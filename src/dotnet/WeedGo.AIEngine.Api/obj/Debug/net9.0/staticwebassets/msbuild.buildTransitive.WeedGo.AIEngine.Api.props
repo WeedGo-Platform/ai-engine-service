@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="../buildMultiTargeting/WeedGo.AIEngine.Api.props" />
+</Project>

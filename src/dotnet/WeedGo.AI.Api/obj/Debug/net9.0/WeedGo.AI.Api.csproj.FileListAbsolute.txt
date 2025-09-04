@@ -1,0 +1,7 @@
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Api/obj/Debug/net9.0/WeedGo.AI.Api.csproj.AssemblyReference.cache
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Api/obj/Debug/net9.0/WeedGo.AI.Api.GeneratedMSBuildEditorConfig.editorconfig
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Api/obj/Debug/net9.0/WeedGo.AI.Api.AssemblyInfoInputs.cache
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Api/obj/Debug/net9.0/WeedGo.AI.Api.AssemblyInfo.cs
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Api/obj/Debug/net9.0/WeedGo.AI.Api.csproj.CoreCompileInputs.cache
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Api/obj/Debug/net9.0/WeedGo.AI.Api.MvcApplicationPartsAssemblyInfo.cs
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Api/obj/Debug/net9.0/WeedGo.AI.Api.MvcApplicationPartsAssemblyInfo.cache

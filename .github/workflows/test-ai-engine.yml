@@ -1,0 +1,105 @@
+name: AI Engine API Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'microservices/ai-engine-service/**'
+      - '.github/workflows/test-ai-engine.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'microservices/ai-engine-service/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: weedgo
+          POSTGRES_PASSWORD: weedgo123
+          POSTGRES_DB: ai_engine
+        ports:
+          - 5434:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      
+      redis:
+        image: redis:7
+        ports:
+          - 6381:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '9.0.x'
+    
+    - name: Install Python dependencies
+      working-directory: ./microservices/ai-engine-service
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Setup database
+      env:
+        PGPASSWORD: weedgo123
+      run: |
+        psql -h localhost -p 5434 -U weedgo -d ai_engine -f ./microservices/ai-engine-service/data/migrations/001_create_ai_engine_schema.sql
+        psql -h localhost -p 5434 -U weedgo -d ai_engine -f ./microservices/ai-engine-service/data/migrations/002_create_history_aware_tables.sql
+        psql -h localhost -p 5434 -U weedgo -d ai_engine -f ./microservices/ai-engine-service/data/migrations/003_create_compliance_tables.sql
+    
+    - name: Start AI Engine API
+      working-directory: ./microservices/ai-engine-service
+      env:
+        DB_HOST: localhost
+        DB_PORT: 5434
+        DB_NAME: ai_engine
+        DB_USER: weedgo
+        DB_PASSWORD: weedgo123
+        REDIS_HOST: localhost
+        REDIS_PORT: 6381
+      run: |
+        python3 api_server.py &
+        sleep 10
+        curl -f http://localhost:8080/health || exit 1
+    
+    - name: Run .NET Tests
+      working-directory: ./microservices/ai-engine-service/AIEngineTests
+      run: |
+        dotnet restore
+        dotnet build --configuration Release
+        dotnet test --configuration Release --logger "trx;LogFileName=test_results.trx" --logger "console;verbosity=detailed"
+    
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: test-results
+        path: ./microservices/ai-engine-service/AIEngineTests/TestResults/*.trx
+    
+    - name: Test Report
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: AI Engine Test Results
+        path: './microservices/ai-engine-service/AIEngineTests/TestResults/*.trx'
+        reporter: dotnet-trx

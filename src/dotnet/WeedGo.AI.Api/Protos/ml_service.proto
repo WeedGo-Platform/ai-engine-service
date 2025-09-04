@@ -1,0 +1,326 @@
+syntax = "proto3";
+
+package weedgo.ai.ml;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+option csharp_namespace = "WeedGo.AI.Api.Protos";
+
+// Main ML Service
+service MLService {
+    // Health check
+    rpc GetHealth(google.protobuf.Empty) returns (HealthResponse);
+    
+    // Product embeddings and similarity
+    rpc GenerateProductEmbedding(ProductEmbeddingRequest) returns (ProductEmbeddingResponse);
+    rpc FindSimilarProducts(SimilarProductsRequest) returns (SimilarProductsResponse);
+    rpc SearchProducts(ProductSearchRequest) returns (ProductSearchResponse);
+    
+    // Virtual Budtender
+    rpc ProcessBudtenderMessage(BudtenderMessageRequest) returns (BudtenderMessageResponse);
+    rpc GenerateRecommendations(RecommendationRequest) returns (RecommendationResponse);
+    
+    // Customer Recognition
+    rpc RecognizeCustomer(CustomerRecognitionRequest) returns (CustomerRecognitionResponse);
+    rpc UpdateCustomerProfile(UpdateCustomerRequest) returns (UpdateCustomerResponse);
+    
+    // Identity Verification
+    rpc VerifyIdentity(IdentityVerificationRequest) returns (IdentityVerificationResponse);
+    rpc ProcessDocument(DocumentProcessingRequest) returns (DocumentProcessingResponse);
+    
+    // Pricing Intelligence
+    rpc AnalyzePricing(PricingAnalysisRequest) returns (PricingAnalysisResponse);
+    rpc GetPricingRecommendations(PricingRecommendationRequest) returns (PricingRecommendationResponse);
+}
+
+// Common messages
+message HealthResponse {
+    bool is_healthy = 1;
+    string version = 2;
+    repeated ServiceStatus services = 3;
+    google.protobuf.Timestamp timestamp = 4;
+}
+
+message ServiceStatus {
+    string service_name = 1;
+    bool is_healthy = 2;
+    string message = 3;
+}
+
+// Product Embedding Messages
+message ProductEmbeddingRequest {
+    string product_id = 1;
+    string product_name = 2;
+    string brand = 3;
+    string description = 4;
+    string category = 5;
+    repeated string terpenes = 6;
+    float thc_content = 7;
+    float cbd_content = 8;
+    string embedding_type = 9; // "basic", "detailed", "effects", "search"
+}
+
+message ProductEmbeddingResponse {
+    repeated float embedding = 1;
+    int32 dimension = 2;
+    string model_name = 3;
+    string model_version = 4;
+}
+
+message SimilarProductsRequest {
+    string product_id = 1;
+    int32 limit = 2;
+    repeated string exclude_categories = 3;
+    float min_similarity_score = 4;
+}
+
+message SimilarProductsResponse {
+    repeated SimilarProduct products = 1;
+}
+
+message SimilarProduct {
+    string product_id = 1;
+    string product_name = 2;
+    string brand = 3;
+    float similarity_score = 4;
+    string category = 5;
+    float thc_content = 6;
+    float cbd_content = 7;
+    repeated string terpenes = 8;
+}
+
+message ProductSearchRequest {
+    string search_query = 1;
+    int32 limit = 2;
+    repeated string categories = 3;
+    repeated string brands = 4;
+    float min_thc = 5;
+    float max_thc = 6;
+    float min_cbd = 7;
+    float max_cbd = 8;
+    repeated string effects = 9;
+    repeated string terpenes = 10;
+}
+
+message ProductSearchResponse {
+    repeated SearchResult results = 1;
+    int32 total_found = 2;
+    float search_time_ms = 3;
+}
+
+message SearchResult {
+    string product_id = 1;
+    string product_name = 2;
+    string brand = 3;
+    string category = 4;
+    float relevance_score = 5;
+    string snippet = 6;
+    repeated string highlighted_terms = 7;
+}
+
+// Virtual Budtender Messages
+message BudtenderMessageRequest {
+    string session_id = 1;
+    string customer_message = 2;
+    string language_code = 3;
+    repeated string conversation_history = 4;
+    CustomerContext customer_context = 5;
+    string personality_mode = 6; // "professional", "casual", "expert"
+}
+
+message CustomerContext {
+    string customer_id = 1;
+    repeated string preferred_categories = 2;
+    repeated string preferred_brands = 3;
+    string thc_preference = 4; // "low", "medium", "high"
+    string cbd_preference = 5;
+    repeated string desired_effects = 6;
+    repeated string medical_conditions = 7;
+    string experience_level = 8; // "beginner", "intermediate", "expert"
+}
+
+message BudtenderMessageResponse {
+    string response_message = 1;
+    string original_language = 2;
+    string translated_message = 3;
+    repeated ProductRecommendation recommendations = 4;
+    repeated string detected_intents = 5;
+    repeated ExtractedEntity entities = 6;
+    float confidence_score = 7;
+    int32 response_time_ms = 8;
+    repeated string follow_up_questions = 9;
+}
+
+message ProductRecommendation {
+    string product_id = 1;
+    string product_name = 2;
+    string brand = 3;
+    string category = 4;
+    float recommendation_score = 5;
+    string reason = 6;
+    float price = 7;
+    string image_url = 8;
+}
+
+message ExtractedEntity {
+    string entity_type = 1; // "product", "effect", "brand", "category", "thc_level", etc.
+    string entity_value = 2;
+    float confidence = 3;
+    int32 start_position = 4;
+    int32 end_position = 5;
+}
+
+message RecommendationRequest {
+    CustomerContext customer_context = 1;
+    int32 limit = 2;
+    repeated string exclude_products = 3;
+    string recommendation_type = 4; // "similar_to_purchase", "new_discovery", "trending"
+}
+
+message RecommendationResponse {
+    repeated ProductRecommendation recommendations = 1;
+    string recommendation_strategy = 2;
+    float confidence_score = 3;
+}
+
+// Customer Recognition Messages
+message CustomerRecognitionRequest {
+    bytes face_image = 1;
+    string tenant_id = 2;
+    bool create_if_not_exists = 3;
+    float recognition_threshold = 4;
+}
+
+message CustomerRecognitionResponse {
+    bool customer_recognized = 1;
+    string customer_profile_id = 2;
+    float confidence_score = 3;
+    bool is_new_customer = 4;
+    CustomerProfile customer_profile = 5;
+    string template_hash = 6;
+}
+
+message CustomerProfile {
+    string profile_id = 1;
+    google.protobuf.Timestamp first_seen = 2;
+    google.protobuf.Timestamp last_seen = 3;
+    int32 visit_count = 4;
+    float total_spent = 5;
+    repeated string preferred_categories = 6;
+    repeated string preferred_brands = 7;
+    string estimated_age_range = 8;
+    string loyalty_tier = 9;
+}
+
+message UpdateCustomerRequest {
+    string customer_profile_id = 1;
+    repeated string purchased_products = 2;
+    float purchase_amount = 3;
+    repeated string interaction_data = 4;
+    google.protobuf.Timestamp visit_timestamp = 5;
+}
+
+message UpdateCustomerResponse {
+    bool success = 1;
+    string message = 2;
+    CustomerProfile updated_profile = 3;
+}
+
+// Identity Verification Messages
+message IdentityVerificationRequest {
+    bytes document_image = 1;
+    bytes selfie_image = 2;
+    string document_type = 3; // "drivers_license", "passport", "provincial_id"
+    string region = 4; // "ON", "BC", etc.
+    string session_id = 5;
+}
+
+message IdentityVerificationResponse {
+    bool age_verified = 1;
+    bool identity_verified = 2;
+    bool face_match_verified = 3;
+    float age_confidence = 4;
+    float identity_confidence = 5;
+    float face_match_confidence = 6;
+    VerificationDetails details = 7;
+    repeated string verification_issues = 8;
+}
+
+message VerificationDetails {
+    bool document_valid = 1;
+    bool document_expired = 2;
+    bool document_tampered = 3;
+    string extracted_age = 4;
+    string extracted_name = 5;
+    string extracted_address = 6;
+    string document_number = 7;
+    google.protobuf.Timestamp expiry_date = 8;
+}
+
+message DocumentProcessingRequest {
+    bytes document_image = 1;
+    string document_type = 2;
+    string region = 3;
+}
+
+message DocumentProcessingResponse {
+    bool processing_successful = 1;
+    map<string, string> extracted_fields = 2;
+    float processing_confidence = 3;
+    repeated string detected_issues = 4;
+    int32 processing_time_ms = 5;
+}
+
+// Pricing Intelligence Messages
+message PricingAnalysisRequest {
+    string product_id = 1;
+    repeated CompetitorData competitor_data = 2;
+    string analysis_type = 3; // "competitive", "market_position", "optimization"
+}
+
+message CompetitorData {
+    string competitor_name = 1;
+    string product_name = 2;
+    float price = 3;
+    string size = 4;
+    bool in_stock = 5;
+    string promotion = 6;
+    google.protobuf.Timestamp scraped_at = 7;
+}
+
+message PricingAnalysisResponse {
+    string product_id = 1;
+    float current_price = 2;
+    float market_average = 3;
+    float market_min = 4;
+    float market_max = 5;
+    string market_position = 6; // "lowest", "below_average", "average", "above_average", "highest"
+    repeated PriceInsight insights = 7;
+}
+
+message PriceInsight {
+    string insight_type = 1; // "competitor_analysis", "demand_trend", "margin_analysis"
+    string description = 2;
+    float impact_score = 3;
+    string recommendation = 4;
+}
+
+message PricingRecommendationRequest {
+    string product_id = 1;
+    string strategy = 2; // "maximize_revenue", "maximize_margin", "competitive", "penetration"
+    float target_margin = 3;
+    repeated string constraints = 4;
+}
+
+message PricingRecommendationResponse {
+    string product_id = 1;
+    float recommended_price = 2;
+    float min_price = 3;
+    float max_price = 4;
+    string strategy_used = 5;
+    float expected_demand_change = 6;
+    float expected_revenue_impact = 7;
+    string reasoning = 8;
+    repeated string risk_factors = 9;
+}
