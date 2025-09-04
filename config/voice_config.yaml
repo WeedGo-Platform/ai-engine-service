@@ -1,0 +1,328 @@
+# Voice System Configuration
+# All voice settings are configurable here
+
+# Speech Recognition (STT)
+stt:
+  # Model selection (can be overridden per domain)
+  default_model: whisper-base
+  models:
+    whisper-tiny:
+      path: models/whisper/tiny.bin
+      size_mb: 39
+      languages: all
+      speed_multiplier: 3.0
+      accuracy: 0.85
+    whisper-base:
+      path: models/whisper/base.bin
+      size_mb: 74
+      languages: all
+      speed_multiplier: 2.0
+      accuracy: 0.92
+    whisper-small:
+      path: models/whisper/small.bin
+      size_mb: 244
+      languages: all
+      speed_multiplier: 1.0
+      accuracy: 0.95
+    vosk-small:
+      path: models/vosk/small
+      size_mb: 50
+      languages: [en, es, fr, de, zh]
+      speed_multiplier: 5.0
+      accuracy: 0.88
+  
+  # Auto language detection
+  auto_detect_language: true
+  language_detection_duration_ms: 3000
+  
+  # Performance settings
+  device: auto  # auto, cpu, cuda, mps
+  num_threads: 4
+  batch_size: 1
+  
+  # Quality settings
+  enable_timestamps: true
+  enable_diarization: false
+  max_segment_length_ms: 30000
+
+# Text-to-Speech (TTS)
+tts:
+  # Voice models per language/style
+  voices:
+    # English voices
+    en-casual:
+      model: piper
+      path: models/piper/en_US-ryan-medium.onnx
+      speaker_id: 0
+      sample_rate: 22050
+    en-professional:
+      model: piper
+      path: models/piper/en_US-amy-medium.onnx
+      speaker_id: 0
+      sample_rate: 22050
+    en-authoritative:
+      model: piper
+      path: models/piper/en_US-john-medium.onnx
+      speaker_id: 0
+      sample_rate: 22050
+    
+    # Spanish voices
+    es-casual:
+      model: piper
+      path: models/piper/es_ES-mls_9923-medium.onnx
+      speaker_id: 0
+      sample_rate: 22050
+    
+    # Chinese voices
+    zh-professional:
+      model: piper
+      path: models/piper/zh_CN-huayan-medium.onnx
+      speaker_id: 0
+      sample_rate: 22050
+    
+    # Add more voices as needed
+  
+  # Default voice settings (can be overridden)
+  default_speed: 1.0
+  default_pitch: 0.0
+  default_volume: 0.9
+  
+  # Caching
+  cache_enabled: true
+  cache_size_mb: 100
+  cache_ttl_seconds: 3600
+
+# Voice Activity Detection (VAD)
+vad:
+  model: silero
+  model_path: models/silero_vad.onnx
+  
+  # Detection thresholds
+  speech_threshold: 0.5
+  
+  # Timing settings (milliseconds)
+  min_speech_duration_ms: 250
+  max_speech_duration_ms: 30000
+  speech_pad_ms: 300
+  
+  # Silence detection
+  min_silence_duration_ms: 700
+  max_silence_duration_ms: 2000
+  
+  # Energy-based fallback
+  energy_threshold: 0.01
+  zero_crossing_threshold: 0.1
+
+# Wake Word Detection
+wake_word:
+  # Model for wake word detection
+  model: openwakeword
+  model_path: models/wake_word/
+  
+  # Wake words are fully configurable
+  # Each domain can have different wake words
+  wake_words:
+    default:
+      - phrase: "hey assistant"
+        threshold: 0.8
+        model_file: hey_assistant.onnx
+    
+    budtender:
+      - phrase: "hey budtender"
+        threshold: 0.85
+        model_file: hey_budtender.onnx
+      - phrase: "cannabis assistant"
+        threshold: 0.85
+        model_file: cannabis_assistant.onnx
+    
+    healthcare:
+      - phrase: "medical assistant"
+        threshold: 0.9
+        model_file: medical_assistant.onnx
+      - phrase: "health advisor"
+        threshold: 0.9
+        model_file: health_advisor.onnx
+    
+    legal:
+      - phrase: "legal assistant"
+        threshold: 0.9
+        model_file: legal_assistant.onnx
+  
+  # Wake word settings
+  buffer_duration_ms: 2000
+  cooldown_ms: 1000
+  
+  # Custom wake word training
+  allow_custom_wake_words: true
+  custom_wake_word_samples_required: 3
+  custom_wake_word_model_path: models/wake_word/custom/
+
+# Audio Processing
+audio:
+  # Input settings
+  input_sample_rate: 16000
+  input_channels: 1
+  input_format: int16
+  
+  # Output settings  
+  output_sample_rate: 22050
+  output_channels: 1
+  output_format: int16
+  
+  # Buffer settings
+  chunk_duration_ms: 30
+  buffer_duration_seconds: 10
+  
+  # Noise reduction
+  enable_noise_reduction: true
+  noise_reduction_model: webrtc
+  
+  # Echo cancellation
+  enable_echo_cancellation: true
+  echo_cancellation_model: webrtc
+  
+  # Automatic gain control
+  enable_agc: true
+  target_level_dbfs: -3
+  
+  # Audio enhancement
+  enable_enhancement: true
+  enhancement_model: simple
+
+# Domain-specific Voice Profiles
+# These override default settings per domain
+domain_profiles:
+  budtender:
+    stt:
+      preferred_model: whisper-base
+      language_hints: [en, es]
+    tts:
+      voice: en-casual
+      speed: 0.95
+      pitch: -1
+      prosody: relaxed
+      personality_traits:
+        - friendly
+        - knowledgeable
+        - laid-back
+    conversation:
+      formality: casual
+      use_fillers: true
+      fillers: ["you know", "like", "basically"]
+      backchannel: ["right", "totally", "for sure"]
+  
+  healthcare:
+    stt:
+      preferred_model: whisper-small
+      language_hints: [en, es, zh]
+    tts:
+      voice: en-professional
+      speed: 0.9
+      pitch: 0
+      prosody: caring
+      personality_traits:
+        - professional
+        - empathetic
+        - clear
+    conversation:
+      formality: professional
+      use_fillers: false
+      backchannel: ["I understand", "I see", "please continue"]
+  
+  legal:
+    stt:
+      preferred_model: whisper-small
+      language_hints: [en]
+    tts:
+      voice: en-authoritative
+      speed: 0.85
+      pitch: -2
+      prosody: formal
+      personality_traits:
+        - precise
+        - authoritative
+        - formal
+    conversation:
+      formality: formal
+      use_fillers: false
+      backchannel: ["indeed", "correct", "precisely"]
+
+# Conversation Management
+conversation:
+  # Turn-taking
+  enable_interruption_detection: true
+  interruption_energy_threshold: 0.7
+  
+  # Backchanneling
+  enable_backchanneling: true
+  backchannel_frequency: 0.2
+  
+  # Natural pauses
+  sentence_pause_ms: 200
+  paragraph_pause_ms: 500
+  thinking_pause_ms: 1000
+  
+  # Emotional adaptation
+  enable_emotion_detection: true
+  emotion_adaptation: true
+  
+  # Context awareness
+  maintain_context_turns: 10
+  context_timeout_seconds: 300
+
+# Performance Optimization
+performance:
+  # Model loading
+  preload_models: true
+  lazy_load_voices: false
+  
+  # Caching
+  enable_response_cache: true
+  cache_size_mb: 500
+  
+  # Parallel processing
+  enable_parallel_pipeline: true
+  pipeline_threads: 4
+  
+  # Quantization
+  enable_model_quantization: true
+  quantization_bits: 4
+  
+  # Speculative decoding
+  enable_speculative_decoding: true
+  draft_model: whisper-tiny
+  verification_model: whisper-base
+
+# Logging and Monitoring
+logging:
+  level: INFO
+  log_audio: false
+  log_transcriptions: true
+  log_performance_metrics: true
+  metrics_interval_seconds: 60
+
+# Privacy Settings
+privacy:
+  # Data retention
+  store_audio: false
+  store_transcriptions: false
+  anonymize_logs: true
+  
+  # Processing
+  process_on_device: true
+  allow_cloud_fallback: false
+  
+  # User data
+  require_consent: true
+  allow_voice_training: false
+
+# Feature Flags
+features:
+  wake_word_detection: true
+  multi_speaker_support: true
+  emotion_detection: true
+  dialect_adaptation: true
+  voice_cloning: false
+  real_time_translation: false
+  spatial_audio: false
+  lip_sync: false

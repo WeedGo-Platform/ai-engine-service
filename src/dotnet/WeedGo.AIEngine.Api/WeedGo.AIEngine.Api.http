@@ -1,0 +1,6 @@
+@WeedGo.AIEngine.Api_HostAddress = http://localhost:5197
+
+GET {{WeedGo.AIEngine.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

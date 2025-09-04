@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Recent Activity</title>
+</head>
+<body>
+    <h2>Testing Recent Activity API</h2>
+    <div id="results"></div>
+    
+    <script>
+        async function testRecentActivity() {
+            const API_BASE_URL = 'http://localhost:8080';
+            const results = document.getElementById('results');
+            
+            // Fetch conversations
+            const convResponse = await fetch(`${API_BASE_URL}/api/v1/conversations/history?limit=5`);
+            const conversations = await convResponse.json();
+            
+            results.innerHTML += '<h3>Conversations Data:</h3>';
+            results.innerHTML += '<pre>' + JSON.stringify(conversations, null, 2) + '</pre>';
+            
+            // Process for recent activity
+            const activities = [];
+            
+            if (conversations.conversations && Array.isArray(conversations.conversations)) {
+                conversations.conversations.forEach(conv => {
+                    const customerMessages = conv.messages?.filter(m => m.sender === 'customer') || [];
+                    const lastMessage = customerMessages[customerMessages.length - 1]?.message || 
+                                      conv.messages?.[0]?.message || 
+                                      'No message content';
+                    
+                    const timestamp = conv.end_time || conv.start_time || new Date().toISOString();
+                    
+                    activities.push({
+                        time: getRelativeTime(timestamp),
+                        action: `Customer query processed: "${lastMessage.substring(0, 50)}${lastMessage.length > 50 ? '...' : ''}"`,
+                        type: 'default'
+                    });
+                });
+            }
+            
+            results.innerHTML += '<h3>Processed Activities:</h3>';
+            results.innerHTML += '<pre>' + JSON.stringify(activities, null, 2) + '</pre>';
+        }
+        
+        function getRelativeTime(timestamp) {
+            if (!timestamp) return 'Unknown time';
+            
+            const now = new Date();
+            const time = new Date(timestamp);
+            
+            if (isNaN(time.getTime())) {
+                return 'Unknown time';
+            }
+            
+            const diff = now.getTime() - time.getTime();
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(minutes / 60);
+            const days = Math.floor(hours / 24);
+            
+            if (diff < 0) return 'just now';
+            if (minutes < 1) return 'just now';
+            if (minutes < 60) return `${minutes} min ago`;
+            if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+            if (days === 0) return 'today';
+            return `${days} day${days > 1 ? 's' : ''} ago`;
+        }
+        
+        testRecentActivity();
+    </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Application/bin/Debug/net9.0/WeedGo.AI.Application.deps.json
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Application/bin/Debug/net9.0/WeedGo.AI.Application.dll
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Application/bin/Debug/net9.0/WeedGo.AI.Application.pdb
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Application/bin/Debug/net9.0/WeedGo.AI.Domain.dll
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Application/bin/Debug/net9.0/WeedGo.AI.Domain.pdb
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Application/obj/Debug/net9.0/WeedGo.AI.Application.csproj.AssemblyReference.cache
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Application/obj/Debug/net9.0/WeedGo.AI.Application.GeneratedMSBuildEditorConfig.editorconfig
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Application/obj/Debug/net9.0/WeedGo.AI.Application.AssemblyInfoInputs.cache
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Application/obj/Debug/net9.0/WeedGo.AI.Application.AssemblyInfo.cs
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Application/obj/Debug/net9.0/WeedGo.AI.Application.csproj.CoreCompileInputs.cache
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Application/obj/Debug/net9.0/WeedGo.A.1A2F7C80.Up2Date
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Application/obj/Debug/net9.0/WeedGo.AI.Application.dll
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Application/obj/Debug/net9.0/refint/WeedGo.AI.Application.dll
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Application/obj/Debug/net9.0/WeedGo.AI.Application.pdb
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Application/obj/Debug/net9.0/ref/WeedGo.AI.Application.dll

@@ -1,0 +1,11 @@
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Domain/bin/Debug/net9.0/WeedGo.AI.Domain.deps.json
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Domain/bin/Debug/net9.0/WeedGo.AI.Domain.dll
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Domain/bin/Debug/net9.0/WeedGo.AI.Domain.pdb
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Domain/obj/Debug/net9.0/WeedGo.AI.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Domain/obj/Debug/net9.0/WeedGo.AI.Domain.AssemblyInfoInputs.cache
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Domain/obj/Debug/net9.0/WeedGo.AI.Domain.AssemblyInfo.cs
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Domain/obj/Debug/net9.0/WeedGo.AI.Domain.csproj.CoreCompileInputs.cache
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Domain/obj/Debug/net9.0/WeedGo.AI.Domain.dll
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Domain/obj/Debug/net9.0/refint/WeedGo.AI.Domain.dll
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Domain/obj/Debug/net9.0/WeedGo.AI.Domain.pdb
+/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/dotnet/WeedGo.AI.Domain/obj/Debug/net9.0/ref/WeedGo.AI.Domain.dll
