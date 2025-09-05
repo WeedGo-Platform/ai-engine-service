@@ -1,4 +1,0 @@
-obj/Debug/net9.0/Protos/MlService.cs \
-obj/Debug/net9.0/Protos/MlServiceGrpc.cs: /Users/charrcy/.nuget/packages/grpc.tools/2.60.0/build/native/include/google/protobuf/timestamp.proto\
- /Users/charrcy/.nuget/packages/grpc.tools/2.60.0/build/native/include/google/protobuf/empty.proto\
- Protos/ml_service.proto
