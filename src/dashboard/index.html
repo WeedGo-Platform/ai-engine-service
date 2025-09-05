@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V5 AI Engine - Admin Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-icon">🌿</span>
+                <h1>V5 AI Engine</h1>
+                <span class="version">v5.0.0</span>
+            </div>
+            <div class="header-actions">
+                <button class="btn-icon" id="theme-toggle" title="Toggle Theme">
+                    <span class="icon">🌙</span>
+                </button>
+                <button class="btn-icon" id="refresh-btn" title="Refresh Data">
+                    <span class="icon">🔄</span>
+                </button>
+                <div class="connection-status" id="connection-status">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Connecting...</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="sidebar">
+        <ul class="nav-menu">
+            <li class="nav-item active" data-page="overview">
+                <span class="nav-icon">📊</span>
+                <span class="nav-text">Overview</span>
+            </li>
+            <li class="nav-item" data-page="system">
+                <span class="nav-icon">💻</span>
+                <span class="nav-text">System Health</span>
+            </li>
+            <li class="nav-item" data-page="voice">
+                <span class="nav-icon">🎤</span>
+                <span class="nav-text">Voice System</span>
+            </li>
+            <li class="nav-item" data-page="mcp">
+                <span class="nav-icon">🔌</span>
+                <span class="nav-text">MCP Integration</span>
+            </li>
+            <li class="nav-item" data-page="api">
+                <span class="nav-icon">🌐</span>
+                <span class="nav-text">API Analytics</span>
+            </li>
+            <li class="nav-item" data-page="sessions">
+                <span class="nav-icon">👥</span>
+                <span class="nav-text">Sessions</span>
+            </li>
+            <li class="nav-item" data-page="tools">
+                <span class="nav-icon">🛠️</span>
+                <span class="nav-text">Tools</span>
+            </li>
+            <li class="nav-item" data-page="config">
+                <span class="nav-icon">⚙️</span>
+                <span class="nav-text">Configuration</span>
+            </li>
+            <li class="nav-item" data-page="logs">
+                <span class="nav-icon">📝</span>
+                <span class="nav-text">Logs</span>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Overview Page -->
+        <div class="page active" id="page-overview">
+            <div class="page-header">
+                <h2>System Overview</h2>
+                <div class="time-range">
+                    <select id="time-range">
+                        <option value="1h">Last Hour</option>
+                        <option value="24h" selected>Last 24 Hours</option>
+                        <option value="7d">Last 7 Days</option>
+                        <option value="30d">Last 30 Days</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Key Metrics -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-icon">⚡</span>
+                        <span class="metric-label">Requests/Min</span>
+                    </div>
+                    <div class="metric-value" id="requests-per-min">0</div>
+                    <div class="metric-change positive">+12.5%</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-icon">⏱️</span>
+                        <span class="metric-label">Avg Response Time</span>
+                    </div>
+                    <div class="metric-value" id="avg-response-time">0ms</div>
+                    <div class="metric-change negative">+5.2%</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-icon">👥</span>
+                        <span class="metric-label">Active Sessions</span>
+                    </div>
+                    <div class="metric-value" id="active-sessions">0</div>
+                    <div class="metric-change positive">+8</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-icon">🔧</span>
+                        <span class="metric-label">Tools Executed</span>
+                    </div>
+                    <div class="metric-value" id="tools-executed">0</div>
+                    <div class="metric-change">Today</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-icon">💾</span>
+                        <span class="metric-label">Memory Usage</span>
+                    </div>
+                    <div class="metric-value" id="memory-usage">0%</div>
+                    <div class="metric-progress">
+                        <div class="progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-icon">🔥</span>
+                        <span class="metric-label">CPU Usage</span>
+                    </div>
+                    <div class="metric-value" id="cpu-usage">0%</div>
+                    <div class="metric-progress">
+                        <div class="progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h3>Request Volume</h3>
+                    <canvas id="requests-chart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Response Times</h3>
+                    <canvas id="response-chart"></canvas>
+                </div>
+            </div>
+
+            <!-- System Status -->
+            <div class="status-grid">
+                <div class="status-card">
+                    <h3>Core Services</h3>
+                    <div class="status-list">
+                        <div class="status-item">
+                            <span class="status-name">AI Engine</span>
+                            <span class="status-badge success">Online</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-name">Voice System</span>
+                            <span class="status-badge success" id="voice-status">Online</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-name">MCP Services</span>
+                            <span class="status-badge warning" id="mcp-status">Partial</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-name">Database</span>
+                            <span class="status-badge success" id="db-status">Connected</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="status-card">
+                    <h3>Recent Activity</h3>
+                    <div class="activity-list" id="recent-activity">
+                        <div class="activity-item">
+                            <span class="activity-time">2 min ago</span>
+                            <span class="activity-text">New session started</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-time">5 min ago</span>
+                            <span class="activity-text">MCP tool executed: strain_lookup</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-time">12 min ago</span>
+                            <span class="activity-text">Voice transcription completed</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Health Page -->
+        <div class="page" id="page-system">
+            <div class="page-header">
+                <h2>System Health</h2>
+            </div>
+            
+            <div class="health-grid">
+                <div class="health-card">
+                    <h3>Resource Utilization</h3>
+                    <div class="resource-meters">
+                        <div class="meter">
+                            <label>CPU</label>
+                            <div class="meter-bar">
+                                <div class="meter-fill" id="cpu-meter" style="width: 0%"></div>
+                            </div>
+                            <span class="meter-value">0%</span>
+                        </div>
+                        <div class="meter">
+                            <label>Memory</label>
+                            <div class="meter-bar">
+                                <div class="meter-fill" id="memory-meter" style="width: 0%"></div>
+                            </div>
+                            <span class="meter-value">0%</span>
+                        </div>
+                        <div class="meter">
+                            <label>Disk</label>
+                            <div class="meter-bar">
+                                <div class="meter-fill" id="disk-meter" style="width: 0%"></div>
+                            </div>
+                            <span class="meter-value">0%</span>
+                        </div>
+                        <div class="meter">
+                            <label>Network I/O</label>
+                            <div class="meter-bar">
+                                <div class="meter-fill" id="network-meter" style="width: 0%"></div>
+                            </div>
+                            <span class="meter-value">0 KB/s</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="health-card">
+                    <h3>Model Performance</h3>
+                    <div class="model-stats">
+                        <div class="stat-row">
+                            <span>Active Model:</span>
+                            <span id="active-model">qwen_0.5b</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Tokens/Second:</span>
+                            <span id="tokens-per-sec">0</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Context Usage:</span>
+                            <span id="context-usage">0/2048</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Cache Hit Rate:</span>
+                            <span id="cache-hit-rate">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="health-card full-width">
+                    <h3>System Metrics Timeline</h3>
+                    <canvas id="system-metrics-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Voice System Page -->
+        <div class="page" id="page-voice">
+            <div class="page-header">
+                <h2>Voice System Status</h2>
+            </div>
+
+            <div class="voice-grid">
+                <div class="voice-card">
+                    <h3>🎤 Speech-to-Text (STT)</h3>
+                    <div class="component-status">
+                        <div class="status-indicator online"></div>
+                        <span>Whisper Model: base</span>
+                    </div>
+                    <div class="voice-stats">
+                        <div class="stat">Transcriptions: <span id="stt-count">0</span></div>
+                        <div class="stat">Avg Time: <span id="stt-time">0ms</span></div>
+                        <div class="stat">Accuracy: <span id="stt-accuracy">95%</span></div>
+                    </div>
+                </div>
+
+                <div class="voice-card">
+                    <h3>🔊 Text-to-Speech (TTS)</h3>
+                    <div class="component-status">
+                        <div class="status-indicator online"></div>
+                        <span>Engine: pyttsx3</span>
+                    </div>
+                    <div class="voice-stats">
+                        <div class="stat">Syntheses: <span id="tts-count">0</span></div>
+                        <div class="stat">Avg Time: <span id="tts-time">0ms</span></div>
+                        <div class="stat">Voices: <span id="tts-voices">3</span></div>
+                    </div>
+                </div>
+
+                <div class="voice-card">
+                    <h3>🎯 Voice Activity Detection</h3>
+                    <div class="component-status">
+                        <div class="status-indicator online"></div>
+                        <span>Silero VAD</span>
+                    </div>
+                    <div class="voice-stats">
+                        <div class="stat">Detections: <span id="vad-count">0</span></div>
+                        <div class="stat">Threshold: <span id="vad-threshold">0.5</span></div>
+                        <div class="stat">Precision: <span id="vad-precision">92%</span></div>
+                    </div>
+                </div>
+
+                <div class="voice-card full-width">
+                    <h3>Voice Processing Pipeline</h3>
+                    <div class="pipeline-flow">
+                        <div class="pipeline-step">
+                            <div class="step-icon">🎤</div>
+                            <div class="step-name">Audio Input</div>
+                        </div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-step">
+                            <div class="step-icon">🎯</div>
+                            <div class="step-name">VAD</div>
+                        </div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-step">
+                            <div class="step-icon">📝</div>
+                            <div class="step-name">STT</div>
+                        </div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-step">
+                            <div class="step-icon">🤖</div>
+                            <div class="step-name">AI Processing</div>
+                        </div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-step">
+                            <div class="step-icon">🔊</div>
+                            <div class="step-name">TTS</div>
+                        </div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="pipeline-step">
+                            <div class="step-icon">🎧</div>
+                            <div class="step-name">Audio Output</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MCP Integration Page -->
+        <div class="page" id="page-mcp">
+            <div class="page-header">
+                <h2>MCP Integration</h2>
+            </div>
+
+            <div class="mcp-grid">
+                <div class="mcp-card">
+                    <h3>Connected Servers</h3>
+                    <div class="server-list" id="mcp-servers">
+                        <div class="server-item">
+                            <div class="server-status online"></div>
+                            <div class="server-info">
+                                <div class="server-name">WeedGo MCP</div>
+                                <div class="server-details">stdio • v1.0.0</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-primary mt-2">Discover Servers</button>
+                </div>
+
+                <div class="mcp-card">
+                    <h3>Available Tools</h3>
+                    <div class="tools-list" id="mcp-tools">
+                        <div class="tool-item">
+                            <span class="tool-name">strain_lookup</span>
+                            <span class="tool-calls">245</span>
+                        </div>
+                        <div class="tool-item">
+                            <span class="tool-name">dosage_calculator</span>
+                            <span class="tool-calls">189</span>
+                        </div>
+                        <div class="tool-item">
+                            <span class="tool-name">compliance_check</span>
+                            <span class="tool-calls">78</span>
+                        </div>
+                        <div class="tool-item">
+                            <span class="tool-name">terpene_analyzer</span>
+                            <span class="tool-calls">56</span>
+                        </div>
+                        <div class="tool-item">
+                            <span class="tool-name">lab_result_interpreter</span>
+                            <span class="tool-calls">34</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mcp-card">
+                    <h3>Tool Execution Stats</h3>
+                    <canvas id="mcp-tools-chart"></canvas>
+                </div>
+
+                <div class="mcp-card">
+                    <h3>Test Tool</h3>
+                    <div class="tool-tester">
+                        <select id="test-tool-select" class="form-input">
+                            <option>Select a tool...</option>
+                            <option value="strain_lookup">strain_lookup</option>
+                            <option value="dosage_calculator">dosage_calculator</option>
+                            <option value="compliance_check">compliance_check</option>
+                        </select>
+                        <textarea id="test-tool-args" class="form-input" placeholder='{"strain": "Blue Dream"}'></textarea>
+                        <button class="btn-primary" onclick="testMCPTool()">Execute</button>
+                        <div id="test-tool-result" class="tool-result"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Analytics Page -->
+        <div class="page" id="page-api">
+            <div class="page-header">
+                <h2>API Analytics</h2>
+            </div>
+
+            <div class="api-grid">
+                <div class="api-card">
+                    <h3>Endpoint Usage</h3>
+                    <div class="endpoint-list">
+                        <div class="endpoint-item">
+                            <div class="endpoint-info">
+                                <span class="method">POST</span>
+                                <span class="path">/api/v5/chat</span>
+                            </div>
+                            <div class="endpoint-stats">
+                                <span class="calls">1,234</span>
+                                <span class="time">45ms</span>
+                            </div>
+                        </div>
+                        <div class="endpoint-item">
+                            <div class="endpoint-info">
+                                <span class="method">GET</span>
+                                <span class="path">/api/v5/health</span>
+                            </div>
+                            <div class="endpoint-stats">
+                                <span class="calls">892</span>
+                                <span class="time">12ms</span>
+                            </div>
+                        </div>
+                        <div class="endpoint-item">
+                            <div class="endpoint-info">
+                                <span class="method">POST</span>
+                                <span class="path">/api/v5/voice/transcribe</span>
+                            </div>
+                            <div class="endpoint-stats">
+                                <span class="calls">567</span>
+                                <span class="time">250ms</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="api-card">
+                    <h3>Response Codes</h3>
+                    <canvas id="response-codes-chart"></canvas>
+                </div>
+
+                <div class="api-card">
+                    <h3>Rate Limiting</h3>
+                    <div class="rate-limit-stats">
+                        <div class="limit-item">
+                            <span>Global Limit:</span>
+                            <span>60 req/min</span>
+                        </div>
+                        <div class="limit-item">
+                            <span>Chat Endpoint:</span>
+                            <span>30 req/min</span>
+                        </div>
+                        <div class="limit-item">
+                            <span>Violations Today:</span>
+                            <span class="violations">12</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="api-card full-width">
+                    <h3>API Traffic Timeline</h3>
+                    <canvas id="api-traffic-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sessions Page -->
+        <div class="page" id="page-sessions">
+            <div class="page-header">
+                <h2>Active Sessions</h2>
+                <button class="btn-secondary">Export Sessions</button>
+            </div>
+
+            <div class="sessions-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Session ID</th>
+                            <th>User</th>
+                            <th>Started</th>
+                            <th>Duration</th>
+                            <th>Messages</th>
+                            <th>Tools Used</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sessions-tbody">
+                        <tr>
+                            <td>sess_abc123</td>
+                            <td>user_456</td>
+                            <td>10:30 AM</td>
+                            <td>15 min</td>
+                            <td>12</td>
+                            <td>3</td>
+                            <td><span class="status-badge success">Active</span></td>
+                            <td>
+                                <button class="btn-small">View</button>
+                                <button class="btn-small btn-danger">End</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tools Page -->
+        <div class="page" id="page-tools">
+            <div class="page-header">
+                <h2>Tools Management</h2>
+            </div>
+
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <h3>Available Tools</h3>
+                    <div class="tool-categories">
+                        <div class="category">
+                            <h4>🌿 Cannabis Tools</h4>
+                            <ul class="tool-list">
+                                <li>strain_lookup <span class="badge">MCP</span></li>
+                                <li>dosage_calculator <span class="badge">MCP</span></li>
+                                <li>compliance_check <span class="badge">MCP</span></li>
+                            </ul>
+                        </div>
+                        <div class="category">
+                            <h4>🔧 System Tools</h4>
+                            <ul class="tool-list">
+                                <li>read_api <span class="badge">Local</span></li>
+                                <li>api_orchestrator <span class="badge">Local</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card">
+                    <h3>Tool Execution History</h3>
+                    <canvas id="tool-history-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configuration Page -->
+        <div class="page" id="page-config">
+            <div class="page-header">
+                <h2>Configuration</h2>
+                <div>
+                    <button class="btn-secondary" onclick="loadConfig()">Reload</button>
+                    <button class="btn-primary" onclick="saveConfig()">Save Changes</button>
+                </div>
+            </div>
+
+            <div class="config-sections">
+                <div class="config-section">
+                    <h3>System Settings</h3>
+                    <div class="config-group">
+                        <label>Environment</label>
+                        <select id="config-env" class="form-input">
+                            <option value="development">Development</option>
+                            <option value="production">Production</option>
+                            <option value="testing">Testing</option>
+                        </select>
+                    </div>
+                    <div class="config-group">
+                        <label>Log Level</label>
+                        <select id="config-log-level" class="form-input">
+                            <option value="DEBUG">DEBUG</option>
+                            <option value="INFO">INFO</option>
+                            <option value="WARNING">WARNING</option>
+                            <option value="ERROR">ERROR</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="config-section">
+                    <h3>MCP Configuration</h3>
+                    <div class="config-group">
+                        <label>
+                            <input type="checkbox" id="config-mcp-enabled" checked>
+                            MCP Enabled
+                        </label>
+                    </div>
+                    <div class="config-group">
+                        <label>
+                            <input type="checkbox" id="config-mcp-fallback" checked>
+                            Offline Fallback
+                        </label>
+                    </div>
+                    <div class="config-group">
+                        <label>Timeout (seconds)</label>
+                        <input type="number" id="config-mcp-timeout" class="form-input" value="30">
+                    </div>
+                </div>
+
+                <div class="config-section">
+                    <h3>Voice Settings</h3>
+                    <div class="config-group">
+                        <label>STT Model</label>
+                        <select id="config-stt-model" class="form-input">
+                            <option value="tiny">Tiny (39M)</option>
+                            <option value="base" selected>Base (74M)</option>
+                            <option value="small">Small (244M)</option>
+                        </select>
+                    </div>
+                    <div class="config-group">
+                        <label>VAD Threshold</label>
+                        <input type="range" id="config-vad-threshold" min="0" max="1" step="0.1" value="0.5">
+                        <span id="vad-threshold-value">0.5</span>
+                    </div>
+                </div>
+
+                <div class="config-section">
+                    <h3>Raw Configuration (JSON)</h3>
+                    <textarea id="config-json" class="form-input code-editor"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Logs Page -->
+        <div class="page" id="page-logs">
+            <div class="page-header">
+                <h2>System Logs</h2>
+                <div class="log-controls">
+                    <select id="log-level-filter">
+                        <option value="all">All Levels</option>
+                        <option value="DEBUG">DEBUG</option>
+                        <option value="INFO">INFO</option>
+                        <option value="WARNING">WARNING</option>
+                        <option value="ERROR">ERROR</option>
+                    </select>
+                    <input type="text" id="log-search" placeholder="Search logs...">
+                    <button class="btn-secondary" onclick="clearLogs()">Clear</button>
+                    <button class="btn-secondary" onclick="downloadLogs()">Download</button>
+                </div>
+            </div>
+
+            <div class="log-viewer" id="log-viewer">
+                <div class="log-entry info">
+                    <span class="log-time">2024-01-04 10:45:23</span>
+                    <span class="log-level">INFO</span>
+                    <span class="log-message">V5 AI Engine started successfully</span>
+                </div>
+                <div class="log-entry debug">
+                    <span class="log-time">2024-01-04 10:45:24</span>
+                    <span class="log-level">DEBUG</span>
+                    <span class="log-message">MCP client connected to WeedGo server</span>
+                </div>
+                <div class="log-entry warning">
+                    <span class="log-time">2024-01-04 10:45:25</span>
+                    <span class="log-level">WARNING</span>
+                    <span class="log-message">Rate limit approaching for client 192.168.1.100</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="dashboard.js"></script>
+</body>
+</html>
