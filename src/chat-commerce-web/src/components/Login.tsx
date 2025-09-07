@@ -126,7 +126,7 @@ const Login: React.FC<LoginProps> = ({ isOpen = true, onClose, onLoginSuccess, o
     try {
       let response;
       if (loginMethod === 'password') {
-        response = await authApi.login({ email, password, otp: '' });
+        response = await authApi.login({ email, password });
       } else {
         response = await authApi.verifyOTP(email, otpCode);
       }

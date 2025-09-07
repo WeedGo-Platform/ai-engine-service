@@ -98,21 +98,48 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
               
                 {/* Metadata - Clean and minimal */}
                 {message.role === 'assistant' && (
-                  <div className="mt-2 px-2 flex items-center gap-3 justify-start">
-                    <span className="text-[11px] text-slate-600 font-medium">
+                  <div className="mt-2 px-2 text-[11px] text-slate-600 flex items-center gap-2 justify-start">
+                    <span className="font-medium">
                       {formatTime(new Date(message.timestamp))}
                     </span>
                     
                     {message.responseTime && (
-                      <span className="text-[11px] text-slate-600 font-medium">
-                        {formatResponseTime(message.responseTime)}
-                      </span>
+                      <>
+                        <span>•</span>
+                        <span className="font-medium">
+                          {formatResponseTime(message.responseTime)}
+                        </span>
+                      </>
                     )}
                     
                     {message.tokens && (
-                      <span className="text-[11px] text-slate-600 font-medium">
-                        {message.tokens}t
-                      </span>
+                      <>
+                        <span>•</span>
+                        <span className="font-medium">
+                          {message.tokens} tokens
+                        </span>
+                      </>
+                    )}
+                    
+                    {message.agent && (
+                      <>
+                        <span>•</span>
+                        <span className="font-medium">Agent: {message.agent}</span>
+                      </>
+                    )}
+                    
+                    {message.personality && (
+                      <>
+                        <span>•</span>
+                        <span className="font-medium">Personality: {message.personality}</span>
+                      </>
+                    )}
+                    
+                    {(message.metadata?.prompt || message.metadata?.prompt_template) && (
+                      <>
+                        <span>•</span>
+                        <span className="italic font-medium">Prompt: {(message.metadata.prompt || message.metadata.prompt_template || '').substring(0, 50)}...</span>
+                      </>
                     )}
                   </div>
                 )}

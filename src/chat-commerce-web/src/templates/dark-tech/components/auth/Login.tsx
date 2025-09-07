@@ -6,11 +6,13 @@ import Modal from '../ui/Modal';
 import Card from '../ui/Card';
 import Badge from '../ui/Badge';
 import { LoginFormProps } from '../../../../core/contracts/template.contracts';
+import { detectContactType, getContactPlaceholder } from '../../../../utils/validation';
 
 const Login: React.FC<LoginFormProps> = ({ onClose, onSubmit, onRegister }) => {
   const { login, loginWithOTP, sendOTP, error: authError, clearError, isLoading: authLoading } = useAuth();
   const [loginMethod, setLoginMethod] = useState<'password' | 'otp'>('password');
   const [email, setEmail] = useState('');
+  const [contactInput, setContactInput] = useState('');
   const [password, setPassword] = useState('');
   const [otpCode, setOtpCode] = useState('');
   const [localError, setLocalError] = useState('');
@@ -36,10 +38,10 @@ const Login: React.FC<LoginFormProps> = ({ onClose, onSubmit, onRegister }) => {
   }, []);
 
   const handleSendOTP = async () => {
-    if (!email) return;
+    if (!contactInput) return;
     
     try {
-      await sendOTP(email);
+      await sendOTP(contactInput);
       setOtpSent(true);
     } catch (err: any) {
       setLocalError('TRANSMISSION FAILED');
@@ -54,7 +56,7 @@ const Login: React.FC<LoginFormProps> = ({ onClose, onSubmit, onRegister }) => {
       if (loginMethod === 'password') {
         await login({ email, password });
       } else {
-        await loginWithOTP(email, otpCode);
+        await loginWithOTP(contactInput, otpCode);
       }
       
       if (rememberMe) {
@@ -117,21 +119,52 @@ const Login: React.FC<LoginFormProps> = ({ onClose, onSubmit, onRegister }) => {
           >
             <div className="flex items-center justify-center gap-2">
               <span className="text-lg">📡</span>
-              QUANTUM KEY
+              NEURAL LINK
             </div>
           </button>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-6">
-          {/* Email Field */}
-          <Input
-            type="email"
-            label="USER IDENTITY"
-            value={email}
-            placeholder="neural.interface@matrix.net"
-            required
-            onChange={setEmail}
-          />
+          {/* Email Field - for password login */}
+          {loginMethod === 'password' && (
+            <Input
+              type="email"
+              label="USER IDENTITY"
+              value={email}
+              placeholder="neural.interface@matrix.net"
+              required
+              onChange={setEmail}
+            />
+          )}
+          
+          {/* Contact Input Field - for OTP login */}
+          {loginMethod === 'otp' && (
+            <div className="space-y-2">
+              <Input
+                type="text"
+                label="NEURAL INTERFACE"
+                value={contactInput}
+                placeholder="neural.link@matrix.net or +1-555-HACK"
+                required
+                onChange={setContactInput}
+              />
+              {contactInput && (
+                <div className="text-xs px-2 font-mono">
+                  {(() => {
+                    const contactInfo = detectContactType(contactInput);
+                    if (contactInfo.type === 'email') {
+                      return <span className="text-cyan-400">📧 EMAIL PROTOCOL DETECTED</span>;
+                    } else if (contactInfo.type === 'phone') {
+                      return <span className="text-cyan-400">📡 NEURAL LINK DETECTED: {contactInfo.formatted}</span>;
+                    } else if (contactInput.length > 0) {
+                      return <span className="text-red-400">⚠ INVALID INTERFACE FORMAT</span>;
+                    }
+                    return null;
+                  })()}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Password Login Fields */}
           {loginMethod === 'password' ? (
@@ -186,7 +219,7 @@ const Login: React.FC<LoginFormProps> = ({ onClose, onSubmit, onRegister }) => {
                       <div className="text-sm text-cyan-100 font-mono">
                         <p className="font-bold mb-2 uppercase">QUANTUM AUTHENTICATION</p>
                         <p className="text-xs text-cyan-400">
-                          INITIATING SECURE TRANSMISSION TO YOUR NEURAL INTERFACE...
+                          INITIATING SECURE TRANSMISSION TO YOUR EMAIL OR NEURAL LINK...
                         </p>
                       </div>
                     </div>
@@ -195,7 +228,7 @@ const Login: React.FC<LoginFormProps> = ({ onClose, onSubmit, onRegister }) => {
                   <Button
                     type="button"
                     onClick={handleSendOTP}
-                    disabled={authLoading || !email}
+                    disabled={authLoading || !contactInput}
                     loading={authLoading}
                     variant="secondary"
                     className="w-full"

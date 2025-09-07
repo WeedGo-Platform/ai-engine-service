@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { TemplateContextProvider } from './contexts/TemplateContext';
+import { TemplateContextProvider, useTemplateContext } from './contexts/TemplateContext';
 import { AuthProvider } from './contexts/AuthContext';
+import { ComplianceProvider } from './contexts/ComplianceContext';
 import { DynamicComponent, TemplateLayout } from './core/providers/template.provider';
 import { modelApi, chatApi, voiceApi } from './services/api';
-import { TemplateSwitcher } from './components/common/TemplateSwitcher';
+import { useClickOutside } from './hooks/useClickOutside';
 
 // Types
 import { 
@@ -22,6 +23,9 @@ import {
 import { formatTime, formatResponseTime } from './utils/formatters';
 
 function AppContent() {
+  // Get template context
+  const { currentTemplate, availableTemplates, switchTemplate } = useTemplateContext();
+  
   // State
   const [personalities, setPersonalities] = useState<Personality[]>([]);
   const [activeTools, setActiveTools] = useState<Tool[]>([]);
@@ -83,6 +87,12 @@ function AppContent() {
   const inputRef = useRef<HTMLInputElement>(null);
   const shouldAutoSend = useRef(false);
   const messagesEndRef = useRef<HTMLDivElement>(null!);
+  const hamburgerRef = useRef<HTMLDivElement>(null);
+  const panelRef = useClickOutside<HTMLDivElement>(() => {
+    if (isPanelOpen) {
+      setIsPanelOpen(false);
+    }
+  }, [hamburgerRef]);
 
   // Load saved configuration and session on mount
   useEffect(() => {
@@ -431,6 +441,10 @@ function AppContent() {
 
   return (
     <TemplateLayout>
+      {/* Legal Components */}
+      <DynamicComponent component="AgeGate" />
+      <DynamicComponent component="CookieDisclaimer" />
+      
       <div className="h-screen flex flex-col">
         {/* Top Menu Bar with Template Switcher */}
         <div className="relative">
@@ -440,27 +454,26 @@ function AppContent() {
             onShowRegister={() => setShowRegister(true)}
           />
           
-          {/* Add Template Switcher to the top menu */}
-          <div className="absolute top-4 right-32 z-50">
-            <TemplateSwitcher />
-          </div>
         </div>
 
         {/* Main Chat Container */}
         <div className="flex-1 flex relative overflow-hidden">
-          {/* Configuration Toggle Button */}
-          <DynamicComponent
-            component="ConfigToggleButton"
-            isPanelOpen={isPanelOpen}
-            onClick={() => setIsPanelOpen(true)}
-          />
+          {/* Hamburger Menu Button */}
+          <div ref={hamburgerRef} className="fixed top-16 sm:top-20 left-2 sm:left-4 z-50">
+            <DynamicComponent
+              component="HamburgerMenu"
+              isOpen={isPanelOpen}
+              onClick={() => setIsPanelOpen(!isPanelOpen)}
+            />
+          </div>
 
           {/* Configuration Panel */}
-          <DynamicComponent
-            component="ConfigurationPanel"
-            isOpen={isPanelOpen}
-            onClose={() => setIsPanelOpen(false)}
-            presets={presets}
+          <div ref={panelRef}>
+            <DynamicComponent
+              component="ConfigurationPanel"
+              isOpen={isPanelOpen}
+              onClose={() => setIsPanelOpen(false)}
+              presets={presets}
             selectedPersonality={selectedPersonality}
             isModelLoaded={isModelLoaded}
             onPresetLoad={(preset: Preset) => {
@@ -475,7 +488,11 @@ function AppContent() {
             isSpeakerEnabled={isSpeakerEnabled}
             onToggleSpeaker={handleToggleSpeaker}
             activeTools={activeTools}
+            currentTemplate={currentTemplate}
+            availableTemplates={availableTemplates}
+            onTemplateChange={switchTemplate}
           />
+          </div>
 
           {/* Main Chat Area */}
           <div className="flex-1 flex flex-col bg-white/95 backdrop-blur-sm">
@@ -580,9 +597,11 @@ function AppContent() {
 function App() {
   return (
     <AuthProvider>
-      <TemplateContextProvider>
-        <AppContent />
-      </TemplateContextProvider>
+      <ComplianceProvider>
+        <TemplateContextProvider>
+          <AppContent />
+        </TemplateContextProvider>
+      </ComplianceProvider>
     </AuthProvider>
   );
 }

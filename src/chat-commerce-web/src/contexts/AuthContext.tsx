@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { authApi } from '../services/api';
 import { User, AuthState, LoginCredentials, RegisterData, AuthContextType } from '../types/auth.types';
+import { detectContactType } from '../utils/validation';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -112,13 +113,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const loginWithOTP = async (email: string, code: string) => {
+  const loginWithOTP = async (contact: string, code: string) => {
     setAuthState(prev => ({ ...prev, isLoading: true, error: null }));
     
     try {
-      // Note: OTP login is not implemented in the API yet
-      // This is a placeholder for when it's added
-      throw new Error('OTP login not yet implemented');
+      const contactInfo = detectContactType(contact);
+      
+      if (contactInfo.type === 'invalid') {
+        throw new Error('Please enter a valid email address or phone number');
+      }
+      
+      // Note: OTP login API implementation needed
+      // For now, we'll prepare the structure for both email and phone
+      const otpData = contactInfo.type === 'email' 
+        ? { email: contactInfo.value, code }
+        : { phone: contactInfo.value, code };
+      
+      // TODO: Implement actual API call when backend is ready
+      // const response = await authApi.verifyOTP(otpData);
+      
+      throw new Error('OTP login coming soon! Backend implementation in progress.');
     } catch (error: any) {
       const errorMessage = error.message || 'OTP login failed';
       setAuthState({
@@ -157,8 +171,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const response = await authApi.register({
         email: data.email,
         password: data.password,
-        first_name: data.firstName,
-        last_name: data.lastName,
+        first_name: data.first_name,
+        last_name: data.last_name,
         date_of_birth: data.dateOfBirth,
         phone: data.phoneNumber,
       });
@@ -191,10 +205,31 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const sendOTP = async (email: string) => {
-    // Note: OTP sending is not implemented in the API yet
-    // This is a placeholder for when it's added
-    throw new Error('OTP sending not yet implemented');
+  const sendOTP = async (contact: string) => {
+    const contactInfo = detectContactType(contact);
+    
+    if (contactInfo.type === 'invalid') {
+      throw new Error('Please enter a valid email address or phone number');
+    }
+    
+    // TODO: Implement actual API call when backend is ready
+    // For now, we'll prepare the structure for both email and phone
+    const otpRequest = contactInfo.type === 'email'
+      ? { type: 'email', email: contactInfo.value }
+      : { type: 'phone', phone: contactInfo.value };
+    
+    // Simulate API call for demo
+    console.log('Sending OTP to:', otpRequest);
+    
+    // TODO: Uncomment when API is ready
+    // const response = await authApi.sendOTP(otpRequest);
+    
+    // For demo purposes, we'll show success message
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({ success: true, message: `Verification code sent to ${contactInfo.type === 'email' ? contactInfo.value : contactInfo.formatted}` });
+      }, 1000);
+    });
   };
 
   const logout = async () => {

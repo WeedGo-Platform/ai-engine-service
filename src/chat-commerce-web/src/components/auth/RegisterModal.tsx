@@ -15,8 +15,8 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
 }) => {
   const { register, error, clearError, isLoading } = useAuth();
   const [formData, setFormData] = useState<RegisterData>({
-    firstName: '',
-    lastName: '',
+    first_name: '',
+    last_name: '',
     email: '',
     phoneNumber: '',
     dateOfBirth: '',
@@ -41,7 +41,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
 
   const validateForm = (): boolean => {
     // Check required fields
-    if (!formData.firstName || !formData.lastName || !formData.email || 
+    if (!formData.first_name || !formData.last_name || !formData.email || 
         !formData.phoneNumber || !formData.dateOfBirth || !formData.password) {
       setLocalError('All fields are required');
       return false;
