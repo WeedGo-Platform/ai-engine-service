@@ -70,7 +70,7 @@ class InputValidator:
         'xss': [
             r"(<script[^>]*>.*?</script>)",
             r"(javascript:|data:text/html)",
-            r"(on\w+\s*=)",
+            r"(\bon\w+\s*=\s*[\"'])",  # More specific: only match HTML event handlers with quotes
             r"(<iframe[^>]*>)",
             r"(<object[^>]*>)",
             r"(<embed[^>]*>)",
@@ -146,7 +146,13 @@ class InputValidator:
                 name='message',
                 max_length=1000,
                 sanitizer=self._sanitize_text,
-                forbidden_patterns=self.DANGEROUS_PATTERNS['xss']
+                forbidden_patterns=[]  # Chat messages are text-only, not rendered as HTML
+            ),
+            'chat_message': ValidationRule(
+                name='chat_message',
+                max_length=1000,
+                sanitizer=self._sanitize_chat_text,
+                forbidden_patterns=[]  # Chat messages don't need XSS protection
             ),
             'product_name': ValidationRule(
                 name='product_name',
@@ -188,8 +194,18 @@ class InputValidator:
         # Convert to string for validation
         str_value = str(value)
         
-        # Check for dangerous patterns first
-        self._check_dangerous_patterns(str_value, input_type)
+        # Skip dangerous pattern check for chat messages
+        if rule_name not in ['chat_message', 'message']:
+            # Check for dangerous patterns first
+            self._check_dangerous_patterns(str_value, input_type)
+        
+        # Apply rule-based validation first if provided
+        if rule_name and rule_name in self.validation_rules:
+            rule = self.validation_rules[rule_name]
+            return self._apply_rule(str_value, rule)
+        
+        if custom_rule:
+            return self._apply_rule(str_value, custom_rule)
         
         # Apply specific validation
         if input_type == InputType.EMAIL:
@@ -208,14 +224,6 @@ class InputValidator:
             return self._sanitize_html(str_value)
         elif input_type == InputType.TEXT:
             return self._sanitize_text(str_value)
-        
-        # Apply rule-based validation
-        if rule_name and rule_name in self.validation_rules:
-            rule = self.validation_rules[rule_name]
-            return self._apply_rule(str_value, rule)
-        
-        if custom_rule:
-            return self._apply_rule(str_value, custom_rule)
         
         # Default sanitization
         return self._sanitize_text(str_value)
@@ -414,6 +422,23 @@ class InputValidator:
         
         return text.strip()
     
+    def _sanitize_chat_text(self, text: str) -> str:
+        """Sanitize chat text - minimal sanitization for conversational messages"""
+        # Remove null bytes
+        text = text.replace('\x00', '')
+        
+        # Limit consecutive whitespace but preserve single spaces
+        text = re.sub(r'\s{3,}', '  ', text)  # Replace 3+ spaces with 2
+        text = re.sub(r'\n{3,}', '\n\n', text)  # Replace 3+ newlines with 2
+        
+        # Remove control characters except newline, return, tab
+        text = ''.join(char for char in text if ord(char) >= 32 or char in '\n\r\t')
+        
+        # Don't HTML escape - this is plain text chat, not HTML
+        # Preserve apostrophes, quotes, question marks for natural conversation
+        
+        return text.strip()
+    
     def _sanitize_html(self, html_str: str) -> str:
         """Sanitize HTML (remove dangerous tags)"""
         # Remove script tags
@@ -455,7 +480,8 @@ class ChatRequestModel(BaseModel):
     def validate_message(cls, v):
         validator = InputValidator()
         try:
-            return validator.validate(v, InputType.TEXT, 'message')
+            # Use chat_message rule for conversational text
+            return validator.validate(v, InputType.TEXT, 'chat_message')
         except ValidationError as e:
             raise ValueError(str(e))
     

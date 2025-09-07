@@ -2,19 +2,20 @@
 Voice API Endpoints for V5
 RESTful API for voice processing
 """
-from fastapi import APIRouter, File, UploadFile, HTTPException, Form, Response
+from fastapi import APIRouter, File, UploadFile, HTTPException, Form, Response, Request
 from fastapi.responses import StreamingResponse
 from typing import Optional, Dict, Any
 import io
 import logging
 import base64
+import json
 
 from core.voice import VoicePipeline, PipelineMode
 
 logger = logging.getLogger(__name__)
 
 # Create router
-router = APIRouter(prefix="/v5/voice", tags=["voice"])
+router = APIRouter(prefix="/api/voice", tags=["voice"])
 
 # Global voice pipeline instance
 voice_pipeline = None
@@ -272,12 +273,122 @@ async def get_available_voices() -> Dict[str, Any]:
         
         return {
             "status": "success",
-            "voices": voices
+            "voices": voices,
+            "current_voice": pipeline.tts.current_voice if hasattr(pipeline.tts, 'current_voice') else None
         }
         
     except Exception as e:
         logger.error(f"Error getting voices: {e}")
         raise HTTPException(500, f"Failed to get voices: {str(e)}")
+
+@router.post("/voice")
+async def set_voice(
+    request: Request
+) -> Dict[str, Any]:
+    """Set the current TTS voice
+    
+    Args:
+        voice_id: Voice identifier to use
+        voice_settings: Optional voice-specific settings as JSON string (speed, pitch, etc.)
+    
+    Returns:
+        Confirmation with voice details
+    """
+    try:
+        # Parse request body
+        data = await request.json()
+        voice_id = data.get("voice_id")
+        voice_settings = data.get("voice_settings")
+        quality = data.get("quality", "high")  # Default to high quality
+        
+        if not voice_id:
+            raise HTTPException(400, "voice_id is required")
+        
+        # Get pipeline
+        pipeline = await get_pipeline()
+        
+        # Parse voice settings if provided
+        settings = None
+        if voice_settings:
+            try:
+                settings = json.loads(voice_settings)
+            except json.JSONDecodeError:
+                raise HTTPException(400, "Invalid voice_settings JSON format")
+        
+        # Configure audio quality (always use high quality for better sound)
+        if quality == "high":
+            pipeline.tts.config.sample_rate = 48000
+            pipeline.tts.config.channels = 2  # Stereo
+            pipeline.tts.config.quality = "high"
+        elif quality == "medium":
+            pipeline.tts.config.sample_rate = 44100
+            pipeline.tts.config.channels = 2  # Stereo
+            pipeline.tts.config.quality = "medium"
+        else:
+            pipeline.tts.config.sample_rate = 22050
+            pipeline.tts.config.channels = 1  # Mono for low quality
+            pipeline.tts.config.quality = "low"
+        
+        # Set the voice
+        if hasattr(pipeline.tts, '_set_voice'):
+            await pipeline.tts._set_voice(voice_id)
+            success = True
+        else:
+            # Fallback: Store voice preference for next synthesis
+            pipeline.tts.current_voice_id = voice_id
+            if settings:
+                pipeline.tts.voice_settings = settings
+            success = True
+        
+        if success:
+            return {
+                "status": "success",
+                "message": f"Voice changed to {voice_id}",
+                "voice_id": voice_id,
+                "settings": settings,
+                "quality": quality,
+                "sample_rate": pipeline.tts.config.sample_rate
+            }
+        else:
+            raise HTTPException(400, f"Failed to set voice: {voice_id} not found")
+        
+    except Exception as e:
+        logger.error(f"Error setting voice: {e}")
+        raise HTTPException(500, f"Failed to set voice: {str(e)}")
+
+@router.get("/voice")
+async def get_current_voice() -> Dict[str, Any]:
+    """Get the current TTS voice configuration
+    
+    Returns:
+        Current voice settings
+    """
+    try:
+        # Get pipeline
+        pipeline = await get_pipeline()
+        
+        current_voice = getattr(pipeline.tts, 'current_voice_id', None)
+        voice_settings = getattr(pipeline.tts, 'voice_settings', {})
+        quality = getattr(pipeline.tts.config, 'quality', 'high')
+        sample_rate = getattr(pipeline.tts.config, 'sample_rate', 44100)
+        
+        return {
+            "status": "success",
+            "current_voice": current_voice,
+            "settings": voice_settings,
+            "quality": quality,
+            "sample_rate": sample_rate,
+            "available_settings": {
+                "speed": "Speech rate (0.5-2.0)",
+                "pitch": "Voice pitch adjustment (-20 to 20)",
+                "volume": "Volume level (0.0-1.0)",
+                "emotion": "Emotional tone (neutral, happy, sad, etc.)"
+            }
+        }
+        
+    except Exception as e:
+        logger.error(f"Error getting current voice: {e}")
+        raise HTTPException(500, f"Failed to get current voice: {str(e)}")
 
 @router.get("/metrics")
 async def get_voice_metrics() -> Dict[str, Any]:

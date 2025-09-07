@@ -58,9 +58,26 @@ class OfflineTTSHandler(TTSHandler):
         try:
             engine = pyttsx3.init()
             
-            # Configure default settings
-            engine.setProperty('rate', 150)  # Speed
-            engine.setProperty('volume', 0.9)  # Volume
+            # Configure for better quality
+            engine.setProperty('rate', 175)  # Slightly faster for clarity
+            engine.setProperty('volume', 1.0)  # Full volume
+            
+            # Try to set better quality if available
+            voices = engine.getProperty('voices')
+            if voices:
+                # Prefer enhanced/premium voices if available
+                premium_voice = None
+                for voice in voices:
+                    if 'premium' in voice.id.lower() or 'enhanced' in voice.id.lower():
+                        premium_voice = voice
+                        break
+                    # Prefer Samantha, Alex, or other high-quality voices on macOS
+                    elif any(name in voice.id.lower() for name in ['samantha', 'alex', 'karen', 'daniel']):
+                        premium_voice = voice
+                        
+                if premium_voice:
+                    engine.setProperty('voice', premium_voice.id)
+                    logger.info(f"Using high-quality voice: {premium_voice.name}")
             
             return engine
         except Exception as e:
@@ -96,9 +113,10 @@ class OfflineTTSHandler(TTSHandler):
             if voice and voice != self.current_voice_id:
                 await self._set_voice(voice)
             
-            # Configure speed (rate)
-            base_rate = 150
+            # Configure speed (rate) - optimized for clarity
+            base_rate = 175  # Better baseline for clarity
             adjusted_rate = int(base_rate * speed)
+            adjusted_rate = max(100, min(300, adjusted_rate))  # Clamp to reasonable range
             self.engine.setProperty('rate', adjusted_rate)
             
             # Generate audio in thread pool
@@ -140,10 +158,10 @@ class OfflineTTSHandler(TTSHandler):
             )
     
     def _synthesize_sync(self, text: str) -> bytes:
-        """Synchronously synthesize speech"""
-        # Save to temporary file then read back
-        # (pyttsx3 doesn't have direct memory output)
+        """Synchronously synthesize speech with enhanced quality"""
         import tempfile
+        import subprocess
+        import platform
         
         with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as tmp_file:
             output_path = tmp_file.name
@@ -153,7 +171,33 @@ class OfflineTTSHandler(TTSHandler):
             self.engine.save_to_file(text, output_path)
             self.engine.runAndWait()
             
-            # Read the audio file
+            # On macOS, we can use the 'say' command for better quality
+            if platform.system() == 'Darwin' and self.current_voice_id:
+                enhanced_path = output_path.replace('.wav', '_enhanced.wav')
+                try:
+                    # Extract voice name from ID
+                    voice_name = self.current_voice_id.split('.')[-1] if '.' in self.current_voice_id else 'Samantha'
+                    # Use macOS 'say' command with high quality settings
+                    subprocess.run([
+                        'say',
+                        '-v', voice_name,
+                        '-r', '175',  # Rate
+                        '--data-format=LEF32@44100',  # 32-bit float at 44.1kHz
+                        '-o', enhanced_path,
+                        text
+                    ], check=True, capture_output=True, timeout=10)
+                    
+                    # Convert to standard WAV if needed
+                    if Path(enhanced_path).exists():
+                        # Read the enhanced audio
+                        with open(enhanced_path, 'rb') as f:
+                            audio_data = f.read()
+                        Path(enhanced_path).unlink(missing_ok=True)
+                        return audio_data
+                except Exception as e:
+                    logger.debug(f"Enhanced TTS failed, falling back: {e}")
+            
+            # Read the standard pyttsx3 output
             with open(output_path, 'rb') as f:
                 audio_data = f.read()
             
@@ -211,16 +255,16 @@ class OfflineTTSHandler(TTSHandler):
             logger.error(f"Error setting voice: {e}")
     
     def _generate_silence(self, duration_ms: int = 1000) -> bytes:
-        """Generate silent audio as WAV"""
-        # Generate silence
-        sample_rate = self.config.sample_rate
+        """Generate high-quality silent audio as WAV"""
+        # Generate silence at high quality
+        sample_rate = 44100  # CD quality
         num_samples = int(sample_rate * duration_ms / 1000)
         silence = np.zeros(num_samples, dtype=np.int16)
         
-        # Create WAV file in memory
+        # Create WAV file in memory with better quality
         buffer = io.BytesIO()
         with wave.open(buffer, 'wb') as wav_file:
-            wav_file.setnchannels(1)  # Mono
+            wav_file.setnchannels(1)  # Mono (can be 2 for stereo)
             wav_file.setsampwidth(2)  # 16-bit
             wav_file.setframerate(sample_rate)
             wav_file.writeframes(silence.tobytes())

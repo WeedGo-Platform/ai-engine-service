@@ -5,6 +5,7 @@ Combines STT, TTS, and VAD into a complete voice system
 import asyncio
 import logging
 import time
+import platform
 from typing import Dict, Any, Optional, Callable, AsyncGenerator, Union
 from dataclasses import dataclass
 import numpy as np
@@ -12,7 +13,7 @@ from enum import Enum
 
 from .base_handler import VoiceState, AudioConfig
 from .whisper_stt import WhisperSTTHandler
-from .offline_tts import OfflineTTSHandler
+from .piper_tts import PiperTTSHandler
 from .vad_handler import SileroVADHandler
 
 logger = logging.getLogger(__name__)
@@ -56,7 +57,11 @@ class VoicePipeline:
         
         # Initialize handlers
         self.stt = WhisperSTTHandler(stt_model, self.config)
-        self.tts = OfflineTTSHandler(self.config)
+        
+        # Use only Piper neural TTS for production compatibility
+        self.tts = PiperTTSHandler(self.config)
+        logger.info("Using high-quality Piper neural TTS handler")
+        
         self.vad = SileroVADHandler(self.config)
         
         # Pipeline state
