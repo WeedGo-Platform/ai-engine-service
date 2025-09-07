@@ -16,9 +16,10 @@ import uvicorn
 # Add V5 to path
 sys.path.insert(0, str(Path(__file__).parent))
 
-from fastapi import FastAPI, HTTPException, Request, Depends, status
+from fastapi import FastAPI, HTTPException, Request, Depends, status, WebSocket
 from fastapi.responses import JSONResponse, StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 # V5 Core imports
@@ -35,8 +36,13 @@ from api.voice_endpoints import router as voice_router
 # Import chat endpoints  
 from api.chat_endpoints import router as chat_router
 
+# Import authentication endpoints
+from api.simple_auth_endpoints import router as auth_router
+from api.otp_auth_endpoints import router as otp_router
+
 # V5 Services
 from services.smart_ai_engine_v5 import SmartAIEngineV5
+from services.context.simple_hybrid_manager import SimpleHybridContextManager
 
 # Configure logging
 logging.basicConfig(
@@ -73,7 +79,16 @@ class FunctionCallResponse(BaseModel):
 app = FastAPI(
     title="V5 AI Engine",
     description="Industry-standard AI engine with complete security and features",
-    version="5.0.0"
+    version="5.0.0",
+    # Disable external CDN for Swagger UI
+    swagger_ui_parameters={
+        "syntaxHighlight": False,
+        "tryItOutEnabled": True,
+        "docExpansion": "none",
+    },
+    # Use local assets only
+    docs_url="/docs",
+    redoc_url="/redoc"
 )
 
 # Globals
@@ -117,15 +132,99 @@ async def lifespan(app: FastAPI):
         logger.info("Initializing V5 AI Engine...")
         v5_engine = SmartAIEngineV5()
         
-        # Load with dispensary agent by default
-        v5_engine.load_agent_personality(
-            agent_id="dispensary",
-            personality_id="friendly"
-        )
+        # Store engine in app state for access from endpoints
+        app.state.v5_engine = v5_engine
+        
+        # Initialize context manager
+        logger.info("Initializing Context Manager...")
+        db_config = {
+            'host': os.getenv('DB_HOST', 'localhost'),
+            'port': int(os.getenv('DB_PORT', 5434)),
+            'database': os.getenv('DB_NAME', 'ai_engine'),
+            'user': os.getenv('DB_USER', 'weedgo'),
+            'password': os.getenv('DB_PASSWORD', 'your_password_here')
+        }
+        context_manager = SimpleHybridContextManager(db_config=db_config)
+        await context_manager.initialize()
+        app.state.context_manager = context_manager
+        
+        # Auto-load smallest model with dispensary agent and zac personality on startup
+        logger.info("Auto-loading default model configuration...")
+        
+        # Find the smallest model
+        smallest_model = None
+        smallest_size = float('inf')
+        for model_name, model_path in v5_engine.available_models.items():
+            try:
+                size_bytes = os.path.getsize(model_path)
+                if size_bytes > 0 and size_bytes < smallest_size:
+                    smallest_size = size_bytes
+                    smallest_model = model_name
+            except:
+                continue
+        
+        if smallest_model:
+            logger.info(f"Loading smallest model: {smallest_model} ({smallest_size / (1024**3):.2f} GB)")
+            # Load model with dispensary agent and zac personality
+            success = v5_engine.load_model(
+                model_name=smallest_model,
+                agent_id="dispensary",
+                personality_id="zac"
+            )
+            if success:
+                logger.info(f"✅ Successfully loaded {smallest_model} with dispensary/zac configuration")
+            else:
+                logger.warning(f"Failed to load default model configuration")
+        else:
+            logger.warning("No models available to auto-load")
+        
+        logger.info(f"V5 Engine ready with {len(v5_engine.available_models)} models available")
         
         # Register function schemas
         logger.info("Registering function schemas...")
         registry = get_function_registry()
+        
+        # Load and register actual tool implementations
+        logger.info("Loading tool implementations...")
+        try:
+            from services.tools.product_search_tool import ProductSearchTool
+            
+            # Create tool instances
+            product_search_tool = ProductSearchTool()
+            
+            # Register tools with the v5 engine's tool manager if available
+            if hasattr(v5_engine, 'tool_manager') and v5_engine.tool_manager:
+                # Register product search wrapper
+                v5_engine.tool_manager.register_tool(
+                    "search_products",
+                    lambda **kwargs: product_search_tool.search_products(**kwargs),
+                    {
+                        "description": "Search for cannabis products",
+                        "category": "search",
+                        "function_schema": registry.get_schema("search_products")
+                    }
+                )
+                
+                # Get product count for verification
+                product_count = product_search_tool.get_product_count()
+                logger.info(f"ProductSearchTool loaded - Database has {product_count} products")
+                
+                # Register trending products tool
+                v5_engine.tool_manager.register_tool(
+                    "get_trending_products", 
+                    lambda **kwargs: product_search_tool.get_trending_products(**kwargs),
+                    {
+                        "description": "Get trending cannabis products",
+                        "category": "search"
+                    }
+                )
+                
+                logger.info(f"Registered {len(v5_engine.tool_manager.list_tools())} tools with ToolManager")
+            else:
+                logger.warning("ToolManager not available in v5_engine")
+                
+        except Exception as e:
+            logger.error(f"Failed to load tool implementations: {e}")
         
         logger.info("V5 AI Engine started successfully")
         
@@ -140,12 +239,30 @@ async def lifespan(app: FastAPI):
         logger.info("Shutting down V5 engine...")
         if db:
             await db.close()
+        
+        # Close context manager
+        if hasattr(app.state, 'context_manager'):
+            logger.info("Closing context manager...")
+            await app.state.context_manager.close()
         if v5_engine:
             v5_engine.cleanup()
 
 
-# Configure app
-app = FastAPI(lifespan=lifespan)
+# Configure app with same settings
+app = FastAPI(
+    lifespan=lifespan,
+    title="V5 AI Engine",
+    description="Industry-standard AI engine with complete security and features",
+    version="5.0.0",
+    # Disable external CDN for Swagger UI
+    swagger_ui_parameters={
+        "syntaxHighlight": False,
+        "tryItOutEnabled": True,
+        "docExpansion": "none",
+    },
+    docs_url="/docs",
+    redoc_url="/redoc"
+)
 
 # Add CORS middleware
 app.add_middleware(
@@ -156,24 +273,53 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Add security headers middleware
+# Add security headers middleware with relaxed CSP for Swagger UI
 @app.middleware("http")
 async def add_security_headers(request: Request, call_next):
     response = await call_next(request)
+    
+    # Skip CSP for docs and redoc endpoints
+    if request.url.path in ["/docs", "/redoc", "/openapi.json"]:
+        # Allow Swagger UI to work properly
+        response.headers["Content-Security-Policy"] = (
+            "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; "
+            "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; "
+            "img-src 'self' data: blob: https://fastapi.tiangolo.com; "
+            "font-src 'self' data:; "
+            "connect-src 'self'"
+        )
+    else:
+        # Strict CSP for other endpoints
+        response.headers["Content-Security-Policy"] = "default-src 'self'"
+    
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["X-XSS-Protection"] = "1; mode=block"
     response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
-    response.headers["Content-Security-Policy"] = "default-src 'self'"
     return response
 
 # Include routers
+app.include_router(auth_router)  # Authentication endpoints
+app.include_router(otp_router)   # OTP authentication endpoints
 app.include_router(voice_router)
 app.include_router(chat_router)
 
-# Import and include admin endpoints
+# Import and include admin endpoints (unified admin + model management)
 from api.admin_endpoints import router as admin_router
 app.include_router(admin_router)
+
+# Import and include inventory endpoints
+from api.inventory_endpoints import router as inventory_router
+app.include_router(inventory_router)
+
+# Import and include cart endpoints
+from api.cart_endpoints import router as cart_router
+app.include_router(cart_router)
+
+# Import and include order endpoints
+from api.order_endpoints import router as order_router
+app.include_router(order_router)
 
 # Add global rate limiting
 @app.middleware("http")
@@ -247,11 +393,11 @@ async def login(email: str, password: str):
 
 
 # Main chat endpoint
-@app.post("/api/v5/chat", response_model=ChatResponse)
+@app.post("/api/chat", response_model=ChatResponse)
 @rate_limit(resource="chat", requests=30, seconds=60)
 async def chat_v5(
     request: ChatRequestModel,
-    user: Dict = Depends(get_current_user)
+    req: Request
 ):
     """
     V5 Chat endpoint with full features
@@ -260,31 +406,190 @@ async def chat_v5(
     - Input validated
     - Function schemas supported
     """
-    if not v5_engine:
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="V5 engine not initialized"
-        )
-    
     try:
-        # Build context
+        # Get v5_engine and context_manager from app state
+        v5_engine = getattr(req.app.state, 'v5_engine', None)
+        if not v5_engine:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="V5 engine not initialized"
+            )
+        
+        context_manager = getattr(req.app.state, 'context_manager', None)
+        if not context_manager:
+            logger.warning("Context manager not initialized, proceeding without context persistence")
+        
+        # Build context and get conversation history if available
         context = {
-            'user_id': user.get('user_id'),
-            'role': user.get('role'),
+            'user_id': 'test-user',
+            'role': 'user',
             'session_id': request.session_id,
             'agent_id': request.agent_id or 'dispensary'
         }
         
+        # Get conversation context if context manager is available
+        conversation_context = None
+        if context_manager and request.session_id:
+            try:
+                # Get context and format history for prompt
+                conversation_context = await context_manager.get_context(
+                    request.session_id, 
+                    customer_id=context.get('user_id')
+                )
+                
+                # Get formatted history to include in prompt
+                formatted_history = await context_manager.get_formatted_history(
+                    request.session_id,
+                    limit=10,
+                    format_style='simple'
+                )
+                
+                if formatted_history:
+                    # Prepend history to the message for context
+                    context['conversation_history'] = formatted_history
+                    
+            except Exception as e:
+                logger.error(f"Failed to get conversation context: {e}")
+                # Continue without context on error
+        
         # Process message
-        result = await v5_engine.process_message(
-            message=request.message,
-            context=context,
-            session_id=request.session_id
-        )
+        try:
+            # Make sure the v5_engine has a model loaded
+            if not v5_engine.current_model:
+                # Try to load the default model if none is loaded
+                logger.warning("No model loaded in v5_engine, attempting to load default")
+                v5_engine.load_model("tinyllama_1.1b_chat_v1.0.q4_k_m")
+            
+            # Use the new intent detector for intelligent intent detection
+            intent_result = v5_engine.detect_intent(request.message)
+            
+            # Ensure intent_result is a dictionary
+            if not isinstance(intent_result, dict):
+                logger.warning(f"Intent detector returned non-dict: {type(intent_result)}")
+                intent_result = {"intent": "general", "confidence": 0.3, "method": "fallback"}
+            
+            # Map intent to prompt type
+            detected_intent = intent_result.get('intent', 'general')
+            confidence = intent_result.get('confidence', 0.5)
+            
+            # Log intent detection result
+            logger.info(f"Intent detected: {detected_intent} (confidence: {confidence}, method: {intent_result.get('method', 'unknown')})")
+            
+            # Get prompt_type from intent result metadata (loaded from intent.json)
+            # The prompt_type should be included in the intent configuration
+            prompt_type = intent_result.get('prompt_type', None)
+            
+            # If prompt_type is not in the result, let V5 auto-detect
+            if not prompt_type and detected_intent != 'general':
+                # Try to get it from the intent detector's configuration
+                if hasattr(v5_engine.intent_detector, 'intent_config'):
+                    intents = v5_engine.intent_detector.intent_config.get('intents', {})
+                    intent_config = intents.get(detected_intent, {})
+                    prompt_type = intent_config.get('prompt_type', None)
+            
+            # Build prompt with context if available
+            prompt_with_context = request.message
+            if context.get('conversation_history'):
+                prompt_with_context = f"Previous conversation:\n{context['conversation_history']}\n\nCurrent message: {request.message}"
+            
+            # Get tools configuration from system config
+            tools_enabled = False
+            if hasattr(v5_engine, 'system_config') and v5_engine.system_config:
+                tools_enabled = v5_engine.system_config.get('system', {}).get('tools', {}).get('enabled', False)
+            
+            # Generate response using the correct method with prompt type
+            result = v5_engine.generate(
+                prompt=prompt_with_context,
+                prompt_type=prompt_type,  # Pass the detected prompt type
+                session_id=request.session_id,
+                max_tokens=500,
+                use_tools=tools_enabled,  # Use configuration setting
+                use_context=False
+            )
+            
+            # Ensure result is a dict
+            if not isinstance(result, dict):
+                result = {"text": str(result) if result else ""}
+            
+            # Log the raw result for debugging
+            logger.info(f"Raw generate result: {result}")
+            
+            # Extract text from the result
+            response_text = ""
+            if isinstance(result, dict):
+                response_text = result.get("text", "")
+                if result.get("error"):
+                    logger.error(f"Error from v5_engine: {result.get('error')}")
+                    response_text = f"I encountered an error: {result.get('error')}"
+            else:
+                response_text = str(result) if result else ""
+            
+            if not response_text or response_text.strip() == "":
+                # Try with a more explicit prompt format for TinyLlama
+                formatted_prompt = f"<|system|>\nYou are a helpful cannabis dispensary assistant.\n<|user|>\n{request.message}\n<|assistant|>\n"
+                result = v5_engine.generate(
+                    prompt=formatted_prompt,
+                    session_id=request.session_id,
+                    max_tokens=500,
+                    use_tools=tools_enabled,  # Use configuration setting
+                    use_context=False
+                )
+                # Ensure result is a dict
+                if not isinstance(result, dict):
+                    result = {"text": str(result) if result else ""}
+                logger.info(f"Retry with formatted prompt result: {result}")
+                if isinstance(result, dict):
+                    response_text = result.get("text", "")
+                    
+            if not response_text or response_text.strip() == "":
+                response_text = "I'm here to help! Please ask me a question about cannabis products."
+            
+            # Extract additional metadata from generate result if available
+            metadata = {'session_id': request.session_id}
+            if isinstance(result, dict):
+                metadata['tokens'] = result.get('tokens')
+                metadata['tokens_per_sec'] = result.get('tokens_per_sec')
+                metadata['time_ms'] = result.get('time_ms')
+                metadata['prompt_template'] = result.get('prompt_template')
+                metadata['model'] = result.get('model')
+                
+            result = {
+                'response': response_text,
+                'tools_used': [],
+                'confidence': None,
+                'metadata': metadata
+            }
+        except Exception as e:
+            logger.error(f"Error in process_message: {e}")
+            result = {
+                'response': f"I apologize, but I encountered an error: {str(e)}",
+                'tools_used': [],
+                'confidence': None,
+                'metadata': {'error': str(e)}
+            }
         
         # Extract response
         response_text = result.get('response', "I couldn't process that request")
         tools_used = result.get('tools_used', [])
+        
+        # Save interaction to context if available
+        if context_manager and request.session_id:
+            try:
+                await context_manager.add_interaction(
+                    session_id=request.session_id,
+                    user_message=request.message,
+                    ai_response=response_text,
+                    customer_id=context.get('user_id'),
+                    metadata={
+                        'intent': detected_intent if 'detected_intent' in locals() else None,
+                        'confidence': confidence if 'confidence' in locals() else None,
+                        'tokens': result.get('metadata', {}).get('tokens'),
+                        'response_time': result.get('metadata', {}).get('time_ms')
+                    }
+                )
+            except Exception as e:
+                logger.error(f"Failed to save interaction: {e}")
+                # Continue even if saving fails
         
         return ChatResponse(
             response=response_text,
@@ -303,16 +608,18 @@ async def chat_v5(
 
 
 # Streaming chat endpoint
-@app.post("/api/v5/chat/stream")
+@app.post("/api/chat/stream")
 @rate_limit(resource="chat", requests=20, seconds=60)
 async def chat_v5_stream(
     request: ChatRequestModel,
-    user: Dict = Depends(get_current_user)
+    req: Request
 ):
     """
     V5 Streaming chat endpoint
     Returns Server-Sent Events stream
     """
+    # Get v5_engine from app state
+    v5_engine = getattr(req.app.state, 'v5_engine', None)
     if not v5_engine:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
@@ -323,8 +630,8 @@ async def chat_v5_stream(
         """Generate streaming response"""
         try:
             context = {
-                'user_id': user.get('user_id'),
-                'role': user.get('role'),
+                'user_id': 'test-user',
+                'role': 'user',
                 'session_id': request.session_id
             }
             
@@ -353,12 +660,12 @@ async def chat_v5_stream(
 
 
 # Function calling endpoint
-@app.post("/api/v5/function/{function_name}", response_model=FunctionCallResponse)
+@app.post("/api/function/{function_name}", response_model=FunctionCallResponse)
 @rate_limit(resource="function", requests=20, seconds=60)
 async def call_function(
     function_name: str,
     arguments: Dict[str, Any],
-    user: Dict = Depends(get_current_user)
+    req: Request
 ):
     """
     Direct function calling endpoint
@@ -387,11 +694,10 @@ async def call_function(
 
 
 # List available functions
-@app.get("/api/v5/functions")
+@app.get("/api/functions")
 async def list_functions(
     format: str = "openai",
-    category: Optional[str] = None,
-    user: Dict = Depends(get_current_user)
+    category: Optional[str] = None
 ):
     """
     List available functions in OpenAI or Anthropic format
@@ -405,11 +711,69 @@ async def list_functions(
 
 
 # Product search endpoint
-@app.post("/api/v5/search/products")
+@app.get("/api/context/stats")
+async def get_context_stats(req: Request):
+    """
+    Get context manager statistics
+    """
+    try:
+        context_manager = getattr(req.app.state, 'context_manager', None)
+        if not context_manager:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Context manager not initialized"
+            )
+        
+        stats = await context_manager.get_stats()
+        return stats
+        
+    except Exception as e:
+        logger.error(f"Failed to get context stats: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve context statistics"
+        )
+
+@app.get("/api/conversations/history/{session_id}")
+@rate_limit(resource="history", requests=50, seconds=60)
+async def get_conversation_history(
+    session_id: str,
+    req: Request,
+    limit: int = 20
+):
+    """
+    Get conversation history for a session
+    """
+    try:
+        context_manager = getattr(req.app.state, 'context_manager', None)
+        if not context_manager:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="Context manager not initialized"
+            )
+        
+        history = await context_manager.get_history(session_id, limit=limit)
+        context = await context_manager.get_context(session_id)
+        
+        return {
+            "session_id": session_id,
+            "history": history,
+            "context": context,
+            "message_count": len(history)
+        }
+        
+    except Exception as e:
+        logger.error(f"Failed to get conversation history: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve conversation history"
+        )
+
+@app.post("/api/search/products")
 @rate_limit(resource="search", requests=30, seconds=60)
 async def search_products(
     request: ProductSearchModel,
-    user: Dict = Depends(get_current_user)
+    req: Request
 ):
     """Search for products using V5 engine"""
     if not v5_engine:
@@ -432,18 +796,18 @@ async def search_products(
         action="read_raw",
         endpoint="/api/v1/products/search",
         params=request.dict(exclude_none=True),
-        auth_token=user.get('token')
+        auth_token=None  # No auth for testing
     )
     
     return result
 
 
 # Order creation endpoint
-@app.post("/api/v5/orders")
+@app.post("/api/orders")
 @rate_limit(resource="order", requests=5, seconds=60)
 async def create_order(
     request: OrderCreateModel,
-    user: Dict = Depends(get_current_user)
+    req: Request
 ):
     """Create an order using V5 engine"""
     if not v5_engine:
@@ -466,21 +830,16 @@ async def create_order(
         action="submit",
         operation_id="createOrder",
         data=request.dict(),
-        auth_token=user.get('token')
+        auth_token=None  # No auth for testing
     )
     
     return result
 
 
 # Admin endpoints
-@app.get("/api/v5/admin/stats")
-async def get_stats(user: Dict = Depends(get_current_user)):
-    """Get V5 engine statistics (admin only)"""
-    if user.get('role') != 'admin':
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Admin access required"
-        )
+@app.get("/api/admin/stats")
+async def get_stats():
+    """Get V5 engine statistics (testing mode - no auth required)"""
     
     return {
         "version": "5.0.0",

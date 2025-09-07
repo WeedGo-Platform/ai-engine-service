@@ -20,10 +20,12 @@ class VoiceState(Enum):
 @dataclass
 class AudioConfig:
     """Audio configuration settings"""
-    sample_rate: int = 16000
-    channels: int = 1
-    chunk_size: int = 1024
+    sample_rate: int = 48000  # Professional quality (48kHz)
+    channels: int = 2  # Stereo for better sound
+    chunk_size: int = 4096  # Larger buffer for smoother playback
     format: str = "int16"
+    bit_depth: int = 16  # 16-bit audio (standard)
+    quality: str = "high"  # high, medium, low
     
 @dataclass
 class TranscriptionResult:

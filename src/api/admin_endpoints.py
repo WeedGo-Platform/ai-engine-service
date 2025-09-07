@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 from typing import Dict, Any, Optional, List
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException, Depends, WebSocket, WebSocketDisconnect, status
+from fastapi import APIRouter, HTTPException, Depends, WebSocket, WebSocketDisconnect, status, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
@@ -23,7 +23,7 @@ from services.smart_ai_engine_v5 import SmartAIEngineV5
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/api/v5/admin", tags=["admin"])
+router = APIRouter(prefix="/api/admin", tags=["admin"])
 
 # Global references
 engine_stats = {
@@ -346,10 +346,10 @@ async def get_api_analytics(user: Dict = Depends(check_admin_access)):
         },
         "hourly_data": hourly_data,
         "top_endpoints": [
-            {"endpoint": "/api/v5/chat", "calls": 1250, "avg_time_ms": 42},
-            {"endpoint": "/api/v5/search/products", "calls": 820, "avg_time_ms": 28},
-            {"endpoint": "/api/v5/voice/transcribe", "calls": 450, "avg_time_ms": 185},
-            {"endpoint": "/api/v5/functions/dosage_calculator", "calls": 380, "avg_time_ms": 15}
+            {"endpoint": "/api/chat", "calls": 1250, "avg_time_ms": 42},
+            {"endpoint": "/api/search/products", "calls": 820, "avg_time_ms": 28},
+            {"endpoint": "/api/voice/transcribe", "calls": 450, "avg_time_ms": 185},
+            {"endpoint": "/api/functions/dosage_calculator", "calls": 380, "avg_time_ms": 15}
         ],
         "status_codes": {
             "2xx": 4500,
@@ -433,47 +433,229 @@ async def test_tool(
     }
 
 @router.get("/models")
-async def get_available_models(user: Dict = Depends(check_admin_access)):
-    """Get list of available models from the system"""
+async def get_available_models(request: Request, user: Dict = Depends(check_admin_access)):
+    """Get list of available models from V5 engine's available_models dictionary"""
     try:
-        engine = SmartAIEngineV5()
-        models_list = engine.list_models()
+        models = []
         
-        # If no models found, return default list
-        if not models_list:
-            models_list = [
-                {"name": "qwen_0.5b", "size": 0, "path": "models/qwen_0.5b.gguf", "size_mb": 500, "loaded": False},
-                {"name": "llama3", "size": 0, "path": "models/llama3.gguf", "size_mb": 4000, "loaded": False}
-            ]
+        # Get the V5 engine instance to access its available_models
+        v5_engine = getattr(request.app.state, 'v5_engine', None)
+        
+        if v5_engine and hasattr(v5_engine, 'available_models'):
+            # Use the engine's available models for consistency
+            for model_key, model_path_str in v5_engine.available_models.items():
+                model_path = Path(model_path_str)
+                if model_path.exists():
+                    size_gb = model_path.stat().st_size / (1024**3)
+                    models.append({
+                        "name": model_key,  # This is the key the engine expects
+                        "filename": model_path.name,
+                        "path": str(model_path),
+                        "size_gb": round(size_gb, 2)
+                    })
+        else:
+            # Fallback: scan file system if engine not available
+            model_dir = Path("models/LLM")
+            if model_dir.exists():
+                for model_path in model_dir.rglob("*.gguf"):
+                    size_gb = model_path.stat().st_size / (1024**3)
+                    if size_gb > 0.01:  # At least 10MB
+                        # Apply same transformation as engine's _scan_models
+                        model_key = model_path.stem.replace('.Q4_K_M', '').replace('-', '_').lower()
+                        models.append({
+                            "name": model_key,
+                            "filename": model_path.name,
+                            "path": str(model_path),
+                            "size_gb": round(size_gb, 2)
+                        })
+        
+        # Also get current model from engine
+        try:
+            # Use the singleton v5_engine from app state
+            v5_engine = getattr(request.app.state, 'v5_engine', None)
+            if v5_engine and hasattr(v5_engine, 'current_model_name'):
+                current_model = v5_engine.current_model_name
+            else:
+                current_model = None
+        except:
+            current_model = None
         
         return {
             "status": "success",
-            "models": models_list,
-            "current_model": engine.current_model_name
+            "models": models,
+            "current_model": current_model
         }
     except Exception as e:
-        logger.error(f"Error getting models: {e}")
-        # Return fallback models list
+        logger.error(f"Error scanning models: {e}")
         return {
-            "status": "success",
-            "models": [
-                {"name": "qwen_0.5b", "size": 0, "path": "models/qwen_0.5b.gguf", "size_mb": 500, "loaded": False},
-                {"name": "llama3", "size": 0, "path": "models/llama3.gguf", "size_mb": 4000, "loaded": False}
-            ],
-            "current_model": "qwen_0.5b"
+            "status": "error",
+            "error": str(e),
+            "models": [],
+            "current_model": None
         }
 
+@router.get("/agents")
+async def get_available_agents(user: Dict = Depends(check_admin_access)):
+    """Scan and return available agents from prompts/agents directory"""
+    try:
+        agents = []
+        agents_dir = Path("prompts/agents")
+        
+        if agents_dir.exists():
+            for agent_dir in agents_dir.iterdir():
+                if agent_dir.is_dir():
+                    # Check if prompts.json exists
+                    prompts_file = agent_dir / "prompts.json"
+                    config_file = agent_dir / "config" / "config.json"
+                    
+                    if prompts_file.exists():
+                        agent_info = {
+                            "id": agent_dir.name,
+                            "name": agent_dir.name.capitalize(),
+                            "has_prompts": prompts_file.exists(),
+                            "has_config": config_file.exists(),
+                            "path": str(agent_dir)
+                        }
+                        agents.append(agent_info)
+        
+        return {"agents": agents}
+    except Exception as e:
+        logger.error(f"Error scanning agents: {e}")
+        return {"agents": [], "error": str(e)}
+
+@router.get("/agents/{agent_id}/personalities")
+async def get_agent_personalities(agent_id: str, user: Dict = Depends(check_admin_access)):
+    """Get personalities for a specific agent"""
+    try:
+        personalities = []
+        personality_dir = Path(f"prompts/agents/{agent_id}/personality")
+        
+        if personality_dir.exists():
+            for personality_file in personality_dir.glob("*.json"):
+                personalities.append({
+                    "id": personality_file.stem,
+                    "name": personality_file.stem.capitalize(),
+                    "filename": personality_file.name,
+                    "path": str(personality_file)
+                })
+        
+        return {"personalities": personalities}
+    except Exception as e:
+        logger.error(f"Error scanning personalities: {e}")
+        return {"personalities": [], "error": str(e)}
+
+@router.post("/agents/{agent_id}/personality")
+async def update_personality(
+    agent_id: str,
+    personality_id: str,
+    user: Dict = Depends(check_admin_access),
+    request: Request = None
+):
+    """Update personality without reloading the model"""
+    try:
+        v5_engine = getattr(request.app.state, 'v5_engine', None) if request else None
+        if not v5_engine:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="V5 engine not initialized"
+            )
+        
+        # Check if the current agent matches
+        if v5_engine.current_agent != agent_id:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Current agent is '{v5_engine.current_agent}', not '{agent_id}'. Load the agent first."
+            )
+        
+        # Check if model is loaded
+        if not v5_engine.current_model:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="No model loaded. Load a model first."
+            )
+        
+        # Update the personality
+        success = v5_engine.update_personality(personality_id)
+        
+        if success:
+            return {
+                "success": True,
+                "message": f"Personality updated to {personality_id}",
+                "agent": agent_id,
+                "personality": personality_id,
+                "personality_name": v5_engine.personality_traits.get('name', personality_id)
+            }
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Personality '{personality_id}' not found for agent '{agent_id}'"
+            )
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Failed to update personality: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to update personality: {str(e)}"
+        )
+
+@router.get("/agents/{agent_id}/config")
+async def get_agent_config(agent_id: str, user: Dict = Depends(check_admin_access)):
+    """Get config.json for a specific agent"""
+    try:
+        config_path = Path(f"prompts/agents/{agent_id}/config/config.json")
+        
+        if not config_path.exists():
+            return {"config": None, "message": "No config file found"}
+        
+        with open(config_path, 'r') as f:
+            config = json.load(f)
+        
+        return {"config": config}
+    except Exception as e:
+        logger.error(f"Error loading config: {e}")
+        return {"config": None, "error": str(e)}
+
+@router.get("/active-tools")
+async def get_active_tools(request: Request, user: Dict = Depends(check_admin_access)):
+    """Get currently active tools from loaded configuration"""
+    try:
+        # Use the singleton v5_engine from app state
+        engine = getattr(request.app.state, 'v5_engine', None)
+        if not engine:
+            return {"tools": []}
+        
+        # Get tools from engine
+        tools = []
+        if hasattr(engine, 'tool_manager') and engine.tool_manager:
+            if hasattr(engine.tool_manager, 'tools'):
+                for tool_name in engine.tool_manager.tools.keys():
+                    tools.append({
+                        "name": tool_name,
+                        "enabled": True
+                    })
+        
+        return {"tools": tools}
+    except Exception as e:
+        logger.error(f"Error getting active tools: {e}")
+        return {"tools": []}
+
 @router.get("/config")
-async def get_configuration(user: Dict = Depends(check_admin_access)):
+async def get_configuration(request: Request, user: Dict = Depends(check_admin_access)):
     """Get current configuration"""
     config = get_config()
     
     # Get actual models from engine
     try:
-        engine = SmartAIEngineV5()
-        available_models = list(engine.available_models.keys()) if engine.available_models else ["qwen_0.5b", "llama3"]
+        # Use the singleton v5_engine from app state
+        engine = getattr(request.app.state, 'v5_engine', None)
+        if engine and hasattr(engine, 'available_models'):
+            available_models = list(engine.available_models.keys()) if engine.available_models else []
+        else:
+            available_models = []
     except:
-        available_models = ["qwen_0.5b", "llama3"]
+        available_models = []
     
     # Sanitize sensitive values
     safe_config = {
@@ -488,7 +670,7 @@ async def get_configuration(user: Dict = Depends(check_admin_access)):
             "default": "dispensary"
         },
         "models": {
-            "current": "qwen_0.5b",
+            "current": engine.current_model_name if engine and hasattr(engine, 'current_model_name') else None,
             "available": available_models
         },
         "security": {
@@ -521,48 +703,259 @@ async def update_configuration(
     }
 
 @router.post("/model/load")
+@router.post("/load-model")  # Also support the old endpoint name
 async def load_model(
-    model: str,
-    agent_id: Optional[str] = None,
-    personality_id: Optional[str] = None,
+    data: Dict[str, Any],
+    request: Request,
     user: Dict = Depends(check_admin_access)
 ):
     """Load a model with agent and personality
     
-    This follows the SmartAIEngineV5 pattern where:
-    - When model changes, agent and personality are reloaded
-    - This ensures proper prompt and trait loading
+    Expected payload:
+    {
+        "model": "model_name",
+        "agent": "agent_id" (optional),
+        "personality": "personality_id" (optional),
+        "apply_config": true/false (optional)
+    }
     """
     try:
-        # Get the engine instance
-        engine = SmartAIEngineV5()
+        model = data.get("model")
+        agent_id = data.get("agent")
+        personality_id = data.get("personality", "friendly")
+        apply_config = data.get("apply_config", False)
         
-        # Load model with agent and personality
-        success = engine.load_model(
-            model_name=model,
-            agent_id=agent_id,
-            personality_id=personality_id
-        )
+        if not model:
+            raise HTTPException(status_code=400, detail="Model name is required")
         
-        if success:
-            return {
-                "status": "success",
-                "model": model,
-                "agent": agent_id,
-                "personality": personality_id,
-                "message": f"Model {model} loaded with agent={agent_id}, personality={personality_id}"
-            }
+        # Get the global engine instance from app state
+        v5_engine = getattr(request.app.state, 'v5_engine', None)
+        if not v5_engine:
+            raise HTTPException(status_code=503, detail="V5 engine not initialized")
+        
+        # The model name from /models endpoint is already in the correct format
+        # (it comes from v5_engine.available_models keys)
+        # No transformation needed - use it directly
+        model_key = model
+        
+        # Load model with agent and personality if specified
+        if agent_id:
+            success = v5_engine.load_model(model_key, agent_id=agent_id, personality_id=personality_id)
         else:
-            raise HTTPException(
-                status_code=500,
-                detail=f"Failed to load model {model}"
-            )
+            success = v5_engine.load_model(model_key)
+        if not success:
+            raise HTTPException(status_code=500, detail=f"Failed to load model: {model}")
+        
+        # The load_model function already sets current_agent and current_personality
+        # and loads the agent personality, so we don't need to do it again
+        
+        # Apply config if requested
+        if agent_id and apply_config:
+            # Try both possible config paths
+            config_path = Path(f"prompts/agents/{agent_id}/config/config.json")
+            if not config_path.exists():
+                # Try without the extra config directory
+                config_path = Path(f"prompts/agents/{agent_id}/config.json")
+            
+            if config_path.exists():
+                with open(config_path, 'r') as f:
+                    config = json.load(f)
+                
+                # Apply model settings to engine
+                if hasattr(v5_engine, 'model') and v5_engine.model:
+                    model_settings = config.get('model_settings', {})
+                    if model_settings:
+                        # Apply temperature, max_tokens, etc.
+                        if 'temperature' in model_settings:
+                            v5_engine.temperature = model_settings['temperature']
+                        if 'max_tokens' in model_settings:
+                            v5_engine.max_tokens = model_settings['max_tokens']
+                        if 'top_p' in model_settings:
+                            v5_engine.top_p = model_settings['top_p']
+                        if 'repeat_penalty' in model_settings:
+                            v5_engine.repeat_penalty = model_settings['repeat_penalty']
+                
+                # Store config in engine for reference
+                v5_engine.agent_config = config
+                logger.info(f"Applied config for agent: {agent_id} with settings: {config.get('model_settings', {})}")
+        
+        # Include config info in response
+        config_applied = False
+        config_details = {}
+        if agent_id and apply_config:
+            # Try both possible config paths
+            config_path = Path(f"prompts/agents/{agent_id}/config/config.json")
+            if not config_path.exists():
+                config_path = Path(f"prompts/agents/{agent_id}/config.json")
+            
+            if config_path.exists():
+                config_applied = True
+                if hasattr(v5_engine, 'agent_config'):
+                    config_details = {
+                        "name": v5_engine.agent_config.get("agent_name", ""),
+                        "version": v5_engine.agent_config.get("version", ""),
+                        "temperature": v5_engine.agent_config.get("model_settings", {}).get("temperature"),
+                        "max_tokens": v5_engine.agent_config.get("model_settings", {}).get("max_tokens")
+                    }
+        
+        return {
+            "success": True,
+            "message": f"Model {model} loaded successfully",
+            "model": model,
+            "agent": agent_id,
+            "personality": personality_id,
+            "config_applied": config_applied,
+            "config_details": config_details
+        }
+    
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Model load error: {e}")
         raise HTTPException(
             status_code=500,
             detail=f"Failed to load model: {str(e)}"
         )
+
+@router.get("/model")
+async def get_current_model(
+    request: Request,
+    # user: Dict = Depends(check_admin_access)  # Disabled for development
+):
+    """Get current model information and readiness status"""
+    v5_engine = getattr(request.app.state, 'v5_engine', None)
+    if not v5_engine:
+        return {
+            "ready": False,
+            "loaded": False,
+            "model": None,
+            "agent": None,
+            "personality": None,
+            "config_applied": False,
+            "message": "Engine not initialized"
+        }
+    
+    # Check if model is actually loaded with more detailed checks
+    has_current_model = hasattr(v5_engine, 'current_model')
+    current_model_value = getattr(v5_engine, 'current_model', None) if has_current_model else None
+    model_loaded = has_current_model and current_model_value is not None
+    
+    # Also check for current_model_name as a backup
+    has_model_name = hasattr(v5_engine, 'current_model_name')
+    current_model_name = getattr(v5_engine, 'current_model_name', None) if has_model_name else None
+    
+    # Log for debugging
+    logger.info(f"Model check - has_current_model: {has_current_model}, model_loaded: {model_loaded}, current_model_name: {current_model_name}")
+    
+    if not model_loaded:
+        return {
+            "ready": False,
+            "loaded": False,
+            "model": None,
+            "agent": None,
+            "personality": None,
+            "config_applied": False,
+            "message": "No model loaded"
+        }
+    
+    # Get current model info
+    current_model = getattr(v5_engine, 'current_model', None)
+    current_agent = getattr(v5_engine, 'current_agent', None)
+    current_personality = getattr(v5_engine, 'current_personality', None)
+    config_applied = hasattr(v5_engine, 'agent_config') and v5_engine.agent_config is not None
+    
+    config_details = {}
+    if config_applied and hasattr(v5_engine, 'agent_config'):
+        config_details = {
+            "name": v5_engine.agent_config.get("agent_name", ""),
+            "version": v5_engine.agent_config.get("version", ""),
+            "temperature": v5_engine.agent_config.get("model_settings", {}).get("temperature"),
+            "max_tokens": v5_engine.agent_config.get("model_settings", {}).get("max_tokens")
+        }
+    
+    return {
+        "ready": True,
+        "loaded": True,
+        "model": current_model_name,  # Use the model name string, not the Llama object
+        "agent": current_agent,
+        "personality": current_personality,
+        "config_applied": config_applied,
+        "config_details": config_details if config_applied else None,
+        "message": "Model ready for inference"
+    }
+
+@router.get("/model/status")
+async def get_model_status(
+    request: Request,
+    # user: Dict = Depends(check_admin_access)  # Disabled for development
+):
+    """Get current model loading status (legacy endpoint, use /model instead)"""
+    v5_engine = getattr(request.app.state, 'v5_engine', None)
+    if not v5_engine:
+        return {
+            "loaded": False,
+            "model": None,
+            "agent": None,
+            "personality": None,
+            "config_applied": False
+        }
+    
+    # Check if model is actually loaded
+    model_loaded = hasattr(v5_engine, 'current_model') and v5_engine.current_model is not None
+    
+    if not model_loaded:
+        return {
+            "loaded": False,
+            "model": None,
+            "agent": None,
+            "personality": None,
+            "config_applied": False
+        }
+    
+    # Get current model info
+    current_model_name = getattr(v5_engine, 'current_model_name', None)
+    current_agent = getattr(v5_engine, 'current_agent', None)
+    current_personality = getattr(v5_engine, 'current_personality', None)
+    config_applied = hasattr(v5_engine, 'agent_config') and v5_engine.agent_config is not None
+    
+    config_details = {}
+    if config_applied and hasattr(v5_engine, 'agent_config'):
+        config_details = {
+            "name": v5_engine.agent_config.get("agent_name", ""),
+            "version": v5_engine.agent_config.get("version", ""),
+            "temperature": v5_engine.agent_config.get("model_settings", {}).get("temperature"),
+            "max_tokens": v5_engine.agent_config.get("model_settings", {}).get("max_tokens")
+        }
+    
+    return {
+        "loaded": True,
+        "model": current_model_name,
+        "agent": current_agent,
+        "personality": current_personality,
+        "config_applied": config_applied,
+        "config_details": config_details if config_applied else None
+    }
+
+@router.get("/model/active-tools")
+async def get_active_tools(
+    request: Request,
+    user: Dict = Depends(check_admin_access)
+):
+    """Get currently active tools from loaded agent"""
+    v5_engine = getattr(request.app.state, 'v5_engine', None)
+    if not v5_engine:
+        return {"tools": []}
+    
+    # Get active tools from engine
+    tools = []
+    if hasattr(v5_engine, 'tool_manager') and v5_engine.tool_manager:
+        if hasattr(v5_engine.tool_manager, 'tools'):
+            tools = [
+                {"name": tool_name, "enabled": True} 
+                for tool_name in v5_engine.tool_manager.tools.keys()
+            ]
+    
+    return {"tools": tools}
 
 @router.get("/health")
 async def get_health(user: Dict = Depends(check_admin_access)):

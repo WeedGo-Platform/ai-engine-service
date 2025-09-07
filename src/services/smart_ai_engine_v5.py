@@ -29,6 +29,14 @@ except ImportError:
     TOOLS_AVAILABLE = False
     logging.warning("Tool and context modules not available")
 
+# Import intent detector
+try:
+    from services.intent_detector import IntentDetectorInterface, LLMIntentDetector, PatternIntentDetector
+    INTENT_DETECTOR_AVAILABLE = True
+except ImportError:
+    INTENT_DETECTOR_AVAILABLE = False
+    logging.warning("Intent detector module not available")
+
 logger = logging.getLogger(__name__)
 
 class SmartAIEngineV5:
@@ -74,6 +82,10 @@ class SmartAIEngineV5:
         self.session_id = None
         self._initialize_tools_and_context()
         
+        # Initialize intent detector
+        self.intent_detector = None
+        self._initialize_intent_detector()
+        
         logger.info(f"SmartAIEngineV5 initialized with {len(self.available_models)} models")
         self._log_system_resources()
     
@@ -88,6 +100,66 @@ class SmartAIEngineV5:
             logger.info(f"  - Memory used: {memory.percent}%")
         except Exception as e:
             logger.warning(f"Could not get system resources: {e}")
+    
+    def _initialize_intent_detector(self):
+        """Initialize intent detector based on configuration"""
+        if not INTENT_DETECTOR_AVAILABLE:
+            logger.warning("Intent detector not available")
+            return
+        
+        try:
+            # Check config for detector type
+            detector_type = "llm"  # default
+            if self.system_config:
+                detector_type = self.system_config.get('intent_detection', {}).get('type', 'llm')
+            
+            # Initialize appropriate detector
+            if detector_type == 'llm':
+                self.intent_detector = LLMIntentDetector(v5_engine=self)
+                logger.info("Initialized LLM-based intent detector")
+            elif detector_type == 'pattern':
+                self.intent_detector = PatternIntentDetector()
+                logger.info("Initialized pattern-based intent detector")
+            else:
+                self.intent_detector = LLMIntentDetector(v5_engine=self)
+                logger.info(f"Unknown detector type '{detector_type}', using LLM detector")
+                
+        except Exception as e:
+            logger.error(f"Failed to initialize intent detector: {e}")
+            self.intent_detector = None
+    
+    def detect_intent(self, message: str, language: str = "auto") -> Dict[str, Any]:
+        """Detect intent using the configured detector"""
+        if not self.intent_detector:
+            # Fallback to basic detection
+            return self._basic_intent_detection(message)
+        
+        try:
+            # Detect intent
+            result = self.intent_detector.detect(message, language)
+            
+            # Ensure result is a dictionary
+            if not isinstance(result, dict):
+                logger.warning(f"Intent detector returned non-dict: {type(result)} - {result}")
+                return self._basic_intent_detection(message)
+            
+            # Log detection result
+            logger.info(f"Intent detected: {result.get('intent')} (confidence: {result.get('confidence')})")
+            
+            return result
+            
+        except AttributeError as e:
+            # Handle the specific case where we get a string instead of dict
+            logger.error(f"Intent detection returned invalid type (likely string): {e}")
+            return self._basic_intent_detection(message)
+        except Exception as e:
+            logger.error(f"Intent detection failed: {e}")
+            return self._basic_intent_detection(message)
+    
+    def _basic_intent_detection(self, message: str) -> Dict[str, Any]:
+        """Basic fallback when intent detector is not available"""
+        # No pattern matching - just return general intent
+        return {"intent": "general", "confidence": 0.3, "method": "no_detector"}
     
     def _initialize_tools_and_context(self):
         """Initialize tool manager and context storage based on config"""
@@ -121,7 +193,7 @@ class SmartAIEngineV5:
                 else:
                     store = MemoryContextStore()
                 
-                self.context_manager = ContextManager(store, context_config.get('settings', {}))
+                self.context_manager = ContextManager(store)
                 self.session_id = str(uuid.uuid4())
                 logger.info(f"Context manager initialized with {storage_type} storage")
                 
@@ -261,34 +333,121 @@ class SmartAIEngineV5:
         logger.warning("No system config found, using defaults")
         return {}
     
+    def update_personality(self, personality_id: str) -> bool:
+        """Update personality without reloading model or agent configuration"""
+        try:
+            if not self.current_agent:
+                logger.error("No agent loaded - cannot update personality")
+                return False
+            
+            logger.info(f"=== UPDATING PERSONALITY ===")
+            logger.info(f"Current agent: {self.current_agent}, New personality: {personality_id}")
+            
+            # Load new personality traits
+            agent_personality_path = Path(f"prompts/agents/{self.current_agent}/personality/{personality_id}.json")
+            
+            if agent_personality_path.exists():
+                with open(agent_personality_path, 'r') as f:
+                    personality_data = json.load(f)
+                    self.personality_traits = personality_data.get('personality', {})
+                    self.current_personality_type = personality_id
+                    logger.info(f"✅ UPDATED PERSONALITY to '{personality_id}' for agent '{self.current_agent}'")
+                    logger.info(f"  Personality name: {self.personality_traits.get('name')}")
+                    
+                    # Update use_prompts flag
+                    self.use_prompts = bool(self.agent_prompts or self.personality_traits or self.system_config)
+                    return True
+            else:
+                logger.error(f"❌ PERSONALITY NOT FOUND at {agent_personality_path}")
+                return False
+                
+        except Exception as e:
+            logger.error(f"Failed to update personality: {e}")
+            return False
+    
     def load_agent_personality(self, agent_id: str = None, personality_id: str = None) -> bool:
         """Load agent and personality combination for modular system"""
         try:
+            logger.info(f"=== LOADING AGENT PERSONALITY ===")
+            logger.info(f"Agent ID: {agent_id}, Personality ID: {personality_id}")
+            
             # Reset current configuration
             self.agent_prompts = {}
             self.personality_traits = {}
+            self.system_config = {}
             self.current_agent = agent_id
             self.current_personality_type = personality_id
             
-            # Load agent prompts
+            # Load agent configuration and prompts
             if agent_id:
+                # First load the config.json if it exists
+                config_path = Path(f"prompts/agents/{agent_id}/config.json")
+                if config_path.exists():
+                    with open(config_path, 'r') as f:
+                        config_data = json.load(f)
+                        # Store the entire config including system_behavior settings
+                        self.system_config = config_data
+                        # Extract system behavior settings specifically
+                        if 'system_behavior' in config_data:
+                            self.system_config.update(config_data['system_behavior'])
+                        if 'default_behavior' in config_data:
+                            self.system_config.update(config_data['default_behavior'])
+                        if 'safety_guidelines' in config_data:
+                            self.system_config['safety_guidelines'] = config_data['safety_guidelines']
+                        logger.info(f"✅ LOADED CONFIG.JSON for '{agent_id}' - Keys: {list(config_data.keys())}")
+                        if 'model_settings' in config_data:
+                            logger.info(f"  Model settings: {config_data['model_settings']}")
+                else:
+                    logger.warning(f"❌ CONFIG.JSON NOT FOUND at {config_path}")
+                
+                # Load intent configuration for this agent
+                if self.intent_detector:
+                    loaded = self.intent_detector.load_intents(agent_id)
+                    logger.info(f"✅ LOADED INTENT.JSON for agent {agent_id}: {loaded}")
+                else:
+                    logger.warning(f"❌ Intent detector not initialized")
+                
+                # Then load the prompts.json
                 agent_path = Path(f"prompts/agents/{agent_id}/prompts.json")
                 if agent_path.exists():
                     with open(agent_path, 'r') as f:
                         agent_data = json.load(f)
                         self.agent_prompts = agent_data.get('prompts', {})
-                        logger.info(f"Loaded agent '{agent_id}' with {len(self.agent_prompts)} prompts")
+                        logger.info(f"✅ LOADED PROMPTS.JSON for '{agent_id}' - {len(self.agent_prompts)} prompts")
+                        logger.info(f"  Available prompts: {list(self.agent_prompts.keys())}")
+                else:
+                    logger.warning(f"❌ PROMPTS.JSON NOT FOUND at {agent_path}")
             
             # Load personality traits
             if personality_id:
+                # First check for personality in agent's personality folder (note: singular 'personality')
+                agent_personality_path = Path(f"prompts/agents/{agent_id}/personality/{personality_id}.json") if agent_id else None
                 personality_path = Path(f"prompts/personality/{personality_id}/traits.json")
-                if personality_path.exists():
+                
+                if agent_personality_path and agent_personality_path.exists():
+                    # Load from agent-specific personality
+                    with open(agent_personality_path, 'r') as f:
+                        personality_data = json.load(f)
+                        self.personality_traits = personality_data.get('personality', {})
+                        logger.info(f"✅ LOADED PERSONALITY '{personality_id}' for agent '{agent_id}'")
+                        logger.info(f"  Personality name: {self.personality_traits.get('name')}")
+                        logger.info(f"  Traits: {self.personality_traits.get('traits', {})}")
+                elif personality_path.exists():
+                    # Load from global personality folder
                     with open(personality_path, 'r') as f:
                         personality_data = json.load(f)
                         self.personality_traits = personality_data.get('personality', {})
-                        logger.info(f"Loaded personality '{personality_id}' - {self.personality_traits.get('name')}")
+                        logger.info(f"Loaded global personality '{personality_id}' - {self.personality_traits.get('name')}")
             
-            self.use_prompts = bool(self.agent_prompts or self.personality_traits)
+            self.use_prompts = bool(self.agent_prompts or self.personality_traits or self.system_config)
+            
+            # Log summary of what was loaded
+            logger.info(f"=== LOADING COMPLETE ===")
+            logger.info(f"  use_prompts: {self.use_prompts}")
+            logger.info(f"  agent_prompts loaded: {len(self.agent_prompts)} prompts")
+            logger.info(f"  personality loaded: {self.personality_traits.get('name', 'None')}")
+            logger.info(f"  system_config loaded: {bool(self.system_config)}")
+            
             return True
             
         except Exception as e:
@@ -413,13 +572,27 @@ class SmartAIEngineV5:
             return self.apply_prompt_template(user_input, prompt_type)
         
         template_data = self.agent_prompts[prompt_type]
-        template_str = template_data.get('template', '')
+        
+        # Handle both string and dict formats
+        if isinstance(template_data, str):
+            # If template_data is a string, use it directly as the template
+            template_str = template_data
+            use_system_format = False
+        elif isinstance(template_data, dict):
+            template_str = template_data.get('template', '')
+        else:
+            # Fallback for unexpected types
+            logger.warning(f"Unexpected template_data type: {type(template_data)}")
+            return user_input
         
         if not template_str:
             return user_input
         
-        # Check if this should be used as a system message
-        use_system_format = template_data.get('system_format', False)
+        # Check if this should be used as a system message (only for dict format)
+        if not isinstance(template_data, dict):
+            use_system_format = False
+        else:
+            use_system_format = template_data.get('system_format', False)
         
         # Replace personality variables - also check self.current_personality for backward compatibility
         personality_data = self.personality_traits or self.current_personality
@@ -443,25 +616,35 @@ class SmartAIEngineV5:
             template_str = template_str.replace('{personality_name}', 'Assistant')
             template_str = template_str.replace('{personality_traits}', '')
         
-        # Replace other common variables with defaults
-        variables = template_data.get('variables', [])
+        # Replace other common variables with defaults (only for dict format)
+        if isinstance(template_data, dict):
+            variables = template_data.get('variables', [])
+        else:
+            # For string templates, check for common variables in the template itself
+            variables = []
+            if '{message}' in template_str:
+                variables.append('message')
+        
         for var in variables:
             if var == 'message':
                 # Don't replace message in system format
                 if not use_system_format:
                     template_str = template_str.replace('{message}', user_input)
             elif var == 'effects':
-                template_str = template_str.replace('{effects}', 'relaxation')
+                template_str = template_str.replace('{effects}', '')
             elif var == 'budget':
-                template_str = template_str.replace('{budget}', '50')
+                template_str = template_str.replace('{budget}', '')
             elif var == 'experience':
-                template_str = template_str.replace('{experience}', 'intermediate')
+                template_str = template_str.replace('{experience}', '')
             else:
                 template_str = template_str.replace(f'{{{var}}}', '')
         
         # If system format, create a system-user prompt structure
         if use_system_format:
-            return f"System: {template_str}\n\nUser: {user_input}\nAssistant:"
+            # Get format from config or return empty
+            if self.system_config and 'prompt_format' in self.system_config:
+                return self.system_config['prompt_format'].format(system=template_str, user=user_input)
+            return user_input
         
         return template_str
     
@@ -475,8 +658,13 @@ class SmartAIEngineV5:
             template_result = self.apply_prompt_template(user_input, prompt_type)
             template = self.get_prompt_template(prompt_type)
         
+        # Handle case where template is a string (backward compatibility)
+        if isinstance(template, str):
+            # If template is just a string, wrap it in a dict format
+            template = {'template': template}
+        
         # Get template config with better defaults
-        if template:
+        if template and isinstance(template, dict):
             # Extract max_tokens from template or constraints
             max_tokens = template.get('max_tokens')
             if not max_tokens and 'constraints' in template:
@@ -487,15 +675,15 @@ class SmartAIEngineV5:
             if not stop_sequences and 'constraints' in template:
                 stop_sequences = template['constraints'].get('stop_sequences', [])
             if not stop_sequences:
-                # Default stop sequences for cannabis dispensary context
-                stop_sequences = ["\nCustomer:", "\nBudtender:", "\n\n", "\\n4.", "\\n\\n"]
+                # Get stop sequences from config only
+                stop_sequences = self.system_config.get('default_stop_sequences', []) if self.system_config else []
             
             config = {
-                'max_tokens': max_tokens or 50,  # Default to 50 if not specified
+                'max_tokens': max_tokens or (self.system_config.get('default_max_tokens') if self.system_config else None),
                 'stop_sequences': stop_sequences
             }
         else:
-            config = {'max_tokens': 50, 'stop_sequences': []}
+            config = {'max_tokens': self.system_config.get('default_max_tokens') if self.system_config else None, 'stop_sequences': []}
             
         return template_result, config
     
@@ -539,15 +727,14 @@ class SmartAIEngineV5:
         if 'personality' in variables:
             if self.current_personality:
                 # Use loaded personality data
-                personality_str = f"You are {self.current_personality.get('name', 'a budtender')}, {self.current_personality.get('description', 'a helpful cannabis budtender')}. "
+                personality_str = f"You are {self.current_personality.get('name', '')}, {self.current_personality.get('description', '')}. "
                 if self.current_personality.get('traits'):
                     traits = self.current_personality['traits']
-                    personality_str += f"You are {traits.get('age', '')} years old with {traits.get('communication_style', 'friendly')} communication style. "
-                    personality_str += f"Your approach is {traits.get('sales_approach', 'helpful')} and {traits.get('formality', 'professional')}."
+                    personality_str += f"You are {traits.get('age', '')} years old with {traits.get('communication_style', '')} communication style. "
+                    personality_str += f"Your approach is {traits.get('sales_approach', '')} and {traits.get('formality', '')}."
                 formatted_prompt = formatted_prompt.replace('{personality}', personality_str)
             else:
-                formatted_prompt = formatted_prompt.replace('{personality}', 
-                    "You are a helpful cannabis budtender assistant. Be friendly and knowledgeable about cannabis products.")
+                formatted_prompt = formatted_prompt.replace('{personality}', '')
         
         # Replace other common placeholders with defaults
         if 'conversation_text' in variables:
@@ -555,17 +742,21 @@ class SmartAIEngineV5:
         if 'customer_context' in variables:
             formatted_prompt = formatted_prompt.replace('{customer_context}', '')
         if 'customer_profile' in variables:
-            formatted_prompt = formatted_prompt.replace('{customer_profile}', 'General customer')
+            formatted_prompt = formatted_prompt.replace('{customer_profile}', '')
         if 'available_products' in variables:
-            formatted_prompt = formatted_prompt.replace('{available_products}', 'Various cannabis products')
+            formatted_prompt = formatted_prompt.replace('{available_products}', '')
         if 'product_data' in variables:
-            formatted_prompt = formatted_prompt.replace('{product_data}', 'Product information')
+            formatted_prompt = formatted_prompt.replace('{product_data}', '')
         if 'products_shown' in variables:
-            formatted_prompt = formatted_prompt.replace('{products_shown}', 'No products shown yet')
+            formatted_prompt = formatted_prompt.replace('{products_shown}', '')
         
         # If system format, create a system-user prompt structure
         if use_system_format:
-            formatted_prompt = f"System: {formatted_prompt}\n\nUser: {user_input}\nAssistant:"
+            # Get format from config or return as-is
+            if self.system_config and 'prompt_format' in self.system_config:
+                formatted_prompt = self.system_config['prompt_format'].format(system=formatted_prompt, user=user_input)
+            else:
+                formatted_prompt = user_input
         
         logger.info(f"Applied template '{prompt_type}' to user input")
         return formatted_prompt
@@ -773,7 +964,9 @@ class SmartAIEngineV5:
             self.current_model_name = model_name
             logger.info(f"✅ Successfully loaded {model_name}")
             if self.use_prompts:
-                logger.info(f"✅ With {sum(len(p) for p in self.loaded_prompts.values())} prompts")
+                # Count prompts from either agent system or legacy system
+                prompt_count = len(self.agent_prompts) if self.agent_prompts else sum(len(p) for p in self.loaded_prompts.values())
+                logger.info(f"✅ With {prompt_count} prompts loaded")
             return True
             
         except Exception as e:
@@ -794,13 +987,13 @@ class SmartAIEngineV5:
             if rules:
                 instruction_parts.append("Follow these guidelines:\n" + "\n".join(f"- {rule}" for rule in rules[:2]))
         
-        # Add response style
+        # Add response style from config
         if system_cfg.get('default_behavior', {}).get('response_style'):
             style = system_cfg['default_behavior']['response_style']
-            if style == 'conversational':
-                instruction_parts.append("Respond in a friendly, conversational manner.")
-            elif style == 'formal':
-                instruction_parts.append("Respond in a professional, formal manner.")
+            # Get style descriptions from config
+            style_descriptions = system_cfg.get('response_style_descriptions', {})
+            if style in style_descriptions:
+                instruction_parts.append(style_descriptions[style])
         
         return "\n".join(instruction_parts) if instruction_parts else ""
     
@@ -830,18 +1023,86 @@ class SmartAIEngineV5:
         return response
     
     def get_config_temperature(self) -> float:
-        """Get temperature setting from system config"""
+        """Get temperature setting from agent config or system config"""
+        # First check if we have agent config with model settings
+        if hasattr(self, 'agent_config') and self.agent_config:
+            model_settings = self.agent_config.get('model_settings', {})
+            if 'temperature' in model_settings:
+                return model_settings['temperature']
+        
+        # Fall back to system config
         if self.system_config and 'system' in self.system_config:
             default_behavior = self.system_config['system'].get('default_behavior', {})
             return default_behavior.get('temperature_default', 0.7)
         return 0.7
     
     def get_config_max_context(self) -> int:
-        """Get max context length from system config"""
+        """Get max context length from agent config or system config"""
+        # First check agent config
+        if hasattr(self, 'agent_config') and self.agent_config:
+            model_settings = self.agent_config.get('model_settings', {})
+            if 'context_window' in model_settings:
+                return model_settings['context_window']
+        
+        # Fall back to system config
         if self.system_config and 'system' in self.system_config:
             default_behavior = self.system_config['system'].get('default_behavior', {})
             return default_behavior.get('max_context_length', 4096)
         return 4096
+    
+    def get_config_max_tokens(self) -> int:
+        """Get max tokens from agent config"""
+        if hasattr(self, 'agent_config') and self.agent_config:
+            model_settings = self.agent_config.get('model_settings', {})
+            if 'max_tokens' in model_settings:
+                return model_settings['max_tokens']
+        return 512  # Default
+    
+    def get_config_top_p(self) -> float:
+        """Get top_p from agent config"""
+        if hasattr(self, 'agent_config') and self.agent_config:
+            model_settings = self.agent_config.get('model_settings', {})
+            if 'top_p' in model_settings:
+                return model_settings['top_p']
+        return 0.95  # Default
+    
+    def get_config_repeat_penalty(self) -> float:
+        """Get repeat penalty from agent config"""
+        if hasattr(self, 'agent_config') and self.agent_config:
+            model_settings = self.agent_config.get('model_settings', {})
+            if 'repeat_penalty' in model_settings:
+                return model_settings['repeat_penalty']
+        return 1.1  # Default
+    
+    def _generate_internal(self, prompt: str, max_tokens: int = 20, temperature: float = 0.1, top_p: float = 0.9) -> Dict[str, Any]:
+        """Internal generation method for intent detection to avoid recursion"""
+        if not self.current_model:
+            return {"text": "general", "error": "No model loaded"}
+        
+        try:
+            # Direct model call without any prompt processing or intent detection
+            response = self.current_model(
+                prompt,
+                max_tokens=max_tokens,
+                temperature=temperature,
+                top_p=top_p,
+                stop=["\n", ".", ","],
+                echo=False,
+                stream=False
+            )
+            
+            # Handle different response types
+            if isinstance(response, str):
+                return {"text": response.strip() if response else "general"}
+            elif isinstance(response, dict) and response.get("choices"):
+                text = response["choices"][0].get("text", "")
+                return {"text": text.strip() if text else "general"}
+            else:
+                return {"text": "general"}
+                
+        except Exception as e:
+            logger.error(f"Internal generation failed: {e}")
+            return {"text": "general", "error": str(e)}
     
     def _extract_tool_calls(self, response: str) -> List[Dict]:
         """Extract tool calls from LLM response"""
@@ -906,9 +1167,9 @@ class SmartAIEngineV5:
     def generate(self, 
                  prompt: str, 
                  prompt_type: Optional[str] = None,
-                 max_tokens: int = 512,
+                 max_tokens: int = None,
                  temperature: float = None,  # Changed to None to allow config override
-                 top_p: float = 0.95,
+                 top_p: float = None,
                  top_k: int = 40,
                  use_tools: bool = False,
                  use_context: bool = False,
@@ -924,9 +1185,13 @@ class SmartAIEngineV5:
                 "used_prompt": False
             }
         
-        # Apply system config temperature if not explicitly provided
+        # Apply config values if not explicitly provided
         if temperature is None:
             temperature = self.get_config_temperature()
+        if max_tokens is None:
+            max_tokens = self.get_config_max_tokens()
+        if top_p is None:
+            top_p = self.get_config_top_p()
         
         try:
             start_time = time.time()
@@ -964,47 +1229,70 @@ class SmartAIEngineV5:
             template_max_tokens = None
             template_stop_sequences = None
             if prompt_type and self.use_prompts:
-                template_applied, template_config = self.apply_prompt_template_with_config(prompt, prompt_type)
+                try:
+                    template_applied, template_config = self.apply_prompt_template_with_config(prompt, prompt_type)
+                except ValueError as e:
+                    # Handle unpacking error
+                    logger.error(f"Failed to unpack template result: {e}")
+                    template_applied = prompt
+                    template_config = {}
                 if template_applied and template_applied != prompt:  # Only use if template was actually applied
                     final_prompt = template_applied
                     used_template = prompt_type
-                    template_max_tokens = template_config.get('max_tokens', 50)  # Default to 50 if not specified
+                    # Ensure template_config is a dict before calling .get()
+                    if not isinstance(template_config, dict):
+                        template_config = {}
+                    template_max_tokens = template_config.get('max_tokens') or (self.system_config.get('default_max_tokens') if self.system_config else None)
                     template_stop_sequences = template_config.get('stop_sequences', [])
                     logger.info(f"Applied template '{prompt_type}' with max_tokens={template_max_tokens}")
             elif self.use_prompts and not prompt_type:
                 # Auto-detect prompt type based on content and available prompts
                 detected_type = None
-                if any(word in prompt.lower() for word in ['hello', 'hi', 'hey', 'greetings', 'hola', 'bonjour']):
-                    # Try different greeting prompts
-                    if self.get_prompt_template('greeting_response'):
-                        detected_type = 'greeting_response'
-                    elif self.get_prompt_template('greeting_detection'):
-                        detected_type = 'greeting_detection'
-                    elif self.get_prompt_template('greeting'):
-                        detected_type = 'greeting'
-                elif any(word in prompt.lower() for word in ['want', 'need', 'looking for', 'show me', 'find', 'offer']):
-                    # Try search/product prompts
-                    if self.get_prompt_template('product_search'):
-                        detected_type = 'product_search'
-                    elif self.get_prompt_template('search_extraction_enhanced'):
-                        detected_type = 'search_extraction_enhanced'
+                # Use intent detector for auto-detection instead of hardcoded patterns
+                if self.intent_detector:
+                    intent_result = self.detect_intent(prompt)
+                    # Ensure intent_result is a dictionary before calling .get()
+                    if isinstance(intent_result, dict):
+                        detected_type = intent_result.get('prompt_type', None)
+                    else:
+                        logger.warning(f"detect_intent returned non-dict: {type(intent_result)}")
+                        detected_type = None
+                else:
+                    # Fallback to no auto-detection if intent detector not available
+                    detected_type = None
                 
                 # Use detected type or fall back to default
                 if detected_type:
-                    template_applied, template_config = self.apply_prompt_template_with_config(prompt, detected_type)
+                    try:
+                        template_applied, template_config = self.apply_prompt_template_with_config(prompt, detected_type)
+                    except ValueError as e:
+                        logger.error(f"Failed to unpack template result for detected type: {e}")
+                        template_applied = prompt
+                        template_config = {}
                     if template_applied and template_applied != prompt:
                         final_prompt = template_applied
                         used_template = detected_type
-                        template_max_tokens = template_config.get('max_tokens', 50)
+                        # Ensure template_config is a dict before calling .get()
+                        if not isinstance(template_config, dict):
+                            template_config = {}
+                        template_max_tokens = template_config.get('max_tokens') or (self.system_config.get('default_max_tokens') if self.system_config else None)
                         template_stop_sequences = template_config.get('stop_sequences', [])
                         logger.info(f"Auto-detected and applied template '{detected_type}'")
                 elif self.get_prompt_template('default'):
                     # Use default template for any unmatched input
-                    template_applied, template_config = self.apply_prompt_template_with_config(prompt, 'default')
+                    try:
+                        template_applied, template_config = self.apply_prompt_template_with_config(prompt, 'default')
+                    except ValueError as e:
+                        logger.error(f"Failed to unpack template result for default: {e}")
+                        template_applied = prompt
+                        template_config = {}
                     if template_applied and template_applied != prompt:
                         final_prompt = template_applied
                         used_template = 'default'
-                        template_max_tokens = template_config.get('max_tokens', 50)
+                        # Ensure template_config is a dict before calling .get()
+                        if not isinstance(template_config, dict):
+                            template_config = {}
+                        template_max_tokens = template_config.get('max_tokens') or (self.system_config.get('default_max_tokens') if self.system_config else None)
                         template_stop_sequences = template_config.get('stop_sequences', [])
                         logger.info(f"Applied default template for unmatched input")
                 else:
@@ -1017,7 +1305,11 @@ class SmartAIEngineV5:
             if self.system_config and not used_template:
                 system_instruction = self._get_system_instruction()
                 if system_instruction:
-                    final_prompt = f"{system_instruction}\n\nUser: {prompt}\nAssistant:"
+                    # Get format from config
+                    if self.system_config and 'prompt_format' in self.system_config:
+                        final_prompt = self.system_config['prompt_format'].format(system=system_instruction, user=prompt)
+                    else:
+                        final_prompt = prompt
             
             # Apply system config for response style
             response_style = None
@@ -1047,7 +1339,8 @@ class SmartAIEngineV5:
                 stop_sequences = template_stop_sequences
                 logger.info(f"Using template stop sequences: {stop_sequences[:3]}")
             else:
-                stop_sequences = ["Human:", "User:", "\n\n\n", "\nCustomer:", "\nBudtender:"]
+                # Get stop sequences from config
+                stop_sequences = self.system_config.get('default_stop_sequences', []) if self.system_config else []
             
             # Log generation parameters for debugging
             logger.info(f"Generating with max_tokens={final_max_tokens}, temp={actual_temperature:.2f}, stops={len(stop_sequences)}")
@@ -1063,12 +1356,19 @@ class SmartAIEngineV5:
                 echo=False,
                 stop=stop_sequences[:8],  # Allow more stop sequences for better control
                 stream=False,
-                repeat_penalty=1.1  # Prevent repetition
+                repeat_penalty=self.get_config_repeat_penalty()  # Use config value
             )
             
             elapsed_ms = (time.time() - start_time) * 1000
             
-            if response and response.get("choices"):
+            # Ensure response is a dict
+            if isinstance(response, str):
+                # If response is a string, wrap it in proper dict format
+                response = {
+                    "choices": [{"text": response}]
+                }
+            
+            if response and isinstance(response, dict) and response.get("choices"):
                 text = response["choices"][0].get("text", "")
                 
                 # Apply safety guidelines if configured
@@ -1113,7 +1413,9 @@ class SmartAIEngineV5:
                 }
                 
         except Exception as e:
+            import traceback
             logger.error(f"Generation error: {e}")
+            logger.error(f"Error traceback: {traceback.format_exc()}")
             return {
                 "error": str(e),
                 "text": "",
@@ -1158,13 +1460,13 @@ class SmartAIEngineV5:
         """Benchmark a model with or without prompts"""
         
         if not test_prompts:
-            test_prompts = [
-                "What is 2+2?",
-                "hello",
-                "I want to find cannabis products",
-                "show me sativa flowers",
-                "Explain quantum computing in simple terms"
-            ]
+            # Get test prompts from config or use minimal defaults
+            test_prompts = []
+            if self.system_config and 'test_prompts' in self.system_config:
+                test_prompts = self.system_config['test_prompts']
+            else:
+                # No fallback - tests require config
+                test_prompts = []
         
         # Load the model
         prompt_folder = self.prompt_folder if with_prompts else None
@@ -1187,12 +1489,17 @@ class SmartAIEngineV5:
             # Auto-detect prompt type for benchmarking
             prompt_type = None
             if with_prompts:
-                if 'hello' in prompt.lower():
+                # Check configured greeting keywords for benchmarking
+                greeting_keywords = self.system_config.get('greeting_keywords', []) if self.system_config else []
+                if greeting_keywords and any(word in prompt.lower() for word in greeting_keywords):
                     prompt_type = 'greeting_detection'
-                elif 'want' in prompt.lower() or 'show' in prompt.lower():
+                search_keywords = self.system_config.get('search_keywords', []) if self.system_config else []
+                if search_keywords and any(word in prompt.lower() for word in search_keywords):
                     prompt_type = 'search_extraction_enhanced'
             
-            result = self.generate(prompt, prompt_type=prompt_type, max_tokens=100)
+            # Get max tokens from config
+            max_tokens = self.system_config.get('benchmark_max_tokens') if self.system_config else None
+            result = self.generate(prompt, prompt_type=prompt_type, max_tokens=max_tokens)
             results["tests"].append({
                 "prompt": prompt[:50] + "..." if len(prompt) > 50 else prompt,
                 "prompt_type": prompt_type,
