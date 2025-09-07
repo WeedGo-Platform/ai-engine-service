@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Preset, Tool, Voice } from '../../types';
 import { modelApi, voiceApi } from '../../../../services/api';
+import TemplateSwitcher from '../layout/TemplateSwitcher';
 
 interface ConfigurationPanelProps {
   isOpen: boolean;
@@ -16,6 +17,9 @@ interface ConfigurationPanelProps {
   isSpeakerEnabled: boolean;
   onToggleSpeaker: () => void;
   activeTools: Tool[];
+  currentTemplate?: string;
+  availableTemplates?: string[];
+  onTemplateChange?: (template: string) => void;
 }
 
 const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
@@ -31,7 +35,10 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
   onVoiceChange,
   isSpeakerEnabled,
   onToggleSpeaker,
-  activeTools: propTools
+  activeTools: propTools,
+  currentTemplate,
+  availableTemplates,
+  onTemplateChange
 }) => {
   const [selectedAgent, setSelectedAgent] = useState<string>('budtender');
   const [personalities, setPersonalities] = useState<Preset[]>(propPresets);
@@ -118,7 +125,7 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
   }, [propTools]);
 
   return (
-    <div className={`fixed left-0 top-[72px] h-[calc(100vh-72px)] w-80 bg-black border-r border-cyan-500/30 transform transition-transform duration-300 z-30 ${
+    <div className={`fixed left-0 top-[60px] sm:top-[72px] h-[calc(100vh-60px)] sm:h-[calc(100vh-72px)] w-full sm:w-80 bg-black border-r border-cyan-500/30 transform transition-transform duration-300 z-30 ${
       isOpen ? 'translate-x-0' : '-translate-x-full'
     }`}
     style={{
@@ -129,26 +136,15 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
         <div className="matrix-rain"></div>
       </div>
 
-      <div className="relative p-6 h-full overflow-y-auto">
+      <div className="relative p-4 sm:p-6 h-full overflow-y-auto">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-mono font-bold text-cyan-400 uppercase tracking-wider" 
-                  style={{ textShadow: '0 0 20px rgba(0, 255, 255, 0.8)' }}>
-                [SYSTEM_CONFIG]
-              </h2>
-              <p className="text-xs text-green-400/80 mt-1 font-mono">// Initialize AI parameters</p>
-            </div>
-            <button
-              onClick={onClose}
-              className="p-2 bg-red-900/30 hover:bg-red-800/50 border border-red-500/50 hover:border-red-400 rounded transition-all group"
-              style={{ boxShadow: '0 0 10px rgba(239, 68, 68, 0.3)' }}
-            >
-              <svg className="w-5 h-5 text-red-400 group-hover:text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+        <div className="mb-6 sm:mb-8">
+          <div>
+            <h2 className="text-lg sm:text-2xl font-mono font-bold text-cyan-400 uppercase tracking-wider" 
+                style={{ textShadow: '0 0 20px rgba(0, 255, 255, 0.8)' }}>
+              [SYSTEM_CONFIG]
+            </h2>
+            <p className="text-xs text-green-400/80 mt-1 font-mono hidden sm:block">// Initialize AI parameters</p>
           </div>
         </div>
 
@@ -181,66 +177,20 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
           </div>
         </div>
 
-        {/* Quick Presets */}
-        <div className="mb-6">
-          <h3 className="text-xs font-mono font-bold text-green-400 mb-3 uppercase tracking-widest"
-              style={{ textShadow: '0 0 10px rgba(74, 222, 128, 0.6)' }}>
-            [PERSONALITY_MATRIX]
-          </h3>
-          {isLoadingPersonalities ? (
-            <div className="flex items-center justify-center py-8">
-              <div className="relative">
-                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-cyan-400"></div>
-                <div className="absolute inset-0 animate-ping rounded-full h-8 w-8 border border-cyan-400/30"></div>
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-2">
-              {personalities.map(preset => (
-                <button
-                  key={preset.id}
-                  onClick={() => onPresetLoad(preset)}
-                  disabled={!isModelLoaded}
-                  className={`w-full p-3 bg-gray-900/60 hover:bg-gray-800/70 border transition-all group ${
-                    !isModelLoaded ? 'opacity-50 cursor-not-allowed' : ''
-                  } ${
-                    selectedPersonality === preset.personality 
-                      ? 'border-cyan-400 shadow-[0_0_20px_rgba(0,255,255,0.5)]' 
-                      : 'border-green-500/30 hover:border-green-400/50 hover:shadow-[0_0_15px_rgba(74,222,128,0.3)]'
-                  }`}
-                  title={isModelLoaded ? `Switch to ${preset.name}` : 'Load a model first'}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl" style={{ 
-                      filter: selectedPersonality === preset.personality 
-                        ? 'drop-shadow(0 0 8px rgba(0, 255, 255, 0.8))' 
-                        : 'drop-shadow(0 0 5px rgba(74, 222, 128, 0.5))'
-                    }}>{preset.icon}</span>
-                    <div className="text-left flex-1">
-                      <div className="font-mono font-bold text-cyan-300 uppercase text-sm">
-                        {preset.name}
-                      </div>
-                      <div className="text-xs text-green-400/70 font-mono">
-                        // {preset.description}
-                      </div>
-                    </div>
-                    {selectedPersonality === preset.personality ? (
-                      <div className="p-1 bg-cyan-500/20 border border-cyan-400 rounded">
-                        <svg className="w-3 h-3 text-cyan-400" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
-                        </svg>
-                      </div>
-                    ) : (
-                      <svg className="w-4 h-4 text-green-500/50 group-hover:text-green-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                      </svg>
-                    )}
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+        {/* Theme Selector */}
+        {currentTemplate && availableTemplates && onTemplateChange && (
+          <div className="mb-6">
+            <h3 className="text-xs font-mono font-bold text-green-400 mb-3 uppercase tracking-widest"
+                style={{ textShadow: '0 0 10px rgba(74, 222, 128, 0.6)' }}>
+              [THEME_SELECT]
+            </h3>
+            <TemplateSwitcher 
+              currentTemplate={currentTemplate}
+              availableTemplates={availableTemplates}
+              onTemplateChange={onTemplateChange}
+            />
+          </div>
+        )}
 
         {/* Voice Settings */}
         <div className="mb-6 p-4 bg-gray-900/60 border border-cyan-500/30 rounded"

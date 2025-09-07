@@ -11,8 +11,8 @@ const Register: React.FC<RegisterFormProps> = ({ onClose, onSubmit, onLogin }) =
   const { register, error: authError, clearError, isLoading: authLoading } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    first_name: '',
+    last_name: '',
     email: '',
     phoneNumber: '',
     dateOfBirth: '',
@@ -56,8 +56,8 @@ const Register: React.FC<RegisterFormProps> = ({ onClose, onSubmit, onLogin }) =
 
     try {
       await register({
-        firstName: formData.firstName,
-        lastName: formData.lastName,
+        first_name: formData.first_name,
+        last_name: formData.last_name,
         email: formData.email,
         phoneNumber: formData.phoneNumber,
         dateOfBirth: formData.dateOfBirth,
@@ -124,17 +124,17 @@ const Register: React.FC<RegisterFormProps> = ({ onClose, onSubmit, onLogin }) =
       <div className="grid grid-cols-2 gap-4">
         <Input
           label="FIRST NAME"
-          value={formData.firstName}
+          value={formData.first_name}
           placeholder="Neo"
           required
-          onChange={(value) => handleInputChange('firstName', value)}
+          onChange={(value) => handleInputChange('first_name', value)}
         />
         <Input
           label="LAST NAME"
-          value={formData.lastName}
+          value={formData.last_name}
           placeholder="Anderson"
           required
-          onChange={(value) => handleInputChange('lastName', value)}
+          onChange={(value) => handleInputChange('last_name', value)}
         />
       </div>
 
@@ -149,7 +149,7 @@ const Register: React.FC<RegisterFormProps> = ({ onClose, onSubmit, onLogin }) =
 
       <Button
         onClick={handleNextStep}
-        disabled={!formData.firstName || !formData.lastName || !formData.email}
+        disabled={!formData.first_name || !formData.last_name || !formData.email}
         className="w-full"
         size="lg"
       >

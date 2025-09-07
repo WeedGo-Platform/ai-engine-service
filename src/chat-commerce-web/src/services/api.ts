@@ -216,9 +216,34 @@ export const authApi = {
       console.error('Failed to get user info:', error);
       throw error;
     }
-  }
+  },
   
-  // OTP endpoints are also available if needed
+  // Send OTP for login
+  sendOTP: async (email: string) => {
+    try {
+      const response = await api.post('/api/auth/send-otp', { email });
+      return response.data;
+    } catch (error) {
+      console.error('Send OTP failed:', error);
+      throw error;
+    }
+  },
+  
+  // Verify OTP and login
+  verifyOTP: async (email: string, otp: string) => {
+    try {
+      const response = await api.post('/api/auth/verify-otp', { email, otp });
+      // Store token on successful OTP verification
+      if (response.data.access_token) {
+        localStorage.setItem('access_token', response.data.access_token);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+      }
+      return response.data;
+    } catch (error) {
+      console.error('Verify OTP failed:', error);
+      throw error;
+    }
+  }
 };
 
 export default api;

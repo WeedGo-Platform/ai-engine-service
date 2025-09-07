@@ -19,6 +19,8 @@ import { StyleProvider } from './styles/StyleProvider';
 import TopMenuBar from './components/layout/TopMenuBar';
 import ConfigurationPanel from './components/panels/ConfigurationPanel';
 import ConfigToggleButton from './components/common/ConfigToggleButton';
+import HamburgerMenu from './components/layout/HamburgerMenu';
+import TemplateSwitcher from './components/layout/TemplateSwitcher';
 import ChatHeader from './components/chat/ChatHeader';
 import ChatMessages from './components/chat/ChatMessages';
 import ChatInputArea from './components/chat/ChatInputArea';
@@ -46,6 +48,10 @@ import Modal from './components/ui/Modal';
 import Card from './components/ui/Card';
 import Badge from './components/ui/Badge';
 
+// Import legal components
+import AgeGate from './components/legal/AgeGate';
+import CookieDisclaimer from './components/legal/CookieDisclaimer';
+
 
 export class ModernMinimalTemplateProvider extends BaseTemplateProvider {
   private components: TemplateComponents;
@@ -60,6 +66,8 @@ export class ModernMinimalTemplateProvider extends BaseTemplateProvider {
       TopMenuBar: TopMenuBar as any,
       ConfigurationPanel: ConfigurationPanel as any,
       ConfigToggleButton: ConfigToggleButton as any,
+      HamburgerMenu: HamburgerMenu as any,
+      TemplateSwitcher: TemplateSwitcher as any,
       ChatHeader: ChatHeader as any,
       ChatMessages: ChatMessages as any,
       ChatInputArea: ChatInputArea as any,
@@ -82,6 +90,8 @@ export class ModernMinimalTemplateProvider extends BaseTemplateProvider {
       Modal: Modal as any,
       Card: Card as any,
       Badge: Badge as any,
+      AgeGate: AgeGate as any,
+      CookieDisclaimer: CookieDisclaimer as any,
     };
     
     // Initialize layout

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAuth } from '../../../../contexts/AuthContext';
-import potPalaceLogo from '../../../../assets/pot-palace-logo.png';
+import modernMinimalLogo from '../../assets/modern-minimal-logo.png';
 
 interface TopMenuBarProps {
   onShowLogin: () => void;
@@ -19,7 +19,7 @@ const TopMenuBar: React.FC<TopMenuBarProps> = ({
       <div className="flex items-center gap-6 relative z-10">
         {/* Logo - Sophisticated monochrome */}
         <div className="flex items-center gap-3">
-          <img src={potPalaceLogo} alt="Pot Palace" className="h-8 w-auto opacity-90 grayscale contrast-125" />
+          <img src={modernMinimalLogo} alt="Pot Palace Cannabis Co." className="h-8 w-auto opacity-90 grayscale contrast-125" />
         </div>
       </div>
 

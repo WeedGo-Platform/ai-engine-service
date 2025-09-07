@@ -8,6 +8,7 @@ from datetime import datetime, date
 from uuid import UUID
 from pydantic import BaseModel, Field
 import logging
+import asyncpg
 
 from services.order_service import OrderService
 from services.database_connection_manager import DatabaseConnectionManager
@@ -181,11 +182,29 @@ async def list_orders(
         
         return {
             "count": len(orders),
-            "orders": orders
+            "orders": orders,
+            "data": orders  # For compatibility with dashboard
+        }
+    except asyncpg.UndefinedTableError:
+        # Table doesn't exist yet - return empty result
+        logger.warning("Orders table does not exist yet")
+        return {
+            "count": 0,
+            "orders": [],
+            "data": []
         }
     except Exception as e:
         logger.error(f"Error listing orders: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
+        # Check if it's a database connection error
+        if "connection" in str(e).lower() or "database" in str(e).lower():
+            return {
+                "count": 0,
+                "orders": [],
+                "data": [],
+                "error": "Database connection issue"
+            }
+        # For other errors, still return 500 but with more detail
+        raise HTTPException(status_code=500, detail=f"Failed to list orders: {str(e)}")
 
 
 @router.get("/{order_id}/history")

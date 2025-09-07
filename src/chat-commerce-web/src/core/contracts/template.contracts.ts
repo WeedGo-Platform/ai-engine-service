@@ -18,6 +18,8 @@ export interface TemplateComponents {
   TopMenuBar: ITopMenuBarComponent;
   ConfigurationPanel: IConfigurationPanelComponent;
   ConfigToggleButton: IConfigToggleButtonComponent;
+  HamburgerMenu: IHamburgerMenuComponent;
+  TemplateSwitcher: ITemplateSwitcherComponent;
   
   // Chat Components
   ChatHeader: IChatHeaderComponent;
@@ -35,13 +37,17 @@ export interface TemplateComponents {
   MicrophoneButton: IMicrophoneButtonComponent;
   
   // Auth Components
-  LoginForm: ILoginFormComponent;
-  RegisterForm: IRegisterFormComponent;
+  Login: ILoginFormComponent;
+  Register: IRegisterFormComponent;
   
   // Common Components
   Notification: INotificationComponent;
   LoadingSpinner: ILoadingSpinnerComponent;
   ErrorBoundary: IErrorBoundaryComponent;
+  
+  // Legal Components
+  AgeGate: IAgeGateComponent;
+  CookieDisclaimer: ICookieDisclaimerComponent;
   
   // UI Components
   Button: IButtonComponent;
@@ -95,6 +101,9 @@ export interface ConfigurationPanelProps {
     outputTokens: number;
     totalCost: number;
   };
+  currentTemplate?: string;
+  availableTemplates?: string[];
+  onTemplateChange?: (template: string) => void;
 }
 
 export interface IConfigToggleButtonComponent {
@@ -104,6 +113,25 @@ export interface IConfigToggleButtonComponent {
 export interface ConfigToggleButtonProps {
   isPanelOpen: boolean;
   onClick: () => void;
+}
+
+export interface IHamburgerMenuComponent {
+  (props: HamburgerMenuProps): ReactNode;
+}
+
+export interface HamburgerMenuProps {
+  isOpen: boolean;
+  onClick: () => void;
+}
+
+export interface ITemplateSwitcherComponent {
+  (props: TemplateSwitcherProps): ReactNode;
+}
+
+export interface TemplateSwitcherProps {
+  currentTemplate: string;
+  availableTemplates: string[];
+  onTemplateChange: (template: string) => void;
 }
 
 export interface IChatHeaderComponent {
@@ -361,6 +389,23 @@ export interface MicrophoneButtonProps {
   isRecording: boolean;
   onClick: () => void;
   disabled?: boolean;
+}
+
+// Legal Component Interfaces
+export interface IAgeGateComponent {
+  (props: AgeGateProps): ReactNode;
+}
+
+export interface AgeGateProps {
+  // No props needed - component uses ComplianceContext directly
+}
+
+export interface ICookieDisclaimerComponent {
+  (props: CookieDisclaimerProps): ReactNode;
+}
+
+export interface CookieDisclaimerProps {
+  // No props needed - component uses ComplianceContext directly
 }
 
 // Style Provider Contract

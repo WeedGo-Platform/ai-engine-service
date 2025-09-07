@@ -6,6 +6,10 @@ export const formatTime = (date: Date): string => {
   });
 };
 
-export const formatResponseTime = (ms: number): string => {
-  return `${(ms / 1000).toFixed(1)}s`;
+export const formatResponseTime = (seconds: number): string => {
+  // Input is already in seconds, just format it
+  if (seconds < 0.1) {
+    return "< 0.1s";
+  }
+  return `${seconds.toFixed(1)}s`;
 };

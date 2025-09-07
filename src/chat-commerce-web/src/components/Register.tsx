@@ -259,11 +259,11 @@ const Register: React.FC<RegisterProps> = ({ isOpen = true, onClose, onRegisterS
 
     try {
       const response = await authApi.register({
-        firstName: formData.firstName.trim(),
-        lastName: formData.lastName.trim(),
+        first_name: formData.firstName.trim(),
+        last_name: formData.lastName.trim(),
         email: formData.email.toLowerCase().trim(),
-        phoneNumber: formData.phoneNumber.trim(),
-        dateOfBirth: formData.dateOfBirth,
+        phone: formData.phoneNumber.trim(),
+        date_of_birth: formData.dateOfBirth,
         password: formData.password
       });
       onRegisterSuccess?.(response.user);

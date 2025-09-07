@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Preset, Tool, Voice } from '../../types';
 import { modelApi, voiceApi } from '../../../../services/api';
+import TemplateSwitcher from '../layout/TemplateSwitcher';
 
 interface ConfigurationPanelProps {
   isOpen: boolean;
@@ -16,6 +17,9 @@ interface ConfigurationPanelProps {
   isSpeakerEnabled: boolean;
   onToggleSpeaker: () => void;
   activeTools: Tool[];
+  currentTemplate?: string;
+  availableTemplates?: string[];
+  onTemplateChange?: (template: string) => void;
 }
 
 const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
@@ -31,7 +35,10 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
   onVoiceChange,
   isSpeakerEnabled,
   onToggleSpeaker,
-  activeTools: propTools
+  activeTools: propTools,
+  currentTemplate,
+  availableTemplates,
+  onTemplateChange
 }) => {
   const [selectedAgent, setSelectedAgent] = useState<string>('budtender');
   const [personalities, setPersonalities] = useState<Preset[]>(propPresets);
@@ -118,27 +125,17 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
   }, [propTools]);
 
   return (
-    <div className={`fixed left-0 top-[72px] h-[calc(100vh-72px)] w-80 bg-white shadow-xl border-r border-slate-200 transform transition-transform duration-300 z-30 ${
+    <div className={`fixed left-0 top-[60px] sm:top-[72px] h-[calc(100vh-60px)] sm:h-[calc(100vh-72px)] w-full sm:w-80 bg-white shadow-xl border-r border-slate-200 transform transition-transform duration-300 z-30 ${
       isOpen ? 'translate-x-0' : '-translate-x-full'
     }`}>
-      <div className="p-6 h-full overflow-y-auto">
+      <div className="p-4 sm:p-6 h-full overflow-y-auto">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-light text-slate-900">
-                AI Configuration
-              </h2>
-              <p className="text-sm text-slate-500 mt-1">Manage your AI settings</p>
-            </div>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
-            >
-              <svg className="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+        <div className="mb-6 sm:mb-8">
+          <div>
+            <h2 className="text-xl sm:text-2xl font-light text-slate-900">
+              AI Configuration
+            </h2>
+            <p className="text-sm text-slate-500 mt-1 hidden sm:block">Manage your AI settings</p>
           </div>
         </div>
 
@@ -160,58 +157,19 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
           </select>
         </div>
 
-        {/* Quick Presets */}
-        <div className="mb-8">
-          <h3 className="text-xs font-semibold text-slate-700 mb-4 uppercase tracking-wider">
-            Quick Presets
-          </h3>
-          {isLoadingPersonalities ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-900"></div>
-            </div>
-          ) : (
-            <div className="space-y-2">
-              {personalities.map(preset => (
-                <button
-                  key={preset.id}
-                  onClick={() => onPresetLoad(preset)}
-                  disabled={!isModelLoaded}
-                  className={`w-full p-4 bg-white hover:bg-slate-50 border rounded-lg transition-all group ${
-                    !isModelLoaded ? 'opacity-50 cursor-not-allowed' : ''
-                  } ${
-                    selectedPersonality === preset.personality 
-                      ? 'border-slate-900 shadow-md' 
-                      : 'border-slate-200 hover:border-slate-300'
-                  }`}
-                  title={isModelLoaded ? `Switch to ${preset.name}` : 'Load a model first'}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="text-xl">{preset.icon}</span>
-                    <div className="text-left flex-1">
-                      <div className="font-medium text-slate-900">
-                        {preset.name}
-                      </div>
-                      <div className="text-xs text-slate-500 mt-0.5">
-                        {preset.description}
-                      </div>
-                    </div>
-                    {selectedPersonality === preset.personality ? (
-                      <div className="p-1 bg-slate-900 rounded-full">
-                        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
-                        </svg>
-                      </div>
-                    ) : (
-                      <svg className="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                      </svg>
-                    )}
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+        {/* Theme Selector */}
+        {currentTemplate && availableTemplates && onTemplateChange && (
+          <div className="mb-8">
+            <h3 className="text-xs font-semibold text-slate-700 mb-4 uppercase tracking-wider">
+              Choose Theme
+            </h3>
+            <TemplateSwitcher 
+              currentTemplate={currentTemplate}
+              availableTemplates={availableTemplates}
+              onTemplateChange={onTemplateChange}
+            />
+          </div>
+        )}
 
         {/* Voice Settings */}
         <div className="mb-8 p-4 bg-slate-50 rounded-lg border border-slate-200">

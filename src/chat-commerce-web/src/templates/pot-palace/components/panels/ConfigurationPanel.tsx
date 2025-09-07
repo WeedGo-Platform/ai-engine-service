@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Preset, Tool, Voice } from '../../types';
 import { modelApi, voiceApi } from '../../../../services/api';
+import TemplateSwitcher from '../layout/TemplateSwitcher';
 
 interface ConfigurationPanelProps {
   isOpen: boolean;
@@ -16,6 +17,9 @@ interface ConfigurationPanelProps {
   isSpeakerEnabled: boolean;
   onToggleSpeaker: () => void;
   activeTools: Tool[];
+  currentTemplate?: string;
+  availableTemplates?: string[];
+  onTemplateChange?: (template: string) => void;
 }
 
 const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
@@ -31,7 +35,10 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
   onVoiceChange,
   isSpeakerEnabled,
   onToggleSpeaker,
-  activeTools: propTools
+  activeTools: propTools,
+  currentTemplate,
+  availableTemplates,
+  onTemplateChange
 }) => {
   const [selectedAgent, setSelectedAgent] = useState<string>('budtender');
   const [personalities, setPersonalities] = useState<Preset[]>(propPresets);
@@ -118,7 +125,7 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
   }, [propTools]);
 
   return (
-    <div className={`fixed left-0 top-[72px] h-[calc(100vh-72px)] w-80 transform transition-transform duration-300 z-30 ${
+    <div className={`fixed left-0 top-[60px] sm:top-[72px] h-[calc(100vh-60px)] sm:h-[calc(100vh-72px)] w-full sm:w-80 transform transition-transform duration-300 z-30 ${
       isOpen ? 'translate-x-0' : '-translate-x-full'
     }`}
     style={{
@@ -136,29 +143,19 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
         <div className="absolute bottom-40 right-6 text-4xl opacity-30 animate-float" style={{ animationDelay: '1s' }}>🌿</div>
       </div>
 
-      <div className="relative p-6 h-full overflow-y-auto">
+      <div className="relative p-4 sm:p-6 h-full overflow-y-auto">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl shadow-lg shadow-purple-500/50">
-                <span className="text-2xl">🌿</span>
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-green-300 to-pink-300 drop-shadow-[0_0_20px_rgba(236,72,153,0.5)]">
-                  AI Configuration
-                </h2>
-                <p className="text-xs text-purple-200">Customize your experience</p>
-              </div>
+        <div className="mb-6 sm:mb-8">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="p-1.5 sm:p-2 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl shadow-lg shadow-purple-500/50">
+              <span className="text-xl sm:text-2xl">🌿</span>
             </div>
-            <button
-              onClick={onClose}
-              className="p-2 bg-purple-800/50 hover:bg-purple-700/50 rounded-lg transition-all hover:scale-110 group"
-            >
-              <svg className="w-5 h-5 text-pink-300 group-hover:text-yellow-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+            <div>
+              <h2 className="text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-green-300 to-pink-300 drop-shadow-[0_0_20px_rgba(236,72,153,0.5)]">
+                AI Configuration
+              </h2>
+              <p className="text-xs text-purple-200 hidden sm:block">Customize your experience</p>
+            </div>
           </div>
         </div>
 
@@ -187,58 +184,19 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
           </div>
         </div>
 
-        {/* Quick Presets */}
-        <div className="mb-6">
-          <h3 className="text-sm font-bold text-green-300 mb-3 uppercase tracking-wider drop-shadow-[0_0_10px_rgba(134,239,172,0.5)]">
-            Quick Presets ✨
-          </h3>
-          {isLoadingPersonalities ? (
-            <div className="flex items-center justify-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-yellow-300"></div>
-            </div>
-          ) : (
-            <div className="space-y-2">
-              {personalities.map(preset => (
-                <button
-                  key={preset.id}
-                  onClick={() => onPresetLoad(preset)}
-                  disabled={!isModelLoaded}
-                  className={`w-full p-3 bg-gradient-to-r from-purple-800/60 to-pink-800/60 hover:from-purple-700/70 hover:to-pink-700/70 border-2 border-purple-400/50 rounded-xl transition-all group shadow-lg hover:shadow-yellow-400/30 backdrop-blur-sm ${
-                    !isModelLoaded ? 'opacity-50 cursor-not-allowed' : 'hover:scale-[1.02]'
-                  } ${
-                    selectedPersonality === preset.personality 
-                      ? 'ring-2 ring-yellow-400 border-yellow-400/50 shadow-yellow-400/40' 
-                      : ''
-                  }`}
-                  title={isModelLoaded ? `Switch to ${preset.name}` : 'Load a model first'}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl filter drop-shadow-[0_0_8px_rgba(236,72,153,0.6)]">{preset.icon}</span>
-                    <div className="text-left flex-1">
-                      <div className="font-bold text-yellow-300 drop-shadow-[0_0_5px_rgba(253,224,71,0.4)]">
-                        {preset.name}
-                      </div>
-                      <div className="text-xs text-green-200">
-                        {preset.description}
-                      </div>
-                    </div>
-                    {selectedPersonality === preset.personality ? (
-                      <div className="p-1 bg-gradient-to-br from-yellow-400 to-green-400 rounded-full">
-                        <svg className="w-3 h-3 text-purple-900" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
-                        </svg>
-                      </div>
-                    ) : (
-                      <svg className="w-4 h-4 text-purple-300 group-hover:text-yellow-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                      </svg>
-                    )}
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+        {/* Theme Selector */}
+        {currentTemplate && availableTemplates && onTemplateChange && (
+          <div className="mb-6">
+            <h3 className="text-sm font-bold text-green-300 mb-3 uppercase tracking-wider drop-shadow-[0_0_10px_rgba(134,239,172,0.5)]">
+              Choose Theme 🎨
+            </h3>
+            <TemplateSwitcher 
+              currentTemplate={currentTemplate}
+              availableTemplates={availableTemplates}
+              onTemplateChange={onTemplateChange}
+            />
+          </div>
+        )}
 
         {/* Voice Settings */}
         <div className="mb-6 p-4 bg-gradient-to-br from-indigo-900/60 to-purple-900/60 rounded-xl border-2 border-indigo-400/50 backdrop-blur-sm shadow-lg shadow-indigo-500/30">

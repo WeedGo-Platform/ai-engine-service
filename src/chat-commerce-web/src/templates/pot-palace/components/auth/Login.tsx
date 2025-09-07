@@ -6,11 +6,13 @@ import Modal from '../ui/Modal';
 import Card from '../ui/Card';
 import Badge from '../ui/Badge';
 import { LoginFormProps } from '../../../../core/contracts/template.contracts';
+import { detectContactType, getContactPlaceholder } from '../../../../utils/validation';
 
 const Login: React.FC<LoginFormProps> = ({ onClose, onSubmit, onRegister }) => {
   const { login, loginWithOTP, sendOTP, error: authError, clearError, isLoading: authLoading } = useAuth();
   const [loginMethod, setLoginMethod] = useState<'password' | 'otp'>('password');
   const [email, setEmail] = useState('');
+  const [contactInput, setContactInput] = useState('');
   const [password, setPassword] = useState('');
   const [otpCode, setOtpCode] = useState('');
   const [localError, setLocalError] = useState('');
@@ -36,10 +38,10 @@ const Login: React.FC<LoginFormProps> = ({ onClose, onSubmit, onRegister }) => {
   }, []);
 
   const handleSendOTP = async () => {
-    if (!email) return;
+    if (!contactInput) return;
     
     try {
-      await sendOTP(email);
+      await sendOTP(contactInput);
       setOtpSent(true);
     } catch (err: any) {
       setLocalError(err.message || 'Failed to send verification code');
@@ -54,7 +56,7 @@ const Login: React.FC<LoginFormProps> = ({ onClose, onSubmit, onRegister }) => {
       if (loginMethod === 'password') {
         await login({ email, password });
       } else {
-        await loginWithOTP(email, otpCode);
+        await loginWithOTP(contactInput, otpCode);
       }
       
       if (rememberMe) {
@@ -118,21 +120,52 @@ const Login: React.FC<LoginFormProps> = ({ onClose, onSubmit, onRegister }) => {
           >
             <div className="flex items-center justify-center gap-2">
               <span>📱</span>
-              One-Time Code
+              Phone/Email Code
             </div>
           </button>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-6">
-          {/* Email Field */}
-          <Input
-            type="email"
-            label="Email Address"
-            value={email}
-            placeholder="Enter your email address"
-            required
-            onChange={setEmail}
-          />
+          {/* Email Field - for password login */}
+          {loginMethod === 'password' && (
+            <Input
+              type="email"
+              label="Email Address"
+              value={email}
+              placeholder="Enter your email address"
+              required
+              onChange={setEmail}
+            />
+          )}
+          
+          {/* Contact Input Field - for OTP login */}
+          {loginMethod === 'otp' && (
+            <div className="space-y-2">
+              <Input
+                type="text"
+                label="Email or Phone"
+                value={contactInput}
+                placeholder="Enter email or phone number"
+                required
+                onChange={setContactInput}
+              />
+              {contactInput && (
+                <div className="text-xs px-2">
+                  {(() => {
+                    const contactInfo = detectContactType(contactInput);
+                    if (contactInfo.type === 'email') {
+                      return <span className="text-purple-600">📧 Email detected</span>;
+                    } else if (contactInfo.type === 'phone') {
+                      return <span className="text-purple-600">📱 Phone detected: {contactInfo.formatted}</span>;
+                    } else if (contactInput.length > 0) {
+                      return <span className="text-orange-600">⚠️ Please enter a valid email or phone number</span>;
+                    }
+                    return null;
+                  })()}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Password Login Fields */}
           {loginMethod === 'password' ? (
@@ -186,7 +219,7 @@ const Login: React.FC<LoginFormProps> = ({ onClose, onSubmit, onRegister }) => {
                       <span className="text-2xl">✨</span>
                       <div className="text-sm text-purple-800">
                         <p className="font-semibold mb-1">Quick & Secure Login</p>
-                        <p className="text-xs">We'll send a magical verification code to your email for passwordless sign-in.</p>
+                        <p className="text-xs">We'll send a verification code to your email or phone for passwordless sign-in.</p>
                       </div>
                     </div>
                   </Card>
@@ -194,7 +227,7 @@ const Login: React.FC<LoginFormProps> = ({ onClose, onSubmit, onRegister }) => {
                   <Button
                     type="button"
                     onClick={handleSendOTP}
-                    disabled={authLoading || !email}
+                    disabled={authLoading || !contactInput}
                     loading={authLoading}
                     variant="secondary"
                     className="w-full"

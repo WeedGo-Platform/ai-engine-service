@@ -117,6 +117,13 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                       </>
                     )}
                     
+                    {(message.metadata?.prompt || message.metadata?.prompt_template) && (
+                      <>
+                        <span>•</span>
+                        <span className="italic">Prompt: {(message.metadata.prompt || message.metadata.prompt_template || '').substring(0, 50)}...</span>
+                      </>
+                    )}
+                    
                     {message.toolsUsed && message.toolsUsed.length > 0 && (
                       <>
                         <span>•</span>

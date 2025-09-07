@@ -11,13 +11,29 @@ from pydantic import BaseModel, Field
 import logging
 
 from services.inventory_service import InventoryService
-from services.database_connection_manager import DatabaseConnectionManager
+import asyncpg
+import os
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/inventory", tags=["inventory"])
 
-# Get database connection
-db_manager = DatabaseConnectionManager()
+# Database connection pool
+db_pool = None
+
+async def get_db_pool():
+    """Get or create database connection pool"""
+    global db_pool
+    if db_pool is None:
+        db_pool = await asyncpg.create_pool(
+            host=os.getenv('DB_HOST', 'localhost'),
+            port=int(os.getenv('DB_PORT', 5434)),
+            database=os.getenv('DB_NAME', 'ai_engine'),
+            user=os.getenv('DB_USER', 'weedgo'),
+            password=os.getenv('DB_PASSWORD', 'weedgo123'),
+            min_size=1,
+            max_size=10
+        )
+    return db_pool
 
 
 # Pydantic Models
@@ -58,8 +74,12 @@ class UpdateInventoryRequest(BaseModel):
 
 async def get_inventory_service():
     """Get inventory service instance"""
-    conn = await db_manager.get_connection()
-    return InventoryService(conn)
+    pool = await get_db_pool()
+    conn = await pool.acquire()
+    try:
+        yield InventoryService(conn)
+    finally:
+        await pool.release(conn)
 
 
 @router.get("/status/{sku}")

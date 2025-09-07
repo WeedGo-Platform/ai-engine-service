@@ -18,6 +18,7 @@ export interface MessageMetadata {
   tokens?: number;
   tokens_per_sec?: number;
   prompt_template?: string;
+  prompt?: string;
   [key: string]: any;
 }
 
