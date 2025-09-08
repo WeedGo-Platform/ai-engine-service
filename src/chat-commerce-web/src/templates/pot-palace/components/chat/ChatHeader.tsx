@@ -1,5 +1,6 @@
 import React from 'react';
 import { Message, Preset } from '../../types';
+import { useFloatingChat } from '../../../../contexts/FloatingChatContext';
 
 interface ChatHeaderProps {
   isModelLoaded: boolean;
@@ -30,6 +31,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
   sessionId,
   isPanelOpen
 }) => {
+  const { toggleFloating, windowState } = useFloatingChat();
   return (
     <div className="bg-gradient-to-r from-purple-900/95 via-pink-900/90 to-purple-900/95 border-b-2 border-purple-400/50 px-6 py-4 shadow-[0_4px_20px_rgba(168,85,247,0.3)] backdrop-blur-sm">
       <div className="flex items-center justify-between">
@@ -67,15 +69,15 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Fullscreen Toggle */}
+          {/* Floating Window Toggle */}
           <button
-            onClick={onToggleFullscreen}
-            className="p-2 rounded-xl bg-purple-800/50 hover:bg-purple-700/50 text-purple-300 hover:text-pink-400 border border-purple-600/30 transition-all shadow-lg hover:shadow-[0_0_15px_rgba(236,72,153,0.5)]"
-            title="Toggle fullscreen"
+            onClick={toggleFloating}
+            className={`p-2 rounded-xl ${windowState === 'floating' ? 'bg-yellow-500/80 hover:bg-yellow-600/80' : 'bg-purple-800/50 hover:bg-purple-700/50'} text-purple-300 hover:text-pink-400 border border-purple-600/30 transition-all shadow-lg hover:shadow-[0_0_15px_rgba(236,72,153,0.5)]`}
+            title={windowState === 'floating' ? 'Dock chat window' : 'Pop out chat window'}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {isFullscreen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              {windowState === 'floating' ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
               ) : (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0 0l-5-5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5h-4m4 0v-4" />
               )}

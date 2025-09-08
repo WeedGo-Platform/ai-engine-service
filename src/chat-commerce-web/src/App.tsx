@@ -1,10 +1,15 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, RefObject } from 'react';
 import { TemplateContextProvider, useTemplateContext } from './contexts/TemplateContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { ComplianceProvider } from './contexts/ComplianceContext';
+import { FloatingChatProvider } from './contexts/FloatingChatContext';
+import { CartProvider } from './contexts/CartContext';
 import { DynamicComponent, TemplateLayout } from './core/providers/template.provider';
+import FloatingChatContainer from './components/floating-chat/FloatingChatContainer';
 import { modelApi, chatApi, voiceApi } from './services/api';
 import { useClickOutside } from './hooks/useClickOutside';
+import { useEnhancedChatInput } from './hooks/useEnhancedChatInput';
+import { getChatHistory } from './utils/chatHistory';
 
 // Types
 import { 
@@ -21,6 +26,7 @@ import {
 
 // Utils
 import { formatTime, formatResponseTime } from './utils/formatters';
+import { extractMessageContent, formatMessageContent } from './utils/messageParser';
 
 function AppContent() {
   // Get template context
@@ -36,7 +42,6 @@ function AppContent() {
   const [selectedPersonality, setSelectedPersonality] = useState<string>('');
   
   const [messages, setMessages] = useState<Message[]>([]);
-  const [inputMessage, setInputMessage] = useState('');
   const [isModelLoaded, setIsModelLoaded] = useState(false);
   const [configDetails, setConfigDetails] = useState<any>(null);
   const [isSending, setIsSending] = useState(false);
@@ -70,6 +75,14 @@ function AppContent() {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
   
+  // New state for real-time transcript
+  const [liveTranscript, setLiveTranscript] = useState<string>('');
+  const [finalizedTranscript, setFinalizedTranscript] = useState<string>('');
+  const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const pauseTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const lastSpeechTimeRef = useRef<number>(Date.now());
+  const pendingTranscriptRef = useRef<string>('');
+  
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -84,6 +97,36 @@ function AppContent() {
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   
+  // Age verification state
+  const [isAgeVerified, setIsAgeVerified] = useState(() => {
+    // Check if age was already verified in this session
+    return localStorage.getItem('age_verified') === 'true';
+  });
+  
+  // Forward declare the send message ref
+  const sendMessageRef = useRef<(text?: string) => Promise<void>>(null);
+  
+  // Enhanced chat input with history and autocorrect
+  const enhancedInput = useEnhancedChatInput({
+    onSubmit: (text: string) => {
+      if (sendMessageRef.current) {
+        sendMessageRef.current(text);
+      }
+    },
+    enableAutoCorrect: true,
+    enableHistory: true,
+    autoCorrectDelay: 500
+  });
+  
+  const inputMessage = enhancedInput.value || '';
+  const setInputMessage = enhancedInput.setValue;
+  const handleInputKeyDown = enhancedInput.handleKeyDown;
+  const suggestions = enhancedInput.suggestions;
+  const showSuggestions = enhancedInput.showSuggestions;
+  const applySuggestion = enhancedInput.applySuggestion;
+  const dismissSuggestions = enhancedInput.dismissSuggestions;
+  const enhancedInputRef = enhancedInput.inputRef;
+  
   const inputRef = useRef<HTMLInputElement>(null);
   const shouldAutoSend = useRef(false);
   const messagesEndRef = useRef<HTMLDivElement>(null!);
@@ -92,7 +135,7 @@ function AppContent() {
     if (isPanelOpen) {
       setIsPanelOpen(false);
     }
-  }, [hamburgerRef]);
+  }, [hamburgerRef as RefObject<HTMLElement>]);
 
   // Load saved configuration and session on mount
   useEffect(() => {
@@ -112,24 +155,107 @@ function AppContent() {
       recognitionInstance.interimResults = true;
       recognitionInstance.lang = 'en-US';
       
+      let allFinalText = '';
+      let lastResultIndex = 0;
+      let lastSentText = '';
+      
       recognitionInstance.onresult = (event: any) => {
-        let interimTranscript = '';
-        let finalTranscript = '';
+        console.log('Speech result event, resultIndex:', event.resultIndex, 'results length:', event.results.length);
         
+        let interimText = '';
+        let newFinalText = '';
+        
+        // Process only new results (from resultIndex onwards)
         for (let i = event.resultIndex; i < event.results.length; i++) {
-          const transcript = event.results[i][0].transcript;
-          if (event.results[i].isFinal) {
-            finalTranscript += transcript + ' ';
+          const result = event.results[i];
+          
+          if (!result || !result[0]) {
+            continue;
+          }
+          
+          const transcriptText = String(result[0].transcript);
+          console.log(`Result ${i}: "${transcriptText}" (final: ${result.isFinal})`);
+          
+          if (result.isFinal) {
+            newFinalText += transcriptText + ' ';
+            // Add to accumulated final text
+            if (i >= lastResultIndex) {
+              allFinalText += transcriptText + ' ';
+              lastResultIndex = i + 1;
+            }
           } else {
-            interimTranscript += transcript;
+            // This is interim/live text
+            interimText = transcriptText;
           }
         }
         
-        setTranscript(finalTranscript || interimTranscript);
+        // Show complete transcript immediately (accumulated final + current interim)
+        const completeTranscript = allFinalText + interimText;
+        console.log('Setting transcript to:', completeTranscript);
         
-        if (finalTranscript) {
-          setInputMessage(prev => prev + finalTranscript);
+        // Update all transcript states immediately for live display
+        setTranscript(completeTranscript);
+        setLiveTranscript(interimText);
+        setFinalizedTranscript(allFinalText);
+        pendingTranscriptRef.current = allFinalText; // Store for pause detection
+        
+        // Keep transcribing state active
+        setIsTranscribing(interimText.length > 0 || allFinalText.length > 0);
+        
+        // Reset timers on any speech activity
+        lastSpeechTimeRef.current = Date.now();
+        
+        // Clear existing pause timer
+        if (pauseTimerRef.current) {
+          clearTimeout(pauseTimerRef.current);
         }
+        
+        // Clear existing silence timer
+        if (silenceTimerRef.current) {
+          clearTimeout(silenceTimerRef.current);
+        }
+        
+        // Set pause timer (1.5 seconds) - sends text but keeps recording
+        if (allFinalText.trim() && allFinalText.trim() !== lastSentText) {
+          pauseTimerRef.current = setTimeout(() => {
+            console.log('Pause detected, sending chunk:', allFinalText);
+            
+            const textToSend = allFinalText.trim();
+            if (textToSend && textToSend !== lastSentText) {
+              // Send this chunk as a message
+              sendMessageRef.current?.(textToSend);
+              lastSentText = textToSend;
+              
+              // Clear the pending transcript since we've sent it
+              allFinalText = '';
+              lastResultIndex = event.results.length;
+              setFinalizedTranscript('');
+              setTranscript(interimText); // Keep showing any interim text
+              pendingTranscriptRef.current = '';
+            }
+          }, 1500); // 1.5 seconds pause = send chunk
+        }
+        
+        // Set long silence timer (5 seconds) - stops recording completely
+        silenceTimerRef.current = setTimeout(() => {
+          console.log('5 seconds of silence detected, stopping recording');
+          
+          // Send any remaining unsent text
+          const remainingText = allFinalText.trim();
+          if (remainingText && remainingText !== lastSentText) {
+            sendMessageRef.current?.(remainingText);
+          }
+          
+          // Stop recording
+          if (recognitionInstance) {
+            recognitionInstance.stop();
+          }
+          
+          // Reset for next recording session
+          allFinalText = '';
+          lastResultIndex = 0;
+          lastSentText = '';
+        }, 5000); // 5 seconds = stop recording
       };
       
       recognitionInstance.onerror = (event: any) => {
@@ -139,8 +265,25 @@ function AppContent() {
       };
       
       recognitionInstance.onend = () => {
+        console.log('Speech recognition ended');
+        
+        // Clear both timers
+        if (silenceTimerRef.current) {
+          clearTimeout(silenceTimerRef.current);
+          silenceTimerRef.current = null;
+        }
+        if (pauseTimerRef.current) {
+          clearTimeout(pauseTimerRef.current);
+          pauseTimerRef.current = null;
+        }
+        
+        // Clean up states
         setIsRecording(false);
         setIsTranscribing(false);
+        setTranscript('');
+        setLiveTranscript('');
+        setFinalizedTranscript('');
+        pendingTranscriptRef.current = '';
       };
       
       setRecognition(recognitionInstance);
@@ -231,43 +374,112 @@ function AppContent() {
   };
 
   // Handle sending message
-  const handleSendMessage = async () => {
-    if (!inputMessage.trim() || !isModelLoaded || isSending) return;
+  const handleSendMessage = async (messageText?: string) => {
+    // Ensure we have a string value
+    const textToSend = String(messageText || inputMessage || '');
+    if (!textToSend || !textToSend.trim() || !isModelLoaded || isSending) return;
+    
+    // Add to history
+    const trimmedText = textToSend.trim();
+    if (enhancedInput && enhancedInput.value === trimmedText) {
+      // This came from the input, add to history
+      const history = getChatHistory();
+      history.add(trimmedText);
+    }
     
     const userMessage: Message = {
       id: `msg-${Date.now()}`,
       role: 'user',
-      content: inputMessage,
+      content: trimmedText,
+      text: trimmedText, // Add for template compatibility
       timestamp: new Date()
-    };
+    } as Message;
     
-    setMessages(prev => [...prev, userMessage]);
+    console.log('Creating user message:', userMessage);
+    console.log('User message content type:', typeof userMessage.content);
+    console.log('User message content value:', userMessage.content);
+    
+    setMessages(prev => {
+      console.log('Previous messages:', prev);
+      const newMessages = [...prev, userMessage];
+      console.log('New messages array:', newMessages);
+      return newMessages;
+    });
     setInputMessage('');
     setIsSending(true);
     
     try {
       const startTime = Date.now();
-      const response = await chatApi.sendMessage(inputMessage, sessionId, selectedAgent);
+      // Get user_id from localStorage if user is logged in
+      let userId: string | undefined;
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          userId = user?.id;
+        } catch (e) {
+          console.error('Failed to parse user from localStorage:', e);
+        }
+      }
+      
+      const response = await chatApi.sendMessage(trimmedText, sessionId, selectedAgent, userId);
       const responseTime = (Date.now() - startTime) / 1000; // Convert to seconds
+      
+      // Debug log to see the structure
+      if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
+        console.log('Chat API Response:', response);
+        console.log('Response type:', typeof response);
+        if (response && typeof response === 'object') {
+          console.log('Response keys:', Object.keys(response));
+        }
+      }
+      
+      // Use the robust message parser to extract content
+      const messageContent = formatMessageContent(response);
+      
+      // Validate the extracted content
+      if (!messageContent || messageContent === '[object Object]') {
+        console.error('Failed to extract valid message content from response:', response);
+        // Provide a fallback message
+        const fallbackMessage = 'I received your message but encountered an issue processing the response.';
+        
+        const errorMessage: Message = {
+          id: `msg-${Date.now()}-assistant`,
+          role: 'assistant',
+          content: fallbackMessage,
+          text: fallbackMessage, // Add for template compatibility
+          timestamp: new Date(),
+          responseTime: responseTime,
+          tokens: 0,
+          agent: selectedAgent || 'default',
+          personality: selectedPersonality || 'default',
+          metadata: { error: 'Failed to parse response', originalResponse: response }
+        } as Message;
+        
+        setMessages(prev => [...prev, errorMessage]);
+        setIsSending(false);
+        return;
+      }
       
       const assistantMessage: Message = {
         id: `msg-${Date.now()}-assistant`,
         role: 'assistant',
-        content: response.response || response.message || '',
+        content: messageContent,
+        text: messageContent, // Add for template compatibility
         timestamp: new Date(),
         responseTime: responseTime,
-        tokens: response.metadata?.tokens || 0,
+        tokens: response?.metadata?.tokens || 0,
         agent: selectedAgent || 'default',
         personality: selectedPersonality || 'default',
-        metadata: response.metadata
-      };
+        metadata: response?.metadata
+      } as Message;
       
       setMessages(prev => [...prev, assistantMessage]);
       
       // Handle voice synthesis if enabled
       if (isSpeakerEnabled && selectedVoice) {
         try {
-          const audioBlob = await voiceApi.synthesize(response.response || response.message || '', selectedVoice);
+          const audioBlob = await voiceApi.synthesize(messageContent, selectedVoice);
           const audioUrl = URL.createObjectURL(audioBlob);
           
           // Stop any currently playing audio
@@ -307,6 +519,9 @@ function AppContent() {
       setIsSending(false);
     }
   };
+  
+  // Assign the send message function to the ref
+  sendMessageRef.current = handleSendMessage;
 
   // Handle new conversation
   const handleNewConversation = () => {
@@ -319,11 +534,40 @@ function AppContent() {
     if (!recognition) return;
     
     if (isRecording) {
+      console.log('Manually stopping recording');
+      
+      // Clear both timers if active
+      if (silenceTimerRef.current) {
+        clearTimeout(silenceTimerRef.current);
+        silenceTimerRef.current = null;
+      }
+      if (pauseTimerRef.current) {
+        clearTimeout(pauseTimerRef.current);
+        pauseTimerRef.current = null;
+      }
+      
+      // Send any pending transcript before stopping
+      if (pendingTranscriptRef.current && pendingTranscriptRef.current.trim()) {
+        sendMessageRef.current?.(pendingTranscriptRef.current.trim());
+      }
+      
       recognition.stop();
     } else {
+      console.log('Starting recording');
+      
+      // Clear any previous transcripts
+      setTranscript('');
+      setLiveTranscript('');
+      setFinalizedTranscript('');
+      pendingTranscriptRef.current = '';
+      
+      // Start recognition
       recognition.start();
       setIsRecording(true);
       setIsTranscribing(true);
+      
+      // Initialize speech time
+      lastSpeechTimeRef.current = Date.now();
     }
   };
 
@@ -442,7 +686,17 @@ function AppContent() {
   return (
     <TemplateLayout>
       {/* Legal Components */}
-      <DynamicComponent component="AgeGate" />
+      {!isAgeVerified && (
+        <DynamicComponent 
+          component="AgeGate" 
+          onVerified={() => {
+            // Handle age verification
+            setIsAgeVerified(true);
+            localStorage.setItem('age_verified', 'true');
+            console.log('Age verified');
+          }} 
+        />
+      )}
       <DynamicComponent component="CookieDisclaimer" />
       
       <div className="h-screen flex flex-col">
@@ -494,67 +748,75 @@ function AppContent() {
           />
           </div>
 
-          {/* Main Chat Area */}
-          <div className="flex-1 flex flex-col bg-white/95 backdrop-blur-sm">
-            {/* Chat Header */}
-            <DynamicComponent
-              component="ChatHeader"
-              isModelLoaded={isModelLoaded}
-              selectedModel={selectedModel}
-              selectedPersonality={selectedPersonality}
-              presets={presets}
-              isSpeaking={isSpeaking}
-              isFullscreen={isFullscreen}
-              onToggleFullscreen={() => setIsFullscreen(!isFullscreen)}
-              onCopyChat={() => {
-                const chatText = messages.map(m => `${m.role}: ${m.content}`).join('\n');
-                navigator.clipboard.writeText(chatText);
-                showNotificationMessage('Chat copied to clipboard!');
-              }}
-              onClearSession={handleNewConversation}
-              messages={messages}
-              sessionId={sessionId}
-              isPanelOpen={isPanelOpen}
-            />
+          {/* Main Chat Area with Floating Container */}
+          <FloatingChatContainer 
+            className={`flex-1 transition-all duration-300 ${isPanelOpen ? 'sm:ml-80' : ''}`}
+            isPanelOpen={isPanelOpen}>
+            <div className="flex-1 flex flex-col bg-white/95 backdrop-blur-sm h-full">
+              {/* Chat Header */}
+              <DynamicComponent
+                component="ChatHeader"
+                isModelLoaded={isModelLoaded}
+                selectedModel={selectedModel}
+                selectedPersonality={selectedPersonality}
+                presets={presets}
+                isSpeaking={isSpeaking}
+                isFullscreen={isFullscreen}
+                onToggleFullscreen={() => setIsFullscreen(!isFullscreen)}
+                onCopyChat={() => {
+                  const chatText = messages.map(m => `${m.role}: ${m.content}`).join('\n');
+                  navigator.clipboard.writeText(chatText);
+                  showNotificationMessage('Chat copied to clipboard!');
+                }}
+                onClearSession={handleNewConversation}
+                messages={messages}
+                sessionId={sessionId}
+                isPanelOpen={isPanelOpen}
+              />
 
-            {/* Chat Messages */}
-            <DynamicComponent
-              component="ChatMessages"
-              messages={messages}
-              isTyping={isSending}
-              messagesEndRef={messagesEndRef}
-              isModelLoaded={isModelLoaded}
-            />
+              {/* Chat Messages */}
+              <DynamicComponent
+                component="ChatMessages"
+                messages={messages}
+                isTyping={isSending}
+                messagesEndRef={messagesEndRef}
+                isModelLoaded={isModelLoaded}
+              />
 
-            {/* Chat Input Area */}
-            <DynamicComponent
-              component="ChatInputArea"
-              inputMessage={inputMessage}
-              onInputChange={setInputMessage}
-              onSendMessage={handleSendMessage}
-              onKeyPress={(e: React.KeyboardEvent) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSendMessage();
-                }
-              }}
-              isModelLoaded={isModelLoaded}
-              isSending={isSending}
-              isRecording={isRecording}
-              isTranscribing={isTranscribing}
-              transcript={transcript}
-              onToggleVoiceRecording={handleVoiceRecord}
-              isSpeakerEnabled={isSpeakerEnabled}
-              onToggleSpeaker={handleToggleSpeaker}
-              isSpeaking={isSpeaking}
-              showTemplates={showTemplates}
-              onToggleTemplates={() => setShowTemplates(!showTemplates)}
-              onUseTemplate={(template: ConversationTemplate) => {
-                setInputMessage(template.message);
-                setShowTemplates(false);
-              }}
-            />
-          </div>
+              {/* Chat Input Area */}
+              <DynamicComponent
+                component="ChatInputArea"
+                inputMessage={inputMessage}
+                onInputChange={setInputMessage}
+                onSendMessage={handleSendMessage}
+                onKeyDown={(e: React.KeyboardEvent) => {
+                  // Use enhanced input key handler for history and autocorrect
+                  handleInputKeyDown(e);
+                }}
+                isModelLoaded={isModelLoaded}
+                isSending={isSending}
+                isRecording={isRecording}
+                isTranscribing={isTranscribing}
+                transcript={transcript}
+                onToggleVoiceRecording={handleVoiceRecord}
+                isSpeakerEnabled={isSpeakerEnabled}
+                onToggleSpeaker={handleToggleSpeaker}
+                isSpeaking={isSpeaking}
+                showTemplates={showTemplates}
+                onToggleTemplates={() => setShowTemplates(!showTemplates)}
+                // Enhanced features
+                inputRef={enhancedInputRef}
+                autoCorrectSuggestions={suggestions}
+                showAutoCorrectSuggestions={showSuggestions}
+                onApplySuggestion={applySuggestion}
+                onDismissSuggestions={dismissSuggestions}
+                onUseTemplate={(template: ConversationTemplate) => {
+                  setInputMessage(template.message);
+                  setShowTemplates(false);
+                }}
+              />
+            </div>
+          </FloatingChatContainer>
         </div>
 
         {/* Notification */}
@@ -599,7 +861,11 @@ function App() {
     <AuthProvider>
       <ComplianceProvider>
         <TemplateContextProvider>
-          <AppContent />
+          <CartProvider>
+            <FloatingChatProvider>
+              <AppContent />
+            </FloatingChatProvider>
+          </CartProvider>
         </TemplateContextProvider>
       </ComplianceProvider>
     </AuthProvider>

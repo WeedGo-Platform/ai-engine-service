@@ -106,11 +106,13 @@ async def websocket_endpoint(websocket: WebSocket):
                         "status": "start"
                     }), session_id)
                     
-                    # Get actual AI response
+                    # Get actual AI response with user context if available
+                    user_id = message_data.get("user_id")  # Get user_id if provided
                     try:
                         ai_response = ai_engine.get_response(
                             user_message,
                             session_id=session_id,
+                            user_id=user_id,  # Pass user_id for context
                             max_tokens=500
                         )
                     except Exception as e:
@@ -232,7 +234,7 @@ async def get_session(session_id: str):
     return JSONResponse(chat_sessions[session_id])
 
 @router.post("/message")
-async def send_message(session_id: str, message: str):
+async def send_message(session_id: str, message: str, user_id: Optional[str] = None):
     """Send a message in a chat session (REST alternative to WebSocket)"""
     if session_id not in chat_sessions:
         # Create session if it doesn't exist
@@ -241,7 +243,8 @@ async def send_message(session_id: str, message: str):
             "agent": "dispensary",
             "personality": "friendly",
             "created_at": datetime.utcnow().isoformat(),
-            "messages": []
+            "messages": [],
+            "user_id": user_id  # Store user_id in session
         }
     
     # Add user message to session
@@ -259,11 +262,16 @@ async def send_message(session_id: str, message: str):
     if ai_engine.current_agent != agent or ai_engine.current_personality_type != personality:
         ai_engine.load_agent_personality(agent, personality)
     
-    # Generate AI response
+    # Get user_id from session if not provided
+    if not user_id and "user_id" in chat_sessions[session_id]:
+        user_id = chat_sessions[session_id]["user_id"]
+    
+    # Generate AI response with user context
     try:
         ai_response = ai_engine.get_response(
             message,
             session_id=session_id,
+            user_id=user_id,  # Pass user_id for context-aware responses
             max_tokens=500
         )
     except Exception as e:

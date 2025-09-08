@@ -33,7 +33,9 @@ export interface AuthContextType extends AuthState {
   login: (credentials: LoginCredentials) => Promise<void>;
   loginWithOTP: (email: string, code: string) => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
-  sendOTP: (email: string) => Promise<void>;
+  sendOTP: (email: string) => Promise<any>;
+  resendOTP: (identifier: string) => Promise<any>;
+  getOTPStatus: (identifier: string) => Promise<any>;
   logout: () => Promise<void>;
   clearError: () => void;
 }

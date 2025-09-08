@@ -267,7 +267,7 @@ app = FastAPI(
 # Add CORS middleware - allow localhost on any port
 app.add_middleware(
     CORSMiddleware,
-    allow_origin_regex=r"^https?://localhost(:\d+)?$",  # Allow localhost on any port
+    allow_origins=["http://localhost:3004", "http://localhost:3000", "http://localhost:5024", "http://localhost:5173"],  # Allow specific localhost ports
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -334,6 +334,46 @@ except Exception as e:
             "orders": [],
             "data": []
         }
+
+# Import and include translation endpoints
+try:
+    from api.translation_endpoints import router as translation_router
+    app.include_router(translation_router)
+    logger.info("Translation endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load translation endpoints: {e}")
+
+# Import and include search endpoints
+try:
+    from api.search_endpoints import router as search_router
+    app.include_router(search_router)
+    logger.info("Search endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load search endpoints: {e}")
+
+# Import and include supplier endpoints
+try:
+    from api.supplier_endpoints import router as supplier_router
+    app.include_router(supplier_router)
+    logger.info("Supplier endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load supplier endpoints: {e}")
+
+# Import and include user context endpoints
+try:
+    from api.user_context_endpoints import router as user_context_router
+    app.include_router(user_context_router)
+    logger.info("User context endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load user context endpoints: {e}")
+
+# Import and include voice authentication endpoints
+try:
+    from api.voice_auth_endpoints import router as voice_auth_router
+    app.include_router(voice_auth_router)
+    logger.info("Voice authentication endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load voice authentication endpoints: {e}")
 
 # Add global rate limiting
 @app.middleware("http")

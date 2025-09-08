@@ -18,6 +18,11 @@ export interface Message {
   tokens?: number;
   agent?: string;
   personality?: string;
+  metadata?: {
+    tokens?: number;
+    tokens_per_sec?: number;
+    [key: string]: any;
+  };
 }
 
 export interface ConversationTemplate {

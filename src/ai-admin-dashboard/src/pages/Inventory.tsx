@@ -15,9 +15,11 @@ const Inventory: React.FC = () => {
     queryKey: ['inventory', searchTerm, selectedStatus],
     queryFn: async () => {
       const params: any = {};
-      if (searchTerm) params.search = searchTerm;
-      if (selectedStatus !== 'all') params.status = selectedStatus;
-      const response = await api.inventory.getAll(params);
+      if (searchTerm) params.q = searchTerm;
+      if (selectedStatus !== 'all') {
+        params.in_stock = selectedStatus === 'in_stock';
+      }
+      const response = await api.inventory.search(params);
       return response.data;
     },
   });
@@ -155,23 +157,23 @@ const Inventory: React.FC = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {inventory?.data?.map((item: InventoryItem) => (
+              {inventory?.products?.map((item: any) => (
                 <tr key={item.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <Package className="h-5 w-5 text-gray-400 mr-3" />
                       <div>
                         <div className="text-sm font-medium text-gray-900">
-                          {item.product?.name || 'Unknown Product'}
+                          {item.name || 'Unknown Product'}
                         </div>
                         <div className="text-sm text-gray-500">
-                          {item.product?.category}
+                          {item.category}
                         </div>
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {item.product?.sku || item.batch_number}
+                    {item.sku}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {editingItem?.id === item.id ? (
@@ -195,30 +197,30 @@ const Inventory: React.FC = () => {
                         className="text-sm text-gray-900 cursor-pointer"
                         onClick={() => setEditingItem(item)}
                       >
-                        {item.quantity_on_hand}
+                        {item.quantity_on_hand || item.stock_quantity || 0}
                       </span>
                     )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {item.quantity_reserved}
+                    {item.quantity_reserved || 0}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {item.quantity_available}
+                    {item.quantity_available || 0}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
-                        item.status
+                        item.stock_status || 'unknown'
                       )}`}
                     >
-                      {item.status.replace('_', ' ')}
+                      {(item.stock_status || 'unknown').replace('_', ' ')}
                     </span>
-                    {item.status === 'low_stock' && (
+                    {item.stock_status === 'low_stock' && (
                       <AlertTriangle className="inline-block ml-2 h-4 w-4 text-yellow-600" />
                     )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {item.location}
+                    {item.location || 'N/A'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button
@@ -244,7 +246,7 @@ const Inventory: React.FC = () => {
           </table>
         </div>
 
-        {(!inventory?.data || inventory.data.length === 0) && (
+        {(!inventory?.products || inventory.products.length === 0) && (
           <div className="text-center py-12">
             <Package className="mx-auto h-12 w-12 text-gray-400" />
             <h3 className="mt-2 text-sm font-medium text-gray-900">No inventory items</h3>
@@ -262,7 +264,7 @@ const Inventory: React.FC = () => {
             <div>
               <p className="text-sm font-medium text-gray-600">Total Items</p>
               <p className="text-2xl font-bold text-gray-900">
-                {inventory?.data?.reduce((sum: number, item: InventoryItem) => sum + item.quantity_on_hand, 0) || 0}
+                {inventory?.products?.reduce((sum: number, item: any) => sum + (item.quantity_on_hand || item.stock_quantity || 0), 0) || 0}
               </p>
             </div>
             <Package className="h-8 w-8 text-green-600" />
@@ -274,7 +276,7 @@ const Inventory: React.FC = () => {
             <div>
               <p className="text-sm font-medium text-gray-600">Low Stock</p>
               <p className="text-2xl font-bold text-yellow-600">
-                {inventory?.data?.filter((item: InventoryItem) => item.status === 'low_stock').length || 0}
+                {inventory?.products?.filter((item: any) => item.stock_status === 'low_stock').length || 0}
               </p>
             </div>
             <AlertTriangle className="h-8 w-8 text-yellow-600" />
@@ -286,7 +288,7 @@ const Inventory: React.FC = () => {
             <div>
               <p className="text-sm font-medium text-gray-600">Out of Stock</p>
               <p className="text-2xl font-bold text-red-600">
-                {inventory?.data?.filter((item: InventoryItem) => item.status === 'out_of_stock').length || 0}
+                {inventory?.products?.filter((item: any) => item.stock_status === 'out_of_stock').length || 0}
               </p>
             </div>
             <Package className="h-8 w-8 text-red-600" />
@@ -298,8 +300,8 @@ const Inventory: React.FC = () => {
             <div>
               <p className="text-sm font-medium text-gray-600">Total Value</p>
               <p className="text-2xl font-bold text-gray-900">
-                ${inventory?.data?.reduce((sum: number, item: InventoryItem) => 
-                  sum + (item.quantity_on_hand * item.unit_cost), 0
+                ${inventory?.products?.reduce((sum: number, item: any) => 
+                  sum + ((item.quantity_on_hand || item.stock_quantity || 0) * (item.unit_cost || item.price || 0)), 0
                 ).toFixed(2) || '0.00'}
               </p>
             </div>

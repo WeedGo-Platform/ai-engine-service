@@ -252,6 +252,11 @@ class InventoryService:
                             (batch_lot, sku, purchase_order_id, quantity_received, 
                              quantity_remaining, unit_cost, expiry_date)
                             VALUES ($1, $2, $3, $4, $4, $5, $6)
+                            ON CONFLICT (batch_lot) DO UPDATE
+                            SET quantity_received = batch_tracking.quantity_received + $4,
+                                quantity_remaining = batch_tracking.quantity_remaining + $4,
+                                unit_cost = ((batch_tracking.quantity_remaining * batch_tracking.unit_cost) + 
+                                            ($4 * $5)) / (batch_tracking.quantity_remaining + $4)
                         """
                         
                         await self.db.execute(

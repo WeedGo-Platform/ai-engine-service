@@ -9,7 +9,7 @@ import { LoginFormProps } from '../../../../core/contracts/template.contracts';
 import { detectContactType, getContactPlaceholder } from '../../../../utils/validation';
 
 const Login: React.FC<LoginFormProps> = ({ onClose, onSubmit, onRegister }) => {
-  const { login, loginWithOTP, sendOTP, error: authError, clearError, isLoading: authLoading } = useAuth();
+  const { login, loginWithOTP, sendOTP, resendOTP, getOTPStatus, error: authError, clearError, isLoading: authLoading } = useAuth();
   const [loginMethod, setLoginMethod] = useState<'password' | 'otp'>('password');
   const [email, setEmail] = useState('');
   const [contactInput, setContactInput] = useState('');
@@ -19,6 +19,8 @@ const Login: React.FC<LoginFormProps> = ({ onClose, onSubmit, onRegister }) => {
   const [otpSent, setOtpSent] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const [currentIdentifier, setCurrentIdentifier] = useState('');
 
   // Clear errors when switching login methods
   useEffect(() => {
@@ -26,7 +28,7 @@ const Login: React.FC<LoginFormProps> = ({ onClose, onSubmit, onRegister }) => {
     clearError();
     setOtpSent(false);
     setOtpCode('');
-  }, [loginMethod, clearError]);
+  }, [loginMethod]);
 
   // Load remembered email
   useEffect(() => {
@@ -37,14 +39,38 @@ const Login: React.FC<LoginFormProps> = ({ onClose, onSubmit, onRegister }) => {
     }
   }, []);
 
+  // Resend cooldown timer
+  useEffect(() => {
+    if (resendCooldown > 0) {
+      const timer = setTimeout(() => {
+        setResendCooldown(resendCooldown - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [resendCooldown]);
+
   const handleSendOTP = async () => {
     if (!contactInput) return;
     
     try {
       await sendOTP(contactInput);
       setOtpSent(true);
+      setCurrentIdentifier(contactInput);
+      setResendCooldown(60); // 60 second cooldown
     } catch (err: any) {
       setLocalError(err.message || 'Failed to send verification code');
+    }
+  };
+
+  const handleResendOTP = async () => {
+    if (!currentIdentifier || resendCooldown > 0) return;
+    
+    try {
+      await resendOTP(currentIdentifier);
+      setResendCooldown(60); // Reset cooldown
+      setLocalError('');
+    } catch (err: any) {
+      setLocalError(err.message || 'Failed to resend verification code');
     }
   };
 
@@ -78,19 +104,19 @@ const Login: React.FC<LoginFormProps> = ({ onClose, onSubmit, onRegister }) => {
 
   return (
     <Modal isOpen onClose={onClose} title="Welcome Back to Pot Palace">
-      <div className="space-y-6">
+      <div className="space-y-4">
         {/* Logo and Header */}
         <div className="text-center">
-          <div className="flex justify-center mb-4">
+          <div className="flex justify-center mb-2">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full blur-xl opacity-30 animate-pulse"></div>
-              <div className="relative z-10 w-20 h-20 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center">
-                <span className="text-3xl">🌿</span>
+              <div className="relative z-10 w-16 h-16 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center">
+                <span className="text-2xl">🌿</span>
               </div>
             </div>
           </div>
-          <h2 className="text-2xl font-bold text-purple-800 mb-2">Welcome Back!</h2>
-          <p className="text-purple-600">Sign in to your premium cannabis experience</p>
+          <h2 className="text-xl font-bold text-purple-800 mb-1">Welcome Back!</h2>
+          <p className="text-sm text-purple-600">Sign in to your premium cannabis experience</p>
         </div>
 
         {/* Login Method Toggle */}
@@ -125,7 +151,7 @@ const Login: React.FC<LoginFormProps> = ({ onClose, onSubmit, onRegister }) => {
           </button>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-6">
+        <form onSubmit={handleLogin} className="space-y-4">
           {/* Email Field - for password login */}
           {loginMethod === 'password' && (
             <Input
@@ -246,12 +272,20 @@ const Login: React.FC<LoginFormProps> = ({ onClose, onSubmit, onRegister }) => {
                     className="font-mono text-lg tracking-widest text-center"
                   />
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-purple-600">Didn't receive the code?</span>
+                    <span className="text-xs text-purple-600">
+                      {resendCooldown > 0 
+                        ? `Resend available in ${resendCooldown}s` 
+                        : "Didn't receive the code?"}
+                    </span>
                     <button
                       type="button"
-                      onClick={handleSendOTP}
-                      disabled={authLoading}
-                      className="text-xs text-pink-600 hover:text-pink-700 font-semibold"
+                      onClick={handleResendOTP}
+                      disabled={authLoading || resendCooldown > 0}
+                      className={`text-xs font-semibold transition-colors ${
+                        resendCooldown > 0 
+                          ? 'text-gray-400 cursor-not-allowed' 
+                          : 'text-pink-600 hover:text-pink-700 cursor-pointer'
+                      }`}
                     >
                       {authLoading ? 'Sending...' : 'Resend Code 🔄'}
                     </button>
@@ -283,12 +317,6 @@ const Login: React.FC<LoginFormProps> = ({ onClose, onSubmit, onRegister }) => {
               {authLoading ? 'Signing In...' : 'Sign In ✨'}
             </Button>
           )}
-          
-          {/* Security Badge */}
-          <div className="flex items-center justify-center gap-4 text-xs">
-            <Badge variant="secondary" size="sm">🔒 SSL Encrypted</Badge>
-            <Badge variant="secondary" size="sm">🌿 Cannabis Verified</Badge>
-          </div>
         </form>
 
         {/* Register Link */}

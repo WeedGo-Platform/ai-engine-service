@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { authApi } from '../services/api';
+import { otpService } from '../services/otp';
 import { User, AuthState, LoginCredentials, RegisterData, AuthContextType } from '../types/auth.types';
 import { detectContactType } from '../utils/validation';
 
@@ -123,16 +124,35 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         throw new Error('Please enter a valid email address or phone number');
       }
       
-      // Note: OTP login API implementation needed
-      // For now, we'll prepare the structure for both email and phone
-      const otpData = contactInfo.type === 'email' 
-        ? { email: contactInfo.value, code }
-        : { phone: contactInfo.value, code };
+      // Verify OTP using the OTP service
+      const response = await otpService.verifyOTP({
+        identifier: contactInfo.value,
+        code: code
+      });
       
-      // TODO: Implement actual API call when backend is ready
-      // const response = await authApi.verifyOTP(otpData);
-      
-      throw new Error('OTP login coming soon! Backend implementation in progress.');
+      if (response.success && response.user) {
+        const user: User = {
+          id: response.user.id,
+          email: response.user.email || contactInfo.value,
+          name: response.user.name || `${response.user.first_name} ${response.user.last_name}`,
+          firstName: response.user.first_name,
+          lastName: response.user.last_name,
+          phoneNumber: response.user.phone,
+          dateOfBirth: response.user.date_of_birth,
+        };
+        
+        setAuthState({
+          currentUser: user,
+          isAuthenticated: true,
+          isLoading: false,
+          error: null,
+        });
+        
+        // Store user info (tokens are handled by OTP service)
+        localStorage.setItem('user', JSON.stringify(user));
+      } else {
+        throw new Error(response.message || 'OTP verification failed');
+      }
     } catch (error: any) {
       const errorMessage = error.message || 'OTP login failed';
       setAuthState({
@@ -205,31 +225,57 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const sendOTP = async (contact: string) => {
+  const sendOTP = async (contact: string): Promise<any> => {
     const contactInfo = detectContactType(contact);
     
     if (contactInfo.type === 'invalid') {
       throw new Error('Please enter a valid email address or phone number');
     }
     
-    // TODO: Implement actual API call when backend is ready
-    // For now, we'll prepare the structure for both email and phone
-    const otpRequest = contactInfo.type === 'email'
-      ? { type: 'email', email: contactInfo.value }
-      : { type: 'phone', phone: contactInfo.value };
-    
-    // Simulate API call for demo
-    console.log('Sending OTP to:', otpRequest);
-    
-    // TODO: Uncomment when API is ready
-    // const response = await authApi.sendOTP(otpRequest);
-    
-    // For demo purposes, we'll show success message
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({ success: true, message: `Verification code sent to ${contactInfo.type === 'email' ? contactInfo.value : contactInfo.formatted}` });
-      }, 1000);
-    });
+    try {
+      // Send OTP using the OTP service
+      const response = await otpService.sendOTP({
+        identifier: contactInfo.value,
+        type: contactInfo.type === 'email' ? 'email' : 'phone'
+      });
+      
+      return {
+        success: response.success,
+        message: response.message || `Verification code sent to ${otpService.maskIdentifier(contactInfo.value)}`,
+        type: response.type,
+        identifier: response.identifier
+      };
+    } catch (error: any) {
+      throw new Error(error.message || 'Failed to send OTP');
+    }
+  };
+
+  const resendOTP = async (identifier: string): Promise<any> => {
+    try {
+      const response = await otpService.resendOTP(identifier);
+      return {
+        success: response.success,
+        message: response.message || `Verification code resent to ${otpService.maskIdentifier(identifier)}`,
+        type: response.type,
+        identifier: response.identifier
+      };
+    } catch (error: any) {
+      throw new Error(error.message || 'Failed to resend OTP');
+    }
+  };
+
+  const getOTPStatus = async (identifier: string): Promise<any> => {
+    try {
+      const status = await otpService.getOTPStatus(identifier);
+      return status;
+    } catch (error: any) {
+      console.error('Error getting OTP status:', error);
+      return {
+        exists: false,
+        identifier,
+        can_resend: true
+      };
+    }
   };
 
   const logout = async () => {
@@ -262,6 +308,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     loginWithOTP,
     register,
     sendOTP,
+    resendOTP,
+    getOTPStatus,
     logout,
     clearError,
   };

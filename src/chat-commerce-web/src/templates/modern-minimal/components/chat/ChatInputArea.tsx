@@ -6,7 +6,7 @@ interface ChatInputAreaProps {
   inputMessage: string;
   onInputChange: (value: string) => void;
   onSendMessage: () => void;
-  onKeyPress: (e: React.KeyboardEvent) => void;
+  onKeyDown: (e: React.KeyboardEvent) => void;
   isModelLoaded: boolean;
   isSending: boolean;
   isRecording: boolean;
@@ -25,7 +25,7 @@ const ChatInputArea = forwardRef<HTMLInputElement, ChatInputAreaProps>(({
   inputMessage,
   onInputChange,
   onSendMessage,
-  onKeyPress,
+  onKeyDown,
   isModelLoaded,
   isSending,
   isRecording,
@@ -63,7 +63,13 @@ const ChatInputArea = forwardRef<HTMLInputElement, ChatInputAreaProps>(({
             {transcript && !isRecording && !isTranscribing && (
               <div className="flex-1 px-4 py-2 bg-slate-100 rounded-lg border border-slate-200">
                 <p className="text-sm text-slate-800 font-medium">
-                  {transcript}
+                  {
+                    typeof transcript === 'string' 
+                      ? transcript 
+                      : typeof transcript === 'object' && transcript !== null
+                        ? (transcript.text || transcript.transcript || transcript.message || JSON.stringify(transcript))
+                        : String(transcript)
+                  }
                 </p>
               </div>
             )}
@@ -108,7 +114,7 @@ const ChatInputArea = forwardRef<HTMLInputElement, ChatInputAreaProps>(({
             type="text"
             value={inputMessage}
             onChange={(e) => onInputChange(e.target.value)}
-            onKeyPress={onKeyPress}
+            onKeyDown={onKeyDown}
             placeholder={isModelLoaded ? "Type your message..." : "Waiting for model..."}
             disabled={!isModelLoaded}
             className={`flex-1 px-3 sm:px-4 py-2 sm:py-2.5 bg-white border border-slate-300 rounded-lg text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-slate-400 transition-all duration-200 font-normal text-sm sm:text-base`}

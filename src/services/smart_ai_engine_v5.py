@@ -1424,6 +1424,123 @@ class SmartAIEngineV5:
                 "used_prompt": self.use_prompts
             }
     
+    async def get_user_context(self, user_id: str, session_id: Optional[str] = None) -> Dict[str, Any]:
+        """Fetch user context from the UserContextService"""
+        try:
+            # Import here to avoid circular dependencies
+            from services.user_context_service import UserContextService
+            import asyncpg
+            import os
+            
+            # Create a database connection
+            conn = await asyncpg.connect(
+                host=os.getenv('DB_HOST', 'localhost'),
+                port=int(os.getenv('DB_PORT', 5434)),
+                database=os.getenv('DB_NAME', 'ai_engine'),
+                user=os.getenv('DB_USER', 'weedgo'),
+                password=os.getenv('DB_PASSWORD', 'weedgo123')
+            )
+            
+            try:
+                context_service = UserContextService(conn)
+                user_context = await context_service.get_complete_user_context(user_id, session_id)
+                return user_context
+            finally:
+                await conn.close()
+                
+        except Exception as e:
+            logger.error(f"Error getting user context: {str(e)}")
+            return {}
+    
+    def get_response(self, message: str, session_id: Optional[str] = None, 
+                    user_id: Optional[str] = None, max_tokens: int = 500,
+                    include_context: bool = True) -> str:
+        """
+        Simple wrapper around generate() for backward compatibility
+        This is the method called by chat endpoints
+        """
+        try:
+            # Build context-aware prompt if user_id is provided
+            context_prompt = message
+            
+            if include_context and user_id:
+                # Try to get user context (sync wrapper for async function)
+                import asyncio
+                try:
+                    loop = asyncio.get_event_loop()
+                except RuntimeError:
+                    loop = asyncio.new_event_loop()
+                    asyncio.set_event_loop(loop)
+                
+                user_context = loop.run_until_complete(self.get_user_context(user_id, session_id))
+                
+                if user_context and user_context.get('user_profile'):
+                    # Build context-aware prompt
+                    context_parts = []
+                    
+                    # Add user profile info
+                    profile = user_context['user_profile']
+                    if profile:
+                        context_parts.append(f"User: {profile.get('first_name', '')} {profile.get('last_name', '')}")
+                        if profile.get('age_verified'):
+                            context_parts.append("Age verified: Yes")
+                        if profile.get('loyalty_points'):
+                            context_parts.append(f"Loyalty points: {profile['loyalty_points']}")
+                    
+                    # Add recent purchase context
+                    if user_context.get('recent_purchases'):
+                        recent_items = []
+                        for order in user_context['recent_purchases'][:3]:
+                            if order.get('items'):
+                                for item in order['items'][:2]:
+                                    recent_items.append(item.get('product_name', 'Unknown'))
+                        if recent_items:
+                            context_parts.append(f"Recent purchases: {', '.join(recent_items[:5])}")
+                    
+                    # Add preferences
+                    if user_context.get('preferences', {}).get('frequent_items'):
+                        fav_products = [item['product_name'] for item in user_context['preferences']['frequent_items'][:3]]
+                        if fav_products:
+                            context_parts.append(f"Favorite products: {', '.join(fav_products)}")
+                    
+                    # Add conversation context
+                    if user_context.get('conversation_context', {}).get('messages'):
+                        # Include last few messages for context continuity
+                        recent_msgs = user_context['conversation_context']['messages'][-4:]
+                        if recent_msgs:
+                            context_parts.append("Recent conversation:")
+                            for msg in recent_msgs:
+                                role = msg.get('role', 'user')
+                                content = msg.get('content', '')[:100]
+                                context_parts.append(f"{role}: {content}")
+                    
+                    if context_parts:
+                        context_info = "\n".join(context_parts)
+                        context_prompt = f"""Context about the user:
+{context_info}
+
+Current message: {message}
+
+Please provide a personalized response based on the user's history and preferences."""
+            
+            # Generate response using the existing generate method
+            result = self.generate(
+                prompt=context_prompt,
+                max_tokens=max_tokens,
+                use_context=True,
+                session_id=session_id
+            )
+            
+            # Extract just the text from the result
+            if isinstance(result, dict):
+                return result.get('text', 'I apologize, but I encountered an error processing your request.')
+            else:
+                return str(result)
+                
+        except Exception as e:
+            logger.error(f"Error in get_response: {str(e)}")
+            return "I apologize, but I'm having trouble processing your request. Please try again."
+    
     def compare_with_without_prompts(self, user_input: str, prompt_type: str = None) -> Dict:
         """Generate responses with and without prompts for comparison"""
         

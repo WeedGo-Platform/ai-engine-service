@@ -72,7 +72,7 @@ export const modelApi = {
 
 // Chat API
 export const chatApi = {
-  sendMessage: async (message: string, sessionId: string, agentId?: string) => {
+  sendMessage: async (message: string, sessionId: string, agentId?: string, userId?: string) => {
     const payload: any = {
       message,
       session_id: sessionId
@@ -81,6 +81,24 @@ export const chatApi = {
     // Only include agent_id if it's provided and not empty
     if (agentId && agentId.trim()) {
       payload.agent_id = agentId;
+    }
+    
+    // Include user_id if provided or get from localStorage
+    if (userId) {
+      payload.user_id = userId;
+    } else {
+      // Try to get user from localStorage
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          if (user && user.id) {
+            payload.user_id = user.id;
+          }
+        } catch (e) {
+          console.error('Failed to parse user from localStorage:', e);
+        }
+      }
     }
     
     const response = await api.post('/api/chat', payload);
