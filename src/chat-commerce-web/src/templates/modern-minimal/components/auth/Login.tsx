@@ -26,7 +26,7 @@ const Login: React.FC<LoginFormProps> = ({ onClose, onSubmit, onRegister }) => {
     clearError();
     setOtpSent(false);
     setOtpCode('');
-  }, [loginMethod, clearError]);
+  }, [loginMethod]);
 
   // Load remembered email
   useEffect(() => {
@@ -78,14 +78,14 @@ const Login: React.FC<LoginFormProps> = ({ onClose, onSubmit, onRegister }) => {
 
   return (
     <Modal isOpen onClose={onClose} title="Sign In">
-      <div className="space-y-8">
+      <div className="space-y-4">
         {/* Header */}
         <div className="text-center">
-          <div className="w-12 h-12 bg-black text-white rounded-none flex items-center justify-center mx-auto mb-6 font-mono text-xl">
+          <div className="w-10 h-10 bg-black text-white rounded-none flex items-center justify-center mx-auto mb-3 font-mono text-lg">
             →
           </div>
-          <h2 className="text-2xl font-light text-gray-900 mb-2">Welcome Back</h2>
-          <p className="text-gray-600 text-sm">Access your account</p>
+          <h2 className="text-xl font-light text-gray-900 mb-1">Welcome Back</h2>
+          <p className="text-gray-600 text-xs">Access your account</p>
         </div>
 
         {/* Login Method Toggle */}
@@ -116,7 +116,7 @@ const Login: React.FC<LoginFormProps> = ({ onClose, onSubmit, onRegister }) => {
           </div>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-6">
+        <form onSubmit={handleLogin} className="space-y-4">
           {/* Email Field - for password login */}
           {loginMethod === 'password' && (
             <Input
@@ -270,16 +270,10 @@ const Login: React.FC<LoginFormProps> = ({ onClose, onSubmit, onRegister }) => {
               {authLoading ? 'AUTHENTICATING...' : 'SIGN IN'}
             </Button>
           )}
-          
-          {/* Security Info */}
-          <div className="flex items-center justify-center gap-8 text-xs font-mono">
-            <Badge variant="secondary" size="sm">SSL</Badge>
-            <Badge variant="secondary" size="sm">SECURE</Badge>
-          </div>
         </form>
 
         {/* Register Link */}
-        <div className="text-center pt-6 border-t border-gray-200">
+        <div className="text-center pt-4 border-t border-gray-200">
           <p className="text-gray-600 mb-4 font-mono text-xs">NEW USER?</p>
           <Button
             variant="outline"

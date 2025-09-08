@@ -324,12 +324,6 @@ const Register: React.FC<RegisterFormProps> = ({ onClose, onSubmit, onLogin }) =
           </Button>
         </div>
 
-        {/* Security Info */}
-        <div className="flex items-center justify-center gap-8 text-xs font-mono pt-4">
-          <Badge variant="secondary" size="sm">SECURE</Badge>
-          <Badge variant="secondary" size="sm">ENCRYPTED</Badge>
-          <Badge variant="secondary" size="sm">COMPLIANT</Badge>
-        </div>
       </div>
     </Modal>
   );

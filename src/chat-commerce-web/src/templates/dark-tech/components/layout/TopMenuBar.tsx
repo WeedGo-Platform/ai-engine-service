@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAuth } from '../../../../contexts/AuthContext';
 import potPalaceLogo from '../../../../assets/pot-palace-logo.png';
+import ProductSearchDropdown from '../../../../components/search/ProductSearchDropdown';
 
 interface TopMenuBarProps {
   onShowLogin: () => void;
@@ -36,27 +37,21 @@ const TopMenuBar: React.FC<TopMenuBarProps> = ({
       </div>
 
       {/* Search Bar - Terminal style */}
-      <div className="flex-1 max-w-2xl mx-8 relative z-10">
-        <div className="relative group">
-          <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-pink-500 rounded-sm opacity-0 group-hover:opacity-30 blur transition-all duration-300"></div>
-          <input
-            type="text"
-            placeholder="&gt; SEARCH_DATABASE..."
-            className="w-full px-4 py-2.5 bg-black/80 backdrop-blur-sm border border-cyan-500/30 rounded-sm text-cyan-400 placeholder-cyan-700 pr-12 
+      <div className="flex-1 max-w-2xl mx-8 relative">
+        <ProductSearchDropdown
+          placeholder="> SEARCH_DATABASE..."
+          className="w-full"
+          inputClassName="w-full px-4 py-2.5 bg-black/80 backdrop-blur-sm border border-cyan-500/30 rounded-sm text-cyan-400 placeholder-cyan-700 pr-12 
                      focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_20px_rgba(0,255,255,0.3)]
                      font-mono text-sm uppercase tracking-wider transition-all duration-300
                      hover:border-cyan-400/50 hover:shadow-[0_0_10px_rgba(0,255,255,0.2)]"
-          />
-          <button className="absolute right-2 top-1/2 -translate-y-1/2 p-2 hover:bg-cyan-500/10 rounded-sm transition-all group/btn">
-            <svg className="w-5 h-5 text-cyan-500 group-hover/btn:text-cyan-300 group-hover/btn:drop-shadow-[0_0_8px_rgba(0,255,255,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </button>
-          {/* Scanline effect */}
-          <div className="absolute inset-0 pointer-events-none opacity-20">
-            <div className="h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent animate-scan"></div>
-          </div>
-        </div>
+          dropdownClassName="bg-black/90 backdrop-blur-md border-cyan-500/30 shadow-[0_0_30px_rgba(0,255,255,0.3)]"
+          resultItemClassName="hover:bg-cyan-900/30 border-cyan-500/20"
+          onProductSelect={(product) => {
+            console.log('Product selected:', product);
+            // Handle product selection - could navigate to product page or add to cart
+          }}
+        />
       </div>
 
       {/* Right Actions - Holographic panel */}

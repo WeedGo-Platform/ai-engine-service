@@ -1,5 +1,6 @@
 import React from 'react';
 import { Message, Preset } from '../../types';
+import { useFloatingChat } from '../../../../contexts/FloatingChatContext';
 
 interface ChatHeaderProps {
   isModelLoaded: boolean;
@@ -30,6 +31,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
   sessionId,
   isPanelOpen
 }) => {
+  const { toggleFloating, windowState } = useFloatingChat();
   return (
     <div className="bg-black/90 backdrop-blur-md border-b border-cyan-500/20 px-6 py-3 relative overflow-hidden">
       {/* Matrix rain background effect */}
@@ -95,11 +97,11 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Fullscreen Toggle - Holographic button */}
+          {/* Floating Window Toggle - Holographic button */}
           <button
-            onClick={onToggleFullscreen}
-            className="p-2 bg-black/50 border border-cyan-500/30 rounded-sm text-cyan-400 hover:text-cyan-300 hover:border-cyan-400 hover:bg-cyan-900/30 hover:shadow-[0_0_10px_rgba(0,255,255,0.5)] transition-all duration-300 group"
-            title="FULLSCREEN.TOGGLE"
+            onClick={toggleFloating}
+            className={`p-2 ${windowState === 'floating' ? 'bg-green-900/50 border-green-400 text-green-300' : 'bg-black/50 border-cyan-500/30 text-cyan-400'} border rounded-sm hover:text-cyan-300 hover:border-cyan-400 hover:bg-cyan-900/30 hover:shadow-[0_0_10px_rgba(0,255,255,0.5)] transition-all duration-300 group`}
+            title={windowState === 'floating' ? 'DOCK.WINDOW' : 'FLOAT.WINDOW'}
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {isFullscreen ? (

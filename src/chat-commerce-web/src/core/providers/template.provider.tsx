@@ -94,7 +94,19 @@ export function DynamicComponent<T extends keyof TemplateComponents>({
 } & (TemplateComponents[T] extends (...args: any) => any ? Parameters<TemplateComponents[T]>[0] : any)) {
   const template = useTemplate();
   const Component = template.getComponent(component) as any;
-  return <Component {...props} />;
+  
+  if (!Component) {
+    console.error(`Component "${component}" not found in template`);
+    return <div>Component {component} not found</div>;
+  }
+  
+  // Just try to render it - React will throw a proper error if it's not valid
+  try {
+    return <Component {...props} />;
+  } catch (error) {
+    console.error(`Error rendering component "${component}":`, error, Component);
+    return <div>Error rendering component: {component}</div>;
+  }
 }
 
 // Layout wrapper

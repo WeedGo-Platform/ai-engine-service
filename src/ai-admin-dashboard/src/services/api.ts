@@ -89,7 +89,7 @@ export const api = {
 
   // Suppliers
   suppliers: {
-    getAll: (params?: any) => axiosInstance.get('/suppliers', { params }),
+    getAll: (params?: any) => axiosInstance.get('/inventory/suppliers', { params }),
     getById: (id: string) => axiosInstance.get(`/suppliers/${id}`),
     create: (data: any) => axiosInstance.post('/suppliers', data),
     update: (id: string, data: any) => axiosInstance.put(`/suppliers/${id}`, data),

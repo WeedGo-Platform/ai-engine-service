@@ -6,7 +6,7 @@ interface ChatInputAreaProps {
   inputMessage: string;
   onInputChange: (value: string) => void;
   onSendMessage: () => void;
-  onKeyPress: (e: React.KeyboardEvent) => void;
+  onKeyDown: (e: React.KeyboardEvent) => void;
   isModelLoaded: boolean;
   isSending: boolean;
   isRecording: boolean;
@@ -25,7 +25,7 @@ const ChatInputArea = forwardRef<HTMLInputElement, ChatInputAreaProps>(({
   inputMessage,
   onInputChange,
   onSendMessage,
-  onKeyPress,
+  onKeyDown,
   isModelLoaded,
   isSending,
   isRecording,
@@ -63,7 +63,13 @@ const ChatInputArea = forwardRef<HTMLInputElement, ChatInputAreaProps>(({
             {transcript && !isRecording && !isTranscribing && (
               <div className="flex-1 px-4 py-2 bg-purple-800/50 rounded-xl border border-purple-600/30">
                 <p className="text-sm text-purple-200">
-                  <span className="font-medium text-pink-400">Transcript:</span> {transcript}
+                  <span className="font-medium text-pink-400">Transcript:</span> {
+                    typeof transcript === 'string' 
+                      ? transcript 
+                      : typeof transcript === 'object' && transcript !== null
+                        ? (transcript.text || transcript.transcript || transcript.message || JSON.stringify(transcript))
+                        : String(transcript)
+                  }
                 </p>
               </div>
             )}
@@ -108,7 +114,7 @@ const ChatInputArea = forwardRef<HTMLInputElement, ChatInputAreaProps>(({
             type="text"
             value={inputMessage}
             onChange={(e) => onInputChange(e.target.value)}
-            onKeyPress={onKeyPress}
+            onKeyDown={onKeyDown}
             placeholder={isModelLoaded ? "root@ai:~$ Enter command..." : "[SYSTEM OFFLINE]"}
             disabled={!isModelLoaded}
             className={`flex-1 px-3 sm:px-5 py-2 sm:py-3 bg-gray-950/90 border-2 border-cyan-500/30 rounded-lg text-cyan-300 placeholder-cyan-800 focus:outline-none focus:border-cyan-400/50 focus:shadow-[0_0_15px_rgba(6,182,212,0.3)] transition-all font-mono text-sm sm:text-base`}

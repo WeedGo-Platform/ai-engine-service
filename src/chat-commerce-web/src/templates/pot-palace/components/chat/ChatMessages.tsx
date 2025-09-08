@@ -1,6 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import { Message } from '../../types';
 import { formatTime, formatResponseTime } from '../../../../utils/formatters';
+import { safeStringify } from '../../../../utils/messageParser';
+import '../../styles/scrollbar.css';
 
 interface ChatMessagesProps {
   messages: Message[];
@@ -21,15 +23,32 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Debug: Log messages to see what we're receiving
+    console.log('ChatMessages received messages:', messages);
+    messages.forEach((msg, index) => {
+      console.log(`Message ${index}:`, {
+        id: msg.id,
+        role: msg.role,
+        content: msg.content,
+        contentType: typeof msg.content,
+        text: msg.text,
+        textType: typeof msg.text
+      });
+    });
+    
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     messagesEndRef?.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping, isSending, messagesEndRef]);
 
   return (
-    <div className="flex-1 overflow-y-auto p-6 relative" style={{
+    <div className="flex-1 overflow-y-auto relative pot-palace-scrollbar pot-palace-scrollbar-glow" style={{
       background: 'linear-gradient(135deg, rgba(76, 29, 149, 0.9) 0%, rgba(91, 33, 182, 0.8) 25%, rgba(124, 58, 237, 0.7) 50%, rgba(139, 92, 246, 0.6) 75%, rgba(76, 29, 149, 0.9) 100%)',
       backgroundSize: '400% 400%',
-      animation: 'psychedelicGradient 15s ease infinite'
+      animation: 'psychedelicGradient 15s ease infinite',
+      paddingTop: '20px',
+      paddingBottom: '20px',
+      paddingLeft: '24px',
+      paddingRight: '24px'
     }}>
       {/* Floating cannabis leaves background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -115,7 +134,9 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                 }`}>
                   {/* Shimmer effect overlay */}
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-shimmer" style={{ animation: 'shimmer 3s infinite' }}></div>
-                  <div className="text-base font-medium">{message.content || message.text}</div>
+                  <div className="text-base font-medium whitespace-pre-wrap break-words">
+                    {safeStringify(message.content || message.text, 'No message content')}
+                  </div>
                 </div>
               
                 {/* Metadata with psychedelic glow */}

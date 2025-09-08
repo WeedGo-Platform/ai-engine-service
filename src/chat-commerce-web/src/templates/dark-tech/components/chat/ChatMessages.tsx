@@ -1,6 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import { Message } from '../../types';
 import { formatTime, formatResponseTime } from '../../../../utils/formatters';
+import { safeStringify } from '../../../../utils/messageParser';
+import '../../styles/scrollbar.css';
 
 interface ChatMessagesProps {
   messages: Message[];
@@ -26,7 +28,8 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
   }, [messages, isTyping, isSending, messagesEndRef]);
 
   return (
-    <div className="flex-1 overflow-y-auto p-6 bg-black/50 backdrop-blur-sm relative">
+    <div className="flex-1 overflow-y-auto bg-black/50 backdrop-blur-sm relative dark-tech-scrollbar dark-tech-scrollbar-pulse"
+         style={{ paddingTop: '20px', paddingBottom: '20px', paddingLeft: '24px', paddingRight: '24px' }}>
       {/* Offline Overlay */}
       {!isModelLoaded && (
         <div className="absolute inset-0 bg-black/95 backdrop-blur-md z-10 flex items-center justify-center">
@@ -81,7 +84,9 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                     ? 'bg-black/75 text-pink-400 border border-purple-600/50 backdrop-blur-sm'
                     : 'bg-black/75 text-green-400 border border-green-700/40 backdrop-blur-sm'
                 }`}>
-                  <div className="text-base font-medium">{message.content || message.text}</div>
+                  <div className="text-base font-medium whitespace-pre-wrap break-words">
+                    {safeStringify(message.content || message.text, 'No message content')}
+                  </div>
                 </div>
               
                 {/* Metadata */}

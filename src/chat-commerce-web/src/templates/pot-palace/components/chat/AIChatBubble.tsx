@@ -1,5 +1,6 @@
 import React from 'react';
 import type { AIChatBubbleProps } from '../../../../core/contracts/template.contracts';
+import { safeStringify } from '../../../../utils/messageParser';
 
 const AIChatBubble: React.FC<AIChatBubbleProps> = ({
   content,
@@ -25,7 +26,9 @@ const AIChatBubble: React.FC<AIChatBubbleProps> = ({
     <div className="flex justify-start">
       <div className="max-w-4xl">
         <div className="px-5 py-3 rounded-2xl bg-black/75 text-green-400 border border-green-700/40 backdrop-blur-sm shadow-lg">
-          <div className="text-base font-medium">{content}</div>
+          <div className="text-base font-medium whitespace-pre-wrap break-words">
+            {safeStringify(content, 'No message content')}
+          </div>
         </div>
       </div>
     </div>

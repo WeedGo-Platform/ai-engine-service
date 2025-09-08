@@ -2,6 +2,7 @@ import { getTemplateFactory } from '../core/providers/template.provider';
 import { PotPalaceTemplateProvider } from './pot-palace/provider';
 import { ModernMinimalTemplateProvider } from './modern-minimal/provider';
 import { DarkTechTemplateProvider } from './dark-tech/provider';
+import { RastaVibesTemplateProvider } from './rasta-vibes/provider';
 
 // Register all templates
 export function registerTemplates() {
@@ -15,6 +16,9 @@ export function registerTemplates() {
   
   // Register Dark/Tech theme
   factory.register('dark-tech', new DarkTechTemplateProvider());
+  
+  // Register Rasta Vibes theme
+  factory.register('rasta-vibes', new RastaVibesTemplateProvider());
 }
 
 // Export template names
@@ -22,7 +26,8 @@ export const TEMPLATE_NAMES = {
   POT_PALACE: 'pot-palace',
   MODERN_MINIMAL: 'modern-minimal',
   DARK_TECH: 'dark-tech',
+  RASTA_VIBES: 'rasta-vibes',
 } as const;
 
 // Export default template
-export const DEFAULT_TEMPLATE = TEMPLATE_NAMES.POT_PALACE;
+export const DEFAULT_TEMPLATE = TEMPLATE_NAMES.RASTA_VIBES;

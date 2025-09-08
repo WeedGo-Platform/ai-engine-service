@@ -207,6 +207,50 @@ async def get_inventory_value_report(
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@router.get("/check")
+async def check_inventory_exists(
+    sku: str = Query(..., description="SKU to check"),
+    batch_lot: Optional[str] = Query(None, description="Batch lot to check"),
+    service: InventoryService = Depends(get_inventory_service)
+):
+    """Check if a SKU (and optionally batch lot) exists in inventory"""
+    try:
+        conn = service.db
+        
+        if batch_lot:
+            # Check for specific SKU + BatchLot combination
+            query = """
+                SELECT EXISTS(
+                    SELECT 1 
+                    FROM batch_tracking 
+                    WHERE sku = $1 
+                    AND batch_lot = $2 
+                    AND quantity_remaining > 0
+                ) as exists
+            """
+            result = await conn.fetchrow(query, sku, batch_lot)
+        else:
+            # Check for SKU only
+            query = """
+                SELECT EXISTS(
+                    SELECT 1 
+                    FROM inventory 
+                    WHERE sku = $1
+                    AND quantity_on_hand > 0
+                ) as exists
+            """
+            result = await conn.fetchrow(query, sku)
+        
+        return {
+            "exists": result['exists'],
+            "sku": sku,
+            "batch_lot": batch_lot
+        }
+    except Exception as e:
+        logger.error(f"Error checking inventory: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.get("/search")
 async def search_inventory_products(
     q: Optional[str] = Query(None, description="Search term"),
@@ -323,4 +367,97 @@ async def get_purchase_orders(
         }
     except Exception as e:
         logger.error(f"Error getting purchase orders: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.put("/purchase-orders/{po_id}/status")
+async def update_purchase_order_status(
+    po_id: UUID,
+    status: str = Query(..., pattern="^(pending|partial|received|cancelled)$"),
+    service: InventoryService = Depends(get_inventory_service)
+):
+    """Update purchase order status (approve, cancel, etc.)"""
+    try:
+        conn = service.db
+        
+        # If changing to 'received', trigger inventory update
+        if status == 'received':
+            # Get all items from the purchase order
+            items_query = """
+                SELECT 
+                    sku,
+                    batch_lot,
+                    quantity_ordered,
+                    unit_cost,
+                    expiry_date
+                FROM purchase_order_items
+                WHERE purchase_order_id = $1
+            """
+            
+            items = await conn.fetch(items_query, po_id)
+            
+            if items:
+                # Prepare items for receive function
+                received_items = [
+                    {
+                        'sku': item['sku'],
+                        'quantity_received': item['quantity_ordered'],  # Use ordered quantity as received
+                        'unit_cost': float(item['unit_cost']),
+                        'batch_lot': item['batch_lot'],
+                        'expiry_date': item['expiry_date']
+                    }
+                    for item in items
+                ]
+                
+                # Call the receive_purchase_order function to update inventory
+                success = await service.receive_purchase_order(po_id, received_items)
+                
+                if not success:
+                    raise HTTPException(
+                        status_code=400,
+                        detail="Failed to update inventory for received items"
+                    )
+                
+                # Get the updated PO info
+                result_query = """
+                    SELECT id, po_number, status 
+                    FROM purchase_orders 
+                    WHERE id = $1
+                """
+                result = await conn.fetchrow(result_query, po_id)
+                
+                return {
+                    "success": True,
+                    "message": f"Purchase order {result['po_number']} received and inventory updated",
+                    "po_id": str(result['id']),
+                    "po_number": result['po_number'],
+                    "new_status": result['status'],
+                    "items_received": len(items)
+                }
+        else:
+            # For other status changes, just update the status
+            query = """
+                UPDATE purchase_orders
+                SET status = $1,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE id = $2
+                RETURNING id, po_number, status
+            """
+            
+            result = await conn.fetchrow(query, status, po_id)
+            
+            if not result:
+                raise HTTPException(status_code=404, detail=f"Purchase order {po_id} not found")
+            
+            return {
+                "success": True,
+                "message": f"Purchase order {result['po_number']} status updated to {status}",
+                "po_id": str(result['id']),
+                "po_number": result['po_number'],
+                "new_status": result['status']
+            }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating purchase order status: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))

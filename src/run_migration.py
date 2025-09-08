@@ -28,7 +28,8 @@ async def run_migration():
         logger.info("Reading migration files...")
         migrations = [
             'migrations/002_create_auth_tables.sql',
-            'migrations/003_create_otp_tables.sql'
+            'migrations/003_create_otp_tables.sql',
+            'migrations/003_translation_system.sql'
         ]
         
         for migration_file in migrations:

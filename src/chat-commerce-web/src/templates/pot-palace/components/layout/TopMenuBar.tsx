@@ -1,6 +1,8 @@
 import React from 'react';
 import { useAuth } from '../../../../contexts/AuthContext';
+import { useCart } from '../../../../contexts/CartContext';
 import potPalaceLogo from '../../../../assets/pot-palace-logo.png';
+import ProductSearchDropdown from '../../../../components/search/ProductSearchDropdown';
 
 interface TopMenuBarProps {
   onShowLogin: () => void;
@@ -12,6 +14,7 @@ const TopMenuBar: React.FC<TopMenuBarProps> = ({
   onShowRegister
 }) => {
   const { currentUser, logout, isAuthenticated } = useAuth();
+  const { itemCount } = useCart();
   return (
     <div className="w-full bg-gradient-to-r from-[#E91ED4] via-[#FF006E] via-[#FF6B35] to-[#FFA500] px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between shadow-lg relative overflow-hidden z-40 h-[60px] sm:h-[72px]">
       {/* Animated gradient overlay */}
@@ -25,19 +28,18 @@ const TopMenuBar: React.FC<TopMenuBarProps> = ({
       </div>
 
       {/* Search Bar - Hidden on mobile */}
-      <div className="hidden md:flex flex-1 max-w-2xl mx-4 lg:mx-8 relative z-10">
-        <div className="relative w-full">
-          <input
-            type="text"
-            placeholder="Search for products..."
-            className="w-full px-4 sm:px-5 py-2 sm:py-2.5 bg-white/95 backdrop-blur-sm rounded-full text-gray-800 placeholder-gray-500 pr-10 sm:pr-12 focus:outline-none focus:ring-2 focus:ring-white/50 shadow-md text-sm sm:text-base"
-          />
-          <button className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 sm:p-2 hover:bg-gray-100 rounded-full transition-colors">
-            <svg className="w-4 sm:w-5 h-4 sm:h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </button>
-        </div>
+      <div className="hidden md:flex flex-1 max-w-2xl mx-4 lg:mx-8 relative">
+        <ProductSearchDropdown
+          placeholder="Search for products..."
+          className="w-full"
+          inputClassName="w-full px-4 sm:px-5 py-2 sm:py-2.5 bg-white/95 backdrop-blur-sm rounded-full text-gray-800 placeholder-gray-500 pr-10 sm:pr-12 focus:outline-none focus:ring-2 focus:ring-white/50 shadow-md text-sm sm:text-base"
+          dropdownClassName="bg-white/95 backdrop-blur-sm border-pink-200 shadow-2xl rounded-2xl"
+          resultItemClassName="hover:bg-gradient-to-r hover:from-pink-50 hover:to-orange-50 border-pink-100"
+          onProductSelect={(product) => {
+            console.log('Product selected:', product);
+            // Handle product selection - could navigate to product page or add to cart
+          }}
+        />
       </div>
 
       {/* Right Actions - Transparent Cylinder with Icons */}
@@ -58,10 +60,15 @@ const TopMenuBar: React.FC<TopMenuBarProps> = ({
           </button>
           
           {/* Cart Icon */}
-          <button className="p-2 sm:p-2.5 rounded-full hover:bg-white/20 transition-all group" title="Cart">
+          <button className="p-2 sm:p-2.5 rounded-full hover:bg-white/20 transition-all group relative" title="Cart">
             <svg className="w-4 sm:w-5 h-4 sm:h-5 text-white group-hover:text-yellow-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
             </svg>
+            {itemCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">
+                {itemCount}
+              </span>
+            )}
           </button>
           
           {/* Login/Logout Icon */}

@@ -47,6 +47,7 @@ import Select from './components/ui/Select';
 import Modal from './components/ui/Modal';
 import Card from './components/ui/Card';
 import Badge from './components/ui/Badge';
+import Scrollbar from './components/ui/Scrollbar';
 
 // Import legal components
 import AgeGate from './components/legal/AgeGate';
@@ -89,6 +90,7 @@ export class PotPalaceTemplateProvider extends BaseTemplateProvider {
       Modal: Modal as any,
       Card: Card as any,
       Badge: Badge as any,
+      Scrollbar: Scrollbar as any,
       AgeGate: AgeGate as any,
       CookieDisclaimer: CookieDisclaimer as any,
     };

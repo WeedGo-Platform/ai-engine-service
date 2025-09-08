@@ -56,6 +56,7 @@ export interface TemplateComponents {
   Modal: IModalComponent;
   Card: ICardComponent;
   Badge: IBadgeComponent;
+  Scrollbar: IScrollbarComponent;
 }
 
 // Layout Contract
@@ -299,6 +300,16 @@ export interface BadgeProps {
   variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   className?: string;
+}
+
+export interface IScrollbarComponent {
+  (props: ScrollbarProps): ReactNode;
+}
+
+export interface ScrollbarProps {
+  children: ReactNode;
+  className?: string;
+  maxHeight?: string;
 }
 
 // Granular Chat Component Interfaces

@@ -6,7 +6,7 @@ interface ChatInputAreaProps {
   inputMessage: string;
   onInputChange: (value: string) => void;
   onSendMessage: () => void;
-  onKeyPress: (e: React.KeyboardEvent) => void;
+  onKeyDown: (e: React.KeyboardEvent) => void;
   isModelLoaded: boolean;
   isSending: boolean;
   isRecording: boolean;
@@ -25,7 +25,7 @@ const ChatInputArea = forwardRef<HTMLInputElement, ChatInputAreaProps>(({
   inputMessage,
   onInputChange,
   onSendMessage,
-  onKeyPress,
+  onKeyDown,
   isModelLoaded,
   isSending,
   isRecording,
@@ -63,7 +63,13 @@ const ChatInputArea = forwardRef<HTMLInputElement, ChatInputAreaProps>(({
             {transcript && !isRecording && !isTranscribing && (
               <div className="flex-1 px-4 py-2 bg-purple-800/50 rounded-xl border border-purple-600/30">
                 <p className="text-sm text-purple-200">
-                  <span className="font-medium text-pink-400">Transcript:</span> {transcript}
+                  <span className="font-medium text-pink-400">Transcript:</span> {
+                    typeof transcript === 'string' 
+                      ? transcript 
+                      : typeof transcript === 'object' && transcript !== null
+                        ? (transcript.text || transcript.transcript || transcript.message || JSON.stringify(transcript))
+                        : String(transcript)
+                  }
                 </p>
               </div>
             )}
@@ -108,7 +114,7 @@ const ChatInputArea = forwardRef<HTMLInputElement, ChatInputAreaProps>(({
             type="text"
             value={inputMessage}
             onChange={(e) => onInputChange(e.target.value)}
-            onKeyPress={onKeyPress}
+            onKeyDown={onKeyDown}
             placeholder={isModelLoaded ? "Type your question here... (Cmd+K to focus)" : "Load a model to start chatting"}
             disabled={!isModelLoaded}
             className={`flex-1 px-3 sm:px-5 py-2 sm:py-3 bg-gradient-to-r from-purple-900/60 via-pink-900/50 to-purple-900/60 border-2 border-purple-400/40 rounded-xl text-yellow-100 placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 focus:border-yellow-400/50 transition-all shadow-inner backdrop-blur-sm font-medium text-sm sm:text-base`}

@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../services/api';
 import { PurchaseOrder, Supplier, Product } from '../types';
-import { FileText, Plus, Eye, Clock, CheckCircle, XCircle, TruckIcon } from 'lucide-react';
+import { FileText, Plus, Eye, Clock, CheckCircle, XCircle, TruckIcon, FileSpreadsheet, Package } from 'lucide-react';
+import ASNImportModal from '../components/ASNImportModal';
 
 const PurchaseOrders: React.FC = () => {
   const queryClient = useQueryClient();
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showASNImportModal, setShowASNImportModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<PurchaseOrder | null>(null);
 
   const { data: orders, isLoading, error } = useQuery({
@@ -92,11 +94,28 @@ const PurchaseOrders: React.FC = () => {
     }
   };
 
-  const handleStatusUpdate = (orderId: string, newStatus: string) => {
-    updateMutation.mutate({
-      id: orderId,
-      order: { status: newStatus as any },
-    });
+  const handleStatusUpdate = async (orderId: string, newStatus: string) => {
+    try {
+      const response = await fetch(`http://localhost:5024/api/inventory/purchase-orders/${orderId}/status?status=${newStatus}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || 'Failed to update status');
+      }
+      
+      const data = await response.json();
+      alert(data.message);
+      
+      // Refresh the purchase orders list
+      queryClient.invalidateQueries({ queryKey: ['purchase-orders'] });
+    } catch (error) {
+      alert(`Error updating status: ${(error as Error).message}`);
+    }
   };
 
   if (isLoading) {
@@ -119,13 +138,22 @@ const PurchaseOrders: React.FC = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-900">Purchase Orders</h1>
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 flex items-center gap-2"
-        >
-          <Plus className="h-5 w-5" />
-          Create Order
-        </button>
+        <div className="flex gap-3">
+          <button
+            onClick={() => setShowASNImportModal(true)}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2"
+          >
+            <FileSpreadsheet className="h-5 w-5" />
+            Import ASN
+          </button>
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 flex items-center gap-2"
+          >
+            <Plus className="h-5 w-5" />
+            Create Order
+          </button>
+        </div>
       </div>
 
       <div className="bg-white rounded-lg shadow-sm p-6">
@@ -177,22 +205,22 @@ const PurchaseOrders: React.FC = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {orders?.data?.map((order: PurchaseOrder) => (
+              {orders?.purchase_orders?.map((order: any) => (
                 <tr key={order.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       {getStatusIcon(order.status)}
                       <span className="ml-2 text-sm font-medium text-gray-900">
-                        {order.order_number}
+                        {order.po_number}
                       </span>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">
-                      {order.supplier?.name || 'Unknown Supplier'}
+                      {order.supplier_name || 'Unknown Supplier'}
                     </div>
                     <div className="text-sm text-gray-500">
-                      {order.supplier?.contact_name}
+                      {order.supplier?.contact_person || ''}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -208,10 +236,10 @@ const PurchaseOrders: React.FC = () => {
                     {new Date(order.order_date).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {new Date(order.expected_delivery).toLocaleDateString()}
+                    {order.expected_date ? new Date(order.expected_date).toLocaleDateString() : 'Not set'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {order.items?.length || 0} items
+                    {order.item_count || 0} items
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     ${order.total_amount?.toFixed(2) || '0.00'}
@@ -225,26 +253,26 @@ const PurchaseOrders: React.FC = () => {
                     </button>
                     {order.status === 'pending' && (
                       <button
-                        onClick={() => handleStatusUpdate(order.id, 'approved')}
+                        onClick={() => handleStatusUpdate(order.id, 'received')}
                         className="text-green-600 hover:text-green-900 mr-3"
                       >
-                        Approve
+                        Mark as Received
                       </button>
                     )}
-                    {order.status === 'approved' && (
+                    {order.status === 'pending' && (
                       <button
-                        onClick={() => handleStatusUpdate(order.id, 'ordered')}
-                        className="text-blue-600 hover:text-blue-900 mr-3"
+                        onClick={() => handleStatusUpdate(order.id, 'cancelled')}
+                        className="text-red-600 hover:text-red-900"
                       >
-                        Mark Ordered
+                        Cancel
                       </button>
                     )}
-                    {order.status === 'shipped' && (
+                    {order.status === 'partial' && (
                       <button
                         onClick={() => handleStatusUpdate(order.id, 'received')}
                         className="text-green-600 hover:text-green-900"
                       >
-                        Mark Received
+                        Mark Fully Received
                       </button>
                     )}
                   </td>
@@ -389,10 +417,7 @@ const PurchaseOrders: React.FC = () => {
               <div className="border-t pt-4">
                 <div className="flex justify-end space-y-1">
                   <div className="text-right">
-                    <p className="text-sm text-gray-600">Subtotal: ${selectedOrder.subtotal.toFixed(2)}</p>
-                    <p className="text-sm text-gray-600">Tax: ${selectedOrder.tax_amount.toFixed(2)}</p>
-                    <p className="text-sm text-gray-600">Shipping: ${selectedOrder.shipping_cost.toFixed(2)}</p>
-                    <p className="text-lg font-bold">Total: ${selectedOrder.total_amount.toFixed(2)}</p>
+                    <p className="text-lg font-bold">Total Amount: ${(selectedOrder.total_amount || 0).toFixed(2)}</p>
                   </div>
                 </div>
               </div>
@@ -400,6 +425,13 @@ const PurchaseOrders: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* ASN Import Modal */}
+      <ASNImportModal
+        isOpen={showASNImportModal}
+        onClose={() => setShowASNImportModal(false)}
+        suppliers={suppliers?.suppliers || []}
+      />
     </div>
   );
 };

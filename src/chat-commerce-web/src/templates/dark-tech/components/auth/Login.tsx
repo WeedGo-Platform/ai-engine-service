@@ -26,7 +26,7 @@ const Login: React.FC<LoginFormProps> = ({ onClose, onSubmit, onRegister }) => {
     clearError();
     setOtpSent(false);
     setOtpCode('');
-  }, [loginMethod, clearError]);
+  }, [loginMethod]);
 
   // Load remembered email
   useEffect(() => {
@@ -78,18 +78,18 @@ const Login: React.FC<LoginFormProps> = ({ onClose, onSubmit, onRegister }) => {
 
   return (
     <Modal isOpen onClose={onClose} title="SYSTEM ACCESS">
-      <div className="space-y-6">
+      <div className="space-y-4">
         {/* Header with Matrix-like effect */}
         <div className="text-center relative">
-          <div className="w-16 h-16 bg-gray-900 border-2 border-cyan-400 text-cyan-400 flex items-center justify-center mx-auto mb-6 font-mono text-xl relative">
+          <div className="w-12 h-12 bg-gray-900 border-2 border-cyan-400 text-cyan-400 flex items-center justify-center mx-auto mb-3 font-mono text-lg relative">
             <span className="animate-pulse">{'<>'}</span>
             {/* Glowing effect */}
             <div className="absolute inset-0 border-2 border-cyan-400 animate-pulse opacity-50"></div>
           </div>
-          <h2 className="text-2xl font-bold text-cyan-100 mb-2 font-mono uppercase tracking-wider">
+          <h2 className="text-xl font-bold text-cyan-100 mb-1 font-mono uppercase tracking-wider">
             INITIATE CONNECTION
           </h2>
-          <p className="text-cyan-400 text-sm font-mono">{'>>> '} NEURAL LINK PROTOCOL</p>
+          <p className="text-cyan-400 text-xs font-mono">{'>>> '} NEURAL LINK PROTOCOL</p>
         </div>
 
         {/* Authentication Method Toggle */}
@@ -124,7 +124,7 @@ const Login: React.FC<LoginFormProps> = ({ onClose, onSubmit, onRegister }) => {
           </button>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-6">
+        <form onSubmit={handleLogin} className="space-y-4">
           {/* Email Field - for password login */}
           {loginMethod === 'password' && (
             <Input
@@ -284,16 +284,10 @@ const Login: React.FC<LoginFormProps> = ({ onClose, onSubmit, onRegister }) => {
               {authLoading ? 'ESTABLISHING LINK...' : 'JACK IN ⚡'}
             </Button>
           )}
-          
-          {/* Security Status */}
-          <div className="flex items-center justify-center gap-6 text-xs font-mono">
-            <Badge variant="primary" size="sm">◉ ENCRYPTED</Badge>
-            <Badge variant="secondary" size="sm">◈ QUANTUM-SAFE</Badge>
-          </div>
         </form>
 
         {/* Register Link */}
-        <div className="text-center pt-6 border-t-2 border-cyan-800/50">
+        <div className="text-center pt-4 border-t-2 border-cyan-800/50">
           <p className="text-cyan-400 mb-4 font-mono text-sm uppercase">NEW TO THE MATRIX?</p>
           <Button
             variant="outline"

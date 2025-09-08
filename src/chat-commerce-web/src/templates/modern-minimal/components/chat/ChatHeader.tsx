@@ -1,5 +1,6 @@
 import React from 'react';
 import { Message, Preset } from '../../types';
+import { useFloatingChat } from '../../../../contexts/FloatingChatContext';
 
 interface ChatHeaderProps {
   isModelLoaded: boolean;
@@ -30,6 +31,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
   sessionId,
   isPanelOpen
 }) => {
+  const { toggleFloating, windowState } = useFloatingChat();
   return (
     <div className="bg-white backdrop-blur-lg border-b border-slate-200 px-8 py-3">
       <div className="flex items-center justify-between">
@@ -71,11 +73,11 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
         </div>
 
         <div className="flex items-center gap-1">
-          {/* Fullscreen Toggle */}
+          {/* Floating Window Toggle */}
           <button
-            onClick={onToggleFullscreen}
-            className="p-2 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-all duration-200"
-            title="Toggle fullscreen"
+            onClick={toggleFloating}
+            className={`p-2 rounded-lg ${windowState === 'floating' ? 'bg-blue-500 text-white' : 'hover:bg-slate-100 text-slate-600 hover:text-slate-900'} transition-all duration-200`}
+            title={windowState === 'floating' ? 'Dock chat window' : 'Pop out chat window'}
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {isFullscreen ? (

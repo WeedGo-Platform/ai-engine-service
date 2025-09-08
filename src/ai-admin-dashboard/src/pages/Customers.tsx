@@ -17,7 +17,8 @@ const Customers: React.FC = () => {
       if (searchTerm) params.search = searchTerm;
       if (selectedType !== 'all') params.customer_type = selectedType;
       const response = await api.customers.getAll(params);
-      return response.data;
+      // Handle both array response and wrapped response
+      return Array.isArray(response.data) ? response.data : response.data?.data || [];
     },
   });
 
@@ -128,7 +129,7 @@ const Customers: React.FC = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {customers?.data?.map((customer: Customer) => (
+              {customers?.map((customer: any) => (
                 <tr key={customer.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
@@ -137,7 +138,7 @@ const Customers: React.FC = () => {
                       </div>
                       <div className="ml-4">
                         <div className="text-sm font-medium text-gray-900">
-                          {customer.first_name} {customer.last_name}
+                          {customer.first_name || 'Unknown'} {customer.last_name || 'Customer'}
                         </div>
                         <div className="text-sm text-gray-500">
                           ID: {customer.id.slice(0, 8)}
@@ -150,14 +151,16 @@ const Customers: React.FC = () => {
                       <Mail className="h-4 w-4 text-gray-400" />
                       {customer.email}
                     </div>
-                    <div className="text-sm text-gray-500 flex items-center gap-1">
-                      <Phone className="h-4 w-4 text-gray-400" />
-                      {customer.phone}
-                    </div>
+                    {customer.phone && (
+                      <div className="text-sm text-gray-500 flex items-center gap-1">
+                        <Phone className="h-4 w-4 text-gray-400" />
+                        {customer.phone}
+                      </div>
+                    )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getTypeColor(customer.customer_type)}`}>
-                      {customer.customer_type}
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getTypeColor(customer.customer_type || 'regular')}`}>
+                      {customer.customer_type || 'regular'}
                     </span>
                     {customer.medical_license && (
                       <div className="text-xs text-gray-500 mt-1">
@@ -168,21 +171,21 @@ const Customers: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <Star className="h-4 w-4 text-yellow-400 mr-1" />
-                      <span className="text-sm text-gray-900">{customer.loyalty_points}</span>
+                      <span className="text-sm text-gray-900">{customer.loyalty_points || 0}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    ${customer.total_spent.toFixed(2)}
+                    ${(parseFloat(customer.total_spent) || 0).toFixed(2)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <ShoppingBag className="h-4 w-4 text-gray-400 mr-1" />
-                      <span className="text-sm text-gray-900">{customer.order_count}</span>
+                      <span className="text-sm text-gray-900">{customer.order_count || 0}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(customer.status)}`}>
-                      {customer.status}
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(customer.status || 'active')}`}>
+                      {customer.status || 'active'}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -199,7 +202,7 @@ const Customers: React.FC = () => {
           </table>
         </div>
 
-        {(!customers?.data || customers.data.length === 0) && (
+        {(!customers || customers.length === 0) && (
           <div className="text-center py-12">
             <Users className="mx-auto h-12 w-12 text-gray-400" />
             <h3 className="mt-2 text-sm font-medium text-gray-900">No customers found</h3>
@@ -217,7 +220,7 @@ const Customers: React.FC = () => {
             <div>
               <p className="text-sm font-medium text-gray-600">Total Customers</p>
               <p className="text-2xl font-bold text-gray-900">
-                {customers?.data?.length || 0}
+                {customers?.length || 0}
               </p>
             </div>
             <Users className="h-8 w-8 text-green-600" />
@@ -229,7 +232,7 @@ const Customers: React.FC = () => {
             <div>
               <p className="text-sm font-medium text-gray-600">Medical Patients</p>
               <p className="text-2xl font-bold text-blue-600">
-                {customers?.data?.filter((c: Customer) => c.customer_type === 'medical').length || 0}
+                {customers?.filter((c: any) => c.customer_type === 'medical').length || 0}
               </p>
             </div>
             <Users className="h-8 w-8 text-blue-600" />
@@ -241,8 +244,8 @@ const Customers: React.FC = () => {
             <div>
               <p className="text-sm font-medium text-gray-600">Avg Spent</p>
               <p className="text-2xl font-bold text-gray-900">
-                ${customers?.data?.length ? 
-                  (customers.data.reduce((sum: number, c: Customer) => sum + c.total_spent, 0) / customers.data.length).toFixed(2)
+                ${customers?.length ? 
+                  (customers.reduce((sum: number, c: any) => sum + (parseFloat(c.total_spent) || 0), 0) / customers.length).toFixed(2)
                   : '0.00'
                 }
               </p>
@@ -256,7 +259,7 @@ const Customers: React.FC = () => {
             <div>
               <p className="text-sm font-medium text-gray-600">Total Points</p>
               <p className="text-2xl font-bold text-yellow-600">
-                {customers?.data?.reduce((sum: number, c: Customer) => sum + c.loyalty_points, 0) || 0}
+                {customers?.reduce((sum: number, c: any) => sum + (c.loyalty_points || 0), 0) || 0}
               </p>
             </div>
             <Star className="h-8 w-8 text-yellow-600" />

@@ -21,19 +21,27 @@ class CustomerService:
         self.db = db_connection
     
     async def create_customer(self, customer_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Create a new customer (user)"""
+        """Create a new customer"""
         try:
-            # Insert into users table
-            # Generate a placeholder password hash (in production, handle this properly)
-            import hashlib
-            password_hash = hashlib.sha256(f"temp_{customer_data['email']}".encode()).hexdigest()
+            # Prepare data for customers table
+            import json
+            
+            # Extract preferences data
+            preferences = {}
+            if customer_data.get('address'):
+                preferences['address'] = customer_data['address']
+            if customer_data.get('tags'):
+                preferences['tags'] = customer_data['tags']
+            if customer_data.get('notes'):
+                preferences['notes'] = customer_data['notes']
             
             query = """
-                INSERT INTO users (
-                    first_name, last_name, email, phone, 
-                    password_hash, role, active, email_verified, terms_accepted
+                INSERT INTO customers (
+                    first_name, last_name, email, phone,
+                    customer_type, medical_license, preferences,
+                    loyalty_points, total_spent, order_count, status
                 )
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
                 RETURNING *
             """
             
@@ -43,43 +51,16 @@ class CustomerService:
                 customer_data.get('last_name'),
                 customer_data['email'],
                 customer_data.get('phone'),
-                password_hash,  # Temporary password hash
-                'customer',  # Default role
-                customer_data.get('is_active', True),
-                False,  # email_verified default
-                True   # terms_accepted default
+                customer_data.get('customer_type', 'recreational'),
+                customer_data.get('medical_license'),
+                json.dumps(preferences) if preferences else None,
+                0,  # Initial loyalty points
+                0.0,  # Initial total spent
+                0,  # Initial order count
+                'active'  # Default status
             )
             
-            user = dict(result)
-            
-            # Create customer profile if we have additional data
-            if customer_data.get('address') or customer_data.get('tags') or customer_data.get('notes'):
-                profile_query = """
-                    INSERT INTO customer_profiles (
-                        customer_id, preferences
-                    )
-                    VALUES ($1, $2)
-                    ON CONFLICT (customer_id) DO UPDATE 
-                    SET preferences = EXCLUDED.preferences,
-                        updated_at = CURRENT_TIMESTAMP
-                """
-                
-                preferences = {
-                    'address': customer_data.get('address'),
-                    'tags': customer_data.get('tags', []),
-                    'notes': customer_data.get('notes')
-                }
-                
-                import json
-                await self.db.execute(
-                    profile_query,
-                    str(user['id']),
-                    json.dumps(preferences)
-                )
-                
-                user['preferences'] = preferences
-            
-            return user
+            return dict(result)
             
         except asyncpg.UniqueViolationError:
             raise ValueError(f"Customer with email {customer_data['email']} already exists")
@@ -91,10 +72,10 @@ class CustomerService:
         """Get customer by ID"""
         try:
             query = """
-                SELECT u.*, cp.preferences 
-                FROM users u
-                LEFT JOIN customer_profiles cp ON cp.customer_id = u.id::text
-                WHERE u.id = $1 AND u.role = 'customer'
+                SELECT c.*, u.email_verified, u.terms_accepted
+                FROM customers c
+                LEFT JOIN users u ON c.user_id = u.id
+                WHERE c.id = $1
             """
             
             result = await self.db.fetchrow(query, customer_id)
@@ -108,53 +89,57 @@ class CustomerService:
                             update_data: Dict[str, Any]) -> bool:
         """Update customer information"""
         try:
-            # Separate user fields from profile fields
-            user_fields = ['first_name', 'last_name', 'email', 'phone', 'active']
-            profile_data = {}
-            user_updates = {}
+            import json
+            
+            # Build update clauses
+            set_clauses = []
+            params = []
+            param_count = 1
+            
+            # Direct customer fields
+            customer_fields = ['first_name', 'last_name', 'email', 'phone', 
+                             'customer_type', 'medical_license']
+            
+            # Handle status field mapping
+            if 'is_active' in update_data:
+                update_data['status'] = 'active' if update_data['is_active'] else 'inactive'
+                del update_data['is_active']
             
             for field, value in update_data.items():
-                if field in user_fields:
-                    user_updates[field] = value
-                elif field in ['address', 'tags', 'notes']:
-                    profile_data[field] = value
-            
-            # Update users table if needed
-            if user_updates:
-                set_clauses = []
-                params = []
-                param_count = 1
-                
-                for field, value in user_updates.items():
+                if field in customer_fields:
                     set_clauses.append(f"{field} = ${param_count}")
                     params.append(value)
                     param_count += 1
-                
-                params.append(customer_id)
-                query = f"""
-                    UPDATE users
-                    SET {', '.join(set_clauses)}, updated_at = CURRENT_TIMESTAMP
-                    WHERE id = ${param_count} AND role = 'customer'
-                """
-                
-                result = await self.db.execute(query, *params)
-                
-            # Update profile if needed
-            if profile_data:
-                import json
-                await self.db.execute(
-                    """
-                    INSERT INTO customer_profiles (customer_id, preferences)
-                    VALUES ($1, $2::jsonb)
-                    ON CONFLICT (customer_id) DO UPDATE 
-                    SET preferences = customer_profiles.preferences || $2::jsonb,
-                        updated_at = CURRENT_TIMESTAMP
-                    """,
-                    str(customer_id),
-                    json.dumps(profile_data)
-                )
+                elif field == 'status':
+                    set_clauses.append(f"status = ${param_count}")
+                    params.append(value)
+                    param_count += 1
+                elif field in ['address', 'tags', 'notes']:
+                    # Update preferences JSONB field
+                    if 'preferences' not in [c.split(' = ')[0] for c in set_clauses]:
+                        # Get current preferences first
+                        current = await self.db.fetchrow(
+                            "SELECT preferences FROM customers WHERE id = $1",
+                            customer_id
+                        )
+                        prefs = current['preferences'] if current and current['preferences'] else {}
+                        prefs[field] = value
+                        set_clauses.append(f"preferences = ${param_count}")
+                        params.append(json.dumps(prefs))
+                        param_count += 1
             
-            return True
+            if not set_clauses:
+                return True  # Nothing to update
+            
+            params.append(customer_id)
+            query = f"""
+                UPDATE customers
+                SET {', '.join(set_clauses)}, updated_at = CURRENT_TIMESTAMP
+                WHERE id = ${param_count}
+            """
+            
+            result = await self.db.execute(query, *params)
+            return result != "UPDATE 0"
             
         except Exception as e:
             logger.error(f"Error updating customer: {str(e)}")
@@ -164,9 +149,9 @@ class CustomerService:
         """Soft delete a customer"""
         try:
             query = """
-                UPDATE users
-                SET active = false, updated_at = CURRENT_TIMESTAMP
-                WHERE id = $1 AND role = 'customer'
+                UPDATE customers
+                SET status = 'inactive', updated_at = CURRENT_TIMESTAMP
+                WHERE id = $1
             """
             
             result = await self.db.execute(query, customer_id)
@@ -183,10 +168,10 @@ class CustomerService:
         """List customers with optional filters"""
         try:
             query = """
-                SELECT u.*, cp.preferences
-                FROM users u
-                LEFT JOIN customer_profiles cp ON cp.customer_id = u.id::text
-                WHERE u.role = 'customer'
+                SELECT c.*, u.email_verified, u.terms_accepted
+                FROM customers c
+                LEFT JOIN users u ON c.user_id = u.id
+                WHERE 1=1
             """
             
             params = []
@@ -195,19 +180,20 @@ class CustomerService:
             if search:
                 param_count += 1
                 query += f""" AND (
-                    u.first_name ILIKE ${param_count} OR 
-                    u.last_name ILIKE ${param_count} OR 
-                    u.email ILIKE ${param_count} OR
-                    u.phone ILIKE ${param_count}
+                    c.first_name ILIKE ${param_count} OR 
+                    c.last_name ILIKE ${param_count} OR 
+                    c.email ILIKE ${param_count} OR
+                    c.phone ILIKE ${param_count}
                 )"""
                 params.append(f"%{search}%")
             
             if is_active is not None:
                 param_count += 1
-                query += f" AND u.active = ${param_count}"
-                params.append(is_active)
+                status = 'active' if is_active else 'inactive'
+                query += f" AND c.status = ${param_count}"
+                params.append(status)
             
-            query += f" ORDER BY u.created_at DESC LIMIT ${param_count + 1} OFFSET ${param_count + 2}"
+            query += f" ORDER BY c.created_at DESC LIMIT ${param_count + 1} OFFSET ${param_count + 2}"
             params.extend([limit, offset])
             
             results = await self.db.fetch(query, *params)
@@ -237,30 +223,27 @@ class CustomerService:
                                    points_change: int) -> Dict[str, Any]:
         """Update customer loyalty points"""
         try:
-            # Get current preferences
-            profile = await self.db.fetchrow(
-                "SELECT preferences FROM customer_profiles WHERE customer_id = $1",
-                str(customer_id)
+            # Get current points
+            current = await self.db.fetchrow(
+                "SELECT loyalty_points FROM customers WHERE id = $1",
+                customer_id
             )
             
-            current_points = 0
-            if profile and profile['preferences']:
-                current_points = profile['preferences'].get('loyalty_points', 0)
+            if not current:
+                raise ValueError("Customer not found")
             
-            new_points = current_points + points_change
+            current_points = current['loyalty_points'] or 0
+            new_points = max(0, current_points + points_change)  # Don't go negative
             
-            # Update or create profile with new points
-            import json
+            # Update points
             await self.db.execute(
                 """
-                INSERT INTO customer_profiles (customer_id, preferences)
-                VALUES ($1, $2::jsonb)
-                ON CONFLICT (customer_id) DO UPDATE 
-                SET preferences = customer_profiles.preferences || $2::jsonb,
-                    updated_at = CURRENT_TIMESTAMP
+                UPDATE customers
+                SET loyalty_points = $1, updated_at = CURRENT_TIMESTAMP
+                WHERE id = $2
                 """,
-                str(customer_id),
-                json.dumps({'loyalty_points': new_points})
+                new_points,
+                customer_id
             )
             
             return {"loyalty_points": new_points}
@@ -272,14 +255,15 @@ class CustomerService:
     async def get_customer_stats(self, customer_id: UUID) -> Dict[str, Any]:
         """Get customer statistics"""
         try:
-            # Get customer basic info
+            # Get customer info from customers table
             customer_query = """
                 SELECT 
-                    u.created_at,
-                    cp.preferences
-                FROM users u
-                LEFT JOIN customer_profiles cp ON cp.customer_id = u.id::text
-                WHERE u.id = $1 AND u.role = 'customer'
+                    created_at,
+                    loyalty_points,
+                    total_spent,
+                    order_count
+                FROM customers
+                WHERE id = $1
             """
             
             customer = await self.db.fetchrow(customer_query, customer_id)
@@ -287,28 +271,22 @@ class CustomerService:
             if not customer:
                 return None
             
-            # Extract stats from preferences
-            preferences = customer.get('preferences', {}) or {}
-            loyalty_points = preferences.get('loyalty_points', 0)
-            total_spent = preferences.get('total_spent', 0)
-            order_count = preferences.get('order_count', 0)
-            
             # Get recent order info
             orders_query = """
                 SELECT 
                     COUNT(*) as recent_orders,
                     SUM(total_amount) as recent_spent
                 FROM orders
-                WHERE user_id = $1 
+                WHERE customer_id = $1 
                 AND created_at > CURRENT_DATE - INTERVAL '30 days'
             """
             
             recent = await self.db.fetchrow(orders_query, customer_id)
             
             return {
-                'loyalty_points': loyalty_points,
-                'total_spent': float(total_spent),
-                'total_orders': order_count,
+                'loyalty_points': customer['loyalty_points'] or 0,
+                'total_spent': float(customer['total_spent'] or 0),
+                'total_orders': customer['order_count'] or 0,
                 'recent_orders': recent['recent_orders'] or 0,
                 'recent_spent': float(recent['recent_spent'] or 0),
                 'member_since': customer['created_at'].isoformat()
