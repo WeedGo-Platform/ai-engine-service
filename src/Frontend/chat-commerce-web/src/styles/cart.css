@@ -1,0 +1,57 @@
+/* Cart Modal Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slideInRight {
+  animation: slideInRight 0.3s ease-out;
+}
+
+/* Cart Styles */
+.cart-panel {
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
+}
+
+.cart-item {
+  transition: all 0.2s ease;
+}
+
+.cart-item:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Scrollbar Styles for Cart */
+.cart-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.cart-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.cart-scroll::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.cart-scroll::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
