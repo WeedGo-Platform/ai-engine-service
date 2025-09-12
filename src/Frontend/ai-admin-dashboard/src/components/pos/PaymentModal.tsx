@@ -1,0 +1,420 @@
+import React, { useState, useEffect } from 'react';
+import {
+  X, CreditCard, DollarSign, Smartphone, Calculator,
+  CheckCircle, AlertCircle, Printer, Mail
+} from 'lucide-react';
+
+interface PaymentModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  total: number;
+  onComplete: (payment: PaymentDetails) => void;
+}
+
+interface PaymentDetails {
+  method: 'cash' | 'card' | 'debit' | 'split';
+  cashAmount?: number;
+  cardAmount?: number;
+  changeGiven?: number;
+  cardLastFour?: string;
+  authorizationCode?: string;
+  printReceipt: boolean;
+  emailReceipt?: string;
+}
+
+const CASH_DENOMINATIONS = [
+  { value: 100, label: '$100' },
+  { value: 50, label: '$50' },
+  { value: 20, label: '$20' },
+  { value: 10, label: '$10' },
+  { value: 5, label: '$5' },
+];
+
+const QUICK_AMOUNTS = [20, 40, 60, 80, 100, 200];
+
+export default function PaymentModal({ isOpen, onClose, total, onComplete }: PaymentModalProps) {
+  const [paymentMethod, setPaymentMethod] = useState<'cash' | 'card' | 'debit' | 'split'>('cash');
+  const [cashAmount, setCashAmount] = useState<string>('');
+  const [cardAmount, setCardAmount] = useState<string>('');
+  const [change, setChange] = useState<number>(0);
+  const [processing, setProcessing] = useState(false);
+  const [printReceipt, setPrintReceipt] = useState(true);
+  const [emailReceipt, setEmailReceipt] = useState('');
+  const [showEmailInput, setShowEmailInput] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (paymentMethod === 'cash' && cashAmount) {
+      const cash = parseFloat(cashAmount);
+      if (!isNaN(cash)) {
+        setChange(Math.max(0, cash - total));
+      }
+    } else if (paymentMethod === 'split' && cashAmount && cardAmount) {
+      const cash = parseFloat(cashAmount) || 0;
+      const card = parseFloat(cardAmount) || 0;
+      setChange(Math.max(0, (cash + card) - total));
+    } else {
+      setChange(0);
+    }
+  }, [cashAmount, cardAmount, total, paymentMethod]);
+
+  const handleQuickCash = (amount: number) => {
+    setCashAmount(amount.toString());
+  };
+
+  const handleCashDenomination = (value: number) => {
+    const current = parseFloat(cashAmount) || 0;
+    setCashAmount((current + value).toString());
+  };
+
+  const calculateChange = () => {
+    const cash = parseFloat(cashAmount) || 0;
+    return Math.max(0, cash - total);
+  };
+
+  const processPayment = async () => {
+    setProcessing(true);
+    setError(null);
+
+    try {
+      // Validate payment amount
+      if (paymentMethod === 'cash') {
+        const cash = parseFloat(cashAmount);
+        if (isNaN(cash) || cash < total) {
+          throw new Error('Insufficient cash amount');
+        }
+      } else if (paymentMethod === 'split') {
+        const cash = parseFloat(cashAmount) || 0;
+        const card = parseFloat(cardAmount) || 0;
+        if (cash + card < total) {
+          throw new Error('Insufficient payment amount');
+        }
+      }
+
+      // Simulate payment processing
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      const payment: PaymentDetails = {
+        method: paymentMethod,
+        printReceipt,
+        emailReceipt: showEmailInput ? emailReceipt : undefined
+      };
+
+      if (paymentMethod === 'cash') {
+        payment.cashAmount = parseFloat(cashAmount);
+        payment.changeGiven = change;
+      } else if (paymentMethod === 'card' || paymentMethod === 'debit') {
+        payment.cardAmount = total;
+        payment.cardLastFour = '****';
+        payment.authorizationCode = Math.random().toString(36).substring(7).toUpperCase();
+      } else if (paymentMethod === 'split') {
+        payment.cashAmount = parseFloat(cashAmount);
+        payment.cardAmount = parseFloat(cardAmount);
+        payment.changeGiven = change;
+        payment.cardLastFour = '****';
+        payment.authorizationCode = Math.random().toString(36).substring(7).toUpperCase();
+      }
+
+      onComplete(payment);
+      onClose();
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  const canProcess = () => {
+    if (paymentMethod === 'cash') {
+      const cash = parseFloat(cashAmount);
+      return !isNaN(cash) && cash >= total;
+    } else if (paymentMethod === 'split') {
+      const cash = parseFloat(cashAmount) || 0;
+      const card = parseFloat(cardAmount) || 0;
+      return cash + card >= total;
+    }
+    return true; // Card and debit can always process
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-3xl">
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b">
+          <h2 className="text-2xl font-bold">Process Payment</h2>
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="p-6">
+          {/* Total Amount */}
+          <div className="bg-gray-100 rounded-lg p-4 mb-6">
+            <div className="text-center">
+              <p className="text-sm text-gray-600 mb-1">Total Amount Due</p>
+              <p className="text-4xl font-bold text-gray-900">${total.toFixed(2)}</p>
+            </div>
+          </div>
+
+          {/* Payment Method Selection */}
+          <div className="mb-6">
+            <p className="text-sm font-medium text-gray-700 mb-3">Payment Method</p>
+            <div className="grid grid-cols-4 gap-3">
+              <button
+                onClick={() => setPaymentMethod('cash')}
+                className={`p-3 rounded-lg border-2 transition-colors ${
+                  paymentMethod === 'cash'
+                    ? 'border-green-500 bg-green-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <DollarSign className="w-6 h-6 mx-auto mb-1" />
+                <p className="text-sm font-medium">Cash</p>
+              </button>
+              <button
+                onClick={() => setPaymentMethod('card')}
+                className={`p-3 rounded-lg border-2 transition-colors ${
+                  paymentMethod === 'card'
+                    ? 'border-green-500 bg-green-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <CreditCard className="w-6 h-6 mx-auto mb-1" />
+                <p className="text-sm font-medium">Credit</p>
+              </button>
+              <button
+                onClick={() => setPaymentMethod('debit')}
+                className={`p-3 rounded-lg border-2 transition-colors ${
+                  paymentMethod === 'debit'
+                    ? 'border-green-500 bg-green-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <Smartphone className="w-6 h-6 mx-auto mb-1" />
+                <p className="text-sm font-medium">Debit</p>
+              </button>
+              <button
+                onClick={() => setPaymentMethod('split')}
+                className={`p-3 rounded-lg border-2 transition-colors ${
+                  paymentMethod === 'split'
+                    ? 'border-green-500 bg-green-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <Calculator className="w-6 h-6 mx-auto mb-1" />
+                <p className="text-sm font-medium">Split</p>
+              </button>
+            </div>
+          </div>
+
+          {/* Cash Payment */}
+          {paymentMethod === 'cash' && (
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Cash Received
+                </label>
+                <input
+                  type="number"
+                  value={cashAmount}
+                  onChange={(e) => setCashAmount(e.target.value)}
+                  className="w-full px-4 py-3 text-2xl font-bold border rounded-lg focus:ring-2 focus:ring-green-500"
+                  placeholder="0.00"
+                  step="0.01"
+                />
+              </div>
+
+              {/* Quick Cash Buttons */}
+              <div>
+                <p className="text-sm font-medium text-gray-700 mb-2">Quick Amount</p>
+                <div className="grid grid-cols-6 gap-2">
+                  {QUICK_AMOUNTS.map(amount => (
+                    <button
+                      key={amount}
+                      onClick={() => handleQuickCash(amount)}
+                      className="px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded text-sm font-medium"
+                    >
+                      ${amount}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Cash Denominations */}
+              <div>
+                <p className="text-sm font-medium text-gray-700 mb-2">Add Bills</p>
+                <div className="flex gap-2">
+                  {CASH_DENOMINATIONS.map(denom => (
+                    <button
+                      key={denom.value}
+                      onClick={() => handleCashDenomination(denom.value)}
+                      className="flex-1 px-3 py-2 bg-green-100 hover:bg-green-200 rounded text-sm font-medium"
+                    >
+                      {denom.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Change Display */}
+              {change > 0 && (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-lg font-medium">Change Due:</span>
+                    <span className="text-2xl font-bold text-yellow-700">
+                      ${change.toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Card/Debit Payment */}
+          {(paymentMethod === 'card' || paymentMethod === 'debit') && (
+            <div className="text-center py-8">
+              <CreditCard className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+              <p className="text-lg font-medium mb-2">Insert or Tap Card</p>
+              <p className="text-sm text-gray-600">
+                Waiting for {paymentMethod === 'card' ? 'credit' : 'debit'} card...
+              </p>
+              <p className="text-2xl font-bold mt-4">${total.toFixed(2)}</p>
+            </div>
+          )}
+
+          {/* Split Payment */}
+          {paymentMethod === 'split' && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Cash Amount
+                  </label>
+                  <input
+                    type="number"
+                    value={cashAmount}
+                    onChange={(e) => setCashAmount(e.target.value)}
+                    className="w-full px-4 py-2 border rounded-lg"
+                    placeholder="0.00"
+                    step="0.01"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Card Amount
+                  </label>
+                  <input
+                    type="number"
+                    value={cardAmount}
+                    onChange={(e) => setCardAmount(e.target.value)}
+                    className="w-full px-4 py-2 border rounded-lg"
+                    placeholder="0.00"
+                    step="0.01"
+                  />
+                </div>
+              </div>
+              
+              <div className="bg-gray-50 rounded-lg p-3">
+                <div className="flex justify-between text-sm">
+                  <span>Cash:</span>
+                  <span>${parseFloat(cashAmount) || 0}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span>Card:</span>
+                  <span>${parseFloat(cardAmount) || 0}</span>
+                </div>
+                <div className="flex justify-between font-bold pt-2 border-t mt-2">
+                  <span>Total:</span>
+                  <span>${((parseFloat(cashAmount) || 0) + (parseFloat(cardAmount) || 0)).toFixed(2)}</span>
+                </div>
+                {change > 0 && (
+                  <div className="flex justify-between text-sm text-yellow-600 mt-2">
+                    <span>Change:</span>
+                    <span>${change.toFixed(2)}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Receipt Options */}
+          <div className="mt-6 pt-6 border-t">
+            <p className="text-sm font-medium text-gray-700 mb-3">Receipt Options</p>
+            <div className="space-y-2">
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={printReceipt}
+                  onChange={(e) => setPrintReceipt(e.target.checked)}
+                  className="rounded"
+                />
+                <Printer className="w-4 h-4" />
+                <span className="text-sm">Print Receipt</span>
+              </label>
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={showEmailInput}
+                  onChange={(e) => setShowEmailInput(e.target.checked)}
+                  className="rounded"
+                />
+                <Mail className="w-4 h-4" />
+                <span className="text-sm">Email Receipt</span>
+              </label>
+              {showEmailInput && (
+                <input
+                  type="email"
+                  value={emailReceipt}
+                  onChange={(e) => setEmailReceipt(e.target.value)}
+                  className="w-full px-3 py-2 border rounded-lg text-sm"
+                  placeholder="customer@email.com"
+                />
+              )}
+            </div>
+          </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
+              <AlertCircle className="w-5 h-5 text-red-500" />
+              <span className="text-sm text-red-700">{error}</span>
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="flex items-center justify-between p-6 border-t bg-gray-50">
+          <button
+            onClick={onClose}
+            className="px-6 py-2 text-gray-700 hover:text-gray-900"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={processPayment}
+            disabled={processing || !canProcess()}
+            className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center gap-2"
+          >
+            {processing ? (
+              <>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
+                Processing...
+              </>
+            ) : (
+              <>
+                <CheckCircle className="w-5 h-5" />
+                Complete Payment
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}

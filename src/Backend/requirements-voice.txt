@@ -1,0 +1,17 @@
+# Voice/Audio Processing Dependencies
+# Required for voice endpoints and audio processing
+
+# Speech-to-Text
+openai-whisper==20250625
+torch>=2.0.0
+
+# Text-to-Speech
+pyttsx3==2.99
+
+# Voice Activity Detection
+onnxruntime==1.16.3
+
+# Audio Processing
+numpy>=1.24.3
+scipy>=1.10.0
+soundfile>=0.12.1

@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: weedgo-postgres
+    environment:
+      POSTGRES_USER: weedgo
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-your_password_here}
+      POSTGRES_DB: ai_engine
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d
+    networks:
+      - weedgo-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U weedgo -d ai_engine"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: weedgo-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - weedgo-network
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ai-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: weedgo-ai-engine
+    ports:
+      - "5024:5024"
+    environment:
+      DATABASE_URL: postgresql://weedgo:${DB_PASSWORD:-your_password_here}@postgres:5432/ai_engine
+      REDIS_URL: redis://redis:6379/0
+      SECRET_KEY: ${SECRET_KEY}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      ENVIRONMENT: ${ENVIRONMENT:-production}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./logs:/app/logs
+      - ./models:/app/models
+    networks:
+      - weedgo-network
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    container_name: weedgo-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/ssl:/etc/nginx/ssl
+    depends_on:
+      - ai-engine
+    networks:
+      - weedgo-network
+    restart: unless-stopped
+
+networks:
+  weedgo-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
