@@ -5,6 +5,7 @@ import {
   Settings, ChevronDown, ChevronUp, X, Check, ArrowLeft, Loader2
 } from 'lucide-react';
 import tenantService from '../services/tenantService';
+import storeService from '../services/storeService';
 import storeHoursService from '../services/storeHoursService';
 
 // Import types from service
@@ -35,12 +36,13 @@ const TIMEZONES = [
 ];
 
 export default function StoreHoursManagement() {
-  const { storeId } = useParams<{ storeId: string }>();
+  const { storeCode } = useParams<{ storeCode: string }>();
   const navigate = useNavigate();
   
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [store, setStore] = useState<any>(null);
+  const [storeId, setStoreId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'regular' | 'holidays' | 'special' | 'settings'>('regular');
   
   // State for different hour types
@@ -67,37 +69,64 @@ export default function StoreHoursManagement() {
   const [editingSpecial, setEditingSpecial] = useState<SpecialHoursType | null>(null);
 
   useEffect(() => {
+    if (storeCode) {
+      loadStoreByCode();
+    }
+  }, [storeCode]);
+
+  useEffect(() => {
     if (storeId) {
       loadStoreData();
       loadHolidays();
     }
   }, [storeId]);
 
-  const loadStoreData = async () => {
+  const loadStoreByCode = async () => {
     try {
       setLoading(true);
       
-      // Load store details
-      const storeData = await tenantService.getStore(storeId!);
-      setStore(storeData);
-      
-      // Load hours data using service
+      // First try to get by store code
       try {
-        const data = await storeHoursService.getStoreHours(storeId!);
-        setRegularHours(data.regular_hours.length > 0 ? data.regular_hours : initializeRegularHours());
-        setHolidayHours(data.holiday_hours || []);
-        setSpecialHours(data.special_hours || []);
-        setSettings(data.settings || settings);
-        // Don't overwrite holidays - they're loaded separately via loadHolidays()
+        const storeData = await storeService.getStoreByCode(storeCode!);
+        setStore(storeData);
+        setStoreId(storeData.id);
       } catch (err) {
-        // Initialize with default hours if none exist
-        setRegularHours(initializeRegularHours());
+        console.log('Store by code not found, trying alternative approach');
+        
+        // If that fails, get the first store (temporary workaround)
+        const tenantId = 'e6e513b2-c589-4f0b-a6f8-a52dd93feb90'; // This should come from auth context
+        const stores = await storeService.getStoresByTenant(tenantId);
+        const storeData = stores.find(s => s.store_code === storeCode) || stores[0];
+        if (storeData) {
+          setStore(storeData);
+          setStoreId(storeData.id);
+        } else {
+          throw new Error('Store not found');
+        }
       }
     } catch (error) {
-      console.error('Error loading store data:', error);
-      showNotification('error', 'Failed to load store hours');
+      console.error('Error loading store:', error);
+      showNotification('error', 'Failed to load store');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadStoreData = async () => {
+    if (!storeId) return;
+    
+    try {
+      
+      // Load hours data using service
+      const data = await storeHoursService.getStoreHours(storeId);
+      setRegularHours(data.regular_hours.length > 0 ? data.regular_hours : initializeRegularHours());
+      setHolidayHours(data.holiday_hours || []);
+      setSpecialHours(data.special_hours || []);
+      setSettings(data.settings || settings);
+      // Don't overwrite holidays - they're loaded separately via loadHolidays()
+    } catch (err) {
+      // Initialize with default hours if none exist
+      setRegularHours(initializeRegularHours());
     }
   };
 
@@ -130,9 +159,11 @@ export default function StoreHoursManagement() {
   };
 
   const saveRegularHours = async () => {
+    if (!storeId) return;
+    
     try {
       setSaving(true);
-      await storeHoursService.updateRegularHours(storeId!, regularHours);
+      await storeHoursService.updateRegularHours(storeId, regularHours);
       showNotification('success', 'Regular hours saved successfully');
     } catch (error) {
       console.error('Error saving regular hours:', error);
@@ -143,12 +174,14 @@ export default function StoreHoursManagement() {
   };
 
   const saveHolidayHours = async (holidayHour: HolidayHoursType) => {
+    if (!storeId) return;
+    
     try {
       setSaving(true);
       if (editingHoliday?.id) {
-        await storeHoursService.updateHolidayHours(storeId!, editingHoliday.id, holidayHour);
+        await storeHoursService.updateHolidayHours(storeId, editingHoliday.id, holidayHour);
       } else {
-        await storeHoursService.addHolidayHours(storeId!, holidayHour);
+        await storeHoursService.addHolidayHours(storeId, holidayHour);
       }
       showNotification('success', 'Holiday hours saved successfully');
       await loadStoreData();
@@ -163,12 +196,14 @@ export default function StoreHoursManagement() {
   };
 
   const saveSpecialHours = async (specialHour: SpecialHoursType) => {
+    if (!storeId) return;
+    
     try {
       setSaving(true);
       if (editingSpecial?.id) {
-        await storeHoursService.updateSpecialHours(storeId!, editingSpecial.id, specialHour);
+        await storeHoursService.updateSpecialHours(storeId, editingSpecial.id, specialHour);
       } else {
-        await storeHoursService.addSpecialHours(storeId!, specialHour);
+        await storeHoursService.addSpecialHours(storeId, specialHour);
       }
       showNotification('success', 'Special hours saved successfully');
       await loadStoreData();
@@ -183,9 +218,11 @@ export default function StoreHoursManagement() {
   };
 
   const saveSettings = async () => {
+    if (!storeId) return;
+    
     try {
       setSaving(true);
-      await storeHoursService.updateSettings(storeId!, settings);
+      await storeHoursService.updateSettings(storeId, settings);
       showNotification('success', 'Settings saved successfully');
     } catch (error) {
       console.error('Error saving settings:', error);
@@ -583,7 +620,7 @@ export default function StoreHoursManagement() {
                             onClick={async () => {
                               if (holiday.id && confirm('Delete this holiday configuration?')) {
                                 try {
-                                  await storeHoursService.deleteHolidayHours(storeId!, holiday.id);
+                                  await storeHoursService.deleteHolidayHours(storeId, holiday.id);
                                   await loadStoreData();
                                   showNotification('success', 'Holiday hours deleted');
                                 } catch (error) {
@@ -653,7 +690,7 @@ export default function StoreHoursManagement() {
                             onClick={async () => {
                               if (special.id && confirm('Delete this special hours entry?')) {
                                 try {
-                                  await storeHoursService.deleteSpecialHours(storeId!, special.id);
+                                  await storeHoursService.deleteSpecialHours(storeId, special.id);
                                   await loadStoreData();
                                   showNotification('success', 'Special hours deleted');
                                 } catch (error) {

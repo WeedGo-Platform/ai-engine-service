@@ -1,10 +1,11 @@
 import axios, { AxiosInstance } from 'axios';
+import { authConfig, getAuthStorage, getStorageKey } from '../config/auth.config';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5024';
+const API_BASE_URL = authConfig.endpoints.baseUrl;
 
 // Create axios instance for auth endpoints (no auth interceptor)
 const authApi: AxiosInstance = axios.create({
-  baseURL: `${API_BASE_URL}/api/v1/auth/admin`,
+  baseURL: API_BASE_URL,
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
@@ -23,7 +24,8 @@ const api: AxiosInstance = axios.create({
 // Add auth interceptor for authenticated requests
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('access_token');
+    const storage = getAuthStorage();
+    const token = storage.getItem(getStorageKey('access_token'));
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -34,6 +36,19 @@ api.interceptors.request.use(
   }
 );
 
+// Track if we're currently refreshing
+let isRefreshing = false;
+let refreshSubscribers: ((token: string) => void)[] = [];
+
+const subscribeTokenRefresh = (cb: (token: string) => void) => {
+  refreshSubscribers.push(cb);
+};
+
+const onTokenRefreshed = (token: string) => {
+  refreshSubscribers.forEach(cb => cb(token));
+  refreshSubscribers = [];
+};
+
 // Add response interceptor to handle token expiry
 api.interceptors.response.use(
   (response) => response,
@@ -43,22 +58,42 @@ api.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       
-      try {
-        const refreshToken = localStorage.getItem('refresh_token');
-        if (refreshToken) {
-          const response = await authService.refreshToken(refreshToken);
-          localStorage.setItem('access_token', response.access_token);
-          localStorage.setItem('refresh_token', response.refresh_token);
-          
-          // Retry original request with new token
-          originalRequest.headers.Authorization = `Bearer ${response.access_token}`;
-          return api(originalRequest);
+      if (!isRefreshing) {
+        isRefreshing = true;
+        
+        try {
+          const storage = getAuthStorage();
+          const refreshToken = storage.getItem(getStorageKey('refresh_token'));
+          if (refreshToken) {
+            const response = await authService.refreshToken(refreshToken);
+            storage.setItem(getStorageKey('access_token'), response.access_token);
+            storage.setItem(getStorageKey('refresh_token'), response.refresh_token);
+            
+            isRefreshing = false;
+            onTokenRefreshed(response.access_token);
+            
+            // Retry original request with new token
+            originalRequest.headers.Authorization = `Bearer ${response.access_token}`;
+            return api(originalRequest);
+          }
+        } catch (refreshError) {
+          // Refresh failed, only clear auth-related items
+          isRefreshing = false;
+          const storage = getAuthStorage();
+          storage.removeItem(getStorageKey('access_token'));
+          storage.removeItem(getStorageKey('refresh_token'));
+          storage.removeItem(getStorageKey('token_expiry'));
+          window.location.href = authConfig.redirects.unauthorized;
+          return Promise.reject(refreshError);
         }
-      } catch (refreshError) {
-        // Refresh failed, redirect to login
-        localStorage.clear();
-        window.location.href = '/login';
-        return Promise.reject(refreshError);
+      } else {
+        // Wait for token refresh to complete
+        return new Promise((resolve) => {
+          subscribeTokenRefresh((token: string) => {
+            originalRequest.headers.Authorization = `Bearer ${token}`;
+            resolve(api(originalRequest));
+          });
+        });
       }
     }
     
@@ -117,7 +152,7 @@ class AuthService {
    * Login admin user
    */
   async login(email: string, password: string, rememberMe: boolean = false): Promise<LoginResponse> {
-    const response = await authApi.post<LoginResponse>('/login', {
+    const response = await authApi.post<LoginResponse>(authConfig.endpoints.login, {
       email,
       password,
       remember_me: rememberMe
@@ -130,7 +165,7 @@ class AuthService {
    */
   async logout(): Promise<void> {
     try {
-      await api.post('/api/v1/auth/admin/logout');
+      await api.post(authConfig.endpoints.logout);
     } catch (error) {
       console.error('Logout API call failed:', error);
     }
@@ -140,7 +175,7 @@ class AuthService {
    * Refresh access token
    */
   async refreshToken(refreshToken: string): Promise<RefreshTokenResponse> {
-    const response = await authApi.post<RefreshTokenResponse>('/refresh', {
+    const response = await authApi.post<RefreshTokenResponse>(authConfig.endpoints.refresh, {
       refresh_token: refreshToken
     });
     return response.data;
@@ -150,7 +185,7 @@ class AuthService {
    * Get current user information
    */
   async getCurrentUser(): Promise<CurrentUserResponse> {
-    const response = await api.get<CurrentUserResponse>('/api/v1/auth/admin/me');
+    const response = await api.get<CurrentUserResponse>(authConfig.endpoints.me);
     return response.data;
   }
 
@@ -158,7 +193,7 @@ class AuthService {
    * Verify if token is valid
    */
   async verifyToken(): Promise<TokenVerifyResponse> {
-    const response = await api.post<TokenVerifyResponse>('/api/v1/auth/admin/verify');
+    const response = await api.post<TokenVerifyResponse>(authConfig.endpoints.verify);
     return response.data;
   }
 
@@ -221,7 +256,8 @@ class AuthService {
    * Get authorization header
    */
   getAuthHeader(): { Authorization: string } | {} {
-    const token = localStorage.getItem('access_token');
+    const storage = getAuthStorage();
+    const token = storage.getItem(getStorageKey('access_token'));
     return token ? { Authorization: `Bearer ${token}` } : {};
   }
 
@@ -229,8 +265,9 @@ class AuthService {
    * Check if user is authenticated
    */
   isAuthenticated(): boolean {
-    const token = localStorage.getItem('access_token');
-    const expiry = localStorage.getItem('token_expiry');
+    const storage = getAuthStorage();
+    const token = storage.getItem(getStorageKey('access_token'));
+    const expiry = storage.getItem(getStorageKey('token_expiry'));
     
     if (!token || !expiry) {
       return false;
@@ -240,9 +277,9 @@ class AuthService {
     const expiryTime = parseInt(expiry, 10);
     if (Date.now() > expiryTime) {
       // Token expired, clear storage
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('refresh_token');
-      localStorage.removeItem('token_expiry');
+      storage.removeItem(getStorageKey('access_token'));
+      storage.removeItem(getStorageKey('refresh_token'));
+      storage.removeItem(getStorageKey('token_expiry'));
       return false;
     }
     

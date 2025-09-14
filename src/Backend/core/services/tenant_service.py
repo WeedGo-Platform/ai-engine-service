@@ -32,7 +32,7 @@ class TenantService:
         name: str,
         code: str,
         contact_email: str,
-        subscription_tier: SubscriptionTier = SubscriptionTier.COMMUNITY,
+        subscription_tier: SubscriptionTier = SubscriptionTier.COMMUNITY_AND_NEW_BUSINESS,
         company_name: Optional[str] = None,
         business_number: Optional[str] = None,
         gst_hst_number: Optional[str] = None,
@@ -62,9 +62,9 @@ class TenantService:
             
             # Determine store limits based on subscription
             store_limits = {
-                SubscriptionTier.COMMUNITY: 1,
-                SubscriptionTier.BASIC: 5,
-                SubscriptionTier.SMALL_BUSINESS: 12,
+                SubscriptionTier.COMMUNITY_AND_NEW_BUSINESS: 1,
+                SubscriptionTier.SMALL_BUSINESS: 5,
+                SubscriptionTier.PROFESSIONAL_AND_GROWING_BUSINESS: 12,
                 SubscriptionTier.ENTERPRISE: 999  # Effectively unlimited
             }
             
@@ -102,7 +102,7 @@ class TenantService:
                 tier=subscription_tier,
                 store_limit=saved_tenant.max_stores,
                 ai_personalities_per_store=saved_tenant.get_ai_personality_limit(),
-                billing_cycle=BillingCycle.MONTHLY if subscription_tier != SubscriptionTier.COMMUNITY else None,
+                billing_cycle=BillingCycle.MONTHLY if subscription_tier != SubscriptionTier.COMMUNITY_AND_NEW_BUSINESS else None,
                 price_cad=TenantSubscription().get_monthly_price(),
                 features=self._get_tier_features(subscription_tier),
                 status="active",
@@ -139,6 +139,7 @@ class TenantService:
         contact_phone: Optional[str] = None,
         website: Optional[str] = None,
         logo_url: Optional[str] = None,
+        subscription_tier: Optional[SubscriptionTier] = None,
         settings: Optional[Dict[str, Any]] = None
     ) -> Tenant:
         """Update tenant information"""
@@ -172,6 +173,12 @@ class TenantService:
                 tenant.website = website
             if logo_url is not None:
                 tenant.logo_url = logo_url
+            if subscription_tier is not None:
+                # Update subscription tier and related fields
+                tenant.subscription_tier = subscription_tier
+                # Update max_stores based on new tier
+                store_limit = self._get_store_limit(subscription_tier)
+                tenant.max_stores = store_limit if store_limit else 999
             if settings is not None:
                 tenant.settings = settings
             
@@ -299,9 +306,9 @@ class TenantService:
     def _get_store_limit(self, tier: SubscriptionTier) -> Optional[int]:
         """Get store limit for subscription tier"""
         limits = {
-            SubscriptionTier.COMMUNITY: 1,
-            SubscriptionTier.BASIC: 5,
-            SubscriptionTier.SMALL_BUSINESS: 12,
+            SubscriptionTier.COMMUNITY_AND_NEW_BUSINESS: 1,
+            SubscriptionTier.SMALL_BUSINESS: 5,
+            SubscriptionTier.PROFESSIONAL_AND_GROWING_BUSINESS: 12,
             SubscriptionTier.ENTERPRISE: None  # Unlimited
         }
         return limits.get(tier)
@@ -309,21 +316,21 @@ class TenantService:
     def _get_tier_features(self, tier: SubscriptionTier) -> Dict[str, Any]:
         """Get features for subscription tier"""
         features = {
-            SubscriptionTier.COMMUNITY: {
+            SubscriptionTier.COMMUNITY_AND_NEW_BUSINESS: {
                 "stores": 1,
                 "ai_personalities": 1,
                 "support": "community",
                 "analytics": "basic",
                 "api_access": False
             },
-            SubscriptionTier.BASIC: {
+            SubscriptionTier.SMALL_BUSINESS: {
                 "stores": 5,
                 "ai_personalities": 2,
                 "support": "email",
                 "analytics": "standard",
                 "api_access": True
             },
-            SubscriptionTier.SMALL_BUSINESS: {
+            SubscriptionTier.PROFESSIONAL_AND_GROWING_BUSINESS: {
                 "stores": 12,
                 "ai_personalities": 3,
                 "support": "priority",

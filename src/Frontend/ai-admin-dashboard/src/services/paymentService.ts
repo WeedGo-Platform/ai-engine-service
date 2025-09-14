@@ -1,3 +1,4 @@
+import { appConfig } from '../config/app.config';
 import axios from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5024';
@@ -378,6 +379,42 @@ class PaymentService {
         start_date: dateRange.start,
         end_date: dateRange.end
       },
+      { headers: this.getAuthHeaders() }
+    );
+    return response.data;
+  }
+
+  // Store-level Payment Terminal Management
+  async getStorePaymentTerminals(storeId: string): Promise<any> {
+    const response = await axios.get(
+      `${API_BASE_URL}/api/stores/${storeId}/payment-terminals`,
+      { headers: this.getAuthHeaders() }
+    );
+    return response.data;
+  }
+
+  async updateStorePaymentTerminals(storeId: string, terminals: any): Promise<any> {
+    const response = await axios.put(
+      `${API_BASE_URL}/api/stores/${storeId}/payment-terminals`,
+      terminals,
+      { headers: this.getAuthHeaders() }
+    );
+    return response.data;
+  }
+
+  // Store Device Management
+  async getStoreDevices(storeId: string): Promise<any> {
+    const response = await axios.get(
+      `${API_BASE_URL}/api/stores/${storeId}/devices`,
+      { headers: this.getAuthHeaders() }
+    );
+    return response.data;
+  }
+
+  async updateStoreDevices(storeId: string, devices: any): Promise<any> {
+    const response = await axios.put(
+      `${API_BASE_URL}/api/stores/${storeId}/devices`,
+      devices,
       { headers: this.getAuthHeaders() }
     );
     return response.data;

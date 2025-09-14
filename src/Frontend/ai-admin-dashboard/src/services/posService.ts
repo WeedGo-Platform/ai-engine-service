@@ -172,17 +172,28 @@ class POSService {
     return response.data;
   }
 
-  async getTransactionHistory(storeId: string, date?: string): Promise<Transaction[]> {
+  async getTransactionHistory(storeId: string, startDate?: string, endDate?: string): Promise<Transaction[]> {
     const params: any = { store_id: storeId };
-    if (date) params.date = date;
+    if (startDate) params.start_date = startDate;
+    if (endDate) params.end_date = endDate;
     const response = await axios.get(`${API_BASE_URL}/pos/transactions`, { params });
     return response.data;
   }
 
   async refundTransaction(transactionId: string, items?: string[]): Promise<Transaction> {
-    const response = await axios.post(`${API_BASE_URL}/pos/transactions/${transactionId}/refund`, { 
-      items 
+    const response = await axios.post(`${API_BASE_URL}/pos/transactions/${transactionId}/refund`, {
+      items
     });
+    return response.data;
+  }
+
+  async processRefund(transactionId: string, refundData: {
+    amount: number;
+    reason: string;
+    items?: any[];
+    processed_by: string;
+  }): Promise<any> {
+    const response = await axios.post(`${API_BASE_URL}/pos/transactions/${transactionId}/refund`, refundData);
     return response.data;
   }
 

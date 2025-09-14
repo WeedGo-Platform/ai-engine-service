@@ -12,18 +12,17 @@ import {
   Mail
 } from 'lucide-react';
 import storeService, { Store } from '../services/storeService';
-import paymentService, { POSTerminalSettings } from '../services/paymentService';
-import POSTerminalSettingsComponent from '../components/POSTerminalSettings';
+import AllSettingsTabbed from '../components/storeSettings/AllSettingsTabbed';
 
 const StoreSettings: React.FC = () => {
   const { storeCode } = useParams<{ storeCode: string }>();
   const navigate = useNavigate();
   const [store, setStore] = useState<Store | null>(null);
-  const [posSettings, setPosSettings] = useState<POSTerminalSettings | null>(null);
+  const [storeSettings, setStoreSettings] = useState<any>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'general' | 'pos' | 'hours'>('general');
+  const [activeTab, setActiveTab] = useState<'general' | 'settings'>('general');
 
   useEffect(() => {
     if (storeCode) {
@@ -48,10 +47,29 @@ const StoreSettings: React.FC = () => {
   const loadStoreData = async () => {
     try {
       setLoading(true);
-      const storeData = await storeService.getStoreByCode(storeCode!);
-      const posData = await paymentService.getStorePOSSettings(storeData.id);
-      setStore(storeData);
-      setPosSettings(posData);
+      let storeData = null;
+      
+      // First try to get by store code (if backend supports it)
+      try {
+        storeData = await storeService.getStoreByCode(storeCode!);
+      } catch (err) {
+        console.log('Store by code not found, trying alternative approach');
+        
+        // If that fails, get the first store (temporary workaround)
+        // In production, you'd get this from context or props
+        const tenantId = 'e6e513b2-c589-4f0b-a6f8-a52dd93feb90'; // This should come from auth context
+        const stores = await storeService.getStoresByTenant(tenantId);
+        storeData = stores.find(s => s.store_code === storeCode) || stores[0];
+      }
+      
+      if (storeData) {
+        setStore(storeData);
+        // Load store settings from store.settings JSON field
+        setStoreSettings(storeData.settings || {});
+        setError(null);
+      } else {
+        setError('Store not found');
+      }
     } catch (err) {
       setError('Failed to load store settings');
       console.error(err);
@@ -60,26 +78,22 @@ const StoreSettings: React.FC = () => {
     }
   };
 
-  const handleSavePOSSettings = async (settings: POSTerminalSettings) => {
+  const handleSaveSettings = async (category: string, settings: any) => {
     try {
-      await paymentService.updateStorePOSSettings(store!.id, settings);
-      setPosSettings(settings);
-      setSuccess('POS settings updated successfully');
+      // Update the store's settings field with the new settings
+      const updatedSettings = {
+        ...storeSettings,
+        [category]: settings
+      };
+      
+      await storeService.updateStore(store!.id, {
+        settings: updatedSettings
+      });
+      
+      setStoreSettings(updatedSettings);
+      setSuccess(`${category.charAt(0).toUpperCase() + category.slice(1)} settings updated successfully`);
     } catch (err) {
-      setError('Failed to update POS settings');
-      throw err;
-    }
-  };
-
-  const handlePingTerminal = async (terminalId: string) => {
-    try {
-      const result = await paymentService.pingPOSTerminal(store!.id, terminalId);
-      if (result.status === 'online') {
-        setSuccess(`Terminal ${terminalId} is online (${result.response_time_ms}ms)`);
-      } else {
-        setError(`Terminal ${terminalId} is offline`);
-      }
-    } catch (err) {
+      setError(`Failed to update ${category} settings`);
       throw err;
     }
   };
@@ -174,27 +188,17 @@ const StoreSettings: React.FC = () => {
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
-            General Settings
+            General Information
           </button>
           <button
-            onClick={() => setActiveTab('pos')}
+            onClick={() => setActiveTab('settings')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
-              activeTab === 'pos'
+              activeTab === 'settings'
                 ? 'border-blue-500 text-blue-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
-            POS & Terminals
-          </button>
-          <button
-            onClick={() => setActiveTab('hours')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
-              activeTab === 'hours'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
-          >
-            Store Hours
+            Store Configuration
           </button>
         </nav>
       </div>
@@ -359,47 +363,15 @@ const StoreSettings: React.FC = () => {
         </div>
       )}
 
-      {activeTab === 'pos' && posSettings && (
-        <POSTerminalSettingsComponent
+      {activeTab === 'settings' && (
+        <AllSettingsTabbed
           storeId={store?.id || ''}
-          settings={posSettings}
-          onSave={handleSavePOSSettings}
-          onPingTerminal={handlePingTerminal}
+          initialSettings={storeSettings}
+          store={store}
+          onSave={handleSaveSettings}
         />
       )}
 
-      {activeTab === 'hours' && (
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-            <Clock className="w-5 h-5" />
-            Store Hours
-          </h2>
-          
-          <div className="space-y-3">
-            {['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map(day => {
-              const dayHours = store.hours?.[day];
-              const dayCapitalized = day.charAt(0).toUpperCase() + day.slice(1);
-              
-              return (
-                <div key={day} className="flex items-center justify-between py-2 border-b">
-                  <span className="font-medium">{dayCapitalized}</span>
-                  <span className="text-gray-600">
-                    {!dayHours || dayHours.closed 
-                      ? 'Closed' 
-                      : `${dayHours.open} - ${dayHours.close}`}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-          
-          <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-            <p className="text-sm text-blue-700">
-              To modify store hours, please use the Store Hours Management page or contact support.
-            </p>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

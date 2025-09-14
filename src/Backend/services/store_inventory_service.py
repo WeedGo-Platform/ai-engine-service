@@ -63,32 +63,26 @@ class StoreInventoryService:
         try:
             async with self.db_pool.acquire() as conn:
                 query = """
-                    SELECT 
+                    SELECT
                         si.id,
                         si.store_id,
-                        si.product_id,
                         si.sku,
                         si.quantity_on_hand,
                         si.quantity_available,
                         si.quantity_reserved,
-                        si.quantity_in_transit,
                         si.unit_cost,
                         si.retail_price,
                         si.reorder_point,
                         si.reorder_quantity,
-                        si.location,
-                        si.zone,
-                        si.bin_number,
                         si.last_restock_date,
-                        si.last_count_date,
-                        si.is_active,
-                        p.name as product_name,
+                        si.is_available as is_active,
+                        p.product_name,
                         p.category,
                         p.brand,
                         s.name as store_name,
                         s.store_code
-                    FROM store_inventory si
-                    JOIN products p ON si.product_id = p.id
+                    FROM ocs_inventory si
+                    LEFT JOIN ocs_product_catalog p ON si.sku = p.ocs_variant_number
                     JOIN stores s ON si.store_id = s.id
                     WHERE si.store_id = $1 AND si.sku = $2
                 """
@@ -156,27 +150,33 @@ class StoreInventoryService:
                 
                 # Get total count
                 count_query = f"""
-                    SELECT COUNT(*) 
-                    FROM store_inventory si
-                    JOIN products p ON si.product_id = p.id
+                    SELECT COUNT(*)
+                    FROM ocs_inventory si
+                    LEFT JOIN ocs_product_catalog p ON si.sku = p.ocs_variant_number
                     WHERE {where_clause}
                 """
                 total_count = await conn.fetchval(count_query, *params)
-                
+
                 # Get paginated results
                 params.extend([limit, offset])
                 list_query = f"""
-                    SELECT 
+                    SELECT
                         si.*,
-                        p.name as product_name,
+                        p.product_name,
                         p.category,
                         p.brand,
                         p.image_url,
-                        p.description
-                    FROM store_inventory si
-                    JOIN products p ON si.product_id = p.id
+                        p.product_name as name,
+                        STRING_AGG(DISTINCT bt.batch_lot, ', ' ORDER BY bt.batch_lot) as batch_lot
+                    FROM ocs_inventory si
+                    LEFT JOIN ocs_product_catalog p ON si.sku = p.ocs_variant_number
+                    LEFT JOIN batch_tracking bt ON si.sku = bt.sku AND si.store_id = bt.store_id AND bt.is_active = true AND bt.quantity_remaining > 0
                     WHERE {where_clause}
-                    ORDER BY p.name
+                    GROUP BY si.id, si.store_id, si.sku, si.quantity_on_hand, si.quantity_available,
+                             si.quantity_reserved, si.unit_cost, si.retail_price, si.reorder_point,
+                             si.reorder_quantity, si.last_restock_date, si.is_available, si.created_at,
+                             si.updated_at, p.product_name, p.category, p.brand, p.image_url
+                    ORDER BY COALESCE(p.product_name, si.sku)
                     LIMIT ${param_counter} OFFSET ${param_counter + 1}
                 """
                 
@@ -313,7 +313,65 @@ class StoreInventoryService:
                         quantity_change, reference_id, batch_lot, notes,
                         None  # TODO: Add user_id from context
                     )
-                    
+
+                    # Handle batch tracking for PURCHASE transactions
+                    if transaction_type == TransactionType.PURCHASE and batch_lot:
+                        # Check if batch_tracking record exists
+                        existing_batch = await conn.fetchrow("""
+                            SELECT id, quantity_remaining
+                            FROM batch_tracking
+                            WHERE store_id = $1 AND sku = $2 AND batch_lot = $3
+                        """, store_id, sku, batch_lot)
+
+                        if existing_batch:
+                            # Update existing batch quantity
+                            await conn.execute("""
+                                UPDATE batch_tracking
+                                SET quantity_remaining = quantity_remaining + $4,
+                                    quantity_received = quantity_received + $4,
+                                    updated_at = CURRENT_TIMESTAMP
+                                WHERE store_id = $1 AND sku = $2 AND batch_lot = $3
+                            """, store_id, sku, batch_lot, abs(quantity_change))
+                        else:
+                            # Create new batch tracking record
+                            await conn.execute("""
+                                INSERT INTO batch_tracking
+                                (store_id, sku, batch_lot, quantity_received,
+                                 quantity_remaining, is_active, created_at, updated_at)
+                                VALUES ($1, $2, $3, $4, $4, true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                            """, store_id, sku, batch_lot, abs(quantity_change))
+
+                    # Handle batch tracking for SALE transactions (reduce from oldest batches first - FIFO)
+                    elif transaction_type == TransactionType.SALE:
+                        quantity_to_reduce = abs(quantity_change)
+
+                        # Get active batches ordered by created_at (FIFO)
+                        active_batches = await conn.fetch("""
+                            SELECT id, batch_lot, quantity_remaining
+                            FROM batch_tracking
+                            WHERE store_id = $1 AND sku = $2 AND is_active = true
+                                  AND quantity_remaining > 0
+                            ORDER BY created_at ASC
+                        """, store_id, sku)
+
+                        for batch in active_batches:
+                            if quantity_to_reduce <= 0:
+                                break
+
+                            batch_reduction = min(batch['quantity_remaining'], quantity_to_reduce)
+                            new_remaining = batch['quantity_remaining'] - batch_reduction
+
+                            # Update batch quantity
+                            await conn.execute("""
+                                UPDATE batch_tracking
+                                SET quantity_remaining = $3,
+                                    is_active = CASE WHEN $3 = 0 THEN false ELSE true END,
+                                    updated_at = CURRENT_TIMESTAMP
+                                WHERE id = $1 AND store_id = $2
+                            """, batch['id'], store_id, new_remaining)
+
+                            quantity_to_reduce -= batch_reduction
+
                     return {
                         **dict(result),
                         'transaction_id': transaction_id
@@ -387,13 +445,13 @@ class StoreInventoryService:
                         
                         item_query = """
                             INSERT INTO purchase_order_items
-                            (purchase_order_id, product_id, sku, batch_lot, 
-                             quantity_ordered, unit_cost, expiry_date,
+                            (purchase_order_id, product_id, sku, batch_lot,
+                             quantity_ordered, unit_cost,
                              case_gtin, gtin_barcode, each_gtin,
                              vendor, brand, packaged_on_date, shipped_qty,
                              uom, uom_conversion, uom_conversion_qty)
-                            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
-                                    $11, $12, $13, $14, $15, $16, $17)
+                            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9,
+                                    $10, $11, $12, $13, $14, $15, $16)
                         """
                         
                         await conn.execute(
@@ -404,7 +462,6 @@ class StoreInventoryService:
                             item.get('batch_lot'),
                             item['quantity'],
                             item['unit_cost'],
-                            item.get('expiry_date'),
                             item.get('case_gtin'),
                             item.get('gtin_barcode'),
                             item.get('each_gtin'),
@@ -604,13 +661,13 @@ class StoreInventoryService:
                         COUNT(DISTINCT sku) as total_skus,
                         SUM(quantity_on_hand) as total_quantity,
                         SUM(quantity_available * unit_cost) as total_value,
-                        COUNT(CASE WHEN quantity_available <= reorder_point 
+                        COUNT(CASE WHEN quantity_available <= reorder_point
                               AND quantity_available > 0 THEN 1 END) as low_stock_items,
                         COUNT(CASE WHEN quantity_available = 0 THEN 1 END) as out_of_stock_items,
-                        COUNT(CASE WHEN quantity_in_transit > 0 THEN 1 END) as items_in_transit,
-                        SUM(quantity_in_transit) as total_in_transit
-                    FROM store_inventory
-                    WHERE store_id = $1 AND is_active = true
+                        0 as items_in_transit,
+                        0 as total_in_transit
+                    FROM ocs_inventory
+                    WHERE store_id = $1 AND is_available = true
                 """
                 
                 result = await conn.fetchrow(stats_query, store_id)

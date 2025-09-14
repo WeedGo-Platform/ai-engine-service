@@ -2,15 +2,15 @@ import React from 'react';
 import { createBrowserRouter, RouterProvider, Link, Outlet, useLocation, Navigate, useNavigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { 
-  Home, Package, ShoppingCart, Users, FileText, 
+import {
+  Home, Package, ShoppingCart, Users, FileText,
   TrendingUp, Leaf, Menu, X, LogOut, Settings,
-  Building2, Store, Tag, Sparkles, Upload
+  Building2, Store, Tag, Sparkles, Upload, ChevronRight
 } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { StoreProvider, useStoreContext } from './contexts/StoreContext';
 import ProtectedRoute from './components/ProtectedRoute';
-import StoreSelector from './components/StoreSelector';
+import StoreSelectionModal from './components/StoreSelectionModal';
 
 // Import pages
 import Login from './pages/Login';
@@ -51,16 +51,62 @@ const queryClient = new QueryClient({
 // Layout component
 function Layout() {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  const [showStoreModal, setShowStoreModal] = React.useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, logout, isSuperAdmin, isTenantAdmin, isStoreManager } = useAuth();
+  const { user, logout, isAuthenticated, loading, isSuperAdmin, isTenantAdmin, isStoreManager } = useAuth();
+  const { currentStore, selectStore } = useStoreContext();
+  const [selectedTenant, setSelectedTenant] = React.useState<{id: string, name: string} | null>(null);
+
+  // Set tenant for tenant admins automatically
+  React.useEffect(() => {
+    if (isTenantAdmin() && !isSuperAdmin() && user?.tenant_id) {
+      // For tenant admins, set their tenant automatically
+      const tenantName = user?.tenants?.[0]?.name || 'Tenant';
+      setSelectedTenant({ id: user.tenant_id, name: tenantName });
+    }
+  }, [user, isTenantAdmin, isSuperAdmin]);
+
+  // Check authentication status and redirect if not authenticated
+  React.useEffect(() => {
+    if (!loading && !isAuthenticated) {
+      navigate('/');  // Redirect to landing page instead of login
+    }
+  }, [loading, isAuthenticated, navigate]);
 
   // Build navigation based on user permissions
   const navigation = React.useMemo(() => {
+    // Debug logging
+    console.log('Navigation Debug:', {
+      user,
+      isStoreManager: isStoreManager(),
+      isTenantAdmin: isTenantAdmin(),
+      isSuperAdmin: isSuperAdmin(),
+      stores: user?.stores,
+      store_role: user?.store_role
+    });
+    
+    // For store managers only (not tenant admin or super admin), show specific menu items
+    if (isStoreManager() && !isTenantAdmin() && !isSuperAdmin()) {
+      return [
+        { name: 'Dashboard', href: '/dashboard', icon: Home, permission: 'all' },
+        { name: 'POS', href: '/dashboard/pos', icon: ShoppingCart, permission: 'store' },
+        { name: 'Organization', href: '/dashboard/tenants', icon: Building2, permission: 'store_manager' },
+        { name: 'Inventory', href: '/dashboard/inventory', icon: Package, permission: 'store' },
+        { name: 'Accessories', href: '/dashboard/accessories', icon: Package, permission: 'store' },
+        { name: 'Orders', href: '/dashboard/orders', icon: ShoppingCart, permission: 'store' },
+        { name: 'Customers', href: '/dashboard/customers', icon: Users, permission: 'store' },
+        { name: 'Purchase Orders', href: '/dashboard/purchase-orders', icon: FileText, permission: 'store' },
+        { name: 'Promotions', href: '/dashboard/promotions', icon: Tag, permission: 'store' },
+        { name: 'Recommendations', href: '/dashboard/recommendations', icon: Sparkles, permission: 'store' },
+      ];
+    }
+
+    // For admins (tenant admin and super admin), show all applicable items
     const items = [
       { name: 'Dashboard', href: '/dashboard', icon: Home, permission: 'all' },
       { name: 'POS', href: '/dashboard/pos', icon: ShoppingCart, permission: 'store' },
-      { name: 'Tenants', href: '/dashboard/tenants', icon: Building2, permission: 'admin' },
+      { name: isTenantAdmin() && !isSuperAdmin() ? 'Organization' : 'Tenants', href: '/dashboard/tenants', icon: Building2, permission: 'admin' },
       { name: 'Products', href: '/dashboard/products', icon: Leaf, permission: 'store' },
       { name: 'Inventory', href: '/dashboard/inventory', icon: Package, permission: 'store' },
       { name: 'Accessories', href: '/dashboard/accessories', icon: Package, permission: 'store' },
@@ -79,9 +125,24 @@ function Layout() {
       if (item.permission === 'admin') return isSuperAdmin() || isTenantAdmin();
       if (item.permission === 'tenant') return isSuperAdmin() || isTenantAdmin();
       if (item.permission === 'store') return isSuperAdmin() || isTenantAdmin() || isStoreManager();
+      if (item.permission === 'store_manager') return isStoreManager();
       return true;
     });
   }, [isSuperAdmin, isTenantAdmin, isStoreManager]);
+
+  // Show loading spinner while checking authentication
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+      </div>
+    );
+  }
+
+  // If not authenticated after loading, the useEffect will redirect
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -136,15 +197,24 @@ function Layout() {
               <div>
                 <img
                   className="inline-block h-9 w-9 rounded-full"
-                  src={`https://ui-avatars.com/api/?name=${user?.first_name || 'Admin'}+${user?.last_name || 'User'}&background=10b981&color=fff`}
-                  alt="Admin"
+                  src={`https://ui-avatars.com/api/?name=${user?.first_name || 'Not'}+${user?.last_name || 'Logged'}&background=10b981&color=fff`}
+                  alt="User Avatar"
                 />
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-white">
-                  {user?.first_name || 'Admin'} {user?.last_name || 'User'}
+                  {user?.first_name && user?.last_name ? `${user.first_name} ${user.last_name}` : 'Not Logged In'}
                 </p>
-                <p className="text-xs font-medium text-green-200">{user?.email || 'admin@potpalace.ca'}</p>
+                <p className="text-xs font-medium text-green-200">{user?.email || 'No user session'}</p>
+                <p className="text-xs font-medium text-green-300 capitalize">
+                  {(() => {
+                    if (!user) return 'No Active Session';
+                    if (isSuperAdmin()) return 'Super Admin';
+                    if (isTenantAdmin()) return 'Tenant Admin';
+                    if (isStoreManager()) return 'Store Manager';
+                    return user?.role?.replace('_', ' ') || 'User';
+                  })()}
+                </p>
               </div>
             </div>
           </div>
@@ -163,13 +233,58 @@ function Layout() {
               <Menu className="h-6 w-6" />
             </button>
             
-            <div className="flex items-center">
+            <div className="flex-1 flex items-center">
               <h2 className="text-lg font-semibold text-gray-900">WeedGo Admin Dashboard</h2>
-            </div>
 
-            {/* Store Selector */}
-            <div className="flex-1 max-w-md mx-4">
-              <StoreSelector position="header" />
+              {/* Store Selection and Breadcrumb */}
+              {(isSuperAdmin() || isTenantAdmin()) && (
+                <div className="ml-8 flex items-center">
+                  <button
+                    onClick={() => setShowStoreModal(true)}
+                    className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                    title="Select Store"
+                  >
+                    <Store className="h-5 w-5" />
+                  </button>
+
+                  {currentStore && (
+                    <div className="ml-2 flex items-center text-sm text-gray-600">
+                      {/* Show tenant only for super admins */}
+                      {isSuperAdmin() && selectedTenant && (
+                        <>
+                          <span className="font-medium">{selectedTenant.name}</span>
+                          <ChevronRight className="h-4 w-4 mx-1" />
+                        </>
+                      )}
+                      <span className="font-medium">{currentStore.name}</span>
+                      <button
+                        onClick={() => setShowStoreModal(true)}
+                        className="ml-2 text-blue-600 hover:text-blue-700 text-xs underline"
+                      >
+                        Change
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Fixed store display for store managers and staff */}
+              {isStoreManager() && !isTenantAdmin() && !isSuperAdmin() && (
+                <div className="ml-8 flex items-center">
+                  <div className="p-2 text-gray-400">
+                    <Store className="h-5 w-5" />
+                  </div>
+                  {currentStore ? (
+                    <div className="ml-2 flex items-center text-sm text-gray-600">
+                      <span className="font-medium">{currentStore.name}</span>
+                    </div>
+                  ) : (
+                    <div className="ml-2 flex items-center text-sm text-gray-500">
+                      <span className="italic">Loading store...</span>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="flex items-center space-x-4">
@@ -195,6 +310,20 @@ function Layout() {
           <Outlet />
         </main>
       </div>
+
+      {/* Store Selection Modal */}
+      {(isSuperAdmin() || isTenantAdmin()) && (
+        <StoreSelectionModal
+          isOpen={showStoreModal}
+          onSelect={async (tenantId, storeId, storeName, tenantName) => {
+            setSelectedTenant({ id: tenantId, name: tenantName || 'Unknown Tenant' });
+            // Pass the store name along with the ID to ensure breadcrumb displays immediately
+            await selectStore(storeId, storeName);
+            setShowStoreModal(false);
+          }}
+          onClose={() => setShowStoreModal(false)}
+        />
+      )}
     </div>
   );
 }
@@ -237,11 +366,7 @@ const router = createBrowserRouter([
       { path: 'pos', element: <POS /> },
       { 
         path: 'tenants', 
-        element: (
-          <ProtectedRoute requiredPermissions={['system:super_admin', 'system:admin']}>
-            <TenantManagement />
-          </ProtectedRoute>
-        )
+        element: <TenantManagement />
       },
       { path: 'tenants/:tenantCode/settings', element: <TenantSettings /> },
       { path: 'tenants/:tenantCode/payment-settings', element: <TenantPaymentSettings /> },

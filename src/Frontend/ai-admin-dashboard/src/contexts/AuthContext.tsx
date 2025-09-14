@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useRef } from 'react';
 import authService from '../services/authService';
+import { authConfig, getAuthStorage, getStorageKey } from '../config/auth.config';
 
 interface User {
   user_id: string;
@@ -35,6 +36,7 @@ interface AuthContextType {
   isSuperAdmin: () => boolean;
   isTenantAdmin: (tenantId?: string) => boolean;
   isStoreManager: (storeId?: string) => boolean;
+  isTenantAdminOnly: () => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -56,42 +58,80 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [permissions, setPermissions] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const refreshTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const storage = getAuthStorage();
 
   // Check for existing session on mount
   useEffect(() => {
     checkAuthStatus();
+    
+    // Set up session check on window focus if enabled
+    if (authConfig.session.checkOnFocus) {
+      const handleFocus = () => checkAuthStatus();
+      window.addEventListener('focus', handleFocus);
+      return () => window.removeEventListener('focus', handleFocus);
+    }
   }, []);
+  
+  // Set up periodic session check if enabled
+  useEffect(() => {
+    if (authConfig.session.checkInterval > 0 && isAuthenticated) {
+      const interval = setInterval(() => {
+        checkAuthStatus();
+      }, authConfig.session.checkInterval * 1000);
+      
+      return () => clearInterval(interval);
+    }
+  }, [isAuthenticated]);
 
   const checkAuthStatus = async () => {
     try {
-      const token = localStorage.getItem('access_token');
+      const token = storage.getItem(getStorageKey('access_token'));
       
       if (!token) {
         setLoading(false);
         return;
       }
 
-      // Verify token and get user info
-      const response = await authService.verifyToken();
-      
-      if (response.valid) {
-        setUser(response.payload);
-        setIsAuthenticated(true);
-        
-        // Get fresh user data and permissions
+      try {
+        // Try to get current user directly first (faster than verify)
         const userData = await authService.getCurrentUser();
         setUser(userData.user);
         setPermissions(userData.permissions);
-      } else {
-        // Token invalid, try to refresh
-        await refreshToken();
+        setIsAuthenticated(true);
+      } catch (error: any) {
+        // If 401, token might be expired, try to refresh
+        if (error?.response?.status === 401) {
+          const refreshTokenValue = storage.getItem(getStorageKey('refresh_token'));
+          if (refreshTokenValue) {
+            try {
+              await refreshToken();
+            } catch (refreshError) {
+              // Only clear auth tokens
+              storage.removeItem(getStorageKey('access_token'));
+              storage.removeItem(getStorageKey('refresh_token'));
+              storage.removeItem(getStorageKey('token_expiry'));
+              setIsAuthenticated(false);
+            }
+          } else {
+            // No refresh token available
+            storage.removeItem(getStorageKey('access_token'));
+            storage.removeItem(getStorageKey('token_expiry'));
+            setIsAuthenticated(false);
+          }
+        } else {
+          // Network error or other issue - don't log out yet
+          console.error('Auth check failed with non-401 error:', error);
+          // Try to use cached user data if available
+          const cachedToken = storage.getItem(getStorageKey('access_token'));
+          if (cachedToken) {
+            // Keep user logged in but log the error
+            setIsAuthenticated(true);
+          }
+        }
       }
     } catch (error) {
       console.error('Auth check failed:', error);
-      // Clear invalid session
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('refresh_token');
-      setIsAuthenticated(false);
     } finally {
       setLoading(false);
     }
@@ -102,20 +142,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const response = await authService.login(email, password, rememberMe);
       
       // Store tokens
-      localStorage.setItem('access_token', response.access_token);
-      localStorage.setItem('refresh_token', response.refresh_token);
+      storage.setItem(getStorageKey('access_token'), response.access_token);
+      storage.setItem(getStorageKey('refresh_token'), response.refresh_token);
       
       // Store token expiry for auto-refresh
       const expiryTime = Date.now() + (response.expires_in * 1000);
-      localStorage.setItem('token_expiry', expiryTime.toString());
+      storage.setItem(getStorageKey('token_expiry'), expiryTime.toString());
       
       // Set user data
       setUser(response.user);
       setPermissions(response.permissions);
       setIsAuthenticated(true);
       
-      // Set up token refresh timer
-      setupTokenRefresh(response.expires_in);
+      // Set up token refresh timer if enabled
+      if (authConfig.tokenRefresh.enabled) {
+        setupTokenRefresh(response.expires_in);
+      }
       
     } catch (error) {
       console.error('Login failed:', error);
@@ -130,9 +172,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.error('Logout error:', error);
     } finally {
       // Clear local state regardless
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('refresh_token');
-      localStorage.removeItem('token_expiry');
+      storage.removeItem(getStorageKey('access_token'));
+      storage.removeItem(getStorageKey('refresh_token'));
+      storage.removeItem(getStorageKey('token_expiry'));
+      
+      // Clear refresh timer
+      if (refreshTimerRef.current) {
+        clearTimeout(refreshTimerRef.current);
+        refreshTimerRef.current = null;
+      }
       setUser(null);
       setPermissions([]);
       setIsAuthenticated(false);
@@ -141,7 +189,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const refreshToken = async () => {
     try {
-      const refreshToken = localStorage.getItem('refresh_token');
+      const refreshToken = storage.getItem(getStorageKey('refresh_token'));
       
       if (!refreshToken) {
         throw new Error('No refresh token available');
@@ -150,20 +198,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const response = await authService.refreshToken(refreshToken);
       
       // Update tokens
-      localStorage.setItem('access_token', response.access_token);
-      localStorage.setItem('refresh_token', response.refresh_token);
+      storage.setItem(getStorageKey('access_token'), response.access_token);
+      storage.setItem(getStorageKey('refresh_token'), response.refresh_token);
       
       // Update expiry
       const expiryTime = Date.now() + (response.expires_in * 1000);
-      localStorage.setItem('token_expiry', expiryTime.toString());
+      storage.setItem(getStorageKey('token_expiry'), expiryTime.toString());
       
       // Update user data
       setUser(response.user);
       setPermissions(response.permissions);
       setIsAuthenticated(true);
       
-      // Set up new refresh timer
-      setupTokenRefresh(response.expires_in);
+      // Set up new refresh timer if enabled
+      if (authConfig.tokenRefresh.enabled) {
+        setupTokenRefresh(response.expires_in);
+      }
       
     } catch (error) {
       console.error('Token refresh failed:', error);
@@ -174,12 +224,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const setupTokenRefresh = (expiresIn: number) => {
-    // Refresh token 5 minutes before expiry
-    const refreshTime = (expiresIn - 300) * 1000;
+    // Clear any existing timer
+    if (refreshTimerRef.current) {
+      clearTimeout(refreshTimerRef.current);
+    }
+    
+    // Refresh token before expiry based on config
+    const refreshTime = (expiresIn - authConfig.tokenRefresh.bufferTime) * 1000;
     
     if (refreshTime > 0) {
-      setTimeout(() => {
-        refreshToken().catch(console.error);
+      refreshTimerRef.current = setTimeout(() => {
+        refreshToken().catch((error) => {
+          console.error('Auto-refresh failed:', error);
+          // Optionally retry based on config
+          // Could implement retry logic here if needed
+        });
       }, refreshTime);
     }
   };
@@ -219,13 +278,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const isTenantAdmin = (tenantId?: string): boolean => {
     if (isSuperAdmin()) return true;
     
+    // Check if user has tenant_admin role
+    if (user?.role === 'tenant_admin') return true;
+    
     if (tenantId) {
       return hasPermission(`tenant:${tenantId}:admin`) || 
              hasPermission(`tenant:${tenantId}:*`);
     }
     
     // Check if admin of any tenant
-    return user?.tenants?.some(t => t.role === 'admin' || t.role === 'owner') || false;
+    return user?.tenants?.some(t => t.role === 'admin' || t.role === 'owner' || t.role === 'tenant_admin') || false;
   };
 
   const isStoreManager = (storeId?: string): boolean => {
@@ -236,8 +298,33 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
              hasPermission(`store:${storeId}:*`);
     }
     
-    // Check if manager of any store
-    return user?.stores?.some(s => s.role === 'manager') || false;
+    // Debug logging for store manager check
+    console.log('isStoreManager check:', {
+      stores: user?.stores,
+      store_role: user?.store_role,
+      role: user?.role,
+      storeCheck: user?.stores?.some(s => s.role === 'manager' || s.role === 'store_manager'),
+      directRoleCheck: user?.store_role === 'manager' || user?.store_role === 'store_manager',
+      mainRoleCheck: user?.role === 'store_manager'
+    });
+    
+    // Check if manager of any store - check for both 'manager' and 'store_manager' roles
+    return user?.stores?.some(s => s.role === 'manager' || s.role === 'store_manager') || 
+           user?.store_role === 'manager' || 
+           user?.store_role === 'store_manager' ||
+           user?.role === 'store_manager' ||
+           false;
+  };
+
+  const isTenantAdminOnly = (): boolean => {
+    // Returns true ONLY if user is a tenant admin, not a super admin
+    if (isSuperAdmin()) return false;
+    
+    // Check if user has tenant_admin role
+    if (user?.role === 'tenant_admin') return true;
+    
+    // Check if admin of any tenant
+    return user?.tenants?.some(t => t.role === 'admin' || t.role === 'owner' || t.role === 'tenant_admin') || false;
   };
 
   const value: AuthContextType = {
@@ -252,7 +339,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     hasAnyPermission,
     isSuperAdmin,
     isTenantAdmin,
-    isStoreManager
+    isStoreManager,
+    isTenantAdminOnly
   };
 
   return (

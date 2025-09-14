@@ -1,9 +1,10 @@
 import axios, { AxiosInstance } from 'axios';
+import { appConfig, getApiEndpoint } from '../config/app.config';
 
 // Create axios instance with default config
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: 'http://localhost:5024/api',
-  timeout: 30000,
+  baseURL: getApiEndpoint(''),
+  timeout: appConfig.api.timeout,
   headers: {
     'Content-Type': 'application/json',
   },

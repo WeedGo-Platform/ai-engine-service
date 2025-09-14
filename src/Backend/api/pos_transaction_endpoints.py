@@ -196,25 +196,25 @@ async def create_pos_transaction(transaction: POSTransactionCreate):
 @router.get("/pos/transactions")
 async def get_pos_transactions(
     store_id: str,
-    status: Optional[str] = Query(None),
-    date: Optional[str] = Query(None, description="Date in YYYY-MM-DD format"),
-    limit: int = Query(100, ge=1, le=500)
+    status: Optional[str] = None,
+    date: Optional[str] = None,
+    limit: int = 100
 ):
     """Get POS transactions for a store"""
     try:
         await ensure_pos_transactions_table()
-        
+
         pool = await get_db_pool()
         async with pool.acquire() as conn:
             conditions = ["store_id = $1"]
             params = [store_id]
             param_num = 2
-            
+
             if status:
                 conditions.append(f"status = ${param_num}")
                 params.append(status)
                 param_num += 1
-            
+
             if date:
                 conditions.append(f"DATE(created_at) = ${param_num}")
                 params.append(datetime.strptime(date, '%Y-%m-%d').date())

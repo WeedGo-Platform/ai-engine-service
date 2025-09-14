@@ -151,7 +151,7 @@ async def get_dashboard_analytics(
                     COUNT(*) as total_products,
                     COUNT(*) FILTER (WHERE si.quantity_on_hand <= si.min_stock_level AND si.quantity_on_hand > 0) as low_stock,
                     COUNT(*) FILTER (WHERE si.quantity_on_hand = 0) as out_of_stock
-                FROM store_inventory si
+                FROM ocs_inventory si
                 JOIN stores s ON si.store_id = s.id
                 WHERE s.tenant_id = ${inventory_param_index}
             """
@@ -167,7 +167,7 @@ async def get_dashboard_analytics(
                     COUNT(*) as total_products,
                     COUNT(*) FILTER (WHERE quantity_on_hand <= min_stock_level AND quantity_on_hand > 0) as low_stock,
                     COUNT(*) FILTER (WHERE quantity_on_hand = 0) as out_of_stock
-                FROM store_inventory
+                FROM ocs_inventory
                 WHERE store_id = $1
             """
             inventory_params.append(store_id)
@@ -178,7 +178,7 @@ async def get_dashboard_analytics(
                     COUNT(*) as total_products,
                     COUNT(*) FILTER (WHERE quantity_on_hand <= min_stock_level AND quantity_on_hand > 0) as low_stock,
                     COUNT(*) FILTER (WHERE quantity_on_hand = 0) as out_of_stock
-                FROM store_inventory
+                FROM ocs_inventory
             """
         
         if inventory_params:

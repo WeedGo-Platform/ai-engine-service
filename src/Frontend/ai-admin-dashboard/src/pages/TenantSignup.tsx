@@ -62,6 +62,8 @@ const TenantSignup = () => {
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const [voiceRegistrationStatus, setVoiceRegistrationStatus] = useState<'idle' | 'registering' | 'success' | 'error'>('idle');
   const audioRef = useRef<HTMLAudioElement>(null);
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormData>({
     companyName: '',
     businessNumber: '',
@@ -109,9 +111,9 @@ const TenantSignup = () => {
   ];
 
   const subscriptionPlans = {
-    community: { name: 'Community', price: 0, features: ['1 Store', '2 Languages', '1 AI Personality'] },
-    basic: { name: 'Basic', price: 99, features: ['5 Stores', '5 Languages', '2 AI Personalities'] },
-    small_business: { name: 'Small Business', price: 149, features: ['12 Stores', '10 Languages', '3 AI Personalities'] },
+    community_and_new_business: { name: 'Community and New Business', price: 0, features: ['1 Store', '2 Languages', '1 AI Personality'] },
+    small_business: { name: 'Small Business', price: 99, features: ['5 Stores', '5 Languages', '2 AI Personalities'] },
+    professional_and_growing_business: { name: 'Professional and Growing Business', price: 149, features: ['12 Stores', '10 Languages', '3 AI Personalities'] },
     enterprise: { name: 'Enterprise', price: 299, features: ['Unlimited Stores', '25+ Languages', '5 AI Personalities'] }
   };
 
@@ -162,7 +164,7 @@ const TenantSignup = () => {
         break;
         
       case 4: // Payment
-        if (formData.subscriptionTier !== 'enterprise' && formData.subscriptionTier !== 'community') {
+        if (formData.subscriptionTier !== 'enterprise' && formData.subscriptionTier !== 'community_and_new_business') {
           if (!formData.cardNumber.trim()) newErrors.cardNumber = 'Card number is required';
           else if (!/^\d{16}$/.test(formData.cardNumber.replace(/\s/g, ''))) {
             newErrors.cardNumber = 'Please enter a valid 16-digit card number';
@@ -279,7 +281,7 @@ const TenantSignup = () => {
         contact_email: formData.contactEmail,
         contact_phone: formData.contactPhone || undefined,
         website: formData.website || undefined,
-        subscription_tier: formData.subscriptionTier as 'community' | 'basic' | 'small_business' | 'enterprise',
+        subscription_tier: formData.subscriptionTier as 'community_and_new_business' | 'small_business' | 'professional_and_growing_business' | 'enterprise',
         settings: {
           admin_user: {
             first_name: formData.firstName,
@@ -296,6 +298,22 @@ const TenantSignup = () => {
       };
 
       const result = await tenantService.createTenant(payload);
+      
+      // Upload logo if provided
+      if (logoFile && result?.id) {
+        const formData = new FormData();
+        formData.append('file', logoFile);
+        
+        try {
+          await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5024'}/api/uploads/tenant/${result.id}/logo`, {
+            method: 'POST',
+            body: formData,
+          });
+        } catch (error) {
+          console.error('Failed to upload logo:', error);
+          // Don't fail the entire signup if logo upload fails
+        }
+      }
       
       // Store the created user ID for voice registration
       if (result?.settings?.admin_user?.id) {
@@ -488,6 +506,42 @@ const TenantSignup = () => {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 placeholder="https://www.yoursite.com"
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Logo Upload
+              </label>
+              <div className="space-y-2">
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="file"
+                    accept="image/png,image/jpeg,image/jpg,image/webp"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setLogoFile(file);
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                          setLogoPreview(reader.result as string);
+                        };
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                    className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  />
+                  {logoPreview && (
+                    <img 
+                      src={logoPreview} 
+                      alt="Logo preview" 
+                      className="w-16 h-16 object-contain border border-gray-300 rounded"
+                    />
+                  )}
+                </div>
+                <div className="text-xs text-gray-500">
+                  Max 2MB • PNG, JPG, WebP • Recommended: 500x500px square
+                </div>
+              </div>
             </div>
           </div>
         );
@@ -796,7 +850,7 @@ const TenantSignup = () => {
             </div>
 
             {/* Payment Information - Skip for Community and Enterprise */}
-            {formData.subscriptionTier !== 'enterprise' && formData.subscriptionTier !== 'community' && (
+            {formData.subscriptionTier !== 'enterprise' && formData.subscriptionTier !== 'community_and_new_business' && (
               <>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
