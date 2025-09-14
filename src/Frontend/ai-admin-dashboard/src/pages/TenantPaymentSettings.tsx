@@ -312,7 +312,7 @@ const TenantPaymentSettings: React.FC = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <button
-            onClick={() => navigate('/tenants')}
+            onClick={() => navigate('/dashboard/tenants')}
             className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
           >
             <ChevronRight className="w-5 h-5 rotate-180" />

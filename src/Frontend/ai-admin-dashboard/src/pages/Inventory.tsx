@@ -39,7 +39,6 @@ interface InventoryItem {
   // Batch tracking fields
   batch_lot?: string;
   lot_number?: string;
-  expiry_date?: string;
   packaged_on_date?: string;
   manufacture_date?: string;
   supplier_name?: string;
@@ -146,15 +145,15 @@ const Inventory: React.FC = () => {
 
   // Calculate stats
   const stats = {
-    totalItems: inventory?.products?.length || 0,
-    inStock: inventory?.products?.filter((item: any) => item.stock_status === 'in_stock').length || 0,
-    lowStock: inventory?.products?.filter((item: any) => item.stock_status === 'low_stock').length || 0,
-    totalValue: inventory?.products?.reduce((sum: number, item: any) => 
+    totalItems: inventory?.length || 0,
+    inStock: inventory?.filter((item: any) => item.stock_status === 'in_stock').length || 0,
+    lowStock: inventory?.filter((item: any) => item.stock_status === 'low_stock').length || 0,
+    totalValue: inventory?.reduce((sum: number, item: any) =>
       sum + ((item.quantity_available || 0) * (item.unit_cost || item.price || 0)), 0) || 0
   };
 
   // Filter inventory items
-  const filteredItems = inventory?.products?.filter((item: any) => {
+  const filteredItems = inventory?.filter((item: any) => {
     const matchesSearch = !searchTerm || 
       item.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.sku?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -433,14 +432,6 @@ const Inventory: React.FC = () => {
                               <div className="text-sm text-gray-900 dark:text-white">
                                 {item.packaged_on_date ? 
                                   new Date(item.packaged_on_date).toLocaleDateString() : 
-                                  'Not specified'}
-                              </div>
-                            </div>
-                            <div>
-                              <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Expiry Date</div>
-                              <div className="text-sm text-gray-900 dark:text-white">
-                                {item.expiry_date ? 
-                                  new Date(item.expiry_date).toLocaleDateString() : 
                                   'Not specified'}
                               </div>
                             </div>

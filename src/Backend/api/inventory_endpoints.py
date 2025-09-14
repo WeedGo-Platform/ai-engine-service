@@ -2,7 +2,7 @@
 Inventory Management API Endpoints
 """
 
-from fastapi import APIRouter, HTTPException, Depends, Query
+from fastapi import APIRouter, HTTPException, Depends, Query, Header
 from typing import List, Dict, Optional, Any
 from datetime import date
 from decimal import Decimal
@@ -41,31 +41,39 @@ class PurchaseOrderItem(BaseModel):
     sku: str
     quantity: int = Field(gt=0)
     unit_cost: float = Field(gt=0)
-    batch_lot: Optional[str] = None
-    expiry_date: Optional[date] = None
-    case_gtin: Optional[str] = None
-    packaged_on_date: Optional[date] = None
-    gtin_barcode: Optional[str] = None
-    each_gtin: Optional[str] = None
+    batch_lot: str  # Required
+    case_gtin: str  # Required
+    packaged_on_date: date  # Required
+    gtin_barcode: Optional[str] = None  # Optional - not in Excel data
+    each_gtin: str  # Required
+    vendor: str  # Required
+    brand: str  # Required
+    shipped_qty: int = Field(gt=0)  # Required
+    uom: str  # Required
+    uom_conversion: float = Field(gt=0)  # Required
+    uom_conversion_qty: float = Field(gt=0)  # Required
 
 
 class CreatePurchaseOrderRequest(BaseModel):
     supplier_id: UUID
     items: List[PurchaseOrderItem]
-    expected_date: Optional[date] = None
-    notes: Optional[str] = None
+    expected_date: date  # Required
+    notes: Optional[str] = None  # Optional
+    excel_filename: str  # Required for PO number generation
+    store_id: Optional[UUID] = None  # Can be provided in body or header
 
 
 class ReceivePurchaseOrderItem(BaseModel):
     sku: str
     quantity_received: int = Field(ge=0)
     unit_cost: float = Field(gt=0)
-    batch_lot: Optional[str] = None
-    expiry_date: Optional[date] = None
-    case_gtin: Optional[str] = None
-    packaged_on_date: Optional[date] = None
-    gtin_barcode: Optional[str] = None
-    each_gtin: Optional[str] = None
+    batch_lot: str  # Required
+    case_gtin: str  # Required
+    packaged_on_date: date  # Required
+    gtin_barcode: Optional[str] = None  # Optional - not in Excel data
+    each_gtin: str  # Required
+    vendor: str  # Required
+    brand: str  # Required
 
 
 class ReceivePurchaseOrderRequest(BaseModel):
@@ -136,15 +144,29 @@ async def update_inventory(
 @router.post("/purchase-orders")
 async def create_purchase_order(
     request: CreatePurchaseOrderRequest,
+    x_store_id: Optional[str] = Header(None, alias="X-Store-ID"),
     service: InventoryService = Depends(get_inventory_service)
 ):
     """Create a new purchase order"""
     try:
+        # Get store_id from request body or header
+        store_id = request.store_id
+        if not store_id and x_store_id and x_store_id.strip():
+            try:
+                store_id = UUID(x_store_id.strip())
+            except ValueError:
+                raise HTTPException(status_code=400, detail="Invalid store ID in header")
+
+        if not store_id:
+            raise HTTPException(status_code=400, detail="Store ID is required - please select a store")
+        
         po_id = await service.create_purchase_order(
-            request.supplier_id,
-            [item.dict() for item in request.items],
-            request.expected_date,
-            request.notes
+            supplier_id=request.supplier_id,
+            items=[item.dict() for item in request.items],
+            expected_date=request.expected_date,
+            notes=request.notes,
+            excel_filename=request.excel_filename,
+            store_id=store_id
         )
         
         return {
@@ -242,7 +264,7 @@ async def check_inventory_exists(
             query = """
                 SELECT EXISTS(
                     SELECT 1 
-                    FROM inventory 
+                    FROM ocs_inventory 
                     WHERE LOWER(TRIM(sku)) = LOWER(TRIM($1))
                     AND quantity_on_hand > 0
                 ) as exists
@@ -403,9 +425,9 @@ async def get_purchase_order_details(
                 poi.uom,
                 poi.uom_conversion,
                 poi.uom_conversion_qty,
-                p.name as product_name
+                opc.product_name as product_name
             FROM purchase_order_items poi
-            LEFT JOIN products p ON poi.sku = p.sku
+            LEFT JOIN ocs_product_catalog opc ON poi.sku = opc.ocs_variant_number
             WHERE poi.purchase_order_id = $1
         """
         
@@ -428,14 +450,24 @@ async def get_purchase_order_details(
 async def get_purchase_orders(
     status: Optional[str] = Query(None, pattern="^(pending|partial|received|cancelled)$"),
     supplier_id: Optional[UUID] = None,
+    store_id: Optional[UUID] = Query(None, description="Store UUID"),
+    x_store_id: Optional[str] = Header(None, alias="X-Store-ID"),
     limit: int = Query(50, ge=1, le=200),
     service: InventoryService = Depends(get_inventory_service)
 ):
-    """Get list of purchase orders"""
+    """Get list of purchase orders for a specific store"""
     try:
+        # Determine which store_id to use (query param takes precedence over header)
+        effective_store_id = store_id
+        if not effective_store_id and x_store_id:
+            try:
+                effective_store_id = UUID(x_store_id)
+            except ValueError:
+                raise HTTPException(status_code=400, detail="Invalid X-Store-ID header format")
+
         conn = service.db
         query = """
-            SELECT 
+            SELECT
                 po.id,
                 po.po_number,
                 po.supplier_id,
@@ -452,15 +484,21 @@ async def get_purchase_orders(
             LEFT JOIN purchase_order_items poi ON po.id = poi.purchase_order_id
             WHERE 1=1
         """
-        
+
         params = []
         param_count = 0
-        
+
+        # Filter by store_id if provided
+        if effective_store_id:
+            param_count += 1
+            query += f" AND po.store_id = ${param_count}"
+            params.append(effective_store_id)
+
         if status:
             param_count += 1
             query += f" AND po.status = ${param_count}"
             params.append(status)
-        
+
         if supplier_id:
             param_count += 1
             query += f" AND po.supplier_id = ${param_count}"
@@ -500,12 +538,11 @@ async def update_purchase_order_status(
         if status == 'received':
             # Get all items from the purchase order including GTIN fields
             items_query = """
-                SELECT 
+                SELECT
                     sku,
                     batch_lot,
                     quantity_ordered,
                     unit_cost,
-                    expiry_date,
                     case_gtin,
                     packaged_on_date,
                     gtin_barcode,
@@ -524,7 +561,6 @@ async def update_purchase_order_status(
                         'quantity_received': item['quantity_ordered'],  # Use ordered quantity as received
                         'unit_cost': float(item['unit_cost']),
                         'batch_lot': item['batch_lot'],
-                        'expiry_date': item['expiry_date'],
                         'case_gtin': item.get('case_gtin'),
                         'packaged_on_date': item.get('packaged_on_date'),
                         'gtin_barcode': item.get('gtin_barcode'),
@@ -559,17 +595,45 @@ async def update_purchase_order_status(
                     "items_received": len(items)
                 }
         else:
-            # For other status changes, just update the status
-            query = """
-                UPDATE purchase_orders
-                SET status = $1,
-                    updated_at = CURRENT_TIMESTAMP
-                WHERE id = $2
-                RETURNING id, po_number, status
-            """
-            
+            # For cancelled status, append '-cancelled' to PO number if not already present
+            if status == 'cancelled':
+                # First check current PO number
+                check_query = """
+                    SELECT po_number FROM purchase_orders WHERE id = $1
+                """
+                current_po = await conn.fetchrow(check_query, po_id)
+
+                if current_po and not current_po['po_number'].endswith('-cancelled'):
+                    # Update both status and PO number
+                    query = """
+                        UPDATE purchase_orders
+                        SET status = $1,
+                            po_number = po_number || '-cancelled',
+                            updated_at = CURRENT_TIMESTAMP
+                        WHERE id = $2
+                        RETURNING id, po_number, status
+                    """
+                else:
+                    # Just update status if already has '-cancelled' suffix
+                    query = """
+                        UPDATE purchase_orders
+                        SET status = $1,
+                            updated_at = CURRENT_TIMESTAMP
+                        WHERE id = $2
+                        RETURNING id, po_number, status
+                    """
+            else:
+                # For other status changes, just update the status
+                query = """
+                    UPDATE purchase_orders
+                    SET status = $1,
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE id = $2
+                    RETURNING id, po_number, status
+                """
+
             result = await conn.fetchrow(query, status, po_id)
-            
+
             if not result:
                 raise HTTPException(status_code=404, detail=f"Purchase order {po_id} not found")
             
@@ -633,6 +697,7 @@ async def get_product_image(
     """Get product image URL from product catalog"""
     try:
         conn = service.db
+        # First try exact match with case-insensitive comparison
         query = """
             SELECT 
                 pc.product_name,
@@ -640,12 +705,29 @@ async def get_product_image(
                 pc.category,
                 pc.brand,
                 pc.unit_price as retail_price
-            FROM product_catalog pc
+            FROM ocs_product_catalog pc
             WHERE LOWER(TRIM(pc.ocs_variant_number)) = LOWER(TRIM($1))
             LIMIT 1
         """
         
         result = await conn.fetchrow(query, sku)
+        
+        # If no match, try with normalized SKU (replace underscores)
+        if not result:
+            # Normalize the SKU - convert to lowercase and standardize format
+            normalized_sku = sku.lower().replace('_', '')
+            query_normalized = """
+                SELECT 
+                    pc.product_name,
+                    pc.image_url,
+                    pc.category,
+                    pc.brand,
+                    pc.unit_price as retail_price
+                FROM ocs_product_catalog pc
+                WHERE LOWER(REPLACE(pc.ocs_variant_number, '_', '')) = $1
+                LIMIT 1
+            """
+            result = await conn.fetchrow(query_normalized, normalized_sku)
         
         if not result:
             # Return default placeholder if product not found

@@ -225,21 +225,35 @@ async def record_login_attempt(
 
 
 async def get_user_permissions(user_id: UUID, db_pool: asyncpg.Pool) -> List[str]:
-    """Get all permissions for a user across tenants and stores"""
+    """Get all permissions for a user"""
     permissions = []
     
     async with db_pool.acquire() as conn:
-        # Get system role
-        user_role = await conn.fetchval("""
-            SELECT role FROM users WHERE id = $1
+        # Get user role and custom permissions
+        user = await conn.fetchrow("""
+            SELECT role, permissions FROM users WHERE id = $1
         """, user_id)
         
-        if user_role == 'super_admin':
-            permissions.append('system:*')
+        if not user:
             return permissions
         
-        # Removed tenant_users and store_users table references
-        # Permissions now come directly from user roles
+        user_role = user['role']
+        
+        # Assign base permissions based on role
+        if user_role == 'super_admin':
+            permissions.append('system:*')
+        elif user_role == 'tenant_admin':
+            permissions.extend(['tenant:read', 'tenant:write', 'store:*', 'user:*'])
+        elif user_role == 'store_manager':
+            permissions.extend(['store:read', 'store:write', 'user:read', 'user:write'])
+        elif user_role == 'staff':
+            permissions.extend(['store:read', 'user:read'])
+        
+        # Add any custom permissions from JSONB field
+        if user.get('permissions'):
+            custom_perms = user['permissions']
+            if isinstance(custom_perms, dict) and 'additional' in custom_perms:
+                permissions.extend(custom_perms['additional'])
     
     return permissions
 
@@ -275,10 +289,10 @@ async def admin_login(
         )
     
     async with db_pool.acquire() as conn:
-        # Fetch user with password
+        # Fetch user with password, including tenant and store associations
         user = await conn.fetchrow("""
             SELECT id, email, password_hash, first_name, last_name, role,
-                   active, email_verified
+                   active, email_verified, tenant_id, store_id, permissions
             FROM users
             WHERE email = $1
         """, credentials.email)
@@ -316,9 +330,7 @@ async def admin_login(
             # Track failed login with IP geolocation
             login_tracker = get_login_tracking_service(db_pool)
             # Get tenant ID if available
-            tenant_id = None
-            if user.get('tenant_id'):
-                tenant_id = user['tenant_id']
+            tenant_id = user.get('tenant_id')
             
             await login_tracker.track_login(
                 user_id=user['id'],
@@ -344,14 +356,12 @@ async def admin_login(
         
         # Check if user has admin access
         user_role = user['role']
-        if user_role not in ['super_admin', 'tenant_admin', 'store_manager']:
-            # Check tenant and store roles from users table
-            if user.get('tenant_role') not in ['owner', 'admin', 'manager'] and \
-               user.get('store_role') not in ['manager', 'supervisor']:
-                raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEN,
-                    detail="No admin access privileges"
-                )
+        if user_role not in ['super_admin', 'tenant_admin', 'store_manager', 'staff']:
+            # Only customers don't have admin access
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="No admin access privileges"
+            )
         
         # Get tenant associations from users table
         tenants = []
@@ -366,7 +376,7 @@ async def admin_login(
                     'id': tenant['id'],
                     'name': tenant['name'],
                     'code': tenant['code'],
-                    'role': user.get('tenant_role', 'member')
+                    'role': user['role']  # Use the main role field
                 }]
         
         # Get store associations from users table
@@ -383,7 +393,7 @@ async def admin_login(
                     'name': store['name'],
                     'store_code': store['store_code'],
                     'tenant_id': store['tenant_id'],
-                    'role': user.get('store_role', 'staff')
+                    'role': user['role']  # Use the main role field
                 }]
         
         # Prepare user info for JWT
@@ -445,7 +455,7 @@ async def admin_login(
             session_id=refresh_token_hash,
             metadata={
                 'remember_me': credentials.remember_me,
-                'role': user_role
+                'role': user['role']
             }
         )
         
@@ -504,7 +514,9 @@ async def refresh_token(
         
         # Get updated user info from users table
         user = await conn.fetchrow("""
-            SELECT * FROM users WHERE id = $1
+            SELECT id, email, first_name, last_name, role,
+                   tenant_id, store_id, permissions, active
+            FROM users WHERE id = $1
         """, session['user_id'])
         
         tenants = []
@@ -519,7 +531,7 @@ async def refresh_token(
                     'id': tenant['id'],
                     'name': tenant['name'],
                     'code': tenant['code'],
-                    'role': user.get('tenant_role', 'member')
+                    'role': user['role']  # Use the main role field
                 }]
         
         stores = []
@@ -535,7 +547,7 @@ async def refresh_token(
                     'name': store['name'],
                     'store_code': store['store_code'],
                     'tenant_id': store['tenant_id'],
-                    'role': user.get('store_role', 'staff')
+                    'role': user['role']  # Use the main role field
                 }]
         
         user_info = {
@@ -624,15 +636,75 @@ async def get_current_admin(
     db_pool: asyncpg.Pool = Depends(get_db_pool)
 ):
     """
-    Get current admin user information
+    Get current admin user information with fresh data from database
     """
     token = credentials.credentials
     payload = decode_token(token)
+    user_id = UUID(payload['user_id'])
     
-    # Return user info from token
+    async with db_pool.acquire() as conn:
+        # Fetch fresh user data from database
+        user = await conn.fetchrow("""
+            SELECT id, email, first_name, last_name, role,
+                   tenant_id, store_id, permissions
+            FROM users
+            WHERE id = $1
+        """, user_id)
+        
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found"
+            )
+        
+        # Get tenant associations
+        tenants = []
+        if user.get('tenant_id'):
+            tenant = await conn.fetchrow("""
+                SELECT id, name, code
+                FROM tenants
+                WHERE id = $1 AND status = 'active'
+            """, user['tenant_id'])
+            if tenant:
+                tenants = [{
+                    'id': str(tenant['id']),
+                    'name': tenant['name'],
+                    'code': tenant['code'],
+                    'role': user['role']  # Use the main role field
+                }]
+        
+        # Get store associations
+        stores = []
+        if user.get('store_id'):
+            store = await conn.fetchrow("""
+                SELECT id, name, store_code, tenant_id
+                FROM stores
+                WHERE id = $1 AND status = 'active'
+            """, user['store_id'])
+            if store:
+                stores = [{
+                    'id': str(store['id']),
+                    'name': store['name'],
+                    'code': store['store_code'],
+                    'tenant_id': str(store['tenant_id']),
+                    'role': user['role']  # Use the main role field
+                }]
+        
+        # Build user info with fresh data
+        user_info = {
+            "user_id": str(user['id']),
+            "email": user['email'],
+            "role": user['role'],
+            "first_name": user['first_name'],
+            "last_name": user['last_name'],
+            "tenants": tenants,
+            "stores": stores
+        }
+    
+    # Return fresh user info
     return {
-        "user": payload,
-        "permissions": await get_user_permissions(UUID(payload['user_id']), db_pool)
+        "user": user_info,
+        "permissions": await get_user_permissions(user_id, db_pool)
     }
 
 
@@ -694,17 +766,23 @@ async def create_admin_user(
         # Hash password
         password_hash = hash_password(password)
         
-        # Create user
-        user_id = await conn.fetchval("""
-            INSERT INTO users (
-                email, password_hash, first_name, last_name, role,
-                active, email_verified, created_at
-            ) VALUES ($1, $2, $3, $4, $5, true, true, CURRENT_TIMESTAMP)
-            RETURNING id
-        """, email, password_hash, first_name, last_name, role.value)
-        
-        # Removed tenant_users table reference
-        # User-tenant association handled differently
+        # Create user with tenant association if provided
+        if tenant_id:
+            user_id = await conn.fetchval("""
+                INSERT INTO users (
+                    email, password_hash, first_name, last_name, role,
+                    tenant_id, active, email_verified, created_at
+                ) VALUES ($1, $2, $3, $4, $5, $6, true, true, CURRENT_TIMESTAMP)
+                RETURNING id
+            """, email, password_hash, first_name, last_name, role.value, tenant_id)
+        else:
+            user_id = await conn.fetchval("""
+                INSERT INTO users (
+                    email, password_hash, first_name, last_name, role,
+                    active, email_verified, created_at
+                ) VALUES ($1, $2, $3, $4, $5, true, true, CURRENT_TIMESTAMP)
+                RETURNING id
+            """, email, password_hash, first_name, last_name, role.value)
         
         # Log admin creation
         await conn.execute("""

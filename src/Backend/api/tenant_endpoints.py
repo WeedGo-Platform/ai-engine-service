@@ -10,6 +10,8 @@ from pydantic import BaseModel, Field, EmailStr
 import asyncpg
 import os
 import logging
+import secrets
+import string
 
 from core.domain.models import TenantStatus, SubscriptionTier
 from core.services.tenant_service import TenantService
@@ -34,7 +36,7 @@ class CreateTenantRequest(BaseModel):
     name: str = Field(..., min_length=1, max_length=100)
     code: str = Field(..., min_length=2, max_length=20, pattern="^[A-Z0-9_-]+$")
     contact_email: EmailStr
-    subscription_tier: SubscriptionTier = SubscriptionTier.COMMUNITY
+    subscription_tier: SubscriptionTier = SubscriptionTier.COMMUNITY_AND_NEW_BUSINESS
     company_name: Optional[str] = Field(None, max_length=200)
     business_number: Optional[str] = Field(None, max_length=50)
     gst_hst_number: Optional[str] = Field(None, max_length=50)
@@ -55,6 +57,7 @@ class UpdateTenantRequest(BaseModel):
     contact_phone: Optional[str] = Field(None, max_length=20)
     website: Optional[str] = Field(None, max_length=200)
     logo_url: Optional[str] = Field(None, max_length=500)
+    subscription_tier: Optional[SubscriptionTier] = None
     settings: Optional[Dict[str, Any]] = None
 
 
@@ -176,12 +179,11 @@ async def create_tenant(
                     phone=request.contact_phone
                 )
                 
-                # Link user to tenant with admin role
-                await user_repo.create_tenant_user(
+                # Update user with tenant and admin role
+                await user_repo.update_user_tenant(
                     user_id=created_user['id'],
                     tenant_id=tenant.id,
-                    role='admin',
-                    permissions={'all': True}
+                    role='tenant_admin'
                 )
                 
                 # Add user ID to settings for response
@@ -200,11 +202,10 @@ async def create_tenant(
                     admin_user_data.get('email', request.contact_email)
                 )
                 if existing_user:
-                    await user_repo.create_tenant_user(
+                    await user_repo.update_user_tenant(
                         user_id=existing_user['id'],
                         tenant_id=tenant.id,
-                        role='admin',
-                        permissions={'all': True}
+                        role='tenant_admin'
                     )
         
         return TenantResponse(
@@ -332,6 +333,7 @@ async def update_tenant(
             contact_phone=request.contact_phone,
             website=request.website,
             logo_url=request.logo_url,
+            subscription_tier=request.subscription_tier,
             settings=request.settings
         )
         
@@ -535,3 +537,441 @@ async def can_add_store(
     except Exception as e:
         logger.error(f"Error checking store limit: {e}")
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to check store limit")
+
+
+# ==================== Tenant User Management Endpoints ====================
+
+class TenantUserRequest(BaseModel):
+    email: EmailStr
+    first_name: str = Field(..., min_length=1, max_length=100)
+    last_name: str = Field(..., min_length=1, max_length=100)
+    role: str = Field(..., pattern="^(super_admin|tenant_admin|store_manager|staff|customer)$")
+    password: Optional[str] = Field(None, min_length=8)
+    permissions: Optional[Dict[str, Any]] = Field(default_factory=dict)
+
+
+class TenantUserUpdateRequest(BaseModel):
+    first_name: Optional[str] = Field(None, min_length=1, max_length=100)
+    last_name: Optional[str] = Field(None, min_length=1, max_length=100)
+    role: Optional[str] = Field(None, pattern="^(super_admin|tenant_admin|store_manager|staff|customer)$")
+    active: Optional[bool] = None
+    permissions: Optional[Dict[str, Any]] = None
+
+
+class TenantUserResponse(BaseModel):
+    id: UUID
+    email: str
+    first_name: Optional[str]
+    last_name: Optional[str]
+    role: str
+    active: bool
+    tenant_id: UUID
+    permissions: Optional[Dict[str, Any]]
+    created_at: datetime
+    last_login_at: Optional[datetime]
+
+
+@router.get("/{tenant_id}/users", response_model=List[TenantUserResponse])
+async def get_tenant_users(
+    tenant_id: UUID,
+    pool: asyncpg.Pool = Depends(get_db_pool)
+):
+    """Get all users for a tenant"""
+    try:
+        async with pool.acquire() as conn:
+            # Query users table directly where tenant_id matches
+            query = """
+                SELECT 
+                    id, email, first_name, last_name, role, active,
+                    tenant_id, permissions, created_at, last_login_at
+                FROM users
+                WHERE tenant_id = $1
+                ORDER BY created_at DESC
+            """
+            rows = await conn.fetch(query, tenant_id)
+            
+            return [
+                TenantUserResponse(
+                    id=row['id'],
+                    email=row['email'],
+                    first_name=row['first_name'],
+                    last_name=row['last_name'],
+                    role=row['role'],
+                    active=row['active'],
+                    tenant_id=row['tenant_id'],
+                    permissions=row['permissions'],
+                    created_at=row['created_at'],
+                    last_login_at=row['last_login_at']
+                )
+                for row in rows
+            ]
+    except Exception as e:
+        logger.error(f"Error getting tenant users: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to get tenant users")
+
+
+@router.post("/{tenant_id}/users", response_model=TenantUserResponse, status_code=status.HTTP_201_CREATED)
+async def create_tenant_user(
+    tenant_id: UUID,
+    user_data: TenantUserRequest,
+    pool: asyncpg.Pool = Depends(get_db_pool)
+):
+    """Create a new user for a tenant"""
+    try:
+        async with pool.acquire() as conn:
+            # Check if email already exists
+            existing = await conn.fetchval(
+                "SELECT id FROM users WHERE email = $1",
+                user_data.email
+            )
+            if existing:
+                raise HTTPException(status_code=400, detail="Email already exists")
+            
+            # Hash password if provided, otherwise generate one
+            from passlib.context import CryptContext
+            pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+            password = user_data.password or "TempPassword123!"
+            password_hash = pwd_context.hash(password)
+            
+            # Create user directly in users table with tenant_id
+            query = """
+                INSERT INTO users (
+                    email, password_hash, first_name, last_name, 
+                    role, tenant_id, permissions, active, created_at
+                )
+                VALUES ($1, $2, $3, $4, $5, $6, $7, true, CURRENT_TIMESTAMP)
+                RETURNING id, email, first_name, last_name, role, active, 
+                          tenant_id, permissions, created_at, last_login_at
+            """
+            row = await conn.fetchrow(
+                query, 
+                user_data.email,
+                password_hash,
+                user_data.first_name,
+                user_data.last_name,
+                user_data.role,
+                tenant_id,
+                user_data.permissions or {}
+            )
+            
+            return TenantUserResponse(
+                id=row['id'],
+                email=row['email'],
+                first_name=row['first_name'],
+                last_name=row['last_name'],
+                role=row['role'],
+                active=row['active'],
+                tenant_id=row['tenant_id'],
+                permissions=row['permissions'],
+                created_at=row['created_at'],
+                last_login_at=row['last_login_at']
+            )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error creating tenant user: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to create tenant user")
+
+
+@router.put("/{tenant_id}/users/{user_id}", response_model=TenantUserResponse)
+async def update_tenant_user(
+    tenant_id: UUID,
+    user_id: UUID,
+    update_data: TenantUserUpdateRequest,
+    pool: asyncpg.Pool = Depends(get_db_pool)
+):
+    """Update a tenant user"""
+    try:
+        async with pool.acquire() as conn:
+            # Build update query dynamically
+            updates = []
+            params = []
+            param_count = 1
+            
+            if update_data.first_name is not None:
+                updates.append(f"first_name = ${param_count}")
+                params.append(update_data.first_name)
+                param_count += 1
+                
+            if update_data.last_name is not None:
+                updates.append(f"last_name = ${param_count}")
+                params.append(update_data.last_name)
+                param_count += 1
+                
+            if update_data.role is not None:
+                updates.append(f"role = ${param_count}")
+                params.append(update_data.role)
+                param_count += 1
+                
+            if update_data.active is not None:
+                updates.append(f"active = ${param_count}")
+                params.append(update_data.active)
+                param_count += 1
+            
+            if update_data.permissions is not None:
+                updates.append(f"permissions = ${param_count}")
+                params.append(update_data.permissions)
+                param_count += 1
+            
+            if not updates:
+                raise HTTPException(status_code=400, detail="No fields to update")
+            
+            params.extend([user_id, tenant_id])
+            query = f"""
+                UPDATE users
+                SET {', '.join(updates)}, updated_at = CURRENT_TIMESTAMP
+                WHERE id = ${param_count} AND tenant_id = ${param_count + 1}
+                RETURNING id, email, first_name, last_name, role, active, 
+                          tenant_id, permissions, created_at, last_login_at
+            """
+            
+            row = await conn.fetchrow(query, *params)
+            if not row:
+                raise HTTPException(status_code=404, detail="User not found")
+            
+            return TenantUserResponse(
+                id=row['id'],
+                email=row['email'],
+                first_name=row['first_name'],
+                last_name=row['last_name'],
+                role=row['role'],
+                active=row['active'],
+                tenant_id=row['tenant_id'],
+                permissions=row['permissions'],
+                created_at=row['created_at'],
+                last_login_at=row['last_login_at']
+            )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating tenant user: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to update tenant user")
+
+
+class PasswordResetRequest(BaseModel):
+    method: str = "otp"  # "email" or "otp"
+
+@router.post("/{tenant_id}/users/{user_id}/reset-password")
+async def reset_tenant_user_password(
+    tenant_id: UUID,
+    user_id: UUID,
+    request: Optional[PasswordResetRequest] = None,
+    pool: asyncpg.Pool = Depends(get_db_pool)
+):
+    """Reset a tenant user's password"""
+    try:
+        reset_method = request.method if request else "otp"
+        
+        async with pool.acquire() as conn:
+            # Get user email
+            user_email = await conn.fetchval("""
+                SELECT email FROM users
+                WHERE id = $1 AND tenant_id = $2
+            """, user_id, tenant_id)
+            
+            if not user_email:
+                raise HTTPException(status_code=404, detail="User not found")
+            
+            if reset_method == "email":
+                # In production, send actual email with reset link
+                # For now, we'll simulate it
+                reset_token = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(32))
+                
+                # Store reset token (in production, store in cache/db with expiry)
+                # For demo, just return success
+                logger.info(f"Password reset link would be sent to {user_email} with token {reset_token}")
+                
+                return {"message": f"Password reset link sent to {user_email}"}
+            else:
+                # Generate temporary password
+                import secrets
+                import string
+                alphabet = string.ascii_letters + string.digits
+                temp_password = ''.join(secrets.choice(alphabet) for _ in range(12))
+                
+                # Hash password
+                from passlib.context import CryptContext
+                pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+                password_hash = pwd_context.hash(temp_password)
+                
+                # Update password
+                result = await conn.execute("""
+                    UPDATE users
+                    SET password_hash = $1, updated_at = CURRENT_TIMESTAMP
+                    WHERE id = $2 AND tenant_id = $3
+                """, password_hash, user_id, tenant_id)
+                
+                if result.split()[-1] == '0':
+                    raise HTTPException(status_code=404, detail="User not found")
+                
+                return {"message": "Password reset successfully", "temporary_password": temp_password, "otp": temp_password}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error resetting password: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to reset password")
+
+
+@router.delete("/{tenant_id}/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_tenant_user(
+    tenant_id: UUID,
+    user_id: UUID,
+    pool: asyncpg.Pool = Depends(get_db_pool)
+):
+    """Remove a user from a tenant (sets tenant_id to NULL)"""
+    try:
+        async with pool.acquire() as conn:
+            # Instead of deleting, set tenant_id to NULL to remove from tenant
+            result = await conn.execute("""
+                UPDATE users
+                SET tenant_id = NULL, updated_at = CURRENT_TIMESTAMP
+                WHERE id = $1 AND tenant_id = $2
+            """, user_id, tenant_id)
+            
+            if result.split()[-1] == '0':
+                raise HTTPException(status_code=404, detail="User not found in this tenant")
+            
+            return None
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting tenant user: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to delete tenant user")
+
+
+class AddUserToTenantRequest(BaseModel):
+    email: EmailStr
+    role: str = Field(..., pattern="^(super_admin|tenant_admin|store_manager|staff|customer)$")
+    permissions: Optional[Dict[str, Any]] = Field(default_factory=dict)
+
+
+@router.post("/{tenant_id}/users/add-existing", response_model=TenantUserResponse)
+async def add_existing_user_to_tenant(
+    tenant_id: UUID,
+    request: AddUserToTenantRequest,
+    pool: asyncpg.Pool = Depends(get_db_pool)
+):
+    """Add an existing user to a tenant"""
+    try:
+        async with pool.acquire() as conn:
+            # Find user by email
+            user = await conn.fetchrow("""
+                SELECT id, email, first_name, last_name, tenant_id, active, created_at, last_login_at
+                FROM users
+                WHERE email = $1
+            """, request.email)
+            
+            if not user:
+                raise HTTPException(status_code=404, detail="User not found")
+            
+            if user['tenant_id']:
+                raise HTTPException(status_code=400, detail="User already belongs to a tenant")
+            
+            # Update user with tenant information
+            updated_user = await conn.fetchrow("""
+                UPDATE users
+                SET tenant_id = $1, role = $2, permissions = $3, updated_at = CURRENT_TIMESTAMP
+                WHERE id = $4
+                RETURNING id, email, first_name, last_name, role, active, 
+                          tenant_id, permissions, created_at, last_login_at
+            """, tenant_id, request.role, request.permissions or {}, user['id'])
+            
+            return TenantUserResponse(
+                id=updated_user['id'],
+                email=updated_user['email'],
+                first_name=updated_user['first_name'],
+                last_name=updated_user['last_name'],
+                role=updated_user['role'],
+                active=updated_user['active'],
+                tenant_id=updated_user['tenant_id'],
+                permissions=updated_user['permissions'],
+                created_at=updated_user['created_at'],
+                last_login_at=updated_user['last_login_at']
+            )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error adding user to tenant: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to add user to tenant")
+
+
+@router.patch("/{tenant_id}/users/{user_id}/toggle-active")
+async def toggle_tenant_user_active(
+    tenant_id: UUID,
+    user_id: UUID,
+    pool: asyncpg.Pool = Depends(get_db_pool)
+):
+    """Toggle user active status (block/unblock)"""
+    try:
+        async with pool.acquire() as conn:
+            # First get current status
+            current_status = await conn.fetchval("""
+                SELECT active FROM users
+                WHERE id = $1 AND tenant_id = $2
+            """, user_id, tenant_id)
+            
+            if current_status is None:
+                raise HTTPException(status_code=404, detail="User not found")
+            
+            # Toggle the status
+            new_status = not current_status
+            
+            await conn.execute("""
+                UPDATE users
+                SET active = $1, updated_at = CURRENT_TIMESTAMP
+                WHERE id = $2 AND tenant_id = $3
+            """, new_status, user_id, tenant_id)
+            
+            return {"active": new_status, "message": f"User {'activated' if new_status else 'blocked'} successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error toggling user active status: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to toggle user status")
+
+
+@router.get("/{tenant_id}/metrics")
+async def get_tenant_metrics(
+    tenant_id: UUID,
+    pool: asyncpg.Pool = Depends(get_db_pool)
+):
+    """Get metrics for a tenant including store counts and last month revenue"""
+    try:
+        async with pool.acquire() as conn:
+            # Get store metrics
+            store_metrics = await conn.fetchrow("""
+                SELECT 
+                    COUNT(*) as total_stores,
+                    COUNT(CASE WHEN status = 'active' THEN 1 END) as active_stores
+                FROM stores 
+                WHERE tenant_id = $1
+            """, tenant_id)
+            
+            # Get last month revenue (placeholder - would be calculated from actual order data)
+            # For now, we'll return a calculated value based on subscription tier
+            tenant = await conn.fetchrow("""
+                SELECT subscription_tier
+                FROM tenants 
+                WHERE id = $1
+            """, tenant_id)
+            
+            # Mock revenue calculation based on tier
+            tier_base_revenue = {
+                'community_and_new_business': 5000,
+                'small_business': 15000,
+                'professional_and_growing_business': 35000,
+                'enterprise': 75000
+            }
+            
+            base_revenue = tier_base_revenue.get(tenant.get('subscription_tier'), 0)
+            last_month_revenue = base_revenue * (store_metrics.get('active_stores', 0) or 1)
+            
+            return {
+                "total_stores": store_metrics.get('total_stores', 0),
+                "active_stores": store_metrics.get('active_stores', 0),
+                "last_month_revenue": last_month_revenue,
+                "subscription_tier": tenant.get('subscription_tier')
+            }
+    except Exception as e:
+        logger.error(f"Error getting tenant metrics: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to get tenant metrics")

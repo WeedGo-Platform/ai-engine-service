@@ -12,7 +12,6 @@ interface POItem {
   received_quantity?: number;
   retail_price?: number;
   batch_lot?: string;
-  expiry_date?: string;
   case_gtin?: string;
   packaged_on_date?: string;
   gtin_barcode?: string;
@@ -102,7 +101,6 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
         quantity: item.quantity,
         unit_cost: item.unit_cost,
         batch_lot: item.batch_lot,
-        expiry_date: item.expiry_date,
         case_gtin: item.case_gtin,
         packaged_on_date: item.packaged_on_date,
         gtin_barcode: item.gtin_barcode,

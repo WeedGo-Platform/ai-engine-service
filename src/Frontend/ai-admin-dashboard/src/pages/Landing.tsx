@@ -221,14 +221,14 @@ const Landing = () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {/* Community Plan */}
+            {/* Community and New Business Plan */}
             <div className="bg-white border-2 border-gray-200 rounded-xl p-8 hover:border-green-300 transition-colors">
               <div className="text-center">
-                <h3 className="text-xl font-semibold mb-2">Community</h3>
+                <h3 className="text-xl font-semibold mb-2">Community and New Business</h3>
                 <div className="text-3xl font-bold text-gray-900 mb-1">FREE</div>
                 <div className="text-gray-500 mb-6">forever</div>
                 <Link
-                  to="/signup?plan=community"
+                  to="/signup?plan=community_and_new_business"
                   className="w-full bg-gray-100 text-gray-900 py-2 px-4 rounded-lg hover:bg-gray-200 transition-colors block text-center"
                 >
                   Get Started
@@ -258,14 +258,14 @@ const Landing = () => {
               </ul>
             </div>
 
-            {/* Basic Plan */}
+            {/* Small Business Plan */}
             <div className="bg-white border-2 border-gray-200 rounded-xl p-8 hover:border-green-300 transition-colors">
               <div className="text-center">
-                <h3 className="text-xl font-semibold mb-2">Basic</h3>
+                <h3 className="text-xl font-semibold mb-2">Small Business</h3>
                 <div className="text-3xl font-bold text-gray-900 mb-1">$99</div>
                 <div className="text-gray-500 mb-6">/month</div>
                 <Link
-                  to="/signup?plan=basic"
+                  to="/signup?plan=small_business"
                   className="w-full bg-gray-100 text-gray-900 py-2 px-4 rounded-lg hover:bg-gray-200 transition-colors block text-center"
                 >
                   Get Started
@@ -299,7 +299,7 @@ const Landing = () => {
               </ul>
             </div>
 
-            {/* Small Business Plan */}
+            {/* Professional and Growing Business Plan */}
             <div className="bg-white border-2 border-green-500 rounded-xl p-8 relative">
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                 <span className="bg-green-500 text-white px-4 py-1 rounded-full text-sm font-medium">
@@ -307,11 +307,11 @@ const Landing = () => {
                 </span>
               </div>
               <div className="text-center">
-                <h3 className="text-xl font-semibold mb-2">Small Business</h3>
+                <h3 className="text-xl font-semibold mb-2">Professional and Growing Business</h3>
                 <div className="text-3xl font-bold text-gray-900 mb-1">$149</div>
                 <div className="text-gray-500 mb-6">/month</div>
                 <Link
-                  to="/signup?plan=small_business"
+                  to="/signup?plan=professional_and_growing_business"
                   className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors block text-center"
                 >
                   Get Started

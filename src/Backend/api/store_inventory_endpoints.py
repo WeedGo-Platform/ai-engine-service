@@ -12,15 +12,40 @@ from pydantic import BaseModel, Field
 from decimal import Decimal
 import logging
 
+import asyncpg
+import os
+
 from services.store_inventory_service import (
-    StoreInventoryService, 
+    StoreInventoryService,
     TransactionType,
     create_store_inventory_service
 )
-from api.stores_endpoints import get_current_store
-from database import get_db_pool
 
 logger = logging.getLogger(__name__)
+
+# Database connection pool
+db_pool = None
+
+async def get_db_pool():
+    """Get or create database connection pool"""
+    global db_pool
+    if db_pool is None:
+        db_pool = await asyncpg.create_pool(
+            host=os.getenv('DB_HOST', 'localhost'),
+            port=int(os.getenv('DB_PORT', 5434)),
+            database=os.getenv('DB_NAME', 'ai_engine'),
+            user=os.getenv('DB_USER', 'weedgo'),
+            password=os.getenv('DB_PASSWORD', 'weedgo123'),
+            min_size=10,
+            max_size=20
+        )
+    return db_pool
+
+async def get_current_store(x_store_id: Optional[str] = Header(None)):
+    """Get current store from header"""
+    if not x_store_id:
+        raise HTTPException(status_code=400, detail="X-Store-ID header is required")
+    return {"id": x_store_id}
 
 # =====================================================
 # Router Configuration
@@ -55,33 +80,34 @@ class PurchaseOrderItemRequest(BaseModel):
     sku: str
     quantity: int = Field(gt=0)
     unit_cost: Decimal = Field(ge=0)
-    batch_lot: Optional[str] = None
-    expiry_date: Optional[date] = None
-    case_gtin: Optional[str] = None
-    gtin_barcode: Optional[str] = None
-    each_gtin: Optional[str] = None
-    vendor: Optional[str] = None
-    brand: Optional[str] = None
-    packaged_on_date: Optional[date] = None
-    shipped_qty: Optional[int] = None
-    uom: Optional[str] = None
-    uom_conversion: Optional[float] = None
-    uom_conversion_qty: Optional[float] = None
+    batch_lot: str  # Required
+    case_gtin: str  # Required
+    gtin_barcode: str  # Required
+    each_gtin: str  # Required
+    vendor: str  # Required
+    brand: str  # Required
+    packaged_on_date: date  # Required
+    shipped_qty: int  # Required
+    uom: str  # Required
+    uom_conversion: float  # Required
+    uom_conversion_qty: float  # Required
+    notes: Optional[str] = None  # Optional
 
 
 class CreatePurchaseOrderRequest(BaseModel):
     """Request model for creating purchase orders"""
     supplier_id: UUID
     items: List[PurchaseOrderItemRequest]
-    expected_date: Optional[date] = None
-    notes: Optional[str] = None
+    expected_date: date  # Required
+    notes: Optional[str] = None  # Optional
+    excel_filename: str  # Required for PO number generation
 
 
 class ReceivePurchaseOrderRequest(BaseModel):
     """Request model for receiving purchase orders"""
     items: List[Dict[str, Any]]
-    receive_date: Optional[date] = None
-    notes: Optional[str] = None
+    receive_date: date  # Required
+    notes: Optional[str] = None  # Optional
 
 
 class TransferRequest(BaseModel):

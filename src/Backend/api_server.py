@@ -45,9 +45,11 @@ from api.auth_context import router as context_auth_router
 from api.tenant_endpoints import router as tenant_router
 from api.store_endpoints import router as store_router
 from api.store_hours_endpoints import router as store_hours_router
+from api.store_inventory_endpoints import router as store_inventory_router
 from api.payment_settings_endpoints import router as payment_settings_router
 from api.payment_provider_endpoints import router as payment_provider_router
 from api.client_payment_endpoints import router as client_payment_router
+from api.store_payment_endpoints import router as store_payment_router
 from api.admin_auth import router as admin_auth_router
 
 # Configure logging
@@ -296,15 +298,21 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3003", "http://localhost:3004", "http://localhost:3000", "http://localhost:5024", "http://localhost:5173", "http://localhost:5174"],  # Allow specific localhost ports including admin dashboard
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
+    expose_headers=["*"],
+    max_age=3600,
 )
 
 # Add security headers middleware with relaxed CSP for Swagger UI
 @app.middleware("http")
 async def add_security_headers(request: Request, call_next):
     response = await call_next(request)
-    
+
+    # Skip security headers for OPTIONS requests to avoid CORS conflicts
+    if request.method == "OPTIONS":
+        return response
+
     # Skip CSP for docs and redoc endpoints
     if request.url.path in ["/docs", "/redoc", "/openapi.json"]:
         # Allow Swagger UI to work properly
@@ -314,17 +322,39 @@ async def add_security_headers(request: Request, call_next):
             "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; "
             "img-src 'self' data: blob: https://fastapi.tiangolo.com; "
             "font-src 'self' data:; "
-            "connect-src 'self'"
+            "connect-src 'self' http://localhost:*"
         )
     else:
-        # Strict CSP for other endpoints
-        response.headers["Content-Security-Policy"] = "default-src 'self'"
-    
+        # Relaxed CSP for API endpoints to allow localhost connections
+        response.headers["Content-Security-Policy"] = "default-src 'self' http://localhost:*"
+
     response.headers["X-Content-Type-Options"] = "nosniff"
-    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-Frame-Options"] = "SAMEORIGIN"  # Changed from DENY to allow same-origin
     response.headers["X-XSS-Protection"] = "1; mode=block"
-    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    # Remove HSTS for local development
+    # response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
     return response
+
+# Auth redirect endpoints for frontend compatibility
+@app.get("/api/v1/auth/")
+async def auth_redirect():
+    """Redirect to available auth endpoints"""
+    return {
+        "message": "Authentication endpoints available",
+        "endpoints": {
+            "customer": "/api/v1/auth/customer",
+            "admin": "/api/v1/auth/admin",
+            "otp": "/api/v1/auth/otp"
+        }
+    }
+
+@app.post("/api/v1/auth/login")
+async def auth_login_redirect():
+    """Redirect login to appropriate endpoint"""
+    return HTTPException(
+        status_code=307,
+        detail="Please use /api/v1/auth/admin/login or /api/v1/auth/customer/login"
+    )
 
 # Include routers
 app.include_router(customer_auth_router)  # Customer authentication endpoints
@@ -335,6 +365,14 @@ app.include_router(voice_router)
 app.include_router(chat_router)
 app.include_router(tenant_router)  # Tenant management endpoints
 
+# File upload endpoints
+try:
+    from api.file_upload import router as file_upload_router
+    app.include_router(file_upload_router)
+    logger.info("File upload endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load file upload endpoints: {e}")
+
 # User management endpoints
 try:
     from api.user_endpoints import router as user_router
@@ -344,10 +382,12 @@ except Exception as e:
     logger.warning(f"Failed to load user endpoints: {e}")
 
 app.include_router(store_hours_router)  # Store hours management endpoints (must be before store_router)
-app.include_router(store_router)   # Store management endpoints
+app.include_router(store_router)   # Store management endpoints (includes inventory stats)
+app.include_router(store_inventory_router)  # Store inventory endpoints
 app.include_router(payment_settings_router)  # Payment settings endpoints
 app.include_router(payment_provider_router)  # Payment provider management endpoints
 app.include_router(client_payment_router)  # Client payment endpoints
+app.include_router(store_payment_router)  # Store payment terminal and device endpoints
 
 # Import and include admin endpoints (unified admin + model management)
 from api.admin_endpoints import router as admin_router
@@ -358,6 +398,14 @@ app.include_router(analytics_router)
 # Import and include inventory endpoints
 from api.inventory_endpoints import router as inventory_router
 app.include_router(inventory_router)
+
+# Import and include shelf location endpoints
+try:
+    from api.shelf_location_endpoints import router as shelf_location_router
+    app.include_router(shelf_location_router)
+    logger.info("Shelf location endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load shelf location endpoints: {e}")
 
 # Import and include cart endpoints
 from api.cart_endpoints import router as cart_router
@@ -428,6 +476,14 @@ try:
 except Exception as e:
     logger.warning(f"Failed to load search endpoints: {e}")
 
+# Import and include product details endpoints
+try:
+    from api.product_details_endpoints import router as product_details_router
+    app.include_router(product_details_router)
+    logger.info("Product details endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load product details endpoints: {e}")
+
 # Import and include supplier endpoints
 try:
     from api.supplier_endpoints import router as supplier_router
@@ -496,12 +552,20 @@ except Exception as e:
 @app.middleware("http")
 async def rate_limit_middleware(request: Request, call_next):
     """Global rate limiting middleware"""
+    # Skip rate limiting for OPTIONS requests (CORS preflight)
+    if request.method == "OPTIONS":
+        return await call_next(request)
+
+    # Skip rate limiting for inventory endpoints (they have their own limits)
+    if "/api/inventory" in request.url.path or "/api/store-inventory" in request.url.path:
+        return await call_next(request)
+
     if not hasattr(app.state, 'rate_limiter'):
         return await call_next(request)
-    
+
     rate_limiter = app.state.rate_limiter
     client_id = rate_limiter.get_client_id(request)
-    
+
     # Check global rate limit
     allowed, info = await rate_limiter.check_rate_limit(
         client_id,

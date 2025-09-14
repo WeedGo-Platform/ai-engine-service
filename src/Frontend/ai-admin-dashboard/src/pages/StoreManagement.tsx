@@ -25,6 +25,8 @@ import {
   Settings
 } from 'lucide-react';
 import tenantService, { Store, Tenant, CreateStoreRequest } from '../services/tenantService';
+import { useAuth } from '../contexts/AuthContext';
+import { useStoreContext } from '../contexts/StoreContext';
 
 const PROVINCES = [
   { code: 'ON', name: 'Ontario' },
@@ -45,6 +47,8 @@ const PROVINCES = [
 const StoreManagement: React.FC = () => {
   const { tenantCode } = useParams<{ tenantCode: string }>();
   const navigate = useNavigate();
+  const { user, isSuperAdmin, isTenantAdmin, isStoreManager } = useAuth();
+  const { currentStore } = useStoreContext();
   const [tenant, setTenant] = useState<Tenant | null>(null);
   const [stores, setStores] = useState<Store[]>([]);
   const [loading, setLoading] = useState(true);
@@ -52,6 +56,13 @@ const StoreManagement: React.FC = () => {
   const [editingStore, setEditingStore] = useState<Store | null>(null);
   const [canAddStore, setCanAddStore] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isStoreManagerView, setIsStoreManagerView] = useState(false);
+
+  useEffect(() => {
+    // Check if user is store manager only (not tenant admin or super admin)
+    const isStoreManagerOnly = !isSuperAdmin() && !isTenantAdmin() && isStoreManager();
+    setIsStoreManagerView(isStoreManagerOnly);
+  }, [isSuperAdmin, isTenantAdmin, isStoreManager]);
 
   useEffect(() => {
     if (tenantCode) {
@@ -59,9 +70,22 @@ const StoreManagement: React.FC = () => {
     }
   }, [tenantCode]);
 
+  // Helper function to check if user can edit a specific store
+  const canEditStore = (storeId: string) => {
+    // Super admins and tenant admins can edit all stores
+    if (isSuperAdmin() || isTenantAdmin()) {
+      return true;
+    }
+    // Store managers can only edit their own store
+    if (isStoreManager() && currentStore?.id === storeId) {
+      return true;
+    }
+    return false;
+  };
+
   const loadTenantAndStores = async () => {
     if (!tenantCode) return;
-    
+
     try {
       setLoading(true);
       const tenantData = await tenantService.getTenantByCode(tenantCode);
@@ -69,10 +93,11 @@ const StoreManagement: React.FC = () => {
         tenantService.getStores(tenantData.id),
         tenantService.canAddStore(tenantData.id)
       ]);
-      
+
       setTenant(tenantData);
       setStores(storesData);
-      setCanAddStore(canAdd.can_add_store);
+      // Store managers cannot add new stores
+      setCanAddStore(isStoreManagerView ? false : canAdd.can_add_store);
     } catch (err) {
       setError('Failed to load tenant and stores');
       console.error(err);
@@ -346,48 +371,57 @@ const StoreManagement: React.FC = () => {
 
                 {/* Actions */}
                 <div className="flex justify-end gap-2">
-                  <button
-                    onClick={() => navigate(`/dashboard/stores/${store.store_code}/settings`)}
-                    className="px-3 py-1.5 text-sm text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg flex items-center gap-1"
-                  >
-                    <Settings className="w-4 h-4" />
-                    POS Settings
-                  </button>
-                  <button
-                    onClick={() => navigate(`/dashboard/stores/${store.store_code}/hours`)}
-                    className="px-3 py-1.5 text-sm text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-lg flex items-center gap-1"
-                  >
-                    <Clock className="w-4 h-4" />
-                    Hours
-                  </button>
-                  <button
-                    onClick={() => setEditingStore(store)}
-                    className="px-3 py-1.5 text-sm text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg"
-                  >
-                    Edit
-                  </button>
-                  {store.status === 'active' ? (
-                    <button
-                      onClick={() => handleSuspendStore(store.id)}
-                      className="px-3 py-1.5 text-sm text-yellow-600 dark:text-yellow-400 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 rounded-lg"
-                    >
-                      Suspend
-                    </button>
-                  ) : store.status === 'suspended' ? (
-                    <button
-                      onClick={() => handleReactivateStore(store.id)}
-                      className="px-3 py-1.5 text-sm text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg"
-                    >
-                      Reactivate
-                    </button>
-                  ) : null}
-                  {store.status !== 'inactive' && (
-                    <button
-                      onClick={() => handleCloseStore(store.id)}
-                      className="px-3 py-1.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg"
-                    >
-                      Close
-                    </button>
+                  {canEditStore(store.id) && (
+                    <>
+                      <button
+                        onClick={() => navigate(`/dashboard/stores/${store.store_code}/settings`)}
+                        className="px-3 py-1.5 text-sm text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg flex items-center gap-1"
+                      >
+                        <Settings className="w-4 h-4" />
+                        Settings
+                      </button>
+                      <button
+                        onClick={() => navigate(`/dashboard/stores/${store.store_code}/hours`)}
+                        className="px-3 py-1.5 text-sm text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-lg flex items-center gap-1"
+                      >
+                        <Clock className="w-4 h-4" />
+                        Hours
+                      </button>
+                      <button
+                        onClick={() => setEditingStore(store)}
+                        className="px-3 py-1.5 text-sm text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg"
+                      >
+                        Edit
+                      </button>
+                    </>
+                  )}
+                  {/* Only admins can suspend/reactivate/close stores */}
+                  {!isStoreManagerView && (
+                    <>
+                      {store.status === 'active' ? (
+                        <button
+                          onClick={() => handleSuspendStore(store.id)}
+                          className="px-3 py-1.5 text-sm text-yellow-600 dark:text-yellow-400 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 rounded-lg"
+                        >
+                          Suspend
+                        </button>
+                      ) : store.status === 'suspended' ? (
+                        <button
+                          onClick={() => handleReactivateStore(store.id)}
+                          className="px-3 py-1.5 text-sm text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg"
+                        >
+                          Reactivate
+                        </button>
+                      ) : null}
+                      {store.status !== 'inactive' && (
+                        <button
+                          onClick={() => handleCloseStore(store.id)}
+                          className="px-3 py-1.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg"
+                        >
+                          Close
+                        </button>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
@@ -452,6 +486,25 @@ const StoreFormModal: React.FC<{
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate store_code format
+    if (!formData.store_code || !/^[A-Z0-9_-]+$/.test(formData.store_code)) {
+      alert('Store code must contain only uppercase letters, numbers, underscores, and hyphens');
+      return;
+    }
+    
+    // Validate province_code format
+    if (!formData.province_code || !/^[A-Z]{2}$/.test(formData.province_code)) {
+      alert('Please select a valid province');
+      return;
+    }
+    
+    // Ensure all required fields are present
+    if (!formData.name || !formData.address?.street || !formData.address?.city || !formData.address?.postal_code) {
+      alert('Please fill in all required fields');
+      return;
+    }
+    
     onSave(formData);
   };
 

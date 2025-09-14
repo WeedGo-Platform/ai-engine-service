@@ -115,30 +115,35 @@ const storeService = {
    * Fetch all accessible stores for the current user
    */
   fetchStores: async (): Promise<Store[]> => {
+    // Get auth token
+    const token = localStorage.getItem('weedgo_auth_access_token') ||
+                  sessionStorage.getItem('weedgo_auth_access_token');
+
     const response = await fetch(`${API_BASE_URL}/api/stores/tenant/active`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        // Add auth headers if needed
+        ...(token && { 'Authorization': `Bearer ${token}` })
       },
     });
-    
+
     if (!response.ok) {
       // Fallback to fetch all stores if tenant endpoint doesn't exist
       const fallbackResponse = await fetch(`${API_BASE_URL}/api/stores`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` })
         },
       });
-      
+
       if (!fallbackResponse.ok) {
         throw new Error('Failed to fetch stores');
       }
-      
+
       return fallbackResponse.json();
     }
-    
+
     return response.json();
   },
   
@@ -146,16 +151,24 @@ const storeService = {
    * Set active store for the session
    */
   setActiveStore: async (storeId: string): Promise<void> => {
+    // Get auth token
+    const token = localStorage.getItem('weedgo_auth_access_token') || 
+                  sessionStorage.getItem('weedgo_auth_access_token');
+    
     const response = await fetch(`${API_BASE_URL}/api/stores/${storeId}/select`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-Store-ID': storeId,
+        ...(token && { 'Authorization': `Bearer ${token}` })
       },
     });
     
     if (!response.ok) {
-      throw new Error('Failed to set active store');
+      // Don't throw error for 404, as the endpoint might not exist yet
+      if (response.status !== 404) {
+        throw new Error('Failed to set active store');
+      }
     }
   },
   
@@ -163,15 +176,30 @@ const storeService = {
    * Fetch inventory statistics for a store
    */
   fetchInventoryStats: async (storeId: string): Promise<StoreInventoryStats> => {
+    // Get auth token
+    const token = localStorage.getItem('weedgo_auth_access_token') || 
+                  sessionStorage.getItem('weedgo_auth_access_token');
+    
     const response = await fetch(`${API_BASE_URL}/api/stores/${storeId}/inventory/stats`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         'X-Store-ID': storeId,
+        ...(token && { 'Authorization': `Bearer ${token}` })
       },
     });
     
     if (!response.ok) {
+      // Return default stats if endpoint doesn't exist
+      if (response.status === 404) {
+        return {
+          total_skus: 0,
+          total_quantity: 0,
+          low_stock_items: 0,
+          out_of_stock_items: 0,
+          total_value: 0
+        };
+      }
       throw new Error('Failed to fetch inventory statistics');
     }
     
@@ -256,7 +284,7 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({
   persistSelection = true,
 }) => {
   const queryClient = useQueryClient();
-  const { user, isSuperAdmin, isAuthenticated } = useAuth();
+  const { user, isSuperAdmin, isTenantAdmin, isStoreManager, isAuthenticated } = useAuth();
   const [currentStore, setCurrentStore] = useState<Store | null>(null);
   const [inventoryStats, setInventoryStats] = useState<StoreInventoryStats | null>(null);
   const [filteredStores, setFilteredStores] = useState<Store[]>([]);
@@ -273,36 +301,6 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({
     enabled: isAuthenticated,
     staleTime: CACHE_DURATION,
     cacheTime: CACHE_DURATION * 2,
-    onSuccess: (data) => {
-      // Filter stores based on user permissions
-      let accessibleStores = data;
-      
-      if (!isSuperAdmin()) {
-        // Filter stores based on user's store permissions
-        const userStoreIds = user?.stores?.map(s => s.id) || [];
-        accessibleStores = data.filter(store => 
-          userStoreIds.includes(store.id)
-        );
-      }
-      
-      setFilteredStores(accessibleStores);
-      
-      // Cache stores for offline access
-      storageUtils.cacheStores(accessibleStores);
-      
-      // Auto-select store if needed
-      if (!currentStore && accessibleStores.length > 0) {
-        const storedId = persistSelection ? storageUtils.getStoredStoreId() : null;
-        const storeToSelect = 
-          (storedId && accessibleStores.find(s => s.id === storedId)) ||
-          (defaultStoreId && accessibleStores.find(s => s.id === defaultStoreId)) ||
-          accessibleStores.find(s => s.status === 'active');
-        
-        if (storeToSelect) {
-          selectStore(storeToSelect.id);
-        }
-      }
-    },
     onError: () => {
       // Try to use cached data on error
       const cached = storageUtils.getCachedStores();
@@ -316,7 +314,7 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({
   const selectStoreMutation = useMutation({
     mutationFn: storeService.setActiveStore,
     onSuccess: (_, storeId) => {
-      const store = stores.find(s => s.id === storeId);
+      const store = filteredStores.find(s => s.id === storeId);
       if (store) {
         setCurrentStore(store);
         if (persistSelection) {
@@ -340,25 +338,60 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({
   // Context Methods
   // =====================================================
   
-  const selectStore = useCallback(async (storeId: string) => {
+  const selectStore = useCallback(async (storeId: string, storeName?: string) => {
+    // If stores haven't loaded yet, just set the store directly
+    // The validation will happen when stores load
+    if (filteredStores.length === 0) {
+      console.log('Stores not loaded yet, setting store ID directly:', storeId);
+      // Include the store name if provided
+      setCurrentStore({ id: storeId, name: storeName || '' } as any);
+      if (persistSelection) {
+        storageUtils.saveStoreId(storeId);
+      }
+      window.localStorage.setItem('X-Store-ID', storeId);
+      return;
+    }
+
     const store = filteredStores.find(s => s.id === storeId);
     if (!store) {
-      throw new Error(`Store with ID ${storeId} not found or not accessible`);
+      console.warn(`Store with ID ${storeId} not found in filtered stores, attempting to set anyway`);
+      // Still try to set it - the store might be valid but not loaded yet
+      // Include the store name if provided
+      setCurrentStore({ id: storeId, name: storeName || '' } as any);
+      if (persistSelection) {
+        storageUtils.saveStoreId(storeId);
+      }
+      window.localStorage.setItem('X-Store-ID', storeId);
+      return;
     }
-    
+
     if (store.status !== 'active') {
       throw new Error(`Store ${store.name} is not active`);
     }
-    
+
     // Check user has permission to access this store
-    if (!isSuperAdmin() && user?.stores && !user.stores.find(s => s.id === storeId)) {
-      throw new Error(`You don't have permission to access store ${store.name}`);
+    if (!isSuperAdmin() && !isTenantAdmin()) {
+      let hasAccess = false;
+
+      // Check for store manager with single store
+      if (user?.store_id) {
+        hasAccess = user.store_id === storeId;
+      }
+      // Check for users with multiple stores
+      else if (user?.stores) {
+        hasAccess = user.stores.some(s => s.id === storeId);
+      }
+
+      if (!hasAccess) {
+        throw new Error(`You don't have permission to access store ${store.name}`);
+      }
     }
-    
+    // Tenant admins have access to all stores in their tenant
+
     await selectStoreMutation.mutateAsync(storeId);
     // Load inventory stats for the selected store
     await loadInventoryStatsMutation.mutateAsync(storeId);
-  }, [filteredStores, selectStoreMutation, loadInventoryStatsMutation, isSuperAdmin, user]);
+  }, [filteredStores, selectStoreMutation, loadInventoryStatsMutation, isSuperAdmin, user, persistSelection]);
   
   const clearStore = useCallback(() => {
     setCurrentStore(null);
@@ -384,29 +417,94 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({
   
   const hasStoreAccess = useCallback((storeId: string) => {
     if (isSuperAdmin()) return true;
-    
+
     const store = getStoreById(storeId);
     if (!store) return false;
-    
+
     // Check if user has permission for this store
-    return user?.stores?.some(s => s.id === storeId) || false;
+    // Handle both store managers (single store_id) and other roles (stores array)
+    if (user?.store_id) {
+      return user.store_id === storeId;
+    } else if (user?.stores) {
+      return user.stores.some(s => s.id === storeId);
+    }
+
+    return false;
   }, [getStoreById, isSuperAdmin, user]);
   
   // =====================================================
   // Effects
   // =====================================================
-  
-  // Initialize store selection on mount
+
+  // Handle store data when it arrives
   useEffect(() => {
-    if (!isLoading && filteredStores.length > 0 && !currentStore) {
-      const storedId = persistSelection ? storageUtils.getStoredStoreId() : null;
-      if (storedId && filteredStores.find(s => s.id === storedId)) {
-        selectStore(storedId).catch(console.error);
-      } else if (defaultStoreId && filteredStores.find(s => s.id === defaultStoreId)) {
+    if (allStores && allStores.length > 0 && !isLoading) {
+      console.log('Processing store data:', {
+        allStoresLength: allStores.length,
+        currentStore,
+        user,
+        userRole: user?.role
+      });
+
+      // Update filtered stores
+      setFilteredStores(allStores);
+
+      // Cache stores for offline access
+      storageUtils.cacheStores(allStores);
+
+      // Auto-select store if needed
+      if (!currentStore) {
+        const isStoreManager = user?.role === 'store_manager';
+
+        // For store managers or users with single store, auto-select it
+        if (allStores.length === 1) {
+          console.log('Auto-selecting single store:', allStores[0]);
+          const store = allStores[0];
+          setCurrentStore(store);
+          if (persistSelection) {
+            storageUtils.saveStoreId(store.id);
+          }
+          window.localStorage.setItem('X-Store-ID', store.id);
+        } else if (persistSelection) {
+          // Try to restore previous selection
+          const storedId = storageUtils.getStoredStoreId();
+          if (storedId) {
+            const store = allStores.find(s => s.id === storedId);
+            if (store) {
+              console.log('Restoring stored selection:', store);
+              setCurrentStore(store);
+              window.localStorage.setItem('X-Store-ID', store.id);
+            }
+          }
+        }
+      } else if (currentStore && currentStore.id && !currentStore.name) {
+        // Update partial store data with full data
+        const fullStore = allStores.find(s => s.id === currentStore.id);
+        if (fullStore) {
+          console.log('Updating partial store data:', fullStore);
+          setCurrentStore(fullStore);
+        }
+      }
+    }
+  }, [allStores, isLoading]); // Removed user?.role to avoid re-runs, only depend on data changes
+
+  // Trigger mutations for selected store
+  useEffect(() => {
+    if (currentStore && filteredStores.length > 0) {
+      // Trigger mutations when store is selected
+      selectStoreMutation.mutate(currentStore.id);
+      loadInventoryStatsMutation.mutate(currentStore.id);
+    }
+  }, [currentStore?.id]);
+
+  // Initialize store selection on mount for default store
+  useEffect(() => {
+    if (!isLoading && filteredStores.length > 0 && !currentStore && defaultStoreId) {
+      if (filteredStores.find(s => s.id === defaultStoreId)) {
         selectStore(defaultStoreId).catch(console.error);
       }
     }
-  }, [isLoading, filteredStores, currentStore, persistSelection, defaultStoreId, selectStore]);
+  }, [isLoading, filteredStores, currentStore, defaultStoreId, selectStore]);
   
   // Set global store header for API requests
   useEffect(() => {

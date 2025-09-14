@@ -42,6 +42,7 @@ async def get_db_connection():
 async def search_products(
     q: Optional[str] = Query(None, description="Search query"),
     id: Optional[str] = Query(None, description="Product ID"),
+    store_id: Optional[str] = Query(None, description="Store ID for inventory filtering"),
     category: Optional[str] = Query(None, description="Product category"),
     min_price: Optional[float] = Query(None, ge=0, description="Minimum price"),
     max_price: Optional[float] = Query(None, ge=0, description="Maximum price"),
@@ -56,64 +57,56 @@ async def search_products(
     Search products with various filters
     """
     try:
-        # Build the query using inventory_products_view
-        query = """
-            SELECT 
-                id,
-                sku,
-                name,
-                brand,
-                supplier_name,
-                category,
-                sub_category,
-                sub_sub_category,
-                plant_type,
-                strain_type,
-                size,
-                unit_of_measure,
-                thc_percentage as thc_content,
-                thc_min_percent as thc_min,
-                cbd_percentage as cbd_content,
-                cbd_min_percent as cbd_min,
-                unit_price,
-                price,
-                short_description,
-                description,
-                long_description,
-                image_url,
-                street_name,
-                terpenes,
-                ocs_item_number,
-                ocs_variant_number,
-                gtin,
-                colour,
-                pack_size,
-                thc_content_per_unit,
-                cbd_content_per_unit,
-                stock_status,
-                pc_stock_status,
-                pc_inventory_status,
-                ingredients,
-                grow_method,
-                grow_region,
-                drying_method,
-                trimming_method,
-                extraction_process,
-                ontario_grown,
-                craft,
-                quantity_on_hand as stock_quantity,
-                quantity_available as available_quantity,
-                quantity_reserved,
-                location,
-                reorder_point,
-                reorder_quantity,
-                CASE 
-                    WHEN quantity_available > 0 THEN true
-                    ELSE false
-                END as in_stock
-            FROM inventory_products_view
-            WHERE 1=1
-        """
+        # Parse GS1-128 barcode if present
+        # GS1-128 format: (01)GTIN(13)DATE(10)BATCH
+        if q and q.startswith('01') and len(q) > 16:
+            # Extract GTIN from GS1-128 barcode
+            # Position 2-15 contains the 14-digit GTIN
+            gtin = q[2:16]
+            # Use the extracted GTIN for search
+            q = gtin
+            logger.info(f"Parsed GS1-128 barcode, extracted GTIN: {gtin}")
+
+        # Build the query using catalog with optional inventory
+        # This allows POS to see all products, not just those with inventory
+        query = (
+            "SELECT "
+            "p.ocs_variant_number as id, "
+            "p.ocs_variant_number as sku, "
+            "p.product_name as name, "
+            "p.brand, "
+            "p.category, "
+            "p.sub_category, "
+            "p.sub_sub_category, "
+            "p.plant_type, "
+            "p.strain_type, "
+            "p.pack_size as size, "
+            "p.unit_of_measure, "
+            "p.maximum_thc_content_percent as thc_content, "
+            "p.minimum_thc_content_percent as thc_min, "
+            "p.maximum_cbd_content_percent as cbd_content, "
+            "p.minimum_cbd_content_percent as cbd_min, "
+            "p.unit_price, "
+            "COALESCE(i.retail_price, p.unit_price) as price, "
+            "p.terpenes, "
+            "p.ocs_item_number, "
+            "p.ocs_variant_number, "
+            "p.gtin, "
+            "CASE "
+            "WHEN i.quantity_available > 10 THEN 'in_stock' "
+            "WHEN i.quantity_available > 0 THEN 'low_stock' "
+            "ELSE 'out_of_stock' "
+            "END as stock_status, "
+            "COALESCE(i.quantity_on_hand, 0) as stock_quantity, "
+            "COALESCE(i.quantity_available, 0) as available_quantity, "
+            "COALESCE(i.quantity_reserved, 0) as quantity_reserved, "
+            "i.reorder_point, "
+            "i.reorder_quantity, "
+            "CASE WHEN i.quantity_available > 0 THEN true ELSE false END as in_stock "
+            "FROM ocs_product_catalog p "
+            "LEFT JOIN ocs_inventory i ON p.ocs_variant_number = i.sku "
+            "WHERE 1=1"
+        )
         
         params = []
         param_count = 0
@@ -121,49 +114,51 @@ async def search_products(
         # Add filters
         if id:
             param_count += 1
-            query += f" AND id = ${param_count}"
+            query += f" AND p.ocs_variant_number = ${param_count}"
             params.append(id)
         
         if q:
             param_count += 1
             query += f""" AND (
-                name ILIKE $%d OR 
-                short_description ILIKE $%d OR 
-                long_description ILIKE $%d OR
-                brand ILIKE $%d OR
-                terpenes::text ILIKE $%d
-            )""" % (param_count, param_count, param_count, param_count, param_count)
+                p.product_name ILIKE ${param_count} OR
+                p.brand ILIKE ${param_count} OR
+                p.category ILIKE ${param_count} OR
+                p.ocs_variant_number ILIKE ${param_count} OR
+                p.gtin ILIKE ${param_count} OR
+                p.ocs_item_number ILIKE ${param_count} OR
+                p.terpenes::text ILIKE ${param_count}
+            )"""
             search_term = f"%{q}%"
             params.append(search_term)
         
         if category:
             param_count += 1
-            query += f" AND category ILIKE ${param_count}"
+            query += f" AND p.category ILIKE ${param_count}"
             params.append(f"%{category}%")
         
         if min_price is not None:
             param_count += 1
-            query += f" AND price >= ${param_count}"
+            query += f" AND COALESCE(i.retail_price, p.unit_price) >= ${param_count}"
             params.append(min_price)
         
         if max_price is not None:
             param_count += 1
-            query += f" AND price <= ${param_count}"
+            query += f" AND COALESCE(i.retail_price, p.unit_price) <= ${param_count}"
             params.append(max_price)
         
         if in_stock:
-            query += " AND quantity_available > 0"
+            query += " AND i.quantity_available > 0"
         
         # Add sorting
         sort_field_map = {
-            "name": "name",
-            "price": "price",
-            "category": "category",
-            "stock": "quantity_available",
-            "thc": "thc_percentage"
+            "name": "p.product_name",
+            "price": "COALESCE(i.retail_price, p.unit_price)",
+            "category": "p.category",
+            "stock": "i.quantity_available",
+            "thc": "p.maximum_thc_content_percent"
         }
         
-        sort_field = sort_field_map.get(sort_by, "name")
+        sort_field = sort_field_map.get(sort_by, "p.product_name")
         sort_direction = "DESC" if sort_order.lower() == "desc" else "ASC"
         query += f" ORDER BY {sort_field} {sort_direction}"
         
@@ -177,8 +172,158 @@ async def search_products(
         params.append(offset)
         
         # Execute query
-        rows = await conn.fetch(query, *params)
-        
+
+        # Build the actual query with dynamic filters and batch information
+        actual_query = f"""
+            WITH product_batches AS (
+                SELECT
+                    LOWER(TRIM(bt.sku)) as sku,
+                    bt.store_id,
+                    json_agg(
+                        json_build_object(
+                            'batch_lot', bt.batch_lot,
+                            'quantity_remaining', bt.quantity_remaining,
+                            'case_gtin', bt.case_gtin,
+                            'each_gtin', bt.each_gtin,
+                            'packaged_on_date', bt.packaged_on_date,
+                            'location_code', sl.location_code
+                        ) ORDER BY bt.batch_lot
+                    ) FILTER (WHERE bt.quantity_remaining > 0) as batches,
+                    COUNT(bt.id) FILTER (WHERE bt.quantity_remaining > 0) as batch_count
+                FROM batch_tracking bt
+                LEFT JOIN shelf_locations sl ON bt.location_id = sl.id
+                WHERE bt.is_active = true
+                GROUP BY LOWER(TRIM(bt.sku)), bt.store_id
+            )
+            SELECT
+                p.ocs_variant_number as id,
+                p.ocs_variant_number as sku,
+                p.product_name as name,
+                p.brand,
+                p.category,
+                p.sub_category,
+                p.plant_type,
+                p.strain_type,
+                p.pack_size as size,
+                p.image_url,
+                p.gtin,
+                p.ocs_item_number,
+                COALESCE(MAX(i.retail_price), p.unit_price, 0) as price,
+                p.unit_price,
+                COALESCE(SUM(i.quantity_available), 0) as available_quantity,
+                CASE WHEN SUM(i.quantity_available) > 0 THEN true ELSE false END as in_stock,
+                CASE
+                    WHEN SUM(i.quantity_available) > 10 THEN 'in_stock'
+                    WHEN SUM(i.quantity_available) > 0 THEN 'low_stock'
+                    ELSE 'out_of_stock'
+                END as stock_status,
+                p.maximum_thc_content_percent as thc_content,
+                p.maximum_cbd_content_percent as cbd_content,
+                COALESCE(MAX(pb.batch_count), 0) as batch_count,
+                MAX(pb.batches::text)::json as batches
+            FROM ocs_product_catalog p
+            INNER JOIN ocs_inventory i ON LOWER(TRIM(i.sku)) = LOWER(TRIM(p.ocs_variant_number))
+            LEFT JOIN product_batches pb ON pb.sku = LOWER(TRIM(p.ocs_variant_number))
+                AND (pb.store_id = i.store_id OR pb.store_id IS NULL)
+        """
+
+        # Add WHERE clause with filters
+        where_conditions = ["1=1"]
+        actual_params = []
+        param_counter = 0
+
+        # Add store filter if provided
+        if store_id:
+            param_counter += 1
+            where_conditions.append(f"i.store_id = ${param_counter}")
+            actual_params.append(store_id)
+
+        if q:
+            param_counter += 1
+            where_conditions.append(f"""(
+                p.product_name ILIKE ${param_counter} OR
+                p.brand ILIKE ${param_counter} OR
+                p.category ILIKE ${param_counter} OR
+                p.ocs_variant_number ILIKE ${param_counter} OR
+                COALESCE(p.gtin::TEXT, '') ILIKE ${param_counter} OR
+                COALESCE(p.ocs_item_number::TEXT, '') ILIKE ${param_counter} OR
+                EXISTS (
+                    SELECT 1 FROM batch_tracking bt
+                    WHERE UPPER(TRIM(bt.sku)) = UPPER(TRIM(p.ocs_variant_number))
+                    AND (
+                        COALESCE(bt.case_gtin, '') ILIKE ${param_counter} OR
+                        COALESCE(bt.each_gtin, '') ILIKE ${param_counter} OR
+                        COALESCE(bt.gtin_barcode, '') ILIKE ${param_counter}
+                    )
+                    AND bt.is_active = true
+                    AND bt.quantity_remaining > 0
+                )
+            )""")
+            # Always use wildcards for search
+            actual_params.append(f"%{q}%")
+
+        if id:
+            param_counter += 1
+            where_conditions.append(f"p.ocs_variant_number = ${param_counter}")
+            actual_params.append(id)
+
+        if category:
+            param_counter += 1
+            where_conditions.append(f"p.category ILIKE ${param_counter}")
+            actual_params.append(f"%{category}%")
+
+        if min_price is not None:
+            param_counter += 1
+            where_conditions.append(f"COALESCE(i.retail_price, p.unit_price) >= ${param_counter}")
+            actual_params.append(min_price)
+
+        if max_price is not None:
+            param_counter += 1
+            where_conditions.append(f"COALESCE(i.retail_price, p.unit_price) <= ${param_counter}")
+            actual_params.append(max_price)
+
+        if in_stock:
+            where_conditions.append("i.quantity_available > 0")
+
+        actual_query += " WHERE " + " AND ".join(where_conditions)
+
+        # Add GROUP BY
+        actual_query += """
+            GROUP BY p.ocs_variant_number, p.product_name, p.brand, p.category,
+                     p.sub_category, p.plant_type, p.strain_type, p.pack_size, p.unit_price, p.image_url,
+                     p.gtin, p.ocs_item_number,
+                     p.maximum_thc_content_percent, p.maximum_cbd_content_percent
+        """
+
+        # Add sorting
+        sort_field_map = {
+            "name": "p.product_name",
+            "price": "COALESCE(MAX(i.retail_price), p.unit_price)",
+            "category": "p.category",
+            "stock": "SUM(i.quantity_available)",
+            "thc": "p.maximum_thc_content_percent"
+        }
+
+        sort_field = sort_field_map.get(sort_by, "p.product_name")
+        sort_direction = "DESC" if sort_order.lower() == "desc" else "ASC"
+        actual_query += f" ORDER BY {sort_field} {sort_direction}"
+
+        # Add pagination
+        param_counter += 1
+        actual_query += f" LIMIT ${param_counter}"
+        actual_params.append(limit)
+
+        param_counter += 1
+        actual_query += f" OFFSET ${param_counter}"
+        actual_params.append(offset)
+
+        try:
+            rows = await conn.fetch(actual_query, *actual_params)
+        except Exception as e:
+            logger.error(f"Error executing query: {str(e)}")
+            logger.error(f"Query was: {query[:500]}")
+            raise
+
         # Convert to list of dicts
         products = []
         for row in rows:
@@ -187,7 +332,6 @@ async def search_products(
             decimal_fields = [
                 'unit_price', 'price',
                 'thc_content', 'thc_min', 'cbd_content', 'cbd_min',
-                'thc_content_per_unit', 'cbd_content_per_unit',
                 'reorder_point', 'reorder_quantity'
             ]
             
@@ -197,51 +341,59 @@ async def search_products(
             
             products.append(product)
         
-        # Get total count for pagination
+        # Get total count for pagination - simplified count for unique products
         count_query = """
-            SELECT COUNT(*) as total
-            FROM inventory_products_view
+            SELECT COUNT(DISTINCT p.ocs_variant_number) as total
+            FROM ocs_product_catalog p
+            INNER JOIN ocs_inventory i ON LOWER(TRIM(i.sku)) = LOWER(TRIM(p.ocs_variant_number))
             WHERE 1=1
         """
-        
+
         # Apply same filters for count
         count_params = []
         count_param_count = 0
-        
-        if id:
+
+        # Add store filter to count as well
+        if store_id:
             count_param_count += 1
-            count_query += f" AND id = ${count_param_count}"
-            count_params.append(id)
-        
+            count_query += f" AND i.store_id = ${count_param_count}"
+            count_params.append(store_id)
+
         if q:
             count_param_count += 1
             count_query += f""" AND (
-                name ILIKE $%d OR 
-                short_description ILIKE $%d OR 
-                long_description ILIKE $%d OR
-                brand ILIKE $%d OR
-                terpenes::text ILIKE $%d
-            )""" % (count_param_count, count_param_count, count_param_count, count_param_count, count_param_count)
-            count_params.append(search_term)
-        
+                p.product_name ILIKE ${count_param_count} OR
+                p.brand ILIKE ${count_param_count} OR
+                p.category ILIKE ${count_param_count} OR
+                p.ocs_variant_number ILIKE ${count_param_count} OR
+                COALESCE(p.gtin::TEXT, '') ILIKE ${count_param_count} OR
+                COALESCE(p.ocs_item_number::TEXT, '') ILIKE ${count_param_count}
+            )"""
+            count_params.append(f"%{q}%")
+
+        if id:
+            count_param_count += 1
+            count_query += f" AND p.ocs_variant_number = ${count_param_count}"
+            count_params.append(id)
+
         if category:
             count_param_count += 1
-            count_query += f" AND category ILIKE ${count_param_count}"
+            count_query += f" AND p.category ILIKE ${count_param_count}"
             count_params.append(f"%{category}%")
-        
+
         if min_price is not None:
             count_param_count += 1
-            count_query += f" AND price >= ${count_param_count}"
+            count_query += f" AND COALESCE(i.retail_price, p.unit_price) >= ${count_param_count}"
             count_params.append(min_price)
-        
+
         if max_price is not None:
             count_param_count += 1
-            count_query += f" AND price <= ${count_param_count}"
+            count_query += f" AND COALESCE(i.retail_price, p.unit_price) <= ${count_param_count}"
             count_params.append(max_price)
-        
+
         if in_stock:
-            count_query += " AND quantity_available > 0"
-        
+            count_query += " AND i.quantity_available > 0"
+
         total_count = await conn.fetchval(count_query, *count_params)
         
         return {

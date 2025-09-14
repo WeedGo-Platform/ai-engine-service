@@ -4,6 +4,7 @@ import { Upload, X, CheckCircle, AlertCircle, FileSpreadsheet, TruckIcon, Loader
 import * as XLSX from 'xlsx';
 import { api } from '../services/api';
 import { useStoreContext } from '../contexts/StoreContext';
+import { useAuth } from '../contexts/AuthContext';
 import StoreSelector from './StoreSelector';
 
 interface ASNItem {
@@ -41,6 +42,7 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { currentStore } = useStoreContext();
+  const { user, isStoreManager } = useAuth();
   
   const [step, setStep] = useState<'upload' | 'review' | 'create'>('upload');
   const [asnItems, setAsnItems] = useState<ASNItem[]>([]);
@@ -51,15 +53,17 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
   // Form state for PO creation
   const [poNumber, setPoNumber] = useState('');
   const [supplierId, setSupplierId] = useState('');
-  const [expectedDate, setExpectedDate] = useState('');
   const [notes, setNotes] = useState('');
+  const [charges, setCharges] = useState(0);
+  const [discount, setDiscount] = useState(0);
+  const [paidInFull, setPaidInFull] = useState(false);
   
   const [error, setError] = useState<string | null>(null);
 
-  // Set default supplier to OCS Wholesale and today's date when modal opens
+  // Set OCS Wholesale as default supplier for Ontario stores
   useEffect(() => {
     if (isOpen && suppliers?.length > 0) {
-      // Find OCS Wholesale supplier
+      // Always use OCS Wholesale for Ontario stores
       const ocsSupplier = suppliers.find((s: any) => 
         s.name?.toLowerCase().includes('ocs') || 
         s.name?.toLowerCase().includes('wholesale')
@@ -67,9 +71,6 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
       if (ocsSupplier) {
         setSupplierId(ocsSupplier.id);
       }
-      // Set today's date as default
-      const today = new Date().toISOString().split('T')[0];
-      setExpectedDate(today);
     }
   }, [isOpen, suppliers]);
 
@@ -117,13 +118,13 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
       
       return { exists: true, isNewBatch: false };
     } catch (error) {
-      console.error('Error checking inventory:', error);
+      console.error('Error checking inventory:', error instanceof Error ? error.message : String(error));
       return { exists: false, isNewBatch: false };
     }
   };
 
-  // Get product image from catalog
-  const getProductImage = async (sku: string): Promise<{image_url: string | null, product_name: string, retail_price?: number}> => {
+  // Get product image from catalog with retry logic
+  const getProductImage = async (sku: string, retryCount = 0): Promise<{image_url: string | null, product_name: string, retail_price?: number}> => {
     try {
       // Trim and encode the SKU for the URL
       const trimmedSku = encodeURIComponent(sku.trim());
@@ -136,16 +137,31 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
       
       if (response.ok) {
         const data = await response.json();
+        // Ensure we return the full image URL if it exists
         return {
-          image_url: data.image_url,
-          product_name: data.product_name || 'Unknown Product',
+          image_url: data.image_url || null,
+          product_name: data.product_name || sku, // Use SKU as fallback name
           retail_price: data.retail_price
         };
       }
-      return { image_url: null, product_name: 'Unknown Product', retail_price: undefined };
+      
+      // Retry on failure if we have retries left
+      if (retryCount > 0) {
+        await new Promise(resolve => setTimeout(resolve, 500)); // Wait 500ms before retry
+        return getProductImage(sku, retryCount - 1);
+      }
+      
+      return { image_url: null, product_name: sku, retail_price: undefined };
     } catch (error) {
-      console.error('Error getting product image:', error);
-      return { image_url: null, product_name: 'Unknown Product', retail_price: undefined };
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error(`Error getting product image for SKU ${sku}:`, errorMessage);
+      // Don't retry on 429 errors to avoid making rate limiting worse
+      // Only retry on other errors if we have retries left
+      if (retryCount > 0 && !errorMessage.includes('429') && !errorMessage.includes('Too Many Requests')) {
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1s before retry
+        return getProductImage(sku, retryCount - 1);
+      }
+      return { image_url: null, product_name: sku, retail_price: undefined };
     }
   };
 
@@ -168,7 +184,7 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
       }
       return false;
     } catch (error) {
-      console.error('Error checking duplicate import:', error);
+      console.error('Error checking duplicate import:', error instanceof Error ? error.message : String(error));
       return false;
     }
   };
@@ -186,7 +202,7 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
         },
       });
     } catch (error) {
-      console.error('Error marking file as imported:', error);
+      console.error('Error marking file as imported:', error instanceof Error ? error.message : String(error));
     }
   };
 
@@ -216,8 +232,15 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
       const items: ASNItem[] = [];
       const totalRows = jsonData.length;
       
-      // Process each row and check inventory
+      // Add delay function to avoid rate limiting
+      const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+      
+      // Process each row and check inventory with rate limiting
       for (let i = 0; i < jsonData.length; i++) {
+        // Add delay between items to avoid 429 rate limit errors (500ms per item)
+        if (i > 0) {
+          await delay(500);
+        }
         const row = jsonData[i] as any;
         setProcessingProgress(Math.round(((i + 1) / totalRows) * 100));
         
@@ -230,6 +253,33 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
         // Get product image
         const productInfo = await getProductImage(sku);
         
+        // Convert date format from "MM/DD/YYYY 12:00:00 AM" to "YYYY-MM-DD"
+        let formattedPackagedOnDate: string | undefined = undefined;
+        if (row.PackagedOnDate) {
+          const dateStr = String(row.PackagedOnDate);
+          // Try to parse various date formats
+          if (dateStr.includes('/')) {
+            // Handle "MM/DD/YYYY" or "MM/DD/YYYY 12:00:00 AM" format
+            const parts = dateStr.split(' ')[0].split('/');
+            if (parts.length === 3) {
+              const month = parts[0].padStart(2, '0');
+              const day = parts[1].padStart(2, '0');
+              const year = parts[2];
+              formattedPackagedOnDate = `${year}-${month}-${day}`;
+            }
+          } else if (dateStr.includes('-')) {
+            // Already in YYYY-MM-DD format
+            formattedPackagedOnDate = dateStr.split(' ')[0];
+          }
+        }
+        
+        // Debug: Log the row to see actual column names
+        if (i === 0) {
+          console.log('First data row columns:', Object.keys(row));
+          console.log('GTINBarCode value:', row.GTINBarCode);
+          console.log('Full row data:', row);
+        }
+
         // Parse the row data
         const item: ASNItem = {
           shipment_id: row.ShipmentID ? String(row.ShipmentID) : undefined,
@@ -240,9 +290,10 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
           vendor: row.Vendor ? String(row.Vendor) : undefined,
           brand: row.Brand ? String(row.Brand) : undefined,
           case_gtin: row.CaseGTIN ? String(row.CaseGTIN) : undefined,
-          packaged_on_date: row.PackagedOnDate ? String(row.PackagedOnDate) : undefined,
+          packaged_on_date: formattedPackagedOnDate,
           batch_lot: batchLot,
-          gtin_barcode: row.Barcode ? String(row.Barcode) : undefined,
+          // Use exact column name from Excel: GTINBarCode (capital C in Code)
+          gtin_barcode: row.GTINBarCode ? String(row.GTINBarCode) : undefined,
           each_gtin: row.EachGTIN ? String(row.EachGTIN) : undefined,
           shipped_qty: parseInt(row.Shipped_Qty) || 0,
           received_qty: parseInt(row.Shipped_Qty) || 0, // Default to shipped quantity
@@ -303,6 +354,27 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
   // Create Purchase Order using existing endpoint
   const createPOMutation = useMutation({
     mutationFn: async () => {
+      if (!poNumber || !asnItems.length) {
+        throw new Error('Invalid PO data');
+      }
+
+      // Get store details to determine province and supplier
+      let storeProvince = 'ON'; // Default to Ontario
+      let vendorName = 'OCS'; // Default vendor
+      
+      if (currentStore?.id) {
+        try {
+          // Fetch store details to get province
+          const storeResponse = await fetch(`http://localhost:5024/api/stores/${currentStore.id}`);
+          if (storeResponse.ok) {
+            const storeData = await storeResponse.json();
+            storeProvince = storeData.province || 'ON';
+          }
+        } catch (error) {
+          console.error('Failed to fetch store details:', error instanceof Error ? error.message : String(error));
+        }
+      }
+
       // Prepare purchase order items from ASN data
       const poItems = asnItems.map(item => ({
         sku: item.sku,
@@ -310,7 +382,7 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
         quantity_ordered: item.shipped_qty,
         unit_cost: item.unit_price,
         item_name: item.item_name,
-        vendor: item.vendor,
+        vendor: item.vendor || vendorName,  // Use determined vendor
         brand: item.brand,
         case_gtin: item.case_gtin,
         packaged_on_date: item.packaged_on_date,
@@ -323,22 +395,65 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
         exists_in_inventory: item.exists_in_inventory
       }));
 
+      // packaged_on_date is optional - use today's date as fallback if missing
+      const itemsWithoutPackagedDate = poItems.filter(item => !item.packaged_on_date);
+      if (itemsWithoutPackagedDate.length > 0) {
+        console.warn(`Missing packaged_on_date for ${itemsWithoutPackagedDate.length} items. Using today's date as fallback.`);
+      }
+
+      // Calculate totals
+      const subtotal = poItems.reduce((sum, item) => sum + (item.shipped_qty * item.unit_cost), 0);
+      const totalAmount = subtotal + charges - discount;
+      
+      // Determine supplier based on province
+      let finalSupplierId = supplierId;
+      if (!finalSupplierId) {
+        // For Ontario, use OCS Wholesale
+        if (storeProvince === 'ON') {
+          const ocsSupplier = suppliers.find((s: any) => 
+            s.name?.toLowerCase().includes('ocs') || 
+            s.name?.toLowerCase().includes('wholesale')
+          );
+          if (ocsSupplier) {
+            finalSupplierId = ocsSupplier.id;
+            vendorName = 'OCS Wholesale';
+          }
+        }
+        // Add logic for other provinces as needed
+      }
+
       // Prepare purchase order data matching API expectations
       const purchaseOrder = {
-        supplier_id: supplierId,
-        store_id: currentStore?.id,  // Include store_id from context
-        items: poItems.map(item => ({
-          sku: item.sku,
-          quantity: item.shipped_qty,  // Use shipped_qty as the quantity
-          unit_cost: item.unit_cost,
-          batch_lot: item.batch_lot,
-          expiry_date: null,  // Add if available in your data
-          case_gtin: item.case_gtin,
-          gtin_barcode: item.gtin_barcode,
-          each_gtin: item.each_gtin
-        })),
-        expected_date: expectedDate || null,
-        notes: `PO Number: ${poNumber}${notes ? `\n${notes}` : ''}`  // Include PO number in notes
+        supplier_id: finalSupplierId,
+        store_id: currentStore?.id || undefined, // Include store_id in the request body
+        items: poItems.map(item => {
+          // Debug: Log the gtin_barcode being sent
+          console.log(`Sending item ${item.sku}: gtin_barcode=${item.gtin_barcode}, case_gtin=${item.case_gtin}`);
+          return {
+            sku: item.sku,
+            quantity: item.shipped_qty,  // Use shipped_qty as the quantity
+            unit_cost: item.unit_cost,
+            batch_lot: item.batch_lot,
+            case_gtin: item.case_gtin,
+            packaged_on_date: item.packaged_on_date || new Date().toISOString().split('T')[0],  // Use today if missing
+            gtin_barcode: item.gtin_barcode,  // Required field
+            each_gtin: item.each_gtin,
+            vendor: item.vendor,  // Use vendor from above logic
+            brand: item.brand || item.item_name || 'Unknown',  // Required
+            shipped_qty: item.shipped_qty,  // Required
+            uom: item.uom || 'EACH',  // Required with default
+            uom_conversion: item.uom_conversion || 1,  // Required with default
+            uom_conversion_qty: item.uom_conversion_qty || 1  // Required with default
+          }
+        }),
+        expected_date: new Date().toISOString().split('T')[0], // Use today's date
+        excel_filename: uploadedFileName || poNumber,  // Required for PO number generation
+        notes: `PO Number: ${poNumber}
+${notes ? `Notes: ${notes}` : ''}
+Additional Charges: $${charges.toFixed(2)}
+Discount: $${discount.toFixed(2)}
+Total: $${totalAmount.toFixed(2)}
+Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all financial details in notes
       };
 
       const response = await fetch('http://localhost:5024/api/inventory/purchase-orders', {
@@ -346,13 +461,21 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
         headers: {
           'Content-Type': 'application/json',
           'X-Store-ID': currentStore?.id || '',  // Ensure store ID is in header
+          'X-Tenant-ID': currentStore?.tenant_id || ''
         },
         body: JSON.stringify(purchaseOrder),
       });
       
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.detail || 'Failed to create purchase order');
+        let errorMessage = 'Failed to create purchase order';
+        try {
+          const errorData = await response.json();
+          console.error('Purchase order creation failed:', JSON.stringify(errorData, null, 2));
+          errorMessage = errorData.detail || errorMessage;
+        } catch (e) {
+          console.error('Failed to parse error response');
+        }
+        throw new Error(errorMessage);
       }
       
       return response.json();
@@ -367,18 +490,30 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
       handleClose();
     },
     onError: (error: Error) => {
+      console.error('Purchase order creation error:', error.message);
       setError(error.message);
     },
   });
 
   const handleCreatePO = () => {
-    if (!poNumber || !supplierId) {
-      setError('Please fill in all required fields');
+    if (!poNumber) {
+      setError('Please enter a PO Number');
       return;
     }
+    // Check if we have a store selected
     if (!currentStore) {
       setError('Please select a store before creating a purchase order');
       return;
+    }
+    // Ensure we have OCS supplier
+    if (!supplierId) {
+      const ocsSupplier = suppliers.find((s: any) => 
+        s.name?.toLowerCase().includes('ocs') || 
+        s.name?.toLowerCase().includes('wholesale')
+      );
+      if (ocsSupplier) {
+        setSupplierId(ocsSupplier.id);
+      }
     }
     createPOMutation.mutate();
   };
@@ -388,8 +523,10 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
     setAsnItems([]);
     setPoNumber('');
     setSupplierId('');
-    setExpectedDate('');
     setNotes('');
+    setCharges(0);
+    setDiscount(0);
+    setPaidInFull(false);
     setError(null);
     setIsProcessing(false);
     setProcessingProgress(0);
@@ -547,18 +684,21 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
                           </div>
                         </td>
                         <td className="px-4 py-3">
-                          {item.image_url ? (
+                          {item.image_url && item.image_url !== 'null' && item.image_url !== 'undefined' ? (
                             <img 
                               src={item.image_url} 
                               alt={item.product_name || item.item_name || 'Product'}
                               className="h-12 w-12 object-cover rounded"
+                              loading="eager"
                               onError={(e) => {
-                                (e.target as HTMLImageElement).style.display = 'none';
+                                // If image fails to load, hide it and log the error
+                                console.error(`Failed to load image for SKU ${item.sku}:`, item.image_url);
+                                (e.target as HTMLImageElement).style.visibility = 'hidden';
                               }}
                             />
                           ) : (
-                            <div className="h-12 w-12 bg-gray-200 rounded flex items-center justify-center">
-                              <Package className="h-6 w-6 text-gray-400" />
+                            <div className="h-12 w-12 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-500">
+                              {item.sku?.substring(0, 3)}
                             </div>
                           )}
                         </td>
@@ -597,18 +737,32 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
             <div className="space-y-6">
               <h3 className="text-lg font-medium">Create Purchase Order</h3>
               
-              {/* Store Selector */}
+              {/* Store Selector - Show selector for non-store managers, show store name for store managers */}
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Store *
                 </label>
-                <StoreSelector className="w-full" showStats={false} />
+                {isStoreManager() ? (
+                  // For store managers, show their assigned store
+                  currentStore ? (
+                    <div className="px-3 py-2 border border-gray-300 rounded-md bg-gray-50">
+                      {currentStore.name}
+                    </div>
+                  ) : (
+                    <div className="px-3 py-2 border border-red-300 rounded-md bg-red-50 text-red-600">
+                      No stores available
+                    </div>
+                  )
+                ) : (
+                  // For other roles, show the store selector
+                  <StoreSelector className="w-full" showStats={false} />
+                )}
                 {!currentStore && (
                   <p className="mt-1 text-sm text-red-600">Please select a store</p>
                 )}
               </div>
               
-              <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     PO Number *
@@ -618,41 +772,11 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
                     value={poNumber}
                     onChange={(e) => setPoNumber(e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
-                    placeholder="PO-2024-001"
+                    placeholder="ASN_SO005932532"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Supplier *
-                  </label>
-                  <select
-                    value={supplierId}
-                    onChange={(e) => setSupplierId(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
-                  >
-                    <option value="">Select Supplier</option>
-                    {suppliers?.map((supplier: any) => (
-                      <option key={supplier.id} value={supplier.id}>
-                        {supplier.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Expected Date
-                  </label>
-                  <input
-                    type="date"
-                    value={expectedDate}
-                    onChange={(e) => setExpectedDate(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
-                  />
-                </div>
-
-                <div className="col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Notes
                   </label>
@@ -686,18 +810,21 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
                         <tr key={index}>
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-3">
-                              {item.image_url ? (
+                              {item.image_url && item.image_url !== 'null' && item.image_url !== 'undefined' ? (
                                 <img 
                                   src={item.image_url} 
                                   alt={item.item_name || 'Product'}
                                   className="h-10 w-10 object-cover rounded"
+                                  loading="eager"
                                   onError={(e) => {
-                                    (e.target as HTMLImageElement).style.display = 'none';
+                                    // If image fails to load, hide it and log the error
+                                    console.error(`Failed to load image for SKU ${item.sku}:`, item.image_url);
+                                    (e.target as HTMLImageElement).style.visibility = 'hidden';
                                   }}
                                 />
                               ) : (
-                                <div className="h-10 w-10 bg-gray-200 rounded flex items-center justify-center">
-                                  <Package className="h-5 w-5 text-gray-400" />
+                                <div className="h-10 w-10 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-500">
+                                  {item.sku?.substring(0, 3)}
                                 </div>
                               )}
                               <div>
@@ -763,24 +890,89 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
                 </div>
               </div>
 
-              <div className="bg-gray-50 rounded-lg p-4">
-                <h4 className="font-medium mb-2">Summary</h4>
-                <div className="grid grid-cols-3 gap-4 text-sm">
+              {/* Charges Section */}
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <h4 className="font-medium mb-3 text-yellow-900">Charges</h4>
+                <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <span className="text-gray-600">Total Items:</span>
-                    <span className="ml-2 font-medium">{asnItems.length}</span>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Additional Charges (e.g., shipping)
+                    </label>
+                    <input
+                      type="number"
+                      value={charges}
+                      onChange={(e) => setCharges(parseFloat(e.target.value) || 0)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500"
+                      placeholder="0.00"
+                      step="0.01"
+                    />
                   </div>
                   <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Discount
+                    </label>
+                    <input
+                      type="number"
+                      value={discount}
+                      onChange={(e) => setDiscount(parseFloat(e.target.value) || 0)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500"
+                      placeholder="0.00"
+                      step="0.01"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Summary Section */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h4 className="font-medium mb-3">Summary</h4>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Total Items:</span>
+                    <span className="font-medium">{asnItems.length}</span>
+                  </div>
+                  <div className="flex justify-between">
                     <span className="text-gray-600">Total Quantity:</span>
-                    <span className="ml-2 font-medium">
+                    <span className="font-medium">
                       {asnItems.reduce((sum, item) => sum + item.shipped_qty, 0)}
                     </span>
                   </div>
-                  <div>
-                    <span className="text-gray-600">Total Amount:</span>
-                    <span className="ml-2 font-medium">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Subtotal:</span>
+                    <span className="font-medium">
                       ${asnItems.reduce((sum, item) => sum + (item.shipped_qty * item.unit_price), 0).toFixed(2)}
                     </span>
+                  </div>
+                  {charges > 0 && (
+                    <div className="flex justify-between text-yellow-700">
+                      <span>Additional Charges:</span>
+                      <span className="font-medium">+${charges.toFixed(2)}</span>
+                    </div>
+                  )}
+                  {discount > 0 && (
+                    <div className="flex justify-between text-green-700">
+                      <span>Discount:</span>
+                      <span className="font-medium">-${discount.toFixed(2)}</span>
+                    </div>
+                  )}
+                  <div className="border-t pt-2 flex justify-between font-bold text-base">
+                    <span>Total:</span>
+                    <span>
+                      ${(asnItems.reduce((sum, item) => sum + (item.shipped_qty * item.unit_price), 0) + charges - discount).toFixed(2)}
+                    </span>
+                  </div>
+                  
+                  {/* Paid in Full Checkbox */}
+                  <div className="border-t pt-3 mt-3">
+                    <label className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={paidInFull}
+                        onChange={(e) => setPaidInFull(e.target.checked)}
+                        className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                      />
+                      <span className="text-sm font-medium text-gray-700">Paid in Full</span>
+                    </label>
                   </div>
                 </div>
               </div>

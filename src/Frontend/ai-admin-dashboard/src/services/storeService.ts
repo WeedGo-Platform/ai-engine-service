@@ -1,6 +1,8 @@
 import axios from 'axios';
+import { appConfig } from '../config/app.config';
+import { getAuthStorage, getStorageKey } from '../config/auth.config';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5024';
+const API_BASE_URL = appConfig.api.baseUrl;
 
 export interface Address {
   street: string;
@@ -42,7 +44,8 @@ export interface Store {
 
 class StoreService {
   private getAuthHeaders() {
-    const token = localStorage.getItem('token');
+    const storage = getAuthStorage();
+    const token = storage.getItem(getStorageKey('access_token'));
     return {
       headers: {
         Authorization: `Bearer ${token}`,

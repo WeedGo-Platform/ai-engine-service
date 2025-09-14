@@ -33,9 +33,8 @@ class InventoryService:
                     retail_price,
                     reorder_point,
                     reorder_quantity,
-                    location,
                     last_restock_date
-                FROM inventory
+                FROM ocs_inventory
                 WHERE sku = $1
             """
             
@@ -57,7 +56,7 @@ class InventoryService:
                 # Update inventory levels
                 if transaction_type == 'sale':
                     update_query = """
-                        UPDATE inventory
+                        UPDATE ocs_inventory
                         SET quantity_available = quantity_available - $2,
                             quantity_on_hand = quantity_on_hand - $2,
                             updated_at = CURRENT_TIMESTAMP
@@ -66,7 +65,7 @@ class InventoryService:
                     """
                 elif transaction_type == 'purchase':
                     update_query = """
-                        UPDATE inventory
+                        UPDATE ocs_inventory
                         SET quantity_available = quantity_available + $2,
                             quantity_on_hand = quantity_on_hand + $2,
                             last_restock_date = CURRENT_TIMESTAMP,
@@ -76,7 +75,7 @@ class InventoryService:
                     """
                 elif transaction_type == 'adjustment':
                     update_query = """
-                        UPDATE inventory
+                        UPDATE ocs_inventory
                         SET quantity_available = quantity_available + $2,
                             quantity_on_hand = quantity_on_hand + $2,
                             updated_at = CURRENT_TIMESTAMP
@@ -92,7 +91,7 @@ class InventoryService:
                     # If SKU doesn't exist or insufficient stock, create new record
                     if transaction_type == 'purchase':
                         insert_query = """
-                            INSERT INTO inventory (sku, quantity_on_hand, quantity_available, 
+                            INSERT INTO ocs_inventory (sku, quantity_on_hand, quantity_available, 
                                                  last_restock_date)
                             VALUES ($1, $2, $2, CURRENT_TIMESTAMP)
                             RETURNING quantity_on_hand
@@ -103,7 +102,7 @@ class InventoryService:
                 
                 # Record transaction
                 transaction_query = """
-                    INSERT INTO inventory_transactions
+                    INSERT INTO ocs_inventory_transactions
                     (sku, transaction_type, reference_id, quantity, running_balance, notes)
                     VALUES ($1, $2, $3, $4, $5, $6)
                 """
@@ -120,13 +119,35 @@ class InventoryService:
             raise
     
     async def create_purchase_order(self, supplier_id: UUID, items: List[Dict[str, Any]],
-                                   expected_date: Optional[date] = None,
-                                   notes: Optional[str] = None) -> UUID:
+                                   expected_date: date,
+                                   notes: Optional[str] = None,
+                                   excel_filename: str = None,
+                                   store_id: UUID = None) -> UUID:
         """Create a new purchase order"""
         try:
             async with self.db.transaction():
-                # Generate PO number
-                po_number = f"PO-{datetime.now().strftime('%Y%m%d')}-{str(uuid4())[:8].upper()}"
+                # Generate PO number using Excel filename
+                # Clean up the filename: remove ASN_ prefix and .xlsx extension
+                clean_filename = excel_filename
+                if clean_filename and clean_filename.startswith('ASN_'):
+                    clean_filename = clean_filename[4:]  # Remove 'ASN_' prefix
+                if clean_filename and clean_filename.endswith('.xlsx'):
+                    clean_filename = clean_filename[:-5]  # Remove '.xlsx' extension
+                elif clean_filename and clean_filename.endswith('.xls'):
+                    clean_filename = clean_filename[:-4]  # Remove '.xls' extension
+
+                po_number = f"PO-{datetime.now().strftime('%Y%m%d')}-{clean_filename}"
+
+                # Check if PO with this number already exists
+                existing_po = await self.db.fetchval(
+                    "SELECT id FROM purchase_orders WHERE po_number = $1",
+                    po_number
+                )
+
+                if existing_po:
+                    raise ValueError(
+                        f"Purchase order already exists for file: {clean_filename}. This file has already been imported."
+                    )
                 
                 # Calculate total amount
                 total_amount = sum(
@@ -137,36 +158,48 @@ class InventoryService:
                 # Create purchase order
                 po_query = """
                     INSERT INTO purchase_orders
-                    (po_number, supplier_id, expected_date, status, total_amount, notes)
-                    VALUES ($1, $2, $3, 'pending', $4, $5)
+                    (po_number, supplier_id, expected_date, status, total_amount, notes, store_id)
+                    VALUES ($1, $2, $3, 'pending', $4, $5, $6)
                     RETURNING id
                 """
                 
                 po_id = await self.db.fetchval(
                     po_query,
-                    po_number, supplier_id, expected_date, total_amount, notes
+                    po_number, supplier_id, expected_date, total_amount, notes, store_id
                 )
                 
                 # Add items to purchase order
                 for item in items:
+                    # Log the gtin_barcode value for debugging
+                    gtin_barcode_value = item.get('gtin_barcode')
+                    logger.info(f"Processing item {item['sku']}: gtin_barcode={gtin_barcode_value}, case_gtin={item.get('case_gtin')}")
+
                     item_query = """
                         INSERT INTO purchase_order_items
-                        (purchase_order_id, sku, batch_lot, quantity_ordered, 
-                         unit_cost, expiry_date, case_gtin, gtin_barcode, each_gtin)
-                        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+                        (purchase_order_id, sku, batch_lot, quantity_ordered,
+                         unit_cost, case_gtin, gtin_barcode, each_gtin,
+                         vendor, brand, packaged_on_date,
+                         shipped_qty, uom, uom_conversion, uom_conversion_qty)
+                        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
                     """
-                    
+
                     await self.db.execute(
                         item_query,
                         po_id,
                         item['sku'],
-                        item.get('batch_lot'),
+                        item['batch_lot'],  # Required from Excel
                         item['quantity'],
                         Decimal(str(item['unit_cost'])),
-                        item.get('expiry_date'),
-                        item.get('case_gtin'),
-                        item.get('gtin_barcode'),
-                        item.get('each_gtin')
+                        item['case_gtin'],  # Required from Excel
+                        gtin_barcode_value,  # From Excel Barcode column
+                        item['each_gtin'],  # Required from Excel
+                        item['vendor'],  # Required from Excel
+                        item['brand'],  # Required from Excel
+                        item['packaged_on_date'],  # Required from Excel
+                        item['shipped_qty'],  # Required from Excel
+                        item['uom'],  # Required from Excel
+                        Decimal(str(item['uom_conversion'])),  # Required from Excel
+                        item['uom_conversion_qty']  # Required from Excel
                     )
                 
                 logger.info(f"Created purchase order {po_number} with {len(items)} items")
@@ -181,6 +214,15 @@ class InventoryService:
         """Process receipt of purchase order items"""
         try:
             async with self.db.transaction():
+                # Get store_id from purchase order
+                store_query = """
+                    SELECT store_id FROM purchase_orders WHERE id = $1
+                """
+                store_id = await self.db.fetchval(store_query, po_id)
+                
+                if not store_id:
+                    raise ValueError(f"Purchase order {po_id} does not have a store_id. Cannot receive items without a store assignment.")
+                
                 # Update PO status
                 status_query = """
                     UPDATE purchase_orders
@@ -210,14 +252,14 @@ class InventoryService:
                     
                     # Update or create inventory record
                     inv_query = """
-                        INSERT INTO inventory (sku, quantity_on_hand, quantity_available, 
+                        INSERT INTO ocs_inventory (store_id, sku, quantity_on_hand, quantity_available, 
                                              unit_cost, last_restock_date)
-                        VALUES ($1, $2, $2, $3, CURRENT_TIMESTAMP)
-                        ON CONFLICT (sku) DO UPDATE
-                        SET quantity_on_hand = inventory.quantity_on_hand + $2,
-                            quantity_available = inventory.quantity_available + $2,
-                            unit_cost = ((inventory.quantity_on_hand * inventory.unit_cost) + 
-                                        ($2 * $3)) / (inventory.quantity_on_hand + $2),
+                        VALUES ($1, $2, $3, $3, $4, CURRENT_TIMESTAMP)
+                        ON CONFLICT (store_id, sku) DO UPDATE
+                        SET quantity_on_hand = ocs_inventory.quantity_on_hand + $3,
+                            quantity_available = ocs_inventory.quantity_available + $3,
+                            unit_cost = ((ocs_inventory.quantity_on_hand * ocs_inventory.unit_cost) + 
+                                        ($3 * $4)) / (ocs_inventory.quantity_on_hand + $3),
                             last_restock_date = CURRENT_TIMESTAMP,
                             updated_at = CURRENT_TIMESTAMP
                         RETURNING quantity_on_hand
@@ -225,6 +267,7 @@ class InventoryService:
                     
                     new_balance = await self.db.fetchval(
                         inv_query,
+                        store_id,
                         item['sku'],
                         item['quantity_received'],
                         Decimal(str(item['unit_cost']))
@@ -232,7 +275,7 @@ class InventoryService:
                     
                     # Record inventory transaction
                     trans_query = """
-                        INSERT INTO inventory_transactions
+                        INSERT INTO ocs_inventory_transactions
                         (sku, transaction_type, reference_id, reference_type, 
                          batch_lot, quantity, unit_cost, running_balance)
                         VALUES ($1, 'purchase', $2, 'purchase_order', $3, $4, $5, $6)
@@ -248,38 +291,36 @@ class InventoryService:
                         new_balance
                     )
                     
-                    # Track batch if provided
-                    if item.get('batch_lot'):
-                        batch_query = """
+                    # Track batch (with optional GTIN fields)
+                    batch_query = """
                             INSERT INTO batch_tracking
-                            (batch_lot, sku, purchase_order_id, quantity_received, 
-                             quantity_remaining, unit_cost, expiry_date,
+                            (batch_lot, sku, purchase_order_id, quantity_received,
+                             quantity_remaining, unit_cost,
                              case_gtin, packaged_on_date, gtin_barcode, each_gtin)
-                            VALUES ($1, $2, $3, $4, $4, $5, $6, $7, $8, $9, $10)
+                            VALUES ($1, $2, $3, $4, $4, $5, $6, $7, $8, $9)
                             ON CONFLICT (batch_lot) DO UPDATE
                             SET quantity_received = batch_tracking.quantity_received + $4,
                                 quantity_remaining = batch_tracking.quantity_remaining + $4,
-                                unit_cost = ((batch_tracking.quantity_remaining * batch_tracking.unit_cost) + 
+                                unit_cost = ((batch_tracking.quantity_remaining * batch_tracking.unit_cost) +
                                             ($4 * $5)) / (batch_tracking.quantity_remaining + $4),
-                                case_gtin = COALESCE($7, batch_tracking.case_gtin),
-                                packaged_on_date = COALESCE($8, batch_tracking.packaged_on_date),
-                                gtin_barcode = COALESCE($9, batch_tracking.gtin_barcode),
-                                each_gtin = COALESCE($10, batch_tracking.each_gtin)
+                                case_gtin = COALESCE(NULLIF($6, ''), batch_tracking.case_gtin),
+                                packaged_on_date = COALESCE($7, batch_tracking.packaged_on_date),
+                                gtin_barcode = COALESCE(NULLIF($8, ''), batch_tracking.gtin_barcode),
+                                each_gtin = COALESCE(NULLIF($9, ''), batch_tracking.each_gtin)
                         """
-                        
-                        await self.db.execute(
-                            batch_query,
-                            item['batch_lot'],
-                            item['sku'],
-                            po_id,
-                            item['quantity_received'],
-                            Decimal(str(item['unit_cost'])),
-                            item.get('expiry_date'),
-                            item.get('case_gtin'),
-                            item.get('packaged_on_date'),
-                            item.get('gtin_barcode'),
-                            item.get('each_gtin')
-                        )
+
+                    await self.db.execute(
+                        batch_query,
+                        item['batch_lot'],  # Required from Excel
+                        item['sku'],
+                        po_id,
+                        item['quantity_received'],
+                        Decimal(str(item['unit_cost'])),
+                        item['case_gtin'],  # Required from Excel
+                        item['packaged_on_date'],  # Required from Excel
+                        item.get('gtin_barcode'),  # From Excel Barcode column
+                        item['each_gtin']  # Required from Excel
+                    )
                 
                 logger.info(f"Received purchase order {po_id} with {len(received_items)} items")
                 return True
@@ -298,10 +339,9 @@ class InventoryService:
                     i.quantity_available,
                     i.reorder_point,
                     i.reorder_quantity,
-                    i.location,
                     s.name as last_supplier
-                FROM inventory i
-                JOIN product_catalog pc ON i.sku = pc.ocs_variant_number
+                FROM ocs_inventory i
+                JOIN ocs_product_catalog pc ON i.sku = pc.ocs_variant_number
                 LEFT JOIN (
                     SELECT DISTINCT ON (poi.sku)
                         poi.sku,
@@ -332,7 +372,7 @@ class InventoryService:
                     SUM(quantity_on_hand * unit_cost) as total_cost_value,
                     SUM(quantity_on_hand * retail_price) as total_retail_value,
                     AVG(quantity_on_hand * retail_price - quantity_on_hand * unit_cost) as avg_margin
-                FROM inventory
+                FROM ocs_inventory
                 WHERE quantity_on_hand > 0
             """
             
@@ -345,8 +385,8 @@ class InventoryService:
                     SUM(i.quantity_on_hand) as units,
                     SUM(i.quantity_on_hand * i.unit_cost) as cost_value,
                     SUM(i.quantity_on_hand * i.retail_price) as retail_value
-                FROM inventory i
-                JOIN product_catalog pc ON i.sku = pc.ocs_variant_number
+                FROM ocs_inventory i
+                JOIN ocs_product_catalog pc ON i.sku = pc.ocs_variant_number
                 WHERE i.quantity_on_hand > 0
                 GROUP BY pc.category
                 ORDER BY retail_value DESC
@@ -383,9 +423,7 @@ class InventoryService:
                     ipv.quantity_available,
                     ipv.price,
                     ipv.stock_status,
-                    ipv.location,
                     bt.batch_lot,
-                    bt.expiry_date,
                     bt.case_gtin,
                     bt.packaged_on_date,
                     bt.gtin_barcode,

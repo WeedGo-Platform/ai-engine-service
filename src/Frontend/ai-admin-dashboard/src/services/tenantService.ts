@@ -1,3 +1,5 @@
+import { appConfig } from '../config/app.config';
+import { getAuthStorage, getStorageKey } from '../config/auth.config';
 import axios from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5024';
@@ -106,6 +108,23 @@ class TenantService {
     },
   });
 
+  constructor() {
+    // Add request interceptor to include auth token
+    this.api.interceptors.request.use(
+      (config) => {
+        const storage = getAuthStorage();
+        const token = storage.getItem(getStorageKey('access_token'));
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    );
+  }
+
   // Tenant operations
   async getTenants(params?: {
     status?: string;
@@ -206,6 +225,32 @@ class TenantService {
   async validateStoreLicense(id: string): Promise<{ license_valid: boolean }> {
     const response = await this.api.get(`/api/stores/${id}/validate-license`);
     return response.data;
+  }
+
+  // Tenant user management
+  async getTenantUsers(tenantId: string): Promise<any[]> {
+    const response = await this.api.get(`/api/tenants/${tenantId}/users`);
+    return response.data;
+  }
+
+  async createTenantUser(tenantId: string, userData: {
+    email: string;
+    first_name: string;
+    last_name: string;
+    role: string;
+    password?: string;
+  }): Promise<any> {
+    const response = await this.api.post(`/api/tenants/${tenantId}/users`, userData);
+    return response.data;
+  }
+
+  async updateTenantUser(tenantId: string, userId: string, userData: any): Promise<any> {
+    const response = await this.api.put(`/api/tenants/${tenantId}/users/${userId}`, userData);
+    return response.data;
+  }
+
+  async deleteTenantUser(tenantId: string, userId: string): Promise<void> {
+    await this.api.delete(`/api/tenants/${tenantId}/users/${userId}`);
   }
 }
 

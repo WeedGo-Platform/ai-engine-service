@@ -258,7 +258,7 @@ async def get_provincial_catalog(
         where_clause = " WHERE " + " AND ".join(where_conditions) if where_conditions else ""
         
         # Get total count
-        count_query = f"SELECT COUNT(*) FROM product_catalog_ocs{where_clause}"
+        count_query = f"SELECT COUNT(*) FROM ocs_product_catalog{where_clause}"
         total = await conn.fetchval(count_query, *params)
         
         # Calculate pagination
@@ -306,7 +306,7 @@ async def get_provincial_catalog(
                 fulfilment_method, delivery_tier,
                 rating, rating_count,
                 created_at, updated_at
-            FROM product_catalog_ocs
+            FROM ocs_product_catalog
             {where_clause}
             ORDER BY rating DESC NULLS LAST, rating_count DESC, product_name, brand
             LIMIT ${limit_param} OFFSET ${offset_param}
@@ -378,7 +378,7 @@ async def get_provincial_categories(province: str):
                 category,
                 sub_category,
                 COUNT(*) as product_count
-            FROM product_catalog_ocs
+            FROM ocs_product_catalog
             WHERE category IS NOT NULL
             GROUP BY category, COALESCE(subcategory, sub_category)
             ORDER BY category, subcategory
@@ -431,7 +431,7 @@ async def get_provincial_brands(province: str):
             SELECT 
                 brand,
                 COUNT(*) as product_count
-            FROM product_catalog_ocs
+            FROM ocs_product_catalog
             WHERE brand IS NOT NULL
             GROUP BY brand
             ORDER BY brand
@@ -465,29 +465,29 @@ async def get_provincial_catalog_stats(province: str):
         conn = await get_db_connection()
         
         # Get total products
-        total_query = "SELECT COUNT(*) as total FROM product_catalog_ocs"
+        total_query = "SELECT COUNT(*) as total FROM ocs_product_catalog"
         total_result = await conn.fetchrow(total_query)
         total_products = total_result['total'] if total_result else 0
         
         # Get categories count
-        categories_query = "SELECT COUNT(DISTINCT category) as count FROM product_catalog_ocs WHERE category IS NOT NULL"
+        categories_query = "SELECT COUNT(DISTINCT category) as count FROM ocs_product_catalog WHERE category IS NOT NULL"
         categories_result = await conn.fetchrow(categories_query)
         total_categories = categories_result['count'] if categories_result else 0
         
         # Get brands count
-        brands_query = "SELECT COUNT(DISTINCT brand) as count FROM product_catalog_ocs WHERE brand IS NOT NULL"
+        brands_query = "SELECT COUNT(DISTINCT brand) as count FROM ocs_product_catalog WHERE brand IS NOT NULL"
         brands_result = await conn.fetchrow(brands_query)
         total_brands = brands_result['count'] if brands_result else 0
         
         # Get last update time
-        update_query = "SELECT MAX(updated_at) as last_update FROM product_catalog_ocs"
+        update_query = "SELECT MAX(updated_at) as last_update FROM ocs_product_catalog"
         update_result = await conn.fetchrow(update_query)
         last_update = update_result['last_update'] if update_result and update_result['last_update'] else None
         
         # Get product type breakdown
         type_query = """
             SELECT category, COUNT(*) as count 
-            FROM product_catalog_ocs 
+            FROM ocs_product_catalog 
             WHERE category IS NOT NULL
             GROUP BY category
             ORDER BY count DESC
@@ -583,7 +583,7 @@ async def get_all_provincial_products(
                 fulfilment_method, delivery_tier,
                 rating, rating_count,
                 created_at, updated_at
-            FROM product_catalog_ocs
+            FROM ocs_product_catalog
             {where_clause}
             ORDER BY product_name, brand
         """
@@ -661,7 +661,7 @@ async def get_provincial_product_by_variant(province: str, ocs_variant_number: s
                 fulfilment_method, delivery_tier,
                 rating, rating_count,
                 created_at, updated_at
-            FROM product_catalog_ocs
+            FROM ocs_product_catalog
             WHERE ocs_variant_number = $1
         """
         

@@ -25,9 +25,9 @@ class TenantStatus(str, Enum):
 
 class SubscriptionTier(str, Enum):
     """Subscription tier levels"""
-    COMMUNITY = "community"
-    BASIC = "basic"
+    COMMUNITY_AND_NEW_BUSINESS = "community_and_new_business"
     SMALL_BUSINESS = "small_business"
+    PROFESSIONAL_AND_GROWING_BUSINESS = "professional_and_growing_business"
     ENTERPRISE = "enterprise"
 
 
@@ -177,7 +177,7 @@ class Tenant:
     website: Optional[str] = None
     logo_url: Optional[str] = None
     status: TenantStatus = TenantStatus.ACTIVE
-    subscription_tier: SubscriptionTier = SubscriptionTier.COMMUNITY
+    subscription_tier: SubscriptionTier = SubscriptionTier.COMMUNITY_AND_NEW_BUSINESS
     max_stores: int = 1
     billing_info: Dict[str, Any] = field(default_factory=dict)
     payment_provider_settings: Dict[str, Any] = field(default_factory=dict)
@@ -196,7 +196,7 @@ class Tenant:
     def get_store_limit(self) -> Optional[int]:
         """Get store limit based on subscription tier"""
         limits = {
-            SubscriptionTier.COMMUNITY: 1,
+            SubscriptionTier.COMMUNITY_AND_NEW_BUSINESS: 1,
             SubscriptionTier.BASIC: 5,
             SubscriptionTier.SMALL_BUSINESS: 12,
             SubscriptionTier.ENTERPRISE: None  # Unlimited
@@ -206,7 +206,7 @@ class Tenant:
     def get_ai_personality_limit(self) -> int:
         """Get AI personality limit per store based on subscription"""
         limits = {
-            SubscriptionTier.COMMUNITY: 1,
+            SubscriptionTier.COMMUNITY_AND_NEW_BUSINESS: 1,
             SubscriptionTier.BASIC: 2,
             SubscriptionTier.SMALL_BUSINESS: 3,
             SubscriptionTier.ENTERPRISE: 5
@@ -309,7 +309,7 @@ class TenantSubscription:
     """Tenant subscription entity"""
     id: UUID = field(default_factory=uuid4)
     tenant_id: UUID = field(default_factory=uuid4)
-    tier: SubscriptionTier = SubscriptionTier.COMMUNITY
+    tier: SubscriptionTier = SubscriptionTier.COMMUNITY_AND_NEW_BUSINESS
     store_limit: Optional[int] = 1
     ai_personalities_per_store: int = 1
     billing_cycle: Optional[BillingCycle] = None
@@ -334,7 +334,7 @@ class TenantSubscription:
     def get_monthly_price(self) -> Decimal:
         """Get monthly price based on tier"""
         prices = {
-            SubscriptionTier.COMMUNITY: Decimal("0.00"),
+            SubscriptionTier.COMMUNITY_AND_NEW_BUSINESS: Decimal("0.00"),
             SubscriptionTier.BASIC: Decimal("99.00"),
             SubscriptionTier.SMALL_BUSINESS: Decimal("149.00"),
             SubscriptionTier.ENTERPRISE: Decimal("299.00")
