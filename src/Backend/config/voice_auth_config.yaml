@@ -1,0 +1,197 @@
+# Voice Authentication Configuration
+# Production Settings - v1.0.0
+
+system:
+  name: "WeedGo Voice Authentication System"
+  version: "1.0.0"
+  environment: "${ENVIRONMENT:development}"
+  debug: false
+
+models:
+  speaker_verification:
+    primary:
+      name: "ecapa-tdnn"
+      path: "models/voice/biometric/speaker_verification/ecapa_tdnn.onnx"
+      embedding_size: 192
+      sample_rate: 16000
+      quantized: true
+      cache_embeddings: true
+
+    secondary:
+      name: "resnet34-se"
+      path: "models/voice/biometric/speaker_verification/resnet34_se.onnx"
+      embedding_size: 256
+      sample_rate: 16000
+      enabled: true
+
+    fusion:
+      strategy: "weighted_concat"  # weighted_concat, mean, attention
+      primary_weight: 0.6
+      secondary_weight: 0.4
+
+  age_detection:
+    name: "wav2vec2-age"
+    path: "models/voice/biometric/age_detection/wav2vec2_age.onnx"
+    ensemble:
+      deep_weight: 0.7
+      acoustic_weight: 0.3
+    features:
+      - f0
+      - formants
+      - mfcc
+      - spectral_centroid
+      - jitter
+      - shimmer
+
+  antispoofing:
+    name: "aasist"
+    path: "models/voice/biometric/antispoofing/aasist_l.onnx"
+    threshold: 0.5
+
+audio:
+  sample_rate: 16000
+  channels: 1
+  duration:
+    min_seconds: 2
+    max_seconds: 10
+    optimal_seconds: 5
+  preprocessing:
+    normalize: true
+    remove_silence: true
+    noise_reduction: true
+
+authentication:
+  thresholds:
+    verification: 0.95  # Cosine similarity threshold
+    age_minimum: 21     # Legal age for cannabis
+    liveness: 0.75      # Anti-spoofing threshold
+    quality: 0.7        # Audio quality threshold
+
+  security:
+    max_attempts: 3
+    lockout_duration: 300  # seconds
+    require_liveness: true
+    require_age_verification: true
+
+  performance:
+    max_latency_ms: 500
+    batch_size: 1
+    use_gpu: false
+    num_threads: 2
+
+database:
+  embedding_store:
+    backend: "faiss"  # faiss, postgresql, redis
+    index_type: "IVF"
+    num_clusters: 100
+    cache_size: 10000
+
+  postgres:
+    host: "${DB_HOST:localhost}"
+    port: "${DB_PORT:5434}"
+    database: "${DB_NAME:ai_engine}"
+    user: "${DB_USER:weedgo}"
+    password: "${DB_PASSWORD:your_password_here}"
+    pool_size: 10
+
+  redis:
+    host: "${REDIS_HOST:localhost}"
+    port: "${REDIS_PORT:6379}"
+    db: 0
+    ttl: 3600  # seconds
+
+api:
+  rate_limiting:
+    enabled: true
+    max_requests_per_minute: 60
+    max_enrollments_per_day: 5
+
+  endpoints:
+    base_path: "/api/v1/voice/auth"
+    enable_config: true
+    enable_metrics: true
+    enable_health: true
+
+  cors:
+    enabled: true
+    origins: ["*"]
+    methods: ["GET", "POST", "PUT", "DELETE"]
+
+monitoring:
+  metrics:
+    enabled: true
+    port: 9090
+    path: "/metrics"
+
+  logging:
+    level: "INFO"
+    format: "json"
+    file: "logs/voice_auth.log"
+    rotation:
+      enabled: true
+      max_size_mb: 100
+      max_files: 5
+
+  alerts:
+    enabled: true
+    channels: ["email", "slack"]
+    thresholds:
+      error_rate: 0.01
+      latency_p99: 1000
+
+compliance:
+  gdpr:
+    enabled: true
+    data_retention_days: 365
+    allow_deletion: true
+    anonymize_logs: true
+
+  audit:
+    enabled: true
+    log_all_attempts: true
+    include_metadata: true
+
+  age_verification:
+    required: true
+    minimum_age: 21
+    store_verification: true
+
+fine_tuning:
+  enabled: true
+  parameters:
+    learning_rate:
+      min: 0.00001
+      max: 0.001
+      default: 0.0001
+
+    batch_size:
+      min: 8
+      max: 64
+      default: 32
+
+    epochs:
+      min: 1
+      max: 100
+      default: 10
+
+    validation_split: 0.2
+    early_stopping: true
+
+  datasets:
+    path: "data/voice_samples"
+    augmentation: true
+    balance_classes: true
+
+feature_flags:
+  use_production_models: true
+  enable_fine_tuning: false
+  enable_a_b_testing: false
+  enable_progressive_enrollment: true
+  enable_challenge_response: false
+  enable_continuous_learning: false
+
+deployment:
+  mode: "standalone"  # standalone, distributed, kubernetes
+  replicas: 1
+  health_check_interval: 30
+  graceful_shutdown_timeout: 30
