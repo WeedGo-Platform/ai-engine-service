@@ -209,7 +209,7 @@ const UserRegistration = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading tenant information...</p>
         </div>
       </div>
@@ -225,7 +225,7 @@ const UserRegistration = () => {
           <p className="text-gray-600 mb-4">The specified tenant could not be found.</p>
           <button
             onClick={() => navigate('/signup')}
-            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+            className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
           >
             Go to Signup
           </button>
@@ -238,16 +238,16 @@ const UserRegistration = () => {
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md mx-auto">
         <div className="text-center mb-8">
-          <div className="mx-auto h-12 w-12 bg-green-600 rounded-full flex items-center justify-center mb-4">
+          <div className="mx-auto h-12 w-12 bg-primary-600 rounded-full flex items-center justify-center mb-4">
             <User className="h-6 w-6 text-white" />
           </div>
           <h2 className="text-3xl font-bold text-gray-900">Create Your Account</h2>
           <p className="mt-2 text-gray-600">Join {tenantInfo.name}</p>
         </div>
 
-        <div className="bg-white shadow-lg rounded-lg p-8">
+        <div className="bg-white border border-gray-200 rounded-lg p-8">
           {/* Tenant Information (Read-only) */}
-          <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+          <div className="mb-6 p-6 bg-gray-50 rounded-lg">
             <div className="flex items-center mb-2">
               <Building2 className="h-5 w-5 text-gray-500 mr-2" />
               <span className="text-sm font-medium text-gray-700">Tenant Information</span>
@@ -265,7 +265,7 @@ const UserRegistration = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   First Name *
@@ -274,13 +274,13 @@ const UserRegistration = () => {
                   type="text"
                   value={formData.firstName}
                   onChange={(e) => handleInputChange('firstName', e.target.value)}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                    errors.firstName ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                    errors.firstName ? 'border-red-500' : 'border-gray-200'
                   }`}
                   placeholder="John"
                 />
                 {errors.firstName && (
-                  <p className="mt-1 text-sm text-red-600">{errors.firstName}</p>
+                  <p className="mt-1 text-sm text-danger-600">{errors.firstName}</p>
                 )}
               </div>
 
@@ -292,13 +292,13 @@ const UserRegistration = () => {
                   type="text"
                   value={formData.lastName}
                   onChange={(e) => handleInputChange('lastName', e.target.value)}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                    errors.lastName ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                    errors.lastName ? 'border-red-500' : 'border-gray-200'
                   }`}
                   placeholder="Doe"
                 />
                 {errors.lastName && (
-                  <p className="mt-1 text-sm text-red-600">{errors.lastName}</p>
+                  <p className="mt-1 text-sm text-danger-600">{errors.lastName}</p>
                 )}
               </div>
             </div>
@@ -312,11 +312,11 @@ const UserRegistration = () => {
                 type="email"
                 value={formData.email}
                 readOnly
-                className="w-full px-3 py-2 border rounded-lg bg-gray-100 border-gray-300 cursor-not-allowed"
+                className="w-full px-3 py-2 border rounded-lg bg-gray-50 border-gray-200 cursor-not-allowed"
                 placeholder="john.doe@example.com"
               />
               {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                <p className="mt-1 text-sm text-danger-600">{errors.email}</p>
               )}
             </div>
 
@@ -329,7 +329,7 @@ const UserRegistration = () => {
                 type="tel"
                 value={formData.phone}
                 onChange={(e) => handleInputChange('phone', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 placeholder="(555) 123-4567"
               />
             </div>
@@ -344,8 +344,8 @@ const UserRegistration = () => {
                   type={showPassword ? "text" : "password"}
                   value={formData.password}
                   onChange={(e) => handleInputChange('password', e.target.value)}
-                  className={`w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                    errors.password ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                    errors.password ? 'border-red-500' : 'border-gray-200'
                   }`}
                   placeholder="••••••••"
                 />
@@ -358,7 +358,7 @@ const UserRegistration = () => {
                 </button>
               </div>
               {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+                <p className="mt-1 text-sm text-danger-600">{errors.password}</p>
               )}
               
               {/* Password Strength Indicator */}
@@ -379,7 +379,7 @@ const UserRegistration = () => {
                       {getPasswordStrengthText(passwordStrength)}
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-gray-100 rounded-full h-2">
                     <div
                       className={`h-2 rounded-full transition-all duration-300 ${getPasswordStrengthColor(passwordStrength)}`}
                       style={{ width: `${passwordStrength}%` }}
@@ -403,8 +403,8 @@ const UserRegistration = () => {
                   type={showConfirmPassword ? "text" : "password"}
                   value={formData.confirmPassword}
                   onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                  className={`w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                    errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                    errors.confirmPassword ? 'border-red-500' : 'border-gray-200'
                   }`}
                   placeholder="••••••••"
                 />
@@ -417,14 +417,14 @@ const UserRegistration = () => {
                 </button>
               </div>
               {errors.confirmPassword && (
-                <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>
+                <p className="mt-1 text-sm text-danger-600">{errors.confirmPassword}</p>
               )}
             </div>
 
             {errors.submit && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+              <div className="bg-danger-50 border border-red-200 rounded-lg p-6">
                 <div className="flex items-start">
-                  <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 mr-3" />
+                  <AlertCircle className="h-5 w-5 text-danger-600 mt-0.5 mr-3" />
                   <p className="text-sm text-red-700">{errors.submit}</p>
                 </div>
               </div>
@@ -433,7 +433,7 @@ const UserRegistration = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3 px-4 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="w-full py-3 px-4 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {isSubmitting ? 'Creating Account...' : 'Create Account'}
             </button>
@@ -442,7 +442,7 @@ const UserRegistration = () => {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               Already have an account?{' '}
-              <a href="/login" className="text-green-600 hover:text-green-700 font-medium">
+              <a href="/login" className="text-primary-600 hover:text-primary-700 font-medium">
                 Sign in
               </a>
             </p>

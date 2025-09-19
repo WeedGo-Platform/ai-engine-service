@@ -298,9 +298,9 @@ const ProvincialCatalogUpload: React.FC = () => {
 
       {/* Catalog Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-lg  border border-gray-200 p-6">
           <div className="flex items-center">
-            <Package className="h-10 w-10 text-blue-600 mr-3" />
+            <Package className="h-10 w-10 text-accent-600 mr-3" />
             <div>
               <p className="text-sm font-medium text-gray-600">Total Products</p>
               <p className="text-2xl font-bold text-gray-900">{catalogStats?.total_products || 0}</p>
@@ -308,9 +308,9 @@ const ProvincialCatalogUpload: React.FC = () => {
           </div>
         </div>
         
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-lg  border border-gray-200 p-6">
           <div className="flex items-center">
-            <Calendar className="h-10 w-10 text-green-600 mr-3" />
+            <Calendar className="h-10 w-10 text-primary-600 mr-3" />
             <div>
               <p className="text-sm font-medium text-gray-600">Last Updated</p>
               <p className="text-lg font-semibold text-gray-900">
@@ -320,7 +320,7 @@ const ProvincialCatalogUpload: React.FC = () => {
           </div>
         </div>
         
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-lg  border border-gray-200 p-6">
           <div className="flex items-center">
             <Filter className="h-10 w-10 text-purple-600 mr-3" />
             <div>
@@ -336,7 +336,7 @@ const ProvincialCatalogUpload: React.FC = () => {
       {/* Province Selection and Upload Section (Super Admin Only) */}
       {canUpload && (
         <>
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+          <div className="bg-white rounded-lg  border border-gray-200 p-6 mb-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -345,7 +345,7 @@ const ProvincialCatalogUpload: React.FC = () => {
                 <select
                   value={selectedProvince}
                   onChange={(e) => setSelectedProvince(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="ON">Ontario (OCS)</option>
                   <option value="BC" disabled>British Columbia (Coming Soon)</option>
@@ -369,7 +369,7 @@ const ProvincialCatalogUpload: React.FC = () => {
                   />
                   <label
                     htmlFor="file-upload"
-                    className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer"
+                    className="inline-flex items-center px-4 py-2 border border-gray-200 rounded-lg  text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer"
                   >
                     <Upload className="h-4 w-4 mr-2" />
                     Choose File
@@ -380,10 +380,10 @@ const ProvincialCatalogUpload: React.FC = () => {
                   <button
                     onClick={handleUpload}
                     disabled={!selectedFile || uploadStatus.type === 'uploading'}
-                    className={`px-4 py-2 rounded-md font-medium transition-colors ${
+                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                       !selectedFile || uploadStatus.type === 'uploading'
                         ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                        : 'bg-blue-600 text-white hover:bg-blue-700'
+                        : 'bg-accent-600 text-white hover:bg-accent-700'
                     }`}
                   >
                     {uploadStatus.type === 'uploading' ? (
@@ -402,26 +402,26 @@ const ProvincialCatalogUpload: React.FC = () => {
 
           {/* Upload Status */}
           {uploadStatus.type !== 'idle' && (
-            <div className={`rounded-lg p-4 mb-6 ${
-              uploadStatus.type === 'error' ? 'bg-red-50 border border-red-200' :
-              uploadStatus.type === 'success' ? 'bg-green-50 border border-green-200' :
+            <div className={`rounded-lg p-6 mb-6 ${
+              uploadStatus.type === 'error' ? 'bg-danger-50 border border-red-200' :
+              uploadStatus.type === 'success' ? 'bg-primary-50 border border-green-200' :
               'bg-blue-50 border border-blue-200'
             }`}>
               <div className="flex items-start">
                 {uploadStatus.type === 'uploading' && (
-                  <Loader2 className="h-5 w-5 text-blue-600 mr-3 animate-spin" />
+                  <Loader2 className="h-5 w-5 text-accent-600 mr-3 animate-spin" />
                 )}
                 {uploadStatus.type === 'success' && (
-                  <CheckCircle className="h-5 w-5 text-green-600 mr-3" />
+                  <CheckCircle className="h-5 w-5 text-primary-600 mr-3" />
                 )}
                 {uploadStatus.type === 'error' && (
-                  <AlertCircle className="h-5 w-5 text-red-600 mr-3" />
+                  <AlertCircle className="h-5 w-5 text-danger-600 mr-3" />
                 )}
                 
                 <div className="flex-1">
                   <p className={`text-sm font-medium ${
-                    uploadStatus.type === 'error' ? 'text-red-800' :
-                    uploadStatus.type === 'success' ? 'text-green-800' :
+                    uploadStatus.type === 'error' ? 'text-danger-800' :
+                    uploadStatus.type === 'success' ? 'text-primary-800' :
                     'text-blue-800'
                   }`}>
                     {uploadStatus.message}
@@ -433,7 +433,7 @@ const ProvincialCatalogUpload: React.FC = () => {
                       <p>Inserted: {uploadStatus.stats.inserted}</p>
                       <p>Updated: {uploadStatus.stats.updated}</p>
                       {uploadStatus.stats.errors > 0 && (
-                        <p className="text-red-600">Errors: {uploadStatus.stats.errors}</p>
+                        <p className="text-danger-600">Errors: {uploadStatus.stats.errors}</p>
                       )}
                     </div>
                   )}
@@ -446,7 +446,7 @@ const ProvincialCatalogUpload: React.FC = () => {
 
       {/* Non-Super Admin Province View */}
       {!canUpload && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+        <div className="bg-white rounded-lg  border border-gray-200 p-6 mb-6">
           <div className="flex items-center justify-between">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -455,7 +455,7 @@ const ProvincialCatalogUpload: React.FC = () => {
               <select
                 value={selectedProvince}
                 onChange={(e) => setSelectedProvince(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="ON">Ontario (OCS)</option>
                 <option value="BC" disabled>British Columbia (Coming Soon)</option>
@@ -472,8 +472,8 @@ const ProvincialCatalogUpload: React.FC = () => {
       )}
 
       {/* Search and Filter Bar */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
-        <div className="flex flex-col md:flex-row gap-4">
+      <div className="bg-white rounded-lg  border border-gray-200 p-6 mb-6">
+        <div className="flex flex-col md:flex-row gap-6">
           <div className="flex-1">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -482,7 +482,7 @@ const ProvincialCatalogUpload: React.FC = () => {
                 placeholder="Search products..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           </div>
@@ -490,7 +490,7 @@ const ProvincialCatalogUpload: React.FC = () => {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">All Categories</option>
             {Object.keys(catalogStats?.categories || {}).map(category => (
@@ -500,7 +500,7 @@ const ProvincialCatalogUpload: React.FC = () => {
             ))}
           </select>
           
-          <button className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+          <button className="px-4 py-2 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50">
             <Download className="h-4 w-4 inline-block mr-2" />
             Export
           </button>
@@ -508,7 +508,7 @@ const ProvincialCatalogUpload: React.FC = () => {
       </div>
 
       {/* Products Table */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-lg  border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
@@ -696,14 +696,14 @@ const ProvincialCatalogUpload: React.FC = () => {
               <button
                 onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                 disabled={currentPage === 1}
-                className="px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-3 py-1 border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Previous
               </button>
               <button
                 onClick={() => setCurrentPage(currentPage + 1)}
                 disabled={catalogProducts.length < productsPerPage}
-                className="px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-3 py-1 border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Next
               </button>
@@ -718,19 +718,19 @@ const ProvincialCatalogUpload: React.FC = () => {
           <h3 className="text-lg font-semibold text-blue-900 mb-3">Upload Instructions</h3>
           <ul className="space-y-2 text-sm text-blue-800">
             <li className="flex items-start">
-              <span className="block w-1.5 h-1.5 rounded-full bg-blue-600 mt-1.5 mr-2 flex-shrink-0"></span>
+              <span className="block w-1.5 h-1.5 rounded-full bg-accent-600 mt-1.5 mr-2 flex-shrink-0"></span>
               <span>The OCS catalog file should contain all required columns as per the OCS specification.</span>
             </li>
             <li className="flex items-start">
-              <span className="block w-1.5 h-1.5 rounded-full bg-blue-600 mt-1.5 mr-2 flex-shrink-0"></span>
+              <span className="block w-1.5 h-1.5 rounded-full bg-accent-600 mt-1.5 mr-2 flex-shrink-0"></span>
               <span>Products are matched and updated using the OCS Variant Number as the unique key.</span>
             </li>
             <li className="flex items-start">
-              <span className="block w-1.5 h-1.5 rounded-full bg-blue-600 mt-1.5 mr-2 flex-shrink-0"></span>
+              <span className="block w-1.5 h-1.5 rounded-full bg-accent-600 mt-1.5 mr-2 flex-shrink-0"></span>
               <span>New products will be inserted, existing products will be updated with the latest information.</span>
             </li>
             <li className="flex items-start">
-              <span className="block w-1.5 h-1.5 rounded-full bg-blue-600 mt-1.5 mr-2 flex-shrink-0"></span>
+              <span className="block w-1.5 h-1.5 rounded-full bg-accent-600 mt-1.5 mr-2 flex-shrink-0"></span>
               <span>Rating and rating count fields will be preserved during updates.</span>
             </li>
           </ul>

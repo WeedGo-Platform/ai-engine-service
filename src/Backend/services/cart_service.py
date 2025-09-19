@@ -85,7 +85,7 @@ class CartService:
                     if 'sku' in product:
                         inv_query = """
                             SELECT quantity_available, retail_price
-                            FROM inventory
+                            FROM ocs_inventory
                             WHERE sku = $1
                         """
                         inventory = await conn.fetchrow(inv_query, product['sku'])
@@ -182,7 +182,7 @@ class CartService:
                                 if 'sku' in item:
                                     inv_query = """
                                         SELECT quantity_available
-                                        FROM inventory
+                                        FROM ocs_inventory
                                         WHERE sku = $1
                                     """
                                     inventory = await conn.fetchrow(inv_query, item['sku'])

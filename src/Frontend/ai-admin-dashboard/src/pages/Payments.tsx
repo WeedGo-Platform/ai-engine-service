@@ -310,7 +310,7 @@ const PaymentsPage: React.FC = () => {
 
       {/* Metrics Cards */}
       {metrics && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
@@ -382,7 +382,7 @@ const PaymentsPage: React.FC = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-col lg:flex-row gap-4 mb-4">
+              <div className="flex flex-col lg:flex-row gap-6 mb-4">
                 <div className="flex-1">
                   <div className="relative">
                     <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -425,7 +425,7 @@ const PaymentsPage: React.FC = () => {
                 </Select>
               </div>
 
-              <div className="rounded-md border">
+              <div className="rounded-lg border">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -532,7 +532,7 @@ const PaymentsPage: React.FC = () => {
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div className="grid grid-cols-2 gap-6 text-sm">
                         <div>
                           <p className="text-muted-foreground">Supported Currencies</p>
                           <p className="font-medium">{provider.supported_currencies.join(', ')}</p>
@@ -648,7 +648,7 @@ const PaymentsPage: React.FC = () => {
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-6">
               <div>
                 <Label>Transaction ID</Label>
                 <p className="font-medium">{selectedTransaction?.id}</p>

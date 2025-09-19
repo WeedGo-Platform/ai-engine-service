@@ -91,7 +91,8 @@ class PaymentService:
         description: Optional[str] = None,
         metadata: Optional[Dict[str, Any]] = None,
         ip_address: Optional[str] = None,
-        user_agent: Optional[str] = None
+        user_agent: Optional[str] = None,
+        store_id: Optional[UUID] = None
     ) -> Dict[str, Any]:
         """Process a payment transaction"""
         
@@ -140,12 +141,54 @@ class PaymentService:
                     provider_type, 'charge', 'pending', amount, currency,
                     ip_address, user_agent, json.dumps(metadata or {}))
                 
-                # Get provider instance
-                provider_info = self.providers.get(provider_type)
-                if not provider_info or not provider_info['instance']:
-                    raise PaymentError(f"Provider {provider_type} not available")
-                
-                provider: BasePaymentProvider = provider_info['instance']
+                # Get provider instance - use store-specific config if store_id provided
+                provider: BasePaymentProvider = None
+
+                if store_id:
+                    # Try to get store-specific online payment configuration
+                    store_config = await conn.fetchrow("""
+                        SELECT settings->'onlinePayment' as online_payment
+                        FROM stores
+                        WHERE id = $1
+                    """, store_id)
+
+                    if store_config and store_config['online_payment']:
+                        online_payment = store_config['online_payment']
+                        if isinstance(online_payment, str):
+                            online_payment = json.loads(online_payment)
+
+                        if online_payment.get('enabled') and online_payment.get('access_token'):
+                            # Create provider instance with store-specific config
+                            store_provider_type = online_payment.get('provider', 'clover')
+                            if store_provider_type == provider_type or not provider_type:
+                                provider_type = store_provider_type
+
+                                # Build provider config from store settings
+                                provider_config = {
+                                    'access_token': online_payment.get('access_token'),
+                                    'merchant_id': online_payment.get('merchant_id'),
+                                    'environment': online_payment.get('environment', 'sandbox'),
+                                    'store_id': str(store_id)
+                                }
+
+                                # Instantiate provider with store config
+                                if provider_type == 'clover':
+                                    provider = CloverProvider(provider_config)
+                                elif provider_type == 'moneris':
+                                    provider = MonerisProvider(provider_config)
+                                elif provider_type == 'interac':
+                                    provider = InteracProvider(provider_config)
+
+                                logger.info(f"Using store-specific {provider_type} config for store {store_id}")
+
+                # Fall back to system-level provider if no store config
+                if not provider:
+                    provider_info = self.providers.get(provider_type)
+                    if not provider_info or not provider_info['instance']:
+                        raise PaymentError(f"Provider {provider_type} not available")
+
+                    provider = provider_info['instance']
+                    logger.info(f"Using system-level {provider_type} config")
                 
                 # Create payment request
                 payment_request = PaymentRequest(

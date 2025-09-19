@@ -293,7 +293,7 @@ const TenantPaymentSettings: React.FC = () => {
     switch (status) {
       case 'active':
       case 'healthy':
-        return 'text-green-500';
+        return 'text-primary-500';
       case 'degraded':
       case 'pending':
         return 'text-yellow-500';
@@ -310,10 +310,10 @@ const TenantPaymentSettings: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-6">
           <button
             onClick={() => navigate('/dashboard/tenants')}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+            className="p-2 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg"
           >
             <ChevronRight className="w-5 h-5 rotate-180" />
           </button>
@@ -327,7 +327,7 @@ const TenantPaymentSettings: React.FC = () => {
           </div>
         </div>
         <div className="flex gap-2">
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2">
+          <button className="px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 flex items-center gap-2">
             <Plus className="w-4 h-4" />
             Add Provider
           </button>
@@ -336,11 +336,11 @@ const TenantPaymentSettings: React.FC = () => {
 
       {/* Stats Cards */}
       {stats && (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-gray-600 dark:text-gray-400">Total Volume</span>
-              <DollarSign className="w-4 h-4 text-green-500" />
+              <DollarSign className="w-4 h-4 text-primary-500" />
             </div>
             <div className="text-2xl font-bold text-gray-900 dark:text-white">
               ${stats.totalVolume.toLocaleString()}
@@ -350,10 +350,10 @@ const TenantPaymentSettings: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-gray-600 dark:text-gray-400">Success Rate</span>
-              <TrendingUp className="w-4 h-4 text-blue-500" />
+              <TrendingUp className="w-4 h-4 text-accent-500" />
             </div>
             <div className="text-2xl font-bold text-gray-900 dark:text-white">
               {stats.successRate}%
@@ -363,7 +363,7 @@ const TenantPaymentSettings: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-gray-600 dark:text-gray-400">Today's Volume</span>
               <Activity className="w-4 h-4 text-purple-500" />
@@ -376,7 +376,7 @@ const TenantPaymentSettings: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-gray-600 dark:text-gray-400">Net Revenue</span>
               <Zap className="w-4 h-4 text-yellow-500" />
@@ -406,7 +406,7 @@ const TenantPaymentSettings: React.FC = () => {
               onClick={() => setActiveTab(tab.id as any)}
               className={`flex items-center gap-2 px-1 py-3 border-b-2 transition-colors ${
                 activeTab === tab.id
-                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                  ? 'border-blue-500 text-accent-600 dark:text-blue-400'
                   : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
               }`}
             >
@@ -426,10 +426,10 @@ const TenantPaymentSettings: React.FC = () => {
             {providers.map((provider) => (
               <div
                 key={provider.id}
-                className="border border-gray-200 dark:border-gray-700 rounded-lg p-4"
+                className="border border-gray-200 dark:border-gray-700 rounded-lg p-6"
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-6">
                     <div className="text-3xl">{getProviderIcon(provider.type)}</div>
                     <div>
                       <div className="flex items-center gap-2">
@@ -456,7 +456,7 @@ const TenantPaymentSettings: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-6">
                     <div className="text-right">
                       <div className="text-sm text-gray-600 dark:text-gray-400">
                         Health Status
@@ -470,7 +470,7 @@ const TenantPaymentSettings: React.FC = () => {
                       <button
                         onClick={() => handleTestConnection(provider)}
                         disabled={isTestingConnection}
-                        className="p-2 text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"
+                        className="p-2 text-gray-600 hover:text-accent-600 dark:text-gray-400 dark:hover:text-blue-400"
                         title="Test Connection"
                       >
                         {isTestingConnection ? (
@@ -490,7 +490,7 @@ const TenantPaymentSettings: React.FC = () => {
                         <Settings className="w-4 h-4" />
                       </button>
                       <button
-                        className="p-2 text-gray-600 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400"
+                        className="p-2 text-gray-600 hover:text-danger-600 dark:text-gray-400 dark:hover:text-red-400"
                         title="Remove"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -501,7 +501,7 @@ const TenantPaymentSettings: React.FC = () => {
 
                 {provider.merchantId && (
                   <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
-                    <div className="grid grid-cols-3 gap-4 text-sm">
+                    <div className="grid grid-cols-3 gap-6 text-sm">
                       <div>
                         <span className="text-gray-600 dark:text-gray-400">Merchant ID:</span>
                         <span className="ml-2 font-mono text-gray-900 dark:text-white">
@@ -542,9 +542,9 @@ const TenantPaymentSettings: React.FC = () => {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold mb-4">API Credentials</h3>
             
-            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+            <div className="bg-warning-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6">
               <div className="flex gap-2">
-                <Shield className="w-5 h-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
+                <Shield className="w-5 h-5 text-warning-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
                 <div className="text-sm text-yellow-700 dark:text-yellow-300">
                   <strong>Security Notice:</strong> API credentials are encrypted and stored securely. 
                   Never share your secret keys or access tokens.
@@ -553,7 +553,7 @@ const TenantPaymentSettings: React.FC = () => {
             </div>
 
             {providers.map((provider) => (
-              <div key={provider.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+              <div key={provider.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
                     {getProviderIcon(provider.type)} {provider.name}
@@ -563,7 +563,7 @@ const TenantPaymentSettings: React.FC = () => {
                       setSelectedProvider(provider);
                       setShowCredentialModal(true);
                     }}
-                    className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400"
+                    className="text-sm text-accent-600 hover:text-accent-700 dark:text-blue-400"
                   >
                     Update Credentials
                   </button>
@@ -574,7 +574,7 @@ const TenantPaymentSettings: React.FC = () => {
                     <span className="text-sm text-gray-600 dark:text-gray-400">API Key</span>
                     <span className="flex items-center gap-2">
                       {provider.credentials?.hasApiKey ? (
-                        <CheckCircle className="w-4 h-4 text-green-500" />
+                        <CheckCircle className="w-4 h-4 text-primary-500" />
                       ) : (
                         <XCircle className="w-4 h-4 text-red-500" />
                       )}
@@ -588,7 +588,7 @@ const TenantPaymentSettings: React.FC = () => {
                     <span className="text-sm text-gray-600 dark:text-gray-400">Secret Key</span>
                     <span className="flex items-center gap-2">
                       {provider.credentials?.hasSecret ? (
-                        <CheckCircle className="w-4 h-4 text-green-500" />
+                        <CheckCircle className="w-4 h-4 text-primary-500" />
                       ) : (
                         <XCircle className="w-4 h-4 text-red-500" />
                       )}
@@ -604,7 +604,7 @@ const TenantPaymentSettings: React.FC = () => {
                       <span className="flex items-center gap-2">
                         {provider.credentials?.hasOAuth ? (
                           <>
-                            <CheckCircle className="w-4 h-4 text-green-500" />
+                            <CheckCircle className="w-4 h-4 text-primary-500" />
                             <span className="text-sm">
                               Connected
                               {provider.credentials.oauthExpiry && (
@@ -622,7 +622,7 @@ const TenantPaymentSettings: React.FC = () => {
                                 setSelectedProvider(provider);
                                 setShowOAuthModal(true);
                               }}
-                              className="text-sm text-blue-600 hover:text-blue-700"
+                              className="text-sm text-accent-600 hover:text-accent-700"
                             >
                               Connect with OAuth
                             </button>
@@ -642,7 +642,7 @@ const TenantPaymentSettings: React.FC = () => {
             <h3 className="text-lg font-semibold mb-4">Fees & Transaction Limits</h3>
             
             {providers.map((provider) => (
-              <div key={provider.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+              <div key={provider.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
                 <h4 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                   {getProviderIcon(provider.type)} {provider.name}
                 </h4>
@@ -664,7 +664,7 @@ const TenantPaymentSettings: React.FC = () => {
                             step="0.01"
                             min="0"
                             max="10"
-                            className="w-24 px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700"
+                            className="w-24 px-3 py-1 border border-gray-200 dark:border-gray-600 rounded-lg dark:bg-gray-700"
                           />
                           <span className="text-sm text-gray-600 dark:text-gray-400">%</span>
                         </div>
@@ -680,7 +680,7 @@ const TenantPaymentSettings: React.FC = () => {
                             value={provider.fees?.platformFixed || 0.30}
                             step="0.01"
                             min="0"
-                            className="w-24 px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700"
+                            className="w-24 px-3 py-1 border border-gray-200 dark:border-gray-600 rounded-lg dark:bg-gray-700"
                           />
                         </div>
                       </div>
@@ -703,7 +703,7 @@ const TenantPaymentSettings: React.FC = () => {
                             value={provider.limits?.dailyLimit || 10000}
                             step="100"
                             min="0"
-                            className="w-32 px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700"
+                            className="w-32 px-3 py-1 border border-gray-200 dark:border-gray-600 rounded-lg dark:bg-gray-700"
                           />
                         </div>
                       </div>
@@ -718,7 +718,7 @@ const TenantPaymentSettings: React.FC = () => {
                             value={provider.limits?.transactionLimit || 1000}
                             step="10"
                             min="0"
-                            className="w-32 px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700"
+                            className="w-32 px-3 py-1 border border-gray-200 dark:border-gray-600 rounded-lg dark:bg-gray-700"
                           />
                         </div>
                       </div>
@@ -727,7 +727,7 @@ const TenantPaymentSettings: React.FC = () => {
                 </div>
 
                 <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                  <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
+                  <button className="px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 text-sm">
                     Save Changes
                   </button>
                 </div>
@@ -740,17 +740,17 @@ const TenantPaymentSettings: React.FC = () => {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold mb-4">Webhook Configuration</h3>
             
-            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
               <div className="flex gap-2">
-                <Info className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
-                <div className="text-sm text-blue-700 dark:text-blue-300">
+                <Info className="w-5 h-5 text-accent-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+                <div className="text-sm text-accent-700 dark:text-blue-300">
                   Configure webhook URLs in your payment provider's dashboard to receive real-time payment events.
                 </div>
               </div>
             </div>
 
             {providers.map((provider) => (
-              <div key={provider.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+              <div key={provider.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
                 <h4 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                   {getProviderIcon(provider.type)} {provider.name}
                 </h4>
@@ -765,14 +765,14 @@ const TenantPaymentSettings: React.FC = () => {
                         type="text"
                         readOnly
                         value={`https://api.weedgo.ai/webhooks/${provider.type}/${tenantId}/${provider.id}`}
-                        className="flex-1 px-3 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg font-mono text-sm"
+                        className="flex-1 px-3 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-lg font-mono text-sm"
                       />
                       <button
                         onClick={() => handleCopyWebhookUrl(provider)}
-                        className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+                        className="px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
                       >
                         {copied === provider.id ? (
-                          <Check className="w-4 h-4 text-green-500" />
+                          <Check className="w-4 h-4 text-primary-500" />
                         ) : (
                           <Copy className="w-4 h-4" />
                         )}
@@ -788,9 +788,9 @@ const TenantPaymentSettings: React.FC = () => {
                       <input
                         type="password"
                         placeholder="Enter webhook signing secret"
-                        className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700"
+                        className="flex-1 px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg dark:bg-gray-700"
                       />
-                      <button className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
+                      <button className="px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
                         <Eye className="w-4 h-4" />
                       </button>
                     </div>
@@ -897,7 +897,7 @@ const TenantPaymentSettings: React.FC = () => {
                     environment: 'sandbox'
                   });
                 }}
-                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
+                className="p-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -912,7 +912,7 @@ const TenantPaymentSettings: React.FC = () => {
                 <select
                   value={credentialForm.environment}
                   onChange={(e) => setCredentialForm({ ...credentialForm, environment: e.target.value as 'sandbox' | 'production' })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 >
                   <option value="sandbox">Sandbox</option>
                   <option value="production">Production</option>
@@ -928,7 +928,7 @@ const TenantPaymentSettings: React.FC = () => {
                   type="password"
                   value={credentialForm.apiKey}
                   onChange={(e) => setCredentialForm({ ...credentialForm, apiKey: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   placeholder="Enter API Key"
                 />
               </div>
@@ -942,7 +942,7 @@ const TenantPaymentSettings: React.FC = () => {
                   type="password"
                   value={credentialForm.secret}
                   onChange={(e) => setCredentialForm({ ...credentialForm, secret: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   placeholder="Enter Secret Key"
                 />
               </div>
@@ -958,7 +958,7 @@ const TenantPaymentSettings: React.FC = () => {
                       type="text"
                       value={credentialForm.merchantId}
                       onChange={(e) => setCredentialForm({ ...credentialForm, merchantId: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       placeholder="Enter Merchant ID"
                     />
                   </div>
@@ -971,7 +971,7 @@ const TenantPaymentSettings: React.FC = () => {
                       type="password"
                       value={credentialForm.accessToken}
                       onChange={(e) => setCredentialForm({ ...credentialForm, accessToken: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       placeholder="Enter Access Token"
                     />
                   </div>
@@ -979,9 +979,9 @@ const TenantPaymentSettings: React.FC = () => {
               )}
 
               {/* Security Notice */}
-              <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3">
+              <div className="bg-warning-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
                 <div className="flex gap-2">
-                  <Shield className="w-4 h-4 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
+                  <Shield className="w-4 h-4 text-warning-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
                   <div className="text-xs text-yellow-700 dark:text-yellow-300">
                     Credentials are encrypted using AES-256 encryption before storage. 
                     Make sure you're in a secure environment when entering sensitive data.
@@ -990,7 +990,7 @@ const TenantPaymentSettings: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex justify-end gap-3 mt-6">
+            <div className="flex justify-end gap-4 mt-6">
               <button
                 onClick={() => {
                   setShowCredentialModal(false);
@@ -1002,14 +1002,14 @@ const TenantPaymentSettings: React.FC = () => {
                     environment: 'sandbox'
                   });
                 }}
-                className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
+                className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg"
               >
                 Cancel
               </button>
               <button
                 onClick={handleUpdateCredentials}
                 disabled={loading || !credentialForm.apiKey || !credentialForm.secret}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 {loading ? (
                   <>
@@ -1030,14 +1030,14 @@ const TenantPaymentSettings: React.FC = () => {
 
       {/* Success/Error Messages */}
       {success && (
-        <div className="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2">
+        <div className="fixed bottom-4 right-4 bg-primary-500 text-white px-4 py-2 rounded-lg border border-gray-200 flex items-center gap-2">
           <CheckCircle className="w-5 h-5" />
           {success}
         </div>
       )}
       
       {error && (
-        <div className="fixed bottom-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2">
+        <div className="fixed bottom-4 right-4 bg-danger-500 text-white px-4 py-2 rounded-lg border border-gray-200 flex items-center gap-2">
           <AlertCircle className="w-5 h-5" />
           {error}
         </div>

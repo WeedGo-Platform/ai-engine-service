@@ -165,7 +165,7 @@ const StoreManagement: React.FC = () => {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'active':
-        return <CheckCircle className="w-5 h-5 text-green-500" />;
+        return <CheckCircle className="w-5 h-5 text-primary-500" />;
       case 'suspended':
         return <Pause className="w-5 h-5 text-yellow-500" />;
       case 'inactive':
@@ -177,7 +177,7 @@ const StoreManagement: React.FC = () => {
 
   const getFeatureIcon = (enabled: boolean) => {
     return enabled ? (
-      <CheckCircle className="w-4 h-4 text-green-500" />
+      <CheckCircle className="w-4 h-4 text-primary-500" />
     ) : (
       <XCircle className="w-4 h-4 text-gray-400" />
     );
@@ -221,7 +221,7 @@ const StoreManagement: React.FC = () => {
         {canAddStore && (
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 transition-colors"
           >
             <Plus className="w-5 h-5" />
             New Store
@@ -230,8 +230,8 @@ const StoreManagement: React.FC = () => {
       </div>
 
       {/* Tenant Info Card */}
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div>
             <p className="text-sm text-gray-600 dark:text-gray-400">Subscription</p>
             <p className="text-lg font-semibold text-gray-900 dark:text-white capitalize">
@@ -261,8 +261,8 @@ const StoreManagement: React.FC = () => {
 
       {/* Error Alert */}
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 flex items-center gap-2">
-          <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
+        <div className="bg-danger-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 flex items-center gap-2">
+          <AlertCircle className="w-5 h-5 text-danger-600 dark:text-red-400" />
           <span className="text-red-700 dark:text-red-300">{error}</span>
         </div>
       )}
@@ -270,13 +270,13 @@ const StoreManagement: React.FC = () => {
       {/* Stores Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {stores.length === 0 ? (
-          <div className="col-span-2 bg-white dark:bg-gray-800 p-12 rounded-lg shadow-sm text-center">
+          <div className="col-span-2 bg-white dark:bg-gray-800 p-12 rounded-lg  text-center">
             <StoreIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <p className="text-gray-500 dark:text-gray-400">No stores created yet</p>
             {canAddStore && (
               <button
                 onClick={() => setShowCreateModal(true)}
-                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                className="mt-4 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700"
               >
                 Create First Store
               </button>
@@ -284,7 +284,7 @@ const StoreManagement: React.FC = () => {
           </div>
         ) : (
           stores.map((store) => (
-            <div key={store.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+            <div key={store.id} className="bg-white dark:bg-gray-800 rounded-lg  overflow-hidden">
               <div className="p-6">
                 <div className="flex justify-between items-start mb-4">
                   <div>
@@ -389,7 +389,7 @@ const StoreManagement: React.FC = () => {
                       </button>
                       <button
                         onClick={() => setEditingStore(store)}
-                        className="px-3 py-1.5 text-sm text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg"
+                        className="px-3 py-1.5 text-sm text-accent-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg"
                       >
                         Edit
                       </button>
@@ -401,14 +401,14 @@ const StoreManagement: React.FC = () => {
                       {store.status === 'active' ? (
                         <button
                           onClick={() => handleSuspendStore(store.id)}
-                          className="px-3 py-1.5 text-sm text-yellow-600 dark:text-yellow-400 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 rounded-lg"
+                          className="px-3 py-1.5 text-sm text-warning-600 dark:text-yellow-400 hover:bg-warning-50 dark:hover:bg-yellow-900/20 rounded-lg"
                         >
                           Suspend
                         </button>
                       ) : store.status === 'suspended' ? (
                         <button
                           onClick={() => handleReactivateStore(store.id)}
-                          className="px-3 py-1.5 text-sm text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg"
+                          className="px-3 py-1.5 text-sm text-primary-600 dark:text-green-400 hover:bg-primary-50 dark:hover:bg-green-900/20 rounded-lg"
                         >
                           Reactivate
                         </button>
@@ -416,7 +416,7 @@ const StoreManagement: React.FC = () => {
                       {store.status !== 'inactive' && (
                         <button
                           onClick={() => handleCloseStore(store.id)}
-                          className="px-3 py-1.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg"
+                          className="px-3 py-1.5 text-sm text-danger-600 dark:text-red-400 hover:bg-danger-50 dark:hover:bg-red-900/20 rounded-lg"
                         >
                           Close
                         </button>
@@ -516,7 +516,7 @@ const StoreFormModal: React.FC<{
         </h2>
         
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Store Name *
@@ -526,7 +526,7 @@ const StoreFormModal: React.FC<{
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               />
             </div>
 
@@ -541,7 +541,7 @@ const StoreFormModal: React.FC<{
                 value={formData.store_code}
                 onChange={(e) => setFormData({ ...formData, store_code: e.target.value.toUpperCase() })}
                 pattern="^[A-Z0-9_\-]+$"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white disabled:opacity-50"
+                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white disabled:opacity-50"
               />
             </div>
           </div>
@@ -561,7 +561,7 @@ const StoreFormModal: React.FC<{
                   address: { ...formData.address!, province }
                 });
               }}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
             >
               {PROVINCES.map(p => (
                 <option key={p.code} value={p.code}>{p.name}</option>
@@ -581,11 +581,11 @@ const StoreFormModal: React.FC<{
                 ...formData,
                 address: { ...formData.address!, street: e.target.value }
               })}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
             />
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 City *
@@ -598,7 +598,7 @@ const StoreFormModal: React.FC<{
                   ...formData,
                   address: { ...formData.address!, city: e.target.value }
                 })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               />
             </div>
 
@@ -614,7 +614,7 @@ const StoreFormModal: React.FC<{
                   ...formData,
                   address: { ...formData.address!, postal_code: e.target.value }
                 })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               />
             </div>
 
@@ -628,12 +628,12 @@ const StoreFormModal: React.FC<{
                 max="100"
                 value={formData.delivery_radius_km}
                 onChange={(e) => setFormData({ ...formData, delivery_radius_km: parseInt(e.target.value) })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Phone
@@ -642,7 +642,7 @@ const StoreFormModal: React.FC<{
                 type="tel"
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               />
             </div>
 
@@ -654,12 +654,12 @@ const StoreFormModal: React.FC<{
                 type="email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 License Number
@@ -668,7 +668,7 @@ const StoreFormModal: React.FC<{
                 type="text"
                 value={formData.license_number}
                 onChange={(e) => setFormData({ ...formData, license_number: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               />
             </div>
 
@@ -680,7 +680,7 @@ const StoreFormModal: React.FC<{
                 type="date"
                 value={formData.license_expiry}
                 onChange={(e) => setFormData({ ...formData, license_expiry: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               />
             </div>
           </div>
@@ -689,13 +689,13 @@ const StoreFormModal: React.FC<{
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Store Features
             </label>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-4">
               <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
                   checked={formData.delivery_enabled}
                   onChange={(e) => setFormData({ ...formData, delivery_enabled: e.target.checked })}
-                  className="rounded text-blue-600 focus:ring-blue-500"
+                  className="rounded text-accent-600 focus:ring-blue-500"
                 />
                 <span className="text-sm text-gray-700 dark:text-gray-300">Delivery Enabled</span>
               </label>
@@ -704,7 +704,7 @@ const StoreFormModal: React.FC<{
                   type="checkbox"
                   checked={formData.pickup_enabled}
                   onChange={(e) => setFormData({ ...formData, pickup_enabled: e.target.checked })}
-                  className="rounded text-blue-600 focus:ring-blue-500"
+                  className="rounded text-accent-600 focus:ring-blue-500"
                 />
                 <span className="text-sm text-gray-700 dark:text-gray-300">Pickup Enabled</span>
               </label>
@@ -713,7 +713,7 @@ const StoreFormModal: React.FC<{
                   type="checkbox"
                   checked={formData.pos_enabled}
                   onChange={(e) => setFormData({ ...formData, pos_enabled: e.target.checked })}
-                  className="rounded text-blue-600 focus:ring-blue-500"
+                  className="rounded text-accent-600 focus:ring-blue-500"
                 />
                 <span className="text-sm text-gray-700 dark:text-gray-300">POS System</span>
               </label>
@@ -722,7 +722,7 @@ const StoreFormModal: React.FC<{
                   type="checkbox"
                   checked={formData.ecommerce_enabled}
                   onChange={(e) => setFormData({ ...formData, ecommerce_enabled: e.target.checked })}
-                  className="rounded text-blue-600 focus:ring-blue-500"
+                  className="rounded text-accent-600 focus:ring-blue-500"
                 />
                 <span className="text-sm text-gray-700 dark:text-gray-300">E-commerce</span>
               </label>
@@ -731,24 +731,24 @@ const StoreFormModal: React.FC<{
                   type="checkbox"
                   checked={formData.kiosk_enabled}
                   onChange={(e) => setFormData({ ...formData, kiosk_enabled: e.target.checked })}
-                  className="rounded text-blue-600 focus:ring-blue-500"
+                  className="rounded text-accent-600 focus:ring-blue-500"
                 />
                 <span className="text-sm text-gray-700 dark:text-gray-300">In-Store Kiosk</span>
               </label>
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 mt-6">
+          <div className="flex justify-end gap-4 mt-6">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600"
+              className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700"
             >
               {store ? 'Update' : 'Create'} Store
             </button>

@@ -91,7 +91,7 @@ class ProductionVoiceAuthService:
     async def extract_voice_features(self, audio_data: bytes) -> AudioFeatures:
         """Extract voice features using production models"""
         try:
-            # Use production feature extractor
+            # Use production feature extractor - it accepts bytes directly
             features = await asyncio.to_thread(
                 self.feature_extractor.extract_embeddings,
                 audio_data

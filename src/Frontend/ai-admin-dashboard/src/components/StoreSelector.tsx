@@ -67,7 +67,7 @@ export const StoreSelector: React.FC<StoreSelectorProps> = ({
   if (isLoading) {
     return (
       <div className={`animate-pulse ${className}`}>
-        <div className="h-10 bg-gray-200 rounded w-48"></div>
+        <div className="h-10 bg-gray-100 rounded w-48"></div>
       </div>
     );
   }
@@ -94,17 +94,17 @@ export const StoreSelector: React.FC<StoreSelectorProps> = ({
       <div className={`relative ${className}`} ref={dropdownRef}>
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-gray-100 transition-colors"
+          className="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-gray-50 transition-colors"
           title={currentStore?.name || 'Select Store'}
         >
           <BuildingStorefrontIcon className="h-6 w-6 text-gray-600" />
           {currentStore && (
-            <span className="absolute -top-1 -right-1 h-3 w-3 bg-green-500 rounded-full"></span>
+            <span className="absolute -top-1 -right-1 h-3 w-3 bg-primary-500 rounded-full"></span>
           )}
         </button>
         
         {isOpen && (
-          <div className="absolute z-50 mt-2 w-72 bg-white rounded-lg shadow-lg border border-gray-200">
+          <div className="absolute z-50 mt-2 w-72 bg-white rounded-lg border border-gray-200 border border-gray-200">
             {renderDropdownContent()}
           </div>
         )}
@@ -118,8 +118,8 @@ export const StoreSelector: React.FC<StoreSelectorProps> = ({
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`
-          flex items-center gap-3 px-4 py-2 bg-white border border-gray-300 
-          rounded-lg hover:border-gray-400 transition-colors min-w-[200px]
+          flex items-center gap-4 px-4 py-2 bg-white border border-gray-200 
+          rounded-lg hover:border-gray-300 transition-colors min-w-[200px]
           ${isOpen ? 'border-blue-500 ring-2 ring-blue-200' : ''}
         `}
       >
@@ -141,7 +141,7 @@ export const StoreSelector: React.FC<StoreSelectorProps> = ({
 
       {isOpen && (
         <div className={`
-          absolute z-50 mt-2 bg-white rounded-lg shadow-lg border border-gray-200
+          absolute z-50 mt-2 bg-white rounded-lg border border-gray-200 border border-gray-200
           ${position === 'header' ? 'w-96' : 'w-full min-w-[320px]'}
         `}>
           {renderDropdownContent()}
@@ -149,7 +149,7 @@ export const StoreSelector: React.FC<StoreSelectorProps> = ({
       )}
 
       {showStats && currentStore && inventoryStats && (
-        <div className="mt-2 p-3 bg-gray-50 rounded-lg text-xs">
+        <div className="mt-2 p-4 bg-gray-50 rounded-lg text-xs">
           <div className="grid grid-cols-2 gap-2">
             <div>
               <span className="text-gray-500">Total SKUs:</span>
@@ -167,7 +167,7 @@ export const StoreSelector: React.FC<StoreSelectorProps> = ({
             </div>
             <div>
               <span className="text-gray-500">Out of Stock:</span>
-              <span className="ml-2 font-medium text-red-600">
+              <span className="ml-2 font-medium text-danger-600">
                 {inventoryStats.out_of_stock_items}
               </span>
             </div>
@@ -181,13 +181,13 @@ export const StoreSelector: React.FC<StoreSelectorProps> = ({
     return (
       <>
         {/* Search input */}
-        <div className="p-3 border-b border-gray-200">
+        <div className="p-4 border-b border-gray-200">
           <input
             type="text"
             placeholder="Search stores..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             autoFocus
           />
         </div>
@@ -195,7 +195,7 @@ export const StoreSelector: React.FC<StoreSelectorProps> = ({
         {/* Store list */}
         <div className="max-h-96 overflow-y-auto">
           {filteredStores.length === 0 ? (
-            <div className="p-4 text-center text-gray-500 text-sm">
+            <div className="p-6 text-center text-gray-500 text-sm">
               No stores found
             </div>
           ) : (
@@ -205,7 +205,7 @@ export const StoreSelector: React.FC<StoreSelectorProps> = ({
                 onClick={() => handleStoreSelect(store.id)}
                 disabled={!isStoreActive(store.id)}
                 className={`
-                  w-full p-3 text-left hover:bg-gray-50 transition-colors
+                  w-full p-4 text-left hover:bg-gray-50 transition-colors
                   border-b border-gray-100 last:border-0
                   ${currentStore?.id === store.id ? 'bg-blue-50' : ''}
                   ${!isStoreActive(store.id) ? 'opacity-50 cursor-not-allowed' : ''}
@@ -218,7 +218,7 @@ export const StoreSelector: React.FC<StoreSelectorProps> = ({
                         {store.name}
                       </p>
                       {currentStore?.id === store.id && (
-                        <CheckIcon className="h-4 w-4 text-blue-600" />
+                        <CheckIcon className="h-4 w-4 text-accent-600" />
                       )}
                     </div>
                     <p className="text-xs text-gray-500 mt-1">
@@ -232,10 +232,10 @@ export const StoreSelector: React.FC<StoreSelectorProps> = ({
                     <span className={`
                       inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
                       ${store.status === 'active' 
-                        ? 'bg-green-100 text-green-800' 
+                        ? 'bg-primary-100 text-primary-800' 
                         : store.status === 'inactive'
-                        ? 'bg-gray-100 text-gray-800'
-                        : 'bg-red-100 text-red-800'
+                        ? 'bg-gray-50 text-gray-800'
+                        : 'bg-danger-100 text-danger-800'
                       }
                     `}>
                       {store.status}
@@ -246,7 +246,7 @@ export const StoreSelector: React.FC<StoreSelectorProps> = ({
                 {/* Store features indicators */}
                 <div className="flex gap-2 mt-2">
                   {store.delivery_enabled && (
-                    <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">
+                    <span className="text-xs bg-blue-100 text-accent-700 px-2 py-0.5 rounded">
                       Delivery
                     </span>
                   )}
@@ -261,7 +261,7 @@ export const StoreSelector: React.FC<StoreSelectorProps> = ({
                     </span>
                   )}
                   {store.ecommerce_enabled && (
-                    <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">
+                    <span className="text-xs bg-primary-100 text-primary-700 px-2 py-0.5 rounded">
                       E-commerce
                     </span>
                   )}
@@ -273,7 +273,7 @@ export const StoreSelector: React.FC<StoreSelectorProps> = ({
 
         {/* Quick actions */}
         {currentStore && (
-          <div className="p-3 border-t border-gray-200 bg-gray-50">
+          <div className="p-4 border-t border-gray-200 bg-gray-50">
             <div className="text-xs text-gray-600">
               Current: <span className="font-medium">{currentStore.name}</span>
             </div>

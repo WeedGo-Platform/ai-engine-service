@@ -20,8 +20,14 @@ const Orders: React.FC = () => {
   });
 
   const updateMutation = useMutation({
-    mutationFn: (data: { id: string; order: Partial<Order> }) =>
-      api.orders.update(data.id, data.order),
+    mutationFn: async (data: { id: string; payment_status?: string; delivery_status?: string; notes?: string }) => {
+      const response = await api.orders.updateStatus(data.id, {
+        payment_status: data.payment_status,
+        delivery_status: data.delivery_status,
+        notes: data.notes
+      });
+      return response.data;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['orders'] });
     },
@@ -32,13 +38,15 @@ const Orders: React.FC = () => {
       case 'pending':
         return <Clock className="h-5 w-5 text-yellow-500" />;
       case 'confirmed':
-        return <CheckCircle className="h-5 w-5 text-blue-500" />;
+        return <CheckCircle className="h-5 w-5 text-accent-500" />;
       case 'processing':
         return <Package className="h-5 w-5 text-indigo-500" />;
       case 'ready':
-        return <CheckCircle className="h-5 w-5 text-green-500" />;
+        return <CheckCircle className="h-5 w-5 text-primary-500" />;
+      case 'out_for_delivery':
+        return <Truck className="h-5 w-5 text-accent-500" />;
       case 'delivered':
-        return <Truck className="h-5 w-5 text-green-600" />;
+        return <Truck className="h-5 w-5 text-primary-600" />;
       case 'cancelled':
         return <XCircle className="h-5 w-5 text-red-500" />;
       default:
@@ -49,19 +57,21 @@ const Orders: React.FC = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-warning-100 text-warning-800';
       case 'confirmed':
         return 'bg-blue-100 text-blue-800';
       case 'processing':
         return 'bg-indigo-100 text-indigo-800';
       case 'ready':
-        return 'bg-green-100 text-green-800';
+        return 'bg-primary-100 text-primary-800';
+      case 'out_for_delivery':
+        return 'bg-accent-100 text-accent-800';
       case 'delivered':
-        return 'bg-green-200 text-green-900';
+        return 'bg-green-200 text-primary-900';
       case 'cancelled':
-        return 'bg-red-100 text-red-800';
+        return 'bg-danger-100 text-danger-800';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-50 text-gray-800';
     }
   };
 
@@ -75,24 +85,27 @@ const Orders: React.FC = () => {
     }
   };
 
-  const handleStatusUpdate = (orderId: string, newStatus: string) => {
-    updateMutation.mutate({
-      id: orderId,
-      order: { status: newStatus as any },
-    });
+  const handleStatusUpdate = (orderId: string, newStatus: string, statusType: 'payment' | 'delivery' = 'delivery') => {
+    const updateData: any = { id: orderId };
+    if (statusType === 'payment') {
+      updateData.payment_status = newStatus;
+    } else {
+      updateData.delivery_status = newStatus;
+    }
+    updateMutation.mutate(updateData);
   };
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+      <div className="bg-danger-50 border border-red-200 text-red-700 px-4 py-3 rounded">
         Error loading orders: {(error as Error).message}
       </div>
     );
@@ -104,18 +117,19 @@ const Orders: React.FC = () => {
         <h1 className="text-2xl font-bold text-gray-900">Order Management</h1>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm p-6">
-        <div className="flex gap-4 mb-6">
+      <div className="bg-white rounded-lg  p-6">
+        <div className="flex gap-6 mb-6">
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+            className="px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500"
           >
             <option value="all">All Orders</option>
             <option value="pending">Pending</option>
             <option value="confirmed">Confirmed</option>
-            <option value="processing">Processing</option>
+            <option value="preparing">Preparing</option>
             <option value="ready">Ready</option>
+            <option value="out_for_delivery">Out for Delivery</option>
             <option value="delivered">Delivered</option>
             <option value="cancelled">Cancelled</option>
           </select>
@@ -203,7 +217,7 @@ const Orders: React.FC = () => {
                       {getPaymentIcon(order.payment_method)}
                       <span className="ml-1 capitalize">{order.payment_method}</span>
                     </div>
-                    <span className={`text-xs ${order.payment_status === 'paid' ? 'text-green-600' : 'text-yellow-600'}`}>
+                    <span className={`text-xs ${order.payment_status === 'paid' ? 'text-primary-600' : 'text-warning-600'}`}>
                       {order.payment_status}
                     </span>
                   </td>
@@ -220,31 +234,47 @@ const Orders: React.FC = () => {
                     {order.status === 'pending' && (
                       <button
                         onClick={() => handleStatusUpdate(order.id, 'confirmed')}
-                        className="text-blue-600 hover:text-blue-900 mr-2"
+                        className="text-accent-600 hover:text-blue-900 mr-2"
                       >
                         Confirm
                       </button>
                     )}
                     {order.status === 'confirmed' && (
                       <button
-                        onClick={() => handleStatusUpdate(order.id, 'processing')}
+                        onClick={() => handleStatusUpdate(order.id, 'preparing')}
                         className="text-indigo-600 hover:text-indigo-900 mr-2"
                       >
-                        Process
+                        Prepare
                       </button>
                     )}
-                    {order.status === 'processing' && (
+                    {(order.status === 'preparing' || order.status === 'processing') && (
                       <button
                         onClick={() => handleStatusUpdate(order.id, 'ready')}
-                        className="text-green-600 hover:text-green-900 mr-2"
+                        className="text-primary-600 hover:text-primary-900 mr-2"
                       >
                         Ready
                       </button>
                     )}
                     {order.status === 'ready' && (
+                      <>
+                        <button
+                          onClick={() => handleStatusUpdate(order.id, 'out_for_delivery')}
+                          className="text-accent-600 hover:text-accent-900 mr-2"
+                        >
+                          Out for Delivery
+                        </button>
+                        <button
+                          onClick={() => handleStatusUpdate(order.id, 'delivered')}
+                          className="text-primary-600 hover:text-primary-900"
+                        >
+                          Mark Delivered
+                        </button>
+                      </>
+                    )}
+                    {order.status === 'out_for_delivery' && (
                       <button
                         onClick={() => handleStatusUpdate(order.id, 'delivered')}
-                        className="text-green-600 hover:text-green-900"
+                        className="text-primary-600 hover:text-primary-900"
                       >
                         Delivered
                       </button>
@@ -268,38 +298,38 @@ const Orders: React.FC = () => {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-lg shadow-sm p-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="bg-white rounded-lg  p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Pending</p>
-              <p className="text-2xl font-bold text-yellow-600">
+              <p className="text-2xl font-bold text-warning-600">
                 {orders?.data?.filter((o: Order) => o.status === 'pending').length || 0}
               </p>
             </div>
-            <Clock className="h-8 w-8 text-yellow-600" />
+            <Clock className="h-8 w-8 text-warning-600" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded-lg  p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Processing</p>
-              <p className="text-2xl font-bold text-blue-600">
+              <p className="text-2xl font-bold text-accent-600">
                 {orders?.data?.filter((o: Order) => 
                   ['confirmed', 'processing'].includes(o.status)
                 ).length || 0}
               </p>
             </div>
-            <Package className="h-8 w-8 text-blue-600" />
+            <Package className="h-8 w-8 text-accent-600" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded-lg  p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Today's Revenue</p>
-              <p className="text-2xl font-bold text-green-600">
+              <p className="text-2xl font-bold text-primary-600">
                 ${orders?.data?.filter((o: Order) => {
                   const orderDate = new Date(o.created_at);
                   const today = new Date();
@@ -308,11 +338,11 @@ const Orders: React.FC = () => {
                 }).reduce((sum: number, o: Order) => sum + o.total_amount, 0).toFixed(2) || '0.00'}
               </p>
             </div>
-            <CreditCard className="h-8 w-8 text-green-600" />
+            <CreditCard className="h-8 w-8 text-primary-600" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded-lg  p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Completed Today</p>
@@ -332,7 +362,7 @@ const Orders: React.FC = () => {
 
       {/* Order Details Modal */}
       {selectedOrder && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-6 z-50">
           <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
@@ -371,10 +401,27 @@ const Orders: React.FC = () => {
               {selectedOrder.delivery_address && (
                 <div className="mb-6">
                   <h3 className="font-semibold mb-2">Delivery Information</h3>
-                  <p className="text-sm text-gray-600">
-                    {selectedOrder.delivery_address}<br />
-                    {selectedOrder.delivery_time && `Delivery Time: ${selectedOrder.delivery_time}`}
-                  </p>
+                  <div className="text-sm text-gray-600">
+                    {typeof selectedOrder.delivery_address === 'object' ? (
+                      <>
+                        <p>{selectedOrder.delivery_address.street}</p>
+                        {selectedOrder.delivery_address.apartment && (
+                          <p>{selectedOrder.delivery_address.apartment}</p>
+                        )}
+                        <p>
+                          {selectedOrder.delivery_address.city}, {selectedOrder.delivery_address.province} {selectedOrder.delivery_address.postal_code}
+                        </p>
+                        {selectedOrder.delivery_address.instructions && (
+                          <p className="mt-2 italic">Instructions: {selectedOrder.delivery_address.instructions}</p>
+                        )}
+                      </>
+                    ) : (
+                      <p>{selectedOrder.delivery_address}</p>
+                    )}
+                    {selectedOrder.delivery_time && (
+                      <p className="mt-2">Delivery Time: {selectedOrder.delivery_time}</p>
+                    )}
+                  </div>
                 </div>
               )}
 
@@ -394,8 +441,8 @@ const Orders: React.FC = () => {
                       <tr key={item.id}>
                         <td className="px-4 py-2 text-sm">{item.product?.name || 'Unknown'}</td>
                         <td className="px-4 py-2 text-sm">{item.quantity}</td>
-                        <td className="px-4 py-2 text-sm">${item.unit_price.toFixed(2)}</td>
-                        <td className="px-4 py-2 text-sm">${item.total_price.toFixed(2)}</td>
+                        <td className="px-4 py-2 text-sm">${(item.unit_price || 0).toFixed(2)}</td>
+                        <td className="px-4 py-2 text-sm">${(item.total_price || 0).toFixed(2)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -405,21 +452,21 @@ const Orders: React.FC = () => {
               <div className="border-t pt-4">
                 <div className="flex justify-end space-y-1">
                   <div className="text-right">
-                    <p className="text-sm text-gray-600">Subtotal: ${selectedOrder.subtotal.toFixed(2)}</p>
-                    <p className="text-sm text-gray-600">Tax (13% HST): ${selectedOrder.tax_amount.toFixed(2)}</p>
+                    <p className="text-sm text-gray-600">Subtotal: ${(selectedOrder.subtotal || 0).toFixed(2)}</p>
+                    <p className="text-sm text-gray-600">Tax (13% HST): ${(selectedOrder.tax_amount || 0).toFixed(2)}</p>
                     {selectedOrder.delivery_fee > 0 && (
-                      <p className="text-sm text-gray-600">Delivery: ${selectedOrder.delivery_fee.toFixed(2)}</p>
+                      <p className="text-sm text-gray-600">Delivery: ${(selectedOrder.delivery_fee || 0).toFixed(2)}</p>
                     )}
                     {selectedOrder.discount_amount > 0 && (
-                      <p className="text-sm text-gray-600">Discount: -${selectedOrder.discount_amount.toFixed(2)}</p>
+                      <p className="text-sm text-gray-600">Discount: -${(selectedOrder.discount_amount || 0).toFixed(2)}</p>
                     )}
-                    <p className="text-lg font-bold">Total: ${selectedOrder.total_amount.toFixed(2)}</p>
+                    <p className="text-lg font-bold">Total: ${(selectedOrder.total_amount || 0).toFixed(2)}</p>
                   </div>
                 </div>
               </div>
 
               {selectedOrder.special_instructions && (
-                <div className="mt-4 p-3 bg-yellow-50 rounded">
+                <div className="mt-4 p-4 bg-warning-50 rounded">
                   <p className="text-sm font-semibold">Special Instructions:</p>
                   <p className="text-sm text-gray-600">{selectedOrder.special_instructions}</p>
                 </div>

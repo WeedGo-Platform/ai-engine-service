@@ -74,7 +74,7 @@ class OrderService:
                 for item in items:
                     if 'sku' in item:
                         inv_query = """
-                            UPDATE inventory
+                            UPDATE ocs_inventory
                             SET quantity_available = quantity_available - $2,
                                 quantity_reserved = quantity_reserved + $2
                             WHERE sku = $1 AND quantity_available >= $2
@@ -145,7 +145,34 @@ class OrderService:
             
             result = await self.db.fetchrow(query, order_number)
             if result:
-                return dict(result)
+                order = dict(result)
+                # Parse JSON fields
+                if order.get('items'):
+                    order['items'] = json.loads(order['items']) if isinstance(order['items'], str) else order['items']
+                    # Add total field to each item
+                    for item in order['items']:
+                        if 'subtotal' in item and 'total' not in item:
+                            item['total'] = item['subtotal']
+                if order.get('delivery_address'):
+                    order['delivery_address'] = json.loads(order['delivery_address']) if isinstance(order['delivery_address'], str) else order['delivery_address']
+                # Map delivery_status to status for frontend compatibility
+                order['status'] = order.get('delivery_status', 'pending')
+                # Map snake_case to camelCase for frontend
+                order['total'] = float(order.get('total_amount', 0))
+                order['subtotal'] = float(order.get('subtotal', 0))
+                order['tax'] = float(order.get('tax_amount', 0))
+                order['discount'] = float(order.get('discount_amount', 0))
+                order['deliveryFee'] = float(order.get('delivery_fee', 0))
+                order['paymentStatus'] = order.get('payment_status', 'pending')
+                order['paymentMethod'] = order.get('payment_method', 'cash')
+                order['customerEmail'] = order.get('user_email', '')
+                order['customerPhone'] = order.get('user_phone', '')
+                order['customerName'] = order.get('user_email', '').split('@')[0].title() if order.get('user_email') else 'Customer'
+                order['orderNumber'] = order.get('order_number')
+                order['notes'] = order.get('special_instructions')
+                order['shippingAddress'] = order.get('delivery_address')
+                order['fulfillmentMethod'] = 'delivery' if order.get('delivery_address') else 'pickup'
+                return order
             return None
             
         except Exception as e:
@@ -204,7 +231,7 @@ class OrderService:
                             for item in items:
                                 if 'sku' in item:
                                     inv_query = """
-                                        UPDATE inventory
+                                        UPDATE ocs_inventory
                                         SET quantity_reserved = quantity_reserved - $2,
                                             quantity_on_hand = quantity_on_hand - $2
                                         WHERE sku = $1
@@ -226,10 +253,13 @@ class OrderService:
         """List orders with filters"""
         try:
             query = """
-                SELECT 
+                SELECT
                     o.id, o.order_number, o.total_amount,
                     o.payment_status, o.delivery_status,
                     o.created_at, o.updated_at,
+                    o.items, o.subtotal, o.tax_amount, o.discount_amount,
+                    o.delivery_fee, o.payment_method, o.delivery_address,
+                    o.special_instructions,
                     u.email as user_email,
                     COUNT(osh.id) as status_updates
                 FROM orders o
@@ -259,14 +289,47 @@ class OrderService:
             query += f"""
                 GROUP BY o.id, o.order_number, o.total_amount,
                          o.payment_status, o.delivery_status,
-                         o.created_at, o.updated_at, u.email
+                         o.created_at, o.updated_at, o.items, o.subtotal,
+                         o.tax_amount, o.discount_amount, o.delivery_fee,
+                         o.payment_method, o.delivery_address, o.special_instructions,
+                         u.email
                 ORDER BY o.created_at DESC
                 LIMIT ${param_count + 1} OFFSET ${param_count + 2}
             """
             params.extend([limit, offset])
             
             results = await self.db.fetch(query, *params)
-            return [dict(row) for row in results]
+            orders = []
+            for row in results:
+                order = dict(row)
+                # Parse JSON fields
+                if order.get('items'):
+                    order['items'] = json.loads(order['items']) if isinstance(order['items'], str) else order['items']
+                if order.get('delivery_address'):
+                    order['delivery_address'] = json.loads(order['delivery_address']) if isinstance(order['delivery_address'], str) else order['delivery_address']
+                # Map delivery_status to status for frontend compatibility
+                order['status'] = order.get('delivery_status', 'pending')
+                # Map payment_method to fulfillmentMethod for compatibility
+                if order.get('delivery_address'):
+                    order['fulfillmentMethod'] = 'delivery'
+                else:
+                    order['fulfillmentMethod'] = 'pickup'
+                # Map total_amount to total for frontend
+                order['total'] = float(order.get('total_amount', 0))
+                # Add paymentStatus field
+                order['paymentStatus'] = order.get('payment_status', 'pending')
+                # Add paymentMethod field
+                order['paymentMethod'] = order.get('payment_method', 'cash')
+                # Add orderNumber field (already exists but ensure it's there)
+                order['orderNumber'] = order.get('order_number')
+                # Add createdAt field
+                if order.get('created_at'):
+                    order['createdAt'] = order['created_at'].isoformat() if hasattr(order['created_at'], 'isoformat') else str(order['created_at'])
+                # Map delivery_address to deliveryAddress
+                if order.get('delivery_address'):
+                    order['deliveryAddress'] = order['delivery_address']
+                orders.append(order)
+            return orders
             
         except Exception as e:
             logger.error(f"Error listing orders: {str(e)}")

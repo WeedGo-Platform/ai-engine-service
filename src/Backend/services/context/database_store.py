@@ -221,10 +221,10 @@ class DatabaseContextStore:
         try:
             async with self.acquire_connection() as conn:
                 row = await conn.fetchrow("""
-                    SELECT customer_id, preferences, purchase_history,
+                    SELECT id::text as customer_id, preferences, purchase_history,
                            interaction_count, last_interaction, created_at, updated_at
-                    FROM customer_profiles
-                    WHERE customer_id = $1
+                    FROM profiles
+                    WHERE id::text = $1
                 """, customer_id)
                 
                 if row:
@@ -287,18 +287,19 @@ class DatabaseContextStore:
                     params.append(customer_id)
                     
                     await conn.execute(f"""
-                        UPDATE customer_profiles
+                        UPDATE profiles
                         SET {', '.join(updates)}
-                        WHERE customer_id = ${param_count}
+                        WHERE id::text = ${param_count}
                     """, *params)
                 else:
-                    # Create new profile
+                    # Create new profile - need user_id for profiles table
+                    # For now, create with a generated user_id
                     await conn.execute("""
-                        INSERT INTO customer_profiles 
-                        (customer_id, preferences, purchase_history, interaction_count, last_interaction)
-                        VALUES ($1, $2, $3, 1, CURRENT_TIMESTAMP)
-                    """, customer_id, 
-                        json.dumps(preferences or {}), 
+                        INSERT INTO profiles
+                        (user_id, preferences, purchase_history, interaction_count, last_interaction)
+                        VALUES (gen_random_uuid(), $1, $2, 1, CURRENT_TIMESTAMP)
+                    """,
+                        json.dumps(preferences or {}),
                         json.dumps(purchase_history or []))
                 
                 logger.debug(f"Updated profile for customer {customer_id}")
@@ -413,7 +414,7 @@ class DatabaseContextStore:
                 # Get counts
                 conv_count = await conn.fetchval("SELECT COUNT(*) FROM ai_conversations")
                 interaction_count = await conn.fetchval("SELECT COUNT(*) FROM chat_interactions")
-                profile_count = await conn.fetchval("SELECT COUNT(*) FROM customer_profiles")
+                profile_count = await conn.fetchval("SELECT COUNT(*) FROM profiles")
                 
                 # Get recent activity
                 recent_activity = await conn.fetchval("""

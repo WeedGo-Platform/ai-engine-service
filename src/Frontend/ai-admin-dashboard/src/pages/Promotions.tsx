@@ -104,15 +104,15 @@ export default function Promotions() {
     const end = endDate ? new Date(endDate) : null;
 
     if (!active) {
-      return <span className="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-600">Inactive</span>;
+      return <span className="px-2 py-1 text-xs rounded-full bg-gray-50 text-gray-600">Inactive</span>;
     }
     if (now < start) {
-      return <span className="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-600">Scheduled</span>;
+      return <span className="px-2 py-1 text-xs rounded-full bg-warning-100 text-warning-600">Scheduled</span>;
     }
     if (end && now > end) {
-      return <span className="px-2 py-1 text-xs rounded-full bg-red-100 text-red-600">Expired</span>;
+      return <span className="px-2 py-1 text-xs rounded-full bg-danger-100 text-danger-600">Expired</span>;
     }
-    return <span className="px-2 py-1 text-xs rounded-full bg-green-100 text-green-600">Active</span>;
+    return <span className="px-2 py-1 text-xs rounded-full bg-primary-100 text-primary-600">Active</span>;
   };
 
   return (
@@ -125,7 +125,7 @@ export default function Promotions() {
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+          className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
         >
           <Plus className="h-5 w-5 mr-2" />
           Create Promotion
@@ -139,8 +139,8 @@ export default function Promotions() {
             onClick={() => setActiveTab('promotions')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'promotions'
-                ? 'border-green-500 text-green-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'border-primary-500 text-primary-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
             }`}
           >
             Active Promotions
@@ -149,8 +149,8 @@ export default function Promotions() {
             onClick={() => setActiveTab('tiers')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'tiers'
-                ? 'border-green-500 text-green-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'border-primary-500 text-primary-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
             }`}
           >
             Price Tiers
@@ -159,8 +159,8 @@ export default function Promotions() {
             onClick={() => setActiveTab('analytics')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'analytics'
-                ? 'border-green-500 text-green-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'border-primary-500 text-primary-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
             }`}
           >
             Analytics
@@ -170,7 +170,7 @@ export default function Promotions() {
 
       {/* Content */}
       {activeTab === 'promotions' && (
-        <div className="bg-white shadow rounded-lg">
+        <div className="bg-white  rounded-lg">
           {isLoading ? (
             <div className="p-8 text-center">Loading promotions...</div>
           ) : (
@@ -218,7 +218,7 @@ export default function Promotions() {
                       <td className="px-6 py-4 whitespace-nowrap">
                         {promo.code ? (
                           <div className="flex items-center">
-                            <code className="text-sm bg-gray-100 px-2 py-1 rounded">{promo.code}</code>
+                            <code className="text-sm bg-gray-50 px-2 py-1 rounded">{promo.code}</code>
                             <button
                               onClick={() => {
                                 navigator.clipboard.writeText(promo.code!);
@@ -271,7 +271,7 @@ export default function Promotions() {
                         >
                           <Edit2 className="h-4 w-4" />
                         </button>
-                        <button className="text-red-600 hover:text-red-900">
+                        <button className="text-danger-600 hover:text-red-900">
                           <Trash2 className="h-4 w-4" />
                         </button>
                       </td>
@@ -287,14 +287,14 @@ export default function Promotions() {
       {activeTab === 'tiers' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {tiers?.map((tier: any) => (
-            <div key={tier.id} className="bg-white rounded-lg shadow p-6">
+            <div key={tier.id} className="bg-white rounded-lg  p-6">
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900">{tier.name}</h3>
                   <p className="text-sm text-gray-500">{tier.customer_type}</p>
                 </div>
                 {tier.active && (
-                  <CheckCircle className="h-5 w-5 text-green-500" />
+                  <CheckCircle className="h-5 w-5 text-primary-500" />
                 )}
               </div>
               
@@ -322,7 +322,7 @@ export default function Promotions() {
               </div>
 
               <div className="mt-4 pt-4 border-t">
-                <button className="w-full px-4 py-2 text-sm text-green-600 hover:bg-green-50 rounded-lg">
+                <button className="w-full px-4 py-2 text-sm text-primary-600 hover:bg-primary-50 rounded-lg">
                   Assign to Customers
                 </button>
               </div>
@@ -334,7 +334,7 @@ export default function Promotions() {
       {activeTab === 'analytics' && analytics && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Top Performing Promotions */}
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white rounded-lg  p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Performing Promotions</h3>
             <div className="space-y-3">
               {analytics.promotions?.slice(0, 5).map((promo: any) => (
@@ -353,28 +353,28 @@ export default function Promotions() {
           </div>
 
           {/* Promotion Stats */}
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white rounded-lg  p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Overall Stats</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-gray-50 rounded-lg p-4">
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-gray-50 rounded-lg p-6">
                 <div className="text-2xl font-bold text-gray-900">
                   {analytics.promotions?.reduce((sum: number, p: any) => sum + (p.times_used || 0), 0) || 0}
                 </div>
                 <div className="text-sm text-gray-600">Total Uses</div>
               </div>
-              <div className="bg-gray-50 rounded-lg p-4">
+              <div className="bg-gray-50 rounded-lg p-6">
                 <div className="text-2xl font-bold text-gray-900">
                   ${analytics.promotions?.reduce((sum: number, p: any) => sum + (p.total_discount_given || 0), 0).toFixed(2) || '0.00'}
                 </div>
                 <div className="text-sm text-gray-600">Total Discounts</div>
               </div>
-              <div className="bg-gray-50 rounded-lg p-4">
+              <div className="bg-gray-50 rounded-lg p-6">
                 <div className="text-2xl font-bold text-gray-900">
                   ${analytics.promotions?.reduce((sum: number, p: any) => sum + (p.total_revenue || 0), 0).toFixed(2) || '0.00'}
                 </div>
                 <div className="text-sm text-gray-600">Total Revenue</div>
               </div>
-              <div className="bg-gray-50 rounded-lg p-4">
+              <div className="bg-gray-50 rounded-lg p-6">
                 <div className="text-2xl font-bold text-gray-900">
                   ${analytics.promotions?.[0]?.avg_order_value?.toFixed(2) || '0.00'}
                 </div>
@@ -437,7 +437,7 @@ function PromotionModal({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-lg border border-gray-200 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6 border-b">
           <h2 className="text-xl font-semibold text-gray-900">
             {promotion ? 'Edit Promotion' : 'Create New Promotion'}
@@ -445,7 +445,7 @@ function PromotionModal({
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Promotion Name *
@@ -455,7 +455,7 @@ function PromotionModal({
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
             </div>
 
@@ -468,7 +468,7 @@ function PromotionModal({
                 value={formData.code}
                 onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
                 placeholder="e.g., SAVE20"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
             </div>
           </div>
@@ -481,11 +481,11 @@ function PromotionModal({
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               rows={2}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Promotion Type *
@@ -493,7 +493,7 @@ function PromotionModal({
               <select
                 value={formData.type}
                 onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 <option value="percentage">Percentage Discount</option>
                 <option value="fixed_amount">Fixed Amount</option>
@@ -510,7 +510,7 @@ function PromotionModal({
               <select
                 value={formData.discount_type}
                 onChange={(e) => setFormData({ ...formData, discount_type: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 <option value="percentage">Percentage</option>
                 <option value="amount">Fixed Amount</option>
@@ -518,7 +518,7 @@ function PromotionModal({
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Discount Value *
@@ -530,7 +530,7 @@ function PromotionModal({
                 step="0.01"
                 value={formData.discount_value}
                 onChange={(e) => setFormData({ ...formData, discount_value: parseFloat(e.target.value) })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
             </div>
 
@@ -544,7 +544,7 @@ function PromotionModal({
                 step="0.01"
                 value={formData.min_purchase_amount || ''}
                 onChange={(e) => setFormData({ ...formData, min_purchase_amount: e.target.value ? parseFloat(e.target.value) : undefined })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
             </div>
 
@@ -558,12 +558,12 @@ function PromotionModal({
                 step="0.01"
                 value={formData.max_discount_amount || ''}
                 onChange={(e) => setFormData({ ...formData, max_discount_amount: e.target.value ? parseFloat(e.target.value) : undefined })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Start Date *
@@ -573,7 +573,7 @@ function PromotionModal({
                 required
                 value={formData.start_date ? formData.start_date.slice(0, 16) : ''}
                 onChange={(e) => setFormData({ ...formData, start_date: new Date(e.target.value).toISOString() })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
             </div>
 
@@ -585,12 +585,12 @@ function PromotionModal({
                 type="datetime-local"
                 value={formData.end_date ? formData.end_date.slice(0, 16) : ''}
                 onChange={(e) => setFormData({ ...formData, end_date: e.target.value ? new Date(e.target.value).toISOString() : undefined })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Usage Limit (Total)
@@ -600,7 +600,7 @@ function PromotionModal({
                 min="0"
                 value={formData.total_usage_limit || ''}
                 onChange={(e) => setFormData({ ...formData, total_usage_limit: e.target.value ? parseInt(e.target.value) : undefined })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
             </div>
 
@@ -613,7 +613,7 @@ function PromotionModal({
                 min="0"
                 value={formData.usage_limit_per_customer || ''}
                 onChange={(e) => setFormData({ ...formData, usage_limit_per_customer: e.target.value ? parseInt(e.target.value) : undefined })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
             </div>
           </div>
@@ -624,7 +624,7 @@ function PromotionModal({
                 type="checkbox"
                 checked={formData.stackable}
                 onChange={(e) => setFormData({ ...formData, stackable: e.target.checked })}
-                className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-200 rounded"
               />
               <span className="ml-2 text-sm text-gray-700">
                 Allow stacking with other promotions
@@ -636,7 +636,7 @@ function PromotionModal({
                 type="checkbox"
                 checked={formData.first_time_customer_only}
                 onChange={(e) => setFormData({ ...formData, first_time_customer_only: e.target.checked })}
-                className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-200 rounded"
               />
               <span className="ml-2 text-sm text-gray-700">
                 First-time customers only
@@ -648,7 +648,7 @@ function PromotionModal({
                 type="checkbox"
                 checked={formData.active}
                 onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
-                className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-200 rounded"
               />
               <span className="ml-2 text-sm text-gray-700">
                 Active
@@ -660,13 +660,13 @@ function PromotionModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300"
+              className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-300"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+              className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
             >
               {promotion ? 'Update' : 'Create'} Promotion
             </button>

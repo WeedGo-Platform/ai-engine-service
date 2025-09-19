@@ -235,15 +235,15 @@ async def get_dashboard_analytics(
             recent_params.append(store_id)
             
         recent_orders_query = f"""
-            SELECT 
+            SELECT
                 o.id,
                 o.order_number,
-                COALESCE(CONCAT(c.first_name, ' ', c.last_name), c.email, 'Guest') as customer,
+                COALESCE(CONCAT(u.first_name, ' ', u.last_name), u.email, 'Guest') as customer,
                 o.total_amount as total,
                 o.payment_status as status,
                 o.created_at as time
             FROM orders o
-            LEFT JOIN customers c ON o.customer_id = c.id
+            LEFT JOIN users u ON o.customer_id = u.id
             {recent_where}
             ORDER BY o.created_at DESC
             LIMIT 10

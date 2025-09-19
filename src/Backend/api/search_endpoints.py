@@ -3,7 +3,7 @@ Product Search API Endpoints
 Provides search functionality for products with filters
 """
 
-from fastapi import APIRouter, HTTPException, Query, Depends
+from fastapi import APIRouter, HTTPException, Query, Depends, Header
 from typing import List, Dict, Optional, Any
 import logging
 import asyncpg
@@ -43,6 +43,7 @@ async def search_products(
     q: Optional[str] = Query(None, description="Search query"),
     id: Optional[str] = Query(None, description="Product ID"),
     store_id: Optional[str] = Query(None, description="Store ID for inventory filtering"),
+    x_store_id: Optional[str] = Header(None, alias="X-Store-ID", description="Store ID from header"),
     category: Optional[str] = Query(None, description="Product category"),
     min_price: Optional[float] = Query(None, ge=0, description="Minimum price"),
     max_price: Optional[float] = Query(None, ge=0, description="Maximum price"),
@@ -56,6 +57,9 @@ async def search_products(
     """
     Search products with various filters
     """
+    # Use header if provided, otherwise fall back to query param
+    effective_store_id = x_store_id or store_id
+
     try:
         # Parse GS1-128 barcode if present
         # GS1-128 format: (01)GTIN(13)DATE(10)BATCH
@@ -233,10 +237,10 @@ async def search_products(
         param_counter = 0
 
         # Add store filter if provided
-        if store_id:
+        if effective_store_id:
             param_counter += 1
             where_conditions.append(f"i.store_id = ${param_counter}")
-            actual_params.append(store_id)
+            actual_params.append(effective_store_id)
 
         if q:
             param_counter += 1
@@ -354,10 +358,10 @@ async def search_products(
         count_param_count = 0
 
         # Add store filter to count as well
-        if store_id:
+        if effective_store_id:
             count_param_count += 1
             count_query += f" AND i.store_id = ${count_param_count}"
-            count_params.append(store_id)
+            count_params.append(effective_store_id)
 
         if q:
             count_param_count += 1

@@ -50,6 +50,7 @@ from api.payment_settings_endpoints import router as payment_settings_router
 from api.payment_provider_endpoints import router as payment_provider_router
 from api.client_payment_endpoints import router as client_payment_router
 from api.store_payment_endpoints import router as store_payment_router
+from api.payment_session_endpoints import router as payment_session_router
 from api.admin_auth import router as admin_auth_router
 
 # Configure logging
@@ -388,6 +389,7 @@ app.include_router(payment_settings_router)  # Payment settings endpoints
 app.include_router(payment_provider_router)  # Payment provider management endpoints
 app.include_router(client_payment_router)  # Client payment endpoints
 app.include_router(store_payment_router)  # Store payment terminal and device endpoints
+app.include_router(payment_session_router)  # Payment session endpoints for Clover integration
 
 # Import and include admin endpoints (unified admin + model management)
 from api.admin_endpoints import router as admin_router
@@ -409,9 +411,10 @@ except Exception as e:
 
 # Import and include cart endpoints
 from api.cart_endpoints import router as cart_router
-from api.checkout_endpoints import router as checkout_router
+from api.wishlist_endpoints import router as wishlist_router
 from api.customer_endpoints import router as customer_router
 from api.promotion_endpoints import router as promotion_router
+from api.database_management import router as database_router
 
 # Include POS router first (before customer router to handle /customers/search route)
 try:
@@ -430,9 +433,10 @@ except Exception as e:
     logger.warning(f"Failed to load POS transaction endpoints: {e}")
 
 app.include_router(cart_router)
-app.include_router(checkout_router)
 app.include_router(customer_router)
 app.include_router(promotion_router)
+app.include_router(wishlist_router)
+app.include_router(database_router)
 
 # Hardware endpoints
 if HARDWARE_ENABLED:
@@ -446,7 +450,7 @@ if ACCESSORIES_ENABLED:
 
 # Import and include order endpoints
 try:
-    from api.order_endpoints_fixed import router as order_router
+    from api.order_endpoints import router as order_router
     app.include_router(order_router)
 except Exception as e:
     logger.warning(f"Failed to load order endpoints: {e}")
@@ -531,6 +535,22 @@ try:
     logger.info("OCS product catalog endpoints loaded successfully")
 except Exception as e:
     logger.warning(f"Failed to load OCS product catalog endpoints: {e}")
+
+# Import and include review endpoints
+try:
+    from api.review_endpoints import router as review_router
+    app.include_router(review_router)
+    logger.info("Review endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load review endpoints: {e}")
+
+# Import and include delivery endpoints
+try:
+    from api.delivery_endpoints import router as delivery_router
+    app.include_router(delivery_router)
+    logger.info("Delivery endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load delivery endpoints: {e}")
 
 # Import and include API gateway for frontend compatibility
 try:
@@ -1037,38 +1057,38 @@ async def search_products(
     return result
 
 
-# Order creation endpoint
-@app.post("/api/orders")
-@rate_limit(resource="order", requests=500, seconds=60)
-async def create_order(
-    request: OrderCreateModel,
-    req: Request
-):
-    """Create an order using V5 engine"""
-    if not v5_engine:
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="V5 engine not initialized"
-        )
-    
-    # Use api_orchestrator tool
-    tool_manager = v5_engine.tool_manager
-    if not tool_manager:
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Tools not initialized"
-        )
-    
-    # Execute order creation
-    result = await tool_manager.execute_tool(
-        "api_orchestrator",
-        action="submit",
-        operation_id="createOrder",
-        data=request.dict(),
-        auth_token=None  # No auth for testing
-    )
-    
-    return result
+# Order creation endpoint (V5 engine - disabled to avoid conflict with order_endpoints router)
+# @app.post("/api/orders")
+# @rate_limit(resource="order", requests=500, seconds=60)
+# async def create_order(
+#     request: OrderCreateModel,
+#     req: Request
+# ):
+#     """Create an order using V5 engine"""
+#     if not v5_engine:
+#         raise HTTPException(
+#             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+#             detail="V5 engine not initialized"
+#         )
+#
+#     # Use api_orchestrator tool
+#     tool_manager = v5_engine.tool_manager
+#     if not tool_manager:
+#         raise HTTPException(
+#             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+#             detail="Tools not initialized"
+#         )
+#
+#     # Execute order creation
+#     result = await tool_manager.execute_tool(
+#         "api_orchestrator",
+#         action="submit",
+#         operation_id="createOrder",
+#         data=request.dict(),
+#         auth_token=None  # No auth for testing
+#     )
+#
+#     return result
 
 
 # Admin endpoints
@@ -1089,20 +1109,36 @@ async def get_stats():
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
     """Handle HTTP exceptions"""
-    return JSONResponse(
+    response = JSONResponse(
         status_code=exc.status_code,
         content={"detail": exc.detail}
     )
+    # Add CORS headers to error responses
+    origin = request.headers.get("origin")
+    if origin in ["http://localhost:3003", "http://localhost:3004", "http://localhost:3000", "http://localhost:5024", "http://localhost:5173", "http://localhost:5174"]:
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+        response.headers["Access-Control-Allow-Headers"] = "*"
+    return response
 
 
 @app.exception_handler(Exception)
 async def general_exception_handler(request: Request, exc: Exception):
     """Handle general exceptions"""
     logger.error(f"Unhandled exception: {exc}")
-    return JSONResponse(
+    response = JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content={"detail": "Internal server error"}
     )
+    # Add CORS headers to error responses
+    origin = request.headers.get("origin")
+    if origin in ["http://localhost:3003", "http://localhost:3004", "http://localhost:3000", "http://localhost:5024", "http://localhost:5173", "http://localhost:5174"]:
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+        response.headers["Access-Control-Allow-Headers"] = "*"
+    return response
 
 
 def main():

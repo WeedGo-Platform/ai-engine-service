@@ -289,7 +289,7 @@ const ProvincialCatalogVirtual: React.FC = () => {
   return (
     <div className="max-w-full mx-auto space-y-6">
       {/* Header */}
-      <div className="bg-white shadow-sm rounded-lg p-6">
+      <div className="bg-white  rounded-lg p-6">
         <h1 className="text-2xl font-bold text-gray-900">Provincial Product Catalog (Virtual Scroll)</h1>
         <p className="mt-2 text-gray-600">
           Manage and upload provincial cannabis product catalogs
@@ -298,7 +298,7 @@ const ProvincialCatalogVirtual: React.FC = () => {
 
       {/* Upload Section */}
       {canUpload && (
-        <div className="bg-white shadow-sm rounded-lg p-6">
+        <div className="bg-white  rounded-lg p-6">
           <h2 className="text-lg font-medium text-gray-900 mb-4">Upload Catalog</h2>
           
           <div className="space-y-4">
@@ -310,7 +310,7 @@ const ProvincialCatalogVirtual: React.FC = () => {
               <select
                 value={selectedProvince}
                 onChange={(e) => setSelectedProvince(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                 disabled={uploadStatus.type === 'uploading'}
               >
                 <option value="ON">Ontario (OCS)</option>
@@ -334,7 +334,7 @@ const ProvincialCatalogVirtual: React.FC = () => {
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={uploadStatus.type === 'uploading'}
-                  className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Upload className="inline-block w-4 h-4 mr-2" />
                   Choose File
@@ -352,7 +352,7 @@ const ProvincialCatalogVirtual: React.FC = () => {
             <button
               onClick={handleUpload}
               disabled={!selectedFile || uploadStatus.type === 'uploading'}
-              className="px-6 py-2 bg-green-600 text-white rounded-md font-medium hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {uploadStatus.type === 'uploading' ? (
                 <>
@@ -366,20 +366,20 @@ const ProvincialCatalogVirtual: React.FC = () => {
 
             {/* Status messages */}
             {uploadStatus.type === 'success' && (
-              <div className="p-4 bg-green-50 border border-green-200 rounded-md">
+              <div className="p-6 bg-primary-50 border border-green-200 rounded-lg">
                 <div className="flex">
                   <CheckCircle className="h-5 w-5 text-green-400" />
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-green-800">
+                    <p className="text-sm font-medium text-primary-800">
                       {uploadStatus.message}
                     </p>
                     {uploadStatus.stats && (
-                      <div className="mt-2 text-sm text-green-700">
+                      <div className="mt-2 text-sm text-primary-700">
                         <p>Total records: {uploadStatus.stats.totalRecords}</p>
                         <p>Inserted: {uploadStatus.stats.inserted}</p>
                         <p>Updated: {uploadStatus.stats.updated}</p>
                         {uploadStatus.stats.errors > 0 && (
-                          <p className="text-red-600">Errors: {uploadStatus.stats.errors}</p>
+                          <p className="text-danger-600">Errors: {uploadStatus.stats.errors}</p>
                         )}
                       </div>
                     )}
@@ -389,11 +389,11 @@ const ProvincialCatalogVirtual: React.FC = () => {
             )}
 
             {uploadStatus.type === 'error' && (
-              <div className="p-4 bg-red-50 border border-red-200 rounded-md">
+              <div className="p-6 bg-danger-50 border border-red-200 rounded-lg">
                 <div className="flex">
                   <AlertCircle className="h-5 w-5 text-red-400" />
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-red-800">
+                    <p className="text-sm font-medium text-danger-800">
                       {uploadStatus.message}
                     </p>
                   </div>
@@ -405,8 +405,8 @@ const ProvincialCatalogVirtual: React.FC = () => {
       )}
 
       {/* Search and Filter */}
-      <div className="bg-white shadow-sm rounded-lg p-6">
-        <div className="flex gap-4">
+      <div className="bg-white  rounded-lg p-6">
+        <div className="flex gap-6">
           <div className="flex-1 max-w-md">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
@@ -415,7 +415,7 @@ const ProvincialCatalogVirtual: React.FC = () => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search products..."
-                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
+                className="w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-primary-500 focus:border-primary-500"
               />
             </div>
           </div>
@@ -423,7 +423,7 @@ const ProvincialCatalogVirtual: React.FC = () => {
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 min-w-[150px]"
+              className="px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-primary-500 focus:border-primary-500 min-w-[150px]"
             >
               <option value="">All Categories</option>
               <option value="Flower">Flower</option>
@@ -441,7 +441,7 @@ const ProvincialCatalogVirtual: React.FC = () => {
       </div>
 
       {/* Virtual Scrolling Table */}
-      <div className="bg-white shadow-sm rounded-lg p-6">
+      <div className="bg-white  rounded-lg p-6">
         <div className="mb-4 flex justify-between items-center">
           <div>
             <h2 className="text-lg font-medium text-gray-900">
@@ -452,7 +452,7 @@ const ProvincialCatalogVirtual: React.FC = () => {
             </p>
           </div>
           <button
-            className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 border border-gray-300 rounded-md"
+            className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 border border-gray-200 rounded-lg"
             onClick={() => {
               // Export functionality
               const csvContent = [
@@ -480,7 +480,7 @@ const ProvincialCatalogVirtual: React.FC = () => {
 
         {isLoading ? (
           <div className="flex justify-center items-center h-64">
-            <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+            <Loader2 className="h-8 w-8 animate-spin text-primary-600" />
           </div>
         ) : filteredProducts.length === 0 ? (
           <div className="text-center py-12 text-gray-500">

@@ -233,8 +233,8 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
       <div className="flex items-center justify-center min-h-screen px-4">
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75" onClick={onClose}></div>
         
-        <div className="relative bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
-          <div className="flex items-center justify-between p-4 border-b">
+        <div className="relative bg-white rounded-lg border border-gray-200 max-w-4xl w-full max-h-[90vh] overflow-hidden">
+          <div className="flex items-center justify-between p-6 border-b">
             <h2 className="text-xl font-semibold">
               {readOnly ? 'View' : 'Edit'} Organization
             </h2>
@@ -251,7 +251,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex items-center gap-2 px-4 py-2 border-b-2 transition-colors ${
                     activeTab === tab.id
-                      ? 'border-blue-500 text-blue-600'
+                      ? 'border-blue-500 text-accent-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700'
                   }`}
                 >
@@ -266,7 +266,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
             {/* Tab content here - same as existing TenantManagement but with readOnly support */}
             {activeTab === 'general' && (
               <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Organization Name
@@ -276,7 +276,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
                       value={editedTenant?.name || ''}
                       onChange={(e) => setEditedTenant({ ...editedTenant, name: e.target.value })}
                       disabled={readOnly}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg"
                     />
                   </div>
                   <div>
@@ -287,12 +287,12 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
                       type="text"
                       value={editedTenant?.code || ''}
                       disabled
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-50"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       <Mail className="inline w-4 h-4 mr-1" />
@@ -303,7 +303,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
                       value={editedTenant?.contact_email || ''}
                       onChange={(e) => setEditedTenant({ ...editedTenant, contact_email: e.target.value })}
                       disabled={readOnly}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg"
                     />
                   </div>
                   <div>
@@ -316,7 +316,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
                       value={editedTenant?.contact_phone || ''}
                       onChange={(e) => setEditedTenant({ ...editedTenant, contact_phone: e.target.value })}
                       disabled={readOnly}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg"
                     />
                   </div>
                 </div>
@@ -331,7 +331,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
                     value={editedTenant?.website || ''}
                     onChange={(e) => setEditedTenant({ ...editedTenant, website: e.target.value })}
                     disabled={readOnly}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg"
                   />
                 </div>
 
@@ -341,7 +341,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
                       <Upload className="inline w-4 h-4 mr-1" />
                       Logo
                     </label>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-6">
                       {logoPreview && (
                         <img src={logoPreview} alt="Logo preview" className="w-16 h-16 object-contain border rounded" />
                       )}
@@ -369,10 +369,10 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
                       address: { ...editedTenant?.address, street: e.target.value }
                     })}
                     disabled={readOnly}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg"
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
                     <input
@@ -383,7 +383,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
                         address: { ...editedTenant?.address, city: e.target.value }
                       })}
                       disabled={readOnly}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg"
                     />
                   </div>
                   <div>
@@ -396,11 +396,11 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
                         address: { ...editedTenant?.address, province: e.target.value }
                       })}
                       disabled={readOnly}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg"
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Postal Code</label>
                     <input
@@ -411,7 +411,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
                         address: { ...editedTenant?.address, postal_code: e.target.value }
                       })}
                       disabled={readOnly}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg"
                     />
                   </div>
                   <div>
@@ -424,7 +424,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
                         address: { ...editedTenant?.address, country: e.target.value }
                       })}
                       disabled={readOnly}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg"
                     />
                   </div>
                 </div>
@@ -433,7 +433,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
 
             {activeTab === 'billing' && (
               <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Company Name</label>
                     <input
@@ -441,7 +441,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
                       value={editedTenant?.company_name || ''}
                       onChange={(e) => setEditedTenant({ ...editedTenant, company_name: e.target.value })}
                       disabled={readOnly}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg"
                     />
                   </div>
                   <div>
@@ -451,7 +451,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
                       value={editedTenant?.business_number || ''}
                       onChange={(e) => setEditedTenant({ ...editedTenant, business_number: e.target.value })}
                       disabled={readOnly}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg"
                     />
                   </div>
                 </div>
@@ -462,7 +462,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
                     value={editedTenant?.gst_hst_number || ''}
                     onChange={(e) => setEditedTenant({ ...editedTenant, gst_hst_number: e.target.value })}
                     disabled={readOnly}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg"
                   />
                 </div>
                 <div>
@@ -471,7 +471,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
                     value={editedTenant?.currency || 'CAD'}
                     onChange={(e) => setEditedTenant({ ...editedTenant, currency: e.target.value })}
                     disabled={readOnly}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg"
                   >
                     <option value="CAD">CAD</option>
                     <option value="USD">USD</option>
@@ -488,7 +488,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
                     value={editedTenant?.subscription_tier || 'community'}
                     onChange={(e) => setEditedTenant({ ...editedTenant, subscription_tier: e.target.value })}
                     disabled={readOnly}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg"
                   >
                     <option value="community_and_new_business">Community and New Business</option>
                     <option value="small_business">Small Business</option>
@@ -503,7 +503,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
                     value={editedTenant?.max_stores || 1}
                     onChange={(e) => setEditedTenant({ ...editedTenant, max_stores: parseInt(e.target.value) })}
                     disabled={readOnly}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg"
                   />
                 </div>
                 <div>
@@ -512,7 +512,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
                     value={editedTenant?.status || 'active'}
                     onChange={(e) => setEditedTenant({ ...editedTenant, status: e.target.value })}
                     disabled={readOnly}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg"
                   >
                     <option value="active">Active</option>
                     <option value="suspended">Suspended</option>
@@ -525,14 +525,14 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
             {activeTab === 'users' && showUsersTab && (
               <div className="space-y-4">
                 {userError && (
-                  <div className="p-3 bg-red-50 border border-red-200 rounded-md">
+                  <div className="p-4 bg-danger-50 border border-red-200 rounded-lg">
                     <p className="text-sm text-red-700">{userError}</p>
                   </div>
                 )}
                 
                 {userSuccess && (
-                  <div className="p-3 bg-green-50 border border-green-200 rounded-md">
-                    <p className="text-sm text-green-700">{userSuccess}</p>
+                  <div className="p-4 bg-primary-50 border border-green-200 rounded-lg">
+                    <p className="text-sm text-primary-700">{userSuccess}</p>
                   </div>
                 )}
 
@@ -541,7 +541,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
                   {!readOnly && (
                     <button
                       onClick={() => setShowAddUserForm(true)}
-                      className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                      className="flex items-center gap-2 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700"
                     >
                       <UserPlus className="w-4 h-4" />
                       Add User
@@ -550,41 +550,41 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
                 </div>
 
                 {showAddUserForm && !readOnly && (
-                  <div className="p-4 bg-gray-50 rounded-md space-y-3">
+                  <div className="p-6 bg-gray-50 rounded-lg space-y-3">
                     <h4 className="font-medium">Add New User</h4>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-2 gap-4">
                       <input
                         type="email"
                         placeholder="Email"
                         value={newUser.email}
                         onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
-                        className="px-3 py-2 border border-gray-300 rounded-md"
+                        className="px-3 py-2 border border-gray-200 rounded-lg"
                       />
                       <input
                         type="password"
                         placeholder="Password"
                         value={newUser.password}
                         onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
-                        className="px-3 py-2 border border-gray-300 rounded-md"
+                        className="px-3 py-2 border border-gray-200 rounded-lg"
                       />
                       <input
                         type="text"
                         placeholder="First Name"
                         value={newUser.first_name}
                         onChange={(e) => setNewUser({ ...newUser, first_name: e.target.value })}
-                        className="px-3 py-2 border border-gray-300 rounded-md"
+                        className="px-3 py-2 border border-gray-200 rounded-lg"
                       />
                       <input
                         type="text"
                         placeholder="Last Name"
                         value={newUser.last_name}
                         onChange={(e) => setNewUser({ ...newUser, last_name: e.target.value })}
-                        className="px-3 py-2 border border-gray-300 rounded-md"
+                        className="px-3 py-2 border border-gray-200 rounded-lg"
                       />
                       <select
                         value={newUser.role}
                         onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
-                        className="px-3 py-2 border border-gray-300 rounded-md col-span-2"
+                        className="px-3 py-2 border border-gray-200 rounded-lg col-span-2"
                       >
                         <option value="tenant_admin">Tenant Admin</option>
                         <option value="store_manager">Store Manager</option>
@@ -594,13 +594,13 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
                     <div className="flex gap-2">
                       <button
                         onClick={handleAddUser}
-                        className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                        className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
                       >
                         Add User
                       </button>
                       <button
                         onClick={() => setShowAddUserForm(false)}
-                        className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
+                        className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
                       >
                         Cancel
                       </button>
@@ -613,24 +613,24 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
                 ) : (
                   <div className="space-y-2">
                     {tenantUsers.map((user: any) => (
-                      <div key={user.id} className="flex items-center justify-between p-3 bg-white border rounded-md">
+                      <div key={user.id} className="flex items-center justify-between p-4 bg-white border rounded-lg">
                         <div>
                           <p className="font-medium">{user.first_name} {user.last_name}</p>
                           <p className="text-sm text-gray-500">{user.email}</p>
                         </div>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-4">
                           <select
                             value={user.role}
                             onChange={(e) => handleUpdateUserRole(user.id, e.target.value)}
                             disabled={readOnly}
-                            className="px-2 py-1 text-sm border border-gray-300 rounded"
+                            className="px-2 py-1 text-sm border border-gray-200 rounded"
                           >
                             <option value="tenant_admin">Tenant Admin</option>
                             <option value="store_manager">Store Manager</option>
                             <option value="staff">Staff</option>
                           </select>
                           <span className={`px-2 py-1 text-xs rounded-full ${
-                            user.active ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                            user.active ? 'bg-primary-100 text-primary-700' : 'bg-danger-100 text-red-700'
                           }`}>
                             {user.active ? 'Active' : 'Blocked'}
                           </span>
@@ -638,7 +638,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
                             <div className="flex gap-1">
                               <button
                                 onClick={() => handleResetPassword(user.id)}
-                                className="p-1 text-blue-600 hover:bg-blue-50 rounded"
+                                className="p-1 text-accent-600 hover:bg-blue-50 rounded"
                                 title="Reset Password"
                               >
                                 <RefreshCw className="w-4 h-4" />
@@ -652,7 +652,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
                               </button>
                               <button
                                 onClick={() => handleDeleteUser(user.id)}
-                                className="p-1 text-red-600 hover:bg-red-50 rounded"
+                                className="p-1 text-danger-600 hover:bg-danger-50 rounded"
                                 title="Delete User"
                               >
                                 <UserX className="w-4 h-4" />
@@ -668,10 +668,10 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
             )}
           </div>
 
-          <div className="flex justify-end gap-3 p-4 border-t">
+          <div className="flex justify-end gap-4 p-6 border-t">
             <button
               onClick={onClose}
-              className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+              className="px-4 py-2 text-gray-700 bg-gray-50 rounded-lg hover:bg-gray-50"
             >
               Cancel
             </button>
@@ -679,7 +679,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
               <button
                 onClick={handleSave}
                 disabled={isSaving}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+                className="flex items-center gap-2 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 disabled:opacity-50"
               >
                 {isSaving ? (
                   <>Saving...</>

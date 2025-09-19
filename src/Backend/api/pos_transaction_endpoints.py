@@ -1,6 +1,7 @@
 """
-Simplified POS Transaction API Endpoints
-Using a dedicated transactions table for POS
+POS Transaction API Endpoints
+Uses unified orders system - all POS transactions create orders with order_source='pos'
+No separate pos_transactions table needed
 """
 
 from fastapi import APIRouter, HTTPException, Query
@@ -69,89 +70,95 @@ class POSTransactionCreate(BaseModel):
     notes: Optional[str] = None
 
 
-async def ensure_pos_transactions_table():
-    """Ensure POS transactions table exists"""
-    pool = await get_db_pool()
-    async with pool.acquire() as conn:
-        await conn.execute("""
-            CREATE TABLE IF NOT EXISTS pos_transactions (
-                id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-                store_id TEXT NOT NULL,
-                cashier_id TEXT NOT NULL,
-                customer_id UUID,
-                transaction_data JSONB NOT NULL,
-                status TEXT NOT NULL DEFAULT 'completed',
-                total_amount DECIMAL(10,2) NOT NULL,
-                created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-                updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-            )
-        """)
-        
-        # Create indexes
-        await conn.execute("""
-            CREATE INDEX IF NOT EXISTS idx_pos_transactions_store 
-            ON pos_transactions(store_id)
-        """)
-        await conn.execute("""
-            CREATE INDEX IF NOT EXISTS idx_pos_transactions_status 
-            ON pos_transactions(status)
-        """)
-        await conn.execute("""
-            CREATE INDEX IF NOT EXISTS idx_pos_transactions_created 
-            ON pos_transactions(created_at DESC)
-        """)
-
 
 @router.post("/pos/transactions")
 async def create_pos_transaction(transaction: POSTransactionCreate):
-    """Create a new POS transaction"""
+    """Create a new POS transaction (now creates an order)"""
     try:
-        # Ensure table exists
-        await ensure_pos_transactions_table()
-        
         pool = await get_db_pool()
         async with pool.acquire() as conn:
-            # Prepare transaction data
-            transaction_data = {
-                'store_id': transaction.store_id,
-                'cashier_id': transaction.cashier_id,
-                'customer_id': transaction.customer_id,
-                'items': [item.dict() for item in transaction.items],
-                'subtotal': transaction.subtotal,
-                'discounts': transaction.discounts,
-                'tax': transaction.tax,
-                'total': transaction.total,
-                'payment_method': transaction.payment_method,
-                'payment_details': transaction.payment_details.dict() if transaction.payment_details else {},
-                'status': transaction.status,
-                'receipt_number': transaction.receipt_number,
-                'notes': transaction.notes
-            }
-            
-            # Parse customer_id if provided
+            # Parse store_id and customer_id as UUIDs
+            store_uuid = None
+            try:
+                store_uuid = uuid.UUID(transaction.store_id)
+            except:
+                logger.warning(f"Invalid store UUID: {transaction.store_id}")
+
             customer_uuid = None
-            if transaction.customer_id and transaction.customer_id != 'anonymous':
+            if transaction.customer_id and transaction.customer_id not in ['anonymous', 'anon']:
                 try:
                     customer_uuid = uuid.UUID(transaction.customer_id)
                 except:
                     pass
-            
+
+            # Get user_id from customer if exists
+            user_id = None
+            if customer_uuid:
+                user_row = await conn.fetchrow(
+                    "SELECT user_id FROM profiles WHERE id = $1",
+                    customer_uuid
+                )
+                if user_row:
+                    user_id = user_row['user_id']
+
+            # Prepare items in the format expected by orders table
+            order_items = [item.dict() for item in transaction.items]
+
+            # Create order using the unified system
+            order_number = transaction.receipt_number or f"POS-{int(datetime.now().timestamp())}"
+
             query = """
-                INSERT INTO pos_transactions (
-                    store_id, cashier_id, customer_id,
-                    transaction_data, status, total_amount
-                ) VALUES ($1, $2, $3, $4, $5, $6)
+                INSERT INTO orders (
+                    order_number,
+                    user_id,
+                    customer_id,
+                    store_id,
+                    items,
+                    subtotal,
+                    tax_amount,
+                    discount_amount,
+                    total_amount,
+                    payment_status,
+                    payment_method,
+                    payment_details,
+                    order_source,
+                    order_status,
+                    is_pos_transaction,
+                    receipt_number,
+                    pos_metadata
+                ) VALUES (
+                    $1, $2, $3, $4, $5::jsonb, $6, $7, $8, $9, $10, $11, $12::jsonb,
+                    'pos', $13, TRUE, $14, $15::jsonb
+                )
                 RETURNING id::text as id, created_at as timestamp
             """
-            
+
+            pos_metadata = {
+                'cashier_id': transaction.cashier_id,
+                'store_id_text': transaction.store_id,
+                'notes': transaction.notes,
+                'created_via': 'pos_terminal'
+            }
+
+            payment_status = 'paid' if transaction.status == 'completed' else 'pending'
+
             row = await conn.fetchrow(
                 query,
-                transaction.store_id,
-                transaction.cashier_id,
-                customer_uuid,
-                json.dumps(transaction_data),
-                transaction.status,
-                Decimal(str(transaction.total))
+                order_number,  # 1
+                user_id,  # 2
+                customer_uuid,  # 3
+                store_uuid,  # 4
+                json.dumps(order_items),  # 5
+                Decimal(str(transaction.subtotal)),  # 6
+                Decimal(str(transaction.tax)),  # 7
+                Decimal(str(transaction.discounts)),  # 8
+                Decimal(str(transaction.total)),  # 9
+                payment_status,  # 10
+                transaction.payment_method,  # 11
+                json.dumps(transaction.payment_details.dict() if transaction.payment_details else {}),  # 12
+                transaction.status,  # 13
+                transaction.receipt_number,  # 14
+                json.dumps(pos_metadata)  # 15
             )
             
             result = transaction_data.copy()
@@ -159,13 +166,13 @@ async def create_pos_transaction(transaction: POSTransactionCreate):
             result['timestamp'] = row['timestamp'].isoformat()
             
             # Update customer loyalty points if applicable
-            if customer_uuid:
+            if user_id:
                 try:
                     points_earned = int(transaction.total)  # 1 point per dollar
                     await conn.execute(
-                        "UPDATE customers SET loyalty_points = COALESCE(loyalty_points, 0) + $1 WHERE id = $2",
+                        "UPDATE profiles SET loyalty_points = COALESCE(loyalty_points, 0) + $1 WHERE user_id = $2",
                         points_earned,
-                        customer_uuid
+                        user_id
                     )
                 except Exception as e:
                     logger.warning(f"Failed to update loyalty points: {e}")
@@ -200,18 +207,27 @@ async def get_pos_transactions(
     date: Optional[str] = None,
     limit: int = 100
 ):
-    """Get POS transactions for a store"""
+    """Get POS transactions (orders) for a store"""
     try:
-        await ensure_pos_transactions_table()
-
         pool = await get_db_pool()
         async with pool.acquire() as conn:
-            conditions = ["store_id = $1"]
-            params = [store_id]
-            param_num = 2
+            conditions = ["order_source = 'pos'"]
+            params = []
+            param_num = 1
+
+            # Handle store_id - could be UUID or text stored in metadata
+            try:
+                store_uuid = uuid.UUID(store_id)
+                conditions.append(f"store_id = ${param_num}")
+                params.append(store_uuid)
+                param_num += 1
+            except:
+                conditions.append(f"pos_metadata->>'store_id_text' = ${param_num}")
+                params.append(store_id)
+                param_num += 1
 
             if status:
-                conditions.append(f"status = ${param_num}")
+                conditions.append(f"order_status = ${param_num}")
                 params.append(status)
                 param_num += 1
 
@@ -219,28 +235,52 @@ async def get_pos_transactions(
                 conditions.append(f"DATE(created_at) = ${param_num}")
                 params.append(datetime.strptime(date, '%Y-%m-%d').date())
                 param_num += 1
-            
+
             where_clause = " AND ".join(conditions)
-            
+
             query = f"""
-                SELECT 
+                SELECT
                     id::text as id,
-                    transaction_data,
+                    order_number,
+                    items,
+                    subtotal,
+                    tax_amount as tax,
+                    discount_amount as discounts,
+                    total_amount as total,
+                    payment_method,
+                    payment_details,
+                    order_status as status,
+                    receipt_number,
+                    pos_metadata,
                     created_at as timestamp
-                FROM pos_transactions
+                FROM orders
                 WHERE {where_clause}
                 ORDER BY created_at DESC
                 LIMIT ${param_num}
             """
             params.append(limit)
-            
+
             rows = await conn.fetch(query, *params)
             
             transactions = []
             for row in rows:
-                trans = json.loads(row['transaction_data']) if row['transaction_data'] else {}
-                trans['id'] = row['id']
-                trans['timestamp'] = row['timestamp'].isoformat()
+                pos_metadata = json.loads(row['pos_metadata']) if row['pos_metadata'] else {}
+                trans = {
+                    'id': row['id'],
+                    'store_id': store_id,
+                    'cashier_id': pos_metadata.get('cashier_id', 'unknown'),
+                    'items': json.loads(row['items']) if row['items'] else [],
+                    'subtotal': float(row['subtotal']),
+                    'tax': float(row['tax']),
+                    'discounts': float(row['discounts']),
+                    'total': float(row['total']),
+                    'payment_method': row['payment_method'],
+                    'payment_details': json.loads(row['payment_details']) if row['payment_details'] else {},
+                    'status': row['status'],
+                    'receipt_number': row['receipt_number'],
+                    'notes': pos_metadata.get('notes'),
+                    'timestamp': row['timestamp'].isoformat()
+                }
                 transactions.append(trans)
             
             return transactions
@@ -264,28 +304,51 @@ async def get_parked_transactions(store_id: str):
 
 @router.put("/pos/transactions/{transaction_id}/resume")
 async def resume_pos_transaction(transaction_id: str):
-    """Resume a parked transaction"""
+    """Resume a parked transaction (order)"""
     try:
         pool = await get_db_pool()
         async with pool.acquire() as conn:
             query = """
-                SELECT transaction_data 
-                FROM pos_transactions 
-                WHERE id = $1::uuid AND status = 'parked'
+                SELECT
+                    id::text as id,
+                    items,
+                    subtotal,
+                    tax_amount as tax,
+                    discount_amount as discounts,
+                    total_amount as total,
+                    payment_method,
+                    payment_details,
+                    receipt_number,
+                    pos_metadata
+                FROM orders
+                WHERE id = $1::uuid AND order_status = 'parked' AND order_source = 'pos'
             """
-            
+
             row = await conn.fetchrow(query, transaction_id)
             if not row:
                 raise HTTPException(status_code=404, detail="Parked transaction not found")
-            
+
             # Mark as resumed
             await conn.execute(
-                "UPDATE pos_transactions SET status = 'resumed' WHERE id = $1::uuid",
+                "UPDATE orders SET order_status = 'resumed' WHERE id = $1::uuid",
                 transaction_id
             )
-            
-            transaction = json.loads(row['transaction_data'])
-            transaction['id'] = transaction_id
+
+            pos_metadata = json.loads(row['pos_metadata']) if row['pos_metadata'] else {}
+            transaction = {
+                'id': transaction_id,
+                'store_id': pos_metadata.get('store_id_text'),
+                'cashier_id': pos_metadata.get('cashier_id'),
+                'items': json.loads(row['items']) if row['items'] else [],
+                'subtotal': float(row['subtotal']),
+                'tax': float(row['tax']),
+                'discounts': float(row['discounts']),
+                'total': float(row['total']),
+                'payment_method': row['payment_method'],
+                'payment_details': json.loads(row['payment_details']) if row['payment_details'] else {},
+                'receipt_number': row['receipt_number'],
+                'notes': pos_metadata.get('notes')
+            }
             return transaction
     except HTTPException:
         raise
@@ -296,38 +359,39 @@ async def resume_pos_transaction(transaction_id: str):
 
 @router.post("/pos/transactions/{transaction_id}/refund")
 async def refund_pos_transaction(transaction_id: str):
-    """Process a refund for a POS transaction"""
+    """Process a refund for a POS transaction (order)"""
     try:
         pool = await get_db_pool()
         async with pool.acquire() as conn:
-            # Get original transaction
+            # Get original order
             query = """
-                SELECT transaction_data, customer_id
-                FROM pos_transactions 
-                WHERE id = $1::uuid AND status = 'completed'
+                SELECT items, total_amount, user_id, customer_id
+                FROM orders
+                WHERE id = $1::uuid AND order_status = 'completed' AND order_source = 'pos'
             """
-            
+
             row = await conn.fetchrow(query, transaction_id)
             if not row:
                 raise HTTPException(status_code=404, detail="Transaction not found")
-            
-            original = json.loads(row['transaction_data'])
-            customer_id = row['customer_id']
-            
+
+            items = json.loads(row['items']) if row['items'] else []
+            total_amount = row['total_amount']
+            user_id = row['user_id']
+
             # Update status to refunded
             await conn.execute(
-                "UPDATE pos_transactions SET status = 'refunded', updated_at = NOW() WHERE id = $1::uuid",
+                "UPDATE orders SET order_status = 'refunded', payment_status = 'refunded', updated_at = NOW() WHERE id = $1::uuid",
                 transaction_id
             )
             
             # Restore inventory
-            for item in original.get('items', []):
+            for item in items:
                 product_id = item.get('product', {}).get('id')
                 if product_id:
                     try:
                         await conn.execute(
                             """
-                            UPDATE products 
+                            UPDATE products
                             SET available_quantity = available_quantity + $1
                             WHERE id = $2::uuid
                             """,
@@ -336,15 +400,15 @@ async def refund_pos_transaction(transaction_id: str):
                         )
                     except Exception as e:
                         logger.warning(f"Failed to restore inventory for product {product_id}: {e}")
-            
+
             # Deduct loyalty points if applicable
-            if customer_id:
+            if user_id:
                 try:
-                    points_to_deduct = int(original.get('total', 0))
+                    points_to_deduct = int(total_amount)
                     await conn.execute(
-                        "UPDATE customers SET loyalty_points = GREATEST(0, loyalty_points - $1) WHERE id = $2",
+                        "UPDATE profiles SET loyalty_points = GREATEST(0, loyalty_points - $1) WHERE user_id = $2",
                         points_to_deduct,
-                        customer_id
+                        user_id
                     )
                 except Exception as e:
                     logger.warning(f"Failed to deduct loyalty points: {e}")

@@ -18,6 +18,13 @@ axiosInstance.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
+    // Add store ID header if available
+    const storeId = localStorage.getItem('X-Store-ID');
+    if (storeId) {
+      config.headers['X-Store-ID'] = storeId;
+    }
+
     return config;
   },
   (error) => {
@@ -72,16 +79,25 @@ export const api = {
     getById: (id: string) => axiosInstance.get(`/orders/${id}`),
     getByNumber: (orderNumber: string) => axiosInstance.get(`/orders/by-number/${orderNumber}`),
     create: (data: any) => axiosInstance.post('/orders/create', data),
-    updateStatus: (id: string, status: string) => 
-      axiosInstance.put(`/orders/${id}/status`, { status }),
-    cancel: (id: string) => axiosInstance.post(`/orders/${id}/cancel`),
+    updateStatus: (id: string, data: { payment_status?: string; delivery_status?: string; notes?: string }) =>
+      axiosInstance.put(`/orders/${id}/status`, data),
+    cancel: (id: string, reason: string) => axiosInstance.post(`/orders/${id}/cancel`, { reason }),
     getHistory: (id: string) => axiosInstance.get(`/orders/${id}/history`),
     getSummary: () => axiosInstance.get('/orders/analytics/summary'),
   },
 
   // Customers
   customers: {
-    getAll: (params?: any) => axiosInstance.get('/customers', { params }),
+    getAll: (params?: any) => {
+      // Use search endpoint with empty query to get all customers
+      const searchQuery = params?.search || '';
+      return axiosInstance.get('/customers/search', {
+        params: {
+          q: searchQuery,
+          ...(params?.customer_type && { customer_type: params.customer_type })
+        }
+      });
+    },
     getById: (id: string) => axiosInstance.get(`/customers/${id}`),
     create: (data: any) => axiosInstance.post('/customers', data),
     update: (id: string, data: any) => axiosInstance.put(`/customers/${id}`, data),

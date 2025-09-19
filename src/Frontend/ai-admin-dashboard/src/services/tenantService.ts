@@ -150,6 +150,32 @@ class TenantService {
     return response.data;
   }
 
+  async checkTenantExists(code?: string, website?: string): Promise<{
+    exists: boolean;
+    conflicts: Array<{
+      type: string;
+      value: string;
+      existing_tenant: {
+        id: string;
+        name: string;
+        code: string;
+        website?: string;
+        contact_email?: string;
+      }
+    }>;
+  }> {
+    const response = await this.api.post('/api/tenants/check-exists', {
+      code,
+      website
+    });
+    return response.data;
+  }
+
+  async createTenantWithAdmin(data: CreateTenantRequest): Promise<Tenant> {
+    const response = await this.api.post('/api/tenants/signup', data);
+    return response.data;
+  }
+
   async createTenant(data: CreateTenantRequest): Promise<Tenant> {
     const response = await this.api.post('/api/tenants/', data);
     return response.data;

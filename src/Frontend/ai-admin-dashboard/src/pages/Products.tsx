@@ -51,7 +51,7 @@ const Products: React.FC = () => {
   const getCategoryColor = (category: string) => {
     switch (category) {
       case 'flower':
-        return 'bg-green-100 text-green-800';
+        return 'bg-primary-100 text-primary-800';
       case 'edibles':
         return 'bg-purple-100 text-purple-800';
       case 'concentrates':
@@ -59,9 +59,9 @@ const Products: React.FC = () => {
       case 'vapes':
         return 'bg-blue-100 text-blue-800';
       case 'accessories':
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-50 text-gray-800';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-50 text-gray-800';
     }
   };
 
@@ -70,27 +70,27 @@ const Products: React.FC = () => {
       case 'indica':
         return 'bg-indigo-100 text-indigo-800';
       case 'sativa':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-warning-100 text-warning-800';
       case 'hybrid':
         return 'bg-pink-100 text-pink-800';
       case 'cbd':
         return 'bg-cyan-100 text-cyan-800';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-50 text-gray-800';
     }
   };
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+      <div className="bg-danger-50 border border-red-200 text-red-700 px-4 py-3 rounded">
         Error loading products: {(error as Error).message}
       </div>
     );
@@ -102,15 +102,15 @@ const Products: React.FC = () => {
         <h1 className="text-2xl font-bold text-gray-900">Product Catalog</h1>
         <button
           onClick={() => setShowAddModal(true)}
-          className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 flex items-center gap-2"
+          className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 flex items-center gap-2"
         >
           <Plus className="h-5 w-5" />
           Add Product
         </button>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm p-6">
-        <div className="flex gap-4 mb-6">
+      <div className="bg-white rounded-lg  p-6">
+        <div className="flex gap-6 mb-6">
           <div className="flex-1">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
@@ -119,14 +119,14 @@ const Products: React.FC = () => {
                 placeholder="Search products..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
             </div>
           </div>
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+            className="px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500"
           >
             <option value="all">All Categories</option>
             <option value="flower">Flower</option>
@@ -138,7 +138,7 @@ const Products: React.FC = () => {
           <select
             value={selectedStrainType}
             onChange={(e) => setSelectedStrainType(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+            className="px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500"
           >
             <option value="all">All Strains</option>
             <option value="indica">Indica</option>
@@ -148,12 +148,12 @@ const Products: React.FC = () => {
           </select>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {products?.data?.map((product: Product) => (
-            <div key={product.id} className="bg-white border border-gray-200 rounded-lg hover:shadow-lg transition-shadow">
-              <div className="p-4">
+            <div key={product.id} className="bg-white border border-gray-200 rounded-lg hover:border border-gray-200 transition-">
+              <div className="p-6">
                 <div className="flex justify-between items-start mb-2">
-                  <Leaf className="h-8 w-8 text-green-600" />
+                  <Leaf className="h-8 w-8 text-primary-600" />
                   <div className="flex gap-1">
                     <button
                       onClick={() => setEditingProduct(product)}
@@ -167,7 +167,7 @@ const Products: React.FC = () => {
                           deleteMutation.mutate(product.id);
                         }
                       }}
-                      className="text-red-600 hover:text-red-900"
+                      className="text-danger-600 hover:text-red-900"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -191,7 +191,7 @@ const Products: React.FC = () => {
                   <div>CBD: {product.cbd_content}%</div>
                 </div>
                 
-                <div className="text-2xl font-bold text-green-600">
+                <div className="text-2xl font-bold text-primary-600">
                   ${product.price.toFixed(2)}
                 </div>
                 
@@ -202,7 +202,7 @@ const Products: React.FC = () => {
                 {product.effects && product.effects.length > 0 && (
                   <div className="mt-2 flex flex-wrap gap-1">
                     {product.effects.slice(0, 3).map((effect, index) => (
-                      <span key={index} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+                      <span key={index} className="text-xs bg-gray-50 text-gray-600 px-2 py-1 rounded">
                         {effect}
                       </span>
                     ))}
@@ -225,8 +225,8 @@ const Products: React.FC = () => {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-lg shadow-sm p-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="bg-white rounded-lg  p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Total Products</p>
@@ -234,23 +234,23 @@ const Products: React.FC = () => {
                 {products?.data?.length || 0}
               </p>
             </div>
-            <Leaf className="h-8 w-8 text-green-600" />
+            <Leaf className="h-8 w-8 text-primary-600" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded-lg  p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Flower Products</p>
-              <p className="text-2xl font-bold text-green-600">
+              <p className="text-2xl font-bold text-primary-600">
                 {products?.data?.filter((p: Product) => p.category === 'flower').length || 0}
               </p>
             </div>
-            <Leaf className="h-8 w-8 text-green-600" />
+            <Leaf className="h-8 w-8 text-primary-600" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded-lg  p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Avg THC %</p>
@@ -265,7 +265,7 @@ const Products: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded-lg  p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Avg Price</p>
@@ -276,7 +276,7 @@ const Products: React.FC = () => {
                 }
               </p>
             </div>
-            <Leaf className="h-8 w-8 text-blue-600" />
+            <Leaf className="h-8 w-8 text-accent-600" />
           </div>
         </div>
       </div>

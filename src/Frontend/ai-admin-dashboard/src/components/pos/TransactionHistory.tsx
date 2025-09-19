@@ -81,11 +81,11 @@ const RefundModal: React.FC<RefundModalProps> = ({ transaction, onClose, onRefun
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-lg border border-gray-200 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="p-6 border-b">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold">Process Refund</h2>
-            <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded">
+            <button onClick={onClose} className="p-1 hover:bg-gray-50 rounded">
               <X className="w-5 h-5" />
             </button>
           </div>
@@ -100,13 +100,13 @@ const RefundModal: React.FC<RefundModalProps> = ({ transaction, onClose, onRefun
           {/* Refund Type Selection */}
           <div className="mb-6">
             <label className="block text-sm font-medium mb-3">Refund Type</label>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-4">
               <button
                 onClick={() => setRefundType('full')}
-                className={`p-3 rounded-lg border-2 transition-colors ${
+                className={`p-4 rounded-lg border-2 transition-colors ${
                   refundType === 'full'
-                    ? 'border-blue-500 bg-blue-50 text-blue-700'
-                    : 'border-gray-200 hover:border-gray-300'
+                    ? 'border-blue-500 bg-blue-50 text-accent-700'
+                    : 'border-gray-200 hover:border-gray-200'
                 }`}
               >
                 <Check className="w-5 h-5 mx-auto mb-1" />
@@ -116,10 +116,10 @@ const RefundModal: React.FC<RefundModalProps> = ({ transaction, onClose, onRefun
 
               <button
                 onClick={() => setRefundType('partial')}
-                className={`p-3 rounded-lg border-2 transition-colors ${
+                className={`p-4 rounded-lg border-2 transition-colors ${
                   refundType === 'partial'
-                    ? 'border-blue-500 bg-blue-50 text-blue-700'
-                    : 'border-gray-200 hover:border-gray-300'
+                    ? 'border-blue-500 bg-blue-50 text-accent-700'
+                    : 'border-gray-200 hover:border-gray-200'
                 }`}
               >
                 <DollarSign className="w-5 h-5 mx-auto mb-1" />
@@ -129,10 +129,10 @@ const RefundModal: React.FC<RefundModalProps> = ({ transaction, onClose, onRefun
 
               <button
                 onClick={() => setRefundType('items')}
-                className={`p-3 rounded-lg border-2 transition-colors ${
+                className={`p-4 rounded-lg border-2 transition-colors ${
                   refundType === 'items'
-                    ? 'border-blue-500 bg-blue-50 text-blue-700'
-                    : 'border-gray-200 hover:border-gray-300'
+                    ? 'border-blue-500 bg-blue-50 text-accent-700'
+                    : 'border-gray-200 hover:border-gray-200'
                 }`}
               >
                 <FileText className="w-5 h-5 mx-auto mb-1" />
@@ -172,7 +172,7 @@ const RefundModal: React.FC<RefundModalProps> = ({ transaction, onClose, onRefun
                 {transaction.items.map((item, index) => (
                   <label
                     key={index}
-                    className="flex items-center p-3 hover:bg-gray-50 cursor-pointer border-b last:border-b-0"
+                    className="flex items-center p-4 hover:bg-gray-50 cursor-pointer border-b last:border-b-0"
                   >
                     <input
                       type="checkbox"
@@ -199,7 +199,7 @@ const RefundModal: React.FC<RefundModalProps> = ({ transaction, onClose, onRefun
                 ))}
               </div>
               {selectedItems.length > 0 && (
-                <p className="text-sm text-blue-600 mt-2">
+                <p className="text-sm text-accent-600 mt-2">
                   Total to refund: ${selectedItems.reduce((sum, item) =>
                     sum + ((item.product?.price || 0) * item.quantity), 0
                   ).toFixed(2)}
@@ -224,16 +224,16 @@ const RefundModal: React.FC<RefundModalProps> = ({ transaction, onClose, onRefun
           </div>
 
           {/* Warning */}
-          <div className="mb-6 p-3 bg-yellow-50 border border-yellow-200 rounded-lg flex items-start gap-2">
-            <AlertCircle className="w-5 h-5 text-yellow-600 mt-0.5" />
-            <div className="text-sm text-yellow-800">
+          <div className="mb-6 p-4 bg-warning-50 border border-yellow-200 rounded-lg flex items-start gap-2">
+            <AlertCircle className="w-5 h-5 text-warning-600 mt-0.5" />
+            <div className="text-sm text-warning-800">
               <p className="font-medium">Important:</p>
               <p>Refunds cannot be reversed. Please verify the refund details before proceeding.</p>
             </div>
           </div>
 
           {/* Actions */}
-          <div className="flex justify-end gap-3">
+          <div className="flex justify-end gap-4">
             <button
               onClick={onClose}
               className="px-4 py-2 border rounded-lg hover:bg-gray-50"
@@ -243,7 +243,7 @@ const RefundModal: React.FC<RefundModalProps> = ({ transaction, onClose, onRefun
             <button
               onClick={handleRefund}
               disabled={processing || !refundReason.trim()}
-              className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="px-4 py-2 bg-danger-500 text-white rounded-lg hover:bg-danger-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
               {processing ? (
                 <>
@@ -398,13 +398,13 @@ export default function TransactionHistory() {
 
   const getStatusBadge = (status: string) => {
     const styles = {
-      completed: 'bg-green-100 text-green-700',
-      parked: 'bg-yellow-100 text-yellow-700',
-      cancelled: 'bg-gray-100 text-gray-700',
-      refunded: 'bg-red-100 text-red-700',
+      completed: 'bg-primary-100 text-primary-700',
+      parked: 'bg-warning-100 text-yellow-700',
+      cancelled: 'bg-gray-50 text-gray-700',
+      refunded: 'bg-danger-100 text-red-700',
       partial_refund: 'bg-orange-100 text-orange-700'
     };
-    return styles[status] || 'bg-gray-100 text-gray-700';
+    return styles[status] || 'bg-gray-50 text-gray-700';
   };
 
   const getPaymentMethodIcon = (method: string) => {
@@ -422,8 +422,8 @@ export default function TransactionHistory() {
   return (
     <div className="h-full flex flex-col">
       {/* Header with Search and Filters */}
-      <div className="bg-white p-4 border-b">
-        <div className="flex flex-col lg:flex-row gap-4">
+      <div className="bg-white p-6 border-b">
+        <div className="flex flex-col lg:flex-row gap-6">
           {/* Search */}
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -458,14 +458,14 @@ export default function TransactionHistory() {
           <button
             onClick={() => setShowFilters(!showFilters)}
             className={`px-4 py-2 border rounded-lg flex items-center gap-2 ${
-              showFilters ? 'bg-blue-50 border-blue-300 text-blue-700' : 'hover:bg-gray-50'
+              showFilters ? 'bg-blue-50 border-blue-300 text-accent-700' : 'hover:bg-gray-50'
             }`}
           >
             <Filter className="w-4 h-4" />
             Filters
             {(filters.status !== 'all' || filters.paymentMethod !== 'all' ||
               filters.minAmount || filters.maxAmount) && (
-              <span className="px-1.5 py-0.5 bg-blue-600 text-white text-xs rounded-full">
+              <span className="px-1.5 py-0.5 bg-accent-600 text-white text-xs rounded-full">
                 {[filters.status !== 'all', filters.paymentMethod !== 'all',
                   !!filters.minAmount, !!filters.maxAmount].filter(Boolean).length}
               </span>
@@ -484,7 +484,7 @@ export default function TransactionHistory() {
 
         {/* Filter Panel */}
         {showFilters && (
-          <div className="mt-4 p-4 bg-gray-50 rounded-lg grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="mt-4 p-6 bg-gray-50 rounded-lg grid grid-cols-1 md:grid-cols-4 gap-6">
             <div>
               <label className="block text-sm font-medium mb-1">Status</label>
               <select
@@ -546,7 +546,7 @@ export default function TransactionHistory() {
           <span className="text-gray-600">
             Showing {filteredTransactions.length} of {transactions.length} transactions
           </span>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
             <span className="text-gray-600">
               Total: ${filteredTransactions.reduce((sum, t) => sum + t.total, 0).toFixed(2)}
             </span>
@@ -649,7 +649,7 @@ export default function TransactionHistory() {
                     <div className="text-sm">
                       <p className="font-medium">${transaction.total.toFixed(2)}</p>
                       {transaction.refunded_amount > 0 && (
-                        <p className="text-red-600 text-xs">
+                        <p className="text-danger-600 text-xs">
                           -${transaction.refunded_amount.toFixed(2)}
                         </p>
                       )}
@@ -670,14 +670,14 @@ export default function TransactionHistory() {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => setSelectedTransaction(transaction)}
-                        className="p-1 hover:bg-gray-100 rounded"
+                        className="p-1 hover:bg-gray-50 rounded"
                         title="View Details"
                       >
                         <Eye className="w-4 h-4 text-gray-600" />
                       </button>
                       <button
                         onClick={() => posService.printReceipt(transaction.id)}
-                        className="p-1 hover:bg-gray-100 rounded"
+                        className="p-1 hover:bg-gray-50 rounded"
                         title="Print Receipt"
                       >
                         <Receipt className="w-4 h-4 text-gray-600" />
@@ -689,10 +689,10 @@ export default function TransactionHistory() {
                             setSelectedTransaction(transaction);
                             setShowRefundModal(true);
                           }}
-                          className="p-1 hover:bg-gray-100 rounded"
+                          className="p-1 hover:bg-gray-50 rounded"
                           title="Refund"
                         >
-                          <RefreshCw className="w-4 h-4 text-red-600" />
+                          <RefreshCw className="w-4 h-4 text-danger-600" />
                         </button>
                       )}
                     </div>
@@ -719,20 +719,20 @@ export default function TransactionHistory() {
       {/* Transaction Details Modal */}
       {selectedTransaction && !showRefundModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg border border-gray-200 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b">
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-bold">Transaction Details</h2>
                 <button
                   onClick={() => setSelectedTransaction(null)}
-                  className="p-1 hover:bg-gray-100 rounded"
+                  className="p-1 hover:bg-gray-50 rounded"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
             </div>
             <div className="p-6">
-              <div className="grid grid-cols-2 gap-4 mb-6">
+              <div className="grid grid-cols-2 gap-6 mb-6">
                 <div>
                   <p className="text-sm text-gray-600">Receipt Number</p>
                   <p className="font-medium">{selectedTransaction.receipt_number}</p>
@@ -783,7 +783,7 @@ export default function TransactionHistory() {
                   <span>${selectedTransaction.total.toFixed(2)}</span>
                 </div>
                 {selectedTransaction.refunded_amount > 0 && (
-                  <div className="flex justify-between text-sm text-red-600">
+                  <div className="flex justify-between text-sm text-danger-600">
                     <span>Refunded</span>
                     <span>-${selectedTransaction.refunded_amount.toFixed(2)}</span>
                   </div>

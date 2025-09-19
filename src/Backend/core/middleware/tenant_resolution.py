@@ -225,7 +225,7 @@ class PortMappingTenantResolver(TenantResolver):
         # Default mapping for development
         mapping = {
             5173: "default",
-            5174: "pot-palace",
+            5174: "POT-PALACE",  # Pot Palace Cannabis Company tenant code
             5175: "modern-minimal",
             5176: "dark-tech",
             5177: "rasta-vibes",

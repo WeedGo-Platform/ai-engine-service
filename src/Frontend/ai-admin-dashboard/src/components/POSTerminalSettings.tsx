@@ -200,15 +200,15 @@ const POSTerminalSettingsComponent: React.FC<POSTerminalSettingsProps> = ({
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'text-green-600 bg-green-100';
-      case 'inactive': return 'text-gray-600 bg-gray-100';
-      case 'offline': return 'text-red-600 bg-red-100';
-      default: return 'text-gray-600 bg-gray-100';
+      case 'active': return 'text-primary-600 bg-primary-100';
+      case 'inactive': return 'text-gray-600 bg-gray-50';
+      case 'offline': return 'text-danger-600 bg-danger-100';
+      default: return 'text-gray-600 bg-gray-50';
     }
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6">
+    <div className="bg-white rounded-lg border border-gray-200 p-6">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold flex items-center gap-2">
           <Monitor className="w-6 h-6" />
@@ -217,7 +217,7 @@ const POSTerminalSettingsComponent: React.FC<POSTerminalSettingsProps> = ({
         <button
           onClick={handleSave}
           disabled={saving}
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 flex items-center gap-2"
+          className="bg-accent-500 text-white px-4 py-2 rounded-lg hover:bg-accent-600 flex items-center gap-2"
         >
           <Save className="w-4 h-4" />
           {saving ? 'Saving...' : 'Save Changes'}
@@ -230,16 +230,16 @@ const POSTerminalSettingsComponent: React.FC<POSTerminalSettingsProps> = ({
           <h3 className="text-lg font-semibold">Terminals</h3>
           <button
             onClick={handleAddTerminal}
-            className="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600 flex items-center gap-2"
+            className="bg-primary-500 text-white px-3 py-1 rounded-lg hover:bg-primary-600 flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
             Add Terminal
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {settings.terminals.map(terminal => (
-            <div key={terminal.id} className="border rounded-lg p-4">
+            <div key={terminal.id} className="border rounded-lg p-6">
               <div className="flex items-start justify-between mb-2">
                 <div>
                   <h4 className="font-semibold">{terminal.name || 'Unnamed Terminal'}</h4>
@@ -280,7 +280,7 @@ const POSTerminalSettingsComponent: React.FC<POSTerminalSettingsProps> = ({
                 <button
                   onClick={() => handlePingTerminal(terminal.id)}
                   disabled={pingingTerminal === terminal.id}
-                  className="flex-1 bg-blue-500 text-white px-2 py-1 rounded text-sm hover:bg-blue-600 flex items-center justify-center gap-1"
+                  className="flex-1 bg-accent-500 text-white px-2 py-1 rounded text-sm hover:bg-accent-600 flex items-center justify-center gap-1"
                 >
                   {pingingTerminal === terminal.id ? (
                     <RefreshCw className="w-3 h-3 animate-spin" />
@@ -303,14 +303,14 @@ const POSTerminalSettingsComponent: React.FC<POSTerminalSettingsProps> = ({
                 </button>
                 <button
                   onClick={() => handleDeleteTerminal(terminal.id)}
-                  className="bg-red-500 text-white px-2 py-1 rounded text-sm hover:bg-red-600 flex items-center justify-center"
+                  className="bg-danger-500 text-white px-2 py-1 rounded text-sm hover:bg-danger-600 flex items-center justify-center"
                 >
                   <Trash2 className="w-3 h-3" />
                 </button>
               </div>
 
               {settings.default_terminal === terminal.id && (
-                <div className="mt-2 text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded text-center">
+                <div className="mt-2 text-xs bg-blue-100 text-accent-700 px-2 py-1 rounded text-center">
                   Default Terminal
                 </div>
               )}
@@ -335,8 +335,8 @@ const POSTerminalSettingsComponent: React.FC<POSTerminalSettingsProps> = ({
               onClick={() => handlePaymentMethodToggle(method.id)}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 settings.payment_methods.includes(method.id)
-                  ? 'bg-blue-100 text-blue-700'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  ? 'bg-blue-100 text-accent-700'
+                  : 'bg-gray-50 text-gray-600 hover:bg-gray-50'
               }`}
             >
               <span className="mr-2">{method.icon}</span>
@@ -348,13 +348,13 @@ const POSTerminalSettingsComponent: React.FC<POSTerminalSettingsProps> = ({
 
       {/* Tip Settings */}
       <div className="mb-8">
-        <div className="flex items-center gap-3 mb-4">
+        <div className="flex items-center gap-4 mb-4">
           <input
             type="checkbox"
             id="tip-enabled"
             checked={settings.tip_enabled}
             onChange={(e) => setSettings(prev => ({ ...prev, tip_enabled: e.target.checked }))}
-            className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+            className="w-4 h-4 text-accent-600 rounded focus:ring-blue-500"
           />
           <label htmlFor="tip-enabled" className="text-lg font-semibold">
             Enable Tipping
@@ -362,7 +362,7 @@ const POSTerminalSettingsComponent: React.FC<POSTerminalSettingsProps> = ({
         </div>
         
         {settings.tip_enabled && (
-          <div className="flex gap-3">
+          <div className="flex gap-4">
             <label className="text-sm font-medium text-gray-700">Tip Options (%):</label>
             {settings.tip_options.map((option, index) => (
               <input
@@ -385,7 +385,7 @@ const POSTerminalSettingsComponent: React.FC<POSTerminalSettingsProps> = ({
           <Receipt className="w-5 h-5" />
           Receipt Settings
         </h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           <label className="flex items-center gap-2">
             <input
               type="checkbox"
@@ -394,7 +394,7 @@ const POSTerminalSettingsComponent: React.FC<POSTerminalSettingsProps> = ({
                 ...prev,
                 receipt_settings: { ...prev.receipt_settings, print_customer_copy: e.target.checked }
               }))}
-              className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+              className="w-4 h-4 text-accent-600 rounded focus:ring-blue-500"
             />
             <span className="text-sm">Print Customer Copy</span>
           </label>
@@ -407,7 +407,7 @@ const POSTerminalSettingsComponent: React.FC<POSTerminalSettingsProps> = ({
                 ...prev,
                 receipt_settings: { ...prev.receipt_settings, print_merchant_copy: e.target.checked }
               }))}
-              className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+              className="w-4 h-4 text-accent-600 rounded focus:ring-blue-500"
             />
             <span className="text-sm">Print Merchant Copy</span>
           </label>
@@ -420,7 +420,7 @@ const POSTerminalSettingsComponent: React.FC<POSTerminalSettingsProps> = ({
                 ...prev,
                 receipt_settings: { ...prev.receipt_settings, email_receipt: e.target.checked }
               }))}
-              className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+              className="w-4 h-4 text-accent-600 rounded focus:ring-blue-500"
             />
             <span className="text-sm">Email Receipt</span>
           </label>
@@ -433,7 +433,7 @@ const POSTerminalSettingsComponent: React.FC<POSTerminalSettingsProps> = ({
                 ...prev,
                 receipt_settings: { ...prev.receipt_settings, sms_receipt: e.target.checked }
               }))}
-              className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+              className="w-4 h-4 text-accent-600 rounded focus:ring-blue-500"
             />
             <span className="text-sm">SMS Receipt</span>
           </label>
@@ -452,13 +452,13 @@ const POSTerminalSettingsComponent: React.FC<POSTerminalSettingsProps> = ({
                 ...prev,
                 offline_mode: { ...prev.offline_mode, enabled: e.target.checked }
               }))}
-              className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+              className="w-4 h-4 text-accent-600 rounded focus:ring-blue-500"
             />
             <span className="text-sm font-medium">Enable Offline Processing</span>
           </label>
           
           {settings.offline_mode.enabled && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ml-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ml-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Max Offline Amount ($)
@@ -575,7 +575,7 @@ const POSTerminalSettingsComponent: React.FC<POSTerminalSettingsProps> = ({
                 />
               </div>
               
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
                 <input
                   type="checkbox"
                   id="set-default"
@@ -584,7 +584,7 @@ const POSTerminalSettingsComponent: React.FC<POSTerminalSettingsProps> = ({
                     ...prev,
                     default_terminal: e.target.checked ? editingTerminal.id : undefined
                   }))}
-                  className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                  className="w-4 h-4 text-accent-600 rounded focus:ring-blue-500"
                 />
                 <label htmlFor="set-default" className="text-sm font-medium text-gray-700">
                   Set as default terminal
@@ -592,10 +592,10 @@ const POSTerminalSettingsComponent: React.FC<POSTerminalSettingsProps> = ({
               </div>
             </div>
             
-            <div className="flex gap-3 mt-6">
+            <div className="flex gap-4 mt-6">
               <button
                 onClick={handleSaveTerminal}
-                className="flex-1 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                className="flex-1 bg-accent-500 text-white px-4 py-2 rounded-lg hover:bg-accent-600"
               >
                 Save
               </button>

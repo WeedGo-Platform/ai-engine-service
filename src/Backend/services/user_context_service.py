@@ -224,12 +224,12 @@ class UserContextService:
         try:
             # Get user profile preferences
             profile_query = """
-                SELECT 
+                SELECT
                     preferences,
                     favorite_products,
                     preferred_categories,
                     loyalty_points
-                FROM user_profiles
+                FROM profiles
                 WHERE user_id = $1
             """
             

@@ -113,7 +113,7 @@ const Dashboard: React.FC = () => {
   if (statsLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
       </div>
     );
   }
@@ -189,7 +189,7 @@ const Dashboard: React.FC = () => {
              'Store performance metrics'}
           </p>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-6">
           {isSuperAdmin() && (
             <div className="bg-purple-50 px-4 py-2 rounded-lg">
               <div className="flex items-center gap-2">
@@ -209,10 +209,10 @@ const Dashboard: React.FC = () => {
 
       {/* No Store Selected Warning */}
       {!currentStore && !isSuperAdmin() && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+        <div className="bg-warning-50 border border-yellow-200 rounded-lg p-6">
           <div className="flex items-center">
-            <AlertTriangle className="h-5 w-5 text-yellow-600 mr-2" />
-            <p className="text-sm text-yellow-800">
+            <AlertTriangle className="h-5 w-5 text-warning-600 mr-2" />
+            <p className="text-sm text-warning-800">
               Please select a store from the dropdown above to view detailed metrics.
             </p>
           </div>
@@ -221,7 +221,7 @@ const Dashboard: React.FC = () => {
 
       {/* Metrics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded-lg  p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Total Revenue</p>
@@ -231,15 +231,15 @@ const Dashboard: React.FC = () => {
               <div className="flex items-center mt-2">
                 {(stats?.revenue?.trend || 0) > 0 ? (
                   <>
-                    <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
-                    <span className="text-sm text-green-600">
+                    <TrendingUp className="h-4 w-4 text-primary-500 mr-1" />
+                    <span className="text-sm text-primary-600">
                       +{stats?.revenue?.trend || 0}%
                     </span>
                   </>
                 ) : (
                   <>
                     <TrendingDown className="h-4 w-4 text-red-500 mr-1" />
-                    <span className="text-sm text-red-600">
+                    <span className="text-sm text-danger-600">
                       {stats?.revenue?.trend || 0}%
                     </span>
                   </>
@@ -247,11 +247,11 @@ const Dashboard: React.FC = () => {
                 <span className="text-sm text-gray-500 ml-2">vs last week</span>
               </div>
             </div>
-            <DollarSign className="h-8 w-8 text-green-600" />
+            <DollarSign className="h-8 w-8 text-primary-600" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded-lg  p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Total Orders</p>
@@ -261,15 +261,15 @@ const Dashboard: React.FC = () => {
               <div className="flex items-center mt-2">
                 {(stats?.orders?.trend || 0) > 0 ? (
                   <>
-                    <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
-                    <span className="text-sm text-green-600">
+                    <TrendingUp className="h-4 w-4 text-primary-500 mr-1" />
+                    <span className="text-sm text-primary-600">
                       +{stats?.orders?.trend || 0}%
                     </span>
                   </>
                 ) : (
                   <>
                     <TrendingDown className="h-4 w-4 text-red-500 mr-1" />
-                    <span className="text-sm text-red-600">
+                    <span className="text-sm text-danger-600">
                       {stats?.orders?.trend || 0}%
                     </span>
                   </>
@@ -277,11 +277,11 @@ const Dashboard: React.FC = () => {
                 <span className="text-sm text-gray-500 ml-2">vs last week</span>
               </div>
             </div>
-            <ShoppingCart className="h-8 w-8 text-blue-600" />
+            <ShoppingCart className="h-8 w-8 text-accent-600" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded-lg  p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Active Customers</p>
@@ -298,7 +298,7 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded-lg  p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Inventory Items</p>
@@ -307,7 +307,7 @@ const Dashboard: React.FC = () => {
               </p>
               <div className="flex items-center mt-2">
                 <AlertTriangle className="h-4 w-4 text-yellow-500 mr-1" />
-                <span className="text-sm text-yellow-600">
+                <span className="text-sm text-warning-600">
                   {inventoryStats?.low_stock_items || stats?.inventory?.low_stock || 0} low stock
                 </span>
               </div>
@@ -319,7 +319,7 @@ const Dashboard: React.FC = () => {
 
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded-lg  p-6">
           <h3 className="text-lg font-semibold mb-4">Revenue Trend</h3>
           <div style={{ height: '300px', position: 'relative' }}>
             <Line 
@@ -338,7 +338,7 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded-lg  p-6">
           <h3 className="text-lg font-semibold mb-4">Sales by Category</h3>
           <div style={{ height: '300px', position: 'relative' }}>
             <Doughnut 
@@ -360,7 +360,7 @@ const Dashboard: React.FC = () => {
       {/* Additional Charts for Admin Users */}
       {(isSuperAdmin() || isTenantAdmin()) && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="bg-white rounded-lg  p-6">
             <h3 className="text-lg font-semibold mb-4">Order Status Distribution</h3>
             <div style={{ height: '300px', position: 'relative' }}>
               <Bar 
@@ -379,7 +379,7 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="bg-white rounded-lg  p-6">
             <h3 className="text-lg font-semibold mb-4">Store Performance</h3>
             <div className="space-y-4">
               {stores.slice(0, 5).map((store) => (
@@ -388,13 +388,13 @@ const Dashboard: React.FC = () => {
                     <Store className="h-5 w-5 text-gray-400 mr-2" />
                     <span className="text-sm font-medium">{store.name}</span>
                   </div>
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-6">
                     <span className="text-sm text-gray-500">
                       ${store.revenue?.toLocaleString() || '0'}
                     </span>
-                    <div className="w-24 bg-gray-200 rounded-full h-2">
+                    <div className="w-24 bg-gray-100 rounded-full h-2">
                       <div 
-                        className="bg-green-600 h-2 rounded-full" 
+                        className="bg-primary-600 h-2 rounded-full" 
                         style={{ width: `${store.performance || 0}%` }}
                       />
                     </div>
@@ -408,7 +408,7 @@ const Dashboard: React.FC = () => {
 
       {/* Recent Activity Tables */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg shadow-sm">
+        <div className="bg-white rounded-lg ">
           <div className="px-6 py-4 border-b">
             <h3 className="text-lg font-semibold">Recent Orders</h3>
           </div>
@@ -424,10 +424,10 @@ const Dashboard: React.FC = () => {
                     <div className="text-right">
                       <p className="text-sm font-medium">${order.total}</p>
                       <span className={`text-xs px-2 py-1 rounded-full ${
-                        order.status === 'completed' ? 'bg-green-100 text-green-800' :
+                        order.status === 'completed' ? 'bg-primary-100 text-primary-800' :
                         order.status === 'processing' ? 'bg-blue-100 text-blue-800' :
                         order.status === 'shipped' ? 'bg-purple-100 text-purple-800' :
-                        'bg-yellow-100 text-yellow-800'
+                        'bg-warning-100 text-warning-800'
                       }`}>
                         {order.status}
                       </span>
@@ -441,7 +441,7 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm">
+        <div className="bg-white rounded-lg ">
           <div className="px-6 py-4 border-b">
             <h3 className="text-lg font-semibold">Low Stock Alerts</h3>
           </div>
@@ -455,7 +455,7 @@ const Dashboard: React.FC = () => {
                       <p className="text-xs text-gray-500">SKU: {item.sku}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-medium text-red-600">
+                      <p className="text-sm font-medium text-danger-600">
                         {item.quantity} left
                       </p>
                       <p className="text-xs text-gray-500">

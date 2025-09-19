@@ -2,7 +2,7 @@
 POS (Point of Sale) API Endpoints
 """
 
-from fastapi import APIRouter, HTTPException, Depends, Query, Body
+from fastapi import APIRouter, HTTPException, Depends, Query, Body, Request
 from typing import List, Dict, Optional, Any
 from uuid import UUID
 from datetime import datetime, date
@@ -94,34 +94,64 @@ class TransactionCreate(BaseModel):
 # Customer endpoints for POS
 @router.get("/customers/search")
 async def search_customers(
-    q: str = Query(..., description="Search query for name, email, or phone")
+    q: str = Query(..., description="Search query for name, email, or phone"),
+    request: Request = None
 ):
     """Search customers for POS"""
     try:
+        # Get store ID from header if provided
+        store_id = request.headers.get("X-Store-ID") if request else None
+
         pool = await get_db_pool()
         async with pool.acquire() as conn:
-            # Search customers by name, email, or phone
-            query = """
-                SELECT 
-                    id::text as id,
-                    COALESCE(first_name || ' ' || last_name, email) as name,
-                    email,
-                    phone,
-                    COALESCE(loyalty_points, 0) as loyalty_points,
-                    '' as birth_date,
-                    true as is_verified
-                FROM customers
-                WHERE is_active = true
-                AND (
-                    LOWER(first_name || ' ' || last_name) LIKE LOWER($1) 
-                    OR LOWER(email) LIKE LOWER($1)
-                    OR phone LIKE $1
-                )
-                ORDER BY created_at DESC
-                LIMIT 10
-            """
-            search_pattern = f'%{q}%'
-            rows = await conn.fetch(query, search_pattern)
+            # Build query with optional store filtering
+            if store_id:
+                query = """
+                    SELECT
+                        p.id::text as id,
+                        COALESCE(p.first_name || ' ' || p.last_name, p.email) as name,
+                        p.email,
+                        p.phone,
+                        COALESCE(p.loyalty_points, 0) as loyalty_points,
+                        COALESCE(p.date_of_birth::text, '') as birth_date,
+                        p.is_verified,
+                        p.primary_store_id::text as primary_store_id
+                    FROM profiles p
+                    WHERE p.is_verified = true
+                    AND p.primary_store_id = $2::uuid
+                    AND (
+                        LOWER(p.first_name || ' ' || p.last_name) LIKE LOWER($1)
+                        OR LOWER(p.email) LIKE LOWER($1)
+                        OR p.phone LIKE $1
+                    )
+                    ORDER BY p.created_at DESC
+                    LIMIT 10
+                """
+                search_pattern = f'%{q}%'
+                rows = await conn.fetch(query, search_pattern, store_id)
+            else:
+                # No store filter - return all matching customers
+                query = """
+                    SELECT
+                        id::text as id,
+                        COALESCE(first_name || ' ' || last_name, email) as name,
+                        email,
+                        phone,
+                        COALESCE(loyalty_points, 0) as loyalty_points,
+                        COALESCE(date_of_birth::text, '') as birth_date,
+                        is_verified
+                    FROM profiles
+                    WHERE is_verified = true
+                    AND (
+                        LOWER(first_name || ' ' || last_name) LIKE LOWER($1)
+                        OR LOWER(email) LIKE LOWER($1)
+                        OR phone LIKE $1
+                    )
+                    ORDER BY created_at DESC
+                    LIMIT 10
+                """
+                search_pattern = f'%{q}%'
+                rows = await conn.fetch(query, search_pattern)
             
             customers = []
             for row in rows:
@@ -144,34 +174,39 @@ async def search_customers(
 
 
 @router.post("/customers")
-async def create_customer(customer: CustomerCreate):
+async def create_customer(customer: CustomerCreate, request: Request = None):
     """Create a new customer for POS"""
     try:
+        # Get store ID from header if provided
+        store_id = request.headers.get("X-Store-ID") if request else None
+
         pool = await get_db_pool()
         async with pool.acquire() as conn:
             # Split name into first and last
             name_parts = customer.name.split(' ', 1)
             first_name = name_parts[0]
             last_name = name_parts[1] if len(name_parts) > 1 else ''
-            
+
             query = """
-                INSERT INTO customers (
-                    first_name, last_name, email, phone, loyalty_points
-                ) VALUES ($1, $2, $3, $4, 0)
-                RETURNING 
+                INSERT INTO profiles (
+                    user_id, first_name, last_name, email, phone, loyalty_points, primary_store_id
+                ) VALUES (gen_random_uuid(), $1, $2, $3, $4, 0, $5::uuid)
+                RETURNING
                     id::text as id,
                     first_name || ' ' || last_name as name,
                     email,
                     phone,
-                    loyalty_points
+                    loyalty_points,
+                    primary_store_id::text as primary_store_id
             """
-            
+
             row = await conn.fetchrow(
                 query,
                 first_name,
                 last_name,
                 customer.email or '',
-                customer.phone or ''
+                customer.phone or '',
+                store_id  # Will be NULL if not provided
             )
             
             result = dict(row)
@@ -214,6 +249,99 @@ async def verify_customer_age(verification: AgeVerification):
         raise HTTPException(status_code=400, detail="Invalid birth date format")
 
 
+@router.put("/customers/{customer_id}")
+async def update_customer(
+    customer_id: str,
+    customer_update: Dict[str, Any] = Body(...),
+    request: Request = None
+):
+    """Update customer details"""
+    try:
+        # Get store ID from header if provided
+        store_id = request.headers.get("X-Store-ID") if request else None
+
+        pool = await get_db_pool()
+        async with pool.acquire() as conn:
+            # If store ID is provided, verify customer belongs to store or has no store
+            if store_id:
+                customer_store = await conn.fetchval("""
+                    SELECT primary_store_id::text
+                    FROM profiles
+                    WHERE id = $1::uuid
+                """, customer_id)
+
+                if customer_store and customer_store != store_id:
+                    raise HTTPException(
+                        status_code=403,
+                        detail="Customer belongs to a different store"
+                    )
+            # Build dynamic update query based on provided fields
+            update_fields = []
+            params = []
+            param_count = 0
+
+            # Handle name field - split into first and last name
+            if 'name' in customer_update:
+                name_parts = customer_update['name'].split(' ', 1)
+                param_count += 1
+                update_fields.append(f"first_name = ${param_count}")
+                params.append(name_parts[0])
+
+                param_count += 1
+                update_fields.append(f"last_name = ${param_count}")
+                params.append(name_parts[1] if len(name_parts) > 1 else '')
+
+            # Handle other fields
+            field_mapping = {
+                'email': 'email',
+                'phone': 'phone',
+                'loyalty_points': 'loyalty_points',
+                'marketing_consent': 'marketing_consent'
+            }
+
+            for field_key, db_column in field_mapping.items():
+                if field_key in customer_update:
+                    param_count += 1
+                    update_fields.append(f"{db_column} = ${param_count}")
+                    params.append(customer_update[field_key])
+
+            if not update_fields:
+                raise HTTPException(status_code=400, detail="No fields to update")
+
+            # Add updated_at
+            update_fields.append("updated_at = CURRENT_TIMESTAMP")
+
+            # Add customer_id as final parameter
+            param_count += 1
+            params.append(customer_id)
+
+            query = f"""
+                UPDATE profiles
+                SET {', '.join(update_fields)}
+                WHERE id = ${param_count}::uuid
+                RETURNING
+                    id::text as id,
+                    COALESCE(first_name || ' ' || last_name, email) as name,
+                    email,
+                    phone,
+                    COALESCE(loyalty_points, 0) as loyalty_points,
+                    marketing_consent,
+                    is_verified
+            """
+
+            row = await conn.fetchrow(query, *params)
+
+            if not row:
+                raise HTTPException(status_code=404, detail="Customer not found")
+
+            return dict(row)
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating customer: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.get("/customers/{customer_id}")
 async def get_customer_by_id(customer_id: str):
     """Get customer details by ID"""
@@ -221,16 +349,16 @@ async def get_customer_by_id(customer_id: str):
         pool = await get_db_pool()
         async with pool.acquire() as conn:
             query = """
-                SELECT 
+                SELECT
                     id::text as id,
                     COALESCE(first_name || ' ' || last_name, email) as name,
                     email,
                     phone,
                     COALESCE(loyalty_points, 0) as loyalty_points,
-                    '' as birth_date,
-                    true as is_verified,
-                    '' as address
-                FROM customers
+                    COALESCE(date_of_birth::text, '') as birth_date,
+                    is_verified,
+                    address
+                FROM profiles
                 WHERE id = $1::uuid
             """
             
@@ -302,7 +430,7 @@ async def create_transaction(transaction: TransactionCreate):
             if transaction.customer_id and transaction.customer_id != 'anonymous':
                 points_earned = int(transaction.total)  # 1 point per dollar
                 await conn.execute(
-                    "UPDATE customers SET loyalty_points = COALESCE(loyalty_points, 0) + $1 WHERE id = $2::uuid",
+                    "UPDATE profiles SET loyalty_points = COALESCE(loyalty_points, 0) + $1 WHERE id = $2::uuid",
                     points_earned,
                     transaction.customer_id
                 )
@@ -506,7 +634,7 @@ async def refund_transaction(
             if refund_data.get('customer_id') and refund_data['customer_id'] != 'anonymous':
                 points_to_deduct = int(refund_data['total'])
                 await conn.execute(
-                    "UPDATE customers SET loyalty_points = GREATEST(0, loyalty_points - $1) WHERE id = $2::uuid",
+                    "UPDATE profiles SET loyalty_points = GREATEST(0, loyalty_points - $1) WHERE id = $2::uuid",
                     points_to_deduct,
                     refund_data['customer_id']
                 )

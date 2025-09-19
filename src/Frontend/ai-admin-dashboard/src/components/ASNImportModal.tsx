@@ -539,11 +539,11 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
   const newItemsCount = asnItems.filter(item => !item.exists_in_inventory).length;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-6 z-50">
       <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden">
         <div className="flex items-center justify-between p-6 border-b">
           <h2 className="text-xl font-bold flex items-center gap-2">
-            <TruckIcon className="h-6 w-6 text-green-600" />
+            <TruckIcon className="h-6 w-6 text-primary-600" />
             Import ASN (Advance Shipping Notice)
           </h2>
           <button onClick={handleClose} className="text-gray-500 hover:text-gray-700">
@@ -553,15 +553,15 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
 
         <div className="p-6 overflow-y-auto" style={{ maxHeight: 'calc(90vh - 200px)' }}>
           {error && (
-            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
-              <AlertCircle className="h-5 w-5 text-red-600" />
+            <div className="mb-4 p-6 bg-danger-50 border border-red-200 rounded-lg flex items-center gap-2">
+              <AlertCircle className="h-5 w-5 text-danger-600" />
               <span className="text-red-700">{error}</span>
             </div>
           )}
 
           {step === 'upload' && (
             <div className="space-y-6">
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
+              <div className="border-2 border-dashed border-gray-200 rounded-lg p-12 text-center">
                 <FileSpreadsheet className="mx-auto h-16 w-16 text-gray-400 mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
                   Upload ASN Excel File
@@ -572,12 +572,12 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
                 {isProcessing ? (
                   <div className="space-y-4">
                     <div className="flex items-center justify-center gap-2">
-                      <Loader2 className="h-5 w-5 animate-spin text-green-600" />
+                      <Loader2 className="h-5 w-5 animate-spin text-primary-600" />
                       <span>Processing Excel and checking inventory...</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="w-full bg-gray-100 rounded-full h-2">
                       <div 
-                        className="bg-green-600 h-2 rounded-full transition-all duration-300"
+                        className="bg-primary-600 h-2 rounded-full transition-all duration-300"
                         style={{ width: `${processingProgress}%` }}
                       />
                     </div>
@@ -594,7 +594,7 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
                     />
                     <button
                       onClick={() => fileInputRef.current?.click()}
-                      className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 flex items-center gap-2 mx-auto"
+                      className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 flex items-center gap-2 mx-auto"
                     >
                       <Upload className="h-5 w-5" />
                       Select File
@@ -603,7 +603,7 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
                 )}
               </div>
 
-              <div className="bg-gray-50 rounded-lg p-4">
+              <div className="bg-gray-50 rounded-lg p-6">
                 <h4 className="font-medium mb-2">Required Excel Columns:</h4>
                 <div className="grid grid-cols-4 gap-2 text-sm text-gray-600">
                   <span>• ShipmentID</span>
@@ -632,12 +632,12 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-medium">Review Imported Items</h3>
-                <div className="flex gap-4">
+                <div className="flex gap-6">
                   <span className="text-sm">
-                    <span className="font-medium text-green-600">{newItemsCount}</span> new items
+                    <span className="font-medium text-primary-600">{newItemsCount}</span> new items
                   </span>
                   <span className="text-sm">
-                    <span className="font-medium text-blue-600">{existingItemsCount}</span> existing items
+                    <span className="font-medium text-accent-600">{existingItemsCount}</span> existing items
                   </span>
                   <span className="text-sm">
                     <span className="font-medium">{asnItems.length}</span> total items
@@ -666,17 +666,17 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
                           <div className="flex flex-col items-center gap-1">
                             {item.is_new_batch ? (
                               <>
-                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-warning-100 text-warning-800">
                                   New Batch
                                 </span>
                               </>
                             ) : item.exists_in_inventory ? (
-                              <span className="flex items-center gap-1 text-blue-600">
+                              <span className="flex items-center gap-1 text-accent-600">
                                 <CheckCircle className="h-4 w-4" />
                                 <span className="text-xs">Exists</span>
                               </span>
                             ) : (
-                              <span className="flex items-center gap-1 text-green-600">
+                              <span className="flex items-center gap-1 text-primary-600">
                                 <AlertCircle className="h-4 w-4" />
                                 <span className="text-xs">New</span>
                               </span>
@@ -697,7 +697,7 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
                               }}
                             />
                           ) : (
-                            <div className="h-12 w-12 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-500">
+                            <div className="h-12 w-12 bg-gray-50 rounded flex items-center justify-center text-xs text-gray-500">
                               {item.sku?.substring(0, 3)}
                             </div>
                           )}
@@ -719,13 +719,13 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
               <div className="flex justify-between">
                 <button
                   onClick={() => setStep('upload')}
-                  className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                  className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50"
                 >
                   Back
                 </button>
                 <button
                   onClick={() => setStep('create')}
-                  className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700"
+                  className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700"
                 >
                   Continue to Create PO
                 </button>
@@ -745,11 +745,11 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
                 {isStoreManager() ? (
                   // For store managers, show their assigned store
                   currentStore ? (
-                    <div className="px-3 py-2 border border-gray-300 rounded-md bg-gray-50">
+                    <div className="px-3 py-2 border border-gray-200 rounded-lg bg-gray-50">
                       {currentStore.name}
                     </div>
                   ) : (
-                    <div className="px-3 py-2 border border-red-300 rounded-md bg-red-50 text-red-600">
+                    <div className="px-3 py-2 border border-red-300 rounded-lg bg-danger-50 text-danger-600">
                       No stores available
                     </div>
                   )
@@ -758,7 +758,7 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
                   <StoreSelector className="w-full" showStats={false} />
                 )}
                 {!currentStore && (
-                  <p className="mt-1 text-sm text-red-600">Please select a store</p>
+                  <p className="mt-1 text-sm text-danger-600">Please select a store</p>
                 )}
               </div>
               
@@ -771,7 +771,7 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
                     type="text"
                     value={poNumber}
                     onChange={(e) => setPoNumber(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500"
                     placeholder="ASN_SO005932532"
                   />
                 </div>
@@ -783,7 +783,7 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
                   <textarea
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500"
                     rows={2}
                     placeholder="Additional notes..."
                   />
@@ -809,7 +809,7 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
                       {asnItems.map((item, index) => (
                         <tr key={index}>
                           <td className="px-4 py-3">
-                            <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-4">
                               {item.image_url && item.image_url !== 'null' && item.image_url !== 'undefined' ? (
                                 <img 
                                   src={item.image_url} 
@@ -823,7 +823,7 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
                                   }}
                                 />
                               ) : (
-                                <div className="h-10 w-10 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-500">
+                                <div className="h-10 w-10 bg-gray-50 rounded flex items-center justify-center text-xs text-gray-500">
                                   {item.sku?.substring(0, 3)}
                                 </div>
                               )}
@@ -846,7 +846,7 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
                                 newItems[index].received_qty = parseInt(e.target.value) || 0;
                                 setAsnItems(newItems);
                               }}
-                              className="w-20 px-2 py-1 text-center border border-gray-300 rounded"
+                              className="w-20 px-2 py-1 text-center border border-gray-200 rounded"
                               min="0"
                             />
                           </td>
@@ -862,7 +862,7 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
                                 newItems[index].retail_price = parseFloat(e.target.value) || 0;
                                 setAsnItems(newItems);
                               }}
-                              className="w-24 px-2 py-1 text-right border border-gray-300 rounded"
+                              className="w-24 px-2 py-1 text-right border border-gray-200 rounded"
                               min="0"
                               step="0.01"
                               placeholder="0.00"
@@ -891,9 +891,9 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
               </div>
 
               {/* Charges Section */}
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+              <div className="bg-warning-50 border border-yellow-200 rounded-lg p-6">
                 <h4 className="font-medium mb-3 text-yellow-900">Charges</h4>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Additional Charges (e.g., shipping)
@@ -902,7 +902,7 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
                       type="number"
                       value={charges}
                       onChange={(e) => setCharges(parseFloat(e.target.value) || 0)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-yellow-500"
                       placeholder="0.00"
                       step="0.01"
                     />
@@ -915,7 +915,7 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
                       type="number"
                       value={discount}
                       onChange={(e) => setDiscount(parseFloat(e.target.value) || 0)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-yellow-500"
                       placeholder="0.00"
                       step="0.01"
                     />
@@ -924,7 +924,7 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
               </div>
 
               {/* Summary Section */}
-              <div className="bg-gray-50 rounded-lg p-4">
+              <div className="bg-gray-50 rounded-lg p-6">
                 <h4 className="font-medium mb-3">Summary</h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
@@ -950,7 +950,7 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
                     </div>
                   )}
                   {discount > 0 && (
-                    <div className="flex justify-between text-green-700">
+                    <div className="flex justify-between text-primary-700">
                       <span>Discount:</span>
                       <span className="font-medium">-${discount.toFixed(2)}</span>
                     </div>
@@ -969,7 +969,7 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
                         type="checkbox"
                         checked={paidInFull}
                         onChange={(e) => setPaidInFull(e.target.checked)}
-                        className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                        className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-200 rounded"
                       />
                       <span className="text-sm font-medium text-gray-700">Paid in Full</span>
                     </label>
@@ -980,14 +980,14 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
               <div className="flex justify-between">
                 <button
                   onClick={() => setStep('review')}
-                  className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                  className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50"
                 >
                   Back
                 </button>
                 <button
                   onClick={handleCreatePO}
                   disabled={createPOMutation.isPending}
-                  className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50"
+                  className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 disabled:opacity-50"
                 >
                   {createPOMutation.isPending ? 'Creating...' : 'Create Purchase Order'}
                 </button>

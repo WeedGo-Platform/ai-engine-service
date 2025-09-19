@@ -59,25 +59,25 @@ const InventoryAdjustModal: React.FC<InventoryAdjustModalProps> = ({
   };
 
   const adjustmentOptions = [
-    { value: 'add', label: 'Add Stock', icon: Plus, color: 'text-green-600' },
-    { value: 'remove', label: 'Remove Stock', icon: Minus, color: 'text-blue-600' },
+    { value: 'add', label: 'Add Stock', icon: Plus, color: 'text-primary-600' },
+    { value: 'remove', label: 'Remove Stock', icon: Minus, color: 'text-accent-600' },
     { value: 'set', label: 'Set Count', icon: Edit2, color: 'text-purple-600' },
     { value: 'damage', label: 'Damaged', icon: AlertTriangle, color: 'text-orange-600' },
-    { value: 'loss', label: 'Loss/Theft', icon: TrendingDown, color: 'text-red-600' }
+    { value: 'loss', label: 'Loss/Theft', icon: TrendingDown, color: 'text-danger-600' }
   ];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-lg">
+      <div className="bg-white rounded-lg border border-gray-200 w-full max-w-lg">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b">
-          <div className="flex items-center gap-3">
-            <Package className="w-6 h-6 text-blue-600" />
+          <div className="flex items-center gap-4">
+            <Package className="w-6 h-6 text-accent-600" />
             <h2 className="text-xl font-semibold">Adjust Inventory</h2>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg"
+            className="p-2 hover:bg-gray-50 rounded-lg"
           >
             <X className="w-5 h-5" />
           </button>
@@ -86,8 +86,8 @@ const InventoryAdjustModal: React.FC<InventoryAdjustModalProps> = ({
         {/* Content */}
         <div className="p-6 space-y-4">
           {/* Product Info */}
-          <div className="p-3 bg-gray-50 rounded-lg">
-            <div className="flex items-center gap-3">
+          <div className="p-4 bg-gray-50 rounded-lg">
+            <div className="flex items-center gap-4">
               {accessory.image_url ? (
                 <img
                   src={accessory.image_url}
@@ -95,7 +95,7 @@ const InventoryAdjustModal: React.FC<InventoryAdjustModalProps> = ({
                   className="w-12 h-12 rounded object-cover"
                 />
               ) : (
-                <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
+                <div className="w-12 h-12 bg-gray-100 rounded flex items-center justify-center">
                   <Package className="w-6 h-6 text-gray-400" />
                 </div>
               )}
@@ -125,7 +125,7 @@ const InventoryAdjustModal: React.FC<InventoryAdjustModalProps> = ({
                     className={`flex items-center gap-2 p-2 border rounded-lg ${
                       adjustmentType === option.value
                         ? 'border-blue-500 bg-blue-50'
-                        : 'border-gray-300 hover:bg-gray-50'
+                        : 'border-gray-200 hover:bg-gray-50'
                     }`}
                   >
                     <Icon className={`w-4 h-4 ${option.color}`} />
@@ -146,7 +146,7 @@ const InventoryAdjustModal: React.FC<InventoryAdjustModalProps> = ({
               value={quantity}
               onChange={(e) => setQuantity(parseInt(e.target.value) || 0)}
               min={adjustmentType === 'set' ? 0 : 1}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
@@ -159,7 +159,7 @@ const InventoryAdjustModal: React.FC<InventoryAdjustModalProps> = ({
               <select
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">Select reason...</option>
                 {adjustmentType === 'damage' && (
@@ -192,26 +192,26 @@ const InventoryAdjustModal: React.FC<InventoryAdjustModalProps> = ({
               onChange={(e) => setNotes(e.target.value)}
               rows={2}
               placeholder="Add any additional details..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           {/* Preview */}
-          <div className="p-3 bg-blue-50 rounded-lg">
+          <div className="p-4 bg-blue-50 rounded-lg">
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600">New Quantity:</span>
               <div className="flex items-center gap-2">
                 <span className="text-lg text-gray-500">{accessory.quantity}</span>
                 <RefreshCw className="w-4 h-4 text-gray-400" />
                 <span className={`text-lg font-bold ${
-                  getNewQuantity() < accessory.min_stock ? 'text-red-600' : 'text-green-600'
+                  getNewQuantity() < accessory.min_stock ? 'text-danger-600' : 'text-primary-600'
                 }`}>
                   {getNewQuantity()}
                 </span>
               </div>
             </div>
             {getNewQuantity() < accessory.min_stock && (
-              <p className="text-xs text-red-600 mt-1">
+              <p className="text-xs text-danger-600 mt-1">
                 Warning: This will put the item below minimum stock level ({accessory.min_stock})
               </p>
             )}
@@ -219,17 +219,17 @@ const InventoryAdjustModal: React.FC<InventoryAdjustModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end gap-3 p-6 border-t bg-gray-50">
+        <div className="flex justify-end gap-4 p-6 border-t bg-gray-50">
           <button
             onClick={onClose}
-            className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+            className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
             disabled={quantity <= 0 && adjustmentType !== 'set'}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Apply Adjustment
           </button>
