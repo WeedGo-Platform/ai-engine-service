@@ -100,19 +100,23 @@ class UserRepository:
         """Update user with tenant information"""
         async with self.pool.acquire() as conn:
             try:
+                # Determine the main role based on the tenant role
+                main_role = 'tenant_admin' if role in ['admin', 'tenant_admin'] else 'staff'
+
                 query = """
-                    UPDATE users 
-                    SET tenant_id = $2, tenant_role = $3, updated_at = $4
+                    UPDATE users
+                    SET tenant_id = $2, tenant_role = $3, role = $4, updated_at = $5
                     WHERE id = $1
-                    RETURNING id, tenant_id, tenant_role as role
+                    RETURNING id, tenant_id, tenant_role, role
                 """
-                
+
                 now = datetime.utcnow()
                 row = await conn.fetchrow(
                     query,
                     user_id,
                     tenant_id,
                     role,
+                    main_role,
                     now
                 )
                 

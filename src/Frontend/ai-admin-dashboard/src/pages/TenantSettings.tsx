@@ -91,7 +91,7 @@ const TenantSettings: React.FC = () => {
   if (!tenant) {
     return (
       <div className="p-6">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+        <div className="bg-danger-50 border border-red-200 rounded-lg p-6">
           <p className="text-red-700">Tenant not found</p>
         </div>
       </div>
@@ -112,7 +112,7 @@ const TenantSettings: React.FC = () => {
         
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold flex items-center gap-3">
+            <h1 className="text-3xl font-bold flex items-center gap-4">
               <Building2 className="w-8 h-8" />
               {tenant.name} Settings
             </h1>
@@ -123,14 +123,14 @@ const TenantSettings: React.FC = () => {
 
       {/* Alerts */}
       {success && (
-        <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2">
-          <AlertCircle className="w-5 h-5 text-green-500" />
-          <span className="text-green-700">{success}</span>
+        <div className="mb-4 p-6 bg-primary-50 border border-green-200 rounded-lg flex items-center gap-2">
+          <AlertCircle className="w-5 h-5 text-primary-500" />
+          <span className="text-primary-700">{success}</span>
         </div>
       )}
 
       {error && (
-        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
+        <div className="mb-4 p-6 bg-danger-50 border border-red-200 rounded-lg flex items-center gap-2">
           <AlertCircle className="w-5 h-5 text-red-500" />
           <span className="text-red-700">{error}</span>
         </div>
@@ -143,8 +143,8 @@ const TenantSettings: React.FC = () => {
             onClick={() => setActiveTab('general')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'general'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'border-blue-500 text-accent-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
             }`}
           >
             General Settings
@@ -153,8 +153,8 @@ const TenantSettings: React.FC = () => {
             onClick={() => setActiveTab('payment')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'payment'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'border-blue-500 text-accent-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
             }`}
           >
             Payment Settings
@@ -164,7 +164,7 @@ const TenantSettings: React.FC = () => {
 
       {/* Tab Content */}
       {activeTab === 'general' && (
-        <div className="bg-white rounded-lg shadow-lg p-6">
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
           <h2 className="text-xl font-semibold mb-4">General Information</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -216,8 +216,8 @@ const TenantSettings: React.FC = () => {
               </label>
               <span className={`inline-flex px-2 py-1 rounded-full text-sm font-medium ${
                 tenant.status === 'active' 
-                  ? 'bg-green-100 text-green-700'
-                  : 'bg-gray-100 text-gray-700'
+                  ? 'bg-primary-100 text-primary-700'
+                  : 'bg-gray-50 text-gray-700'
               }`}>
                 {tenant.status}
               </span>
@@ -227,7 +227,7 @@ const TenantSettings: React.FC = () => {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Subscription Tier
               </label>
-              <span className="inline-flex px-2 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-700">
+              <span className="inline-flex px-2 py-1 rounded-full text-sm font-medium bg-blue-100 text-accent-700">
                 {tenant.subscription_tier}
               </span>
             </div>

@@ -149,11 +149,11 @@ const PurchaseOrders: React.FC = () => {
       case 'pending':
         return <Clock className="h-5 w-5 text-yellow-500" />;
       case 'approved':
-        return <CheckCircle className="h-5 w-5 text-green-500" />;
+        return <CheckCircle className="h-5 w-5 text-primary-500" />;
       case 'ordered':
-        return <TruckIcon className="h-5 w-5 text-blue-500" />;
+        return <TruckIcon className="h-5 w-5 text-accent-500" />;
       case 'received':
-        return <CheckCircle className="h-5 w-5 text-green-600" />;
+        return <CheckCircle className="h-5 w-5 text-primary-600" />;
       case 'cancelled':
         return <XCircle className="h-5 w-5 text-red-500" />;
       default:
@@ -164,21 +164,21 @@ const PurchaseOrders: React.FC = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'draft':
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-50 text-gray-800';
       case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-warning-100 text-warning-800';
       case 'approved':
-        return 'bg-green-100 text-green-800';
+        return 'bg-primary-100 text-primary-800';
       case 'ordered':
         return 'bg-blue-100 text-blue-800';
       case 'shipped':
         return 'bg-indigo-100 text-indigo-800';
       case 'received':
-        return 'bg-green-200 text-green-900';
+        return 'bg-green-200 text-primary-900';
       case 'cancelled':
-        return 'bg-red-100 text-red-800';
+        return 'bg-danger-100 text-danger-800';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-50 text-gray-800';
     }
   };
 
@@ -232,14 +232,14 @@ const PurchaseOrders: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+      <div className="bg-danger-50 border border-red-200 text-red-700 px-4 py-3 rounded">
         Error loading purchase orders: {(error as Error).message}
       </div>
     );
@@ -249,7 +249,7 @@ const PurchaseOrders: React.FC = () => {
   if (!selectedStoreForOrders && !showStoreSelectionModal) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
       </div>
     );
   }
@@ -258,17 +258,17 @@ const PurchaseOrders: React.FC = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-900">Purchase Orders</h1>
-        <div className="flex gap-3">
+        <div className="flex gap-4">
           <button
             onClick={() => setShowASNImportModal(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2"
+            className="bg-accent-600 text-white px-4 py-2 rounded-lg hover:bg-accent-700 flex items-center gap-2"
           >
             <FileSpreadsheet className="h-5 w-5" />
             Import ASN
           </button>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 flex items-center gap-2"
+            className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 flex items-center gap-2"
           >
             <Plus className="h-5 w-5" />
             Create Order
@@ -276,12 +276,12 @@ const PurchaseOrders: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm p-6">
-        <div className="flex gap-4 mb-6">
+      <div className="bg-white rounded-lg  p-6">
+        <div className="flex gap-6 mb-6">
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+            className="px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500"
           >
             <option value="all">All Status</option>
             <option value="draft">Draft</option>
@@ -374,7 +374,7 @@ const PurchaseOrders: React.FC = () => {
                     {order.status === 'pending' && (
                       <button
                         onClick={() => handleStatusUpdate(order.id, 'received')}
-                        className="text-green-600 hover:text-green-900 mr-3"
+                        className="text-primary-600 hover:text-primary-900 mr-3"
                       >
                         Mark as Received
                       </button>
@@ -382,7 +382,7 @@ const PurchaseOrders: React.FC = () => {
                     {order.status === 'pending' && (
                       <button
                         onClick={() => handleStatusUpdate(order.id, 'cancelled')}
-                        className="text-red-600 hover:text-red-900"
+                        className="text-danger-600 hover:text-red-900"
                       >
                         Cancel
                       </button>
@@ -390,7 +390,7 @@ const PurchaseOrders: React.FC = () => {
                     {order.status === 'partial' && (
                       <button
                         onClick={() => handleStatusUpdate(order.id, 'received')}
-                        className="text-green-600 hover:text-green-900"
+                        className="text-primary-600 hover:text-primary-900"
                       >
                         Mark Fully Received
                       </button>
@@ -414,36 +414,36 @@ const PurchaseOrders: React.FC = () => {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-lg shadow-sm p-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="bg-white rounded-lg  p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Pending Orders</p>
-              <p className="text-2xl font-bold text-yellow-600">
+              <p className="text-2xl font-bold text-warning-600">
                 {orders?.data?.filter((o: PurchaseOrder) => o.status === 'pending').length || 0}
               </p>
             </div>
-            <Clock className="h-8 w-8 text-yellow-600" />
+            <Clock className="h-8 w-8 text-warning-600" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded-lg  p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">In Transit</p>
-              <p className="text-2xl font-bold text-blue-600">
+              <p className="text-2xl font-bold text-accent-600">
                 {orders?.data?.filter((o: PurchaseOrder) => o.status === 'shipped').length || 0}
               </p>
             </div>
-            <TruckIcon className="h-8 w-8 text-blue-600" />
+            <TruckIcon className="h-8 w-8 text-accent-600" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded-lg  p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">This Month</p>
-              <p className="text-2xl font-bold text-green-600">
+              <p className="text-2xl font-bold text-primary-600">
                 {orders?.data?.filter((o: PurchaseOrder) => {
                   const orderDate = new Date(o.order_date);
                   const now = new Date();
@@ -452,11 +452,11 @@ const PurchaseOrders: React.FC = () => {
                 }).length || 0}
               </p>
             </div>
-            <CheckCircle className="h-8 w-8 text-green-600" />
+            <CheckCircle className="h-8 w-8 text-primary-600" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded-lg  p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Total Value</p>
@@ -473,7 +473,7 @@ const PurchaseOrders: React.FC = () => {
 
       {/* Order Details Modal */}
       {selectedOrder && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-6 z-50">
           <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
@@ -540,7 +540,7 @@ const PurchaseOrders: React.FC = () => {
                           <td className="px-4 py-2 text-sm">
                             <button
                               onClick={() => setSelectedItem(item)}
-                              className="text-blue-600 hover:text-blue-800"
+                              className="text-accent-600 hover:text-blue-800"
                               title="View Details"
                             >
                               <Info className="h-4 w-4" />
@@ -573,12 +573,12 @@ const PurchaseOrders: React.FC = () => {
 
       {/* Item Details Modal */}
       {selectedItem && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[60]">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-6 z-[60]">
           <div className="bg-white rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-bold flex items-center gap-2">
-                  <Package className="h-6 w-6 text-green-600" />
+                  <Package className="h-6 w-6 text-primary-600" />
                   Item Details
                 </h2>
                 <button
@@ -589,82 +589,82 @@ const PurchaseOrders: React.FC = () => {
                 </button>
               </div>
 
-              <div className="bg-gray-50 rounded-lg p-4">
+              <div className="bg-gray-50 rounded-lg p-6">
                 <table className="min-w-full">
                   <tbody className="divide-y divide-gray-200">
                     <tr>
-                      <td className="py-2 px-4 font-medium text-gray-600 w-1/3">SKU:</td>
-                      <td className="py-2 px-4 text-gray-900">{selectedItem.sku || 'N/A'}</td>
+                      <td className="py-2.5 px-4 font-medium text-gray-600 w-1/3">SKU:</td>
+                      <td className="py-2.5 px-4 text-gray-900">{selectedItem.sku || 'N/A'}</td>
                     </tr>
                     <tr>
-                      <td className="py-2 px-4 font-medium text-gray-600">Product Name:</td>
-                      <td className="py-2 px-4 text-gray-900">
+                      <td className="py-2.5 px-4 font-medium text-gray-600">Product Name:</td>
+                      <td className="py-2.5 px-4 text-gray-900">
                         {selectedItem.product_name || getProductNameBySku(selectedItem.sku)}
                       </td>
                     </tr>
                     <tr>
-                      <td className="py-2 px-4 font-medium text-gray-600">Vendor:</td>
-                      <td className="py-2 px-4 text-gray-900">{selectedItem.vendor || 'N/A'}</td>
+                      <td className="py-2.5 px-4 font-medium text-gray-600">Vendor:</td>
+                      <td className="py-2.5 px-4 text-gray-900">{selectedItem.vendor || 'N/A'}</td>
                     </tr>
                     <tr>
-                      <td className="py-2 px-4 font-medium text-gray-600">Brand:</td>
-                      <td className="py-2 px-4 text-gray-900">{selectedItem.brand || 'N/A'}</td>
+                      <td className="py-2.5 px-4 font-medium text-gray-600">Brand:</td>
+                      <td className="py-2.5 px-4 text-gray-900">{selectedItem.brand || 'N/A'}</td>
                     </tr>
                     <tr>
-                      <td className="py-2 px-4 font-medium text-gray-600">Quantity Ordered:</td>
-                      <td className="py-2 px-4 text-gray-900">{selectedItem.quantity_ordered || 0}</td>
+                      <td className="py-2.5 px-4 font-medium text-gray-600">Quantity Ordered:</td>
+                      <td className="py-2.5 px-4 text-gray-900">{selectedItem.quantity_ordered || 0}</td>
                     </tr>
                     <tr>
-                      <td className="py-2 px-4 font-medium text-gray-600">Quantity Received:</td>
-                      <td className="py-2 px-4 text-gray-900">{selectedItem.quantity_received || 0}</td>
+                      <td className="py-2.5 px-4 font-medium text-gray-600">Quantity Received:</td>
+                      <td className="py-2.5 px-4 text-gray-900">{selectedItem.quantity_received || 0}</td>
                     </tr>
                     <tr>
-                      <td className="py-2 px-4 font-medium text-gray-600">Shipped Quantity:</td>
-                      <td className="py-2 px-4 text-gray-900">{selectedItem.shipped_qty || 'N/A'}</td>
+                      <td className="py-2.5 px-4 font-medium text-gray-600">Shipped Quantity:</td>
+                      <td className="py-2.5 px-4 text-gray-900">{selectedItem.shipped_qty || 'N/A'}</td>
                     </tr>
                     <tr>
-                      <td className="py-2 px-4 font-medium text-gray-600">UOM:</td>
-                      <td className="py-2 px-4 text-gray-900">{selectedItem.uom || 'N/A'}</td>
+                      <td className="py-2.5 px-4 font-medium text-gray-600">UOM:</td>
+                      <td className="py-2.5 px-4 text-gray-900">{selectedItem.uom || 'N/A'}</td>
                     </tr>
                     <tr>
-                      <td className="py-2 px-4 font-medium text-gray-600">UOM Conversion:</td>
-                      <td className="py-2 px-4 text-gray-900">{selectedItem.uom_conversion || 'N/A'}</td>
+                      <td className="py-2.5 px-4 font-medium text-gray-600">UOM Conversion:</td>
+                      <td className="py-2.5 px-4 text-gray-900">{selectedItem.uom_conversion || 'N/A'}</td>
                     </tr>
                     <tr>
-                      <td className="py-2 px-4 font-medium text-gray-600">UOM Conversion Qty:</td>
-                      <td className="py-2 px-4 text-gray-900">{selectedItem.uom_conversion_qty || 'N/A'}</td>
+                      <td className="py-2.5 px-4 font-medium text-gray-600">UOM Conversion Qty:</td>
+                      <td className="py-2.5 px-4 text-gray-900">{selectedItem.uom_conversion_qty || 'N/A'}</td>
                     </tr>
                     <tr>
-                      <td className="py-2 px-4 font-medium text-gray-600">Unit Cost:</td>
-                      <td className="py-2 px-4 text-gray-900">${(selectedItem.unit_cost || 0).toFixed(2)}</td>
+                      <td className="py-2.5 px-4 font-medium text-gray-600">Unit Cost:</td>
+                      <td className="py-2.5 px-4 text-gray-900">${(selectedItem.unit_cost || 0).toFixed(2)}</td>
                     </tr>
                     <tr>
-                      <td className="py-2 px-4 font-medium text-gray-600">Total Cost:</td>
-                      <td className="py-2 px-4 text-gray-900 font-semibold">
+                      <td className="py-2.5 px-4 font-medium text-gray-600">Total Cost:</td>
+                      <td className="py-2.5 px-4 text-gray-700 font-medium text-sm">
                         ${(selectedItem.total_cost || 0).toFixed(2)}
                       </td>
                     </tr>
                     <tr>
-                      <td className="py-2 px-4 font-medium text-gray-600">Batch/Lot:</td>
-                      <td className="py-2 px-4 text-gray-900">{selectedItem.batch_lot || 'N/A'}</td>
+                      <td className="py-2.5 px-4 font-medium text-gray-600">Batch/Lot:</td>
+                      <td className="py-2.5 px-4 text-gray-900">{selectedItem.batch_lot || 'N/A'}</td>
                     </tr>
                     <tr>
-                      <td className="py-2 px-4 font-medium text-gray-600">Packaged On Date:</td>
-                      <td className="py-2 px-4 text-gray-900">
+                      <td className="py-2.5 px-4 font-medium text-gray-600">Packaged On Date:</td>
+                      <td className="py-2.5 px-4 text-gray-900">
                         {selectedItem.packaged_on_date ? new Date(selectedItem.packaged_on_date).toLocaleDateString() : 'N/A'}
                       </td>
                     </tr>
                     <tr>
-                      <td className="py-2 px-4 font-medium text-gray-600">Case GTIN:</td>
-                      <td className="py-2 px-4 text-gray-900">{selectedItem.case_gtin || 'Not provided'}</td>
+                      <td className="py-2.5 px-4 font-medium text-gray-600">Case GTIN:</td>
+                      <td className="py-2.5 px-4 text-gray-900">{selectedItem.case_gtin || 'Not provided'}</td>
                     </tr>
                     <tr>
-                      <td className="py-2 px-4 font-medium text-gray-600">GTIN Barcode:</td>
-                      <td className="py-2 px-4 text-gray-900">{selectedItem.gtin_barcode || 'Not provided'}</td>
+                      <td className="py-2.5 px-4 font-medium text-gray-600">GTIN Barcode:</td>
+                      <td className="py-2.5 px-4 text-gray-900">{selectedItem.gtin_barcode || 'Not provided'}</td>
                     </tr>
                     <tr>
-                      <td className="py-2 px-4 font-medium text-gray-600">Each GTIN:</td>
-                      <td className="py-2 px-4 text-gray-900">{selectedItem.each_gtin || 'Not provided'}</td>
+                      <td className="py-2.5 px-4 font-medium text-gray-600">Each GTIN:</td>
+                      <td className="py-2.5 px-4 text-gray-900">{selectedItem.each_gtin || 'Not provided'}</td>
                     </tr>
                   </tbody>
                 </table>

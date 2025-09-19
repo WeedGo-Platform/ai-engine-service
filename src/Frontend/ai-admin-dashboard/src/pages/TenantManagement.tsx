@@ -233,7 +233,7 @@ const TenantManagement: React.FC = () => {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'active':
-        return <CheckCircle className="w-5 h-5 text-green-500" />;
+        return <CheckCircle className="w-5 h-5 text-primary-500" />;
       case 'suspended':
         return <Pause className="w-5 h-5 text-yellow-500" />;
       case 'cancelled':
@@ -248,9 +248,9 @@ const TenantManagement: React.FC = () => {
       case 'enterprise':
         return <Crown className="w-5 h-5 text-purple-500" />;
       case 'small_business':
-        return <TrendingUp className="w-5 h-5 text-blue-500" />;
+        return <TrendingUp className="w-5 h-5 text-accent-500" />;
       case 'basic':
-        return <Package className="w-5 h-5 text-green-500" />;
+        return <Package className="w-5 h-5 text-primary-500" />;
       default:
         return <Users className="w-5 h-5 text-gray-500" />;
     }
@@ -296,7 +296,7 @@ const TenantManagement: React.FC = () => {
         {!isTenantAdminView && !isStoreManagerView && (
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 transition-colors"
           >
             <Plus className="w-5 h-5" />
             New Tenant
@@ -305,8 +305,8 @@ const TenantManagement: React.FC = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">{isTenantAdminView ? 'Total Stores' : 'Total Tenants'}</p>
@@ -314,23 +314,23 @@ const TenantManagement: React.FC = () => {
                 {isTenantAdminView ? storeCount.total : tenants.length}
               </p>
             </div>
-            <Building2 className="w-8 h-8 text-blue-500" />
+            <Building2 className="w-8 h-8 text-accent-500" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">{isTenantAdminView ? 'Active Stores' : 'Active'}</p>
-              <p className="text-2xl font-bold text-green-600">
+              <p className="text-2xl font-bold text-primary-600">
                 {isTenantAdminView ? storeCount.active : tenants.filter(t => t.status === 'active').length}
               </p>
             </div>
-            <CheckCircle className="w-8 h-8 text-green-500" />
+            <CheckCircle className="w-8 h-8 text-primary-500" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">Enterprise</p>
@@ -342,7 +342,7 @@ const TenantManagement: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">{isTenantAdminView ? 'Last Month Revenue (All Stores)' : 'Monthly Revenue'}</p>
@@ -356,15 +356,15 @@ const TenantManagement: React.FC = () => {
                 }
               </p>
             </div>
-            <DollarSign className="w-8 h-8 text-green-500" />
+            <DollarSign className="w-8 h-8 text-primary-500" />
           </div>
         </div>
       </div>
 
       {/* Filters - only show for super admin */}
       {!isTenantAdminView && (
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
-          <div className="flex flex-wrap gap-4">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
+          <div className="flex flex-wrap gap-6">
             <div className="flex-1 min-w-[200px]">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -373,7 +373,7 @@ const TenantManagement: React.FC = () => {
                   placeholder="Search tenants..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                 />
               </div>
             </div>
@@ -381,7 +381,7 @@ const TenantManagement: React.FC = () => {
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
             >
             <option value="all">All Status</option>
             <option value="active">Active</option>
@@ -392,7 +392,7 @@ const TenantManagement: React.FC = () => {
           <select
             value={filterTier}
             onChange={(e) => setFilterTier(e.target.value)}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
           >
             <option value="all">All Tiers</option>
             <option value="community_and_new_business">Community and New Business</option>
@@ -406,23 +406,23 @@ const TenantManagement: React.FC = () => {
 
       {/* Success Alert */}
       {success && (
-        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 flex items-center gap-2">
-          <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
-          <span className="text-green-700 dark:text-green-300">{success}</span>
+        <div className="bg-primary-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6 flex items-center gap-2">
+          <CheckCircle className="w-5 h-5 text-primary-600 dark:text-green-400" />
+          <span className="text-primary-700 dark:text-green-300">{success}</span>
         </div>
       )}
 
       {/* Error Alert */}
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 flex items-center gap-2">
-          <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
+        <div className="bg-danger-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 flex items-center gap-2">
+          <AlertCircle className="w-5 h-5 text-danger-600 dark:text-red-400" />
           <span className="text-red-700 dark:text-red-300">{error}</span>
         </div>
       )}
 
       {/* Organization Card for Tenant Admin and Store Manager */}
       {(isTenantAdminView || isStoreManagerView) && tenants.length > 0 && (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg  p-6">
           {loading ? (
             <div className="text-center py-8">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
@@ -431,7 +431,7 @@ const TenantManagement: React.FC = () => {
           ) : (
             <div>
               <div className="flex items-start justify-between mb-6">
-                <div className="flex items-start gap-4">
+                <div className="flex items-start gap-6">
                   {tenants[0]?.logo_url && (
                     <img 
                       src={tenants[0].logo_url} 
@@ -447,8 +447,8 @@ const TenantManagement: React.FC = () => {
                     <div className="mt-2">
                       <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
                         tenants[0].status === 'active' 
-                          ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' 
-                          : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
+                          ? 'bg-primary-100 text-primary-700 dark:bg-green-900/30 dark:text-green-400' 
+                          : 'bg-gray-50 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
                       }`}>
                         {tenants[0].status}
                       </span>
@@ -461,7 +461,7 @@ const TenantManagement: React.FC = () => {
                       setSelectedTenant(tenants[0]);
                       setShowTenantModal(true);
                     }}
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    className="flex items-center gap-2 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700"
                   >
                     <Edit className="w-4 h-4" />
                     Edit Organization
@@ -499,7 +499,7 @@ const TenantManagement: React.FC = () => {
 
               <div className="mt-6 pt-6 border-t dark:border-gray-700">
                 <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Quick Actions</h3>
-                <div className="flex gap-3">
+                <div className="flex gap-4">
                   <button
                     onClick={() => navigate(`/dashboard/tenants/${tenants[0].code}/stores`)}
                     className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
@@ -525,7 +525,7 @@ const TenantManagement: React.FC = () => {
 
       {/* Tenants Table - Only show for super admin */}
       {!isTenantAdminView && (
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-lg  overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
@@ -567,7 +567,7 @@ const TenantManagement: React.FC = () => {
                 filteredTenants.map((tenant) => (
                   <tr key={tenant.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                     <td className="px-6 py-4">
-                      <div className="flex items-start gap-3">
+                      <div className="flex items-start gap-4">
                         {tenant.logo_url && (
                           <img 
                             src={tenant.logo_url} 
@@ -659,7 +659,7 @@ const TenantManagement: React.FC = () => {
                               setEditingTenant(tenant);
                             }
                           }}
-                          className="p-1 text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"
+                          className="p-1 text-gray-600 hover:text-accent-600 dark:text-gray-400 dark:hover:text-blue-400"
                           title="Edit"
                         >
                           <Edit className="w-4 h-4" />
@@ -667,7 +667,7 @@ const TenantManagement: React.FC = () => {
                         {tenant.status === 'active' ? (
                           <button
                             onClick={() => handleSuspendTenant(tenant.id)}
-                            className="p-1 text-gray-600 hover:text-yellow-600 dark:text-gray-400 dark:hover:text-yellow-400"
+                            className="p-1 text-gray-600 hover:text-warning-600 dark:text-gray-400 dark:hover:text-yellow-400"
                             title="Suspend"
                           >
                             <Pause className="w-4 h-4" />
@@ -675,7 +675,7 @@ const TenantManagement: React.FC = () => {
                         ) : tenant.status === 'suspended' ? (
                           <button
                             onClick={() => handleReactivateTenant(tenant.id)}
-                            className="p-1 text-gray-600 hover:text-green-600 dark:text-gray-400 dark:hover:text-green-400"
+                            className="p-1 text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-green-400"
                             title="Reactivate"
                           >
                             <Play className="w-4 h-4" />
@@ -1041,7 +1041,7 @@ const TenantFormModal: React.FC<{
               onClick={() => setActiveTab('general')}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'general'
-                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                  ? 'border-blue-500 text-accent-600 dark:text-blue-400'
                   : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
               }`}
             >
@@ -1052,7 +1052,7 @@ const TenantFormModal: React.FC<{
               onClick={() => setActiveTab('features')}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'features'
-                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                  ? 'border-blue-500 text-accent-600 dark:text-blue-400'
                   : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
               }`}
             >
@@ -1063,7 +1063,7 @@ const TenantFormModal: React.FC<{
               onClick={() => setActiveTab('branding')}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'branding'
-                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                  ? 'border-blue-500 text-accent-600 dark:text-blue-400'
                   : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
               }`}
             >
@@ -1074,7 +1074,7 @@ const TenantFormModal: React.FC<{
               onClick={() => setActiveTab('legal')}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'legal'
-                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                  ? 'border-blue-500 text-accent-600 dark:text-blue-400'
                   : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
               }`}
             >
@@ -1085,7 +1085,7 @@ const TenantFormModal: React.FC<{
               onClick={() => setActiveTab('delivery')}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'delivery'
-                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                  ? 'border-blue-500 text-accent-600 dark:text-blue-400'
                   : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
               }`}
             >
@@ -1096,7 +1096,7 @@ const TenantFormModal: React.FC<{
               onClick={() => setActiveTab('payment')}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'payment'
-                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                  ? 'border-blue-500 text-accent-600 dark:text-blue-400'
                   : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
               }`}
             >
@@ -1107,7 +1107,7 @@ const TenantFormModal: React.FC<{
               onClick={() => setActiveTab('notifications')}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'notifications'
-                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                  ? 'border-blue-500 text-accent-600 dark:text-blue-400'
                   : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
               }`}
             >
@@ -1118,7 +1118,7 @@ const TenantFormModal: React.FC<{
               onClick={() => setActiveTab('seo')}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'seo'
-                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                  ? 'border-blue-500 text-accent-600 dark:text-blue-400'
                   : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
               }`}
             >
@@ -1129,7 +1129,7 @@ const TenantFormModal: React.FC<{
               onClick={() => setActiveTab('analytics')}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'analytics'
-                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                  ? 'border-blue-500 text-accent-600 dark:text-blue-400'
                   : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
               }`}
             >
@@ -1140,7 +1140,7 @@ const TenantFormModal: React.FC<{
               onClick={() => setActiveTab('budtender')}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'budtender'
-                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                  ? 'border-blue-500 text-accent-600 dark:text-blue-400'
                   : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
               }`}
             >
@@ -1151,7 +1151,7 @@ const TenantFormModal: React.FC<{
               onClick={() => setActiveTab('users')}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'users'
-                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                  ? 'border-blue-500 text-accent-600 dark:text-blue-400'
                   : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
               }`}
             >
@@ -1165,7 +1165,7 @@ const TenantFormModal: React.FC<{
             {/* General Tab */}
             {activeTab === 'general' && (
             <>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Tenant Name *
@@ -1175,7 +1175,7 @@ const TenantFormModal: React.FC<{
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                   />
                 </div>
 
@@ -1190,12 +1190,12 @@ const TenantFormModal: React.FC<{
                     value={formData.code}
                     onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
                     pattern="^[A-Z0-9_\-]+$"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white disabled:opacity-50"
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white disabled:opacity-50"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Contact Email *
@@ -1205,7 +1205,7 @@ const TenantFormModal: React.FC<{
                     required
                     value={formData.contact_email}
                     onChange={(e) => setFormData({ ...formData, contact_email: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                   />
                 </div>
 
@@ -1217,7 +1217,7 @@ const TenantFormModal: React.FC<{
                     required
                     value={formData.subscription_tier}
                     onChange={(e) => setFormData({ ...formData, subscription_tier: e.target.value as any })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                   >
                     <option value="community_and_new_business">Community and New Business (Free)</option>
                     <option value="small_business">Small Business ($99/month)</option>
@@ -1235,11 +1235,11 @@ const TenantFormModal: React.FC<{
                   type="text"
                   value={formData.company_name}
                   onChange={(e) => setFormData({ ...formData, company_name: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Business Number
@@ -1248,7 +1248,7 @@ const TenantFormModal: React.FC<{
                     type="text"
                     value={formData.business_number}
                     onChange={(e) => setFormData({ ...formData, business_number: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                   />
                 </div>
 
@@ -1260,12 +1260,12 @@ const TenantFormModal: React.FC<{
                     type="text"
                     value={formData.gst_hst_number}
                     onChange={(e) => setFormData({ ...formData, gst_hst_number: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Phone
@@ -1278,7 +1278,7 @@ const TenantFormModal: React.FC<{
                       setFormData({ ...formData, contact_phone: formatted });
                     }}
                     placeholder="(416) 555-0123"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                   />
                 </div>
 
@@ -1291,7 +1291,7 @@ const TenantFormModal: React.FC<{
                     value={formData.website}
                     onChange={(e) => setFormData({ ...formData, website: e.target.value })}
                     placeholder="www.example.com"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                   />
                 </div>
               </div>
@@ -1316,13 +1316,13 @@ const TenantFormModal: React.FC<{
                           reader.readAsDataURL(file);
                         }
                       }}
-                      className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                      className="flex-1 px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                     />
                     {logoPreview && (
                       <img 
                         src={logoPreview} 
                         alt="Logo preview" 
-                        className="w-16 h-16 object-contain border border-gray-300 dark:border-gray-600 rounded"
+                        className="w-16 h-16 object-contain border border-gray-200 dark:border-gray-600 rounded"
                       />
                     )}
                   </div>
@@ -1338,13 +1338,13 @@ const TenantFormModal: React.FC<{
           {activeTab === 'features' && (
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Platform Features</h3>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-6">
                 <label className="flex items-center gap-2">
                   <input
                     type="checkbox"
                     checked={settings.features.reviews}
                     onChange={(e) => setSettings({ ...settings, features: { ...settings.features, reviews: e.target.checked }})}
-                    className="w-4 h-4 text-blue-600 rounded"
+                    className="w-4 h-4 text-accent-600 rounded"
                   />
                   <span className="text-sm text-gray-700 dark:text-gray-300">Product Reviews</span>
                 </label>
@@ -1353,7 +1353,7 @@ const TenantFormModal: React.FC<{
                     type="checkbox"
                     checked={settings.features.wishlist}
                     onChange={(e) => setSettings({ ...settings, features: { ...settings.features, wishlist: e.target.checked }})}
-                    className="w-4 h-4 text-blue-600 rounded"
+                    className="w-4 h-4 text-accent-600 rounded"
                   />
                   <span className="text-sm text-gray-700 dark:text-gray-300">Wishlist</span>
                 </label>
@@ -1362,7 +1362,7 @@ const TenantFormModal: React.FC<{
                     type="checkbox"
                     checked={settings.features.loyalty_program}
                     onChange={(e) => setSettings({ ...settings, features: { ...settings.features, loyalty_program: e.target.checked }})}
-                    className="w-4 h-4 text-blue-600 rounded"
+                    className="w-4 h-4 text-accent-600 rounded"
                   />
                   <span className="text-sm text-gray-700 dark:text-gray-300">Loyalty Program</span>
                 </label>
@@ -1371,7 +1371,7 @@ const TenantFormModal: React.FC<{
                     type="checkbox"
                     checked={settings.features.virtual_budtender}
                     onChange={(e) => setSettings({ ...settings, features: { ...settings.features, virtual_budtender: e.target.checked }})}
-                    className="w-4 h-4 text-blue-600 rounded"
+                    className="w-4 h-4 text-accent-600 rounded"
                   />
                   <span className="text-sm text-gray-700 dark:text-gray-300">Virtual Budtender</span>
                 </label>
@@ -1380,7 +1380,7 @@ const TenantFormModal: React.FC<{
                     type="checkbox"
                     checked={settings.features.recommendations}
                     onChange={(e) => setSettings({ ...settings, features: { ...settings.features, recommendations: e.target.checked }})}
-                    className="w-4 h-4 text-blue-600 rounded"
+                    className="w-4 h-4 text-accent-600 rounded"
                   />
                   <span className="text-sm text-gray-700 dark:text-gray-300">Product Recommendations</span>
                 </label>
@@ -1389,7 +1389,7 @@ const TenantFormModal: React.FC<{
               {settings.features.virtual_budtender && (
                 <>
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mt-6">Virtual Budtender Settings</h3>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         AI Model
@@ -1397,7 +1397,7 @@ const TenantFormModal: React.FC<{
                       <select
                         value={settings.virtual_budtender.ai_model}
                         onChange={(e) => setSettings({ ...settings, virtual_budtender: { ...settings.virtual_budtender, ai_model: e.target.value }})}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                        className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                       >
                         <option value="gpt-4">GPT-4</option>
                         <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
@@ -1411,7 +1411,7 @@ const TenantFormModal: React.FC<{
                       <select
                         value={settings.virtual_budtender.personality}
                         onChange={(e) => setSettings({ ...settings, virtual_budtender: { ...settings.virtual_budtender, personality: e.target.value }})}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                        className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                       >
                         <option value="friendly">Friendly</option>
                         <option value="professional">Professional</option>
@@ -1420,13 +1420,13 @@ const TenantFormModal: React.FC<{
                       </select>
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-6">
                     <label className="flex items-center gap-2">
                       <input
                         type="checkbox"
                         checked={settings.virtual_budtender.product_recommendations}
                         onChange={(e) => setSettings({ ...settings, virtual_budtender: { ...settings.virtual_budtender, product_recommendations: e.target.checked }})}
-                        className="w-4 h-4 text-blue-600 rounded"
+                        className="w-4 h-4 text-accent-600 rounded"
                       />
                       <span className="text-sm text-gray-700 dark:text-gray-300">Product Recommendations</span>
                     </label>
@@ -1435,7 +1435,7 @@ const TenantFormModal: React.FC<{
                         type="checkbox"
                         checked={settings.virtual_budtender.dosage_guidance}
                         onChange={(e) => setSettings({ ...settings, virtual_budtender: { ...settings.virtual_budtender, dosage_guidance: e.target.checked }})}
-                        className="w-4 h-4 text-blue-600 rounded"
+                        className="w-4 h-4 text-accent-600 rounded"
                       />
                       <span className="text-sm text-gray-700 dark:text-gray-300">Dosage Guidance</span>
                     </label>
@@ -1449,7 +1449,7 @@ const TenantFormModal: React.FC<{
           {activeTab === 'branding' && (
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Brand Colors</h3>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Primary Color
@@ -1459,13 +1459,13 @@ const TenantFormModal: React.FC<{
                       type="color"
                       value={settings.branding.primary_color}
                       onChange={(e) => setSettings({ ...settings, branding: { ...settings.branding, primary_color: e.target.value }})}
-                      className="w-12 h-10 border border-gray-300 dark:border-gray-600 rounded"
+                      className="w-12 h-10 border border-gray-200 dark:border-gray-600 rounded"
                     />
                     <input
                       type="text"
                       value={settings.branding.primary_color}
                       onChange={(e) => setSettings({ ...settings, branding: { ...settings.branding, primary_color: e.target.value }})}
-                      className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                      className="flex-1 px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                     />
                   </div>
                 </div>
@@ -1478,13 +1478,13 @@ const TenantFormModal: React.FC<{
                       type="color"
                       value={settings.branding.secondary_color}
                       onChange={(e) => setSettings({ ...settings, branding: { ...settings.branding, secondary_color: e.target.value }})}
-                      className="w-12 h-10 border border-gray-300 dark:border-gray-600 rounded"
+                      className="w-12 h-10 border border-gray-200 dark:border-gray-600 rounded"
                     />
                     <input
                       type="text"
                       value={settings.branding.secondary_color}
                       onChange={(e) => setSettings({ ...settings, branding: { ...settings.branding, secondary_color: e.target.value }})}
-                      className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                      className="flex-1 px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                     />
                   </div>
                 </div>
@@ -1496,7 +1496,7 @@ const TenantFormModal: React.FC<{
                 <select
                   value={settings.branding.font_family}
                   onChange={(e) => setSettings({ ...settings, branding: { ...settings.branding, font_family: e.target.value }})}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                 >
                   <option value="Inter">Inter</option>
                   <option value="Roboto">Roboto</option>
@@ -1515,7 +1515,7 @@ const TenantFormModal: React.FC<{
                   onChange={(e) => setSettings({ ...settings, branding: { ...settings.branding, custom_css: e.target.value }})}
                   rows={4}
                   placeholder="/* Add custom CSS here */"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white font-mono text-sm"
+                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white font-mono text-sm"
                 />
               </div>
             </div>
@@ -1525,13 +1525,13 @@ const TenantFormModal: React.FC<{
           {activeTab === 'legal' && (
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Compliance Settings</h3>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-6">
                 <label className="flex items-center gap-2">
                   <input
                     type="checkbox"
                     checked={settings.legal.age_verification}
                     onChange={(e) => setSettings({ ...settings, legal: { ...settings.legal, age_verification: e.target.checked }})}
-                    className="w-4 h-4 text-blue-600 rounded"
+                    className="w-4 h-4 text-accent-600 rounded"
                   />
                   <span className="text-sm text-gray-700 dark:text-gray-300">Age Verification Required</span>
                 </label>
@@ -1543,7 +1543,7 @@ const TenantFormModal: React.FC<{
           {activeTab === 'delivery' && (
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Delivery Settings</h3>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Minimum Order Value ($)
@@ -1554,7 +1554,7 @@ const TenantFormModal: React.FC<{
                     onChange={(e) => setSettings({ ...settings, delivery: { ...settings.delivery, min_order_value: parseFloat(e.target.value) }})}
                     min="0"
                     step="5"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                   />
                 </div>
                 <div>
@@ -1567,7 +1567,7 @@ const TenantFormModal: React.FC<{
                     onChange={(e) => setSettings({ ...settings, delivery: { ...settings.delivery, free_delivery_threshold: parseFloat(e.target.value) }})}
                     min="0"
                     step="10"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                   />
                 </div>
               </div>
@@ -1587,7 +1587,7 @@ const TenantFormModal: React.FC<{
                   value={settings.analytics.google_analytics_id}
                   onChange={(e) => setSettings({ ...settings, analytics: { ...settings.analytics, google_analytics_id: e.target.value }})}
                   placeholder="G-XXXXXXXXXX"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                 />
               </div>
               <div>
@@ -1599,7 +1599,7 @@ const TenantFormModal: React.FC<{
                   value={settings.analytics.facebook_pixel_id}
                   onChange={(e) => setSettings({ ...settings, analytics: { ...settings.analytics, facebook_pixel_id: e.target.value }})}
                   placeholder="XXXXXXXXXXXXXXX"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                 />
               </div>
               <div>
@@ -1610,7 +1610,7 @@ const TenantFormModal: React.FC<{
                   type="text"
                   value={settings.analytics.segment_write_key}
                   onChange={(e) => setSettings({ ...settings, analytics: { ...settings.analytics, segment_write_key: e.target.value }})}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                 />
               </div>
               <div>
@@ -1621,7 +1621,7 @@ const TenantFormModal: React.FC<{
                   type="text"
                   value={settings.analytics.mixpanel_token}
                   onChange={(e) => setSettings({ ...settings, analytics: { ...settings.analytics, mixpanel_token: e.target.value }})}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                 />
               </div>
             </div>
@@ -1638,7 +1638,7 @@ const TenantFormModal: React.FC<{
                     type="checkbox"
                     checked={settings.virtual_budtender.enabled}
                     onChange={(e) => setSettings({ ...settings, virtual_budtender: { ...settings.virtual_budtender, enabled: e.target.checked }})}
-                    className="w-4 h-4 text-blue-600 rounded"
+                    className="w-4 h-4 text-accent-600 rounded"
                   />
                   <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Enable Virtual Budtender</span>
                 </label>
@@ -1653,7 +1653,7 @@ const TenantFormModal: React.FC<{
                     <select
                       value={settings.virtual_budtender.ai_model}
                       onChange={(e) => setSettings({ ...settings, virtual_budtender: { ...settings.virtual_budtender, ai_model: e.target.value }})}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                     >
                       <option value="gpt-4">GPT-4 (Most Advanced)</option>
                       <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Fast & Efficient)</option>
@@ -1672,7 +1672,7 @@ const TenantFormModal: React.FC<{
                     <select
                       value={settings.virtual_budtender.personality}
                       onChange={(e) => setSettings({ ...settings, virtual_budtender: { ...settings.virtual_budtender, personality: e.target.value }})}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                     >
                       <option value="friendly">Friendly - Warm and welcoming approach</option>
                       <option value="professional">Professional - Formal and informative</option>
@@ -1694,12 +1694,12 @@ const TenantFormModal: React.FC<{
             <div className="space-y-4">
               {/* Success/Error Messages */}
               {userSuccess && (
-                <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-                  <p className="text-sm text-green-700 dark:text-green-300">{userSuccess}</p>
+                <div className="p-4 bg-primary-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                  <p className="text-sm text-primary-700 dark:text-green-300">{userSuccess}</p>
                 </div>
               )}
               {userError && (
-                <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                <div className="p-4 bg-danger-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
                   <p className="text-sm text-red-700 dark:text-red-300">{userError}</p>
                 </div>
               )}
@@ -1708,7 +1708,7 @@ const TenantFormModal: React.FC<{
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Tenant Admin Users</h3>
                 <button
                   type="button"
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 bg-accent-500 text-white rounded-lg hover:bg-accent-600 transition-colors"
                   onClick={handleAddUser}
                 >
                   <UserPlus className="w-4 h-4" />
@@ -1717,7 +1717,7 @@ const TenantFormModal: React.FC<{
               </div>
 
               {/* User List */}
-              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
                 {loadingUsers ? (
                   <div className="flex justify-center py-8">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
@@ -1729,9 +1729,9 @@ const TenantFormModal: React.FC<{
                 ) : (
                   <div className="space-y-3">
                     {tenantUsers.map((user) => (
-                      <div key={user.id} className="flex items-center justify-between p-3 bg-white dark:bg-gray-700 rounded-lg">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-gray-200 dark:bg-gray-600 rounded-full flex items-center justify-center">
+                      <div key={user.id} className="flex items-center justify-between p-4 bg-white dark:bg-gray-700 rounded-lg">
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 bg-gray-100 dark:bg-gray-600 rounded-full flex items-center justify-center">
                             <Users className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                           </div>
                           <div>
@@ -1744,13 +1744,13 @@ const TenantFormModal: React.FC<{
                           </div>
                         </div>
                         
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-6">
                           <div className="flex items-center gap-2">
                             <Shield className="w-4 h-4 text-gray-400" />
                             <select
                               value={user.role}
                               onChange={(e) => handleEditUserRole(user.id, e.target.value)}
-                              className="text-sm text-gray-600 dark:text-gray-300 bg-transparent border border-gray-300 dark:border-gray-600 rounded px-2 py-1"
+                              className="text-sm text-gray-600 dark:text-gray-300 bg-transparent border border-gray-200 dark:border-gray-600 rounded px-2 py-1"
                               title="Change Role"
                             >
                               <option value="tenant_admin">Tenant Admin</option>
@@ -1761,8 +1761,8 @@ const TenantFormModal: React.FC<{
                           
                           <span className={`px-2 py-1 text-xs rounded-full ${
                             user.active 
-                              ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' 
-                              : 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'
+                              ? 'bg-primary-100 text-primary-700 dark:bg-green-900 dark:text-green-300' 
+                              : 'bg-danger-100 text-red-700 dark:bg-red-900 dark:text-red-300'
                           }`}>
                             {user.active ? 'Active' : 'Inactive'}
                           </span>
@@ -1770,7 +1770,7 @@ const TenantFormModal: React.FC<{
                           <div className="flex items-center gap-1">
                             <button
                               type="button"
-                              className="p-1 text-gray-400 hover:text-blue-500 transition-colors"
+                              className="p-1 text-gray-400 hover:text-accent-500 transition-colors"
                               title="Reset Password"
                               onClick={() => handleResetPassword(user.id)}
                             >
@@ -1800,8 +1800,8 @@ const TenantFormModal: React.FC<{
                 )}
               </div>
 
-              <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
-                <p className="text-sm text-blue-700 dark:text-blue-300">
+              <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-6">
+                <p className="text-sm text-accent-700 dark:text-blue-300">
                   Tenant admin users can manage stores, staff, and settings across all stores in this tenant.
                 </p>
               </div>
@@ -1827,7 +1827,7 @@ const TenantFormModal: React.FC<{
                           : settings.payment.accepted_methods.filter(m => m !== 'credit_card');
                         setSettings({ ...settings, payment: { ...settings.payment, accepted_methods: methods }});
                       }}
-                      className="w-4 h-4 text-blue-600 rounded"
+                      className="w-4 h-4 text-accent-600 rounded"
                     />
                     <span className="text-sm text-gray-700 dark:text-gray-300">Credit Card</span>
                   </label>
@@ -1841,7 +1841,7 @@ const TenantFormModal: React.FC<{
                           : settings.payment.accepted_methods.filter(m => m !== 'debit_card');
                         setSettings({ ...settings, payment: { ...settings.payment, accepted_methods: methods }});
                       }}
-                      className="w-4 h-4 text-blue-600 rounded"
+                      className="w-4 h-4 text-accent-600 rounded"
                     />
                     <span className="text-sm text-gray-700 dark:text-gray-300">Debit Card</span>
                   </label>
@@ -1855,7 +1855,7 @@ const TenantFormModal: React.FC<{
                           : settings.payment.accepted_methods.filter(m => m !== 'cash');
                         setSettings({ ...settings, payment: { ...settings.payment, accepted_methods: methods }});
                       }}
-                      className="w-4 h-4 text-blue-600 rounded"
+                      className="w-4 h-4 text-accent-600 rounded"
                     />
                     <span className="text-sm text-gray-700 dark:text-gray-300">Cash</span>
                   </label>
@@ -1869,13 +1869,13 @@ const TenantFormModal: React.FC<{
                           : settings.payment.accepted_methods.filter(m => m !== 'etransfer');
                         setSettings({ ...settings, payment: { ...settings.payment, accepted_methods: methods }});
                       }}
-                      className="w-4 h-4 text-blue-600 rounded"
+                      className="w-4 h-4 text-accent-600 rounded"
                     />
                     <span className="text-sm text-gray-700 dark:text-gray-300">E-Transfer</span>
                   </label>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Payment Gateway Provider
@@ -1883,7 +1883,7 @@ const TenantFormModal: React.FC<{
                   <select
                     value={settings.payment.gateway_provider}
                     onChange={(e) => setSettings({ ...settings, payment: { ...settings.payment, gateway_provider: e.target.value }})}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                   >
                     <option value="stripe">Stripe</option>
                     <option value="square">Square</option>
@@ -1901,7 +1901,7 @@ const TenantFormModal: React.FC<{
                     onChange={(e) => setSettings({ ...settings, payment: { ...settings.payment, hold_duration_days: parseInt(e.target.value) }})}
                     min="0"
                     max="30"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                   />
                 </div>
               </div>
@@ -1911,7 +1911,7 @@ const TenantFormModal: React.FC<{
                     type="checkbox"
                     checked={settings.payment.auto_capture}
                     onChange={(e) => setSettings({ ...settings, payment: { ...settings.payment, auto_capture: e.target.checked }})}
-                    className="w-4 h-4 text-blue-600 rounded"
+                    className="w-4 h-4 text-accent-600 rounded"
                   />
                   <span className="text-sm text-gray-700 dark:text-gray-300">Auto-capture payments</span>
                 </label>
@@ -1923,13 +1923,13 @@ const TenantFormModal: React.FC<{
           {activeTab === 'notifications' && (
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Notification Settings</h3>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-6">
                 <label className="flex items-center gap-2">
                   <input
                     type="checkbox"
                     checked={settings.notifications.email_enabled}
                     onChange={(e) => setSettings({ ...settings, notifications: { ...settings.notifications, email_enabled: e.target.checked }})}
-                    className="w-4 h-4 text-blue-600 rounded"
+                    className="w-4 h-4 text-accent-600 rounded"
                   />
                   <span className="text-sm text-gray-700 dark:text-gray-300">Email Notifications</span>
                 </label>
@@ -1938,7 +1938,7 @@ const TenantFormModal: React.FC<{
                     type="checkbox"
                     checked={settings.notifications.sms_enabled}
                     onChange={(e) => setSettings({ ...settings, notifications: { ...settings.notifications, sms_enabled: e.target.checked }})}
-                    className="w-4 h-4 text-blue-600 rounded"
+                    className="w-4 h-4 text-accent-600 rounded"
                   />
                   <span className="text-sm text-gray-700 dark:text-gray-300">SMS Notifications</span>
                 </label>
@@ -1947,7 +1947,7 @@ const TenantFormModal: React.FC<{
                     type="checkbox"
                     checked={settings.notifications.push_enabled}
                     onChange={(e) => setSettings({ ...settings, notifications: { ...settings.notifications, push_enabled: e.target.checked }})}
-                    className="w-4 h-4 text-blue-600 rounded"
+                    className="w-4 h-4 text-accent-600 rounded"
                   />
                   <span className="text-sm text-gray-700 dark:text-gray-300">Push Notifications</span>
                 </label>
@@ -1956,7 +1956,7 @@ const TenantFormModal: React.FC<{
                     type="checkbox"
                     checked={settings.notifications.order_updates}
                     onChange={(e) => setSettings({ ...settings, notifications: { ...settings.notifications, order_updates: e.target.checked }})}
-                    className="w-4 h-4 text-blue-600 rounded"
+                    className="w-4 h-4 text-accent-600 rounded"
                   />
                   <span className="text-sm text-gray-700 dark:text-gray-300">Order Updates</span>
                 </label>
@@ -1965,7 +1965,7 @@ const TenantFormModal: React.FC<{
                     type="checkbox"
                     checked={settings.notifications.marketing}
                     onChange={(e) => setSettings({ ...settings, notifications: { ...settings.notifications, marketing: e.target.checked }})}
-                    className="w-4 h-4 text-blue-600 rounded"
+                    className="w-4 h-4 text-accent-600 rounded"
                   />
                   <span className="text-sm text-gray-700 dark:text-gray-300">Marketing Messages</span>
                 </label>
@@ -1986,7 +1986,7 @@ const TenantFormModal: React.FC<{
                   value={settings.seo.meta_title}
                   onChange={(e) => setSettings({ ...settings, seo: { ...settings.seo, meta_title: e.target.value }})}
                   placeholder="Your store title for search engines"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                 />
               </div>
               <div>
@@ -1998,7 +1998,7 @@ const TenantFormModal: React.FC<{
                   onChange={(e) => setSettings({ ...settings, seo: { ...settings.seo, meta_description: e.target.value }})}
                   rows={3}
                   placeholder="Brief description of your store for search results"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                 />
               </div>
               <div>
@@ -2007,7 +2007,7 @@ const TenantFormModal: React.FC<{
                     type="checkbox"
                     checked={settings.seo.sitemap_enabled}
                     onChange={(e) => setSettings({ ...settings, seo: { ...settings.seo, sitemap_enabled: e.target.checked }})}
-                    className="w-4 h-4 text-blue-600 rounded"
+                    className="w-4 h-4 text-accent-600 rounded"
                   />
                   <span className="text-sm text-gray-700 dark:text-gray-300">Generate Sitemap</span>
                 </label>
@@ -2021,23 +2021,23 @@ const TenantFormModal: React.FC<{
                   onChange={(e) => setSettings({ ...settings, seo: { ...settings.seo, robots_txt: e.target.value }})}
                   rows={4}
                   placeholder="User-agent: *&#10;Disallow: /admin&#10;Allow: /"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white font-mono text-sm"
+                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white font-mono text-sm"
                 />
               </div>
             </div>
           )}
 
-          <div className="flex justify-end gap-3 mt-6">
+          <div className="flex justify-end gap-4 mt-6">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600"
+              className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700"
             >
               {tenant ? 'Update' : 'Create'} Tenant
             </button>

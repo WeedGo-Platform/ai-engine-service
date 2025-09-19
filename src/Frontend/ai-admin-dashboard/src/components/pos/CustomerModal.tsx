@@ -121,7 +121,7 @@ export default function CustomerModal({ isOpen, onClose, onSelect }: CustomerMod
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl">
+      <div className="bg-white rounded-lg border border-gray-200 w-full max-w-2xl">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b">
           <h2 className="text-2xl font-bold">
@@ -169,14 +169,14 @@ export default function CustomerModal({ isOpen, onClose, onSelect }: CustomerMod
                         onSelect(customer);
                         onClose();
                       }}
-                      className="w-full p-4 bg-gray-50 hover:bg-gray-100 rounded-lg text-left transition-colors"
+                      className="w-full p-6 bg-gray-50 hover:bg-gray-50 rounded-lg text-left transition-colors"
                     >
                       <div className="flex items-start justify-between">
                         <div>
                           <div className="flex items-center gap-2">
                             <p className="font-medium">{customer.name}</p>
                             {customer.is_verified && (
-                              <CheckCircle className="w-4 h-4 text-green-500" />
+                              <CheckCircle className="w-4 h-4 text-primary-500" />
                             )}
                           </div>
                           {customer.email && (
@@ -194,7 +194,7 @@ export default function CustomerModal({ isOpen, onClose, onSelect }: CustomerMod
                         {customer.loyalty_points && (
                           <div className="text-right">
                             <p className="text-sm text-gray-500">Points</p>
-                            <p className="font-medium text-green-600">{customer.loyalty_points}</p>
+                            <p className="font-medium text-primary-600">{customer.loyalty_points}</p>
                           </div>
                         )}
                       </div>
@@ -209,7 +209,7 @@ export default function CustomerModal({ isOpen, onClose, onSelect }: CustomerMod
                         setShowNewCustomerForm(true);
                         setNewCustomer({ ...newCustomer, name: searchTerm });
                       }}
-                      className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                      className="mt-4 px-4 py-2 bg-accent-500 text-white rounded-lg hover:bg-accent-600"
                     >
                       <UserPlus className="w-4 h-4 inline mr-2" />
                       Create New Customer
@@ -223,10 +223,10 @@ export default function CustomerModal({ isOpen, onClose, onSelect }: CustomerMod
               </div>
 
               {/* Quick Actions */}
-              <div className="mt-6 flex gap-3">
+              <div className="mt-6 flex gap-4">
                 <button
                   onClick={() => setShowNewCustomerForm(true)}
-                  className="flex-1 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                  className="flex-1 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600"
                 >
                   <UserPlus className="w-4 h-4 inline mr-2" />
                   New Customer
@@ -276,7 +276,7 @@ export default function CustomerModal({ isOpen, onClose, onSelect }: CustomerMod
                 />
                 {newCustomer.birth_date && (
                   <p className={`text-sm mt-1 ${
-                    calculateAge(newCustomer.birth_date) >= 19 ? 'text-green-600' : 'text-red-600'
+                    calculateAge(newCustomer.birth_date) >= 19 ? 'text-primary-600' : 'text-danger-600'
                   }`}>
                     Age: {calculateAge(newCustomer.birth_date)} years
                     {calculateAge(newCustomer.birth_date) < 19 && ' (Must be 19+ to purchase)'}
@@ -312,28 +312,28 @@ export default function CustomerModal({ isOpen, onClose, onSelect }: CustomerMod
 
               {/* Error Message */}
               {error && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
+                <div className="p-4 bg-danger-50 border border-red-200 rounded-lg flex items-center gap-2">
                   <AlertCircle className="w-5 h-5 text-red-500" />
                   <span className="text-sm text-red-700">{error}</span>
                 </div>
               )}
 
               {/* Form Actions */}
-              <div className="flex gap-3 pt-4">
+              <div className="flex gap-4 pt-4">
                 <button
                   onClick={() => {
                     setShowNewCustomerForm(false);
                     setNewCustomer({ name: '', email: '', phone: '', birth_date: '' });
                     setError(null);
                   }}
-                  className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+                  className="flex-1 px-4 py-2 text-gray-700 bg-gray-50 rounded-lg hover:bg-gray-50"
                 >
                   Back
                 </button>
                 <button
                   onClick={handleCreateCustomer}
                   disabled={loading || !newCustomer.name || !newCustomer.birth_date}
-                  className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  className="flex-1 px-4 py-2 bg-accent-500 text-white rounded-lg hover:bg-accent-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
                 >
                   {loading ? (
                     <>

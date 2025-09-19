@@ -120,20 +120,20 @@ const Inventory: React.FC = () => {
   const getStatusColor = (status: string) => {
     switch (status?.toLowerCase()) {
       case 'in_stock':
-        return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
+        return 'bg-primary-100 text-primary-800 dark:bg-green-900/20 dark:text-green-400';
       case 'low_stock':
-        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400';
+        return 'bg-warning-100 text-warning-800 dark:bg-yellow-900/20 dark:text-yellow-400';
       case 'out_of_stock':
-        return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
+        return 'bg-danger-100 text-danger-800 dark:bg-red-900/20 dark:text-red-400';
       default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
+        return 'bg-gray-50 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status?.toLowerCase()) {
       case 'in_stock':
-        return <CheckCircle className="w-5 h-5 text-green-500" />;
+        return <CheckCircle className="w-5 h-5 text-primary-500" />;
       case 'low_stock':
         return <AlertTriangle className="w-5 h-5 text-yellow-500" />;
       case 'out_of_stock':
@@ -189,7 +189,7 @@ const Inventory: React.FC = () => {
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Inventory Management</h1>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 transition-colors"
         >
           <Plus className="w-5 h-5" />
           Add Product
@@ -197,8 +197,8 @@ const Inventory: React.FC = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 flex-shrink-0">
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 flex-shrink-0">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">Total Products</p>
@@ -206,27 +206,27 @@ const Inventory: React.FC = () => {
                 {stats.totalItems}
               </p>
             </div>
-            <Package className="w-8 h-8 text-blue-500" />
+            <Package className="w-8 h-8 text-accent-500" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">In Stock</p>
-              <p className="text-2xl font-bold text-green-600">
+              <p className="text-2xl font-bold text-primary-600">
                 {stats.inStock}
               </p>
             </div>
-            <CheckCircle className="w-8 h-8 text-green-500" />
+            <CheckCircle className="w-8 h-8 text-primary-500" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">Low Stock</p>
-              <p className="text-2xl font-bold text-yellow-600">
+              <p className="text-2xl font-bold text-warning-600">
                 {stats.lowStock}
               </p>
             </div>
@@ -234,7 +234,7 @@ const Inventory: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">Total Value</p>
@@ -242,14 +242,14 @@ const Inventory: React.FC = () => {
                 ${stats.totalValue.toLocaleString()}
               </p>
             </div>
-            <DollarSign className="w-8 h-8 text-green-500" />
+            <DollarSign className="w-8 h-8 text-primary-500" />
           </div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm flex-shrink-0">
-        <div className="flex flex-wrap gap-4">
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg  flex-shrink-0">
+        <div className="flex flex-wrap gap-6">
           <div className="flex-1 min-w-[200px]">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -258,7 +258,7 @@ const Inventory: React.FC = () => {
                 placeholder="Search products, SKU, or batch/lot..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               />
             </div>
           </div>
@@ -266,7 +266,7 @@ const Inventory: React.FC = () => {
           <select
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value)}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
           >
             <option value="all">All Categories</option>
             <option value="flower">Flower</option>
@@ -280,7 +280,7 @@ const Inventory: React.FC = () => {
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
           >
             <option value="all">All Status</option>
             <option value="in_stock">In Stock</option>
@@ -292,22 +292,22 @@ const Inventory: React.FC = () => {
 
       {/* Success Alert */}
       {success && (
-        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 flex items-center gap-2">
-          <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
-          <span className="text-green-700 dark:text-green-300">{success}</span>
+        <div className="bg-primary-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6 flex items-center gap-2">
+          <CheckCircle className="w-5 h-5 text-primary-600 dark:text-green-400" />
+          <span className="text-primary-700 dark:text-green-300">{success}</span>
         </div>
       )}
 
       {/* Error Alert */}
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 flex items-center gap-2">
-          <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
+        <div className="bg-danger-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 flex items-center gap-2">
+          <AlertCircle className="w-5 h-5 text-danger-600 dark:text-red-400" />
           <span className="text-red-700 dark:text-red-300">{error}</span>
         </div>
       )}
 
       {/* Inventory Table */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden flex-1 flex flex-col min-h-0">
+      <div className="bg-white dark:bg-gray-800 rounded-lg  overflow-hidden flex-1 flex flex-col min-h-0">
         <div className="overflow-auto flex-1">
           <table className="w-full">
             <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600 sticky top-0 z-10">
@@ -373,7 +373,7 @@ const Inventory: React.FC = () => {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <button
                           onClick={() => item.batch_lot && toggleRowExpanded(item.id)}
-                          className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                          className="flex items-center gap-1 text-sm text-accent-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
                           disabled={!item.batch_lot}
                         >
                           {item.batch_lot || 'N/A'}
@@ -411,7 +411,7 @@ const Inventory: React.FC = () => {
                         </button>
                         <button
                           onClick={() => {/* Handle delete */}}
-                          className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                          className="text-danger-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -420,7 +420,7 @@ const Inventory: React.FC = () => {
                     {expandedRows.has(item.id) && item.batch_lot && (
                       <tr>
                         <td colSpan={7} className="px-6 py-4 bg-gray-50 dark:bg-gray-700/30">
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                             <div>
                               <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Batch/Lot Number</div>
                               <div className="text-sm text-gray-900 dark:text-white font-mono">

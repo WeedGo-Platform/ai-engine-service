@@ -164,7 +164,7 @@ const StoreSelectionModal: React.FC<StoreSelectionModalProps> = ({
     if (tenantsError) {
       return (
         <div className="text-center py-8">
-          <p className="text-red-600 mb-2">Failed to load tenants</p>
+          <p className="text-danger-600 mb-2">Failed to load tenants</p>
           <p className="text-sm text-gray-500">Please refresh and try again</p>
         </div>
       );
@@ -181,7 +181,7 @@ const StoreSelectionModal: React.FC<StoreSelectionModalProps> = ({
     return (
       <div className="space-y-3">
         <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-          <Building2 className="w-5 h-5 text-blue-600" />
+          <Building2 className="w-5 h-5 text-accent-600" />
           Select Tenant
         </h3>
         <div className="max-h-96 overflow-y-auto space-y-2">
@@ -194,14 +194,14 @@ const StoreSelectionModal: React.FC<StoreSelectionModalProps> = ({
             <button
               key={tenant.id}
               onClick={() => handleTenantSelect(tenant.id)}
-              className="w-full text-left p-4 rounded-lg border hover:border-blue-500 hover:bg-blue-50 transition-all group"
+              className="w-full text-left p-6 rounded-lg border hover:border-blue-500 hover:bg-blue-50 transition-all group"
             >
               <div className="flex items-center justify-between">
                 <div>
                   <p className="font-semibold text-gray-900">{tenant.name}</p>
                   <p className="text-sm text-gray-500">Code: {tenant.code}</p>
                 </div>
-                <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-blue-600" />
+                <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-accent-600" />
               </div>
             </button>
           )))}
@@ -230,7 +230,7 @@ const StoreSelectionModal: React.FC<StoreSelectionModalProps> = ({
     if (storesError) {
       return (
         <div className="text-center py-8">
-          <p className="text-red-600 mb-2">Failed to load stores</p>
+          <p className="text-danger-600 mb-2">Failed to load stores</p>
           <p className="text-sm text-gray-500">Please refresh and try again</p>
         </div>
       );
@@ -248,13 +248,13 @@ const StoreSelectionModal: React.FC<StoreSelectionModalProps> = ({
         <div className="space-y-3">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold flex items-center gap-2">
-              <Store className="w-5 h-5 text-green-600" />
+              <Store className="w-5 h-5 text-primary-600" />
               Select Store
             </h3>
             {isSuperAdmin() && (
               <button
                 onClick={handleBack}
-                className="text-sm text-blue-600 hover:text-blue-700"
+                className="text-sm text-accent-600 hover:text-accent-700"
               >
                 ← Back to Tenants
               </button>
@@ -262,7 +262,7 @@ const StoreSelectionModal: React.FC<StoreSelectionModalProps> = ({
           </div>
           
           {selectedTenantData && (
-            <div className="bg-gray-50 p-3 rounded-lg mb-4">
+            <div className="bg-gray-50 p-4 rounded-lg mb-4">
               <p className="text-sm text-gray-600">
                 Tenant: <span className="font-semibold text-gray-900">{selectedTenantData.name}</span>
               </p>
@@ -280,13 +280,13 @@ const StoreSelectionModal: React.FC<StoreSelectionModalProps> = ({
       <div className="space-y-3">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold flex items-center gap-2">
-            <Store className="w-5 h-5 text-green-600" />
+            <Store className="w-5 h-5 text-primary-600" />
             Select Store
           </h3>
           {isSuperAdmin() && (
             <button
               onClick={handleBack}
-              className="text-sm text-blue-600 hover:text-blue-700"
+              className="text-sm text-accent-600 hover:text-accent-700"
             >
               ← Back to Tenants
             </button>
@@ -294,7 +294,7 @@ const StoreSelectionModal: React.FC<StoreSelectionModalProps> = ({
         </div>
         
         {selectedTenantData && (
-          <div className="bg-gray-50 p-3 rounded-lg mb-4">
+          <div className="bg-gray-50 p-4 rounded-lg mb-4">
             <p className="text-sm text-gray-600">
               Tenant: <span className="font-semibold text-gray-900">{selectedTenantData.name}</span>
             </p>
@@ -306,7 +306,7 @@ const StoreSelectionModal: React.FC<StoreSelectionModalProps> = ({
             <button
               key={store.id}
               onClick={() => handleStoreSelect(store.id, store.name)}
-              className="w-full text-left p-4 rounded-lg border hover:border-green-500 hover:bg-green-50 transition-all group"
+              className="w-full text-left p-6 rounded-lg border hover:border-primary-500 hover:bg-primary-50 transition-all group"
             >
               <div className="flex items-center justify-between">
                 <div>
@@ -320,7 +320,7 @@ const StoreSelectionModal: React.FC<StoreSelectionModalProps> = ({
                     </p>
                   )}
                 </div>
-                <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-green-600" />
+                <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-primary-600" />
               </div>
             </button>
           ))}
@@ -331,7 +331,7 @@ const StoreSelectionModal: React.FC<StoreSelectionModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden">
+      <div className="bg-white rounded-xl -2xl max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden">
         <div className="flex items-center justify-between p-6 border-b">
           <h2 className="text-xl font-bold text-gray-900">
             Select Store for Purchase Orders

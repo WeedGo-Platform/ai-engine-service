@@ -65,17 +65,17 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="w-80 bg-white border rounded-lg shadow-sm h-fit sticky top-4">
-      <div className="p-4 border-b flex justify-between items-center">
+    <div className="w-80 bg-white border rounded-lg  h-fit sticky top-6">
+      <div className="p-6 border-b flex justify-between items-center">
         <h3 className="font-semibold text-lg">Filters</h3>
         <button
           onClick={onClose}
-          className="p-1 hover:bg-gray-100 rounded"
+          className="p-1 hover:bg-gray-50 rounded"
         >
           <X className="w-4 h-4" />
         </button>
       </div>
-      <div className="p-4 space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto">
+      <div className="p-6 space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto">
         {/* Subcategories */}
         {availableSubcategories.length > 0 && (
           <div>
@@ -180,7 +180,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
               onClick={() => onFilterChange({ ...selectedFilters, priceSort: 'none' })}
               className={`px-3 py-1 text-sm rounded border ${
                 selectedFilters.priceSort === 'none'
-                  ? 'bg-blue-100 border-blue-300 text-blue-700'
+                  ? 'bg-blue-100 border-blue-300 text-accent-700'
                   : 'bg-white hover:bg-gray-50'
               }`}
             >
@@ -191,7 +191,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
               onClick={() => onFilterChange({ ...selectedFilters, priceSort: 'asc' })}
               className={`px-3 py-1 text-sm rounded border ${
                 selectedFilters.priceSort === 'asc'
-                  ? 'bg-blue-100 border-blue-300 text-blue-700'
+                  ? 'bg-blue-100 border-blue-300 text-accent-700'
                   : 'bg-white hover:bg-gray-50'
               }`}
             >
@@ -202,7 +202,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
               onClick={() => onFilterChange({ ...selectedFilters, priceSort: 'desc' })}
               className={`px-3 py-1 text-sm rounded border ${
                 selectedFilters.priceSort === 'desc'
-                  ? 'bg-blue-100 border-blue-300 text-blue-700'
+                  ? 'bg-blue-100 border-blue-300 text-accent-700'
                   : 'bg-white hover:bg-gray-50'
               }`}
             >
@@ -220,7 +220,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
               onClick={() => onFilterChange({ ...selectedFilters, thcSort: 'none' })}
               className={`px-3 py-1 text-sm rounded border ${
                 selectedFilters.thcSort === 'none'
-                  ? 'bg-blue-100 border-blue-300 text-blue-700'
+                  ? 'bg-blue-100 border-blue-300 text-accent-700'
                   : 'bg-white hover:bg-gray-50'
               }`}
             >
@@ -231,7 +231,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
               onClick={() => onFilterChange({ ...selectedFilters, thcSort: 'asc' })}
               className={`px-3 py-1 text-sm rounded border ${
                 selectedFilters.thcSort === 'asc'
-                  ? 'bg-blue-100 border-blue-300 text-blue-700'
+                  ? 'bg-blue-100 border-blue-300 text-accent-700'
                   : 'bg-white hover:bg-gray-50'
               }`}
             >
@@ -242,7 +242,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
               onClick={() => onFilterChange({ ...selectedFilters, thcSort: 'desc' })}
               className={`px-3 py-1 text-sm rounded border ${
                 selectedFilters.thcSort === 'desc'
-                  ? 'bg-blue-100 border-blue-300 text-blue-700'
+                  ? 'bg-blue-100 border-blue-300 text-accent-700'
                   : 'bg-white hover:bg-gray-50'
               }`}
             >
@@ -260,7 +260,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
               onClick={() => onFilterChange({ ...selectedFilters, cbdSort: 'none' })}
               className={`px-3 py-1 text-sm rounded border ${
                 selectedFilters.cbdSort === 'none'
-                  ? 'bg-blue-100 border-blue-300 text-blue-700'
+                  ? 'bg-blue-100 border-blue-300 text-accent-700'
                   : 'bg-white hover:bg-gray-50'
               }`}
             >
@@ -271,7 +271,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
               onClick={() => onFilterChange({ ...selectedFilters, cbdSort: 'asc' })}
               className={`px-3 py-1 text-sm rounded border ${
                 selectedFilters.cbdSort === 'asc'
-                  ? 'bg-blue-100 border-blue-300 text-blue-700'
+                  ? 'bg-blue-100 border-blue-300 text-accent-700'
                   : 'bg-white hover:bg-gray-50'
               }`}
             >
@@ -282,7 +282,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
               onClick={() => onFilterChange({ ...selectedFilters, cbdSort: 'desc' })}
               className={`px-3 py-1 text-sm rounded border ${
                 selectedFilters.cbdSort === 'desc'
-                  ? 'bg-blue-100 border-blue-300 text-blue-700'
+                  ? 'bg-blue-100 border-blue-300 text-accent-700'
                   : 'bg-white hover:bg-gray-50'
               }`}
             >
@@ -311,7 +311,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
       </div>
 
       {/* Clear Filters */}
-      <div className="p-4 border-t">
+      <div className="p-6 border-t">
         <button
           onClick={() => onFilterChange({
             subcategories: [],

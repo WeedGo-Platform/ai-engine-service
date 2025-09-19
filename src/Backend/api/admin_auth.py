@@ -194,14 +194,19 @@ def decode_token(token: str) -> dict:
 async def check_login_attempts(email: str, db_pool: asyncpg.Pool) -> bool:
     """Check if user is locked out due to failed login attempts"""
     async with db_pool.acquire() as conn:
+        # Get user_id from email first
+        user = await conn.fetchrow("SELECT id FROM users WHERE email = $1", email)
+        if not user:
+            return True  # No user found, allow attempt
+
         result = await conn.fetchrow("""
-            SELECT COUNT(*) as attempts, MAX(timestamp) as last_attempt
-            FROM login_attempts
-            WHERE email = $1
-            AND timestamp > CURRENT_TIMESTAMP - INTERVAL '%s minutes'
-            AND success = false
-        """ % LOCKOUT_DURATION_MINUTES, email)
-        
+            SELECT COUNT(*) as attempts, MAX(login_timestamp) as last_attempt
+            FROM user_login_logs
+            WHERE user_id = $1
+            AND login_timestamp > CURRENT_TIMESTAMP - INTERVAL '%s minutes'
+            AND login_successful = false
+        """ % LOCKOUT_DURATION_MINUTES, user['id'])
+
         if result and result['attempts'] >= MAX_LOGIN_ATTEMPTS:
             return False
     return True
@@ -217,11 +222,17 @@ async def record_login_attempt(
 ):
     """Record login attempt for audit and rate limiting"""
     async with db_pool.acquire() as conn:
+        # If no user_id provided, try to get it from email
+        if not user_id:
+            user = await conn.fetchrow("SELECT id FROM users WHERE email = $1", email)
+            if user:
+                user_id = user['id']
+
         await conn.execute("""
-            INSERT INTO login_attempts (
-                email, user_id, success, ip_address, user_agent, timestamp
-            ) VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP)
-        """, email, user_id, success, ip_address, user_agent)
+            INSERT INTO user_login_logs (
+                user_id, ip_address, user_agent, login_successful, failure_reason
+            ) VALUES ($1, $2::inet, $3, $4, $5)
+        """, user_id, ip_address, user_agent, success, None if success else 'Invalid credentials')
 
 
 async def get_user_permissions(user_id: UUID, db_pool: asyncpg.Pool) -> List[str]:
@@ -442,7 +453,7 @@ async def admin_login(
             credentials.email, True, client_ip, user_agent, db_pool, user['id']
         )
         
-        # Track login with IP geolocation
+        # Track login with IP geolocation (location data stored in user_login_logs)
         login_tracker = get_login_tracking_service(db_pool)
         tenant_id = tenants[0]['id'] if tenants else None
         await login_tracker.track_login(
@@ -458,11 +469,11 @@ async def admin_login(
                 'role': user['role']
             }
         )
-        
+
         # Get permissions
         permissions = await get_user_permissions(user['id'], db_pool)
-        
-        # Log admin login for audit
+
+        # Log admin login for audit (basic info only, detailed location in user_login_logs)
         await conn.execute("""
             INSERT INTO audit_log (
                 user_id, action, resource_type, details, ip_address, timestamp

@@ -271,12 +271,22 @@ class StoreAvailabilityService:
                 # Get store hours for the current day
                 day_name = check_time.strftime('%A')
                 
-                row = await conn.fetchrow("""
-                    SELECT 
-                        day_of_week, open_time, close_time, is_closed
-                    FROM store_hours
-                    WHERE store_id = $1 AND day_of_week = $2
-                """, store_id, day_name)
+                # Get store hours from consolidated settings
+                hours_data = await conn.fetchval("""
+                    SELECT value->lower($2)
+                    FROM store_settings
+                    WHERE store_id = $1 AND category = 'hours' AND key = 'regular_hours'
+                """, store_id, day_name.lower())
+
+                if not hours_data:
+                    row = None
+                else:
+                    row = {
+                        'day_of_week': day_name,
+                        'open_time': time.fromisoformat(hours_data['open']) if hours_data.get('open') else None,
+                        'close_time': time.fromisoformat(hours_data['close']) if hours_data.get('close') else None,
+                        'is_closed': hours_data.get('is_closed', False)
+                    }
                 
                 if not row:
                     return {
@@ -331,23 +341,24 @@ class StoreAvailabilityService:
         """Get the next time the store opens"""
         try:
             async with self.db_pool.acquire() as conn:
-                # Get all store hours
-                rows = await conn.fetch("""
-                    SELECT 
-                        day_of_week, open_time, close_time, is_closed
-                    FROM store_hours
-                    WHERE store_id = $1 AND is_closed = false
-                    ORDER BY 
-                        CASE day_of_week
-                            WHEN 'Monday' THEN 0
-                            WHEN 'Tuesday' THEN 1
-                            WHEN 'Wednesday' THEN 2
-                            WHEN 'Thursday' THEN 3
-                            WHEN 'Friday' THEN 4
-                            WHEN 'Saturday' THEN 5
-                            WHEN 'Sunday' THEN 6
-                        END
+                # Get all store hours from consolidated settings
+                hours_json = await conn.fetchval("""
+                    SELECT value
+                    FROM store_settings
+                    WHERE store_id = $1 AND category = 'hours' AND key = 'regular_hours'
                 """, store_id)
+
+                rows = []
+                if hours_json:
+                    days_order = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+                    for day in days_order:
+                        if day in hours_json and not hours_json[day].get('is_closed', False):
+                            rows.append({
+                                'day_of_week': day.capitalize(),
+                                'open_time': time.fromisoformat(hours_json[day]['open']),
+                                'close_time': time.fromisoformat(hours_json[day]['close']),
+                                'is_closed': False
+                            })
                 
                 if not rows:
                     return None
@@ -494,22 +505,25 @@ class StoreAvailabilityService:
         """Get complete store schedule"""
         try:
             async with self.db_pool.acquire() as conn:
-                rows = await conn.fetch("""
-                    SELECT 
-                        day_of_week, open_time, close_time, is_closed
-                    FROM store_hours
-                    WHERE store_id = $1
-                    ORDER BY 
-                        CASE day_of_week
-                            WHEN 'Monday' THEN 0
-                            WHEN 'Tuesday' THEN 1
-                            WHEN 'Wednesday' THEN 2
-                            WHEN 'Thursday' THEN 3
-                            WHEN 'Friday' THEN 4
-                            WHEN 'Saturday' THEN 5
-                            WHEN 'Sunday' THEN 6
-                        END
+                # Get all store hours from consolidated settings
+                hours_json = await conn.fetchval("""
+                    SELECT value
+                    FROM store_settings
+                    WHERE store_id = $1 AND category = 'hours' AND key = 'regular_hours'
                 """, store_id)
+
+                rows = []
+                if hours_json:
+                    days_order = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+                    for day in days_order:
+                        if day in hours_json:
+                            day_data = hours_json[day]
+                            rows.append({
+                                'day_of_week': day.capitalize(),
+                                'open_time': time.fromisoformat(day_data['open']) if day_data.get('open') else None,
+                                'close_time': time.fromisoformat(day_data['close']) if day_data.get('close') else None,
+                                'is_closed': day_data.get('is_closed', False)
+                            })
                 
                 schedule = []
                 for row in rows:
@@ -535,14 +549,28 @@ class StoreAvailabilityService:
         """Get holiday hours for store"""
         try:
             async with self.db_pool.acquire() as conn:
-                rows = await conn.fetch("""
-                    SELECT 
-                        holiday_date, holiday_name,
-                        open_time, close_time, is_closed
-                    FROM store_holiday_hours
-                    WHERE store_id = $1 AND holiday_date >= CURRENT_DATE
-                    ORDER BY holiday_date
+                # Get holiday hours from consolidated settings
+                holidays_json = await conn.fetchval("""
+                    SELECT value
+                    FROM store_settings
+                    WHERE store_id = $1 AND category = 'hours' AND key = 'holiday_hours'
                 """, store_id)
+
+                rows = []
+                if holidays_json and isinstance(holidays_json, list):
+                    from datetime import date
+                    today = date.today()
+                    for holiday in holidays_json:
+                        holiday_date = date.fromisoformat(holiday['date']) if 'date' in holiday else None
+                        if holiday_date and holiday_date >= today:
+                            rows.append({
+                                'holiday_date': holiday_date,
+                                'holiday_name': holiday.get('name', 'Holiday'),
+                                'open_time': time.fromisoformat(holiday['open']) if holiday.get('open') else None,
+                                'close_time': time.fromisoformat(holiday['close']) if holiday.get('close') else None,
+                                'is_closed': holiday.get('is_closed', False)
+                            })
+                    rows.sort(key=lambda x: x['holiday_date'])
                 
                 holidays = []
                 for row in rows:

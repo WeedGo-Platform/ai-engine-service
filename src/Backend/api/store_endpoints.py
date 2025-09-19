@@ -329,6 +329,88 @@ async def get_store(
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to get store")
 
 
+@router.get("/by-code/{code}", response_model=StoreResponse)
+async def get_store_by_code(
+    code: str,
+    service: StoreService = Depends(get_store_service)
+):
+    """Get store by store code"""
+    try:
+        # Use the service to find the store instead of direct DB access
+        stores = await service.get_stores_by_tenant(None)  # Get all stores
+
+        # Find the store with matching code
+        store = None
+        for s in stores:
+            if s.store_code == code:
+                store = s
+                break
+
+        if store:
+            # Return the store found via service
+            return store
+
+        # Try direct DB query as fallback
+        pool = await get_db_pool()
+
+        query = """
+            SELECT
+                id, tenant_id, province_territory_id, store_code, name,
+                address, phone, email, hours, timezone,
+                license_number, license_expiry, tax_rate,
+                delivery_radius_km, delivery_enabled, pickup_enabled,
+                kiosk_enabled, pos_enabled, ecommerce_enabled,
+                status, settings, pos_integration, seo_config,
+                location, created_at, updated_at
+            FROM stores
+            WHERE store_code = $1
+        """
+
+        async with pool.acquire() as conn:
+            result = await conn.fetchrow(query, code)
+
+        if not result:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Store with code '{code}' not found")
+
+        # Parse the result
+        store_data = dict(result)
+
+        return StoreResponse(
+            id=store_data['id'],
+            tenant_id=store_data['tenant_id'],
+            province_territory_id=store_data['province_territory_id'],
+            store_code=store_data['store_code'],
+            name=store_data['name'],
+            address=store_data['address'],
+            phone=store_data['phone'],
+            email=store_data['email'],
+            hours=store_data['hours'],
+            timezone=store_data['timezone'],
+            license_number=store_data['license_number'],
+            license_expiry=store_data['license_expiry'],
+            tax_rate=float(store_data['tax_rate']) if store_data['tax_rate'] else 0.0,
+            delivery_radius_km=store_data['delivery_radius_km'],
+            delivery_enabled=store_data['delivery_enabled'],
+            pickup_enabled=store_data['pickup_enabled'],
+            kiosk_enabled=store_data['kiosk_enabled'],
+            pos_enabled=store_data['pos_enabled'],
+            ecommerce_enabled=store_data['ecommerce_enabled'],
+            status=store_data['status'],
+            settings=store_data['settings'],
+            pos_integration=store_data['pos_integration'],
+            seo_config=store_data['seo_config'],
+            location=store_data['location'],
+            created_at=store_data['created_at'],
+            updated_at=store_data['updated_at']
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting store by code: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to get store by code")
+
+
 @router.put("/{store_id}", response_model=StoreResponse)
 async def update_store(
     store_id: UUID,

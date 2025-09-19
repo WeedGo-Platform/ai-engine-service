@@ -197,8 +197,8 @@ class Tenant:
         """Get store limit based on subscription tier"""
         limits = {
             SubscriptionTier.COMMUNITY_AND_NEW_BUSINESS: 1,
-            SubscriptionTier.BASIC: 5,
-            SubscriptionTier.SMALL_BUSINESS: 12,
+            SubscriptionTier.SMALL_BUSINESS: 5,
+            SubscriptionTier.PROFESSIONAL_AND_GROWING_BUSINESS: 12,
             SubscriptionTier.ENTERPRISE: None  # Unlimited
         }
         return limits.get(self.subscription_tier)
@@ -207,8 +207,8 @@ class Tenant:
         """Get AI personality limit per store based on subscription"""
         limits = {
             SubscriptionTier.COMMUNITY_AND_NEW_BUSINESS: 1,
-            SubscriptionTier.BASIC: 2,
-            SubscriptionTier.SMALL_BUSINESS: 3,
+            SubscriptionTier.SMALL_BUSINESS: 2,
+            SubscriptionTier.PROFESSIONAL_AND_GROWING_BUSINESS: 3,
             SubscriptionTier.ENTERPRISE: 5
         }
         return limits.get(self.subscription_tier, 1)
@@ -335,8 +335,8 @@ class TenantSubscription:
         """Get monthly price based on tier"""
         prices = {
             SubscriptionTier.COMMUNITY_AND_NEW_BUSINESS: Decimal("0.00"),
-            SubscriptionTier.BASIC: Decimal("99.00"),
-            SubscriptionTier.SMALL_BUSINESS: Decimal("149.00"),
+            SubscriptionTier.SMALL_BUSINESS: Decimal("99.00"),
+            SubscriptionTier.PROFESSIONAL_AND_GROWING_BUSINESS: Decimal("149.00"),
             SubscriptionTier.ENTERPRISE: Decimal("299.00")
         }
         return prices.get(self.tier, Decimal("0.00"))

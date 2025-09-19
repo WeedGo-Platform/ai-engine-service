@@ -10,7 +10,7 @@ import asyncpg
 import os
 import base64
 
-from services.voice_auth_service import VoiceAuthService
+from services.voice_auth_service_production import ProductionVoiceAuthService as VoiceAuthService
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/v1/auth/voice", tags=["Voice Authentication"])

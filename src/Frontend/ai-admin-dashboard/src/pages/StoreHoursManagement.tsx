@@ -279,7 +279,7 @@ export default function StoreHoursManagement() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
       </div>
     );
   }
@@ -300,8 +300,8 @@ export default function StoreHoursManagement() {
 
       {/* Notification */}
       {notification && (
-        <div className={`mb-4 p-4 rounded-lg flex items-center ${
-          notification.type === 'success' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'
+        <div className={`mb-4 p-6 rounded-lg flex items-center ${
+          notification.type === 'success' ? 'bg-primary-50 text-primary-800' : 'bg-danger-50 text-danger-800'
         }`}>
           {notification.type === 'success' ? (
             <Check className="h-5 w-5 mr-2" />
@@ -313,15 +313,15 @@ export default function StoreHoursManagement() {
       )}
 
       {/* Tabs */}
-      <div className="bg-white rounded-lg shadow mb-6">
+      <div className="bg-white rounded-lg  mb-6">
         <div className="border-b border-gray-200">
           <nav className="-mb-px flex">
             <button
               onClick={() => setActiveTab('regular')}
               className={`py-2 px-6 border-b-2 font-medium text-sm ${
                 activeTab === 'regular'
-                  ? 'border-green-500 text-green-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-primary-500 text-primary-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
               }`}
             >
               <Clock className="inline h-4 w-4 mr-2" />
@@ -331,8 +331,8 @@ export default function StoreHoursManagement() {
               onClick={() => setActiveTab('holidays')}
               className={`py-2 px-6 border-b-2 font-medium text-sm ${
                 activeTab === 'holidays'
-                  ? 'border-green-500 text-green-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-primary-500 text-primary-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
               }`}
             >
               <Calendar className="inline h-4 w-4 mr-2" />
@@ -342,8 +342,8 @@ export default function StoreHoursManagement() {
               onClick={() => setActiveTab('special')}
               className={`py-2 px-6 border-b-2 font-medium text-sm ${
                 activeTab === 'special'
-                  ? 'border-green-500 text-green-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-primary-500 text-primary-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
               }`}
             >
               <AlertCircle className="inline h-4 w-4 mr-2" />
@@ -353,8 +353,8 @@ export default function StoreHoursManagement() {
               onClick={() => setActiveTab('settings')}
               className={`py-2 px-6 border-b-2 font-medium text-sm ${
                 activeTab === 'settings'
-                  ? 'border-green-500 text-green-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-primary-500 text-primary-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
               }`}
             >
               <Settings className="inline h-4 w-4 mr-2" />
@@ -370,7 +370,7 @@ export default function StoreHoursManagement() {
               <h2 className="text-xl font-semibold mb-4">Regular Weekly Hours</h2>
               <div className="space-y-4">
                 {regularHours.map((day, dayIndex) => (
-                  <div key={dayIndex} className="border rounded-lg p-4">
+                  <div key={dayIndex} className="border rounded-lg p-6">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-4">
                         <h3 className="font-medium text-lg">{DAYS_OF_WEEK[dayIndex]}</h3>
@@ -379,7 +379,7 @@ export default function StoreHoursManagement() {
                             type="checkbox"
                             checked={day.is_closed}
                             onChange={(e) => updateRegularHours(dayIndex, 'is_closed', e.target.checked)}
-                            className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                            className="rounded border-gray-200 text-primary-600 focus:ring-primary-500"
                           />
                           <span className="ml-2 text-sm text-gray-600">Closed</span>
                         </label>
@@ -405,19 +405,19 @@ export default function StoreHoursManagement() {
                                 type="time"
                                 value={slot.open}
                                 onChange={(e) => updateTimeSlot(dayIndex, slotIndex, 'open', e.target.value)}
-                                className="px-3 py-2 border border-gray-300 rounded-md"
+                                className="px-3 py-2 border border-gray-200 rounded-lg"
                               />
                               <span className="text-gray-500">to</span>
                               <input
                                 type="time"
                                 value={slot.close}
                                 onChange={(e) => updateTimeSlot(dayIndex, slotIndex, 'close', e.target.value)}
-                                className="px-3 py-2 border border-gray-300 rounded-md"
+                                className="px-3 py-2 border border-gray-200 rounded-lg"
                               />
                               {day.time_slots.length > 1 && (
                                 <button
                                   onClick={() => removeTimeSlot(dayIndex, slotIndex)}
-                                  className="text-red-600 hover:text-red-800"
+                                  className="text-danger-600 hover:text-danger-800"
                                 >
                                   <Trash2 className="h-4 w-4" />
                                 </button>
@@ -426,7 +426,7 @@ export default function StoreHoursManagement() {
                           ))}
                           <button
                             onClick={() => addTimeSlot(dayIndex)}
-                            className="text-sm text-green-600 hover:text-green-700"
+                            className="text-sm text-primary-600 hover:text-primary-700"
                           >
                             <Plus className="inline h-4 w-4" /> Add time slot
                           </button>
@@ -452,7 +452,7 @@ export default function StoreHoursManagement() {
                                         time_slots: hours.time_slots.length > 0 ? hours.time_slots : [{ open: '09:00', close: '21:00' }]
                                       });
                                     }}
-                                    className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                                    className="rounded border-gray-200 text-primary-600 focus:ring-primary-500"
                                   />
                                   <span className="ml-2 text-sm">Enable delivery during these hours</span>
                                 </label>
@@ -471,7 +471,7 @@ export default function StoreHoursManagement() {
                                               time_slots: updatedSlots
                                             });
                                           }}
-                                          className="px-3 py-2 border border-gray-300 rounded-md"
+                                          className="px-3 py-2 border border-gray-200 rounded-lg"
                                         />
                                         <span className="text-gray-500">to</span>
                                         <input
@@ -485,7 +485,7 @@ export default function StoreHoursManagement() {
                                               time_slots: updatedSlots
                                             });
                                           }}
-                                          className="px-3 py-2 border border-gray-300 rounded-md"
+                                          className="px-3 py-2 border border-gray-200 rounded-lg"
                                         />
                                       </div>
                                     ))}
@@ -511,7 +511,7 @@ export default function StoreHoursManagement() {
                                         time_slots: hours.time_slots.length > 0 ? hours.time_slots : [{ open: '09:00', close: '21:00' }]
                                       });
                                     }}
-                                    className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                                    className="rounded border-gray-200 text-primary-600 focus:ring-primary-500"
                                   />
                                   <span className="ml-2 text-sm">Enable pickup during these hours</span>
                                 </label>
@@ -530,7 +530,7 @@ export default function StoreHoursManagement() {
                                               time_slots: updatedSlots
                                             });
                                           }}
-                                          className="px-3 py-2 border border-gray-300 rounded-md"
+                                          className="px-3 py-2 border border-gray-200 rounded-lg"
                                         />
                                         <span className="text-gray-500">to</span>
                                         <input
@@ -544,7 +544,7 @@ export default function StoreHoursManagement() {
                                               time_slots: updatedSlots
                                             });
                                           }}
-                                          className="px-3 py-2 border border-gray-300 rounded-md"
+                                          className="px-3 py-2 border border-gray-200 rounded-lg"
                                         />
                                       </div>
                                     ))}
@@ -563,7 +563,7 @@ export default function StoreHoursManagement() {
                 <button
                   onClick={saveRegularHours}
                   disabled={saving}
-                  className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50"
+                  className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50"
                 >
                   <Save className="inline h-4 w-4 mr-2" />
                   {saving ? 'Saving...' : 'Save Regular Hours'}
@@ -582,7 +582,7 @@ export default function StoreHoursManagement() {
                   setEditingHoliday(null);
                   setShowHolidayModal(true);
                 }}
-                className="mb-6 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center gap-2"
+                className="mb-6 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 flex items-center gap-2"
               >
                 <Plus className="h-4 w-4" />
                 Add Holiday Hours
@@ -596,7 +596,7 @@ export default function StoreHoursManagement() {
                   </p>
                 ) : (
                   holidayHours.map((holiday, index) => (
-                    <div key={index} className="border rounded-lg p-4">
+                    <div key={index} className="border rounded-lg p-6">
                       <div className="flex justify-between items-start">
                         <div>
                           <h4 className="font-medium">
@@ -612,7 +612,7 @@ export default function StoreHoursManagement() {
                               setEditingHoliday(holiday);
                               setShowHolidayModal(true);
                             }}
-                            className="text-blue-600 hover:text-blue-800"
+                            className="text-accent-600 hover:text-blue-800"
                           >
                             Edit
                           </button>
@@ -628,7 +628,7 @@ export default function StoreHoursManagement() {
                                 }
                               }
                             }}
-                            className="text-red-600 hover:text-red-800"
+                            className="text-danger-600 hover:text-danger-800"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
@@ -651,7 +651,7 @@ export default function StoreHoursManagement() {
                   setEditingSpecial(null);
                   setShowSpecialModal(true);
                 }}
-                className="mb-6 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center gap-2"
+                className="mb-6 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 flex items-center gap-2"
               >
                 <Plus className="h-4 w-4" />
                 Add Special Hours
@@ -665,7 +665,7 @@ export default function StoreHoursManagement() {
                   </p>
                 ) : (
                   specialHours.map((special, index) => (
-                    <div key={index} className="border rounded-lg p-4">
+                    <div key={index} className="border rounded-lg p-6">
                       <div className="flex justify-between items-start">
                         <div>
                           <h4 className="font-medium">{special.date}</h4>
@@ -682,7 +682,7 @@ export default function StoreHoursManagement() {
                               setEditingSpecial(special);
                               setShowSpecialModal(true);
                             }}
-                            className="text-blue-600 hover:text-blue-800"
+                            className="text-accent-600 hover:text-blue-800"
                           >
                             Edit
                           </button>
@@ -698,7 +698,7 @@ export default function StoreHoursManagement() {
                                 }
                               }
                             }}
-                            className="text-red-600 hover:text-red-800"
+                            className="text-danger-600 hover:text-danger-800"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
@@ -726,7 +726,7 @@ export default function StoreHoursManagement() {
                         type="checkbox"
                         checked={settings.observe_federal_holidays}
                         onChange={(e) => setSettings({ ...settings, observe_federal_holidays: e.target.checked })}
-                        className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                        className="rounded border-gray-200 text-primary-600 focus:ring-primary-500"
                       />
                       <span className="ml-2">Observe federal holidays</span>
                     </label>
@@ -735,7 +735,7 @@ export default function StoreHoursManagement() {
                         type="checkbox"
                         checked={settings.observe_provincial_holidays}
                         onChange={(e) => setSettings({ ...settings, observe_provincial_holidays: e.target.checked })}
-                        className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                        className="rounded border-gray-200 text-primary-600 focus:ring-primary-500"
                       />
                       <span className="ml-2">Observe provincial holidays</span>
                     </label>
@@ -744,7 +744,7 @@ export default function StoreHoursManagement() {
                         type="checkbox"
                         checked={settings.observe_municipal_holidays}
                         onChange={(e) => setSettings({ ...settings, observe_municipal_holidays: e.target.checked })}
-                        className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                        className="rounded border-gray-200 text-primary-600 focus:ring-primary-500"
                       />
                       <span className="ml-2">Observe municipal holidays</span>
                     </label>
@@ -762,7 +762,7 @@ export default function StoreHoursManagement() {
                       <select
                         value={settings.default_holiday_action}
                         onChange={(e) => setSettings({ ...settings, default_holiday_action: e.target.value as 'closed' | 'modified' | 'open' })}
-                        className="w-64 px-3 py-2 border border-gray-300 rounded-md"
+                        className="w-64 px-3 py-2 border border-gray-200 rounded-lg"
                       >
                         <option value="closed">Store is closed</option>
                         <option value="modified">Store has modified hours</option>
@@ -783,7 +783,7 @@ export default function StoreHoursManagement() {
                               ...settings, 
                               modified_holiday_hours: [{ open: e.target.value, close: settings.modified_holiday_hours?.[0]?.close || '18:00' }]
                             })}
-                            className="px-3 py-2 border border-gray-300 rounded-md"
+                            className="px-3 py-2 border border-gray-200 rounded-lg"
                           />
                           <span className="text-gray-500">to</span>
                           <input
@@ -793,7 +793,7 @@ export default function StoreHoursManagement() {
                               ...settings, 
                               modified_holiday_hours: [{ open: settings.modified_holiday_hours?.[0]?.open || '10:00', close: e.target.value }]
                             })}
-                            className="px-3 py-2 border border-gray-300 rounded-md"
+                            className="px-3 py-2 border border-gray-200 rounded-lg"
                           />
                         </div>
                       </div>
@@ -806,7 +806,7 @@ export default function StoreHoursManagement() {
                       <select
                         value={settings.delivery_holiday_behavior}
                         onChange={(e) => setSettings({ ...settings, delivery_holiday_behavior: e.target.value as 'same_as_store' | 'closed' | 'modified' })}
-                        className="w-64 px-3 py-2 border border-gray-300 rounded-md"
+                        className="w-64 px-3 py-2 border border-gray-200 rounded-lg"
                       >
                         <option value="same_as_store">Same as store hours</option>
                         <option value="closed">No delivery</option>
@@ -821,7 +821,7 @@ export default function StoreHoursManagement() {
                       <select
                         value={settings.pickup_holiday_behavior}
                         onChange={(e) => setSettings({ ...settings, pickup_holiday_behavior: e.target.value as 'same_as_store' | 'closed' | 'modified' })}
-                        className="w-64 px-3 py-2 border border-gray-300 rounded-md"
+                        className="w-64 px-3 py-2 border border-gray-200 rounded-lg"
                       >
                         <option value="same_as_store">Same as store hours</option>
                         <option value="closed">No pickup</option>
@@ -835,7 +835,7 @@ export default function StoreHoursManagement() {
                   <button
                     onClick={saveSettings}
                     disabled={saving}
-                    className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50"
+                    className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50"
                   >
                     <Save className="inline h-4 w-4 mr-2" />
                     {saving ? 'Saving...' : 'Save Settings'}
@@ -945,7 +945,7 @@ function HolidayHoursForm({
         <select
           value={formData.holiday_id}
           onChange={(e) => setFormData({ ...formData, holiday_id: e.target.value })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+          className="w-full px-3 py-2 border border-gray-200 rounded-lg"
           required
         >
           <option value="">Select a holiday...</option>
@@ -963,7 +963,7 @@ function HolidayHoursForm({
             type="checkbox"
             checked={formData.is_closed}
             onChange={(e) => setFormData({ ...formData, is_closed: e.target.checked })}
-            className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+            className="rounded border-gray-200 text-primary-600 focus:ring-primary-500"
           />
           <span className="ml-2">Store is closed on this holiday</span>
         </label>
@@ -984,7 +984,7 @@ function HolidayHoursForm({
                   updated[index] = { ...updated[index], open: e.target.value };
                   setFormData({ ...formData, time_slots: updated });
                 }}
-                className="px-3 py-2 border border-gray-300 rounded-md"
+                className="px-3 py-2 border border-gray-200 rounded-lg"
                 required
               />
               <span className="text-gray-500">to</span>
@@ -996,7 +996,7 @@ function HolidayHoursForm({
                   updated[index] = { ...updated[index], close: e.target.value };
                   setFormData({ ...formData, time_slots: updated });
                 }}
-                className="px-3 py-2 border border-gray-300 rounded-md"
+                className="px-3 py-2 border border-gray-200 rounded-lg"
                 required
               />
               {formData.time_slots.length > 1 && (
@@ -1006,7 +1006,7 @@ function HolidayHoursForm({
                     const updated = formData.time_slots.filter((_, i) => i !== index);
                     setFormData({ ...formData, time_slots: updated });
                   }}
-                  className="text-red-600 hover:text-red-800"
+                  className="text-danger-600 hover:text-danger-800"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
@@ -1021,7 +1021,7 @@ function HolidayHoursForm({
                 time_slots: [...formData.time_slots, { open: '09:00', close: '17:00' }]
               });
             }}
-            className="text-sm text-green-600 hover:text-green-700"
+            className="text-sm text-primary-600 hover:text-primary-700"
           >
             <Plus className="inline h-4 w-4" /> Add time slot
           </button>
@@ -1032,13 +1032,13 @@ function HolidayHoursForm({
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+          className="px-4 py-2 text-gray-700 bg-gray-50 rounded-lg hover:bg-gray-50"
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+          className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
         >
           Save
         </button>
@@ -1079,7 +1079,7 @@ function SpecialHoursForm({
           type="date"
           value={formData.date}
           onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+          className="w-full px-3 py-2 border border-gray-200 rounded-lg"
           required
         />
       </div>
@@ -1093,7 +1093,7 @@ function SpecialHoursForm({
           value={formData.reason || ''}
           onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
           placeholder="e.g., Staff Training, Inventory, Holiday Sale"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+          className="w-full px-3 py-2 border border-gray-200 rounded-lg"
         />
       </div>
 
@@ -1103,7 +1103,7 @@ function SpecialHoursForm({
             type="checkbox"
             checked={formData.is_closed}
             onChange={(e) => setFormData({ ...formData, is_closed: e.target.checked })}
-            className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+            className="rounded border-gray-200 text-primary-600 focus:ring-primary-500"
           />
           <span className="ml-2">Store is closed on this date</span>
         </label>
@@ -1124,7 +1124,7 @@ function SpecialHoursForm({
                   updated[index] = { ...updated[index], open: e.target.value };
                   setFormData({ ...formData, time_slots: updated });
                 }}
-                className="px-3 py-2 border border-gray-300 rounded-md"
+                className="px-3 py-2 border border-gray-200 rounded-lg"
                 required
               />
               <span className="text-gray-500">to</span>
@@ -1136,7 +1136,7 @@ function SpecialHoursForm({
                   updated[index] = { ...updated[index], close: e.target.value };
                   setFormData({ ...formData, time_slots: updated });
                 }}
-                className="px-3 py-2 border border-gray-300 rounded-md"
+                className="px-3 py-2 border border-gray-200 rounded-lg"
                 required
               />
               {formData.time_slots.length > 1 && (
@@ -1146,7 +1146,7 @@ function SpecialHoursForm({
                     const updated = formData.time_slots.filter((_, i) => i !== index);
                     setFormData({ ...formData, time_slots: updated });
                   }}
-                  className="text-red-600 hover:text-red-800"
+                  className="text-danger-600 hover:text-danger-800"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
@@ -1161,7 +1161,7 @@ function SpecialHoursForm({
                 time_slots: [...formData.time_slots, { open: '09:00', close: '17:00' }]
               });
             }}
-            className="text-sm text-green-600 hover:text-green-700"
+            className="text-sm text-primary-600 hover:text-primary-700"
           >
             <Plus className="inline h-4 w-4" /> Add time slot
           </button>
@@ -1172,13 +1172,13 @@ function SpecialHoursForm({
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+          className="px-4 py-2 text-gray-700 bg-gray-50 rounded-lg hover:bg-gray-50"
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+          className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
         >
           Save
         </button>

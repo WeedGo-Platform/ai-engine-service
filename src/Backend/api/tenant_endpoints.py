@@ -38,8 +38,8 @@ class CreateTenantRequest(BaseModel):
     contact_email: EmailStr
     subscription_tier: SubscriptionTier = SubscriptionTier.COMMUNITY_AND_NEW_BUSINESS
     company_name: Optional[str] = Field(None, max_length=200)
-    business_number: Optional[str] = Field(None, max_length=50)
-    gst_hst_number: Optional[str] = Field(None, max_length=50)
+    business_number: str = Field(..., min_length=9, max_length=9, pattern="^\\d{9}$", description="Canadian Business Number (9 digits)")
+    gst_hst_number: str = Field(..., pattern="^\\d{9}RT\\d{4}$", description="GST/HST Number (format: 123456789RT0001)")
     address: Optional[AddressModel] = None
     contact_phone: Optional[str] = Field(None, max_length=20)
     website: Optional[str] = Field(None, max_length=200)
@@ -74,8 +74,8 @@ class TenantResponse(BaseModel):
     name: str
     code: str
     company_name: Optional[str]
-    business_number: Optional[str]
-    gst_hst_number: Optional[str]
+    business_number: str
+    gst_hst_number: str
     address: Optional[Dict[str, Any]]
     contact_email: Optional[str]
     contact_phone: Optional[str]
@@ -140,74 +140,194 @@ async def get_user_repository() -> UserRepository:
     return UserRepository(pool)
 
 
-@router.post("/", response_model=TenantResponse, status_code=status.HTTP_201_CREATED)
-async def create_tenant(
+class CheckExistsRequest(BaseModel):
+    code: Optional[str] = None
+    website: Optional[str] = None
+
+
+@router.post("/check-exists")
+async def check_tenant_exists(
+    request: CheckExistsRequest,
+    pool: asyncpg.Pool = Depends(get_db_pool)
+):
+    """Check if a tenant with the given code or website already exists"""
+    try:
+        if not request.code and not request.website:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Either code or website must be provided"
+            )
+
+        async with pool.acquire() as conn:
+            conflicts = []
+
+            # Check by code
+            if request.code:
+                existing_by_code = await conn.fetchrow("""
+                    SELECT id, name, code, website, contact_email FROM tenants
+                    WHERE UPPER(code) = UPPER($1)
+                """, request.code)
+
+                if existing_by_code:
+                    conflicts.append({
+                        'type': 'code',
+                        'value': request.code,
+                        'existing_tenant': {
+                            'id': str(existing_by_code['id']),
+                            'name': existing_by_code['name'],
+                            'code': existing_by_code['code'],
+                            'website': existing_by_code['website'],
+                            'contact_email': existing_by_code['contact_email']
+                        }
+                    })
+
+            # Check by website
+            if request.website:
+                # Normalize website URL
+                normalized_website = request.website.lower()
+                normalized_website = normalized_website.replace('https://', '').replace('http://', '').rstrip('/')
+
+                existing_by_website = await conn.fetchrow("""
+                    SELECT id, name, code, website, contact_email FROM tenants
+                    WHERE LOWER(REPLACE(REPLACE(TRIM(website), 'https://', ''), 'http://', '')) = $1
+                """, normalized_website)
+
+                if existing_by_website:
+                    conflicts.append({
+                        'type': 'website',
+                        'value': request.website,
+                        'existing_tenant': {
+                            'id': str(existing_by_website['id']),
+                            'name': existing_by_website['name'],
+                            'code': existing_by_website['code'],
+                            'website': existing_by_website['website'],
+                            'contact_email': existing_by_website['contact_email']
+                        }
+                    })
+
+            return {
+                'exists': len(conflicts) > 0,
+                'conflicts': conflicts
+            }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error checking tenant existence: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to check tenant existence")
+
+
+@router.post("/signup", response_model=TenantResponse, status_code=status.HTTP_201_CREATED)
+async def create_tenant_with_admin(
     request: CreateTenantRequest,
     service: TenantService = Depends(get_tenant_service),
-    user_repo: UserRepository = Depends(get_user_repository)
+    user_repo: UserRepository = Depends(get_user_repository),
+    pool: asyncpg.Pool = Depends(get_db_pool)
 ):
-    """Create a new tenant with admin user"""
+    """Create a new tenant with admin user - atomic operation with duplicate checking"""
     try:
-        # Start with tenant creation
-        tenant = await service.create_tenant(
-            name=request.name,
-            code=request.code,
-            contact_email=request.contact_email,
-            subscription_tier=request.subscription_tier,
-            company_name=request.company_name,
-            business_number=request.business_number,
-            gst_hst_number=request.gst_hst_number,
-            address=request.address.dict() if request.address else None,
-            contact_phone=request.contact_phone,
-            website=request.website,
-            logo_url=request.logo_url,
-            settings=request.settings
-        )
-        
-        # Check if admin user details are provided in settings
+        # First check for existing tenant by code
+        async with pool.acquire() as conn:
+            existing_by_code = await conn.fetchrow("""
+                SELECT id, name, code, website FROM tenants
+                WHERE UPPER(code) = UPPER($1)
+            """, request.code)
+
+            if existing_by_code:
+                raise HTTPException(
+                    status_code=status.HTTP_409_CONFLICT,
+                    detail=f"Tenant with code '{request.code}' already exists"
+                )
+
+            # Check by website URL (if provided)
+            if request.website:
+                # Normalize website URL - remove protocol and trailing slash
+                normalized_website = request.website.lower()
+                normalized_website = normalized_website.replace('https://', '').replace('http://', '').rstrip('/')
+
+                existing_by_website = await conn.fetchrow("""
+                    SELECT id, name, code, website FROM tenants
+                    WHERE LOWER(REPLACE(REPLACE(website, 'https://', ''), 'http://', '')) = $1
+                """, normalized_website)
+
+                if existing_by_website:
+                    raise HTTPException(
+                        status_code=status.HTTP_409_CONFLICT,
+                        detail=f"Tenant with website '{request.website}' already exists"
+                    )
+
+        # Check if admin user is provided
         admin_user_data = request.settings.get('admin_user') if request.settings else None
-        created_user = None
-        
-        if admin_user_data:
-            try:
-                # Create the admin user
-                created_user = await user_repo.create_user(
-                    email=admin_user_data.get('email', request.contact_email),
-                    password=admin_user_data.get('password'),
-                    first_name=admin_user_data.get('first_name'),
-                    last_name=admin_user_data.get('last_name'),
-                    phone=request.contact_phone
+        if not admin_user_data:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Admin user details are required in settings.admin_user"
+            )
+
+        # Validate admin user data
+        if not admin_user_data.get('email'):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Admin user email is required"
+            )
+        if not admin_user_data.get('password'):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Admin user password is required"
+            )
+
+        # Start transaction for atomic operation
+        async with pool.acquire() as conn:
+            async with conn.transaction():
+                # Create tenant first
+                tenant = await service.create_tenant(
+                    name=request.name,
+                    code=request.code,
+                    contact_email=request.contact_email,
+                    subscription_tier=request.subscription_tier,
+                    company_name=request.company_name,
+                    business_number=request.business_number,
+                    gst_hst_number=request.gst_hst_number,
+                    address=request.address.dict() if request.address else None,
+                    contact_phone=request.contact_phone,
+                    website=request.website,
+                    logo_url=request.logo_url,
+                    settings=request.settings
                 )
-                
-                # Update user with tenant and admin role
-                await user_repo.update_user_tenant(
-                    user_id=created_user['id'],
-                    tenant_id=tenant.id,
-                    role='tenant_admin'
-                )
-                
-                # Add user ID to settings for response
-                if not tenant.settings:
-                    tenant.settings = {}
-                tenant.settings['admin_user'] = {
-                    'id': str(created_user['id']),
-                    'email': created_user['email']
-                }
-                
-            except ValueError as e:
-                # If user creation fails, log but don't fail the whole operation
-                logger.warning(f"Failed to create admin user for tenant {tenant.id}: {e}")
-                # User might already exist, try to link them
-                existing_user = await user_repo.get_user_by_email(
-                    admin_user_data.get('email', request.contact_email)
-                )
-                if existing_user:
+
+                # Create admin user
+                try:
+                    created_user = await user_repo.create_user(
+                        email=admin_user_data.get('email'),
+                        password=admin_user_data.get('password'),
+                        first_name=admin_user_data.get('first_name', 'Admin'),
+                        last_name=admin_user_data.get('last_name', 'User'),
+                        phone=request.contact_phone
+                    )
+
+                    # Link user to tenant with admin role
                     await user_repo.update_user_tenant(
-                        user_id=existing_user['id'],
+                        user_id=created_user['id'],
                         tenant_id=tenant.id,
                         role='tenant_admin'
                     )
-        
+
+                    # Add user info to response
+                    if not tenant.settings:
+                        tenant.settings = {}
+                    tenant.settings['admin_user'] = {
+                        'id': str(created_user['id']),
+                        'email': created_user['email']
+                    }
+
+                except Exception as user_error:
+                    # If user creation fails, the transaction will rollback
+                    logger.error(f"Failed to create admin user: {user_error}")
+                    raise HTTPException(
+                        status_code=status.HTTP_400_BAD_REQUEST,
+                        detail=f"Failed to create admin user: {str(user_error)}"
+                    )
+
         return TenantResponse(
             id=tenant.id,
             name=tenant.name,
@@ -228,12 +348,24 @@ async def create_tenant(
             created_at=tenant.created_at,
             updated_at=tenant.updated_at
         )
-        
-    except ValueError as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
+    except HTTPException:
+        raise
     except Exception as e:
-        logger.error(f"Error creating tenant: {e}")
+        logger.error(f"Error creating tenant with admin: {e}")
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to create tenant")
+
+
+@router.post("/", response_model=TenantResponse, status_code=status.HTTP_201_CREATED)
+async def create_tenant(
+    request: CreateTenantRequest,
+    service: TenantService = Depends(get_tenant_service),
+    user_repo: UserRepository = Depends(get_user_repository),
+    pool: asyncpg.Pool = Depends(get_db_pool)
+):
+    """Create a new tenant with admin user - atomic operation with duplicate checking"""
+    # Redirect to the new signup endpoint
+    return await create_tenant_with_admin(request, service, user_repo, pool)
 
 
 @router.get("/{tenant_id}", response_model=TenantResponse)
@@ -581,7 +713,7 @@ async def get_tenant_users(
         async with pool.acquire() as conn:
             # Query users table directly where tenant_id matches
             query = """
-                SELECT 
+                SELECT
                     id, email, first_name, last_name, role, active,
                     tenant_id, permissions, created_at, last_login_at
                 FROM users
@@ -589,22 +721,29 @@ async def get_tenant_users(
                 ORDER BY created_at DESC
             """
             rows = await conn.fetch(query, tenant_id)
-            
-            return [
-                TenantUserResponse(
-                    id=row['id'],
-                    email=row['email'],
-                    first_name=row['first_name'],
-                    last_name=row['last_name'],
-                    role=row['role'],
-                    active=row['active'],
-                    tenant_id=row['tenant_id'],
-                    permissions=row['permissions'],
-                    created_at=row['created_at'],
-                    last_login_at=row['last_login_at']
-                )
-                for row in rows
-            ]
+
+            users = []
+            for row in rows:
+                try:
+                    # Handle potential None values and ensure proper typing
+                    user = TenantUserResponse(
+                        id=row['id'],
+                        email=row['email'] or '',
+                        first_name=row['first_name'],
+                        last_name=row['last_name'],
+                        role=row['role'] or 'customer',
+                        active=row['active'] if row['active'] is not None else True,
+                        tenant_id=row['tenant_id'],
+                        permissions=row['permissions'] or {},
+                        created_at=row['created_at'],
+                        last_login_at=row['last_login_at']
+                    )
+                    users.append(user)
+                except Exception as validation_error:
+                    logger.warning(f"Skipping user due to validation error: {validation_error}, row data: {dict(row)}")
+                    continue
+
+            return users
     except Exception as e:
         logger.error(f"Error getting tenant users: {e}")
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to get tenant users")

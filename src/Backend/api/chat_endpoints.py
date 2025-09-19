@@ -8,12 +8,34 @@ import uuid
 import asyncio
 from datetime import datetime
 import logging
+import time
 from services.smart_ai_engine_v5 import SmartAIEngineV5
 
 logger = logging.getLogger(__name__)
 
 # Initialize AI engine
 ai_engine = SmartAIEngineV5()
+
+# Load default model on startup
+try:
+    # Load the default model configured in system_config.json
+    default_model = "qwen2.5_0.5b_instruct_q4_k_m"  # or get from config
+    if default_model in ai_engine.available_models:
+        success = ai_engine.load_model(default_model, agent_id="dispensary", personality_id="friendly")
+        if success:
+            logger.info(f"Loaded default model: {default_model}")
+        else:
+            logger.error(f"Failed to load default model: {default_model}")
+    else:
+        logger.warning(f"Default model {default_model} not found in available models")
+        # Try to load first available model
+        if ai_engine.available_models:
+            first_model = list(ai_engine.available_models.keys())[0]
+            success = ai_engine.load_model(first_model, agent_id="dispensary", personality_id="friendly")
+            if success:
+                logger.info(f"Loaded fallback model: {first_model}")
+except Exception as e:
+    logger.error(f"Failed to load model on startup: {e}")
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 
@@ -90,22 +112,26 @@ async def websocket_endpoint(websocket: WebSocket):
                 elif message_type == "message":
                     # Process chat message
                     user_message = message_data.get("message", "")
-                    
+
                     # Get session agent and personality
                     session_data = chat_sessions.get(session_id, {})
                     agent = session_data.get("agent", "dispensary")
                     personality = session_data.get("personality", "friendly")
-                    
+
                     # Load agent and personality if needed
                     if ai_engine.current_agent != agent or ai_engine.current_personality_type != personality:
                         ai_engine.load_agent_personality(agent, personality)
-                    
+
                     # Send typing indicator
                     await manager.send_message(json.dumps({
                         "type": "typing",
                         "status": "start"
                     }), session_id)
-                    
+
+                    # Track response time and tokens
+                    start_time = time.time()
+                    prompt_tokens = len(user_message.split())  # Simple approximation
+
                     # Get actual AI response with user context if available
                     user_id = message_data.get("user_id")  # Get user_id if provided
                     try:
@@ -118,17 +144,30 @@ async def websocket_endpoint(websocket: WebSocket):
                     except Exception as e:
                         logger.error(f"AI engine error: {e}")
                         ai_response = "I apologize, but I'm having trouble processing your request. Please try again."
-                    
+
+                    # Calculate metrics
+                    response_time = time.time() - start_time
+                    completion_tokens = len(ai_response.split())  # Simple approximation
+                    total_tokens = prompt_tokens + completion_tokens
+
+                    # Get current model name
+                    current_model = ai_engine.current_model_name if hasattr(ai_engine, 'current_model_name') else 'qwen2.5_0.5b_instruct_q4_k_m'
+
                     await manager.send_message(json.dumps({
                         "type": "typing",
                         "status": "stop"
                     }), session_id)
-                    
+
                     await manager.send_message(json.dumps({
                         "type": "message",
                         "role": "assistant",
                         "content": ai_response,
-                        "timestamp": datetime.utcnow().isoformat()
+                        "timestamp": datetime.utcnow().isoformat(),
+                        "response_time": response_time,
+                        "token_count": total_tokens,
+                        "prompt_tokens": prompt_tokens,
+                        "completion_tokens": completion_tokens,
+                        "model": current_model
                     }), session_id)
                 
                 elif message_type == "voice":
@@ -246,26 +285,30 @@ async def send_message(session_id: str, message: str, user_id: Optional[str] = N
             "messages": [],
             "user_id": user_id  # Store user_id in session
         }
-    
+
     # Add user message to session
     chat_sessions[session_id]["messages"].append({
         "role": "user",
         "content": message,
         "timestamp": datetime.utcnow().isoformat()
     })
-    
+
     # Get session agent and personality
     agent = chat_sessions[session_id].get("agent", "dispensary")
     personality = chat_sessions[session_id].get("personality", "friendly")
-    
+
     # Load agent and personality if needed
     if ai_engine.current_agent != agent or ai_engine.current_personality_type != personality:
         ai_engine.load_agent_personality(agent, personality)
-    
+
     # Get user_id from session if not provided
     if not user_id and "user_id" in chat_sessions[session_id]:
         user_id = chat_sessions[session_id]["user_id"]
-    
+
+    # Track response time and tokens
+    start_time = time.time()
+    prompt_tokens = len(message.split())  # Simple approximation
+
     # Generate AI response with user context
     try:
         ai_response = ai_engine.get_response(
@@ -277,18 +320,26 @@ async def send_message(session_id: str, message: str, user_id: Optional[str] = N
     except Exception as e:
         logger.error(f"AI engine error: {e}")
         ai_response = "I apologize, but I'm having trouble processing your request. Please try again."
-    
+
+    # Calculate metrics
+    response_time = time.time() - start_time
+    completion_tokens = len(ai_response.split())  # Simple approximation
+    total_tokens = prompt_tokens + completion_tokens
+
     # Add AI response to session
     chat_sessions[session_id]["messages"].append({
         "role": "assistant",
         "content": ai_response,
         "timestamp": datetime.utcnow().isoformat()
     })
-    
+
     return JSONResponse({
         "response": ai_response,
         "session_id": session_id,
-        "token_count": len(message.split()) + len(ai_response.split())
+        "response_time": response_time,
+        "token_count": total_tokens,
+        "prompt_tokens": prompt_tokens,
+        "completion_tokens": completion_tokens
     })
 
 @router.delete("/session/{session_id}")

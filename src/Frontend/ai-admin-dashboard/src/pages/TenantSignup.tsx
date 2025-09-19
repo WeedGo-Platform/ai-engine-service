@@ -1,11 +1,11 @@
 import React, { useState, useRef } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { 
-  ArrowLeft, ArrowRight, CheckCircle, AlertCircle,
-  Building2, Mail, Phone, Globe, CreditCard, Lock, Leaf,
-  Eye, EyeOff, Shield
+import {
+  ArrowLeft, ArrowRight, CheckCircle, AlertCircle, Leaf,
+  Eye, EyeOff, Shield, Loader2, UserPlus, LogIn, CheckCircle2
 } from 'lucide-react';
 import tenantService from '../services/tenantService';
+import '../styles/signup-animations.css';
 
 interface FormData {
   // Company Information
@@ -54,16 +54,14 @@ const TenantSignup = () => {
   
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [createdUserId, setCreatedUserId] = useState<string | null>(null);
-  
-  // Voice recording states
-  const [isRecording, setIsRecording] = useState(false);
-  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
-  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
-  const [voiceRegistrationStatus, setVoiceRegistrationStatus] = useState<'idle' | 'registering' | 'success' | 'error'>('idle');
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const [submitProgress, setSubmitProgress] = useState<{
+    step: 'idle' | 'checking' | 'creating' | 'uploading' | 'complete';
+    message: string;
+  }>({ step: 'idle', message: '' });
+  const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  
   const [formData, setFormData] = useState<FormData>({
     companyName: '',
     businessNumber: '',
@@ -89,7 +87,7 @@ const TenantSignup = () => {
     billingName: ''
   });
   
-  const [errors, setErrors] = useState<FormErrors>({});
+  const [errors, setErrors] = useState<FormErrors & { existingTenant?: any }>({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
@@ -122,16 +120,19 @@ const TenantSignup = () => {
     
     switch (step) {
       case 1: // Company Information
-        if (!formData.companyName.trim()) newErrors.companyName = 'Company name is required';
         if (!formData.tenantName.trim()) newErrors.tenantName = 'Brand name is required';
-        if (!formData.tenantCode.trim()) newErrors.tenantCode = 'Tenant code is required';
+        if (!formData.website.trim()) newErrors.website = 'Website is required to generate brand code';
+        if (!formData.tenantCode.trim()) newErrors.tenantCode = 'Brand code is required (enter website to generate)';
         else if (!/^[A-Z0-9_-]+$/.test(formData.tenantCode)) {
-          newErrors.tenantCode = 'Tenant code must contain only uppercase letters, numbers, hyphens, and underscores';
+          newErrors.tenantCode = 'Brand code must contain only uppercase letters, numbers, hyphens, and underscores';
         }
-        if (formData.businessNumber && !/^\d{9}$/.test(formData.businessNumber.replace(/\D/g, ''))) {
+        if (!formData.companyName.trim()) newErrors.companyName = 'Company name is required';
+        if (!formData.businessNumber.trim()) newErrors.businessNumber = 'Business number is required';
+        else if (!/^\d{9}$/.test(formData.businessNumber.replace(/\D/g, ''))) {
           newErrors.businessNumber = 'Business number must be 9 digits';
         }
-        if (formData.gstHstNumber && !/^\d{9}RT\d{4}$/.test(formData.gstHstNumber.replace(/\s/g, ''))) {
+        if (!formData.gstHstNumber.trim()) newErrors.gstHstNumber = 'GST/HST number is required';
+        else if (!/^\d{9}RT\d{4}$/.test(formData.gstHstNumber.replace(/\s/g, ''))) {
           newErrors.gstHstNumber = 'GST/HST number format: 123456789RT0001';
         }
         break;
@@ -213,12 +214,44 @@ const TenantSignup = () => {
     return 'Very Strong';
   };
 
+  const generateBrandCodeFromWebsite = (website: string): string => {
+    // Extract domain name from URL (handles with or without protocol)
+    let domain = website
+      .replace(/^https?:\/\//, '') // Remove protocol if present
+      .replace(/^www\./, ''); // Remove www if present
+
+    // Get the main domain name (before first dot or slash)
+    domain = domain.split('/')[0].split('.')[0];
+
+    // Convert to uppercase and replace non-alphanumeric with hyphens
+    let brandCode = domain.toUpperCase().replace(/[^A-Z0-9]/g, '-');
+
+    // Remove consecutive hyphens and trim
+    brandCode = brandCode.replace(/-+/g, '-').replace(/^-|-$/g, '');
+
+    // Limit length to 20 characters
+    return brandCode.substring(0, 20);
+  };
+
   const handleInputChange = (field: keyof FormData, value: string) => {
     let formattedValue = value;
-    
+
     // Auto-format certain fields
     if (field === 'tenantCode') {
-      formattedValue = value.toUpperCase().replace(/[^A-Z0-9_-]/g, '');
+      // Brand code is readonly, don't allow manual changes
+      return;
+    } else if (field === 'website') {
+      // Auto-generate brand code from website
+      const brandCode = generateBrandCodeFromWebsite(value);
+      setFormData(prev => ({ ...prev, website: value, tenantCode: brandCode }));
+      // Clear both errors
+      if (errors.website) {
+        setErrors(prev => ({ ...prev, website: '' }));
+      }
+      if (errors.tenantCode) {
+        setErrors(prev => ({ ...prev, tenantCode: '' }));
+      }
+      return;
     } else if (field === 'postalCode') {
       formattedValue = value.toUpperCase().replace(/[^A-Z0-9]/g, '');
       if (formattedValue.length > 3) {
@@ -260,17 +293,50 @@ const TenantSignup = () => {
 
   const handleSubmit = async () => {
     if (!validateStep(4)) return;
-    
+
     setIsSubmitting(true);
-    
+    setSubmitProgress({ step: 'checking', message: 'Verifying availability...' });
+
     try {
+      // Add smooth delay for better UX
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // First check if tenant already exists
+      const checkResult = await tenantService.checkTenantExists(
+        formData.tenantCode,
+        formData.website || undefined
+      );
+
+      if (checkResult.exists) {
+        // Show cleaner error message
+        const conflict = checkResult.conflicts[0];
+        const errorMessage = conflict.type === 'code'
+          ? `The tenant code "${conflict.value}" is already registered`
+          : `The website "${conflict.value}" is already in use`;
+
+        setErrors({
+          submit: errorMessage,
+          existingTenant: conflict.existing_tenant,
+          conflictDetails: {
+            name: conflict.existing_tenant.name,
+            code: conflict.existing_tenant.code,
+            contact: conflict.existing_tenant.contact_email
+          }
+        });
+        setSubmitProgress({ step: 'idle', message: '' });
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Update progress
+      setSubmitProgress({ step: 'creating', message: 'Creating your account...' });
       // Prepare the payload according to backend API
       const payload = {
         name: formData.tenantName,
         code: formData.tenantCode,
         company_name: formData.companyName,
-        business_number: formData.businessNumber || undefined,
-        gst_hst_number: formData.gstHstNumber || undefined,
+        business_number: formData.businessNumber,
+        gst_hst_number: formData.gstHstNumber,
         address: {
           street: formData.street,
           city: formData.city,
@@ -297,93 +363,109 @@ const TenantSignup = () => {
         }
       };
 
+      // Create tenant with admin user (now uses atomic signup endpoint)
       const result = await tenantService.createTenant(payload);
-      
+
       // Upload logo if provided
       if (logoFile && result?.id) {
-        const formData = new FormData();
-        formData.append('file', logoFile);
-        
+        setSubmitProgress({ step: 'uploading', message: 'Uploading logo...' });
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        const uploadFormData = new FormData();
+        uploadFormData.append('file', logoFile);
+
         try {
           await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5024'}/api/uploads/tenant/${result.id}/logo`, {
             method: 'POST',
-            body: formData,
+            body: uploadFormData,
           });
         } catch (error) {
-          console.error('Failed to upload logo:', error);
-          // Don't fail the entire signup if logo upload fails
+          console.error('Logo upload failed, but account was created successfully');
         }
       }
-      
-      // Store the created user ID for voice registration
-      if (result?.settings?.admin_user?.id) {
-        setCreatedUserId(result.settings.admin_user.id);
-        setCurrentStep(5); // Move to voice registration step
-      } else {
-        // If no user ID returned, skip voice registration
-        navigate('/signup-success', { 
-          state: { 
-            tenantName: formData.tenantName,
-            tenantCode: formData.tenantCode 
-          } 
-        });
-      }
+
+      // Mark as complete and show success
+      setSubmitProgress({ step: 'complete', message: 'Account created successfully!' });
+      setShowSuccessAnimation(true);
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Navigate to success page
+      navigate('/signup-success', {
+        state: {
+          tenantName: formData.tenantName,
+          tenantCode: formData.tenantCode
+        }
+      });
       
     } catch (error: any) {
       console.error('Signup error:', error);
-      
+      console.error('Error response:', error.response);
+      console.error('Error data:', error.response?.data);
+
       // Parse error response for specific messages
-      let errorMessage = 'Failed to create account';
-      let shouldRedirectToUserRegistration = false;
-      
-      if (error.response?.data?.detail) {
-        const detail = error.response.data.detail;
-        
-        // Check for specific error types
-        if (detail.includes('already exists')) {
-          if (detail.includes('Tenant')) {
-            // Tenant already exists - redirect to user registration
-            shouldRedirectToUserRegistration = true;
-            errorMessage = 'This tenant already exists. Redirecting you to user registration...';
-          } else if (detail.includes('User') || detail.includes('email')) {
-            errorMessage = 'A user with this email already exists. Please use a different email or login instead.';
+      let errorMessage = 'Failed to create account. ';
+
+      if (error.response?.status === 409) {
+        // Conflict error - this shouldn't happen as we check first, but handle it
+        const detail = error.response.data?.detail || '';
+        errorMessage = detail || 'This tenant already exists.';
+
+        // Try to get the existing tenant info for navigation options
+        try {
+          const checkResult = await tenantService.checkTenantExists(
+            formData.tenantCode,
+            formData.website || undefined
+          );
+          if (checkResult.exists && checkResult.conflicts.length > 0) {
+            setErrors({
+              submit: errorMessage,
+              existingTenant: checkResult.conflicts[0].existing_tenant
+            });
           } else {
-            errorMessage = detail;
+            setErrors({ submit: errorMessage });
           }
+        } catch (e) {
+          setErrors({ submit: errorMessage });
+        }
+        setIsSubmitting(false);
+        return;
+      } else if (error.response?.data?.detail) {
+        const detail = typeof error.response.data.detail === 'string'
+          ? error.response.data.detail
+          : JSON.stringify(error.response.data.detail);
+
+        // Check for specific error types
+        if (detail.includes('User') || detail.includes('email')) {
+          errorMessage = 'A user with this email already exists. Please use a different email or login instead.';
         } else if (detail.includes('duplicate key')) {
-          if (detail.includes('tenants_name_key') || detail.includes('tenants_code_key')) {
-            // Tenant already exists - redirect to user registration
-            shouldRedirectToUserRegistration = true;
-            errorMessage = 'This tenant already exists. Redirecting you to user registration...';
-          } else if (detail.includes('users_email_key')) {
+          if (detail.includes('users_email_key')) {
             errorMessage = 'This email is already registered. Please use a different email or login instead.';
           } else {
             errorMessage = 'This information is already registered in our system.';
           }
+        } else if (detail.includes('validation error') || detail.includes('field required')) {
+          errorMessage = 'Please check all required fields are filled correctly. ' + detail;
         } else {
           errorMessage = detail;
         }
+      } else if (error.response?.status === 422) {
+        // Validation error from FastAPI
+        errorMessage = 'Validation error: Please check all required fields are filled correctly.';
+        if (error.response?.data?.errors) {
+          const errors = error.response.data.errors;
+          errorMessage += ' ' + JSON.stringify(errors);
+        }
+      } else if (error.response?.status === 500) {
+        errorMessage = 'Server error occurred. Please try again later or contact support.';
+      } else if (error.response?.status === 404) {
+        errorMessage = 'Service not available. Please ensure the backend is running.';
+      } else if (!error.response) {
+        errorMessage = 'Network error: Unable to connect to the server. Please check your connection.';
       } else if (error.message) {
         errorMessage = error.message;
       }
-      
+
       setErrors({ submit: errorMessage });
-      
-      // If tenant exists, redirect to user registration after a short delay
-      if (shouldRedirectToUserRegistration) {
-        setTimeout(() => {
-          navigate('/user-registration', {
-            state: {
-              tenantCode: formData.tenantCode,
-              tenantName: formData.tenantName,
-              contactEmail: formData.contactEmail,
-              firstName: formData.firstName,
-              lastName: formData.lastName,
-              phone: formData.contactPhone
-            }
-          });
-        }, 2000);
-      }
     } finally {
       setIsSubmitting(false);
     }
@@ -396,40 +478,59 @@ const TenantSignup = () => {
           <div className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Brand/Tenant Name *
+                Brand Name *
               </label>
               <input
                 type="text"
                 value={formData.tenantName}
                 onChange={(e) => handleInputChange('tenantName', e.target.value)}
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                  errors.tenantName ? 'border-red-500' : 'border-gray-300'
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                  errors.tenantName ? 'border-red-500' : 'border-gray-200'
                 }`}
                 placeholder="e.g., Green Valley Dispensary"
               />
               {errors.tenantName && (
-                <p className="mt-1 text-sm text-red-600">{errors.tenantName}</p>
+                <p className="mt-1 text-sm text-danger-600">{errors.tenantName}</p>
               )}
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Tenant Code * (used in URLs)
+                Website *
+              </label>
+              <input
+                type="text"
+                value={formData.website}
+                onChange={(e) => handleInputChange('website', e.target.value)}
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                  errors.website ? 'border-red-500' : 'border-gray-200'
+                }`}
+                placeholder="www.potpalace.ca or potpalace.ca"
+              />
+              <p className="mt-1 text-sm text-gray-500">
+                Your website URL (used to generate brand code)
+              </p>
+              {errors.website && (
+                <p className="mt-1 text-sm text-danger-600">{errors.website}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Brand Code * (auto-generated)
               </label>
               <input
                 type="text"
                 value={formData.tenantCode}
-                onChange={(e) => handleInputChange('tenantCode', e.target.value)}
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                  errors.tenantCode ? 'border-red-500' : 'border-gray-300'
-                }`}
-                placeholder="e.g., GREEN-VALLEY"
+                readOnly
+                className="w-full px-4 py-3 border rounded-lg bg-gray-50 cursor-not-allowed border-gray-200"
+                placeholder="Enter website above to generate"
               />
               <p className="mt-1 text-sm text-gray-500">
                 Will be used in your store URL: {formData.tenantCode.toLowerCase() || 'your-code'}.weedgo.com
               </p>
               {errors.tenantCode && (
-                <p className="mt-1 text-sm text-red-600">{errors.tenantCode}</p>
+                <p className="mt-1 text-sm text-danger-600">{errors.tenantCode}</p>
               )}
             </div>
 
@@ -441,27 +542,27 @@ const TenantSignup = () => {
                 type="text"
                 value={formData.companyName}
                 onChange={(e) => handleInputChange('companyName', e.target.value)}
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                  errors.companyName ? 'border-red-500' : 'border-gray-300'
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                  errors.companyName ? 'border-red-500' : 'border-gray-200'
                 }`}
                 placeholder="e.g., Green Valley Cannabis Inc."
               />
               {errors.companyName && (
-                <p className="mt-1 text-sm text-red-600">{errors.companyName}</p>
+                <p className="mt-1 text-sm text-danger-600">{errors.companyName}</p>
               )}
             </div>
 
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Business Number
+                  Business Number *
                 </label>
                 <input
                   type="text"
                   value={formData.businessNumber}
                   onChange={(e) => handleInputChange('businessNumber', e.target.value)}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                    errors.businessNumber ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                    errors.businessNumber ? 'border-red-500' : 'border-gray-200'
                   }`}
                   placeholder="123456789"
                 />
@@ -469,44 +570,32 @@ const TenantSignup = () => {
                   Canadian Business Number (9 digits)
                 </p>
                 {errors.businessNumber && (
-                  <p className="mt-1 text-sm text-red-600">{errors.businessNumber}</p>
+                  <p className="mt-1 text-sm text-danger-600">{errors.businessNumber}</p>
                 )}
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  GST/HST Number
+                  GST/HST Number *
                 </label>
                 <input
                   type="text"
                   value={formData.gstHstNumber}
                   onChange={(e) => handleInputChange('gstHstNumber', e.target.value)}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                    errors.gstHstNumber ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                    errors.gstHstNumber ? 'border-red-500' : 'border-gray-200'
                   }`}
                   placeholder="123456789RT0001"
                 />
                 <p className="mt-1 text-sm text-gray-500">
-                  Optional - Format: 123456789RT0001
+                  Format: 123456789RT0001
                 </p>
                 {errors.gstHstNumber && (
-                  <p className="mt-1 text-sm text-red-600">{errors.gstHstNumber}</p>
+                  <p className="mt-1 text-sm text-danger-600">{errors.gstHstNumber}</p>
                 )}
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Website
-              </label>
-              <input
-                type="url"
-                value={formData.website}
-                onChange={(e) => handleInputChange('website', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                placeholder="https://www.yoursite.com"
-              />
-            </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -528,13 +617,13 @@ const TenantSignup = () => {
                         reader.readAsDataURL(file);
                       }
                     }}
-                    className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    className="flex-1 px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   />
                   {logoPreview && (
-                    <img 
-                      src={logoPreview} 
-                      alt="Logo preview" 
-                      className="w-16 h-16 object-contain border border-gray-300 rounded"
+                    <img
+                      src={logoPreview}
+                      alt="Logo preview"
+                      className="w-16 h-16 object-contain border border-gray-200 rounded"
                     />
                   )}
                 </div>
@@ -549,7 +638,7 @@ const TenantSignup = () => {
       case 2:
         return (
           <div className="space-y-6">
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   First Name *
@@ -558,12 +647,12 @@ const TenantSignup = () => {
                   type="text"
                   value={formData.firstName}
                   onChange={(e) => handleInputChange('firstName', e.target.value)}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                    errors.firstName ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                    errors.firstName ? 'border-red-500' : 'border-gray-200'
                   }`}
                 />
                 {errors.firstName && (
-                  <p className="mt-1 text-sm text-red-600">{errors.firstName}</p>
+                  <p className="mt-1 text-sm text-danger-600">{errors.firstName}</p>
                 )}
               </div>
 
@@ -575,17 +664,17 @@ const TenantSignup = () => {
                   type="text"
                   value={formData.lastName}
                   onChange={(e) => handleInputChange('lastName', e.target.value)}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                    errors.lastName ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                    errors.lastName ? 'border-red-500' : 'border-gray-200'
                   }`}
                 />
                 {errors.lastName && (
-                  <p className="mt-1 text-sm text-red-600">{errors.lastName}</p>
+                  <p className="mt-1 text-sm text-danger-600">{errors.lastName}</p>
                 )}
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Email Address *
@@ -594,12 +683,12 @@ const TenantSignup = () => {
                   type="email"
                   value={formData.contactEmail}
                   onChange={(e) => handleInputChange('contactEmail', e.target.value)}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                    errors.contactEmail ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                    errors.contactEmail ? 'border-red-500' : 'border-gray-200'
                   }`}
                 />
                 {errors.contactEmail && (
-                  <p className="mt-1 text-sm text-red-600">{errors.contactEmail}</p>
+                  <p className="mt-1 text-sm text-danger-600">{errors.contactEmail}</p>
                 )}
               </div>
 
@@ -611,7 +700,7 @@ const TenantSignup = () => {
                   type="tel"
                   value={formData.contactPhone}
                   onChange={(e) => handleInputChange('contactPhone', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   placeholder="(555) 123-4567"
                 />
               </div>
@@ -625,16 +714,16 @@ const TenantSignup = () => {
                 type="text"
                 value={formData.street}
                 onChange={(e) => handleInputChange('street', e.target.value)}
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                  errors.street ? 'border-red-500' : 'border-gray-300'
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                  errors.street ? 'border-red-500' : 'border-gray-200'
                 }`}
               />
               {errors.street && (
-                <p className="mt-1 text-sm text-red-600">{errors.street}</p>
+                <p className="mt-1 text-sm text-danger-600">{errors.street}</p>
               )}
             </div>
 
-            <div className="grid md:grid-cols-3 gap-4">
+            <div className="grid md:grid-cols-3 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   City *
@@ -643,12 +732,12 @@ const TenantSignup = () => {
                   type="text"
                   value={formData.city}
                   onChange={(e) => handleInputChange('city', e.target.value)}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                    errors.city ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                    errors.city ? 'border-red-500' : 'border-gray-200'
                   }`}
                 />
                 {errors.city && (
-                  <p className="mt-1 text-sm text-red-600">{errors.city}</p>
+                  <p className="mt-1 text-sm text-danger-600">{errors.city}</p>
                 )}
               </div>
 
@@ -659,7 +748,7 @@ const TenantSignup = () => {
                 <select
                   value={formData.province}
                   onChange={(e) => handleInputChange('province', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 >
                   {provinces.map(province => (
                     <option key={province.code} value={province.code}>
@@ -677,13 +766,13 @@ const TenantSignup = () => {
                   type="text"
                   value={formData.postalCode}
                   onChange={(e) => handleInputChange('postalCode', e.target.value)}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                    errors.postalCode ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                    errors.postalCode ? 'border-red-500' : 'border-gray-200'
                   }`}
                   placeholder="A1A 1A1"
                 />
                 {errors.postalCode && (
-                  <p className="mt-1 text-sm text-red-600">{errors.postalCode}</p>
+                  <p className="mt-1 text-sm text-danger-600">{errors.postalCode}</p>
                 )}
               </div>
             </div>
@@ -702,8 +791,8 @@ const TenantSignup = () => {
                   type={showPassword ? "text" : "password"}
                   value={formData.password}
                   onChange={(e) => handleInputChange('password', e.target.value)}
-                  className={`w-full px-4 py-3 pr-12 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                    errors.password ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-4 py-3 pr-12 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                    errors.password ? 'border-red-500' : 'border-gray-200'
                   }`}
                 />
                 <button
@@ -733,7 +822,7 @@ const TenantSignup = () => {
                       {getPasswordStrengthText(passwordStrength)}
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-gray-100 rounded-full h-2">
                     <div
                       className={`h-2 rounded-full transition-all duration-300 ${getPasswordStrengthColor(passwordStrength)}`}
                       style={{ width: `${passwordStrength}%` }}
@@ -746,7 +835,7 @@ const TenantSignup = () => {
                 Must be at least 8 characters with uppercase, lowercase, and number
               </p>
               {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+                <p className="mt-1 text-sm text-danger-600">{errors.password}</p>
               )}
             </div>
 
@@ -759,8 +848,8 @@ const TenantSignup = () => {
                   type={showConfirmPassword ? "text" : "password"}
                   value={formData.confirmPassword}
                   onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                  className={`w-full px-4 py-3 pr-12 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                    errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-4 py-3 pr-12 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                    errors.confirmPassword ? 'border-red-500' : 'border-gray-200'
                   }`}
                 />
                 <button
@@ -772,16 +861,16 @@ const TenantSignup = () => {
                 </button>
               </div>
               {errors.confirmPassword && (
-                <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>
+                <p className="mt-1 text-sm text-danger-600">{errors.confirmPassword}</p>
               )}
             </div>
 
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+            <div className="bg-primary-50 border border-green-200 rounded-lg p-6">
               <div className="flex items-start">
-                <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 mr-3" />
+                <CheckCircle className="h-5 w-5 text-primary-600 mt-0.5 mr-3" />
                 <div>
-                  <h3 className="font-medium text-green-900">Account Security</h3>
-                  <p className="text-sm text-green-700 mt-1">
+                  <h3 className="font-medium text-primary-900">Account Security</h3>
+                  <p className="text-sm text-primary-700 mt-1">
                     Your account will be secured with industry-standard encryption and multi-factor authentication options.
                   </p>
                 </div>
@@ -792,20 +881,272 @@ const TenantSignup = () => {
 
       case 4:
         const selectedPlanInfo = subscriptionPlans[formData.subscriptionTier as keyof typeof subscriptionPlans];
-        
+
+        // Show error message prominently at the top if there's a submit error
+        if (errors.submit) {
+          return (
+            <div className="space-y-6">
+              <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-4">
+                <div className="flex items-start">
+                  <AlertCircle className="h-5 w-5 text-red-500 mt-0.5 mr-3 flex-shrink-0" />
+                  <div>
+                    <h3 className="text-sm font-semibold text-red-800 mb-1">Account Creation Failed</h3>
+                    <p className="text-sm text-red-700">{errors.submit}</p>
+                    <div className="mt-3 flex gap-3">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setErrors({ submit: '' });
+                          setIsSubmitting(false);
+                        }}
+                        className="text-sm px-3 py-1.5 bg-white border border-red-300 text-red-700 rounded-md hover:bg-red-50"
+                      >
+                        Try Again
+                      </button>
+                      {errors.existingTenant && (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => navigate('/user-registration', {
+                              state: {
+                                tenantCode: errors.existingTenant.code,
+                                tenantName: errors.existingTenant.name
+                              }
+                            })}
+                            className="text-sm px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all transform hover:scale-105 flex items-center gap-2"
+                          >
+                            <UserPlus className="h-4 w-4" />
+                            Register as User
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => navigate('/login')}
+                            className="text-sm px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-all transform hover:scale-105 flex items-center gap-2"
+                          >
+                            <LogIn className="h-4 w-4" />
+                            Sign In Instead
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* Show the selected plan and payment form even with error */}
+              {selectedPlanInfo && (
+                <>
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="text-lg font-semibold">Selected Plan: {selectedPlanInfo.name}</h3>
+                      <button
+                        type="button"
+                        onClick={() => handleInputChange('subscriptionTier', '')}
+                        className="text-sm text-primary-600 hover:text-primary-700 underline"
+                      >
+                        Change Plan
+                      </button>
+                    </div>
+                    <div className="text-2xl font-bold text-primary-600 mb-2">
+                      {selectedPlanInfo.price === 0 ? 'FREE' :
+                       selectedPlanInfo.price ? `$${selectedPlanInfo.price}/month` : 'Custom Pricing'}
+                    </div>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      {selectedPlanInfo.features.map((feature, index) => (
+                        <li key={index} className="flex items-center">
+                          <CheckCircle className="h-4 w-4 text-primary-500 mr-2" />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Billing Cycle */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Billing Cycle
+                    </label>
+                    <div className="grid grid-cols-2 gap-6">
+                      <label className="flex items-center p-6 border rounded-lg cursor-pointer hover:bg-gray-50">
+                        <input
+                          type="radio"
+                          name="billingCycle"
+                          value="monthly"
+                          checked={formData.billingCycle === 'monthly'}
+                          onChange={(e) => handleInputChange('billingCycle', e.target.value)}
+                          className="mr-3"
+                        />
+                        <div>
+                          <div className="font-medium">Monthly</div>
+                          <div className="text-sm text-gray-500">Billed monthly</div>
+                        </div>
+                      </label>
+                      <label className="flex items-center p-6 border rounded-lg cursor-pointer hover:bg-gray-50">
+                        <input
+                          type="radio"
+                          name="billingCycle"
+                          value="annual"
+                          checked={formData.billingCycle === 'annual'}
+                          onChange={(e) => handleInputChange('billingCycle', e.target.value)}
+                          className="mr-3"
+                        />
+                        <div>
+                          <div className="font-medium">Annual</div>
+                          <div className="text-sm text-gray-500">Save 20%</div>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Payment fields for non-free plans */}
+                  {selectedPlanInfo.price !== 0 && (
+                    <>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Cardholder Name <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            value={formData.billingName}
+                            onChange={(e) => handleInputChange('billingName', e.target.value)}
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                              errors.billingName ? 'border-red-500' : 'border-gray-300'
+                            }`}
+                            placeholder="John Doe"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Card Number <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            value={formData.cardNumber}
+                            onChange={(e) => handleInputChange('cardNumber', e.target.value.replace(/\s/g, '').replace(/(.{4})/g, '$1 ').trim())}
+                            maxLength={19}
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                              errors.cardNumber ? 'border-red-500' : 'border-gray-300'
+                            }`}
+                            placeholder="1234 5678 9012 3456"
+                          />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Expiry Date <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            value={formData.expiryDate}
+                            onChange={(e) => {
+                              let value = e.target.value.replace(/\D/g, '');
+                              if (value.length >= 2) {
+                                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                              }
+                              handleInputChange('expiryDate', value);
+                            }}
+                            maxLength={5}
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                              errors.expiryDate ? 'border-red-500' : 'border-gray-300'
+                            }`}
+                            placeholder="MM/YY"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            CVV <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            value={formData.cvv}
+                            onChange={(e) => handleInputChange('cvv', e.target.value.replace(/\D/g, '').substring(0, 4))}
+                            maxLength={4}
+                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                              errors.cvv ? 'border-red-500' : 'border-gray-300'
+                            }`}
+                            placeholder="123"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            ZIP/Postal Code
+                          </label>
+                          <input
+                            type="text"
+                            value={formData.billingPostalCode}
+                            onChange={(e) => handleInputChange('billingPostalCode', e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                            placeholder="12345"
+                          />
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </>
+              )}
+            </div>
+          );
+        }
+
+        if (!selectedPlanInfo) {
+          return (
+            <div className="space-y-6">
+              <h3 className="text-lg font-semibold mb-4">Choose Your Subscription Plan</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {Object.entries(subscriptionPlans).map(([key, plan]) => (
+                  <div
+                    key={key}
+                    onClick={() => handleInputChange('subscriptionTier', key)}
+                    className="border rounded-lg p-4 cursor-pointer hover:border-primary-500 hover:shadow-lg transition-all"
+                  >
+                    <h4 className="font-semibold text-lg mb-2">{plan.name}</h4>
+                    <div className="text-2xl font-bold text-primary-600 mb-3">
+                      {plan.price === 0 ? 'FREE' : plan.price ? `$${plan.price}/mo` : 'Custom'}
+                    </div>
+                    <ul className="text-sm space-y-1">
+                      {plan.features.slice(0, 3).map((feature, idx) => (
+                        <li key={idx} className="flex items-start">
+                          <CheckCircle className="h-4 w-4 text-green-500 mr-1 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-600">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <button
+                      type="button"
+                      className="mt-4 w-full py-2 px-4 bg-primary-600 text-white rounded-md hover:bg-primary-700"
+                    >
+                      Select Plan
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        }
+
         return (
           <div className="space-y-6">
             {/* Plan Summary */}
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold mb-2">Selected Plan: {selectedPlanInfo.name}</h3>
-              <div className="text-2xl font-bold text-green-600 mb-2">
-                {selectedPlanInfo.price === 0 ? 'FREE' : 
+              <div className="flex justify-between items-start mb-2">
+                <h3 className="text-lg font-semibold">Selected Plan: {selectedPlanInfo.name}</h3>
+                <button
+                  type="button"
+                  onClick={() => handleInputChange('subscriptionTier', '')}
+                  className="text-sm text-primary-600 hover:text-primary-700 underline"
+                >
+                  Change Plan
+                </button>
+              </div>
+              <div className="text-2xl font-bold text-primary-600 mb-2">
+                {selectedPlanInfo.price === 0 ? 'FREE' :
                  selectedPlanInfo.price ? `$${selectedPlanInfo.price}/month` : 'Custom Pricing'}
               </div>
               <ul className="text-sm text-gray-600 space-y-1">
                 {selectedPlanInfo.features.map((feature, index) => (
                   <li key={index} className="flex items-center">
-                    <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                    <CheckCircle className="h-4 w-4 text-primary-500 mr-2" />
                     {feature}
                   </li>
                 ))}
@@ -817,8 +1158,8 @@ const TenantSignup = () => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Billing Cycle
               </label>
-              <div className="grid grid-cols-2 gap-4">
-                <label className="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
+              <div className="grid grid-cols-2 gap-6">
+                <label className="flex items-center p-6 border rounded-lg cursor-pointer hover:bg-gray-50">
                   <input
                     type="radio"
                     name="billingCycle"
@@ -832,7 +1173,7 @@ const TenantSignup = () => {
                     <div className="text-sm text-gray-500">Billed monthly</div>
                   </div>
                 </label>
-                <label className="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
+                <label className="flex items-center p-6 border rounded-lg cursor-pointer hover:bg-gray-50">
                   <input
                     type="radio"
                     name="billingCycle"
@@ -860,12 +1201,12 @@ const TenantSignup = () => {
                     type="text"
                     value={formData.billingName}
                     onChange={(e) => handleInputChange('billingName', e.target.value)}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                      errors.billingName ? 'border-red-500' : 'border-gray-300'
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                      errors.billingName ? 'border-red-500' : 'border-gray-200'
                     }`}
                   />
                   {errors.billingName && (
-                    <p className="mt-1 text-sm text-red-600">{errors.billingName}</p>
+                    <p className="mt-1 text-sm text-danger-600">{errors.billingName}</p>
                   )}
                 </div>
 
@@ -877,18 +1218,18 @@ const TenantSignup = () => {
                     type="text"
                     value={formData.cardNumber}
                     onChange={(e) => handleInputChange('cardNumber', e.target.value)}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                      errors.cardNumber ? 'border-red-500' : 'border-gray-300'
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                      errors.cardNumber ? 'border-red-500' : 'border-gray-200'
                     }`}
                     placeholder="1234 5678 9012 3456"
                     maxLength={19}
                   />
                   {errors.cardNumber && (
-                    <p className="mt-1 text-sm text-red-600">{errors.cardNumber}</p>
+                    <p className="mt-1 text-sm text-danger-600">{errors.cardNumber}</p>
                   )}
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Expiry Date *
@@ -897,14 +1238,14 @@ const TenantSignup = () => {
                       type="text"
                       value={formData.expiryDate}
                       onChange={(e) => handleInputChange('expiryDate', e.target.value)}
-                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                        errors.expiryDate ? 'border-red-500' : 'border-gray-300'
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                        errors.expiryDate ? 'border-red-500' : 'border-gray-200'
                       }`}
                       placeholder="MM/YY"
                       maxLength={5}
                     />
                     {errors.expiryDate && (
-                      <p className="mt-1 text-sm text-red-600">{errors.expiryDate}</p>
+                      <p className="mt-1 text-sm text-danger-600">{errors.expiryDate}</p>
                     )}
                   </div>
 
@@ -916,13 +1257,13 @@ const TenantSignup = () => {
                       type="text"
                       value={formData.cvv}
                       onChange={(e) => handleInputChange('cvv', e.target.value)}
-                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                        errors.cvv ? 'border-red-500' : 'border-gray-300'
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                        errors.cvv ? 'border-red-500' : 'border-gray-200'
                       }`}
                       placeholder="123"
                     />
                     {errors.cvv && (
-                      <p className="mt-1 text-sm text-red-600">{errors.cvv}</p>
+                      <p className="mt-1 text-sm text-danger-600">{errors.cvv}</p>
                     )}
                   </div>
                 </div>
@@ -930,12 +1271,12 @@ const TenantSignup = () => {
             )}
 
             {formData.subscriptionTier === 'enterprise' && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
                 <div className="flex items-start">
-                  <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5 mr-3" />
+                  <AlertCircle className="h-5 w-5 text-accent-600 mt-0.5 mr-3" />
                   <div>
                     <h3 className="font-medium text-blue-900">Enterprise Plan</h3>
-                    <p className="text-sm text-blue-700 mt-1">
+                    <p className="text-sm text-accent-700 mt-1">
                       Our sales team will contact you within 24 hours to discuss custom pricing and setup.
                     </p>
                   </div>
@@ -944,9 +1285,9 @@ const TenantSignup = () => {
             )}
 
             {errors.submit && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+              <div className="bg-danger-50 border border-red-200 rounded-lg p-6">
                 <div className="flex items-start">
-                  <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 mr-3" />
+                  <AlertCircle className="h-5 w-5 text-danger-600 mt-0.5 mr-3" />
                   <p className="text-sm text-red-700">{errors.submit}</p>
                 </div>
               </div>
@@ -968,17 +1309,58 @@ const TenantSignup = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
+      {/* Success Animation Overlay */}
+      {showSuccessAnimation && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn">
+          <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 animate-scaleIn">
+            <div className="text-center">
+              <div className="mx-auto h-20 w-20 bg-green-100 rounded-full flex items-center justify-center mb-4 animate-scaleIn">
+                <svg
+                  className="h-12 w-12 text-green-600 success-check"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M20 6 L9 17 L4 12"></path>
+                </svg>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2 animate-fadeInUp">
+                Welcome to WeedGo!
+              </h3>
+              <p className="text-gray-600 mb-6 animate-fadeInUp" style={{ animationDelay: '0.1s' }}>
+                Your account has been created successfully.
+              </p>
+              <div className="space-y-2 animate-fadeInUp" style={{ animationDelay: '0.2s' }}>
+                <p className="text-sm text-gray-500">Tenant Code:</p>
+                <p className="text-lg font-mono font-bold text-primary-600 bg-gray-50 py-2 px-4 rounded-lg">
+                  {formData.tenantCode}
+                </p>
+              </div>
+              <div className="mt-6 animate-fadeInUp" style={{ animationDelay: '0.3s' }}>
+                <div className="h-1 w-full bg-gray-200 rounded-full overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-green-500 to-green-600 loading-shimmer"></div>
+                </div>
+                <p className="text-sm text-gray-500 mt-2">Preparing your dashboard...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="bg-white ">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between py-6">
             <Link to="/" className="flex items-center">
               <ArrowLeft className="h-5 w-5 text-gray-400 mr-2" />
-              <Leaf className="h-8 w-8 text-green-600" />
+              <Leaf className="h-8 w-8 text-primary-600" />
               <span className="ml-2 text-2xl font-bold text-gray-900">WeedGo</span>
             </Link>
             <div className="text-sm text-gray-500">
-              Already have an account? <Link to="/login" className="text-green-600 hover:text-green-700">Sign in</Link>
+              Already have an account? <Link to="/login" className="text-primary-600 hover:text-primary-700">Sign in</Link>
             </div>
           </div>
         </div>
@@ -994,8 +1376,8 @@ const TenantSignup = () => {
                 <div key={index} className="flex items-center">
                   <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${
                     index + 1 <= currentStep
-                      ? 'bg-green-600 border-green-600 text-white'
-                      : 'border-gray-300 text-gray-400'
+                      ? 'bg-primary-600 border-primary-600 text-white'
+                      : 'border-gray-200 text-gray-400'
                   }`}>
                     {index + 1 < currentStep ? (
                       <CheckCircle className="h-6 w-6" />
@@ -1005,7 +1387,7 @@ const TenantSignup = () => {
                   </div>
                   {index < stepTitles.length - 1 && (
                     <div className={`flex-1 h-1 mx-4 ${
-                      index + 1 < currentStep ? 'bg-green-600' : 'bg-gray-300'
+                      index + 1 < currentStep ? 'bg-primary-600' : 'bg-gray-300'
                     }`} />
                   )}
                 </div>
@@ -1014,7 +1396,7 @@ const TenantSignup = () => {
             <div className="flex justify-between mt-2">
               {stepTitles.map((title, index) => (
                 <div key={index} className={`text-sm ${
-                  index + 1 === currentStep ? 'text-green-600 font-medium' : 'text-gray-500'
+                  index + 1 === currentStep ? 'text-primary-600 font-medium' : 'text-gray-500'
                 }`}>
                   {title}
                 </div>
@@ -1023,7 +1405,7 @@ const TenantSignup = () => {
           </div>
 
           {/* Form */}
-          <div className="bg-white rounded-xl shadow-sm p-8">
+          <div className="bg-white rounded-xl  p-8">
             <div className="mb-8">
               <h1 className="text-2xl font-bold text-gray-900 mb-2">
                 {stepTitles[currentStep - 1]}
@@ -1036,7 +1418,9 @@ const TenantSignup = () => {
               </p>
             </div>
 
-            {renderStepContent()}
+            <div className="step-content">
+              {renderStepContent()}
+            </div>
 
             {/* Navigation Buttons */}
             <div className="flex justify-between pt-8 mt-8 border-t border-gray-200">
@@ -1046,7 +1430,7 @@ const TenantSignup = () => {
                 className={`flex items-center px-6 py-3 rounded-lg font-medium ${
                   currentStep === 1
                     ? 'text-gray-400 cursor-not-allowed'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
                 <ArrowLeft className="h-5 w-5 mr-2" />
@@ -1056,7 +1440,7 @@ const TenantSignup = () => {
               {currentStep < 4 ? (
                 <button
                   onClick={nextStep}
-                  className="flex items-center px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors"
+                  className="flex items-center px-6 py-3 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-colors"
                 >
                   Next
                   <ArrowRight className="h-5 w-5 ml-2" />
@@ -1065,10 +1449,26 @@ const TenantSignup = () => {
                 <button
                   onClick={handleSubmit}
                   disabled={isSubmitting}
-                  className="flex items-center px-8 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="relative flex items-center px-8 py-3 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-all transform hover:scale-105 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none overflow-hidden"
                 >
-                  {isSubmitting ? 'Creating Account...' : 'Create Account'}
-                  {!isSubmitting && <CheckCircle className="h-5 w-5 ml-2" />}
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                      <span className="animate-pulse">
+                        {submitProgress.message || 'Processing...'}
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Create Account</span>
+                      <CheckCircle className="h-5 w-5 ml-2" />
+                    </>
+                  )}
+                  {submitProgress.step === 'complete' && (
+                    <div className="absolute inset-0 bg-green-600 flex items-center justify-center animate-slideIn">
+                      <CheckCircle2 className="h-6 w-6 text-white animate-scaleIn" />
+                    </div>
+                  )}
                 </button>
               )}
             </div>

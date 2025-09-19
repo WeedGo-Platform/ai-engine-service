@@ -122,7 +122,7 @@ const StoreSettings: React.FC = () => {
   if (!store) {
     return (
       <div className="p-6">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+        <div className="bg-danger-50 border border-red-200 rounded-lg p-6">
           <p className="text-red-700">Store not found</p>
         </div>
       </div>
@@ -153,7 +153,7 @@ const StoreSettings: React.FC = () => {
         
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold flex items-center gap-3">
+            <h1 className="text-3xl font-bold flex items-center gap-4">
               <StoreIcon className="w-8 h-8" />
               {store.name} Settings
             </h1>
@@ -164,14 +164,14 @@ const StoreSettings: React.FC = () => {
 
       {/* Alerts */}
       {success && (
-        <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2">
-          <AlertCircle className="w-5 h-5 text-green-500" />
-          <span className="text-green-700">{success}</span>
+        <div className="mb-4 p-6 bg-primary-50 border border-green-200 rounded-lg flex items-center gap-2">
+          <AlertCircle className="w-5 h-5 text-primary-500" />
+          <span className="text-primary-700">{success}</span>
         </div>
       )}
 
       {error && (
-        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
+        <div className="mb-4 p-6 bg-danger-50 border border-red-200 rounded-lg flex items-center gap-2">
           <AlertCircle className="w-5 h-5 text-red-500" />
           <span className="text-red-700">{error}</span>
         </div>
@@ -184,8 +184,8 @@ const StoreSettings: React.FC = () => {
             onClick={() => setActiveTab('general')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'general'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'border-blue-500 text-accent-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
             }`}
           >
             General Information
@@ -194,8 +194,8 @@ const StoreSettings: React.FC = () => {
             onClick={() => setActiveTab('settings')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'settings'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'border-blue-500 text-accent-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
             }`}
           >
             Store Configuration
@@ -205,7 +205,7 @@ const StoreSettings: React.FC = () => {
 
       {/* Tab Content */}
       {activeTab === 'general' && (
-        <div className="bg-white rounded-lg shadow-lg p-6">
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
           <h2 className="text-xl font-semibold mb-4">General Information</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -277,8 +277,8 @@ const StoreSettings: React.FC = () => {
               </label>
               <span className={`inline-flex px-2 py-1 rounded-full text-sm font-medium ${
                 store.status === 'active' 
-                  ? 'bg-green-100 text-green-700'
-                  : 'bg-gray-100 text-gray-700'
+                  ? 'bg-primary-100 text-primary-700'
+                  : 'bg-gray-50 text-gray-700'
               }`}>
                 {store.status}
               </span>
@@ -308,13 +308,13 @@ const StoreSettings: React.FC = () => {
           
           <div className="mt-6">
             <h3 className="text-lg font-semibold mb-3">Service Options</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
                   checked={store.delivery_enabled}
                   disabled
-                  className="w-4 h-4 text-blue-600 rounded"
+                  className="w-4 h-4 text-accent-600 rounded"
                 />
                 <span className="text-sm">Delivery Enabled</span>
               </label>
@@ -324,7 +324,7 @@ const StoreSettings: React.FC = () => {
                   type="checkbox"
                   checked={store.pickup_enabled}
                   disabled
-                  className="w-4 h-4 text-blue-600 rounded"
+                  className="w-4 h-4 text-accent-600 rounded"
                 />
                 <span className="text-sm">Pickup Enabled</span>
               </label>
@@ -334,7 +334,7 @@ const StoreSettings: React.FC = () => {
                   type="checkbox"
                   checked={store.kiosk_enabled}
                   disabled
-                  className="w-4 h-4 text-blue-600 rounded"
+                  className="w-4 h-4 text-accent-600 rounded"
                 />
                 <span className="text-sm">Kiosk Enabled</span>
               </label>
@@ -344,7 +344,7 @@ const StoreSettings: React.FC = () => {
                   type="checkbox"
                   checked={store.pos_enabled}
                   disabled
-                  className="w-4 h-4 text-blue-600 rounded"
+                  className="w-4 h-4 text-accent-600 rounded"
                 />
                 <span className="text-sm">POS Enabled</span>
               </label>
@@ -354,7 +354,7 @@ const StoreSettings: React.FC = () => {
                   type="checkbox"
                   checked={store.ecommerce_enabled}
                   disabled
-                  className="w-4 h-4 text-blue-600 rounded"
+                  className="w-4 h-4 text-accent-600 rounded"
                 />
                 <span className="text-sm">E-commerce Enabled</span>
               </label>

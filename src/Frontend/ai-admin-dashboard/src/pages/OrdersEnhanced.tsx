@@ -187,11 +187,11 @@ const OrdersEnhanced: React.FC = () => {
   const getStatusIcon = (status: string) => {
     const icons: { [key: string]: JSX.Element } = {
       pending: <Clock className="h-5 w-5 text-yellow-500" />,
-      confirmed: <CheckCircle className="h-5 w-5 text-blue-500" />,
+      confirmed: <CheckCircle className="h-5 w-5 text-accent-500" />,
       preparing: <Package className="h-5 w-5 text-indigo-500" />,
-      ready: <Timer className="h-5 w-5 text-green-500" />,
+      ready: <Timer className="h-5 w-5 text-primary-500" />,
       out_for_delivery: <Truck className="h-5 w-5 text-purple-500" />,
-      delivered: <CheckCircle className="h-5 w-5 text-green-600" />,
+      delivered: <CheckCircle className="h-5 w-5 text-primary-600" />,
       cancelled: <XCircle className="h-5 w-5 text-red-500" />,
       refunded: <RefreshCw className="h-5 w-5 text-orange-500" />,
     };
@@ -200,16 +200,16 @@ const OrdersEnhanced: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     const colors: { [key: string]: string } = {
-      pending: 'bg-yellow-100 text-yellow-800',
+      pending: 'bg-warning-100 text-warning-800',
       confirmed: 'bg-blue-100 text-blue-800',
       preparing: 'bg-indigo-100 text-indigo-800',
-      ready: 'bg-green-100 text-green-800',
+      ready: 'bg-primary-100 text-primary-800',
       out_for_delivery: 'bg-purple-100 text-purple-800',
-      delivered: 'bg-green-200 text-green-900',
-      cancelled: 'bg-red-100 text-red-800',
+      delivered: 'bg-green-200 text-primary-900',
+      cancelled: 'bg-danger-100 text-danger-800',
       refunded: 'bg-orange-100 text-orange-800',
     };
-    return colors[status] || 'bg-gray-100 text-gray-800';
+    return colors[status] || 'bg-gray-50 text-gray-800';
   };
 
   const handleStatusUpdate = (orderId: string, newStatus: string) => {
@@ -273,14 +273,14 @@ const OrdersEnhanced: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+      <div className="bg-danger-50 border border-red-200 text-red-700 px-4 py-3 rounded">
         Error loading orders: {(error as Error).message}
       </div>
     );
@@ -294,13 +294,13 @@ const OrdersEnhanced: React.FC = () => {
         <div className="flex gap-2">
           <button
             onClick={() => refetch()}
-            className="p-2 bg-white rounded-lg shadow hover:shadow-md"
+            className="p-2 bg-white rounded-lg  hover:border border-gray-200"
           >
             <RefreshCw className="h-5 w-5" />
           </button>
           <button
             onClick={exportOrders}
-            className="px-4 py-2 bg-white rounded-lg shadow hover:shadow-md flex items-center gap-2"
+            className="px-4 py-2 bg-white rounded-lg  hover:border border-gray-200 flex items-center gap-2"
           >
             <Download className="h-5 w-5" />
             Export
@@ -309,48 +309,48 @@ const OrdersEnhanced: React.FC = () => {
       </div>
 
       {/* Metrics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <div className="bg-white rounded-lg shadow-sm p-4">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+        <div className="bg-white rounded-lg  p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs font-medium text-gray-600">Pending</p>
-              <p className="text-2xl font-bold text-yellow-600">{metrics.pending}</p>
+              <p className="text-2xl font-bold text-warning-600">{metrics.pending}</p>
             </div>
-            <Clock className="h-8 w-8 text-yellow-600 opacity-20" />
+            <Clock className="h-8 w-8 text-warning-600 opacity-20" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-4">
+        <div className="bg-white rounded-lg  p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs font-medium text-gray-600">Preparing</p>
-              <p className="text-2xl font-bold text-blue-600">{metrics.preparing}</p>
+              <p className="text-2xl font-bold text-accent-600">{metrics.preparing}</p>
             </div>
-            <Package className="h-8 w-8 text-blue-600 opacity-20" />
+            <Package className="h-8 w-8 text-accent-600 opacity-20" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-4">
+        <div className="bg-white rounded-lg  p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs font-medium text-gray-600">Ready</p>
-              <p className="text-2xl font-bold text-green-600">{metrics.ready}</p>
+              <p className="text-2xl font-bold text-primary-600">{metrics.ready}</p>
             </div>
-            <CheckCircle className="h-8 w-8 text-green-600 opacity-20" />
+            <CheckCircle className="h-8 w-8 text-primary-600 opacity-20" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-4">
+        <div className="bg-white rounded-lg  p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs font-medium text-gray-600">Today's Revenue</p>
-              <p className="text-xl font-bold text-green-600">${metrics.revenue.toFixed(2)}</p>
+              <p className="text-xl font-bold text-primary-600">${(metrics.revenue || 0).toFixed(2)}</p>
             </div>
-            <DollarSign className="h-8 w-8 text-green-600 opacity-20" />
+            <DollarSign className="h-8 w-8 text-primary-600 opacity-20" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-4">
+        <div className="bg-white rounded-lg  p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs font-medium text-gray-600">Avg Process Time</p>
@@ -362,8 +362,8 @@ const OrdersEnhanced: React.FC = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-lg shadow-sm p-4">
-        <div className="flex flex-wrap gap-4 items-center">
+      <div className="bg-white rounded-lg  p-6">
+        <div className="flex flex-wrap gap-6 items-center">
           {/* Search */}
           <div className="flex-1 min-w-[200px] relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
@@ -422,7 +422,7 @@ const OrdersEnhanced: React.FC = () => {
 
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="p-2 bg-gray-100 rounded-lg hover:bg-gray-200"
+            className="p-2 bg-gray-50 rounded-lg hover:bg-gray-50"
           >
             <Filter className="h-5 w-5" />
           </button>
@@ -430,7 +430,7 @@ const OrdersEnhanced: React.FC = () => {
       </div>
 
       {/* Orders Table */}
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+      <div className="bg-white rounded-lg  overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
@@ -478,7 +478,7 @@ const OrdersEnhanced: React.FC = () => {
                           {order.order_number}
                         </span>
                         {order.payment_status === 'pending' && (
-                          <span className="ml-2 text-xs text-yellow-600">Payment Pending</span>
+                          <span className="ml-2 text-xs text-warning-600">Payment Pending</span>
                         )}
                       </div>
                     </div>
@@ -529,12 +529,12 @@ const OrdersEnhanced: React.FC = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center text-sm">
-                      <Cannabis className="h-4 w-4 mr-1 text-green-600" />
-                      <span className={order.dried_flower_equivalent > 30 ? 'text-red-600 font-bold' : ''}>
+                      <Cannabis className="h-4 w-4 mr-1 text-primary-600" />
+                      <span className={order.dried_flower_equivalent > 30 ? 'text-danger-600 font-bold' : ''}>
                         {order.dried_flower_equivalent?.toFixed(1) || 0}g
                       </span>
                       {order.dried_flower_equivalent > 30 && (
-                        <AlertCircle className="h-4 w-4 ml-1 text-red-600" />
+                        <AlertCircle className="h-4 w-4 ml-1 text-danger-600" />
                       )}
                     </div>
                   </td>
@@ -547,12 +547,12 @@ const OrdersEnhanced: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center gap-2">
                       {order.age_verified ? (
-                        <CheckCircle className="h-4 w-4 text-green-500" />
+                        <CheckCircle className="h-4 w-4 text-primary-500" />
                       ) : (
                         <AlertCircle className="h-4 w-4 text-yellow-500" />
                       )}
                       {order.id_checked ? (
-                        <span className="text-xs text-green-600">ID ✓</span>
+                        <span className="text-xs text-primary-600">ID ✓</span>
                       ) : (
                         <span className="text-xs text-gray-400">No ID</span>
                       )}
@@ -576,14 +576,14 @@ const OrdersEnhanced: React.FC = () => {
                         <>
                           <button
                             onClick={() => handleStatusUpdate(order.id, 'confirmed')}
-                            className="text-blue-600 hover:text-blue-900"
+                            className="text-accent-600 hover:text-blue-900"
                             title="Confirm Order"
                           >
                             <CheckCircle className="h-4 w-4" />
                           </button>
                           <button
                             onClick={() => handleCancelOrder(order)}
-                            className="text-red-600 hover:text-red-900"
+                            className="text-danger-600 hover:text-red-900"
                             title="Cancel Order"
                           >
                             <Ban className="h-4 w-4" />
@@ -604,7 +604,7 @@ const OrdersEnhanced: React.FC = () => {
                       {order.status === 'preparing' && (
                         <button
                           onClick={() => handleStatusUpdate(order.id, 'ready')}
-                          className="text-green-600 hover:text-green-900"
+                          className="text-primary-600 hover:text-primary-900"
                           title="Mark Ready"
                         >
                           <CheckCircle className="h-4 w-4" />
@@ -627,7 +627,7 @@ const OrdersEnhanced: React.FC = () => {
                       {order.status === 'ready' && order.order_type === 'pickup' && (
                         <button
                           onClick={() => handleStatusUpdate(order.id, 'delivered')}
-                          className="text-green-600 hover:text-green-900"
+                          className="text-primary-600 hover:text-primary-900"
                           title="Mark Picked Up"
                         >
                           <CheckCircle className="h-4 w-4" />
@@ -637,7 +637,7 @@ const OrdersEnhanced: React.FC = () => {
                       {order.status === 'out_for_delivery' && (
                         <button
                           onClick={() => handleStatusUpdate(order.id, 'delivered')}
-                          className="text-green-600 hover:text-green-900"
+                          className="text-primary-600 hover:text-primary-900"
                           title="Mark Delivered"
                         >
                           <CheckCircle className="h-4 w-4" />
@@ -648,7 +648,7 @@ const OrdersEnhanced: React.FC = () => {
                       {!order.age_verified && (
                         <button
                           onClick={() => handleVerifyAge(order.id)}
-                          className="text-yellow-600 hover:text-yellow-900"
+                          className="text-warning-600 hover:text-yellow-900"
                           title="Verify Age & ID"
                         >
                           <User className="h-4 w-4" />
@@ -698,7 +698,7 @@ const OrdersEnhanced: React.FC = () => {
 
       {/* Order Details Modal */}
       {selectedOrder && !showDriverAssignment && !showMessageModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-6 z-50">
           <div className="bg-white rounded-lg max-w-5xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
@@ -716,7 +716,7 @@ const OrdersEnhanced: React.FC = () => {
 
               <div className="grid grid-cols-3 gap-6 mb-6">
                 {/* Customer Info */}
-                <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="bg-gray-50 p-6 rounded-lg">
                   <h3 className="font-semibold mb-3 flex items-center gap-2">
                     <User className="h-5 w-5" />
                     Customer Information
@@ -747,7 +747,7 @@ const OrdersEnhanced: React.FC = () => {
                 </div>
 
                 {/* Order Info */}
-                <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="bg-gray-50 p-6 rounded-lg">
                   <h3 className="font-semibold mb-3 flex items-center gap-2">
                     <Package className="h-5 w-5" />
                     Order Information
@@ -763,20 +763,20 @@ const OrdersEnhanced: React.FC = () => {
                     <p className="flex items-center gap-2">
                       <Cannabis className="h-4 w-4" />
                       Dried Flower Eq: 
-                      <span className={selectedOrder.dried_flower_equivalent > 30 ? 'text-red-600 font-bold' : ''}>
+                      <span className={selectedOrder.dried_flower_equivalent > 30 ? 'text-danger-600 font-bold' : ''}>
                         {selectedOrder.dried_flower_equivalent}g
                       </span>
                     </p>
                     <div className="flex items-center gap-2">
                       {selectedOrder.age_verified ? (
                         <>
-                          <CheckCircle className="h-4 w-4 text-green-500" />
-                          <span className="text-green-600">Age Verified</span>
+                          <CheckCircle className="h-4 w-4 text-primary-500" />
+                          <span className="text-primary-600">Age Verified</span>
                         </>
                       ) : (
                         <>
                           <AlertCircle className="h-4 w-4 text-yellow-500" />
-                          <span className="text-yellow-600">Age Not Verified</span>
+                          <span className="text-warning-600">Age Not Verified</span>
                         </>
                       )}
                     </div>
@@ -784,7 +784,7 @@ const OrdersEnhanced: React.FC = () => {
                 </div>
 
                 {/* Delivery/Pickup Info */}
-                <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="bg-gray-50 p-6 rounded-lg">
                   <h3 className="font-semibold mb-3 flex items-center gap-2">
                     {selectedOrder.order_type === 'delivery' ? (
                       <Truck className="h-5 w-5" />
@@ -819,8 +819,8 @@ const OrdersEnhanced: React.FC = () => {
 
               {/* Special Instructions */}
               {selectedOrder.special_instructions && (
-                <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                  <h3 className="font-semibold mb-2 text-yellow-800">Special Instructions</h3>
+                <div className="mb-6 p-6 bg-warning-50 border border-yellow-200 rounded-lg">
+                  <h3 className="font-semibold mb-2 text-warning-800">Special Instructions</h3>
                   <p className="text-sm text-yellow-700">{selectedOrder.special_instructions}</p>
                 </div>
               )}
@@ -850,8 +850,8 @@ const OrdersEnhanced: React.FC = () => {
                           {item.thc_content}% / {item.cbd_content}%
                         </td>
                         <td className="px-4 py-2 text-sm">{item.quantity}</td>
-                        <td className="px-4 py-2 text-sm">${item.unit_price.toFixed(2)}</td>
-                        <td className="px-4 py-2 text-sm font-medium">${item.total_price.toFixed(2)}</td>
+                        <td className="px-4 py-2 text-sm">${(item.unit_price || 0).toFixed(2)}</td>
+                        <td className="px-4 py-2 text-sm font-medium">${(item.total_price || 0).toFixed(2)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -864,27 +864,27 @@ const OrdersEnhanced: React.FC = () => {
                   <div className="w-64">
                     <div className="flex justify-between py-1">
                       <span className="text-sm text-gray-600">Subtotal:</span>
-                      <span className="text-sm">${selectedOrder.subtotal.toFixed(2)}</span>
+                      <span className="text-sm">${(selectedOrder.subtotal || 0).toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between py-1">
                       <span className="text-sm text-gray-600">Tax (13% HST):</span>
-                      <span className="text-sm">${selectedOrder.tax_amount.toFixed(2)}</span>
+                      <span className="text-sm">${(selectedOrder.tax_amount || 0).toFixed(2)}</span>
                     </div>
                     {selectedOrder.delivery_fee > 0 && (
                       <div className="flex justify-between py-1">
                         <span className="text-sm text-gray-600">Delivery:</span>
-                        <span className="text-sm">${selectedOrder.delivery_fee.toFixed(2)}</span>
+                        <span className="text-sm">${(selectedOrder.delivery_fee || 0).toFixed(2)}</span>
                       </div>
                     )}
                     {selectedOrder.discount_amount > 0 && (
                       <div className="flex justify-between py-1">
                         <span className="text-sm text-gray-600">Discount:</span>
-                        <span className="text-sm text-red-600">-${selectedOrder.discount_amount.toFixed(2)}</span>
+                        <span className="text-sm text-danger-600">-${(selectedOrder.discount_amount || 0).toFixed(2)}</span>
                       </div>
                     )}
                     <div className="flex justify-between py-2 border-t font-bold">
                       <span>Total:</span>
-                      <span>${selectedOrder.total_amount.toFixed(2)}</span>
+                      <span>${(selectedOrder.total_amount || 0).toFixed(2)}</span>
                     </div>
                   </div>
                 </div>
@@ -894,7 +894,7 @@ const OrdersEnhanced: React.FC = () => {
               {(selectedOrder.signature_url || selectedOrder.delivery_photo_url) && (
                 <div className="mt-6 pt-6 border-t">
                   <h3 className="font-semibold mb-3">Delivery Confirmation</h3>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-6">
                     {selectedOrder.signature_url && (
                       <div>
                         <p className="text-sm text-gray-600 mb-2">Customer Signature</p>
@@ -917,7 +917,7 @@ const OrdersEnhanced: React.FC = () => {
 
       {/* Driver Assignment Modal */}
       {showDriverAssignment && selectedOrder && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-6 z-50">
           <div className="bg-white rounded-lg max-w-md w-full">
             <div className="p-6">
               <h3 className="text-lg font-semibold mb-4">Assign Driver</h3>
@@ -971,7 +971,7 @@ const OrdersEnhanced: React.FC = () => {
 
       {/* Message Customer Modal */}
       {showMessageModal && selectedOrder && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-6 z-50">
           <div className="bg-white rounded-lg max-w-md w-full">
             <div className="p-6">
               <h3 className="text-lg font-semibold mb-4">Message Customer</h3>
@@ -1022,7 +1022,7 @@ const OrdersEnhanced: React.FC = () => {
                     }
                   }}
                   disabled={!messageToCustomer}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 flex items-center gap-2"
+                  className="px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 disabled:bg-gray-300 flex items-center gap-2"
                 >
                   <Send className="h-4 w-4" />
                   Send Message

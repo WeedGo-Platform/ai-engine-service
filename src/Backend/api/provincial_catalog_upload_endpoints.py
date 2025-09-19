@@ -2,6 +2,7 @@ from fastapi import APIRouter, File, UploadFile, Form, HTTPException, Depends
 from fastapi.responses import JSONResponse
 import pandas as pd
 import io
+import re
 from typing import Dict, Any, Optional
 import asyncpg
 from datetime import datetime
@@ -18,6 +19,46 @@ class User(BaseModel):
     last_name: Optional[str] = None
 
 router = APIRouter()
+
+def generate_slug(brand, product_name, sub_category, size):
+    """Generate a URL-friendly slug from brand, product name, sub-category, and size."""
+    parts = []
+
+    # Add brand if available
+    if brand and pd.notna(brand):
+        brand_slug = str(brand).lower()
+        brand_slug = re.sub(r'[^\w\s-]', '', brand_slug)
+        brand_slug = re.sub(r'[-\s]+', '-', brand_slug).strip('-')
+        if brand_slug:
+            parts.append(brand_slug)
+
+    # Add product name if available
+    if product_name and pd.notna(product_name):
+        name_slug = str(product_name).lower()
+        name_slug = re.sub(r'[^\w\s-]', '', name_slug)
+        name_slug = re.sub(r'[-\s]+', '-', name_slug).strip('-')
+        if name_slug:
+            parts.append(name_slug)
+
+    # Add sub-category if available
+    if sub_category and pd.notna(sub_category):
+        sub_cat_slug = str(sub_category).lower()
+        sub_cat_slug = re.sub(r'[^\w\s-]', '', sub_cat_slug)
+        sub_cat_slug = re.sub(r'[-\s]+', '-', sub_cat_slug).strip('-')
+        if sub_cat_slug:
+            parts.append(sub_cat_slug)
+
+    # Add size if available
+    if size and pd.notna(size):
+        size_slug = str(size).lower()
+        size_slug = re.sub(r'[^\w\s-]', '', size_slug)
+        size_slug = re.sub(r'[-\s]+', '-', size_slug).strip('-')
+        if size_slug:
+            parts.append(size_slug)
+
+    # Join all parts with hyphen
+    slug = '-'.join(parts) if parts else 'product'
+    return slug
 
 def normalize_column_name(name: str) -> str:
     """Convert OCS column names to database column names."""
@@ -93,10 +134,8 @@ def normalize_column_name(name: str) -> str:
         # Also add strain_type which appears in the database
         'Strain Type': 'strain_type'
     }
-    
-    return mappings.get(name, name.strip().replace(' ', '_').lower())
 
-# Slug generation removed - slug column no longer exists in database
+    return mappings.get(name, name.strip().replace(' ', '_').lower())
 
 @router.post("/upload")
 async def upload_provincial_catalog(
@@ -162,14 +201,16 @@ async def upload_provincial_catalog(
             'errors': 0,
             'error_details': []
         }
-        
-        # Slug tracking removed - slug column no longer exists
-        
+
+        # Track generated slugs to ensure uniqueness
+        used_slugs = {}
+        slug_counter = {}
+
         # Get existing columns from database
         existing_columns_query = """
             SELECT column_name 
             FROM information_schema.columns 
-            WHERE table_name = 'product_catalog_ocs'
+            WHERE table_name = 'ocs_product_catalog'
         """
         existing_columns = await conn.fetch(existing_columns_query)
         db_columns = {row['column_name'] for row in existing_columns}
@@ -177,18 +218,37 @@ async def upload_provincial_catalog(
         # Process each row
         for index, row in df.iterrows():
             try:
-                # Slug generation and duplicate checking removed
-                
+                # Generate slug for this product
+                brand = row.get('Brand')
+                product_name = row.get('Product Name')
+                sub_category = row.get('Sub-Category')
+                size = row.get('Size')
+
+                base_slug = generate_slug(brand, product_name, sub_category, size)
+
+                # Ensure slug uniqueness
+                slug = base_slug
+                ocs_variant = str(row.get('OCS Variant Number', '')).strip()
+
+                # If we've seen this slug before for a different variant, add a counter
+                if base_slug in used_slugs and used_slugs[base_slug] != ocs_variant:
+                    if base_slug not in slug_counter:
+                        slug_counter[base_slug] = 1
+                    slug_counter[base_slug] += 1
+                    slug = f"{base_slug}-{slug_counter[base_slug]}"
+                else:
+                    used_slugs[base_slug] = ocs_variant
+
                 # Build column lists and values for upsert
-                columns = []
-                values = []
-                update_sets = []
-                
+                columns = ['slug']
+                values = [slug]
+                update_sets = ['slug = EXCLUDED.slug']
+
                 for col, value in row.items():
                     # Normalize the column name
                     db_col = normalize_column_name(col)
-                    
-                    if db_col in db_columns and db_col not in ['id', 'created_at', 'updated_at', 'rating', 'rating_count']:
+
+                    if db_col in db_columns and db_col not in ['id', 'created_at', 'updated_at', 'rating', 'rating_count', 'slug']:
                         # Skip NaN values
                         if pd.isna(value):
                             continue
@@ -257,7 +317,7 @@ async def upload_provincial_catalog(
                 # Build the UPSERT query
                 placeholders = [f"${i+1}" for i in range(len(values))]
                 insert_query = f"""
-                    INSERT INTO product_catalog_ocs ({', '.join(columns)})
+                    INSERT INTO ocs_product_catalog ({', '.join(columns)})
                     VALUES ({', '.join(placeholders)})
                     ON CONFLICT (ocs_variant_number) DO UPDATE SET
                     {', '.join(update_sets)}

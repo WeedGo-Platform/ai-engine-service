@@ -172,7 +172,7 @@ const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> =
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6">
+    <div className="bg-white rounded-lg border border-gray-200 p-6">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold flex items-center gap-2">
           <CreditCard className="w-6 h-6" />
@@ -181,7 +181,7 @@ const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> =
         <button
           onClick={handleSave}
           disabled={saving}
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 flex items-center gap-2"
+          className="bg-accent-500 text-white px-4 py-2 rounded-lg hover:bg-accent-600 flex items-center gap-2"
         >
           <Save className="w-4 h-4" />
           {saving ? 'Saving...' : 'Save Changes'}
@@ -189,7 +189,7 @@ const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> =
       </div>
 
       {errors.save && (
-        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
+        <div className="mb-4 p-6 bg-danger-50 border border-red-200 rounded-lg flex items-center gap-2">
           <AlertCircle className="w-5 h-5 text-red-500" />
           <span className="text-red-700">{errors.save}</span>
         </div>
@@ -203,7 +203,7 @@ const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> =
             onClick={() => setActiveProvider(provider.id)}
             className={`px-4 py-2 font-medium transition-colors ${
               activeProvider === provider.id
-                ? 'border-b-2 border-blue-500 text-blue-600'
+                ? 'border-b-2 border-blue-500 text-accent-600'
                 : 'text-gray-600 hover:text-gray-900'
             }`}
           >
@@ -217,8 +217,8 @@ const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> =
       {activeProvider && (
         <div className="space-y-6">
           {/* Enable/Disable Toggle */}
-          <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-            <div className="flex items-center gap-3">
+          <div className="flex items-center justify-between p-6 bg-gray-50 rounded-lg">
+            <div className="flex items-center gap-4">
               <Shield className="w-5 h-5 text-gray-600" />
               <span className="font-medium">
                 Enable {PROVIDERS.find(p => p.id === activeProvider)?.name}
@@ -231,14 +231,14 @@ const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> =
                 onChange={() => handleProviderToggle(activeProvider)}
                 className="sr-only peer"
               />
-              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              <div className="w-11 h-6 bg-gray-100 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent-600"></div>
             </label>
           </div>
 
           {settings[activeProvider as keyof PaymentProviderSettings]?.enabled && (
             <>
               {/* Provider Fields */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {getProviderFields(activeProvider).map(field => (
                   <div key={field.id}>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -290,8 +290,8 @@ const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> =
                         onClick={() => handlePaymentMethodToggle(activeProvider, method.id)}
                         className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
                           isSelected
-                            ? 'bg-blue-100 text-blue-700'
-                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                            ? 'bg-blue-100 text-accent-700'
+                            : 'bg-gray-50 text-gray-600 hover:bg-gray-50'
                         }`}
                       >
                         {method.name}
@@ -302,13 +302,13 @@ const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> =
               </div>
 
               {/* Test Mode */}
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
                 <input
                   type="checkbox"
                   id="test-mode"
                   checked={settings[activeProvider as keyof PaymentProviderSettings]?.test_mode || false}
                   onChange={(e) => handleProviderFieldChange(activeProvider, 'test_mode', e.target.checked)}
-                  className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                  className="w-4 h-4 text-accent-600 rounded focus:ring-blue-500"
                 />
                 <label htmlFor="test-mode" className="flex items-center gap-2 text-sm font-medium text-gray-700">
                   <TestTube className="w-4 h-4" />
@@ -318,17 +318,17 @@ const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> =
 
               {/* Validate Configuration */}
               {onValidate && (
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-6">
                   <button
                     onClick={() => handleValidate(activeProvider)}
                     disabled={validating === activeProvider}
-                    className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 flex items-center gap-2"
+                    className="bg-primary-500 text-white px-4 py-2 rounded-lg hover:bg-primary-600 flex items-center gap-2"
                   >
                     <Check className="w-4 h-4" />
                     {validating === activeProvider ? 'Validating...' : 'Validate Configuration'}
                   </button>
                   {errors[activeProvider] && (
-                    <span className="text-red-600 text-sm">{errors[activeProvider]}</span>
+                    <span className="text-danger-600 text-sm">{errors[activeProvider]}</span>
                   )}
                 </div>
               )}
@@ -340,7 +340,7 @@ const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> =
       {/* General Settings */}
       <div className="mt-8 pt-6 border-t">
         <h3 className="text-lg font-semibold mb-4">General Settings</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Default Provider
@@ -394,26 +394,26 @@ const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> =
             </select>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <input
               type="checkbox"
               id="auto-capture"
               checked={settings.auto_capture !== false}
               onChange={(e) => setSettings(prev => ({ ...prev, auto_capture: e.target.checked }))}
-              className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+              className="w-4 h-4 text-accent-600 rounded focus:ring-blue-500"
             />
             <label htmlFor="auto-capture" className="text-sm font-medium text-gray-700">
               Auto-capture payments
             </label>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <input
               type="checkbox"
               id="receipt-email"
               checked={settings.receipt_email !== false}
               onChange={(e) => setSettings(prev => ({ ...prev, receipt_email: e.target.checked }))}
-              className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+              className="w-4 h-4 text-accent-600 rounded focus:ring-blue-500"
             />
             <label htmlFor="receipt-email" className="text-sm font-medium text-gray-700">
               Email receipts to customers

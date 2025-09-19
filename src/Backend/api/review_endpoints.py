@@ -11,7 +11,7 @@ import uuid
 import asyncpg
 from enum import Enum
 
-from database.connection import get_db_pool
+from database.connection import get_db_pool, get_db
 
 # Import auth functions (handle different possible locations)
 try:

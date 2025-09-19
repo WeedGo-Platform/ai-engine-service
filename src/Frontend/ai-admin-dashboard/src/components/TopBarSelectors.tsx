@@ -41,7 +41,7 @@ const TopBarSelectors: React.FC = () => {
     return (
       <div className="flex items-center space-x-4 text-sm">
         {currentStore && (
-          <div className="flex items-center space-x-2 px-3 py-1 bg-gray-100 rounded-lg">
+          <div className="flex items-center space-x-2 px-3 py-1 bg-gray-50 rounded-lg">
             <Store className="h-4 w-4 text-gray-600" />
             <span className="font-medium">{currentStore.name}</span>
           </div>
@@ -75,7 +75,7 @@ const TopBarSelectors: React.FC = () => {
         <div className="relative">
           <button
             onClick={() => setShowTenantDropdown(!showTenantDropdown)}
-            className="flex items-center space-x-2 px-3 py-1.5 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            className="flex items-center space-x-2 px-3 py-1.5 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
           >
             <Building className="h-4 w-4 text-gray-600" />
             <span className="text-sm font-medium">
@@ -85,7 +85,7 @@ const TopBarSelectors: React.FC = () => {
           </button>
 
           {showTenantDropdown && (
-            <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+            <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg border border-gray-200 border border-gray-200 z-50">
               <div className="p-2 border-b border-gray-200">
                 <p className="text-xs text-gray-500 font-medium px-2">SELECT TENANT</p>
               </div>
@@ -95,7 +95,7 @@ const TopBarSelectors: React.FC = () => {
                     key={tenant.id}
                     onClick={() => handleTenantSelect(tenant)}
                     className={`w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors ${
-                      currentTenant?.id === tenant.id ? 'bg-blue-50 text-blue-600' : ''
+                      currentTenant?.id === tenant.id ? 'bg-blue-50 text-accent-600' : ''
                     }`}
                   >
                     <div className="font-medium text-sm">{tenant.name}</div>
@@ -113,7 +113,7 @@ const TopBarSelectors: React.FC = () => {
         <div className="relative">
           <button
             onClick={() => setShowStoreDropdown(!showStoreDropdown)}
-            className="flex items-center space-x-2 px-3 py-1.5 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            className="flex items-center space-x-2 px-3 py-1.5 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
           >
             <Store className="h-4 w-4 text-gray-600" />
             <span className="text-sm font-medium">
@@ -123,7 +123,7 @@ const TopBarSelectors: React.FC = () => {
           </button>
 
           {showStoreDropdown && (
-            <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+            <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg border border-gray-200 border border-gray-200 z-50">
               <div className="p-2 border-b border-gray-200">
                 <p className="text-xs text-gray-500 font-medium px-2">SELECT STORE</p>
               </div>
@@ -134,7 +134,7 @@ const TopBarSelectors: React.FC = () => {
                       key={store.id}
                       onClick={() => handleStoreSelect(store)}
                       className={`w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors ${
-                        currentStore?.id === store.id ? 'bg-blue-50 text-blue-600' : ''
+                        currentStore?.id === store.id ? 'bg-blue-50 text-accent-600' : ''
                       }`}
                     >
                       <div className="font-medium text-sm">{store.name}</div>

@@ -845,29 +845,29 @@ export default function POS() {
       )}
 
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <div className="bg-white  border-b">
         <div className="px-3 sm:px-6 py-3 sm:py-4">
           <div className="flex items-center justify-between">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6">
               <h1 className="text-lg sm:text-2xl font-bold">Point of Sale</h1>
               {currentStore && (
-                <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-lg">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 text-accent-700 rounded-lg">
                   <Building2 className="w-4 h-4" />
                   <span className="text-sm font-medium">{currentStore.name}</span>
                 </div>
               )}
-              <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 rounded-lg">
+              <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-primary-50 text-primary-700 rounded-lg">
                 <Calendar className="w-4 h-4" />
                 <span className="text-sm font-medium">Valid ID Date: {getValidAgeDate()} or earlier</span>
               </div>
             </div>
-            <div className="flex items-center gap-2 sm:gap-4">
+            <div className="flex items-center gap-2 sm:gap-6">
               <button
                 onClick={() => setScannerEnabled(!scannerEnabled)}
                 className={`p-2 rounded-lg transition-colors ${
                   scannerEnabled 
-                    ? 'bg-green-100 text-green-600 hover:bg-green-200' 
-                    : 'hover:bg-gray-100'
+                    ? 'bg-primary-100 text-primary-600 hover:bg-green-200' 
+                    : 'hover:bg-gray-50'
                 }`}
                 title={scannerEnabled ? 'Scanner Enabled' : 'Scanner Disabled'}
               >
@@ -877,8 +877,8 @@ export default function POS() {
                 onClick={toggleFullscreen}
                 className={`p-2 rounded-lg transition-colors ${
                   isFullscreen 
-                    ? 'bg-blue-100 text-blue-600 hover:bg-blue-200' 
-                    : 'hover:bg-gray-100'
+                    ? 'bg-blue-100 text-accent-600 hover:bg-blue-200' 
+                    : 'hover:bg-gray-50'
                 }`}
                 title={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
               >
@@ -892,11 +892,11 @@ export default function POS() {
           </div>
           
           {/* Tabs */}
-          <div className="flex gap-1 sm:gap-4 mt-3 sm:mt-4 overflow-x-auto">
+          <div className="flex gap-1 sm:gap-6 mt-3 sm:mt-4 overflow-x-auto">
             <button
               onClick={() => setActiveTab('sale')}
               className={`px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium whitespace-nowrap ${
-                activeTab === 'sale' ? 'bg-blue-500 text-white' : 'text-gray-600 hover:bg-gray-100'
+                activeTab === 'sale' ? 'bg-accent-500 text-white' : 'text-gray-600 hover:bg-gray-50'
               }`}
             >
               <ShoppingCart className="w-4 h-4 inline mr-1 sm:mr-2" />
@@ -905,7 +905,7 @@ export default function POS() {
             <button
               onClick={() => setActiveTab('parked')}
               className={`px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium whitespace-nowrap ${
-                activeTab === 'parked' ? 'bg-blue-500 text-white' : 'text-gray-600 hover:bg-gray-100'
+                activeTab === 'parked' ? 'bg-accent-500 text-white' : 'text-gray-600 hover:bg-gray-50'
               }`}
             >
               <PauseCircle className="w-4 h-4 inline mr-1 sm:mr-2" />
@@ -914,7 +914,7 @@ export default function POS() {
             <button
               onClick={() => setActiveTab('history')}
               className={`px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium whitespace-nowrap ${
-                activeTab === 'history' ? 'bg-blue-500 text-white' : 'text-gray-600 hover:bg-gray-100'
+                activeTab === 'history' ? 'bg-accent-500 text-white' : 'text-gray-600 hover:bg-gray-50'
               }`}
             >
               <History className="w-4 h-4 inline mr-1 sm:mr-2" />
@@ -923,7 +923,7 @@ export default function POS() {
             <button
               onClick={() => setActiveTab('settings')}
               className={`px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium whitespace-nowrap ${
-                activeTab === 'settings' ? 'bg-blue-500 text-white' : 'text-gray-600 hover:bg-gray-100'
+                activeTab === 'settings' ? 'bg-accent-500 text-white' : 'text-gray-600 hover:bg-gray-50'
               }`}
             >
               <Settings className="w-4 h-4 inline mr-1 sm:mr-2" />
@@ -939,20 +939,20 @@ export default function POS() {
           {/* Mobile Cart Button */}
           <button
             onClick={() => setMobileCartOpen(true)}
-            className="lg:hidden fixed bottom-4 right-4 z-30 bg-green-500 text-white rounded-full p-4 shadow-lg"
+            className="lg:hidden fixed bottom-4 right-4 z-30 bg-primary-500 text-white rounded-full p-6 border border-gray-200"
           >
             <ShoppingCart className="w-6 h-6" />
             {cart.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">
+              <span className="absolute -top-2 -right-2 bg-danger-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">
                 {cart.length}
               </span>
             )}
           </button>
 
           {/* Product Catalog */}
-          <div className="flex-1 p-3 sm:p-6 overflow-y-auto">
+          <div className="flex-1 p-4 sm:p-6 overflow-y-auto">
             {/* Search and Filters */}
-            <div className="mb-4 flex flex-col sm:flex-row gap-2 sm:gap-4">
+            <div className="mb-4 flex flex-col sm:flex-row gap-2 sm:gap-6">
               <div className="flex-1 relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
@@ -1055,7 +1055,7 @@ export default function POS() {
               <button
                 onClick={() => setShowFilterPanel(!showFilterPanel)}
                 className={`p-2 border rounded-lg transition-colors relative ${
-                  showFilterPanel ? 'bg-blue-50 border-blue-300 text-blue-700' : 'hover:bg-gray-50'
+                  showFilterPanel ? 'bg-blue-50 border-blue-300 text-accent-700' : 'hover:bg-gray-50'
                 }`}
                 title="Filter products"
               >
@@ -1064,7 +1064,7 @@ export default function POS() {
                   (selectedFilters.priceSort !== 'none' ? 1 : 0) +
                   (selectedFilters.thcSort !== 'none' ? 1 : 0) +
                   (selectedFilters.cbdSort !== 'none' ? 1 : 0)) > 0 && (
-                  <span className="absolute -top-1 -right-1 px-1.5 py-0.5 bg-blue-600 text-white text-xs rounded-full min-w-[18px] text-center">
+                  <span className="absolute -top-1 -right-1 px-1.5 py-0.5 bg-accent-600 text-white text-xs rounded-full min-w-[18px] text-center">
                     {selectedFilters.subcategories.length + selectedFilters.plantTypes.length + selectedFilters.sizes.length +
                      (selectedFilters.priceSort !== 'none' ? 1 : 0) +
                      (selectedFilters.thcSort !== 'none' ? 1 : 0) +
@@ -1075,7 +1075,7 @@ export default function POS() {
             </div>
 
             {/* Main Content Area with Product Grid and Filter Panel */}
-            <div className="flex gap-4">
+            <div className="flex gap-6">
               {/* Product Grid Container */}
               <div className="flex-1">
                 {/* Product Grid */}
@@ -1088,7 +1088,7 @@ export default function POS() {
                     <p>No products found</p>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {products.map(product => {
                   const inStock = product.quantity_available > 0;
                   const lowStock = product.quantity_available > 0 && product.quantity_available < 10;
@@ -1101,9 +1101,9 @@ export default function POS() {
                           addToCart(product);
                         }
                       }}
-                      className={`bg-white p-4 rounded-lg shadow transition-all ${
+                      className={`bg-white p-6 rounded-lg  transition-all ${
                         inStock
-                          ? 'hover:shadow-lg cursor-pointer hover:scale-[1.02]'
+                          ? 'hover:border border-gray-200 cursor-pointer hover:scale-[1.02]'
                           : 'opacity-60 cursor-not-allowed'
                       }`}
                     >
@@ -1119,7 +1119,7 @@ export default function POS() {
                             }}
                           />
                         ) : (
-                          <div className="w-full h-32 bg-gray-100 rounded flex items-center justify-center">
+                          <div className="w-full h-32 bg-gray-50 rounded flex items-center justify-center">
                             <Package className="w-8 h-8 text-gray-400" />
                           </div>
                         )}
@@ -1174,7 +1174,7 @@ export default function POS() {
                         <span className="text-lg font-bold">${product.price.toFixed(2)}</span>
                         <span className={`text-xs ${
                           !inStock ? 'text-red-500 font-medium' :
-                          lowStock ? 'text-yellow-600' : 
+                          lowStock ? 'text-warning-600' : 
                           'text-gray-500'
                         }`}>
                           {!inStock ? 'Out of Stock' :
@@ -1196,7 +1196,7 @@ export default function POS() {
                             setSelectedProductBatches(product);
                             setShowProductDetailsModal(true);
                           }}
-                          className="mt-2 flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700"
+                          className="mt-2 flex items-center gap-1 text-xs text-accent-600 hover:text-accent-700"
                         >
                           <Package className="w-3 h-3" />
                           <span>{product.batch_count} batch{product.batch_count > 1 ? 'es' : ''}</span>
@@ -1225,43 +1225,43 @@ export default function POS() {
             mobileCartOpen ? 'translate-x-0' : 'translate-x-full'
           } lg:border-l flex flex-col`}>
             {/* Customer Section */}
-            <div className="p-4 border-b">
+            <div className="p-6 border-b">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="font-semibold">Customer</h3>
                 <button
                   onClick={() => setShowCustomerModal(true)}
-                  className="text-blue-500 hover:text-blue-600"
+                  className="text-accent-500 hover:text-accent-600"
                 >
                   {customer ? 'Change' : 'Select'}
                 </button>
               </div>
               {customer ? (
-                <div className="bg-gray-50 p-3 rounded-lg">
+                <div className="bg-gray-50 p-4 rounded-lg">
                   <p className="font-medium">{customer.name}</p>
                   <p className="text-sm text-gray-600">{customer.phone}</p>
                   {customer.loyalty_points && (
-                    <p className="text-sm text-green-600">Points: {customer.loyalty_points}</p>
+                    <p className="text-sm text-primary-600">Points: {customer.loyalty_points}</p>
                   )}
                 </div>
               ) : (
                 <div className="flex gap-2">
                   <button
                     onClick={() => setShowCustomerModal(true)}
-                    className="flex-1 px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100"
+                    className="flex-1 px-3 py-2 bg-blue-50 text-accent-600 rounded-lg hover:bg-blue-100"
                   >
                     <Users className="w-4 h-4 inline mr-1" />
                     Returning
                   </button>
                   <button
                     onClick={() => setCustomer({ id: 'new', name: 'New Customer', is_verified: false })}
-                    className="flex-1 px-3 py-2 bg-green-50 text-green-600 rounded-lg hover:bg-green-100"
+                    className="flex-1 px-3 py-2 bg-primary-50 text-primary-600 rounded-lg hover:bg-primary-100"
                   >
                     <UserPlus className="w-4 h-4 inline mr-1" />
                     New
                   </button>
                   <button
                     onClick={() => setCustomer({ id: 'anon', name: 'Anonymous', is_verified: true })}
-                    className="flex-1 px-3 py-2 bg-gray-50 text-gray-600 rounded-lg hover:bg-gray-100"
+                    className="flex-1 px-3 py-2 bg-gray-50 text-gray-600 rounded-lg hover:bg-gray-50"
                   >
                     <User className="w-4 h-4 inline mr-1" />
                     Anonymous
@@ -1272,7 +1272,7 @@ export default function POS() {
 
             {/* Weight Limit Warning */}
             {driedFlowerEquivalent > 0 && (
-              <div className={`px-4 py-3 ${driedFlowerEquivalent > 30 ? 'bg-red-50 text-red-700' : 'bg-blue-50 text-blue-700'}`}>
+              <div className={`px-4 py-3 ${driedFlowerEquivalent > 30 ? 'bg-danger-50 text-red-700' : 'bg-blue-50 text-accent-700'}`}>
                 <div className="flex items-center gap-2">
                   <AlertCircle className="w-4 h-4" />
                   <span className="text-sm font-medium">
@@ -1286,7 +1286,7 @@ export default function POS() {
             )}
 
             {/* Cart Items */}
-            <div className="flex-1 overflow-y-auto p-4">
+            <div className="flex-1 overflow-y-auto p-6">
               {cart.length === 0 ? (
                 <div className="text-center text-gray-400 py-8">
                   <ShoppingCart className="w-12 h-12 mx-auto mb-2" />
@@ -1295,7 +1295,7 @@ export default function POS() {
               ) : (
                 <div className="space-y-3">
                   {cart.map((item, index) => (
-                    <div key={`${item.product.id}_${item.batch?.batch_lot || 'no-batch'}_${index}`} className="bg-gray-50 p-3 rounded-lg">
+                    <div key={`${item.product.id}_${item.batch?.batch_lot || 'no-batch'}_${index}`} className="bg-gray-50 p-4 rounded-lg">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <h4 className="font-medium">{item.product.name}</h4>
@@ -1303,12 +1303,12 @@ export default function POS() {
                             ${item.product.price.toFixed(2)} x {item.quantity}
                           </p>
                           {item.batch && (
-                            <p className="text-xs text-blue-600">
+                            <p className="text-xs text-accent-600">
                               Batch: {item.batch.batch_lot}
                             </p>
                           )}
                           {item.discount && (
-                            <p className="text-sm text-green-600">
+                            <p className="text-sm text-primary-600">
                               Discount: {item.discount}%
                             </p>
                           )}
@@ -1321,7 +1321,7 @@ export default function POS() {
                               removeFromCart(item.product.id);
                             }
                           }}
-                          className="text-red-500 hover:text-red-600"
+                          className="text-red-500 hover:text-danger-600"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -1357,7 +1357,7 @@ export default function POS() {
                             const discount = prompt('Enter discount percentage:');
                             if (discount) applyDiscount(item.product.id, parseFloat(discount));
                           }}
-                          className="ml-auto px-2 py-1 text-xs bg-yellow-50 text-yellow-700 rounded hover:bg-yellow-100"
+                          className="ml-auto px-2 py-1 text-xs bg-warning-50 text-yellow-700 rounded hover:bg-warning-100"
                         >
                           <Tag className="w-3 h-3 inline mr-1" />
                           Discount
@@ -1370,7 +1370,7 @@ export default function POS() {
             </div>
 
             {/* Totals */}
-            <div className="border-t p-4 space-y-2">
+            <div className="border-t p-6 space-y-2">
               <div className="flex justify-between text-sm">
                 <span>Subtotal</span>
                 <span>${subtotal.toFixed(2)}</span>
@@ -1390,7 +1390,7 @@ export default function POS() {
                         }
                       }}
                       className={`px-3 py-1 text-xs rounded ${
-                        discount.type === 'percentage' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        discount.type === 'percentage' ? 'bg-primary-600 text-white' : 'bg-gray-50 text-gray-600 hover:bg-gray-50'
                       }`}
                     >
                       %
@@ -1404,7 +1404,7 @@ export default function POS() {
                         }
                       }}
                       className={`px-3 py-1 text-xs rounded ${
-                        discount.type === 'fixed' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        discount.type === 'fixed' ? 'bg-primary-600 text-white' : 'bg-gray-50 text-gray-600 hover:bg-gray-50'
                       }`}
                     >
                       $
@@ -1428,7 +1428,7 @@ export default function POS() {
                   </div>
                 </div>
                 {discountAmount > 0 && (
-                  <div className="flex justify-between text-sm text-green-600 mt-1">
+                  <div className="flex justify-between text-sm text-primary-600 mt-1">
                     <span>Discount applied</span>
                     <span>-${discountAmount.toFixed(2)}</span>
                   </div>
@@ -1436,7 +1436,7 @@ export default function POS() {
               </div>
 
               {discountAmount > 0 && (
-                <div className="flex justify-between text-sm font-medium text-green-600">
+                <div className="flex justify-between text-sm font-medium text-primary-600">
                   <span>After Discount</span>
                   <span>${discountedSubtotal.toFixed(2)}</span>
                 </div>
@@ -1453,18 +1453,18 @@ export default function POS() {
             </div>
 
             {/* Action Buttons */}
-            <div className="p-4 border-t space-y-2">
+            <div className="p-6 border-t space-y-2">
               <div className="grid grid-cols-2 gap-2">
                 <button
                   onClick={parkSale}
-                  className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600"
+                  className="px-4 py-2 bg-warning-500 text-white rounded-lg hover:bg-warning-600"
                 >
                   <PauseCircle className="w-4 h-4 inline mr-1" />
                   Park Sale
                 </button>
                 <button
                   onClick={() => { setCart([]); setCustomer(null); }}
-                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                  className="px-4 py-2 bg-danger-500 text-white rounded-lg hover:bg-danger-600"
                 >
                   <X className="w-4 h-4 inline mr-1" />
                   Clear
@@ -1473,7 +1473,7 @@ export default function POS() {
               <button
                 onClick={() => setShowPaymentModal(true)}
                 disabled={cart.length === 0 || !customer || driedFlowerEquivalent > 30}
-                className="w-full px-4 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                className="w-full px-4 py-3 bg-primary-500 text-white rounded-lg hover:bg-primary-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
               >
                 <CreditCard className="w-4 h-4 inline mr-2" />
                 Process Payment
@@ -1485,7 +1485,7 @@ export default function POS() {
 
       {/* Parked Sales Tab */}
       {activeTab === 'parked' && (
-        <div className="flex-1 p-3 sm:p-6 overflow-y-auto">
+        <div className="flex-1 p-4 sm:p-6 overflow-y-auto">
           <h2 className="text-lg sm:text-xl font-bold mb-4">Parked Sales</h2>
           {parkedSales.length === 0 ? (
             <div className="text-center text-gray-400 py-12">
@@ -1493,9 +1493,9 @@ export default function POS() {
               <p>No parked sales</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {parkedSales.map(sale => (
-                <div key={sale.id} className="bg-white p-4 rounded-lg shadow">
+                <div key={sale.id} className="bg-white p-6 rounded-lg ">
                   <div className="flex justify-between items-start mb-2">
                     <div>
                       <p className="font-semibold">#{sale.id.slice(-6)}</p>
@@ -1510,7 +1510,7 @@ export default function POS() {
                   </p>
                   <button
                     onClick={() => resumeParkedSale(sale)}
-                    className="w-full px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    className="w-full px-3 py-2 bg-accent-500 text-white rounded hover:bg-accent-600"
                   >
                     Resume Sale
                   </button>
@@ -1528,17 +1528,17 @@ export default function POS() {
 
       {/* Settings Tab */}
       {activeTab === 'settings' && (
-        <div className="flex-1 p-3 sm:p-6 overflow-y-auto">
+        <div className="flex-1 p-4 sm:p-6 overflow-y-auto">
           <h2 className="text-xl font-bold mb-6">POS Settings</h2>
           
           <div className="space-y-6">
             {/* Hardware Configuration */}
-            <div className="bg-white p-6 rounded-lg shadow">
+            <div className="bg-white p-6 rounded-lg ">
               <h3 className="text-lg font-semibold mb-4">Hardware Configuration</h3>
               
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-4">
                     <CreditCard className="w-5 h-5 text-gray-400" />
                     <div>
                       <p className="font-medium">Payment Terminal</p>
@@ -1560,7 +1560,7 @@ export default function POS() {
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-4">
                     <Printer className="w-5 h-5 text-gray-400" />
                     <div>
                       <p className="font-medium">Receipt Printer</p>
@@ -1584,7 +1584,7 @@ export default function POS() {
                 {/* Barcode Scanner Section */}
                 <div className="border-t pt-4">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-4">
                       <Scan className="w-5 h-5 text-gray-400" />
                       <div>
                         <p className="font-medium">Barcode Scanners</p>
@@ -1594,7 +1594,7 @@ export default function POS() {
                     <button
                       onClick={detectScanners}
                       disabled={detectingHardware}
-                      className="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 flex items-center gap-2 text-sm"
+                      className="px-3 py-1 bg-blue-50 text-accent-600 rounded-lg hover:bg-blue-100 flex items-center gap-2 text-sm"
                     >
                       {detectingHardware ? (
                         <Loader2 className="w-4 h-4 animate-spin" />
@@ -1609,13 +1609,13 @@ export default function POS() {
                   {detectedScanners.length > 0 ? (
                     <div className="space-y-3">
                       {detectedScanners.map((scanner) => (
-                        <div key={scanner.id} className="p-3 bg-gray-50 rounded-lg">
+                        <div key={scanner.id} className="p-4 bg-gray-50 rounded-lg">
                           <div className="flex items-start justify-between">
-                            <div className="flex items-start gap-3">
+                            <div className="flex items-start gap-4">
                               {/* Connection Type Icon */}
                               {scanner.type === 'USB' && <Usb className="w-5 h-5 text-gray-500 mt-1" />}
-                              {scanner.type === 'Bluetooth' && <Bluetooth className="w-5 h-5 text-blue-500 mt-1" />}
-                              {scanner.type === 'Network' && <Network className="w-5 h-5 text-green-500 mt-1" />}
+                              {scanner.type === 'Bluetooth' && <Bluetooth className="w-5 h-5 text-accent-500 mt-1" />}
+                              {scanner.type === 'Network' && <Network className="w-5 h-5 text-primary-500 mt-1" />}
                               
                               <div className="flex-1">
                                 <p className="font-medium text-sm">{scanner.name}</p>
@@ -1626,16 +1626,16 @@ export default function POS() {
                                 <div className="flex items-center gap-2 mt-2">
                                   <span className={`text-xs px-2 py-1 rounded ${
                                     scanner.status === 'connected' || scanner.status === 'paired' ? 
-                                    'bg-green-100 text-green-700' : 
-                                    'bg-gray-100 text-gray-600'
+                                    'bg-primary-100 text-primary-700' : 
+                                    'bg-gray-50 text-gray-600'
                                   }`}>
                                     {scanner.status}
                                   </span>
                                   {scanner.confidence && (
                                     <span className={`text-xs px-2 py-1 rounded ${
-                                      scanner.confidence === 'high' ? 'bg-blue-100 text-blue-700' :
-                                      scanner.confidence === 'medium' ? 'bg-yellow-100 text-yellow-700' :
-                                      'bg-gray-100 text-gray-600'
+                                      scanner.confidence === 'high' ? 'bg-blue-100 text-accent-700' :
+                                      scanner.confidence === 'medium' ? 'bg-warning-100 text-yellow-700' :
+                                      'bg-gray-50 text-gray-600'
                                     }`}>
                                       {scanner.confidence === 'high' ? '✓ Scanner' : 
                                        scanner.confidence === 'medium' ? 'Likely Scanner' : 
@@ -1655,7 +1655,7 @@ export default function POS() {
                               <button
                                 onClick={() => testScanner(scanner.id)}
                                 disabled={testingScanner === scanner.id}
-                                className="px-2 py-1 text-xs bg-blue-50 text-blue-600 rounded hover:bg-blue-100"
+                                className="px-2 py-1 text-xs bg-blue-50 text-accent-600 rounded hover:bg-blue-100"
                               >
                                 {testingScanner === scanner.id ? (
                                   <Loader2 className="w-3 h-3 animate-spin" />
@@ -1695,7 +1695,7 @@ export default function POS() {
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-4">
                     <DollarSign className="w-5 h-5 text-gray-400" />
                     <div>
                       <p className="font-medium">Cash Drawer</p>
@@ -1719,22 +1719,22 @@ export default function POS() {
             </div>
 
             {/* Cash Management */}
-            <div className="bg-white p-6 rounded-lg shadow">
+            <div className="bg-white p-6 rounded-lg ">
               <h3 className="text-lg font-semibold mb-4">Cash Management</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <button className="px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100">
+              <div className="grid grid-cols-2 gap-6">
+                <button className="px-4 py-2 bg-blue-50 text-accent-600 rounded-lg hover:bg-blue-100">
                   <Calculator className="w-4 h-4 inline mr-2" />
                   Open Register
                 </button>
-                <button className="px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100">
+                <button className="px-4 py-2 bg-blue-50 text-accent-600 rounded-lg hover:bg-blue-100">
                   <DollarSign className="w-4 h-4 inline mr-2" />
                   Cash Count
                 </button>
-                <button className="px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100">
+                <button className="px-4 py-2 bg-blue-50 text-accent-600 rounded-lg hover:bg-blue-100">
                   <Clock className="w-4 h-4 inline mr-2" />
                   End of Day
                 </button>
-                <button className="px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100">
+                <button className="px-4 py-2 bg-blue-50 text-accent-600 rounded-lg hover:bg-blue-100">
                   <Printer className="w-4 h-4 inline mr-2" />
                   Print Report
                 </button>
@@ -1742,24 +1742,24 @@ export default function POS() {
             </div>
 
             {/* Discount Settings */}
-            <div className="bg-white p-6 rounded-lg shadow">
+            <div className="bg-white p-6 rounded-lg ">
               <h3 className="text-lg font-semibold mb-4">Discounts & Promotions</h3>
               <div className="space-y-3">
-                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                   <div>
                     <p className="font-medium">Senior Discount</p>
                     <p className="text-sm text-gray-500">10% off for 65+</p>
                   </div>
-                  <span className="px-2 py-1 bg-green-100 text-green-700 rounded text-sm">Active</span>
+                  <span className="px-2 py-1 bg-primary-100 text-primary-700 rounded text-sm">Active</span>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                   <div>
                     <p className="font-medium">Happy Hour</p>
                     <p className="text-sm text-gray-500">15% off 4-6pm</p>
                   </div>
-                  <span className="px-2 py-1 bg-green-100 text-green-700 rounded text-sm">Active</span>
+                  <span className="px-2 py-1 bg-primary-100 text-primary-700 rounded text-sm">Active</span>
                 </div>
-                <button className="w-full px-4 py-2 border-2 border-dashed border-gray-300 text-gray-500 rounded-lg hover:border-gray-400">
+                <button className="w-full px-4 py-2 border-2 border-dashed border-gray-200 text-gray-500 rounded-lg hover:border-gray-300">
                   <Plus className="w-4 h-4 inline mr-2" />
                   Add Promotion
                 </button>

@@ -196,11 +196,11 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
   if (!isOpen) return null;
   
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-6 z-50">
       <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden">
         <div className="flex items-center justify-between p-6 border-b">
           <h2 className="text-xl font-bold flex items-center gap-2">
-            <Package className="h-6 w-6 text-green-600" />
+            <Package className="h-6 w-6 text-primary-600" />
             Create Purchase Order
           </h2>
           <button onClick={handleClose} className="text-gray-500 hover:text-gray-700">
@@ -210,7 +210,7 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
         
         <div className="p-6 overflow-y-auto" style={{ maxHeight: 'calc(90vh - 200px)' }}>
           {error && (
-            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div className="mb-4 p-6 bg-danger-50 border border-red-200 rounded-lg">
               <span className="text-red-700">{error}</span>
             </div>
           )}
@@ -222,7 +222,7 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
             </label>
             <StoreSelector className="w-full" showStats={false} />
             {!currentStore && (
-              <p className="mt-1 text-sm text-red-600">Please select a store</p>
+              <p className="mt-1 text-sm text-danger-600">Please select a store</p>
             )}
           </div>
           
@@ -234,7 +234,7 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
               <select
                 value={supplierId}
                 onChange={(e) => setSupplierId(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500"
               >
                 <option value="">Select Supplier</option>
                 {suppliers?.map((supplier: any) => (
@@ -253,7 +253,7 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
                 type="date"
                 value={expectedDate}
                 onChange={(e) => setExpectedDate(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500"
               />
             </div>
             
@@ -265,7 +265,7 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
                 type="text"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500"
                 placeholder="Optional notes..."
               />
             </div>
@@ -276,7 +276,7 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
               <h3 className="text-lg font-medium">Order Items</h3>
               <button
                 onClick={addItem}
-                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 flex items-center gap-2"
+                className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 flex items-center gap-2"
               >
                 <Plus className="h-4 w-4" />
                 Add Item
@@ -305,7 +305,7 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
                           type="text"
                           value={item.sku}
                           onChange={(e) => updateItem(index, 'sku', e.target.value)}
-                          className="w-full px-2 py-1 border border-gray-300 rounded"
+                          className="w-full px-2 py-1 border border-gray-200 rounded"
                           placeholder="Enter SKU"
                         />
                       </td>
@@ -314,7 +314,7 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
                           type="text"
                           value={item.batch_lot || ''}
                           onChange={(e) => updateItem(index, 'batch_lot', e.target.value)}
-                          className="w-full px-2 py-1 border border-gray-300 rounded"
+                          className="w-full px-2 py-1 border border-gray-200 rounded"
                           placeholder="Optional"
                         />
                       </td>
@@ -323,7 +323,7 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
                           type="number"
                           value={item.quantity}
                           onChange={(e) => updateItem(index, 'quantity', parseInt(e.target.value) || 0)}
-                          className="w-20 px-2 py-1 border border-gray-300 rounded"
+                          className="w-20 px-2 py-1 border border-gray-200 rounded"
                           min="1"
                         />
                       </td>
@@ -332,7 +332,7 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
                           type="number"
                           value={item.received_quantity || 0}
                           onChange={(e) => updateItem(index, 'received_quantity', parseInt(e.target.value) || 0)}
-                          className="w-20 px-2 py-1 border border-gray-300 rounded"
+                          className="w-20 px-2 py-1 border border-gray-200 rounded"
                           min="0"
                         />
                       </td>
@@ -341,7 +341,7 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
                           type="number"
                           value={item.unit_cost}
                           onChange={(e) => updateItem(index, 'unit_cost', parseFloat(e.target.value) || 0)}
-                          className="w-24 px-2 py-1 border border-gray-300 rounded"
+                          className="w-24 px-2 py-1 border border-gray-200 rounded"
                           min="0"
                           step="0.01"
                         />
@@ -351,7 +351,7 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
                           type="number"
                           value={item.retail_price || 0}
                           onChange={(e) => updateItem(index, 'retail_price', parseFloat(e.target.value) || 0)}
-                          className="w-24 px-2 py-1 border border-gray-300 rounded"
+                          className="w-24 px-2 py-1 border border-gray-200 rounded"
                           min="0"
                           step="0.01"
                         />
@@ -362,7 +362,7 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
                       <td className="px-4 py-3">
                         <button
                           onClick={() => removeItem(index)}
-                          className="text-red-600 hover:text-red-800"
+                          className="text-danger-600 hover:text-danger-800"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -374,7 +374,7 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
             </div>
           </div>
           
-          <div className="bg-gray-50 rounded-lg p-4">
+          <div className="bg-gray-50 rounded-lg p-6">
             <div className="flex justify-between items-center">
               <div className="text-sm text-gray-600">
                 <span>Total Items: {items.length}</span>
@@ -391,14 +391,14 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
         <div className="flex justify-between p-6 border-t">
           <button
             onClick={handleClose}
-            className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+            className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
             disabled={createPOMutation.isPending}
-            className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50"
+            className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 disabled:opacity-50"
           >
             {createPOMutation.isPending ? 'Creating...' : 'Create Purchase Order'}
           </button>

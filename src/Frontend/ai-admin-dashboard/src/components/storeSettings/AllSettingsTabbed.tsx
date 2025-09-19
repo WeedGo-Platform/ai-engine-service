@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Truck, Shield, Clock, DollarSign, AlertTriangle, CreditCard, Smartphone, Plus, Trash2, Monitor, Tablet
+  Truck, Shield, Clock, DollarSign, AlertTriangle, CreditCard, Smartphone, Plus, Trash2, Monitor, Tablet, Globe
 } from 'lucide-react';
 import paymentService from '../../services/paymentService';
+import OnlinePaymentSettings from './OnlinePaymentSettings';
 
 interface AllSettingsTabbedProps {
   storeId: string;
@@ -41,9 +42,9 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
   const [saving, setSaving] = useState(false);
 
   const tabs = [
-    { id: 'payment', label: 'Payment', icon: CreditCard, color: 'text-green-600' },
+    { id: 'payment', label: 'Payment', icon: CreditCard, color: 'text-primary-600' },
     { id: 'delivery', label: 'Delivery', icon: Truck, color: 'text-orange-600' },
-    { id: 'compliance', label: 'Compliance', icon: Shield, color: 'text-red-600' },
+    { id: 'compliance', label: 'Compliance', icon: Shield, color: 'text-danger-600' },
     { id: 'hours', label: 'Store Hours', icon: Clock, color: 'text-indigo-600' },
     { id: 'devices', label: 'Devices', icon: Smartphone, color: 'text-purple-600' },
   ];
@@ -71,6 +72,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
       ...settings.payment
     });
     const [showAddTerminal, setShowAddTerminal] = useState(false);
+    const [showOnlinePaymentSettings, setShowOnlinePaymentSettings] = useState(false);
     const [newTerminal, setNewTerminal] = useState({
       terminalId: '',
       merchantId: '',
@@ -108,12 +110,12 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
         <div className="bg-white rounded-lg p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <CreditCard className="w-5 h-5 text-green-600" />
+              <CreditCard className="w-5 h-5 text-primary-600" />
               <h3 className="text-lg font-semibold">Clover Payment Terminals</h3>
             </div>
             <button
               onClick={() => setShowAddTerminal(true)}
-              className="flex items-center gap-2 px-3 py-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm"
+              className="flex items-center gap-2 px-3 py-1.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 text-sm"
             >
               <Plus className="w-4 h-4" />
               Add Terminal
@@ -121,9 +123,9 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
           </div>
 
           {showAddTerminal && (
-            <div className="mb-4 p-4 bg-gray-50 rounded-lg">
+            <div className="mb-4 p-6 bg-gray-50 rounded-lg">
               <h4 className="font-medium mb-3">Add Clover Terminal</h4>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-1">Terminal Name</label>
                   <input
@@ -158,7 +160,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
               <div className="mt-3 flex gap-2">
                 <button
                   onClick={addTerminal}
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm"
+                  className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 text-sm"
                 >
                   Add Terminal
                 </button>
@@ -182,14 +184,14 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
               </div>
             ) : (
               localSettings.terminals.map((terminal) => (
-                <div key={terminal.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div key={terminal.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                   <div>
                     <div className="font-medium">{terminal.name}</div>
                     <div className="text-sm text-gray-600">
                       Terminal ID: {terminal.terminalId} | Merchant ID: {terminal.merchantId}
                     </div>
                     <div className="text-xs text-gray-500">
-                      Status: <span className={terminal.status === 'active' ? 'text-green-600' : 'text-red-600'}>
+                      Status: <span className={terminal.status === 'active' ? 'text-primary-600' : 'text-danger-600'}>
                         {terminal.status}
                       </span>
                       {terminal.lastSeen && ` | Last seen: ${new Date(terminal.lastSeen).toLocaleString()}`}
@@ -197,7 +199,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
                   </div>
                   <button
                     onClick={() => removeTerminal(terminal.id)}
-                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                    className="p-2 text-danger-600 hover:bg-danger-50 rounded-lg"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -209,7 +211,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
 
         <div className="bg-white rounded-lg p-6">
           <div className="flex items-center gap-2 mb-4">
-            <DollarSign className="w-5 h-5 text-blue-600" />
+            <DollarSign className="w-5 h-5 text-accent-600" />
             <h3 className="text-lg font-semibold">Payment Methods & Tips</h3>
           </div>
 
@@ -235,7 +237,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
                           });
                         }
                       }}
-                      className="w-4 h-4 text-blue-600 rounded"
+                      className="w-4 h-4 text-accent-600 rounded"
                     />
                     <span className="capitalize">{method.replace('_', ' ')}</span>
                   </label>
@@ -249,7 +251,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
                   type="checkbox"
                   checked={localSettings.tipEnabled}
                   onChange={(e) => setLocalSettings({...localSettings, tipEnabled: e.target.checked})}
-                  className="w-4 h-4 text-blue-600 rounded"
+                  className="w-4 h-4 text-accent-600 rounded"
                 />
                 <span className="font-medium">Enable Tips</span>
               </label>
@@ -278,11 +280,61 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
           </div>
         </div>
 
+        {/* Online Payment Settings Button */}
+        <div className="bg-white rounded-lg p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <Globe className="w-5 h-5 text-green-600" />
+                <h3 className="text-lg font-semibold">Online Payment Settings</h3>
+              </div>
+              <p className="text-sm text-gray-600 mt-1">
+                Configure payment processing for ecommerce orders
+              </p>
+            </div>
+            <button
+              onClick={() => setShowOnlinePaymentSettings(true)}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm font-medium"
+            >
+              Configure Online Payments
+            </button>
+          </div>
+        </div>
+
+        {/* Online Payment Settings Modal */}
+        {showOnlinePaymentSettings && (
+          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto m-4">
+              <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between">
+                <h2 className="text-xl font-semibold">Online Payment Configuration</h2>
+                <button
+                  onClick={() => setShowOnlinePaymentSettings(false)}
+                  className="text-gray-400 hover:text-gray-500"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <div className="p-6">
+                <OnlinePaymentSettings
+                  storeId={storeId}
+                  initialSettings={settings.onlinePayment || {}}
+                  onSave={async (onlineSettings) => {
+                    await handleSave('onlinePayment', onlineSettings);
+                    setShowOnlinePaymentSettings(false);
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="flex justify-end">
           <button
             onClick={() => handleSave('payment', localSettings)}
             disabled={saving}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            className="px-6 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 disabled:opacity-50"
           >
             {saving ? 'Saving...' : 'Save Payment Settings'}
           </button>
@@ -335,7 +387,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
     const getDeviceIcon = (platform: string) => {
       return platform === 'tablet'
         ? <Tablet className="w-5 h-5 text-purple-600" />
-        : <Monitor className="w-5 h-5 text-blue-600" />;
+        : <Monitor className="w-5 h-5 text-accent-600" />;
     };
 
     return (
@@ -356,9 +408,9 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
           </div>
 
           {showAddDevice && (
-            <div className="mb-4 p-4 bg-gray-50 rounded-lg">
+            <div className="mb-4 p-6 bg-gray-50 rounded-lg">
               <h4 className="font-medium mb-3">Add Device</h4>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-1">Device Name</label>
                   <input
@@ -430,8 +482,8 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
               </div>
             ) : (
               localSettings.devices.map((device) => (
-                <div key={device.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <div className="flex items-center gap-3">
+                <div key={device.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                  <div className="flex items-center gap-4">
                     {getDeviceIcon(device.platform)}
                     <div>
                       <div className="font-medium">{device.name}</div>
@@ -441,7 +493,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
                         Device ID: {device.deviceId}
                       </div>
                       <div className="text-xs text-gray-500">
-                        Status: <span className={device.status === 'active' ? 'text-green-600' : 'text-red-600'}>
+                        Status: <span className={device.status === 'active' ? 'text-primary-600' : 'text-danger-600'}>
                           {device.status}
                         </span>
                         {device.lastActivity && ` | Last activity: ${new Date(device.lastActivity).toLocaleString()}`}
@@ -450,7 +502,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
                   </div>
                   <button
                     onClick={() => removeDevice(device.id)}
-                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                    className="p-2 text-danger-600 hover:bg-danger-50 rounded-lg"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -462,7 +514,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
 
         <div className="bg-white rounded-lg p-6">
           <div className="flex items-center gap-2 mb-4">
-            <AlertTriangle className="w-5 h-5 text-yellow-600" />
+            <AlertTriangle className="w-5 h-5 text-warning-600" />
             <h3 className="text-lg font-semibold">Device Information</h3>
           </div>
           <div className="space-y-2 text-sm text-gray-600">
@@ -483,7 +535,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
           <button
             onClick={() => handleSave('devices', localSettings)}
             disabled={saving}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            className="px-6 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 disabled:opacity-50"
           >
             {saving ? 'Saving...' : 'Save Device Settings'}
           </button>
@@ -505,7 +557,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
       <div className="space-y-6">
         <div className="bg-white rounded-lg p-6">
           <div className="flex items-center gap-2 mb-4">
-            <DollarSign className="w-5 h-5 text-green-600" />
+            <DollarSign className="w-5 h-5 text-primary-600" />
             <h3 className="text-lg font-semibold">Delivery Fees</h3>
           </div>
 
@@ -553,7 +605,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
 
         <div className="bg-white rounded-lg p-6">
           <div className="flex items-center gap-2 mb-4">
-            <Clock className="w-5 h-5 text-blue-600" />
+            <Clock className="w-5 h-5 text-accent-600" />
             <h3 className="text-lg font-semibold">Time Slots</h3>
           </div>
 
@@ -579,7 +631,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
                           });
                         }
                       }}
-                      className="w-4 h-4 text-blue-600 rounded"
+                      className="w-4 h-4 text-accent-600 rounded"
                     />
                     <span>{slot}</span>
                   </label>
@@ -594,7 +646,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
           <button
             onClick={() => handleSave('delivery', localSettings)}
             disabled={saving}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            className="px-6 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 disabled:opacity-50"
           >
             {saving ? 'Saving...' : 'Save Delivery Settings'}
           </button>
@@ -618,7 +670,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
       <div className="space-y-6">
         <div className="bg-white rounded-lg p-6">
           <div className="flex items-center gap-2 mb-4">
-            <Shield className="w-5 h-5 text-red-600" />
+            <Shield className="w-5 h-5 text-danger-600" />
             <h3 className="text-lg font-semibold">Age & ID Verification</h3>
           </div>
 
@@ -642,7 +694,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
                   type="checkbox"
                   checked={localSettings.ageVerificationRequired}
                   onChange={(e) => setLocalSettings({...localSettings, ageVerificationRequired: e.target.checked})}
-                  className="w-4 h-4 text-blue-600 rounded"
+                  className="w-4 h-4 text-accent-600 rounded"
                 />
                 <span>Require Age Verification</span>
               </label>
@@ -652,7 +704,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
                   type="checkbox"
                   checked={localSettings.requireIdVerification}
                   onChange={(e) => setLocalSettings({...localSettings, requireIdVerification: e.target.checked})}
-                  className="w-4 h-4 text-blue-600 rounded"
+                  className="w-4 h-4 text-accent-600 rounded"
                 />
                 <span>Require ID Verification for All Purchases</span>
               </label>
@@ -662,7 +714,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
 
         <div className="bg-white rounded-lg p-6">
           <div className="flex items-center gap-2 mb-4">
-            <AlertTriangle className="w-5 h-5 text-yellow-600" />
+            <AlertTriangle className="w-5 h-5 text-warning-600" />
             <h3 className="text-lg font-semibold">Purchase Limits</h3>
           </div>
 
@@ -693,7 +745,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
           <button
             onClick={() => handleSave('compliance', localSettings)}
             disabled={saving}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            className="px-6 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 disabled:opacity-50"
           >
             {saving ? 'Saving...' : 'Save Compliance Settings'}
           </button>
@@ -721,7 +773,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
               return (
                 <div key={day} className="flex items-center justify-between py-2 border-b">
                   <span className="font-medium capitalize">{day}</span>
-                  <span className={dayHours?.closed ? 'text-red-600' : 'text-gray-700'}>
+                  <span className={dayHours?.closed ? 'text-danger-600' : 'text-gray-700'}>
                     {!dayHours || dayHours.closed
                       ? 'Closed'
                       : `${dayHours.open} - ${dayHours.close}`}
@@ -731,8 +783,8 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
             })}
           </div>
 
-          <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-            <p className="text-sm text-blue-700">
+          <div className="mt-6 p-6 bg-blue-50 rounded-lg">
+            <p className="text-sm text-accent-700">
               To modify store hours, please use the Store Hours Management page or contact support.
             </p>
           </div>
@@ -762,7 +814,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
   return (
     <div className="space-y-6">
       {/* Tab Navigation */}
-      <div className="bg-white rounded-lg shadow-sm p-1">
+      <div className="bg-white rounded-lg  p-1">
         <div className="flex flex-wrap gap-1">
           {tabs.map(tab => (
             <button
@@ -770,7 +822,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
                 activeTab === tab.id
-                  ? 'bg-blue-50 text-blue-600'
+                  ? 'bg-blue-50 text-accent-600'
                   : 'text-gray-600 hover:bg-gray-50'
               }`}
             >

@@ -129,7 +129,7 @@ export default function Recommendations() {
             refetchComplementary();
             refetchFrequent();
           }}
-          className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+          className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
         >
           <RefreshCw className="h-5 w-5 mr-2" />
           Refresh Data
@@ -143,8 +143,8 @@ export default function Recommendations() {
             onClick={() => setActiveTab('overview')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'overview'
-                ? 'border-green-500 text-green-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'border-primary-500 text-primary-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
             }`}
           >
             Overview
@@ -153,8 +153,8 @@ export default function Recommendations() {
             onClick={() => setActiveTab('performance')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'performance'
-                ? 'border-green-500 text-green-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'border-primary-500 text-primary-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
             }`}
           >
             Performance
@@ -163,8 +163,8 @@ export default function Recommendations() {
             onClick={() => setActiveTab('test')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'test'
-                ? 'border-green-500 text-green-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'border-primary-500 text-primary-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
             }`}
           >
             Test Recommendations
@@ -176,8 +176,8 @@ export default function Recommendations() {
       {activeTab === 'overview' && (
         <div className="space-y-6">
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-white rounded-lg shadow p-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="bg-white rounded-lg  p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Products with Recs</p>
@@ -185,11 +185,11 @@ export default function Recommendations() {
                     {analytics?.overall?.products_with_recommendations || 0}
                   </p>
                 </div>
-                <Target className="h-8 w-8 text-green-500" />
+                <Target className="h-8 w-8 text-primary-500" />
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg  p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Avg CTR</p>
@@ -197,11 +197,11 @@ export default function Recommendations() {
                     {formatPercentage(analytics?.overall?.avg_ctr)}
                   </p>
                 </div>
-                <BarChart3 className="h-8 w-8 text-blue-500" />
+                <BarChart3 className="h-8 w-8 text-accent-500" />
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg  p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Avg Conversion</p>
@@ -213,7 +213,7 @@ export default function Recommendations() {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg  p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Revenue Impact</p>
@@ -221,20 +221,20 @@ export default function Recommendations() {
                     {formatCurrency(analytics?.overall?.total_revenue_impact)}
                   </p>
                 </div>
-                <ArrowUpRight className="h-8 w-8 text-green-500" />
+                <ArrowUpRight className="h-8 w-8 text-primary-500" />
               </div>
             </div>
           </div>
 
           {/* Trending Products */}
-          <div className="bg-white rounded-lg shadow">
+          <div className="bg-white rounded-lg ">
             <div className="p-6 border-b">
               <h3 className="text-lg font-semibold text-gray-900">Trending Products</h3>
             </div>
             <div className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {trendingProducts?.slice(0, 6).map((product: any) => (
-                  <div key={product.product_id} className="border rounded-lg p-4 hover:bg-gray-50">
+                  <div key={product.product_id} className="border rounded-lg p-6 hover:bg-gray-50">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <h4 className="font-medium text-gray-900 text-sm">
@@ -243,14 +243,14 @@ export default function Recommendations() {
                         <p className="text-xs text-gray-500 mt-1">{product.brand}</p>
                         <p className="text-xs text-gray-500">{product.category}</p>
                       </div>
-                      <TrendingUp className="h-4 w-4 text-green-500" />
+                      <TrendingUp className="h-4 w-4 text-primary-500" />
                     </div>
                     <div className="mt-3 flex justify-between items-center">
                       <span className="text-lg font-semibold text-gray-900">
                         ${product.unit_price}
                       </span>
                       {product.thc_percentage && (
-                        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                        <span className="text-xs bg-primary-100 text-primary-800 px-2 py-1 rounded">
                           THC: {product.thc_percentage}%
                         </span>
                       )}
@@ -262,7 +262,7 @@ export default function Recommendations() {
           </div>
 
           {/* Recommendation Types Performance */}
-          <div className="bg-white rounded-lg shadow">
+          <div className="bg-white rounded-lg ">
             <div className="p-6 border-b">
               <h3 className="text-lg font-semibold text-gray-900">Performance by Type</h3>
             </div>
@@ -326,7 +326,7 @@ export default function Recommendations() {
       )}
 
       {activeTab === 'performance' && (
-        <div className="bg-white rounded-lg shadow">
+        <div className="bg-white rounded-lg ">
           <div className="p-6 border-b">
             <h3 className="text-lg font-semibold text-gray-900">Top Performing Recommendations</h3>
           </div>
@@ -397,7 +397,7 @@ export default function Recommendations() {
       {activeTab === 'test' && (
         <div className="space-y-6">
           {/* Product Selector */}
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-white rounded-lg  p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Test Recommendations</h3>
             <div className="max-w-md">
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -409,7 +409,7 @@ export default function Recommendations() {
                   value={selectedProduct}
                   onChange={(e) => setSelectedProduct(e.target.value)}
                   placeholder="e.g., 12345"
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
                 <button
                   onClick={() => {
@@ -418,7 +418,7 @@ export default function Recommendations() {
                     refetchFrequent();
                   }}
                   disabled={!selectedProduct}
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Get Recommendations
                 </button>
@@ -429,16 +429,16 @@ export default function Recommendations() {
           {selectedProduct && (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Similar Products */}
-              <div className="bg-white rounded-lg shadow">
-                <div className="p-4 border-b bg-gray-50">
+              <div className="bg-white rounded-lg ">
+                <div className="p-6 border-b bg-gray-50">
                   <h4 className="font-semibold text-gray-900 flex items-center">
-                    <Package2 className="h-5 w-5 mr-2 text-green-500" />
+                    <Package2 className="h-5 w-5 mr-2 text-primary-500" />
                     Similar Products
                   </h4>
                 </div>
-                <div className="p-4 space-y-3">
+                <div className="p-6 space-y-3">
                   {similarProducts?.map((product: any) => (
-                    <div key={product.product_id} className="border rounded-lg p-3 hover:bg-gray-50">
+                    <div key={product.product_id} className="border rounded-lg p-4 hover:bg-gray-50">
                       <div className="font-medium text-sm text-gray-900">
                         {product.product_name}
                       </div>
@@ -448,7 +448,7 @@ export default function Recommendations() {
                       <div className="flex justify-between items-center mt-2">
                         <span className="font-semibold text-gray-900">${product.unit_price}</span>
                         {product.thc_percentage && (
-                          <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                          <span className="text-xs bg-primary-100 text-primary-800 px-2 py-1 rounded">
                             THC: {product.thc_percentage}%
                           </span>
                         )}
@@ -464,16 +464,16 @@ export default function Recommendations() {
               </div>
 
               {/* Complementary Products */}
-              <div className="bg-white rounded-lg shadow">
-                <div className="p-4 border-b bg-gray-50">
+              <div className="bg-white rounded-lg ">
+                <div className="p-6 border-b bg-gray-50">
                   <h4 className="font-semibold text-gray-900 flex items-center">
-                    <ShoppingBag className="h-5 w-5 mr-2 text-blue-500" />
+                    <ShoppingBag className="h-5 w-5 mr-2 text-accent-500" />
                     Complementary Products
                   </h4>
                 </div>
-                <div className="p-4 space-y-3">
+                <div className="p-6 space-y-3">
                   {complementaryProducts?.map((product: any) => (
-                    <div key={product.product_id} className="border rounded-lg p-3 hover:bg-gray-50">
+                    <div key={product.product_id} className="border rounded-lg p-4 hover:bg-gray-50">
                       <div className="font-medium text-sm text-gray-900">
                         {product.product_name}
                       </div>
@@ -494,16 +494,16 @@ export default function Recommendations() {
               </div>
 
               {/* Frequently Bought Together */}
-              <div className="bg-white rounded-lg shadow">
-                <div className="p-4 border-b bg-gray-50">
+              <div className="bg-white rounded-lg ">
+                <div className="p-6 border-b bg-gray-50">
                   <h4 className="font-semibold text-gray-900 flex items-center">
                     <Zap className="h-5 w-5 mr-2 text-purple-500" />
                     Frequently Bought Together
                   </h4>
                 </div>
-                <div className="p-4 space-y-3">
+                <div className="p-6 space-y-3">
                   {frequentlyBought?.map((product: any) => (
-                    <div key={product.product_id} className="border rounded-lg p-3 hover:bg-gray-50">
+                    <div key={product.product_id} className="border rounded-lg p-4 hover:bg-gray-50">
                       <div className="font-medium text-sm text-gray-900">
                         {product.product_name}
                       </div>

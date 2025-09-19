@@ -52,20 +52,20 @@ const ProductDetailsModal: React.FC<ProductDetailsModalProps> = ({
     return (
       <div className="space-y-3">
         <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">{title}</h3>
-        <div className={includeImage && imageUrl ? "grid grid-cols-1 md:grid-cols-3 gap-4" : "grid grid-cols-1 md:grid-cols-2 gap-3"}>
+        <div className={includeImage && imageUrl ? "grid grid-cols-1 md:grid-cols-3 gap-6" : "grid grid-cols-1 md:grid-cols-2 gap-4"}>
           {includeImage && imageUrl && (
             <div className="md:col-span-1">
               <img
                 src={imageUrl}
                 alt={data.product_name || 'Product'}
-                className="w-full h-auto rounded-lg shadow-md object-contain bg-gray-50"
+                className="w-full h-auto rounded-lg border border-gray-200 object-contain bg-gray-50"
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none';
                 }}
               />
             </div>
           )}
-          <div className={includeImage && imageUrl ? "md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-3" : "col-span-full grid grid-cols-1 md:grid-cols-2 gap-3"}>
+          <div className={includeImage && imageUrl ? "md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4" : "col-span-full grid grid-cols-1 md:grid-cols-2 gap-4"}>
             {Object.entries(data).map(([key, value]) => {
               if (value === null || value === undefined) return null;
               const displayKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
@@ -101,7 +101,7 @@ const ProductDetailsModal: React.FC<ProductDetailsModalProps> = ({
                     Active Batches ({batchCount})
                   </h3>
                   {batchData.map((batch: any, index: number) => (
-                    <div key={index} className="border rounded-lg p-4 space-y-2">
+                    <div key={index} className="border rounded-lg p-6 space-y-2">
                       <div className="flex justify-between items-start">
                         <div className="flex-1">
                           <p className="font-semibold">Batch/Lot: {batch.batch_lot}</p>
@@ -124,13 +124,13 @@ const ProductDetailsModal: React.FC<ProductDetailsModalProps> = ({
                                 onAddBatchToCart(cartProduct, batch);
                                 onClose();
                               }}
-                              className="p-2 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg transition-colors"
+                              className="p-2 bg-blue-100 hover:bg-blue-200 text-accent-700 rounded-lg transition-colors"
                               title="Add to Cart"
                             >
                               <ShoppingCart className="w-4 h-4" />
                             </button>
                           )}
-                          <span className="px-2 py-1 rounded text-xs bg-green-100 text-green-700">
+                          <span className="px-2 py-1 rounded text-xs bg-primary-100 text-primary-700">
                             Active
                           </span>
                         </div>
@@ -246,8 +246,8 @@ const ProductDetailsModal: React.FC<ProductDetailsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-7xl w-full max-h-[90vh] flex flex-col">
+    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-6">
+      <div className="bg-white rounded-lg border border-gray-200 max-w-7xl w-full max-h-[90vh] flex flex-col">
         {/* Header */}
         <div className="flex justify-between items-center p-6 border-b">
           <div>
@@ -278,8 +278,8 @@ const ProductDetailsModal: React.FC<ProductDetailsModalProps> = ({
                 className={`
                   px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors
                   ${activeTab === tab.id
-                    ? 'border-green-600 text-green-600'
-                    : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
+                    ? 'border-primary-600 text-primary-600'
+                    : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-200'
                   }
                 `}
               >
@@ -298,14 +298,14 @@ const ProductDetailsModal: React.FC<ProductDetailsModalProps> = ({
         <div className="border-t p-6 flex justify-between items-center">
           <div className="text-sm text-gray-600">
             {productDetails?.inventory?.in_stock ? (
-              <span className="text-green-600 font-medium">
+              <span className="text-primary-600 font-medium">
                 In Stock: {productDetails.inventory.quantity_available} units
               </span>
             ) : (
-              <span className="text-red-600 font-medium">Out of Stock</span>
+              <span className="text-danger-600 font-medium">Out of Stock</span>
             )}
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-4">
             {onAddToCart && productDetails?.inventory?.in_stock && (
               <button
                 onClick={() => {
@@ -322,14 +322,14 @@ const ProductDetailsModal: React.FC<ProductDetailsModalProps> = ({
                   onAddToCart(cartProduct);
                   onClose();
                 }}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
               >
                 Add to Cart
               </button>
             )}
             <button
               onClick={onClose}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
             >
               Close
             </button>

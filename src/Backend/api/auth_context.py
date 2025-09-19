@@ -246,11 +246,10 @@ async def unified_login(credentials: UnifiedLoginRequest):
         # Log the login
         await conn.execute(
             """
-            INSERT INTO login_attempts (user_id, email, success, ip_address, user_agent, timestamp)
-            VALUES ($1, $2, $3, $4, $5, $6)
+            INSERT INTO user_login_logs (user_id, ip_address, user_agent, login_successful)
+            VALUES ($1, $2::inet, $3, $4)
             """,
-            user['id'], credentials.email, True, 
-            '0.0.0.0', 'API', datetime.now()
+            user['id'], '0.0.0.0', 'API', True
         )
         
         logger.info(f"Unified login successful for: {credentials.email}")
