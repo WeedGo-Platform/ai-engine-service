@@ -3,6 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { View, Text, StyleSheet } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import { useAuthStore } from '@/stores/authStore';
+import { CartBadge } from '@/components/CartBadge';
 
 export default function TabsLayout() {
   const { isAuthenticated } = useAuthStore();
@@ -59,10 +60,11 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, size, focused }) => (
             <View>
               <Ionicons name="cart-outline" size={size} color={color} />
-              {/* Cart badge can be added here */}
+              <CartBadge />
             </View>
           ),
           headerTitle: 'Shopping Cart',
+          headerShown: false,
         }}
       />
       <Tabs.Screen
