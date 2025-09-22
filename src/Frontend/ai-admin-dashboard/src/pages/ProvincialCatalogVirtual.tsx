@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { Upload, AlertCircle, CheckCircle, FileText, Loader2, Search, Filter, Download } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { getApiEndpoint } from '../config/app.config';
 import { uploadProvincialCatalog } from '../services/catalogService';
 import { useQuery } from '@tanstack/react-query';
 
@@ -189,7 +190,7 @@ const ProvincialCatalogVirtual: React.FC = () => {
       if (searchTerm) params.append('search', searchTerm);
       if (selectedCategory) params.append('category', selectedCategory);
       
-      const response = await fetch(`http://localhost:5024/api/province/catalog/${selectedProvince.toLowerCase()}/all?${params}`);
+      const response = await fetch(getApiEndpoint(`/province/catalog/${selectedProvince.toLowerCase()}/all?${params}`));
       if (!response.ok) {
         return [];
       }

@@ -1,11 +1,66 @@
 import React, { useState, useEffect } from 'react';
 import {
   X, Building2, Mail, Phone, Globe, CreditCard, Package,
-  MapPin, Upload, Save, AlertCircle, Users, UserPlus, Lock,
-  Ban, UserX, Shield, RefreshCw
+  MapPin, Upload, Save, Users, UserPlus, Lock,
+  Ban, UserX, RefreshCw, Check, Star, Store,
+  Leaf, Rocket, Crown, TrendingUp, CheckCircle, AlertTriangle, XCircle
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { getApiEndpoint } from '../config/app.config';
 import tenantService from '../services/tenantService';
+
+// Subscription plans configuration with Lucide icons
+const subscriptionPlans = {
+  'community_and_new_business': {
+    name: 'Community & New Business',
+    maxStores: 1,
+    maxLanguages: 2,
+    maxAiPersonalities: 1,
+    price: 'FREE',
+    priceValue: 0,
+    features: ['1 Store Location', '2 Languages (EN/FR)', '1 AI Personality', 'Basic POS System', 'Standard Support'],
+    color: 'bg-blue-50 border-blue-200',
+    iconComponent: Leaf,
+    iconColor: 'text-blue-600'
+  },
+  'small_business': {
+    name: 'Small Business',
+    maxStores: 5,
+    maxLanguages: 5,
+    maxAiPersonalities: 2,
+    price: '$99/month',
+    priceValue: 99,
+    features: ['5 Store Locations', '5 Languages', '2 AI Personalities per store', 'Advanced POS + KIOSK', 'Delivery Management', 'Priority Support'],
+    color: 'bg-green-50 border-green-200',
+    iconComponent: TrendingUp,
+    iconColor: 'text-green-600'
+  },
+  'professional_and_growing_business': {
+    name: 'Professional & Growing',
+    maxStores: 12,
+    maxLanguages: 10,
+    maxAiPersonalities: 3,
+    price: '$149/month',
+    priceValue: 149,
+    features: ['12 Store Locations', '10 Languages', '3 AI Personalities per store', 'Full Platform Access', 'Voice Age Verification', 'Fraud Protection', '24/7 Support'],
+    color: 'bg-purple-50 border-purple-200',
+    iconComponent: Rocket,
+    iconColor: 'text-purple-600',
+    isPopular: true
+  },
+  'enterprise': {
+    name: 'Enterprise',
+    maxStores: 999,
+    maxLanguages: 25,
+    maxAiPersonalities: 5,
+    price: '$299/month',
+    priceValue: 299,
+    features: ['Unlimited Stores', '25+ Languages', '5 AI Personalities per store', 'Full API Access', 'White Label Options', 'Dedicated Account Manager', 'Custom Training'],
+    color: 'bg-gradient-to-r from-purple-50 to-blue-50 border-purple-300',
+    iconComponent: Crown,
+    iconColor: 'text-indigo-600'
+  }
+};
 
 interface TenantEditModalProps {
   tenant: any;
@@ -61,7 +116,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
     setUserError(null);
     
     try {
-      const response = await fetch(`http://localhost:5024/api/tenants/${tenant.id}/users`);
+      const response = await fetch(getApiEndpoint(`/tenants/${tenant.id}/users`));
       if (!response.ok) throw new Error('Failed to fetch users');
       const data = await response.json();
       setTenantUsers(data);
@@ -99,7 +154,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
     );
     
     try {
-      const response = await fetch(`http://localhost:5024/api/tenants/${tenant.id}/users/${userId}/reset-password`, {
+      const response = await fetch(getApiEndpoint(`/tenants/${tenant.id}/users/${userId}/reset-password`), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -125,7 +180,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
     setUserSuccess(null);
     
     try {
-      const response = await fetch(`http://localhost:5024/api/tenants/${tenant.id}/users/${userId}/toggle-active`, {
+      const response = await fetch(getApiEndpoint(`/tenants/${tenant.id}/users/${userId}/toggle-active`), {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -147,7 +202,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
     setUserSuccess(null);
     
     try {
-      const response = await fetch(`http://localhost:5024/api/tenants/${tenant.id}/users/${userId}`, {
+      const response = await fetch(getApiEndpoint(`/tenants/${tenant.id}/users/${userId}`), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -177,7 +232,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
     setUserSuccess(null);
     
     try {
-      const response = await fetch(`http://localhost:5024/api/tenants/${tenant.id}/users/${userId}`, {
+      const response = await fetch(getApiEndpoint(`/tenants/${tenant.id}/users/${userId}`), {
         method: 'DELETE'
       });
       
@@ -233,7 +288,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
       <div className="flex items-center justify-center min-h-screen px-4">
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75" onClick={onClose}></div>
         
-        <div className="relative bg-white rounded-lg border border-gray-200 max-w-4xl w-full max-h-[90vh] overflow-hidden">
+        <div className="relative bg-white rounded-lg border border-gray-200 max-w-4xl w-full max-h-[85vh] overflow-hidden flex flex-col">
           <div className="flex items-center justify-between p-6 border-b">
             <h2 className="text-xl font-semibold">
               {readOnly ? 'View' : 'Edit'} Organization
@@ -262,7 +317,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
             </div>
           </div>
 
-          <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
+          <div className="flex-1 p-6 overflow-y-auto" style={{ maxHeight: 'calc(85vh - 200px)' }}>
             {/* Tab content here - same as existing TenantManagement but with readOnly support */}
             {activeTab === 'general' && (
               <div className="space-y-4">
@@ -481,43 +536,175 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
             )}
 
             {activeTab === 'subscription' && (
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Subscription Tier</label>
-                  <select
-                    value={editedTenant?.subscription_tier || 'community'}
-                    onChange={(e) => setEditedTenant({ ...editedTenant, subscription_tier: e.target.value })}
-                    disabled={readOnly}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg"
-                  >
-                    <option value="community_and_new_business">Community and New Business</option>
-                    <option value="small_business">Small Business</option>
-                    <option value="professional_and_growing_business">Professional and Growing Business</option>
-                    <option value="enterprise">Enterprise</option>
-                  </select>
+              <div className="space-y-6">
+                {/* Current Plan Display */}
+                <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-lg font-semibold text-gray-800">Current Plan</h3>
+                    <div className="flex items-center gap-2">
+                      {subscriptionPlans[(editedTenant?.subscription_tier as keyof typeof subscriptionPlans) || 'community_and_new_business']?.isPopular && (
+                        <span className="px-2 py-1 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full text-xs font-semibold">
+                          Most Popular
+                        </span>
+                      )}
+                      <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                        {subscriptionPlans[(editedTenant?.subscription_tier as keyof typeof subscriptionPlans) || 'community_and_new_business']?.name}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-4 gap-3 text-sm">
+                    <div className="flex items-center gap-1 text-gray-600">
+                      <Store className="w-4 h-4 text-blue-600" />
+                      <span className="font-medium">{editedTenant?.max_stores || 1}</span>
+                      <span className="text-gray-500">Store{(editedTenant?.max_stores || 1) > 1 ? 's' : ''}</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-gray-600">
+                      <Globe className="w-4 h-4 text-green-600" />
+                      <span className="font-medium">{subscriptionPlans[(editedTenant?.subscription_tier as keyof typeof subscriptionPlans) || 'community_and_new_business']?.maxLanguages}</span>
+                      <span className="text-gray-500">Languages</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-gray-600">
+                      <Users className="w-4 h-4 text-purple-600" />
+                      <span className="font-medium">{subscriptionPlans[(editedTenant?.subscription_tier as keyof typeof subscriptionPlans) || 'community_and_new_business']?.maxAiPersonalities}</span>
+                      <span className="text-gray-500">AI/Store</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-gray-600">
+                      <CreditCard className="w-4 h-4 text-indigo-600" />
+                      <span className="font-bold text-gray-800">{subscriptionPlans[(editedTenant?.subscription_tier as keyof typeof subscriptionPlans) || 'community_and_new_business']?.price}</span>
+                    </div>
+                  </div>
                 </div>
+
+                {/* Subscription Plans Grid */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Max Stores</label>
-                  <input
-                    type="number"
-                    value={editedTenant?.max_stores || 1}
-                    onChange={(e) => setEditedTenant({ ...editedTenant, max_stores: parseInt(e.target.value) })}
-                    disabled={readOnly}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg"
-                  />
+                  <label className="block text-sm font-medium text-gray-700 mb-3">Select Subscription Plan</label>
+                  <div className="grid grid-cols-2 gap-4">
+                    {Object.entries(subscriptionPlans).map(([key, plan]) => (
+                      <button
+                        key={key}
+                        onClick={() => {
+                          if (!readOnly) {
+                            setEditedTenant({
+                              ...editedTenant,
+                              subscription_tier: key,
+                              max_stores: plan.maxStores
+                            });
+                          }
+                        }}
+                        disabled={readOnly}
+                        className={`relative p-4 rounded-xl border-2 transition-all text-left ${
+                          editedTenant?.subscription_tier === key
+                            ? `${plan.color} border-blue-500 shadow-lg transform scale-[1.02]`
+                            : 'bg-white border-gray-200 hover:border-gray-300 hover:shadow-md'
+                        } ${readOnly ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
+                      >
+                        {/* Most Popular Badge */}
+                        {plan.isPopular && (
+                          <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                            <span className="bg-gradient-to-r from-purple-600 to-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                              Most Popular
+                            </span>
+                          </div>
+                        )}
+
+                        {editedTenant?.subscription_tier === key && (
+                          <div className="absolute top-2 right-2">
+                            <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                              <Check className="w-4 h-4 text-white" />
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="flex items-start gap-3">
+                          <div className={`p-2 rounded-lg bg-white/50 ${plan.iconColor}`}>
+                            <plan.iconComponent className="w-6 h-6" />
+                          </div>
+                          <div className="flex-1">
+                            <h4 className="font-semibold text-gray-900 mb-1">{plan.name}</h4>
+                            <p className="text-lg font-bold text-primary-600 mb-2">{plan.price}</p>
+                            <div className="space-y-1">
+                              {plan.features.slice(0, 3).map((feature, idx) => (
+                                <div key={idx} className="flex items-center gap-1 text-xs text-gray-600">
+                                  <Check className="w-3 h-3 text-green-500" />
+                                  <span>{feature}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
                 </div>
+
+                {/* Max Stores (Auto-updated, read-only) */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                  <select
-                    value={editedTenant?.status || 'active'}
-                    onChange={(e) => setEditedTenant({ ...editedTenant, status: e.target.value })}
-                    disabled={readOnly}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg"
-                  >
-                    <option value="active">Active</option>
-                    <option value="suspended">Suspended</option>
-                    <option value="inactive">Inactive</option>
-                  </select>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Max Stores Allowed
+                    <span className="ml-2 text-xs text-gray-500">(Auto-set based on plan)</span>
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="number"
+                      value={editedTenant?.max_stores || 1}
+                      disabled={true}
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-50"
+                    />
+                    <div className="px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg">
+                      <Store className="w-5 h-5 text-blue-600" />
+                    </div>
+                  </div>
+                  <p className="mt-1 text-xs text-gray-500">
+                    This tenant can create up to {editedTenant?.max_stores || 1} store location{(editedTenant?.max_stores || 1) > 1 ? 's' : ''}.
+                  </p>
+                </div>
+
+                {/* Account Status */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Account Status</label>
+                  <div className="relative">
+                    <select
+                      value={editedTenant?.status || 'active'}
+                      onChange={(e) => setEditedTenant({ ...editedTenant, status: e.target.value })}
+                      disabled={readOnly}
+                      className={`w-full pl-10 pr-3 py-2 border rounded-lg appearance-none ${
+                        editedTenant?.status === 'active'
+                          ? 'bg-green-50 border-green-200 text-green-700'
+                          : editedTenant?.status === 'suspended'
+                          ? 'bg-yellow-50 border-yellow-200 text-yellow-700'
+                          : 'bg-gray-50 border-gray-200 text-gray-700'
+                      }`}
+                    >
+                      <option value="active">Active</option>
+                      <option value="suspended">Suspended</option>
+                      <option value="inactive">Inactive</option>
+                    </select>
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                      {editedTenant?.status === 'active' ? (
+                        <CheckCircle className="w-4 h-4 text-green-600" />
+                      ) : editedTenant?.status === 'suspended' ? (
+                        <AlertTriangle className="w-4 h-4 text-yellow-600" />
+                      ) : (
+                        <XCircle className="w-4 h-4 text-gray-600" />
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Features List for Current Plan */}
+                <div className="p-4 bg-gray-50 rounded-lg">
+                  <h4 className="font-medium text-gray-900 mb-3 flex items-center gap-2">
+                    <Star className="w-4 h-4 text-yellow-500" />
+                    Included Features
+                  </h4>
+                  <div className="grid grid-cols-2 gap-2">
+                    {subscriptionPlans[(editedTenant?.subscription_tier as keyof typeof subscriptionPlans) || 'community_and_new_business']?.features.map((feature, idx) => (
+                      <div key={idx} className="flex items-center gap-2 text-sm text-gray-700">
+                        <Check className="w-4 h-4 text-green-500" />
+                        <span>{feature}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
@@ -668,7 +855,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
             )}
           </div>
 
-          <div className="flex justify-end gap-4 p-6 border-t">
+          <div className="flex justify-end gap-4 p-6 border-t bg-gray-50 flex-shrink-0">
             <button
               onClick={onClose}
               className="px-4 py-2 text-gray-700 bg-gray-50 rounded-lg hover:bg-gray-50"
@@ -686,7 +873,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
                 ) : (
                   <>
                     <Save className="w-4 h-4" />
-                    Save Changes
+                    {activeTab === 'subscription' ? 'Update Subscription' : 'Save Changes'}
                   </>
                 )}
               </button>

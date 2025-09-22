@@ -41,17 +41,17 @@ async def run_customer_migration():
         logger.info("✓ Migration executed successfully!")
         
         # Verify the new table structure
-        logger.info("\nVerifying new customers table structure...")
-        
-        # Check if customers table exists with correct structure
+        logger.info("\nVerifying new profiles table structure...")
+
+        # Check if profiles table exists with correct structure
         columns = await conn.fetch("""
             SELECT column_name, data_type, is_nullable
             FROM information_schema.columns
-            WHERE table_name = 'customers'
+            WHERE table_name = 'profiles'
             ORDER BY ordinal_position
         """)
-        
-        logger.info(f"Customers table has {len(columns)} columns")
+
+        logger.info(f"Profiles table has {len(columns)} columns")
         
         # Check for user_id foreign key
         fk_check = await conn.fetchval("""
@@ -59,7 +59,7 @@ async def run_customer_migration():
             FROM information_schema.table_constraints tc
             JOIN information_schema.key_column_usage kcu
                 ON tc.constraint_name = kcu.constraint_name
-            WHERE tc.table_name = 'customers'
+            WHERE tc.table_name = 'profiles'
                 AND tc.constraint_type = 'FOREIGN KEY'
                 AND kcu.column_name = 'user_id'
         """)
@@ -91,14 +91,14 @@ async def run_customer_migration():
         
         # Show record counts
         user_count = await conn.fetchval("SELECT COUNT(*) FROM users")
-        customer_count = await conn.fetchval("SELECT COUNT(*) FROM customers")
-        
+        profile_count = await conn.fetchval("SELECT COUNT(*) FROM profiles")
+
         logger.info(f"\nRecord counts:")
         logger.info(f"  Users: {user_count}")
-        logger.info(f"  Customers: {customer_count}")
-        
-        logger.info("\n✅ Customer table conflict resolved successfully!")
-        logger.info("The customers table now properly links to the users table.")
+        logger.info(f"  Profiles: {profile_count}")
+
+        logger.info("\n✅ Profile table conflict resolved successfully!")
+        logger.info("The profiles table now properly links to the users table.")
         
     except FileNotFoundError as e:
         logger.error(f"Migration file not found: {e}")

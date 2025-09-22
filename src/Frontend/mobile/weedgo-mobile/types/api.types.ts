@@ -1,0 +1,359 @@
+// API Response Types
+
+// Authentication Types
+export interface CheckPhoneRequest {
+  phone: string;
+}
+
+export interface CheckPhoneResponse {
+  exists: boolean;
+  requiresOtp: boolean;
+}
+
+export interface RegisterRequest {
+  phone: string;
+  email?: string;
+  first_name?: string;
+  last_name?: string;
+  date_of_birth?: string;
+}
+
+export interface RegisterResponse {
+  success: boolean;
+  message: string;
+  otp_sent: boolean;
+}
+
+export interface LoginRequest {
+  phone: string;
+}
+
+export interface LoginResponse {
+  success: boolean;
+  otp_sent: boolean;
+  session_id: string;
+}
+
+export interface VerifyOTPRequest {
+  phone: string;
+  otp_code: string;
+  session_id: string;
+}
+
+export interface VerifyOTPResponse {
+  access_token: string;
+  refresh_token: string;
+  user: User;
+}
+
+export interface RefreshTokenResponse {
+  access_token: string;
+  refresh_token: string;
+}
+
+// User Types
+export interface User {
+  id: string;
+  phone: string;
+  email?: string;
+  profile_id: string;
+  first_name?: string;
+  last_name?: string;
+}
+
+export interface Profile {
+  id: string;
+  phone: string;
+  email?: string;
+  first_name?: string;
+  last_name?: string;
+  date_of_birth?: string;
+  preferences?: Record<string, any>;
+  medical_info?: Record<string, any>;
+  addresses?: Address[];
+}
+
+export interface Address {
+  id: string;
+  type: 'delivery' | 'billing';
+  street: string;
+  city: string;
+  province: string;
+  postal_code: string;
+  is_default: boolean;
+}
+
+// Store Types
+export interface Store {
+  id: string;
+  name: string;
+  store_code: string;
+  address: string;
+  phone: string;
+  hours: StoreHours;
+  delivery_zones: DeliveryZone[];
+  pickup_available: boolean;
+  delivery_available: boolean;
+  image_url?: string;
+}
+
+export interface StoreHours {
+  monday?: DayHours;
+  tuesday?: DayHours;
+  wednesday?: DayHours;
+  thursday?: DayHours;
+  friday?: DayHours;
+  saturday?: DayHours;
+  sunday?: DayHours;
+  holidays?: Holiday[];
+}
+
+export interface DayHours {
+  open: string;
+  close: string;
+  is_closed?: boolean;
+}
+
+export interface Holiday {
+  date: string;
+  name: string;
+  is_closed: boolean;
+}
+
+export interface DeliveryZone {
+  id: string;
+  name: string;
+  postal_codes: string[];
+  fee: number;
+  minimum_order: number;
+  estimated_time: string;
+}
+
+// Product Types
+export interface Product {
+  id: string;
+  sku: string;
+  name: string;
+  brand: string;
+  category: string;
+  subcategory?: string;
+  description: string;
+  image_url: string;
+  images?: string[];
+  thc_content?: number;
+  cbd_content?: number;
+  strain_type?: 'indica' | 'sativa' | 'hybrid' | 'cbd';
+  terpenes?: Terpene[];
+  effects?: string[];
+  price: number;
+  size?: string;
+  unit_of_measure: string;
+  rating?: number;
+  rating_count?: number;
+  in_stock: boolean;
+  quantity_available?: number;
+}
+
+export interface Terpene {
+  name: string;
+  percentage: number;
+  effects: string[];
+}
+
+export interface ProductSearchParams {
+  q?: string;
+  category?: string;
+  subcategory?: string;
+  brand?: string;
+  strain_type?: string;
+  thc_min?: number;
+  thc_max?: number;
+  cbd_min?: number;
+  cbd_max?: number;
+  price_min?: number;
+  price_max?: number;
+  size?: string;
+  in_stock?: boolean;
+  sort?: 'price_asc' | 'price_desc' | 'name' | 'thc' | 'cbd' | 'rating';
+  limit?: number;
+  offset?: number;
+}
+
+export interface ProductSearchResponse {
+  products: Product[];
+  total: number;
+  facets: {
+    categories: CategoryCount[];
+    brands: BrandCount[];
+    price_ranges: PriceRange[];
+  };
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  image_url?: string;
+  subcategories?: Subcategory[];
+}
+
+export interface Subcategory {
+  id: string;
+  name: string;
+  slug: string;
+  image_url?: string;
+}
+
+export interface CategoryCount {
+  category: string;
+  count: number;
+}
+
+export interface BrandCount {
+  brand: string;
+  count: number;
+}
+
+export interface PriceRange {
+  min: number;
+  max: number;
+  count: number;
+}
+
+// Cart Types
+export interface Cart {
+  session_id: string;
+  items: CartItem[];
+  subtotal: number;
+  tax: number;
+  delivery_fee?: number;
+  discount?: number;
+  total: number;
+  promo_code?: string;
+}
+
+export interface CartItem {
+  id: string;
+  product_id: string;
+  product: Product;
+  quantity: number;
+  price: number;
+  subtotal: number;
+}
+
+export interface AddToCartRequest {
+  product_id: string;
+  quantity: number;
+  size?: string;
+}
+
+export interface UpdateCartItemRequest {
+  quantity: number;
+}
+
+export interface ApplyPromoRequest {
+  promo_code: string;
+}
+
+// Order Types
+export interface Order {
+  id: string;
+  order_number: string;
+  status: OrderStatus;
+  created_at: string;
+  updated_at: string;
+  customer: {
+    name: string;
+    phone: string;
+    email?: string;
+  };
+  delivery_type: 'delivery' | 'pickup';
+  delivery_address?: Address;
+  store: Store;
+  items: OrderItem[];
+  subtotal: number;
+  tax: number;
+  delivery_fee?: number;
+  discount?: number;
+  total: number;
+  payment_method: string;
+  payment_status: PaymentStatus;
+  estimated_time?: string;
+  tracking?: TrackingInfo;
+}
+
+export interface OrderItem {
+  id: string;
+  product: Product;
+  quantity: number;
+  price: number;
+  subtotal: number;
+}
+
+export type OrderStatus =
+  | 'pending'
+  | 'confirmed'
+  | 'preparing'
+  | 'ready'
+  | 'out_for_delivery'
+  | 'delivered'
+  | 'cancelled';
+
+export type PaymentStatus =
+  | 'pending'
+  | 'processing'
+  | 'completed'
+  | 'failed'
+  | 'refunded';
+
+export interface TrackingInfo {
+  driver_name?: string;
+  driver_phone?: string;
+  vehicle_info?: string;
+  current_location?: {
+    lat: number;
+    lng: number;
+  };
+  estimated_arrival?: string;
+}
+
+export interface CreateOrderRequest {
+  delivery_type: 'delivery' | 'pickup';
+  delivery_address_id?: string;
+  delivery_instructions?: string;
+  pickup_time?: string;
+  payment_method: string;
+  tip_amount?: number;
+}
+
+// Chat Types
+export interface ChatMessage {
+  id: string;
+  type: 'user' | 'assistant' | 'system';
+  content: string;
+  timestamp: string;
+  metadata?: {
+    products?: Product[];
+    order?: Order;
+    action?: ChatAction;
+  };
+}
+
+export interface ChatAction {
+  type: 'add_to_cart' | 'view_product' | 'track_order' | 'apply_promo';
+  payload: any;
+}
+
+// WebSocket Events
+export interface WSMessage {
+  type: string;
+  data: any;
+}
+
+// API Error Response
+export interface ApiError {
+  error: string;
+  message: string;
+  statusCode: number;
+  details?: any;
+}

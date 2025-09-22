@@ -6,10 +6,7 @@ import {
   Trash2,
   Wifi,
   WifiOff,
-  Settings,
-  CreditCard,
   Receipt,
-  DollarSign,
   Save,
   RefreshCw,
   Bluetooth,
@@ -77,8 +74,7 @@ const PAYMENT_METHODS = [
 
 const POSTerminalSettingsComponent: React.FC<POSTerminalSettingsProps> = ({
   storeId,
-  settings: initialSettings,
-  onSave,
+  settings: initialonSave,
   onPingTerminal
 }) => {
   const [settings, setSettings] = useState<POSTerminalSettings>(initialSettings || {

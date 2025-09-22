@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
-  Clock, Calendar, AlertCircle, Save, Plus, Trash2, 
+  Clock, Calendar, AlertCircle, Save, Plus, Trash2,
   Settings, ChevronDown, ChevronUp, X, Check, ArrowLeft, Loader2
 } from 'lucide-react';
 import tenantService from '../services/tenantService';
 import storeService from '../services/storeService';
 import storeHoursService from '../services/storeHoursService';
+import { useStoreContext } from '../contexts/StoreContext';
+import { useAuth } from '../contexts/AuthContext';
 
 // Import types from service
 import type {
@@ -38,6 +40,8 @@ const TIMEZONES = [
 export default function StoreHoursManagement() {
   const { storeCode } = useParams<{ storeCode: string }>();
   const navigate = useNavigate();
+  const { currentStore, stores, selectStore } = useStoreContext();
+  const { user } = useAuth();
   
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -69,10 +73,8 @@ export default function StoreHoursManagement() {
   const [editingSpecial, setEditingSpecial] = useState<SpecialHoursType | null>(null);
 
   useEffect(() => {
-    if (storeCode) {
-      loadStoreByCode();
-    }
-  }, [storeCode]);
+    loadStoreByCode();
+  }, [storeCode, currentStore]);
 
   useEffect(() => {
     if (storeId) {
@@ -84,25 +86,36 @@ export default function StoreHoursManagement() {
   const loadStoreByCode = async () => {
     try {
       setLoading(true);
-      
-      // First try to get by store code
-      try {
-        const storeData = await storeService.getStoreByCode(storeCode!);
+      let storeData = null;
+
+      // First check if we have a current store in context
+      if (currentStore) {
+        // Use current store from context
+        storeData = currentStore;
+      } else if (storeCode && stores.length > 0) {
+        // Find store by code from available stores
+        storeData = stores.find(s => s.store_code === storeCode);
+        if (storeData) {
+          await selectStore(storeData.id);
+        }
+      } else if (storeCode && user?.tenant_id) {
+        // Fallback: fetch stores if not in context
+        try {
+          const fetchedStores = await storeService.getStoresByTenant(user.tenant_id);
+          storeData = fetchedStores.find(s => s.store_code === storeCode);
+          if (storeData) {
+            await selectStore(storeData.id);
+          }
+        } catch (err) {
+          console.error('Error fetching stores:', err);
+        }
+      }
+
+      if (storeData) {
         setStore(storeData);
         setStoreId(storeData.id);
-      } catch (err) {
-        console.log('Store by code not found, trying alternative approach');
-        
-        // If that fails, get the first store (temporary workaround)
-        const tenantId = 'e6e513b2-c589-4f0b-a6f8-a52dd93feb90'; // This should come from auth context
-        const stores = await storeService.getStoresByTenant(tenantId);
-        const storeData = stores.find(s => s.store_code === storeCode) || stores[0];
-        if (storeData) {
-          setStore(storeData);
-          setStoreId(storeData.id);
-        } else {
-          throw new Error('Store not found');
-        }
+      } else {
+        throw new Error('Store not found');
       }
     } catch (error) {
       console.error('Error loading store:', error);

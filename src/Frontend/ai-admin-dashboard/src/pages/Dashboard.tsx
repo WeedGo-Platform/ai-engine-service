@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../services/api';
+import { getApiEndpoint } from '../config/app.config';
 import { 
   TrendingUp, TrendingDown, DollarSign, ShoppingCart, 
   Users, Package, AlertTriangle, Activity, 
@@ -50,7 +51,7 @@ const Dashboard: React.FC = () => {
         headers['X-Store-ID'] = currentStore.id;
       }
 
-      const response = await fetch(`http://localhost:5024/api/analytics/dashboard`, {
+      const response = await fetch(getApiEndpoint('/analytics/dashboard'), {
         headers
       });
 
@@ -73,7 +74,7 @@ const Dashboard: React.FC = () => {
     queryFn: async () => {
       if (!currentStore) return { orders: [] };
       
-      const response = await fetch(`http://localhost:5024/api/orders?limit=10`, {
+      const response = await fetch(getApiEndpoint('/orders?limit=10'), {
         headers: {
           'Content-Type': 'application/json',
           'X-Store-ID': currentStore.id
@@ -94,7 +95,7 @@ const Dashboard: React.FC = () => {
     queryFn: async () => {
       if (!currentStore) return { items: [] };
 
-      const response = await fetch(`http://localhost:5024/api/store-inventory/low-stock`, {
+      const response = await fetch(getApiEndpoint('/store-inventory/low-stock'), {
         headers: {
           'Content-Type': 'application/json',
           'X-Store-ID': currentStore.id

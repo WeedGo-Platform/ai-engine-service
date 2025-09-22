@@ -13,10 +13,14 @@ import {
 } from 'lucide-react';
 import storeService, { Store } from '../services/storeService';
 import AllSettingsTabbed from '../components/storeSettings/AllSettingsTabbed';
+import { useStoreContext } from '../contexts/StoreContext';
+import { useAuth } from '../contexts/AuthContext';
 
 const StoreSettings: React.FC = () => {
   const { storeCode } = useParams<{ storeCode: string }>();
   const navigate = useNavigate();
+  const { currentStore, stores, selectStore } = useStoreContext();
+  const { user } = useAuth();
   const [store, setStore] = useState<Store | null>(null);
   const [storeSettings, setStoreSettings] = useState<any>({});
   const [loading, setLoading] = useState(true);
@@ -25,10 +29,8 @@ const StoreSettings: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'general' | 'settings'>('general');
 
   useEffect(() => {
-    if (storeCode) {
-      loadStoreData();
-    }
-  }, [storeCode]);
+    loadStoreData();
+  }, [storeCode, currentStore]);
 
   useEffect(() => {
     if (success) {
@@ -47,24 +49,48 @@ const StoreSettings: React.FC = () => {
   const loadStoreData = async () => {
     try {
       setLoading(true);
-      let storeData = null;
-      
-      // First try to get by store code (if backend supports it)
-      try {
-        storeData = await storeService.getStoreByCode(storeCode!);
-      } catch (err) {
-        console.log('Store by code not found, trying alternative approach');
-        
-        // If that fails, get the first store (temporary workaround)
-        // In production, you'd get this from context or props
-        const tenantId = 'e6e513b2-c589-4f0b-a6f8-a52dd93feb90'; // This should come from auth context
-        const stores = await storeService.getStoresByTenant(tenantId);
-        storeData = stores.find(s => s.store_code === storeCode) || stores[0];
+      let storeData: Store | null = null;
+
+      // First check if we have a current store in context
+      if (currentStore) {
+        // Fetch the complete store data with settings using store ID from context
+        try {
+          storeData = await storeService.getStoreById(currentStore.id);
+        } catch (err) {
+          console.error('Error fetching store by ID:', err);
+        }
+      } else if (storeCode && stores.length > 0) {
+        // Find the store by code from the available stores
+        const contextStore = stores.find(s => s.store_code === storeCode);
+
+        if (contextStore) {
+          // Select it in the context
+          await selectStore(contextStore.id);
+          // Fetch the complete store data with settings
+          try {
+            storeData = await storeService.getStoreById(contextStore.id);
+          } catch (err) {
+            console.error('Error fetching store by ID:', err);
+          }
+        }
+      } else if (storeCode && user?.tenant_id) {
+        // Fallback: fetch stores if not in context
+        try {
+          const fetchedStores = await storeService.getStoresByTenant(user.tenant_id);
+          const foundStore = fetchedStores.find(s => s.store_code === storeCode);
+
+          if (foundStore) {
+            // Select it in the context
+            await selectStore(foundStore.id);
+            storeData = foundStore;
+          }
+        } catch (err) {
+          console.error('Error fetching stores:', err);
+        }
       }
-      
+
       if (storeData) {
         setStore(storeData);
-        // Load store settings from store.settings JSON field
         setStoreSettings(storeData.settings || {});
         setError(null);
       } else {

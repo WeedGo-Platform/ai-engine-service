@@ -224,7 +224,7 @@ class ProductSearchTool:
         
         try:
             cursor = self.connection.cursor()
-            cursor.execute("SELECT COUNT(*) as count FROM products")
+            cursor.execute("SELECT COUNT(*) as count FROM inventory_products_view")
             result = cursor.fetchone()
             cursor.close()
             return result['count'] if result else 0
@@ -247,7 +247,7 @@ class ProductSearchTool:
                     id, name, category, strain_type, 
                     thc_content, cbd_content, price, brand,
                     rating, review_count, inventory_count
-                FROM products
+                FROM inventory_products_view
                 WHERE in_stock = true
                 ORDER BY 
                     rating DESC NULLS LAST,

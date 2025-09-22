@@ -1,6 +1,7 @@
+import { getApiEndpoint } from '../config/app.config';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5024/api/stores';
+const API_BASE_URL = getApiEndpoint('/stores');
 
 export interface TimeSlot {
   open: string;

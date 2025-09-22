@@ -73,18 +73,23 @@ async def get_suppliers(
     """Get list of suppliers with optional filters"""
     try:
         query = """
-            SELECT 
-                id,
-                name,
-                contact_person,
-                email,
-                phone,
-                address,
-                payment_terms,
-                is_active,
-                created_at,
-                updated_at
-            FROM suppliers
+            SELECT
+                ps.id,
+                ps.name,
+                ps.contact_person,
+                ps.email,
+                ps.phone,
+                ps.address,
+                ps.payment_terms,
+                ps.is_active,
+                ps.provinces_territories_id,
+                pt.code as province_code,
+                pt.name as province_name,
+                ps.is_provincial_supplier,
+                ps.created_at,
+                ps.updated_at
+            FROM provincial_suppliers ps
+            LEFT JOIN provinces_territories pt ON ps.provinces_territories_id = pt.id
             WHERE 1=1
         """
         
@@ -118,7 +123,7 @@ async def get_suppliers(
         rows = await conn.fetch(query, *params)
         
         # Get total count
-        count_query = "SELECT COUNT(*) FROM suppliers WHERE 1=1"
+        count_query = "SELECT COUNT(*) FROM provincial_suppliers WHERE 1=1"
         count_params = []
         count_param_count = 0
         
@@ -154,6 +159,100 @@ async def get_suppliers(
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@router.get("/by-province/{province_code}")
+async def get_supplier_by_province(
+    province_code: str,
+    conn = Depends(get_db_connection)
+):
+    """Get provincial supplier for a specific province"""
+    try:
+        query = """
+            SELECT
+                ps.id,
+                ps.name,
+                ps.contact_person,
+                ps.email,
+                ps.phone,
+                ps.address,
+                ps.payment_terms,
+                ps.is_active,
+                ps.provinces_territories_id,
+                pt.code as province_code,
+                pt.name as province_name,
+                ps.is_provincial_supplier,
+                ps.created_at,
+                ps.updated_at
+            FROM provincial_suppliers ps
+            INNER JOIN provinces_territories pt ON ps.provinces_territories_id = pt.id
+            WHERE pt.code = $1
+            AND ps.is_provincial_supplier = true
+            AND ps.is_active = true
+        """
+
+        row = await conn.fetchrow(query, province_code.upper())
+
+        if not row:
+            raise HTTPException(
+                status_code=404,
+                detail=f"No provincial supplier found for province {province_code}"
+            )
+
+        return dict(row)
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting supplier by province: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/by-province-territory-id/{province_territory_id}")
+async def get_supplier_by_province_territory_id(
+    province_territory_id: UUID,
+    conn = Depends(get_db_connection)
+):
+    """Get provincial supplier for a specific province/territory by ID"""
+    try:
+        query = """
+            SELECT
+                ps.id,
+                ps.name,
+                ps.contact_person,
+                ps.email,
+                ps.phone,
+                ps.address,
+                ps.payment_terms,
+                ps.is_active,
+                ps.provinces_territories_id,
+                pt.code as province_code,
+                pt.name as province_name,
+                ps.is_provincial_supplier,
+                ps.created_at,
+                ps.updated_at
+            FROM provincial_suppliers ps
+            INNER JOIN provinces_territories pt ON ps.provinces_territories_id = pt.id
+            WHERE ps.provinces_territories_id = $1
+            AND ps.is_provincial_supplier = true
+            AND ps.is_active = true
+        """
+
+        row = await conn.fetchrow(query, province_territory_id)
+
+        if not row:
+            raise HTTPException(
+                status_code=404,
+                detail=f"No provincial supplier found for province/territory ID {province_territory_id}"
+            )
+
+        return dict(row)
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting supplier by province territory ID: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.get("/{supplier_id}")
 async def get_supplier_by_id(
     supplier_id: UUID,
@@ -162,19 +261,24 @@ async def get_supplier_by_id(
     """Get supplier by ID"""
     try:
         query = """
-            SELECT 
-                id,
-                name,
-                contact_person,
-                email,
-                phone,
-                address,
-                payment_terms,
-                is_active,
-                created_at,
-                updated_at
-            FROM suppliers
-            WHERE id = $1
+            SELECT
+                ps.id,
+                ps.name,
+                ps.contact_person,
+                ps.email,
+                ps.phone,
+                ps.address,
+                ps.payment_terms,
+                ps.is_active,
+                ps.provinces_territories_id,
+                pt.code as province_code,
+                pt.name as province_name,
+                ps.is_provincial_supplier,
+                ps.created_at,
+                ps.updated_at
+            FROM provincial_suppliers ps
+            LEFT JOIN provinces_territories pt ON ps.provinces_territories_id = pt.id
+            WHERE ps.id = $1
         """
         
         row = await conn.fetchrow(query, supplier_id)
@@ -200,7 +304,7 @@ async def create_supplier(
     """Create a new supplier"""
     try:
         query = """
-            INSERT INTO suppliers (
+            INSERT INTO provincial_suppliers (
                 name, contact_person, email, phone,
                 address, payment_terms
             ) VALUES (
@@ -289,7 +393,7 @@ async def update_supplier(
         params.append(supplier_id)
         
         query = f"""
-            UPDATE suppliers
+            UPDATE provincial_suppliers
             SET {', '.join(update_fields)}
             WHERE id = ${param_count}
             RETURNING id, updated_at
@@ -321,7 +425,7 @@ async def delete_supplier(
     """Delete a supplier (soft delete by setting is_active to false)"""
     try:
         query = """
-            UPDATE suppliers
+            UPDATE provincial_suppliers
             SET is_active = false, updated_at = $1
             WHERE id = $2
             RETURNING id

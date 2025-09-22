@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { getApiEndpoint } from '../../config/app.config';
 import {
-  X, Plus, Package, DollarSign, Hash, Tag,
-  Upload, Camera, Check, AlertCircle
+  X, Plus, Package, DollarSign, Hash,
+  Upload, Check, AlertCircle
 } from 'lucide-react';
 import axios from 'axios';
 
@@ -93,7 +94,7 @@ const QuickIntakeModal: React.FC<QuickIntakeModalProps> = ({
     try {
       // First, add to catalog if needed
       const catalogResponse = await axios.post(
-        'http://localhost:5024/api/accessories/catalog',
+        getApiEndpoint('/accessories/catalog'),
         {
           barcode: formData.barcode || null,
           sku: formData.sku || `ACC-${Date.now()}`,
@@ -110,7 +111,7 @@ const QuickIntakeModal: React.FC<QuickIntakeModalProps> = ({
 
       // Then add to inventory
       await axios.post(
-        'http://localhost:5024/api/accessories/inventory/intake',
+        getApiEndpoint('/accessories/inventory/intake'),
         {
           store_id: storeId,
           barcode: formData.barcode,

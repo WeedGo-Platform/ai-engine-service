@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
   Search, Filter, Calendar, DollarSign, CreditCard,
-  RefreshCw, MoreVertical, Eye, Receipt, Mail,
-  Download, ChevronDown, X, Check, AlertCircle,
-  ArrowUpDown, User, Clock, FileText, Loader2
+  RefreshCw, Eye, Receipt, X, Check, AlertCircle,
+  ArrowUpDown, FileText, Loader2
 } from 'lucide-react';
 import { useStoreContext } from '../../contexts/StoreContext';
 import posService from '../../services/posService';
@@ -35,12 +34,12 @@ interface RefundModalProps {
 
 const RefundModal: React.FC<RefundModalProps> = ({ transaction, onClose, onRefund }) => {
   const [refundType, setRefundType] = useState<'full' | 'partial' | 'items'>('full');
-  const [refundAmount, setRefundAmount] = useState(transaction.total - (transaction.refunded_amount || 0));
+  const [refundAmount, setRefundAmount] = useState(transaction.total - ((transaction.refunded_amount ?? 0) || 0));
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
   const [refundReason, setRefundReason] = useState('');
   const [processing, setProcessing] = useState(false);
 
-  const maxRefundable = transaction.total - (transaction.refunded_amount || 0);
+  const maxRefundable = transaction.total - ((transaction.refunded_amount ?? 0) || 0);
 
   const handleRefund = async () => {
     if (!refundReason.trim()) {
@@ -92,7 +91,7 @@ const RefundModal: React.FC<RefundModalProps> = ({ transaction, onClose, onRefun
           <div className="mt-2 text-sm text-gray-600">
             Transaction: {transaction.receipt_number} |
             Total: ${transaction.total.toFixed(2)} |
-            {transaction.refunded_amount ? ` Previously refunded: $${transaction.refunded_amount.toFixed(2)}` : ''}
+            {(transaction.refunded_amount ?? 0) ? ` Previously refunded: $${(transaction.refunded_amount ?? 0).toFixed(2)}` : ''}
           </div>
         </div>
 
@@ -648,9 +647,9 @@ export default function TransactionHistory() {
                   <td className="px-4 py-3">
                     <div className="text-sm">
                       <p className="font-medium">${transaction.total.toFixed(2)}</p>
-                      {transaction.refunded_amount > 0 && (
+                      {(transaction.refunded_amount ?? 0) > 0 && (
                         <p className="text-danger-600 text-xs">
-                          -${transaction.refunded_amount.toFixed(2)}
+                          -${(transaction.refunded_amount ?? 0).toFixed(2)}
                         </p>
                       )}
                     </div>
@@ -683,7 +682,7 @@ export default function TransactionHistory() {
                         <Receipt className="w-4 h-4 text-gray-600" />
                       </button>
                       {transaction.status === 'completed' &&
-                       transaction.total > (transaction.refunded_amount || 0) && (
+                       transaction.total > ((transaction.refunded_amount ?? 0) || 0) && (
                         <button
                           onClick={() => {
                             setSelectedTransaction(transaction);

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Upload, AlertCircle, CheckCircle, FileText, Loader2, Calendar, Package, Search, Filter, Download, Eye, ChevronDown, ChevronUp, Info, Leaf, FlaskConical, Box, Zap } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { getApiEndpoint } from '../config/app.config';
 import { uploadProvincialCatalog } from '../services/catalogService';
 import { useQuery } from '@tanstack/react-query';
 
@@ -158,7 +159,7 @@ const ProvincialCatalogUpload: React.FC = () => {
   const { data: catalogStats, refetch: refetchStats } = useQuery<CatalogStats>({
     queryKey: ['catalog-stats', selectedProvince],
     queryFn: async () => {
-      const response = await fetch(`http://localhost:5024/api/province/catalog/${selectedProvince.toLowerCase()}/stats`);
+      const response = await fetch(getApiEndpoint(`/province/catalog/${selectedProvince.toLowerCase()}/stats`));
       if (!response.ok) {
         // Return mock data if endpoint doesn't exist yet
         return {
@@ -182,7 +183,7 @@ const ProvincialCatalogUpload: React.FC = () => {
         ...(selectedCategory && { category: selectedCategory })
       });
       
-      const response = await fetch(`http://localhost:5024/api/province/catalog/${selectedProvince.toLowerCase()}?${params}`);
+      const response = await fetch(getApiEndpoint(`/province/catalog/${selectedProvince.toLowerCase()}?${params}`));
       if (!response.ok) {
         return [];
       }

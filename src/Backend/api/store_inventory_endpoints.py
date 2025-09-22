@@ -335,13 +335,13 @@ async def adjust_inventory(
 ) -> Dict[str, Any]:
     """
     Make inventory adjustment for cycle counts or corrections
-    
+
     Args:
         sku: Product SKU
         adjustment: Quantity adjustment (positive or negative)
         reason: Reason for adjustment
         store_id: Store UUID
-        
+
     Returns:
         Updated inventory status
     """
@@ -353,10 +353,97 @@ async def adjust_inventory(
             transaction_type=TransactionType.ADJUSTMENT,
             notes=f"Manual adjustment: {reason}"
         )
-        
+
         return result
     except Exception as e:
         logger.error(f"Error adjusting inventory: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/batch-adjust")
+async def batch_adjust_inventory(
+    sku: str = Body(...),
+    store_id: UUID = Body(None),
+    batch_adjustments: List[Dict[str, Any]] = Body(...),
+    retail_price: Optional[Decimal] = Body(None),
+    reorder_point: Optional[int] = Body(None),
+    reorder_quantity: Optional[int] = Body(None),
+    is_available: Optional[bool] = Body(None),
+    x_store_id: Optional[str] = Header(None, alias="X-Store-ID"),
+    service: StoreInventoryService = Depends(get_store_inventory_service)
+) -> Dict[str, Any]:
+    """
+    Make batch-level inventory adjustments for a SKU
+
+    Args:
+        sku: Product SKU
+        store_id: Store UUID from body
+        batch_adjustments: List of batch adjustments with batch_lot, adjustment, reason
+        retail_price: Optional new retail price
+        reorder_point: Optional new reorder point
+        reorder_quantity: Optional new reorder quantity
+        is_available: Optional availability status
+        x_store_id: Store ID from header (fallback)
+
+    Returns:
+        Updated inventory status
+    """
+    try:
+        # Determine store ID
+        final_store_id = store_id
+        if not final_store_id and x_store_id:
+            try:
+                final_store_id = UUID(x_store_id)
+            except ValueError:
+                raise HTTPException(status_code=400, detail="Invalid store ID in header")
+
+        if not final_store_id:
+            raise HTTPException(status_code=400, detail="Store ID required")
+
+        # Process each batch adjustment
+        total_adjustment = 0
+        for batch in batch_adjustments:
+            if batch['adjustment'] != 0:
+                # Update batch tracking quantity
+                await service.adjust_batch_quantity(
+                    store_id=final_store_id,
+                    sku=sku,
+                    batch_lot=batch['batch_lot'],
+                    adjustment=batch['adjustment'],
+                    reason=batch['reason']
+                )
+                total_adjustment += batch['adjustment']
+
+        # Update inventory totals
+        if total_adjustment != 0:
+            await service.update_store_inventory(
+                store_id=final_store_id,
+                sku=sku,
+                quantity_change=total_adjustment,
+                transaction_type=TransactionType.ADJUSTMENT,
+                notes=f"Batch-level adjustments: {len(batch_adjustments)} batches"
+            )
+
+        # Update inventory settings if provided
+        if any([retail_price is not None, reorder_point is not None,
+                reorder_quantity is not None, is_available is not None]):
+            await service.update_inventory_settings(
+                store_id=final_store_id,
+                sku=sku,
+                retail_price=retail_price,
+                reorder_point=reorder_point,
+                reorder_quantity=reorder_quantity,
+                is_available=is_available
+            )
+
+        # Return updated inventory status
+        result = await service.get_store_inventory_status(final_store_id, sku)
+        return result
+
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"Error in batch inventory adjustment: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 

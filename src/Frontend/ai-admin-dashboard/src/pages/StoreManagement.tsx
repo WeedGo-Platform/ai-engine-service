@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   Store as StoreIcon,
@@ -25,24 +26,23 @@ import {
   Settings
 } from 'lucide-react';
 import tenantService, { Store, Tenant, CreateStoreRequest } from '../services/tenantService';
+import { getApiEndpoint } from '../config/app.config';
 import { useAuth } from '../contexts/AuthContext';
 import { useStoreContext } from '../contexts/StoreContext';
 
-const PROVINCES = [
-  { code: 'ON', name: 'Ontario' },
-  { code: 'BC', name: 'British Columbia' },
-  { code: 'AB', name: 'Alberta' },
-  { code: 'QC', name: 'Quebec' },
-  { code: 'SK', name: 'Saskatchewan' },
-  { code: 'MB', name: 'Manitoba' },
-  { code: 'NS', name: 'Nova Scotia' },
-  { code: 'NB', name: 'New Brunswick' },
-  { code: 'NL', name: 'Newfoundland and Labrador' },
-  { code: 'PE', name: 'Prince Edward Island' },
-  { code: 'NT', name: 'Northwest Territories' },
-  { code: 'YT', name: 'Yukon' },
-  { code: 'NU', name: 'Nunavut' },
-];
+// Province interface
+interface Province {
+  id?: string;
+  code: string;
+  name: string;
+  type?: string;
+  tax_rate?: number;
+  cannabis_tax_rate?: number;
+  min_age?: number;
+  regulatory_body?: string;
+  delivery_allowed?: boolean;
+  pickup_allowed?: boolean;
+}
 
 const StoreManagement: React.FC = () => {
   const { tenantCode } = useParams<{ tenantCode: string }>();
@@ -56,6 +56,7 @@ const StoreManagement: React.FC = () => {
   const [editingStore, setEditingStore] = useState<Store | null>(null);
   const [canAddStore, setCanAddStore] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [modalError, setModalError] = useState<string | null>(null);
   const [isStoreManagerView, setIsStoreManagerView] = useState(false);
 
   useEffect(() => {
@@ -108,23 +109,106 @@ const StoreManagement: React.FC = () => {
 
   const handleCreateStore = async (data: CreateStoreRequest) => {
     try {
+      setModalError(null);
       await tenantService.createStore(data);
       setShowCreateModal(false);
       loadTenantAndStores();
-    } catch (err) {
-      setError('Failed to create store');
-      console.error(err);
+    } catch (err: any) {
+      // Extract error details from the server response
+      let errorMessage = 'Failed to create store';
+
+      if (err.response?.data) {
+        // Handle validation errors (422)
+        if (err.response.data.detail) {
+          if (typeof err.response.data.detail === 'string') {
+            errorMessage = err.response.data.detail;
+          } else if (Array.isArray(err.response.data.detail)) {
+            // Handle validation error array with better formatting
+            errorMessage = err.response.data.detail
+              .map((e: any) => {
+                // Extract field name from location path
+                const field = e.loc?.length > 1 ? e.loc[e.loc.length - 1] : 'field';
+                const fieldName = field.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase());
+
+                // Build user-friendly message
+                if (e.type === 'string_too_long' && e.ctx?.max_length) {
+                  return `${fieldName}: Must be ${e.ctx.max_length} characters or less (you entered ${e.input?.length || 0} characters)`;
+                } else if (e.type === 'string_too_short' && e.ctx?.min_length) {
+                  return `${fieldName}: Must be at least ${e.ctx.min_length} characters`;
+                } else if (e.type === 'missing') {
+                  return `${fieldName}: This field is required`;
+                } else if (e.type === 'value_error') {
+                  return `${fieldName}: ${e.msg}`;
+                } else {
+                  // Fallback to original message but include field name
+                  return `${fieldName}: ${e.msg || e.message || 'Invalid value'}`;
+                }
+              })
+              .join('\n');
+          }
+        } else if (err.response.data.message) {
+          errorMessage = err.response.data.message;
+        } else if (err.response.data.error) {
+          errorMessage = err.response.data.error;
+        }
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+
+      setModalError(errorMessage);
+      console.error('Store creation error:', err);
     }
   };
 
   const handleUpdateStore = async (id: string, data: Partial<CreateStoreRequest>) => {
     try {
+      setModalError(null);
       await tenantService.updateStore(id, data);
       setEditingStore(null);
       loadTenantAndStores();
-    } catch (err) {
-      setError('Failed to update store');
-      console.error(err);
+    } catch (err: any) {
+      // Extract error details from the server response
+      let errorMessage = 'Failed to update store';
+
+      if (err.response?.data) {
+        if (err.response.data.detail) {
+          if (typeof err.response.data.detail === 'string') {
+            errorMessage = err.response.data.detail;
+          } else if (Array.isArray(err.response.data.detail)) {
+            // Handle validation error array with better formatting
+            errorMessage = err.response.data.detail
+              .map((e: any) => {
+                // Extract field name from location path
+                const field = e.loc?.length > 1 ? e.loc[e.loc.length - 1] : 'field';
+                const fieldName = field.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase());
+
+                // Build user-friendly message
+                if (e.type === 'string_too_long' && e.ctx?.max_length) {
+                  return `${fieldName}: Must be ${e.ctx.max_length} characters or less (you entered ${e.input?.length || 0} characters)`;
+                } else if (e.type === 'string_too_short' && e.ctx?.min_length) {
+                  return `${fieldName}: Must be at least ${e.ctx.min_length} characters`;
+                } else if (e.type === 'missing') {
+                  return `${fieldName}: This field is required`;
+                } else if (e.type === 'value_error') {
+                  return `${fieldName}: ${e.msg}`;
+                } else {
+                  // Fallback to original message but include field name
+                  return `${fieldName}: ${e.msg || e.message || 'Invalid value'}`;
+                }
+              })
+              .join('\n');
+          }
+        } else if (err.response.data.message) {
+          errorMessage = err.response.data.message;
+        } else if (err.response.data.error) {
+          errorMessage = err.response.data.error;
+        }
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+
+      setModalError(errorMessage);
+      console.error('Store update error:', err);
     }
   };
 
@@ -435,6 +519,7 @@ const StoreManagement: React.FC = () => {
         <StoreFormModal
           tenantId={tenant.id}
           store={editingStore}
+          error={modalError}
           onSave={(data) => {
             if (editingStore) {
               handleUpdateStore(editingStore.id, data);
@@ -445,6 +530,7 @@ const StoreManagement: React.FC = () => {
           onClose={() => {
             setShowCreateModal(false);
             setEditingStore(null);
+            setModalError(null);
           }}
         />
       )}
@@ -456,13 +542,17 @@ const StoreManagement: React.FC = () => {
 const StoreFormModal: React.FC<{
   tenantId: string;
   store?: Store | null;
+  error?: string | null;
   onSave: (data: Partial<CreateStoreRequest>) => void;
   onClose: () => void;
-}> = ({ tenantId, store, onSave, onClose }) => {
+}> = ({ tenantId, store, error, onSave, onClose }) => {
+  const [provinces, setProvinces] = useState<Province[]>([]);
+  const [loadingProvinces, setLoadingProvinces] = useState(true);
+
   const [formData, setFormData] = useState<Partial<CreateStoreRequest>>({
     tenant_id: tenantId,
     province_code: store?.address?.province || 'ON',
-    store_code: store?.store_code || '',
+    // store_code is now auto-generated on the backend
     name: store?.name || '',
     address: store?.address || {
       street: '',
@@ -484,15 +574,32 @@ const StoreFormModal: React.FC<{
     timezone: store?.timezone || 'America/Toronto',
   });
 
+  // Fetch provinces from API
+  useEffect(() => {
+    const fetchProvinces = async () => {
+      try {
+        const response = await axios.get(getApiEndpoint('/stores/provinces'));
+        setProvinces(response.data);
+      } catch (error) {
+        console.error('Failed to fetch provinces:', error);
+        // Fallback to a minimal set if API fails
+        setProvinces([
+          { code: 'ON', name: 'Ontario' },
+          { code: 'BC', name: 'British Columbia' },
+          { code: 'AB', name: 'Alberta' },
+          { code: 'QC', name: 'Quebec' },
+        ]);
+      } finally {
+        setLoadingProvinces(false);
+      }
+    };
+
+    fetchProvinces();
+  }, []);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Validate store_code format
-    if (!formData.store_code || !/^[A-Z0-9_-]+$/.test(formData.store_code)) {
-      alert('Store code must contain only uppercase letters, numbers, underscores, and hyphens');
-      return;
-    }
-    
+
     // Validate province_code format
     if (!formData.province_code || !/^[A-Z]{2}$/.test(formData.province_code)) {
       alert('Please select a valid province');
@@ -514,36 +621,46 @@ const StoreFormModal: React.FC<{
         <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
           {store ? 'Edit Store' : 'Create New Store'}
         </h2>
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Store Name *
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-              />
-            </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Store Code *
-              </label>
-              <input
-                type="text"
-                required
-                disabled={!!store}
-                value={formData.store_code}
-                onChange={(e) => setFormData({ ...formData, store_code: e.target.value.toUpperCase() })}
-                pattern="^[A-Z0-9_\-]+$"
-                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white disabled:opacity-50"
-              />
+        {/* Error message display */}
+        {error && (
+          <div className="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+            <div className="flex items-start">
+              <svg className="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+              <div>
+                <p className="text-sm font-medium text-red-800 dark:text-red-200">
+                  {store ? 'Failed to update store' : 'Failed to create store'}
+                </p>
+                <div className="text-sm text-red-600 dark:text-red-400 mt-1">
+                  {error.split('\n').map((line, index) => (
+                    <p key={index} className={index > 0 ? 'mt-1' : ''}>
+                      {line}
+                    </p>
+                  ))}
+                </div>
+              </div>
             </div>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Store Name *
+            </label>
+            <input
+              type="text"
+              required
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              placeholder="Enter store name (e.g., London Haze East York)"
+            />
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              A unique store code will be automatically generated based on the store name and location
+            </p>
           </div>
 
           <div>
@@ -562,10 +679,15 @@ const StoreFormModal: React.FC<{
                 });
               }}
               className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              disabled={loadingProvinces}
             >
-              {PROVINCES.map(p => (
-                <option key={p.code} value={p.code}>{p.name}</option>
-              ))}
+              {loadingProvinces ? (
+                <option value="">Loading provinces...</option>
+              ) : (
+                provinces.map(p => (
+                  <option key={p.code} value={p.code}>{p.name}</option>
+                ))
+              )}
             </select>
           </div>
 

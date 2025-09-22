@@ -957,6 +957,174 @@ async def get_active_tools(
     
     return {"tools": tools}
 
+@router.get("/configuration")
+async def get_loaded_configuration(
+    user: Dict = Depends(check_admin_access),
+    request: Request = None
+):
+    """Get all loaded configuration files and settings"""
+    v5_engine = getattr(request.app.state, 'v5_engine', None)
+    if not v5_engine:
+        return {
+            "loaded": False,
+            "message": "V5 engine not initialized",
+            "configurations": {}
+        }
+
+    configurations = {}
+
+    # 1. System configuration
+    if hasattr(v5_engine, 'system_config') and v5_engine.system_config:
+        configurations['system'] = {
+            "source": "system_config.json",
+            "loaded": True,
+            "config": v5_engine.system_config
+        }
+
+    # 2. Agent configuration
+    if hasattr(v5_engine, 'current_agent') and v5_engine.current_agent:
+        # Try to get agent config from either agent_config or system_config
+        agent_config = {}
+        config_loaded = False
+
+        # First check if agent_config was set by loading with apply_config
+        if hasattr(v5_engine, 'agent_config') and v5_engine.agent_config:
+            agent_config = v5_engine.agent_config
+            config_loaded = True
+        # Otherwise check if it's in system_config (loaded by load_agent_personality)
+        elif hasattr(v5_engine, 'system_config') and v5_engine.system_config:
+            # The system_config contains the agent config when loaded via load_agent_personality
+            agent_config = v5_engine.system_config
+            config_loaded = True
+
+        configurations['agent'] = {
+            "name": v5_engine.current_agent,
+            "source": f"agents/{v5_engine.current_agent}/config.json",
+            "loaded": config_loaded,
+            "config": agent_config
+        }
+
+    # 3. Agent prompts
+    if hasattr(v5_engine, 'agent_prompts') and v5_engine.agent_prompts:
+        configurations['agent_prompts'] = {
+            "source": f"agents/{v5_engine.current_agent}/prompts.json",
+            "loaded": True,
+            "prompt_types": list(v5_engine.agent_prompts.keys()),
+            "count": len(v5_engine.agent_prompts)
+        }
+
+    # 4. Personality configuration
+    if hasattr(v5_engine, 'current_personality') and v5_engine.current_personality:
+        configurations['personality'] = {
+            "name": v5_engine.current_personality,
+            "source": f"agents/{v5_engine.current_agent}/personalities/{v5_engine.current_personality}.json",
+            "loaded": bool(hasattr(v5_engine, 'personality_traits') and v5_engine.personality_traits),
+            "traits": getattr(v5_engine, 'personality_traits', {})
+        }
+
+    # 5. Intent configuration
+    if hasattr(v5_engine, 'intent_detector') and v5_engine.intent_detector:
+        intent_config = {}
+        if hasattr(v5_engine.intent_detector, 'intent_config'):
+            intent_config = v5_engine.intent_detector.intent_config
+        configurations['intent'] = {
+            "source": f"agents/{v5_engine.current_agent}/intent.json",
+            "loaded": bool(intent_config),
+            "intents": list(intent_config.get('intents', {}).keys()) if intent_config else [],
+            "count": len(intent_config.get('intents', {})) if intent_config else 0,
+            "config": intent_config  # Include full intent config
+        }
+
+    # 6. Model information
+    if hasattr(v5_engine, 'current_model_name') and v5_engine.current_model_name:
+        configurations['model'] = {
+            "name": v5_engine.current_model_name,
+            "loaded": bool(hasattr(v5_engine, 'current_model') and v5_engine.current_model),
+            "settings": {
+                "temperature": getattr(v5_engine, 'temperature', None),
+                "max_tokens": getattr(v5_engine, 'max_tokens', None),
+                "top_p": getattr(v5_engine, 'top_p', None),
+                "repeat_penalty": getattr(v5_engine, 'repeat_penalty', None)
+            }
+        }
+
+    # 7. Loaded prompts (from prompts directory)
+    if hasattr(v5_engine, 'loaded_prompts') and v5_engine.loaded_prompts:
+        configurations['loaded_prompts'] = {
+            "source": "prompts/",
+            "files": list(v5_engine.loaded_prompts.keys()),
+            "total_prompts": sum(len(prompts) for prompts in v5_engine.loaded_prompts.values())
+        }
+
+    return {
+        "loaded": True,
+        "current_model": getattr(v5_engine, 'current_model_name', None),
+        "current_agent": getattr(v5_engine, 'current_agent', None),
+        "current_personality": getattr(v5_engine, 'current_personality', None),
+        "configurations": configurations
+    }
+
+@router.post("/configuration/update")
+async def update_configuration(
+    config_type: str,
+    config_data: Dict,
+    user: Dict = Depends(check_admin_access),
+    request: Request = None
+):
+    """Update configuration and save to file"""
+    import json
+    from pathlib import Path
+
+    v5_engine = getattr(request.app.state, 'v5_engine', None)
+    if not v5_engine:
+        raise HTTPException(status_code=500, detail="V5 engine not initialized")
+
+    try:
+        # Determine the file path based on config type
+        if config_type == "system":
+            file_path = Path("prompts/system_config.json")
+            v5_engine.system_config = config_data
+        elif config_type == "agent_prompts":
+            if not v5_engine.current_agent:
+                raise HTTPException(status_code=400, detail="No agent loaded")
+            file_path = Path(f"prompts/agents/{v5_engine.current_agent}/prompts.json")
+            v5_engine.agent_prompts = config_data
+        elif config_type == "intent":
+            if not v5_engine.current_agent:
+                raise HTTPException(status_code=400, detail="No agent loaded")
+            file_path = Path(f"prompts/agents/{v5_engine.current_agent}/intent.json")
+            if v5_engine.intent_detector:
+                v5_engine.intent_detector.intent_config = config_data
+        else:
+            raise HTTPException(status_code=400, detail=f"Invalid config type: {config_type}")
+
+        # Create backup of existing file
+        if file_path.exists():
+            backup_path = file_path.with_suffix('.json.backup')
+            backup_path.write_text(file_path.read_text())
+
+        # Save the new configuration
+        file_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(file_path, 'w') as f:
+            json.dump(config_data, f, indent=2)
+
+        # Reload the configuration in the engine
+        if config_type == "system":
+            v5_engine.load_system_config()
+        elif config_type == "agent_prompts":
+            v5_engine.load_agent_prompts(v5_engine.current_agent)
+        elif config_type == "intent":
+            v5_engine.load_intent_detection(v5_engine.current_agent)
+
+        return {
+            "status": "success",
+            "message": f"Configuration {config_type} updated successfully",
+            "file_path": str(file_path)
+        }
+    except Exception as e:
+        logger.error(f"Error updating configuration: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @router.get("/health")
 async def get_health(user: Dict = Depends(check_admin_access)):
     """Alias for system health endpoint"""

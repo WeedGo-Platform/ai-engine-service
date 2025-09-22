@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 import BarcodeIntakeModal from '../components/accessories/BarcodeIntakeModal';
+import { getApiEndpoint } from '../config/app.config';
 import QuickIntakeModal from '../components/accessories/QuickIntakeModal';
 import InventoryAdjustModal from '../components/accessories/InventoryAdjustModal';
 
@@ -75,7 +76,7 @@ const Accessories: React.FC = () => {
       }
 
       const response = await axios.get(
-        `http://localhost:5024/api/accessories/inventory/${storeId}`,
+        getApiEndpoint(`/accessories/inventory/${storeId}`),
         { params }
       );
       
@@ -102,7 +103,7 @@ const Accessories: React.FC = () => {
   // Fetch categories
   const fetchCategories = async () => {
     try {
-      const response = await axios.get('http://localhost:5024/api/accessories/categories');
+      const response = await axios.get(getApiEndpoint(`/accessories/categories`));
       setCategories(response.data);
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -135,7 +136,7 @@ const Accessories: React.FC = () => {
   // Handle inventory adjustment
   const handleAdjustInventory = async (adjustment: any) => {
     try {
-      await axios.post('http://localhost:5024/api/accessories/inventory/adjust', {
+      await axios.post(getApiEndpoint(`/accessories/inventory/adjust`), {
         ...adjustment,
         store_id: storeId
       });

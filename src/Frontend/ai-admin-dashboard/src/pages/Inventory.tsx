@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Package, 
-  Search, 
-  Filter, 
-  Plus, 
-  Edit, 
-  Trash2, 
+import {
+  Package,
+  Search,
+  Filter,
+  Plus,
+  Edit,
   AlertTriangle,
   ChevronDown,
   ChevronUp,
@@ -22,10 +21,13 @@ import {
 import { api } from '../services/api';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useStoreContext } from '../contexts/StoreContext';
+import InventoryEditModal from '../components/InventoryEditModal';
+import { getApiEndpoint } from '../config/app.config';
 
 interface InventoryItem {
   id: string;
   name: string;
+  product_name?: string;
   sku: string;
   category: string;
   quantity_available: number;
@@ -33,9 +35,14 @@ interface InventoryItem {
   quantity_reserved?: number;
   stock_status: string;
   price: number;
+  retail_price?: number;
   unit_cost?: number;
   reorder_level?: number;
+  reorder_point?: number;
+  reorder_quantity?: number;
+  is_available?: boolean;
   brand?: string;
+  image_url?: string;
   // Batch tracking fields
   batch_lot?: string;
   lot_number?: string;
@@ -57,6 +64,22 @@ interface InventoryItem {
   certificate_number?: string;
   coa?: string;
   notes?: string;
+  // Batch details array
+  batch_details?: Array<{
+    batch_lot: string;
+    quantity_remaining: number;
+    quantity_received: number;
+    unit_cost: number;
+    case_gtin?: string;
+    each_gtin?: string;
+    gtin_barcode?: string;
+    packaged_on_date?: string;
+    supplier_name?: string;
+    vendor?: string;
+    brand?: string;
+    po_number?: string;
+  }>;
+  store_id?: string;
 }
 
 const Inventory: React.FC = () => {
@@ -66,6 +89,7 @@ const Inventory: React.FC = () => {
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingItem, setEditingItem] = useState<InventoryItem | null>(null);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -89,7 +113,7 @@ const Inventory: React.FC = () => {
       }
       
       // Use the new store-inventory endpoint
-      const response = await fetch(`http://localhost:5024/api/store-inventory/list?${new URLSearchParams(params)}`, {
+      const response = await fetch(`${getApiEndpoint('/store-inventory/list')}?${new URLSearchParams(params)}`, {
         headers: {
           'Content-Type': 'application/json',
           'X-Store-ID': currentStore.id
@@ -146,10 +170,14 @@ const Inventory: React.FC = () => {
   // Calculate stats
   const stats = {
     totalItems: inventory?.length || 0,
-    inStock: inventory?.filter((item: any) => item.stock_status === 'in_stock').length || 0,
-    lowStock: inventory?.filter((item: any) => item.stock_status === 'low_stock').length || 0,
+    inStock: inventory?.filter((item: any) =>
+      item.quantity_available > 0 || item.stock_status?.toLowerCase() === 'in_stock'
+    ).length || 0,
+    lowStock: inventory?.filter((item: any) =>
+      item.stock_status?.toLowerCase() === 'low_stock'
+    ).length || 0,
     totalValue: inventory?.reduce((sum: number, item: any) =>
-      sum + ((item.quantity_available || 0) * (item.unit_cost || item.price || 0)), 0) || 0
+      sum + ((item.quantity_available || 0) * (item.unit_cost || item.retail_price || item.price || 0)), 0) || 0
   };
 
   // Filter inventory items
@@ -354,10 +382,24 @@ const Inventory: React.FC = () => {
                     <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
-                          <Package className="h-5 w-5 text-gray-400 mr-3" />
+                          {item.image_url ? (
+                            <img
+                              src={item.image_url}
+                              alt={item.product_name || item.name}
+                              className="h-10 w-10 rounded-lg object-cover mr-3"
+                              onError={(e) => {
+                                e.currentTarget.onerror = null;
+                                e.currentTarget.src = '';
+                                e.currentTarget.style.display = 'none';
+                                e.currentTarget.parentElement?.insertAdjacentHTML('beforeend', '<div class="h-10 w-10 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center mr-3"><svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div>');
+                              }}
+                            />
+                          ) : (
+                            <Package className="h-5 w-5 text-gray-400 mr-3" />
+                          )}
                           <div>
                             <div className="text-sm font-medium text-gray-900 dark:text-white">
-                              {item.name}
+                              {item.product_name || item.name}
                             </div>
                             <div className="text-sm text-gray-500 dark:text-gray-400">
                               {item.category}
@@ -391,7 +433,7 @@ const Inventory: React.FC = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900 dark:text-white">
-                          ${item.price?.toFixed(2) || '0.00'}
+                          ${(parseFloat(item.retail_price) || parseFloat(item.price) || 0).toFixed(2)}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -404,69 +446,124 @@ const Inventory: React.FC = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button
-                          onClick={() => setEditingItem(item)}
-                          className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 mr-3"
+                          onClick={() => {
+                            setEditingItem(item);
+                            setShowEditModal(true);
+                          }}
+                          className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300"
                         >
                           <Edit className="h-4 w-4" />
-                        </button>
-                        <button
-                          onClick={() => {/* Handle delete */}}
-                          className="text-danger-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
-                        >
-                          <Trash2 className="h-4 w-4" />
                         </button>
                       </td>
                     </tr>
                     {expandedRows.has(item.id) && item.batch_lot && (
                       <tr>
                         <td colSpan={7} className="px-6 py-4 bg-gray-50 dark:bg-gray-700/30">
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                            <div>
-                              <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Batch/Lot Number</div>
-                              <div className="text-sm text-gray-900 dark:text-white font-mono">
-                                {item.batch_lot}
+                          {item.batch_details && item.batch_details.length > 0 ? (
+                            <div className="space-y-4">
+                              {item.batch_details.map((batch: any, batchIndex: number) => (
+                                <div key={batchIndex} className="border-b border-gray-200 dark:border-gray-600 last:border-0 pb-4 last:pb-0">
+                                  {item.batch_details.length > 1 && (
+                                    <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+                                      Batch {batchIndex + 1} of {item.batch_details.length}
+                                    </div>
+                                  )}
+                                  <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                                    <div>
+                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Batch/Lot Number</div>
+                                      <div className="text-sm text-gray-900 dark:text-white font-mono">
+                                        {batch.batch_lot}
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Packaged On</div>
+                                      <div className="text-sm text-gray-900 dark:text-white">
+                                        {batch.packaged_on_date ?
+                                          new Date(batch.packaged_on_date).toLocaleDateString() :
+                                          'Not specified'}
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Supplier</div>
+                                      <div className="text-sm text-gray-900 dark:text-white">
+                                        {batch.supplier_name || 'Unknown'}
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Case GTIN</div>
+                                      <div className="text-sm text-gray-900 dark:text-white font-mono">
+                                        {batch.case_gtin || 'Not specified'}
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Each GTIN</div>
+                                      <div className="text-sm text-gray-900 dark:text-white font-mono">
+                                        {batch.each_gtin || 'Not specified'}
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">GTIN Barcode</div>
+                                      <div className="text-sm text-gray-900 dark:text-white font-mono text-xs">
+                                        {batch.gtin_barcode || 'Not specified'}
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Vendor</div>
+                                      <div className="text-sm text-gray-900 dark:text-white">
+                                        {batch.vendor || 'Not specified'}
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Brand</div>
+                                      <div className="text-sm text-gray-900 dark:text-white">
+                                        {batch.brand || item.brand || 'Not specified'}
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Quantity Remaining</div>
+                                      <div className="text-sm text-gray-900 dark:text-white">
+                                        {batch.quantity_remaining || 0} units
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Unit Cost</div>
+                                      <div className="text-sm text-gray-900 dark:text-white">
+                                        ${parseFloat(batch.unit_cost || 0).toFixed(2)}
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">PO Number</div>
+                                      <div className="text-sm text-gray-900 dark:text-white font-mono">
+                                        {batch.po_number || 'N/A'}
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">THC/CBD</div>
+                                      <div className="text-sm text-gray-900 dark:text-white">
+                                        THC: {item.thc_content || 0}% /
+                                        CBD: {item.cbd_content || 0}%
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                              <div>
+                                <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Batch/Lot Number</div>
+                                <div className="text-sm text-gray-900 dark:text-white font-mono">
+                                  {item.batch_lot}
+                                </div>
+                              </div>
+                              <div>
+                                <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">No batch details available</div>
+                                <div className="text-sm text-gray-500 dark:text-gray-400">
+                                  Batch tracking data not found
+                                </div>
                               </div>
                             </div>
-                            <div>
-                              <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Packaged On</div>
-                              <div className="text-sm text-gray-900 dark:text-white">
-                                {item.packaged_on_date ? 
-                                  new Date(item.packaged_on_date).toLocaleDateString() : 
-                                  'Not specified'}
-                              </div>
-                            </div>
-                            <div>
-                              <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Supplier</div>
-                              <div className="text-sm text-gray-900 dark:text-white">
-                                {item.supplier_name || 'Unknown'}
-                              </div>
-                            </div>
-                            <div>
-                              <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Case GTIN</div>
-                              <div className="text-sm text-gray-900 dark:text-white font-mono">
-                                {item.case_gtin || 'Not specified'}
-                              </div>
-                            </div>
-                            <div>
-                              <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Each GTIN</div>
-                              <div className="text-sm text-gray-900 dark:text-white font-mono">
-                                {item.each_gtin || 'Not specified'}
-                              </div>
-                            </div>
-                            <div>
-                              <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">GTIN Barcode</div>
-                              <div className="text-sm text-gray-900 dark:text-white font-mono">
-                                {item.gtin_barcode || 'Not specified'}
-                              </div>
-                            </div>
-                            <div>
-                              <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">THC/CBD</div>
-                              <div className="text-sm text-gray-900 dark:text-white">
-                                THC: {item.thc_percentage || item.thc_content || 0}% / 
-                                CBD: {item.cbd_percentage || item.cbd_content || 0}%
-                              </div>
-                            </div>
-                          </div>
+                          )}
                         </td>
                       </tr>
                     )}
@@ -477,6 +574,25 @@ const Inventory: React.FC = () => {
           </table>
         </div>
       </div>
+
+      {/* Edit Modal */}
+      {showEditModal && editingItem && (
+        <InventoryEditModal
+          item={editingItem}
+          isOpen={showEditModal}
+          onClose={() => {
+            setShowEditModal(false);
+            setEditingItem(null);
+          }}
+          onSave={(updatedItem) => {
+            queryClient.invalidateQueries({ queryKey: ['inventory'] });
+            setSuccess('Inventory item updated successfully');
+            setShowEditModal(false);
+            setEditingItem(null);
+          }}
+          storeId={currentStore?.id}
+        />
+      )}
     </div>
   );
 };

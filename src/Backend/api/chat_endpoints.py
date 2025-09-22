@@ -9,31 +9,69 @@ import asyncio
 from datetime import datetime
 import logging
 import time
+import asyncpg
+import os
 from services.smart_ai_engine_v5 import SmartAIEngineV5
+from services.user_context_service import UserContextService
 
 logger = logging.getLogger(__name__)
 
 # Initialize AI engine
 ai_engine = SmartAIEngineV5()
 
-# Load default model on startup
+# Database connection pool
+db_pool = None
+
+async def get_db_connection():
+    """Get database connection from pool"""
+    global db_pool
+    if not db_pool:
+        db_pool = await asyncpg.create_pool(
+            host=os.getenv('DB_HOST', 'localhost'),
+            port=int(os.getenv('DB_PORT', 5434)),
+            user=os.getenv('DB_USER', 'weedgo'),
+            password=os.getenv('DB_PASSWORD', 'weedgo123'),
+            database=os.getenv('DB_NAME', 'ai_engine'),
+            min_size=5,
+            max_size=20
+        )
+    return await db_pool.acquire()
+
+# Load default model on startup with assistant agent
 try:
+    from pathlib import Path
+
     # Load the default model configured in system_config.json
     default_model = "qwen2.5_0.5b_instruct_q4_k_m"  # or get from config
+
+    # Get the first personality for assistant agent
+    assistant_personality = "friendly"  # default fallback
+    personalities_dir = Path("prompts/agents/assistant/personality")
+    if personalities_dir.exists():
+        personality_files = list(personalities_dir.glob("*.json"))
+        if personality_files:
+            assistant_personality = personality_files[0].stem
+
     if default_model in ai_engine.available_models:
-        success = ai_engine.load_model(default_model, agent_id="dispensary", personality_id="friendly")
+        # Load with assistant agent and its first available personality
+        success = ai_engine.load_model(default_model, agent_id="assistant", personality_id=assistant_personality)
         if success:
-            logger.info(f"Loaded default model: {default_model}")
+            logger.info(f"Loaded default model: {default_model} with assistant/{assistant_personality}")
         else:
-            logger.error(f"Failed to load default model: {default_model}")
+            # Fallback to dispensary if assistant fails
+            success = ai_engine.load_model(default_model, agent_id="dispensary", personality_id="friendly")
+            if success:
+                logger.info(f"Loaded default model with dispensary agent as fallback")
+            else:
+                logger.error(f"Failed to load default model: {default_model}")
     else:
         logger.warning(f"Default model {default_model} not found in available models")
         # Try to load first available model
         if ai_engine.available_models:
             first_model = list(ai_engine.available_models.keys())[0]
-            success = ai_engine.load_model(first_model, agent_id="dispensary", personality_id="friendly")
+            success = ai_engine.load_model(first_model, agent_id="assistant", personality_id=assistant_personality)
             if success:
-                logger.info(f"Loaded fallback model: {first_model}")
+                logger.info(f"Loaded fallback model: {first_model} with assistant/{assistant_personality}")
 except Exception as e:
     logger.error(f"Failed to load model on startup: {e}")
 
@@ -112,15 +150,26 @@ async def websocket_endpoint(websocket: WebSocket):
                 elif message_type == "message":
                     # Process chat message
                     user_message = message_data.get("message", "")
+                    user_id = message_data.get("user_id")  # Get user_id from message
+
+                    # Log user context status
+                    logger.info(f"[chat_endpoints] Received message - Session: {session_id}, User ID: {user_id}, Has User: {bool(user_id)}")
+
+                    # Debug timing
+                    debug_start = time.time()
+                    timing_points = {}
 
                     # Get session agent and personality
                     session_data = chat_sessions.get(session_id, {})
                     agent = session_data.get("agent", "dispensary")
                     personality = session_data.get("personality", "friendly")
+                    timing_points['session_lookup'] = time.time() - debug_start
 
                     # Load agent and personality if needed
+                    agent_load_start = time.time()
                     if ai_engine.current_agent != agent or ai_engine.current_personality_type != personality:
                         ai_engine.load_agent_personality(agent, personality)
+                    timing_points['agent_load'] = time.time() - agent_load_start
 
                     # Send typing indicator
                     await manager.send_message(json.dumps({
@@ -132,26 +181,72 @@ async def websocket_endpoint(websocket: WebSocket):
                     start_time = time.time()
                     prompt_tokens = len(user_message.split())  # Simple approximation
 
-                    # Get actual AI response with user context if available
-                    user_id = message_data.get("user_id")  # Get user_id if provided
+                    # Log before AI response
+                    logger.info(f"[chat_endpoints] Calling AI engine - User ID: {user_id}, Agent: {agent}, Personality: {personality}")
+
                     try:
-                        ai_response = ai_engine.get_response(
-                            user_message,
-                            session_id=session_id,
-                            user_id=user_id,  # Pass user_id for context
-                            max_tokens=500
-                        )
+                        ai_response_start = time.time()
+                        # Use async version if available
+                        if hasattr(ai_engine, 'get_response_async'):
+                            ai_response = await ai_engine.get_response_async(
+                                user_message,
+                                session_id=session_id,
+                                user_id=user_id,  # Pass user_id for context
+                                max_tokens=500
+                            )
+                        else:
+                            ai_response = ai_engine.get_response(
+                                user_message,
+                                session_id=session_id,
+                                user_id=user_id,  # Pass user_id for context
+                                max_tokens=500
+                            )
+                        timing_points['ai_response'] = time.time() - ai_response_start
                     except Exception as e:
                         logger.error(f"AI engine error: {e}")
                         ai_response = "I apologize, but I'm having trouble processing your request. Please try again."
+                        timing_points['ai_response'] = time.time() - ai_response_start
 
                     # Calculate metrics
                     response_time = time.time() - start_time
+
+                    # Log debug timing
+                    logger.info(f"Chat timing breakdown - Total: {response_time:.3f}s | Session: {timing_points.get('session_lookup', 0):.3f}s | Agent: {timing_points.get('agent_load', 0):.3f}s | AI Response: {timing_points.get('ai_response', 0):.3f}s")
                     completion_tokens = len(ai_response.split())  # Simple approximation
                     total_tokens = prompt_tokens + completion_tokens
 
                     # Get current model name
                     current_model = ai_engine.current_model_name if hasattr(ai_engine, 'current_model_name') else 'qwen2.5_0.5b_instruct_q4_k_m'
+
+                    # Save conversation to database if user_id is provided
+                    if user_id:
+                        try:
+                            conn = await get_db_connection()
+                            try:
+                                user_context_service = UserContextService(conn)
+                                await user_context_service.save_conversation_message(
+                                    session_id=session_id,
+                                    user_id=user_id,
+                                    user_message=user_message,
+                                    ai_response=ai_response,
+                                    intent=None,  # Could be determined based on message analysis
+                                    metadata={
+                                        'agent': agent,
+                                        'personality': personality,
+                                        'model': current_model,
+                                        'response_time': response_time,
+                                        'tokens': {
+                                            'prompt': prompt_tokens,
+                                            'completion': completion_tokens,
+                                            'total': total_tokens
+                                        }
+                                    }
+                                )
+                                logger.info(f"[chat_endpoints] Conversation saved for user {user_id} in session {session_id}")
+                            finally:
+                                await db_pool.release(conn)
+                        except Exception as e:
+                            logger.error(f"[chat_endpoints] Failed to save conversation: {e}")
 
                     await manager.send_message(json.dumps({
                         "type": "typing",
@@ -203,7 +298,25 @@ async def websocket_endpoint(websocket: WebSocket):
                     # Update session settings
                     agent = message_data.get("agent")
                     personality = message_data.get("personality")
-                    
+
+                    # Store session settings
+                    if session_id not in chat_sessions:
+                        chat_sessions[session_id] = {
+                            "id": session_id,
+                            "created_at": datetime.utcnow().isoformat(),
+                            "messages": []
+                        }
+
+                    chat_sessions[session_id]["agent"] = agent
+                    chat_sessions[session_id]["personality"] = personality
+
+                    # Load the agent and personality in the AI engine
+                    try:
+                        ai_engine.load_agent_personality(agent, personality)
+                        logger.info(f"Loaded agent '{agent}' with personality '{personality}' for session {session_id}")
+                    except Exception as e:
+                        logger.warning(f"Could not load agent/personality: {e}")
+
                     await manager.send_message(json.dumps({
                         "type": "session_updated",
                         "agent": agent,
@@ -275,6 +388,8 @@ async def get_session(session_id: str):
 @router.post("/message")
 async def send_message(session_id: str, message: str, user_id: Optional[str] = None):
     """Send a message in a chat session (REST alternative to WebSocket)"""
+    logger.info(f"[chat_endpoints] REST message received - Session: {session_id}, User ID: {user_id}, Has User: {bool(user_id)}")
+
     if session_id not in chat_sessions:
         # Create session if it doesn't exist
         chat_sessions[session_id] = {
@@ -309,6 +424,9 @@ async def send_message(session_id: str, message: str, user_id: Optional[str] = N
     start_time = time.time()
     prompt_tokens = len(message.split())  # Simple approximation
 
+    # Log before AI response
+    logger.info(f"[chat_endpoints] REST calling AI engine - User ID: {user_id}, Agent: {agent}, Personality: {personality}")
+
     # Generate AI response with user context
     try:
         ai_response = ai_engine.get_response(
@@ -325,6 +443,39 @@ async def send_message(session_id: str, message: str, user_id: Optional[str] = N
     response_time = time.time() - start_time
     completion_tokens = len(ai_response.split())  # Simple approximation
     total_tokens = prompt_tokens + completion_tokens
+
+    # Get current model name
+    current_model = ai_engine.current_model_name if hasattr(ai_engine, 'current_model_name') else 'qwen2.5_0.5b_instruct_q4_k_m'
+
+    # Save conversation to database if user_id is provided
+    if user_id:
+        try:
+            conn = await get_db_connection()
+            try:
+                user_context_service = UserContextService(conn)
+                await user_context_service.save_conversation_message(
+                    session_id=session_id,
+                    user_id=user_id,
+                    user_message=message,
+                    ai_response=ai_response,
+                    intent=None,  # Could be determined based on message analysis
+                    metadata={
+                        'agent': agent,
+                        'personality': personality,
+                        'model': current_model,
+                        'response_time': response_time,
+                        'tokens': {
+                            'prompt': prompt_tokens,
+                            'completion': completion_tokens,
+                            'total': total_tokens
+                        }
+                    }
+                )
+                logger.info(f"[chat_endpoints REST] Conversation saved for user {user_id} in session {session_id}")
+            finally:
+                await db_pool.release(conn)
+        except Exception as e:
+            logger.error(f"[chat_endpoints REST] Failed to save conversation: {e}")
 
     # Add AI response to session
     chat_sessions[session_id]["messages"].append({
@@ -365,3 +516,68 @@ async def list_sessions():
         "count": len(chat_sessions),
         "active_websockets": len(manager.active_connections)
     })
+
+@router.get("/history/{user_id}")
+async def get_chat_history(user_id: str, limit: int = 20):
+    """Get chat history for a user"""
+    try:
+        conn = await get_db_connection()
+        try:
+            # Query to get recent chat interactions
+            query = """
+                SELECT
+                    message_id,
+                    session_id,
+                    user_message,
+                    ai_response,
+                    created_at,
+                    metadata
+                FROM chat_interactions
+                WHERE customer_id = $1
+                ORDER BY created_at DESC
+                LIMIT $2
+            """
+
+            rows = await conn.fetch(query, user_id, limit)
+
+            # Format messages for frontend
+            messages = []
+            for row in rows:
+                # Add user message
+                messages.append({
+                    "id": f"user-{row['message_id']}",
+                    "role": "user",
+                    "content": row['user_message'],
+                    "timestamp": row['created_at'].isoformat() if row['created_at'] else None,
+                    "session_id": row['session_id']
+                })
+                # Add AI response
+                messages.append({
+                    "id": f"ai-{row['message_id']}",
+                    "role": "assistant",
+                    "content": row['ai_response'],
+                    "timestamp": row['created_at'].isoformat() if row['created_at'] else None,
+                    "session_id": row['session_id'],
+                    "metadata": row['metadata'] if isinstance(row['metadata'], dict) else None
+                })
+
+            # Reverse to get chronological order (oldest first)
+            messages.reverse()
+
+            logger.info(f"[chat_endpoints] Retrieved {len(messages)} messages for user {user_id}")
+
+            return JSONResponse({
+                "messages": messages,
+                "count": len(messages)
+            })
+
+        finally:
+            await db_pool.release(conn)
+
+    except Exception as e:
+        logger.error(f"[chat_endpoints] Failed to get chat history: {e}")
+        return JSONResponse({
+            "messages": [],
+            "count": 0,
+            "error": str(e)
+        }, status_code=500)

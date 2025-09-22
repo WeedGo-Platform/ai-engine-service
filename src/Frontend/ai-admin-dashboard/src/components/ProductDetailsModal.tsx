@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, ShoppingCart, Package, MapPin, Calendar } from 'lucide-react';
+import { X, ShoppingCart, Package, MapPin } from 'lucide-react';
 
 interface ProductDetailsModalProps {
   isOpen: boolean;
