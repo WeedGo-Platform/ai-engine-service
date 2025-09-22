@@ -1,6 +1,6 @@
 # WeedGo Mobile App Development Tracker
 
-## Overall Progress: 5/15 Phases (33%)
+## Overall Progress: 6/15 Phases (40%)
 
 ## Phase Status Overview
 
@@ -54,40 +54,49 @@
 - `/app/(tabs)/index.tsx` - Revamped home screen
 - `/app/product/[id].tsx` - Product detail screen
 
-### 🔄 Phase 6: Location Services (NEXT)
+### ✅ Phase 6: Shopping Cart (COMPLETED)
+- [x] Enhanced cart store with full CRUD operations
+- [x] Cart screen UI with swipe-to-delete
+- [x] Cart badge showing item count
+- [x] Promo code application feature
+- [x] Order summary with tax calculation
+- [x] Cart persistence across sessions
+- [x] Quantity adjusters (+/-)
+- [x] Empty cart state
+- [x] Cart validation before checkout
+- [x] API integration for cart operations
+
+**Key Files Created:**
+- Enhanced `/stores/cartStore.ts` - Full cart management with API integration
+- `/app/(tabs)/cart.tsx` - Shopping cart screen
+- `/components/cart/CartItem.tsx` - Cart item with swipe to delete
+- `/components/cart/OrderSummary.tsx` - Order summary component
+- `/components/cart/EmptyCart.tsx` - Empty cart state
+- `/components/cart/PromoCodeInput.tsx` - Promo code input
+- `/components/CartBadge.tsx` - Cart badge for navigation
+- `/styles/cart.styles.ts` - Cart screen styles
+
+### 🔄 Phase 7: Location Services (NEXT)
 - [ ] Request location permissions
 - [ ] Implement geolocation tracking
 - [ ] Create store finder
 - [ ] Add map integration
 - [ ] Distance calculations
 
-### ⏸️ Phase 6: Store Selection
+### ⏸️ Phase 8: Store Selection
 - [ ] Store list component
 - [ ] Store details screen
 - [ ] Operating hours display
 - [ ] Store switching logic
 - [ ] Default store persistence
 
-### ⏸️ Phase 7: Product Catalog
-- [ ] Product list views
-- [ ] Category navigation
-- [ ] Product detail screen
-- [ ] Image gallery
-- [ ] Product variants
-
-### ⏸️ Phase 8: Search & Filters
-- [ ] Search bar component
-- [ ] Filter UI
-- [ ] Sort options
+### ⏸️ Phase 9: Search & Filters (Partially Complete)
+- [x] Search bar component
+- [x] Filter UI (Quick filters)
+- [ ] Advanced filter options
+- [x] Sort options
 - [ ] Search history
 - [ ] Voice search integration
-
-### ⏸️ Phase 9: Shopping Cart
-- [ ] Cart state management
-- [ ] Add to cart functionality
-- [ ] Cart screen UI
-- [ ] Quantity adjustments
-- [ ] Cart persistence
 
 ### ⏸️ Phase 10: AI Chat Integration
 - [ ] WebSocket connection
@@ -133,6 +142,19 @@
 
 ## Current Sprint Notes
 
+### Phase 6 Completion (2024-09-22)
+Successfully implemented complete shopping cart functionality:
+- Enhanced cart store with full API integration
+- Cart session management with persistence
+- Swipe-to-delete functionality for cart items
+- Real-time cart badge in navigation
+- Promo code application and validation
+- Order summary with tax calculations (13% HST)
+- Minimum order validation ($50)
+- Empty cart state with call-to-action
+- Toast notifications for user feedback
+- Pull-to-refresh for cart updates
+
 ### Phase 5 Completion (2024-09-22)
 Successfully implemented complete product browsing experience:
 - Store selector with modal picker
@@ -170,6 +192,8 @@ Successfully implemented complete product browsing experience:
 - expo-local-authentication: Biometric auth
 - @react-navigation/native: Navigation support
 - @shopify/flash-list: High-performance list rendering
+- react-native-toast-message: Toast notifications
+- react-native-gesture-handler: Swipe gestures (already included with expo-router)
 
 ## Git Commits
 - Phase 4.1: Create auth store with Zustand and SecureStore
@@ -181,4 +205,5 @@ Successfully implemented complete product browsing experience:
 - Phase 5.2: Implement home screen with categories and filters
 - Phase 5.3: Add product detail screen with full information
 - Phase 5.4: Implement search with debouncing and filters
+- Phase 6.1-6.3: Enhanced cart store, implemented cart UI with swipe-to-delete, and added cart badge
 - Phase 5.5: Add pull-to-refresh and infinite scroll pagination
