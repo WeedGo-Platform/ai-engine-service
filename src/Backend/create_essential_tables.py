@@ -77,10 +77,10 @@ async def create_tables():
         """)
         logger.info("✓ Suppliers table updated")
         
-        # 4. Create customers table
-        logger.info("Creating customers table...")
+        # 4. Create profiles table
+        logger.info("Creating profiles table...")
         await conn.execute("""
-            CREATE TABLE IF NOT EXISTS customers (
+            CREATE TABLE IF NOT EXISTS profiles (
                 id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                 email VARCHAR(255) UNIQUE NOT NULL,
                 first_name VARCHAR(100),
@@ -184,12 +184,12 @@ async def create_tables():
             """)
             logger.info("✓ Sample suppliers inserted")
         
-        # 10. Insert sample customers if empty
-        count = await conn.fetchval("SELECT COUNT(*) FROM customers")
+        # 10. Insert sample profiles if empty
+        count = await conn.fetchval("SELECT COUNT(*) FROM profiles")
         if count == 0:
-            logger.info("Inserting sample customers...")
+            logger.info("Inserting sample profiles...")
             await conn.execute("""
-                INSERT INTO customers (email, first_name, last_name, phone, city, state, loyalty_points, is_active)
+                INSERT INTO profiles (email, first_name, last_name, phone, city, state, loyalty_points, is_active)
                 VALUES 
                     ('alice@example.com', 'Alice', 'Anderson', '555-1001', 'Los Angeles', 'CA', 100, true),
                     ('bob@example.com', 'Bob', 'Brown', '555-1002', 'San Diego', 'CA', 250, true),
@@ -197,19 +197,19 @@ async def create_tables():
                     ('david@example.com', 'David', 'Davis', '555-1004', 'Sacramento', 'CA', 175, true),
                     ('emma@example.com', 'Emma', 'Evans', '555-1005', 'Oakland', 'CA', 300, true)
             """)
-            logger.info("✓ Sample customers inserted")
+            logger.info("✓ Sample profiles inserted")
         
         logger.info("\n✅ All essential tables created and populated successfully!")
         
         # Verify
         products_count = await conn.fetchval("SELECT COUNT(*) FROM products")
-        customers_count = await conn.fetchval("SELECT COUNT(*) FROM customers")
+        profiles_count = await conn.fetchval("SELECT COUNT(*) FROM profiles")
         suppliers_count = await conn.fetchval("SELECT COUNT(*) FROM suppliers WHERE city IS NOT NULL")
         inventory_count = await conn.fetchval("SELECT COUNT(*) FROM inventory")
         
         logger.info(f"\nDatabase Status:")
         logger.info(f"  - Products: {products_count} records")
-        logger.info(f"  - Customers: {customers_count} records")
+        logger.info(f"  - Profiles: {profiles_count} records")
         logger.info(f"  - Suppliers: {suppliers_count} records")
         logger.info(f"  - Inventory: {inventory_count} records")
         

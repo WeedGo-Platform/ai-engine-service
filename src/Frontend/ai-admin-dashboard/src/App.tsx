@@ -2,17 +2,16 @@ import React from 'react';
 import { createBrowserRouter, RouterProvider, Link, Outlet, useLocation, Navigate, useNavigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { Toaster } from 'react-hot-toast';
 import {
-  Home, Package, ShoppingCart, Users, FileText,
-  TrendingUp, Leaf, Menu, X, LogOut, Settings,
-  Building2, Store, Tag, Sparkles, Upload, ChevronRight,
-  ChevronLeft, PanelLeftClose, PanelLeft, Database, Truck, Bot
+  Home, Package, ShoppingCart, Users, FileText, Leaf, Menu, X, LogOut, Settings,
+  Building2, Store, Tag, Sparkles, Upload, ChevronRight, PanelLeftClose, PanelLeft, Database, Truck, Bot, AppWindow
 } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { StoreProvider, useStoreContext } from './contexts/StoreContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import StoreSelectionModal from './components/StoreSelectionModal';
-import ChatWidgetV2 from './components/ChatWidgetV2';
+import ChatWidget from './components/ChatWidget';
 
 // Import pages
 import Login from './pages/Login';
@@ -41,6 +40,8 @@ import ProvincialCatalogVirtual from './pages/ProvincialCatalogVirtual';
 import DatabaseManagement from './pages/DatabaseManagement';
 import DeliveryManagement from './pages/DeliveryManagement';
 import AIManagement from './pages/AIManagement';
+import VoiceAPITest from './pages/VoiceAPITest';
+import Apps from './pages/Apps';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -88,10 +89,11 @@ function Layout() {
     });
     
     // For store managers only (not tenant admin or super admin), show specific menu items
+    let items = [];
     if (isStoreManager() && !isTenantAdmin() && !isSuperAdmin()) {
-      return [
+      items = [
         { name: 'Dashboard', href: '/dashboard', icon: Home, permission: 'all' },
-        { name: 'POS', href: '/dashboard/pos', icon: ShoppingCart, permission: 'store' },
+        { name: 'Apps', href: '/dashboard/apps', icon: AppWindow, permission: 'store' },
         { name: 'Organization', href: '/dashboard/tenants', icon: Building2, permission: 'store_manager' },
         { name: 'Inventory', href: '/dashboard/inventory', icon: Package, permission: 'store' },
         { name: 'Accessories', href: '/dashboard/accessories', icon: Package, permission: 'store' },
@@ -101,26 +103,26 @@ function Layout() {
         { name: 'Promotions', href: '/dashboard/promotions', icon: Tag, permission: 'store' },
         { name: 'Recommendations', href: '/dashboard/recommendations', icon: Sparkles, permission: 'store' },
       ];
+    } else {
+      // For admins (tenant admin and super admin), show all applicable items
+      items = [
+        { name: 'Dashboard', href: '/dashboard', icon: Home, permission: 'all' },
+        { name: 'Apps', href: '/dashboard/apps', icon: AppWindow, permission: 'store' },
+        { name: isTenantAdmin() && !isSuperAdmin() ? 'Organization' : 'Tenants', href: '/dashboard/tenants', icon: Building2, permission: 'admin' },
+        { name: 'Products', href: '/dashboard/products', icon: Leaf, permission: 'store' },
+        { name: 'Inventory', href: '/dashboard/inventory', icon: Package, permission: 'store' },
+        { name: 'Accessories', href: '/dashboard/accessories', icon: Package, permission: 'store' },
+        { name: 'Orders', href: '/dashboard/orders', icon: ShoppingCart, permission: 'store' },
+        { name: 'Customers', href: '/dashboard/customers', icon: Users, permission: 'store' },
+        { name: 'Purchase Orders', href: '/dashboard/purchase-orders', icon: FileText, permission: 'store' },
+        { name: 'Promotions', href: '/dashboard/promotions', icon: Tag, permission: 'store' },
+        { name: 'Recommendations', href: '/dashboard/recommendations', icon: Sparkles, permission: 'store' },
+        { name: 'Deliveries', href: '/dashboard/deliveries', icon: Truck, permission: 'store' },
+        { name: 'AI', href: '/dashboard/ai', icon: Bot, permission: 'all' },
+        { name: 'Provincial Catalog', href: '/dashboard/provincial-catalog', icon: Upload, permission: 'super_admin' },
+        { name: 'Database', href: '/dashboard/database', icon: Database, permission: 'super_admin' },
+      ];
     }
-
-    // For admins (tenant admin and super admin), show all applicable items
-    const items = [
-      { name: 'Dashboard', href: '/dashboard', icon: Home, permission: 'all' },
-      { name: 'POS', href: '/dashboard/pos', icon: ShoppingCart, permission: 'store' },
-      { name: isTenantAdmin() && !isSuperAdmin() ? 'Organization' : 'Tenants', href: '/dashboard/tenants', icon: Building2, permission: 'admin' },
-      { name: 'Products', href: '/dashboard/products', icon: Leaf, permission: 'store' },
-      { name: 'Inventory', href: '/dashboard/inventory', icon: Package, permission: 'store' },
-      { name: 'Accessories', href: '/dashboard/accessories', icon: Package, permission: 'store' },
-      { name: 'Orders', href: '/dashboard/orders', icon: ShoppingCart, permission: 'store' },
-      { name: 'Customers', href: '/dashboard/customers', icon: Users, permission: 'store' },
-      { name: 'Purchase Orders', href: '/dashboard/purchase-orders', icon: FileText, permission: 'store' },
-      { name: 'Promotions', href: '/dashboard/promotions', icon: Tag, permission: 'store' },
-      { name: 'Recommendations', href: '/dashboard/recommendations', icon: Sparkles, permission: 'store' },
-      { name: 'Deliveries', href: '/dashboard/deliveries', icon: Truck, permission: 'store' },
-      { name: 'AI', href: '/dashboard/ai', icon: Bot, permission: 'all' },
-      { name: 'Provincial Catalog', href: '/dashboard/provincial-catalog', icon: Upload, permission: 'super_admin' },
-      { name: 'Database', href: '/dashboard/database', icon: Database, permission: 'super_admin' },
-    ];
 
     // Filter based on permissions
     return items.filter(item => {
@@ -332,7 +334,7 @@ function Layout() {
         </header>
 
         {/* Page content */}
-        <main className={`flex-1 overflow-y-auto ${location.pathname === '/dashboard/pos' ? '' : 'p-6 sm:p-6 lg:p-8'}`}>
+        <main className={`flex-1 overflow-y-auto ${location.pathname === '/dashboard/apps' ? '' : 'p-6 sm:p-6 lg:p-8'}`}>
           <Outlet />
         </main>
       </div>
@@ -352,7 +354,7 @@ function Layout() {
       )}
 
       {/* Chat Widget with Voice Support */}
-      <ChatWidgetV2 />
+      <ChatWidget />
     </div>
   );
 }
@@ -392,7 +394,7 @@ const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <Dashboard /> },
-      { path: 'pos', element: <POS /> },
+      { path: 'apps', element: <Apps /> },
       {
         path: 'tenants',
         element: <TenantManagement />
@@ -412,6 +414,7 @@ const router = createBrowserRouter([
       { path: 'recommendations', element: <Recommendations /> },
       { path: 'deliveries', element: <DeliveryManagement /> },
       { path: 'ai', element: <AIManagement /> },
+      { path: 'voice-test', element: <VoiceAPITest /> },
       {
         path: 'provincial-catalog',
         element: (
@@ -436,7 +439,6 @@ const router = createBrowserRouter([
   }
 ], {
   future: {
-    v7_startTransition: true,
     v7_relativeSplatPath: true
   }
 });
@@ -447,7 +449,35 @@ function App() {
       <AuthProvider>
         <StoreProvider>
           <RouterProvider router={router} />
-          <ReactQueryDevtools initialIsOpen={false} />
+          <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              success: {
+                style: {
+                  background: '#10b981',
+                  color: 'white',
+                  fontWeight: '500'
+                },
+                iconTheme: {
+                  primary: 'white',
+                  secondary: '#10b981'
+                }
+              },
+              error: {
+                style: {
+                  background: '#ef4444',
+                  color: 'white',
+                  fontWeight: '500'
+                },
+                iconTheme: {
+                  primary: 'white',
+                  secondary: '#ef4444'
+                }
+              }
+            }}
+          />
         </StoreProvider>
       </AuthProvider>
     </QueryClientProvider>

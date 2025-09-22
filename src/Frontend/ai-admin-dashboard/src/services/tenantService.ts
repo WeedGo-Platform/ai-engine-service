@@ -37,6 +37,7 @@ export interface Store {
   id: string;
   tenant_id: string;
   province_territory_id: string;
+  province_code?: string;
   store_code: string;
   name: string;
   address?: Address;
@@ -80,7 +81,7 @@ export interface CreateTenantRequest {
 export interface CreateStoreRequest {
   tenant_id: string;
   province_code: string;
-  store_code: string;
+  store_code?: string;  // Now optional - will be auto-generated if not provided
   name: string;
   address: Address;
   phone?: string;

@@ -61,6 +61,12 @@ class CreatePurchaseOrderRequest(BaseModel):
     notes: Optional[str] = None  # Optional
     excel_filename: str  # Required for PO number generation
     store_id: Optional[UUID] = None  # Can be provided in body or header
+    shipment_id: Optional[str] = None  # From ASN Excel
+    container_id: Optional[str] = None  # From ASN Excel
+    vendor: Optional[str] = None  # From ASN Excel
+    ocs_order_number: Optional[str] = None  # Extracted from filename
+    tenant_id: Optional[UUID] = None  # From store/context
+    created_by: Optional[UUID] = None  # User ID from context
 
 
 class ReceivePurchaseOrderItem(BaseModel):
@@ -166,7 +172,13 @@ async def create_purchase_order(
             expected_date=request.expected_date,
             notes=request.notes,
             excel_filename=request.excel_filename,
-            store_id=store_id
+            store_id=store_id,
+            shipment_id=request.shipment_id,
+            container_id=request.container_id,
+            vendor=request.vendor,
+            ocs_order_number=request.ocs_order_number,
+            tenant_id=request.tenant_id,
+            created_by=request.created_by
         )
         
         return {
@@ -240,42 +252,69 @@ async def get_inventory_value_report(
 @router.get("/check")
 async def check_inventory_exists(
     sku: str = Query(..., description="SKU to check"),
+    store_id: str = Query(..., description="Store ID (required)"),
     batch_lot: Optional[str] = Query(None, description="Batch lot to check"),
     service: InventoryService = Depends(get_inventory_service)
 ):
-    """Check if a SKU (and optionally batch lot) exists in inventory"""
+    """Check if a SKU (and optionally batch lot) exists in inventory for a specific store"""
     try:
+        # Validate store_id is a valid UUID
+        try:
+            from uuid import UUID
+            UUID(store_id)
+        except ValueError:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Invalid store_id format: {store_id}. Must be a valid UUID."
+            )
+
         conn = service.db
-        
+
+        # Verify store exists
+        store_check = await conn.fetchval(
+            "SELECT EXISTS(SELECT 1 FROM stores WHERE id = $1::uuid)",
+            store_id
+        )
+        if not store_check:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Store with ID {store_id} does not exist"
+            )
+
         if batch_lot:
-            # Check for specific SKU + BatchLot combination
+            # Check for specific SKU + BatchLot combination in this store
             query = """
                 SELECT EXISTS(
-                    SELECT 1 
-                    FROM batch_tracking 
+                    SELECT 1
+                    FROM batch_tracking
                     WHERE LOWER(TRIM(sku)) = LOWER(TRIM($1))
-                    AND batch_lot = $2 
+                    AND batch_lot = $2
+                    AND store_id = $3::uuid
                     AND quantity_remaining > 0
                 ) as exists
             """
-            result = await conn.fetchrow(query, sku, batch_lot)
+            result = await conn.fetchrow(query, sku, batch_lot, store_id)
         else:
-            # Check for SKU only
+            # Check for SKU only in this store
             query = """
                 SELECT EXISTS(
-                    SELECT 1 
-                    FROM ocs_inventory 
+                    SELECT 1
+                    FROM ocs_inventory
                     WHERE LOWER(TRIM(sku)) = LOWER(TRIM($1))
+                    AND store_id = $2::uuid
                     AND quantity_on_hand > 0
                 ) as exists
             """
-            result = await conn.fetchrow(query, sku)
-        
+            result = await conn.fetchrow(query, sku, store_id)
+
         return {
             "exists": result['exists'],
             "sku": sku,
-            "batch_lot": batch_lot
+            "batch_lot": batch_lot,
+            "store_id": store_id
         }
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Error checking inventory: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -296,7 +335,7 @@ async def get_batch_details(
                 s.name as supplier_name
             FROM batch_tracking bt
             LEFT JOIN product_catalog pc ON bt.sku = pc.sku
-            LEFT JOIN suppliers s ON bt.supplier_id = s.id
+            LEFT JOIN provincial_suppliers s ON bt.supplier_id = s.id
             WHERE bt.batch_lot = $1
         """
         
@@ -355,7 +394,7 @@ async def get_suppliers(
                 phone,
                 payment_terms,
                 is_active
-            FROM suppliers
+            FROM provincial_suppliers
             WHERE is_active = true
             ORDER BY name
         """
@@ -396,7 +435,7 @@ async def get_purchase_order_details(
                 po.container_id,
                 po.vendor
             FROM purchase_orders po
-            JOIN suppliers s ON po.supplier_id = s.id
+            JOIN provincial_suppliers s ON po.supplier_id = s.id
             WHERE po.id = $1
         """
         
@@ -480,7 +519,7 @@ async def get_purchase_orders(
                 po.notes,
                 COUNT(poi.id) as item_count
             FROM purchase_orders po
-            JOIN suppliers s ON po.supplier_id = s.id
+            JOIN provincial_suppliers s ON po.supplier_id = s.id
             LEFT JOIN purchase_order_items poi ON po.id = poi.purchase_order_id
             WHERE 1=1
         """

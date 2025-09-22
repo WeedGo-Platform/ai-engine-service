@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Upload, X, CheckCircle, AlertCircle, FileSpreadsheet, TruckIcon, Loader2, Package } from 'lucide-react';
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
+import { Upload, X, CheckCircle, AlertCircle, FileSpreadsheet, TruckIcon, Loader2 } from 'lucide-react';
 import * as XLSX from 'xlsx';
-import { api } from '../services/api';
 import { useStoreContext } from '../contexts/StoreContext';
 import { useAuth } from '../contexts/AuthContext';
 import StoreSelector from './StoreSelector';
+import { getApiEndpoint } from '../config/app.config';
+import axios from 'axios';
 
 interface ASNItem {
   shipment_id?: string;
@@ -23,6 +24,8 @@ interface ASNItem {
   shipped_qty: number;
   received_qty?: number;
   retail_price?: number;
+  markup_percentage?: number;
+  price_source?: 'inventory_override' | 'category_rule' | 'store_default';
   uom?: string;
   uom_conversion?: number;
   uom_conversion_qty?: number;
@@ -59,63 +62,170 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
   const [paidInFull, setPaidInFull] = useState(false);
   
   const [error, setError] = useState<string | null>(null);
+  const [storeDefaultMarkup, setStoreDefaultMarkup] = useState<number>(25); // Default 25% if not configured
 
-  // Set OCS Wholesale as default supplier for Ontario stores
-  useEffect(() => {
-    if (isOpen && suppliers?.length > 0) {
-      // Always use OCS Wholesale for Ontario stores
-      const ocsSupplier = suppliers.find((s: any) => 
-        s.name?.toLowerCase().includes('ocs') || 
-        s.name?.toLowerCase().includes('wholesale')
+  // Fetch store pricing settings including default markup
+  const { data: pricingSettings } = useQuery({
+    queryKey: ['pricing-settings', currentStore?.id],
+    queryFn: async () => {
+      if (!currentStore?.id) return null;
+      const response = await axios.get(
+        getApiEndpoint('/store-inventory/pricing/settings'),
+        {
+          headers: {
+            'X-Store-ID': currentStore.id,
+            ...(user?.token && { 'Authorization': `Bearer ${user.token}` })
+          }
+        }
       );
-      if (ocsSupplier) {
-        setSupplierId(ocsSupplier.id);
-      }
+      return response.data;
+    },
+    enabled: !!currentStore?.id && isOpen
+  });
+
+  // Update store default markup when settings are fetched
+  useEffect(() => {
+    if (pricingSettings?.default_markup_percentage !== undefined) {
+      setStoreDefaultMarkup(pricingSettings.default_markup_percentage);
     }
-  }, [isOpen, suppliers]);
+  }, [pricingSettings]);
+
+  // Auto-select provincial supplier based on store's province
+  useEffect(() => {
+    const fetchProvincialSupplier = async () => {
+      if (isOpen && currentStore) {
+        // Check if store has province_territory_id
+        if (currentStore.province_territory_id) {
+          try {
+            // Fetch the provincial supplier for the store's province/territory ID
+            const response = await fetch(getApiEndpoint(`/suppliers/by-province-territory-id/${currentStore.province_territory_id}`), {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            });
+
+            if (response.ok) {
+              const provincialSupplier = await response.json();
+              setSupplierId(provincialSupplier.id);
+              console.log(`Auto-selected provincial supplier by territory ID:`, provincialSupplier.name);
+              return; // Exit if we found the supplier
+            }
+          } catch (error) {
+            console.error('Error fetching provincial supplier by territory ID:', error);
+          }
+        }
+
+        // Fallback to province_code if province_territory_id is not available
+        if (currentStore.province_code) {
+          try {
+            const response = await fetch(getApiEndpoint(`/suppliers/by-province/${currentStore.province_code}`), {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            });
+
+            if (response.ok) {
+              const provincialSupplier = await response.json();
+              setSupplierId(provincialSupplier.id);
+              console.log(`Auto-selected provincial supplier by province code:`, provincialSupplier.name);
+              return;
+            }
+          } catch (error) {
+            console.error('Error fetching provincial supplier by province code:', error);
+          }
+        }
+
+        // Fallback to finding supplier in the suppliers list
+        if (suppliers?.length > 0) {
+          // First try to match by provinces_territories_id
+          if (currentStore.province_territory_id) {
+            const provincialSupplier = suppliers.find((s: any) =>
+              s.provinces_territories_id === currentStore.province_territory_id
+            );
+            if (provincialSupplier) {
+              setSupplierId(provincialSupplier.id);
+              console.log('Found provincial supplier in list by territory ID:', provincialSupplier.name);
+              return;
+            }
+          }
+
+          // Then try to match by province_code
+          if (currentStore.province_code) {
+            const provincialSupplier = suppliers.find((s: any) =>
+              s.province_code === currentStore.province_code
+            );
+            if (provincialSupplier) {
+              setSupplierId(provincialSupplier.id);
+              console.log('Found provincial supplier in list by province code:', provincialSupplier.name);
+              return;
+            }
+          }
+
+          // Default to first supplier if no match found
+          setSupplierId(suppliers[0].id);
+          console.log('Using default supplier:', suppliers[0].name);
+        }
+      } else if (isOpen && suppliers?.length > 0 && !currentStore) {
+        // If no store selected, use first supplier
+        setSupplierId(suppliers[0].id);
+        console.log('No store selected, using first supplier');
+      }
+    };
+
+    fetchProvincialSupplier();
+  }, [isOpen, currentStore, suppliers]);
 
   // Check if item exists in inventory (client-side API call)
   const checkInventoryExists = async (sku: string, batchLot?: string): Promise<{exists: boolean, isNewBatch: boolean}> => {
     try {
+      // Require store_id - cannot check inventory without a store context
+      if (!currentStore?.id) {
+        console.error('Cannot check inventory: No store selected');
+        return { exists: false, isNewBatch: false };
+      }
+
       const params = new URLSearchParams();
       params.append('sku', sku);
-      
+      params.append('store_id', currentStore.id);
+
       // Check SKU exists
-      const skuResponse = await fetch(`http://localhost:5024/api/inventory/check?${params.toString()}`, {
+      const skuResponse = await fetch(`${getApiEndpoint('/inventory/check')}?${params.toString()}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
       });
-      
+
       if (!skuResponse.ok) {
         return { exists: false, isNewBatch: false };
       }
-      
+
       const skuData = await skuResponse.json();
-      
-      // If SKU doesn't exist, it's completely new
+
+      // If SKU doesn't exist in this store, it's completely new
       if (!skuData.exists) {
         return { exists: false, isNewBatch: false };
       }
-      
-      // If batch lot provided, check if this specific batch exists
+
+      // If batch lot provided, check if this specific batch exists in this store
       if (batchLot) {
         params.append('batch_lot', batchLot);
-        const batchResponse = await fetch(`http://localhost:5024/api/inventory/check?${params.toString()}`, {
+        const batchResponse = await fetch(`${getApiEndpoint('/inventory/check')}?${params.toString()}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
           },
         });
-        
+
         if (batchResponse.ok) {
           const batchData = await batchResponse.json();
-          // SKU exists but batch doesn't = new batch
+          // SKU exists in store but batch doesn't = new batch
           return { exists: true, isNewBatch: !batchData.exists };
         }
       }
-      
+
       return { exists: true, isNewBatch: false };
     } catch (error) {
       console.error('Error checking inventory:', error instanceof Error ? error.message : String(error));
@@ -123,12 +233,88 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
     }
   };
 
-  // Get product image from catalog with retry logic
-  const getProductImage = async (sku: string, retryCount = 0): Promise<{image_url: string | null, product_name: string, retail_price?: number}> => {
+  // Get comprehensive pricing info including inventory overrides and category rules
+  const getPricingInfo = async (sku: string, unitCost: number): Promise<{
+    retail_price: number,
+    markup_percentage: number,
+    price_source: 'inventory_override' | 'category_rule' | 'store_default'
+  }> => {
+    try {
+      if (!currentStore?.id) {
+        return {
+          retail_price: unitCost * (1 + storeDefaultMarkup / 100),
+          markup_percentage: storeDefaultMarkup,
+          price_source: 'store_default'
+        };
+      }
+
+      // First check if item exists in inventory with override
+      const response = await axios.get(
+        getApiEndpoint(`/store-inventory/product-pricing/${encodeURIComponent(sku)}`),
+        {
+          headers: {
+            'X-Store-ID': currentStore.id,
+            ...(user?.token && { 'Authorization': `Bearer ${user.token}` })
+          }
+        }
+      );
+
+      if (response.data) {
+        const data = response.data;
+
+        // Priority 1: Inventory override price
+        if (data.override_price) {
+          const markup = ((data.override_price - unitCost) / unitCost) * 100;
+          return {
+            retail_price: data.override_price,
+            markup_percentage: markup,
+            price_source: 'inventory_override'
+          };
+        }
+
+        // Priority 2: Category-level pricing rules
+        if (data.category_pricing) {
+          const catPricing = data.category_pricing;
+          // Check sub-sub-category first, then sub-category, then category
+          if (catPricing.sub_sub_category_markup !== null) {
+            return {
+              retail_price: unitCost * (1 + catPricing.sub_sub_category_markup / 100),
+              markup_percentage: catPricing.sub_sub_category_markup,
+              price_source: 'category_rule'
+            };
+          } else if (catPricing.sub_category_markup !== null) {
+            return {
+              retail_price: unitCost * (1 + catPricing.sub_category_markup / 100),
+              markup_percentage: catPricing.sub_category_markup,
+              price_source: 'category_rule'
+            };
+          } else if (catPricing.category_markup !== null) {
+            return {
+              retail_price: unitCost * (1 + catPricing.category_markup / 100),
+              markup_percentage: catPricing.category_markup,
+              price_source: 'category_rule'
+            };
+          }
+        }
+      }
+    } catch (error) {
+      console.error(`Error fetching pricing info for ${sku}:`, error);
+    }
+
+    // Priority 3: Store default markup
+    return {
+      retail_price: unitCost * (1 + storeDefaultMarkup / 100),
+      markup_percentage: storeDefaultMarkup,
+      price_source: 'store_default'
+    };
+  };
+
+  // Get product image and pricing overrides from catalog with retry logic
+  const getProductImage = async (sku: string, retryCount = 0): Promise<{image_url: string | null, product_name: string, retail_price?: number, override_price?: number}> => {
     try {
       // Trim and encode the SKU for the URL
       const trimmedSku = encodeURIComponent(sku.trim());
-      const response = await fetch(`http://localhost:5024/api/inventory/products/${trimmedSku}/image`, {
+      const response = await fetch(getApiEndpoint(`/inventory/products/${trimmedSku}/image`), {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -141,7 +327,8 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
         return {
           image_url: data.image_url || null,
           product_name: data.product_name || sku, // Use SKU as fallback name
-          retail_price: data.retail_price
+          retail_price: data.retail_price,
+          override_price: data.override_price // Include price override if exists
         };
       }
       
@@ -151,7 +338,7 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
         return getProductImage(sku, retryCount - 1);
       }
       
-      return { image_url: null, product_name: sku, retail_price: undefined };
+      return { image_url: null, product_name: sku, retail_price: undefined, override_price: undefined };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       console.error(`Error getting product image for SKU ${sku}:`, errorMessage);
@@ -161,7 +348,7 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
         await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1s before retry
         return getProductImage(sku, retryCount - 1);
       }
-      return { image_url: null, product_name: sku, retail_price: undefined };
+      return { image_url: null, product_name: sku, retail_price: undefined, override_price: undefined };
     }
   };
 
@@ -171,7 +358,7 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
       const params = new URLSearchParams();
       params.append('filename', filename);
       
-      const response = await fetch(`http://localhost:5024/api/inventory/asn/check-duplicate?${params.toString()}`, {
+      const response = await fetch(`${getApiEndpoint('/inventory/asn/check-duplicate')}?${params.toString()}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -195,7 +382,7 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
       const params = new URLSearchParams();
       params.append('filename', filename);
       
-      await fetch(`http://localhost:5024/api/inventory/asn/mark-imported?${params.toString()}`, {
+      await fetch(`${getApiEndpoint('/inventory/asn/mark-imported')}?${params.toString()}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -228,6 +415,9 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
       if (!('SKU' in firstRow) || !('Shipped_Qty' in firstRow)) {
         throw new Error('Missing required columns: SKU and Shipped_Qty');
       }
+
+      // Log all column names for debugging
+      console.log('Excel columns detected:', Object.keys(firstRow));
       
       const items: ASNItem[] = [];
       const totalRows = jsonData.length;
@@ -244,21 +434,32 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
         const row = jsonData[i] as any;
         setProcessingProgress(Math.round(((i + 1) / totalRows) * 100));
         
-        const sku = String(row.SKU || '');
-        const batchLot = row.BatchLot ? String(row.BatchLot) : undefined;
-        
+        const sku = String(row.SKU);
+        const batchLot = String(row.BatchLot);
+
         // Check if this SKU + BatchLot exists in inventory
         const inventoryCheck = await checkInventoryExists(sku, batchLot);
-        
+
         // Get product image
         const productInfo = await getProductImage(sku);
-        
+
         // Convert date format from "MM/DD/YYYY 12:00:00 AM" to "YYYY-MM-DD"
         let formattedPackagedOnDate: string | undefined = undefined;
-        if (row.PackagedOnDate) {
-          const dateStr = String(row.PackagedOnDate);
-          // Try to parse various date formats
-          if (dateStr.includes('/')) {
+        if (row.PackagedOnDate) {  // Column name without underscores
+          const rawDate = row.PackagedOnDate;
+          const dateStr = String(rawDate);
+
+
+          // Check if it's a serial date number (Excel date format)
+          if (typeof rawDate === 'number' || !isNaN(Number(rawDate))) {
+            // Excel serial date: days since 1900-01-01 (with 1900 leap year bug)
+            const serialDate = Number(rawDate);
+            if (serialDate > 0) {
+              const excelEpoch = new Date(1900, 0, 1);
+              const date = new Date(excelEpoch.getTime() + (serialDate - 2) * 24 * 60 * 60 * 1000);
+              formattedPackagedOnDate = date.toISOString().split('T')[0];
+            }
+          } else if (dateStr.includes('/')) {
             // Handle "MM/DD/YYYY" or "MM/DD/YYYY 12:00:00 AM" format
             const parts = dateStr.split(' ')[0].split('/');
             if (parts.length === 3) {
@@ -270,37 +471,39 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
           } else if (dateStr.includes('-')) {
             // Already in YYYY-MM-DD format
             formattedPackagedOnDate = dateStr.split(' ')[0];
+          } else {
+            // Unable to parse date
           }
         }
-        
-        // Debug: Log the row to see actual column names
-        if (i === 0) {
-          console.log('First data row columns:', Object.keys(row));
-          console.log('GTINBarCode value:', row.GTINBarCode);
-          console.log('Full row data:', row);
-        }
 
-        // Parse the row data
+        // Parse unit price from the row
+        const unitPrice = parseFloat(row.UnitPrice);
+
+        // Get comprehensive pricing info (inventory override > category rules > store default)
+        const pricingInfo = await getPricingInfo(sku, unitPrice);
+
+        // Parse the row data using exact column names from Excel (NO underscores)
         const item: ASNItem = {
-          shipment_id: row.ShipmentID ? String(row.ShipmentID) : undefined,
-          container_id: row.ContainerID ? String(row.ContainerID) : undefined,
+          shipment_id: String(row.ShipmentID),
+          container_id: String(row.ContainerID),
           sku: sku,
-          item_name: row.ItemName ? String(row.ItemName) : productInfo.product_name,
-          unit_price: parseFloat(row.UnitPrice) || 0,
-          vendor: row.Vendor ? String(row.Vendor) : undefined,
-          brand: row.Brand ? String(row.Brand) : undefined,
-          case_gtin: row.CaseGTIN ? String(row.CaseGTIN) : undefined,
+          item_name: String(row.ItemName),
+          unit_price: unitPrice,
+          vendor: String(row.Vendor),
+          brand: String(row.Brand),
+          case_gtin: String(row.CaseGTIN),
           packaged_on_date: formattedPackagedOnDate,
           batch_lot: batchLot,
-          // Use exact column name from Excel: GTINBarCode (capital C in Code)
-          gtin_barcode: row.GTINBarCode ? String(row.GTINBarCode) : undefined,
-          each_gtin: row.EachGTIN ? String(row.EachGTIN) : undefined,
-          shipped_qty: parseInt(row.Shipped_Qty) || 0,
-          received_qty: parseInt(row.Shipped_Qty) || 0, // Default to shipped quantity
-          retail_price: productInfo.retail_price || parseFloat(row.RetailPrice) || 0,
-          uom: row.UOM ? String(row.UOM) : undefined,
-          uom_conversion: parseFloat(row.UOMCONVERSION) || 1,
-          uom_conversion_qty: parseInt(row.UOMCONVERSIONQTY) || 1,
+          gtin_barcode: String(row.GTINBarCode),
+          each_gtin: String(row.EachGTIN),
+          shipped_qty: parseInt(row.Shipped_Qty),
+          received_qty: parseInt(row.Shipped_Qty), // Default to shipped quantity
+          retail_price: pricingInfo.retail_price,
+          markup_percentage: pricingInfo.markup_percentage,
+          price_source: pricingInfo.price_source,
+          uom: String(row.UOM),
+          uom_conversion: parseFloat(row.UOMCONVERSION),
+          uom_conversion_qty: parseInt(row.UOMCONVERSIONQTY),
           exists_in_inventory: inventoryCheck.exists,
           is_new_batch: inventoryCheck.isNewBatch,
           image_url: productInfo.image_url,
@@ -365,7 +568,7 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
       if (currentStore?.id) {
         try {
           // Fetch store details to get province
-          const storeResponse = await fetch(`http://localhost:5024/api/stores/${currentStore.id}`);
+          const storeResponse = await fetch(getApiEndpoint(`/stores/${currentStore.id}`));
           if (storeResponse.ok) {
             const storeData = await storeResponse.json();
             storeProvince = storeData.province || 'ON';
@@ -376,24 +579,35 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
       }
 
       // Prepare purchase order items from ASN data
-      const poItems = asnItems.map(item => ({
-        sku: item.sku,
-        batch_lot: item.batch_lot,
-        quantity_ordered: item.shipped_qty,
-        unit_cost: item.unit_price,
-        item_name: item.item_name,
-        vendor: item.vendor || vendorName,  // Use determined vendor
-        brand: item.brand,
-        case_gtin: item.case_gtin,
-        packaged_on_date: item.packaged_on_date,
-        gtin_barcode: item.gtin_barcode,
-        each_gtin: item.each_gtin,
-        shipped_qty: item.shipped_qty,
-        uom: item.uom,
-        uom_conversion: item.uom_conversion,
-        uom_conversion_qty: item.uom_conversion_qty,
-        exists_in_inventory: item.exists_in_inventory
-      }));
+      const poItems = asnItems.map((item, index) => {
+        // Debug log for problematic item
+        if (item.sku === '200643_10 PACK___' || index === 9) {
+          console.log(`=== PO Item Mapping Debug for item ${index} (${item.sku}) ===`);
+          console.log('Original ASN item batch_lot:', item.batch_lot);
+          console.log('Type of batch_lot:', typeof item.batch_lot);
+          console.log('Full ASN item:', item);
+        }
+
+        return {
+          sku: item.sku,
+          batch_lot: item.batch_lot,
+          quantity_ordered: item.shipped_qty,
+          unit_cost: item.unit_price,
+          retail_price: item.retail_price, // Include retail price for inventory creation
+          item_name: item.item_name,
+          vendor: item.vendor || vendorName,  // Use determined vendor
+          brand: item.brand,
+          case_gtin: item.case_gtin,
+          packaged_on_date: item.packaged_on_date,
+          gtin_barcode: item.gtin_barcode,
+          each_gtin: item.each_gtin,
+          shipped_qty: item.shipped_qty,
+          uom: item.uom,
+          uom_conversion: item.uom_conversion,
+          uom_conversion_qty: item.uom_conversion_qty,
+          exists_in_inventory: item.exists_in_inventory
+        };
+      });
 
       // packaged_on_date is optional - use today's date as fallback if missing
       const itemsWithoutPackagedDate = poItems.filter(item => !item.packaged_on_date);
@@ -410,8 +624,8 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
       if (!finalSupplierId) {
         // For Ontario, use OCS Wholesale
         if (storeProvince === 'ON') {
-          const ocsSupplier = suppliers.find((s: any) => 
-            s.name?.toLowerCase().includes('ocs') || 
+          const ocsSupplier = suppliers.find((s: any) =>
+            s.name?.toLowerCase().includes('ocs') ||
             s.name?.toLowerCase().includes('wholesale')
           );
           if (ocsSupplier) {
@@ -420,20 +634,63 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
           }
         }
         // Add logic for other provinces as needed
+
+        // If still no supplier, use first available supplier
+        if (!finalSupplierId && suppliers.length > 0) {
+          finalSupplierId = suppliers[0].id;
+          vendorName = suppliers[0].name;
+          console.warn('Using fallback supplier:', finalSupplierId, vendorName);
+        }
+      }
+
+      // Final validation - ensure we have a supplier_id
+      if (!finalSupplierId) {
+        throw new Error('No supplier available. Please configure suppliers in the system.');
+      }
+
+      // Extract common shipment_id, container_id, and vendor from first item
+      const firstItem = asnItems[0];
+      const shipmentId = firstItem?.shipment_id;
+      const containerId = firstItem?.container_id;
+      // Use vendor from first item or determined vendor
+      const commonVendor = firstItem?.vendor || vendorName;
+
+      // Extract OCS order number from filename (e.g., SO005943926)
+      let ocsOrderNumber = undefined;
+      if (uploadedFileName) {
+        const soMatch = uploadedFileName.match(/SO\d+/);
+        if (soMatch) {
+          ocsOrderNumber = soMatch[0];
+        }
       }
 
       // Prepare purchase order data matching API expectations
       const purchaseOrder = {
         supplier_id: finalSupplierId,
         store_id: currentStore?.id || undefined, // Include store_id in the request body
-        items: poItems.map(item => {
-          // Debug: Log the gtin_barcode being sent
-          console.log(`Sending item ${item.sku}: gtin_barcode=${item.gtin_barcode}, case_gtin=${item.case_gtin}`);
+        shipment_id: shipmentId,  // From ASN Excel
+        container_id: containerId,  // From ASN Excel
+        vendor: commonVendor,  // From ASN Excel or determined
+        ocs_order_number: ocsOrderNumber,  // Extracted from filename
+        tenant_id: currentStore?.tenant_id || undefined,  // From current store
+        items: poItems.map((item, index) => {
+          // Debug: Log the gtin_barcode and batch_lot being sent
+          console.log(`Sending item ${index} ${item.sku}: batch_lot=${item.batch_lot}, gtin_barcode=${item.gtin_barcode}, case_gtin=${item.case_gtin}`);
+
+          // Extra debug for problematic item
+          if (item.sku === '200643_10 PACK___' || index === 9) {
+            console.log(`!!! CRITICAL DEBUG for item ${index} (${item.sku}) !!!`);
+            console.log('batch_lot value:', item.batch_lot);
+            console.log('batch_lot type:', typeof item.batch_lot);
+            console.log('batch_lot truthiness:', !!item.batch_lot);
+            console.log('Full item being mapped:', item);
+          }
+
           return {
             sku: item.sku,
             quantity: item.shipped_qty,  // Use shipped_qty as the quantity
             unit_cost: item.unit_cost,
-            batch_lot: item.batch_lot,
+            batch_lot: item.batch_lot || '',  // Ensure batch_lot is always a string, even if empty
             case_gtin: item.case_gtin,
             packaged_on_date: item.packaged_on_date || new Date().toISOString().split('T')[0],  // Use today if missing
             gtin_barcode: item.gtin_barcode,  // Required field
@@ -456,7 +713,7 @@ Total: $${totalAmount.toFixed(2)}
 Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all financial details in notes
       };
 
-      const response = await fetch('http://localhost:5024/api/inventory/purchase-orders', {
+      const response = await fetch(getApiEndpoint('/inventory/purchase-orders'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -505,14 +762,23 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
       setError('Please select a store before creating a purchase order');
       return;
     }
-    // Ensure we have OCS supplier
-    if (!supplierId) {
-      const ocsSupplier = suppliers.find((s: any) => 
-        s.name?.toLowerCase().includes('ocs') || 
+    // Ensure we have a supplier selected
+    let currentSupplierId = supplierId;
+    if (!currentSupplierId) {
+      const ocsSupplier = suppliers.find((s: any) =>
+        s.name?.toLowerCase().includes('ocs') ||
         s.name?.toLowerCase().includes('wholesale')
       );
       if (ocsSupplier) {
+        currentSupplierId = ocsSupplier.id;
         setSupplierId(ocsSupplier.id);
+      } else if (suppliers.length > 0) {
+        // Use first supplier as fallback
+        currentSupplierId = suppliers[0].id;
+        setSupplierId(suppliers[0].id);
+      } else {
+        setError('No suppliers available. Please ensure suppliers are configured in the system.');
+        return;
       }
     }
     createPOMutation.mutate();
@@ -522,7 +788,7 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
     setStep('upload');
     setAsnItems([]);
     setPoNumber('');
-    setSupplierId('');
+    setSupplierId(''); // Clear supplier selection
     setNotes('');
     setCharges(0);
     setDiscount(0);
@@ -530,6 +796,10 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
     setError(null);
     setIsProcessing(false);
     setProcessingProgress(0);
+    setUploadedFileName('');
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
     onClose();
   };
 
@@ -538,13 +808,43 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
   const existingItemsCount = asnItems.filter(item => item.exists_in_inventory).length;
   const newItemsCount = asnItems.filter(item => !item.exists_in_inventory).length;
 
+  // Show error modal if no store is selected
+  if (!currentStore) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-6 z-50">
+        <div className="bg-white rounded-lg max-w-md w-full">
+          <div className="flex items-center justify-between p-6 border-b">
+            <h2 className="text-xl font-bold text-red-600">Store Required</h2>
+            <button onClick={handleClose} className="text-gray-500 hover:text-gray-700">
+              <X className="h-6 w-6" />
+            </button>
+          </div>
+          <div className="p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <AlertCircle className="h-8 w-8 text-red-500" />
+              <p className="text-gray-700">
+                Please select a store before importing inventory. You cannot create purchase orders or import ASN files without a store context.
+              </p>
+            </div>
+            <button
+              onClick={handleClose}
+              className="w-full px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-6 z-50">
       <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden">
         <div className="flex items-center justify-between p-6 border-b">
           <h2 className="text-xl font-bold flex items-center gap-2">
             <TruckIcon className="h-6 w-6 text-primary-600" />
-            Import ASN (Advance Shipping Notice)
+            Import ASN (Advance Shipping Notice) - {currentStore.name}
           </h2>
           <button onClick={handleClose} className="text-gray-500 hover:text-gray-700">
             <X className="h-6 w-6" />
@@ -606,22 +906,22 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
               <div className="bg-gray-50 rounded-lg p-6">
                 <h4 className="font-medium mb-2">Required Excel Columns:</h4>
                 <div className="grid grid-cols-4 gap-2 text-sm text-gray-600">
-                  <span>• ShipmentID</span>
-                  <span>• ContainerID</span>
+                  <span>• Shipment_ID</span>
+                  <span>• Container_ID</span>
                   <span>• SKU *</span>
-                  <span>• ItemName</span>
-                  <span>• UnitPrice</span>
+                  <span>• Item_Name</span>
+                  <span>• Unit_Price</span>
                   <span>• Vendor</span>
                   <span>• Brand</span>
-                  <span>• CaseGTIN</span>
-                  <span>• PackagedOnDate</span>
-                  <span>• BatchLot</span>
-                  <span>• GTINBarCode</span>
-                  <span>• EachGTIN</span>
+                  <span>• Case_GTIN</span>
+                  <span>• Packaged_On_Date</span>
+                  <span>• Batch_Lot</span>
+                  <span>• GTIN_BarCode</span>
+                  <span>• Each_GTIN</span>
                   <span>• Shipped_Qty *</span>
                   <span>• UOM</span>
-                  <span>• UOMCONVERSION</span>
-                  <span>• UOMCONVERSIONQTY</span>
+                  <span>• UOM_CONVERSION</span>
+                  <span>• UOM_CONVERSION_QTY</span>
                 </div>
                 <p className="text-xs text-gray-500 mt-2">* Required fields</p>
               </div>
@@ -765,6 +1065,32 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Supplier *
+                  </label>
+                  <select
+                    value={supplierId}
+                    onChange={(e) => setSupplierId(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500"
+                    disabled={!!currentStore?.province_code} // Disable if auto-selected by province
+                  >
+                    <option value="">Select a supplier</option>
+                    {suppliers.map((supplier: any) => (
+                      <option key={supplier.id} value={supplier.id}>
+                        {supplier.name}
+                        {supplier.province_code ? ` (Provincial - ${supplier.province_code})` : ''}
+                        {supplier.id === supplierId && currentStore?.province_code ? ' ✓ Auto-selected' : ''}
+                      </option>
+                    ))}
+                  </select>
+                  {currentStore?.province_code && (
+                    <p className="mt-1 text-sm text-gray-600">
+                      Supplier auto-selected based on store province ({currentStore.province_code})
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     PO Number *
                   </label>
                   <input
@@ -854,19 +1180,32 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
                             <span className="text-sm">${item.unit_price.toFixed(2)}</span>
                           </td>
                           <td className="px-4 py-3 text-right">
-                            <input
-                              type="number"
-                              value={item.retail_price || 0}
-                              onChange={(e) => {
-                                const newItems = [...asnItems];
-                                newItems[index].retail_price = parseFloat(e.target.value) || 0;
-                                setAsnItems(newItems);
-                              }}
-                              className="w-24 px-2 py-1 text-right border border-gray-200 rounded"
-                              min="0"
-                              step="0.01"
-                              placeholder="0.00"
-                            />
+                            <div className="flex flex-col items-end">
+                              <input
+                                type="number"
+                                value={item.retail_price || 0}
+                                onChange={(e) => {
+                                  const newItems = [...asnItems];
+                                  newItems[index].retail_price = parseFloat(e.target.value) || 0;
+                                  setAsnItems(newItems);
+                                }}
+                                className="w-24 px-2 py-1 text-right border border-gray-200 rounded"
+                                min="0"
+                                step="0.01"
+                                placeholder="0.00"
+                              />
+                              {item.markup_percentage !== undefined && (
+                                <span className={`text-xs mt-0.5 ${
+                                  item.price_source === 'inventory_override' ? 'text-blue-600 font-semibold' :
+                                  item.price_source === 'category_rule' ? 'text-purple-600' :
+                                  'text-gray-500'
+                                }`}>
+                                  {item.markup_percentage.toFixed(1)}% markup
+                                  {item.price_source === 'inventory_override' && ' (override)'}
+                                  {item.price_source === 'category_rule' && ' (category)'}
+                                </span>
+                              )}
+                            </div>
                           </td>
                           <td className="px-4 py-3 text-right">
                             <span className="text-sm font-medium">

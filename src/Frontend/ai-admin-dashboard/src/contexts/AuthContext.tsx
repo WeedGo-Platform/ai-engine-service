@@ -8,6 +8,8 @@ interface User {
   role: string;
   first_name?: string;
   last_name?: string;
+  tenant_id?: string;
+  store_role?: string;
   tenants: Array<{
     id: string;
     name: string;

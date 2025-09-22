@@ -265,7 +265,7 @@ async def track_order(
                 c.first_name,
                 c.last_name
             FROM orders o
-            LEFT JOIN customers c ON o.customer_id = c.id
+            LEFT JOIN profiles c ON o.customer_id = c.id
             WHERE o.order_number = $1 
             AND (c.email = $2 OR o.customer_email = $2)
         """

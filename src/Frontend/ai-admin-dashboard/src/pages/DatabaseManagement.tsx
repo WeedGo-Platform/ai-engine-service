@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { getAuthStorage, getStorageKey } from '../config/auth.config';
+import { getApiEndpoint } from '../config/app.config';
 
 interface TableInfo {
   name: string;
@@ -83,7 +84,7 @@ export default function DatabaseManagement() {
 
   const fetchConnectionInfo = async () => {
     try {
-      const response = await fetch('http://localhost:5024/api/database/connection-info', {
+      const response = await fetch(getApiEndpoint('/database/connection-info'), {
         headers: {
           'Authorization': `Bearer ${getAuthToken()}`,
           'Content-Type': 'application/json'
@@ -102,7 +103,7 @@ export default function DatabaseManagement() {
   const fetchTables = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5024/api/database/tables', {
+      const response = await fetch(getApiEndpoint('/database/tables'), {
         headers: {
           'Authorization': `Bearer ${getAuthToken()}`,
           'Content-Type': 'application/json'
@@ -133,7 +134,7 @@ export default function DatabaseManagement() {
       }
 
       const response = await fetch(
-        `http://localhost:5024/api/database/tables/${tableName}/data?${params}`,
+        getApiEndpoint(`/database/tables/${tableName}/data?${params}`),
         {
           headers: {
             'Authorization': `Bearer ${getAuthToken()}`,
@@ -160,7 +161,7 @@ export default function DatabaseManagement() {
     setLoading(true);
     try {
       const response = await fetch(
-        `http://localhost:5024/api/database/tables/${tableName}/schema`,
+        getApiEndpoint(`/database/tables/${tableName}/schema`),
         {
           headers: {
             'Authorization': `Bearer ${getAuthToken()}`,
@@ -194,7 +195,7 @@ export default function DatabaseManagement() {
 
     try {
       const response = await fetch(
-        `http://localhost:5024/api/database/tables/${selectedTable}/data`,
+        getApiEndpoint(`/database/tables/${selectedTable}/data`),
         {
           method: 'POST',
           headers: {
@@ -234,7 +235,7 @@ export default function DatabaseManagement() {
       }
 
       const response = await fetch(
-        `http://localhost:5024/api/database/tables/${selectedTable}/data`,
+        getApiEndpoint(`/database/tables/${selectedTable}/data`),
         {
           method: 'PUT',
           headers: {
@@ -278,7 +279,7 @@ export default function DatabaseManagement() {
       }
 
       const response = await fetch(
-        `http://localhost:5024/api/database/tables/${selectedTable}/data`,
+        getApiEndpoint(`/database/tables/${selectedTable}/data`),
         {
           method: 'DELETE',
           headers: {
@@ -308,7 +309,7 @@ export default function DatabaseManagement() {
 
     try {
       const response = await fetch(
-        `http://localhost:5024/api/database/tables/${selectedTable}/truncate`,
+        getApiEndpoint(`/database/tables/${selectedTable}/truncate`),
         {
           method: 'POST',
           headers: {
@@ -338,7 +339,7 @@ export default function DatabaseManagement() {
 
     try {
       const response = await fetch(
-        `http://localhost:5024/api/database/tables/${selectedTable}/drop`,
+        getApiEndpoint(`/database/tables/${selectedTable}/drop`),
         {
           method: 'DELETE',
           headers: {
@@ -371,7 +372,7 @@ export default function DatabaseManagement() {
     setLoading(true);
     try {
       const response = await fetch(
-        'http://localhost:5024/api/database/query',
+        getApiEndpoint('/database/query'),
         {
           method: 'POST',
           headers: {

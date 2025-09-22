@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../services/api';
+import { getApiEndpoint } from '../config/app.config';
 import { PurchaseOrder, Supplier, Product } from '../types';
 import { FileText, Plus, Eye, Clock, CheckCircle, XCircle, TruckIcon, FileSpreadsheet, Package, Info } from 'lucide-react';
 import ASNImportModal from '../components/ASNImportModal';
@@ -68,7 +69,7 @@ const PurchaseOrders: React.FC = () => {
       const params: any = { store_id: selectedStoreForOrders.id };
       if (selectedStatus !== 'all') params.status = selectedStatus;
 
-      const response = await fetch(`http://localhost:5024/api/inventory/purchase-orders`, {
+      const response = await fetch(getApiEndpoint(`/inventory/purchase-orders`), {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -184,7 +185,7 @@ const PurchaseOrders: React.FC = () => {
 
   const handleViewOrder = async (order: any) => {
     try {
-      const response = await fetch(`http://localhost:5024/api/inventory/purchase-orders/${order.id}`, {
+      const response = await fetch(getApiEndpoint(`/inventory/purchase-orders/${order.id}`), {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -206,7 +207,7 @@ const PurchaseOrders: React.FC = () => {
 
   const handleStatusUpdate = async (orderId: string, newStatus: string) => {
     try {
-      const response = await fetch(`http://localhost:5024/api/inventory/purchase-orders/${orderId}/status?status=${newStatus}`, {
+      const response = await fetch(getApiEndpoint(`/inventory/purchase-orders/${orderId}/status?status=${newStatus}`), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

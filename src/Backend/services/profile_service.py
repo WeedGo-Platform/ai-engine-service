@@ -253,20 +253,3 @@ class ProfileService:
         except Exception as e:
             logger.error(f"Error logging loyalty change: {e}")
 
-    # Backward compatibility methods (using the view)
-    async def get_customer(self, customer_id: UUID) -> Optional[Dict[str, Any]]:
-        """Get customer data (backward compatibility using view)"""
-        try:
-            query = """
-                SELECT * FROM customers_view WHERE id = $1
-            """
-            result = await self.db.fetchrow(query, customer_id)
-            return dict(result) if result else None
-        except Exception as e:
-            logger.error(f"Error fetching customer: {e}")
-            return None
-
-    async def search_customers(self, **kwargs) -> List[Dict[str, Any]]:
-        """Search customers (backward compatibility)"""
-        # Redirect to search_profiles
-        return await self.search_profiles(**kwargs)

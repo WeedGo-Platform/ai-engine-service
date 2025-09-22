@@ -37,11 +37,9 @@ class UserContextService:
                     up.preferences,
                     up.loyalty_points,
                     up.total_spent,
-                    up.favorite_products,
-                    up.preferred_categories,
                     up.created_at
                 FROM users u
-                LEFT JOIN user_profiles up ON u.id = up.user_id
+                LEFT JOIN profiles up ON u.id = up.user_id
                 WHERE u.id = $1 OR u.email = $1 OR u.phone = $1
             """
             
@@ -226,8 +224,6 @@ class UserContextService:
             profile_query = """
                 SELECT
                     preferences,
-                    favorite_products,
-                    preferred_categories,
                     loyalty_points
                 FROM profiles
                 WHERE user_id = $1
@@ -288,15 +284,36 @@ class UserContextService:
     async def get_complete_user_context(self, user_id: str, session_id: Optional[str] = None) -> Dict[str, Any]:
         """Get complete user context for AI model"""
         try:
+            logger.info(f"[UserContextService] Starting complete context fetch for User ID: {user_id}, Session ID: {session_id}")
+
+            # Fetch all context components
+            logger.info(f"[UserContextService] Fetching user profile...")
+            user_profile = await self.get_user_profile(user_id)
+            logger.info(f"[UserContextService] User profile fetched: {bool(user_profile)}")
+
+            logger.info(f"[UserContextService] Fetching user preferences...")
+            preferences = await self.get_user_preferences(user_id)
+            logger.info(f"[UserContextService] Preferences fetched: {bool(preferences)}")
+
+            logger.info(f"[UserContextService] Fetching chat history...")
+            chat_history = await self.get_chat_history(user_id, limit=20, days_back=7)
+            logger.info(f"[UserContextService] Chat history fetched: {len(chat_history)} messages")
+
+            logger.info(f"[UserContextService] Fetching purchase history...")
+            purchase_history = await self.get_purchase_history(user_id, limit=10)
+            logger.info(f"[UserContextService] Purchase history fetched: {len(purchase_history)} orders")
+
             context = {
-                'user_profile': await self.get_user_profile(user_id),
-                'preferences': await self.get_user_preferences(user_id),
-                'recent_chat_history': await self.get_chat_history(user_id, limit=20, days_back=7),
-                'recent_purchases': await self.get_purchase_history(user_id, limit=10)
+                'user_profile': user_profile,
+                'preferences': preferences,
+                'recent_chat_history': chat_history,
+                'recent_purchases': purchase_history
             }
             
             if session_id:
+                logger.info(f"[UserContextService] Fetching conversation context for session: {session_id}")
                 context['conversation_context'] = await self.get_conversation_context(session_id)
+                logger.info(f"[UserContextService] Conversation context fetched: {bool(context.get('conversation_context'))}")
             
             # Add summary statistics
             if context['user_profile']:
@@ -308,10 +325,12 @@ class UserContextService:
                     'total_purchases': len(context['recent_purchases'])
                 }
             
+            logger.info(f"[UserContextService] Complete context built successfully for User ID: {user_id}")
             return context
-            
+
         except Exception as e:
-            logger.error(f"Error getting complete user context: {str(e)}")
+            logger.error(f"[UserContextService] Error getting complete user context: {str(e)}")
+            logger.exception("[UserContextService] Full stack trace:")
             raise
     
     async def save_conversation_message(self, session_id: str, user_id: str, 
@@ -331,20 +350,11 @@ class UserContextService:
             response_time = 0.0  # You can calculate actual response time
             await self.db.execute(
                 query,
-                session_id, user_id, user_message, ai_response, 
+                session_id, user_id, user_message, ai_response,
                 intent, response_time, json.dumps(metadata) if metadata else None
             )
-            
-            # Update or create ai_conversations
-            conv_query = """
-                INSERT INTO ai_conversations (conversation_id, session_id, customer_id, messages, context, created_at, updated_at)
-                VALUES (gen_random_uuid(), $1, $2, $3, $4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-                ON CONFLICT (session_id) DO UPDATE
-                SET messages = ai_conversations.messages || $3,
-                    context = $4,
-                    updated_at = CURRENT_TIMESTAMP
-            """
-            
+
+            # Prepare message and context JSON
             message_json = json.dumps([{
                 'role': 'user',
                 'content': user_message,
@@ -354,10 +364,33 @@ class UserContextService:
                 'content': ai_response,
                 'timestamp': datetime.now().isoformat()
             }])
-            
+
             context_json = json.dumps(metadata) if metadata else '{}'
-            
-            await self.db.execute(conv_query, session_id, user_id, message_json, context_json)
+
+            # First check if conversation exists
+            check_query = """
+                SELECT conversation_id FROM ai_conversations
+                WHERE session_id = $1
+            """
+            existing = await self.db.fetchrow(check_query, session_id)
+
+            if existing:
+                # Update existing conversation
+                conv_query = """
+                    UPDATE ai_conversations
+                    SET messages = messages || $1,
+                        context = $2,
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE session_id = $3
+                """
+                await self.db.execute(conv_query, message_json, context_json, session_id)
+            else:
+                # Create new conversation
+                conv_query = """
+                    INSERT INTO ai_conversations (conversation_id, session_id, customer_id, messages, context, created_at, updated_at)
+                    VALUES (gen_random_uuid(), $1, $2, $3, $4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                """
+                await self.db.execute(conv_query, session_id, user_id, message_json, context_json)
             
             return True
             

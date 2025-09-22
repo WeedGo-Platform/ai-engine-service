@@ -4,11 +4,13 @@ import {
   Printer, Scan, History, PauseCircle, Tag, Percent,
   Calendar, CheckCircle, X, Search, Plus, Minus, Trash2,
   Settings, AlertCircle, Calculator, Clock, User, Loader2,
-  Maximize, Minimize, Wifi, Bluetooth, Usb, Network, RefreshCw, Zap,
-  Package, Building2, SlidersHorizontal, ChevronRight, X as CloseIcon
+  Wifi, Bluetooth, Usb, Network, RefreshCw, Zap,
+  Package, Building2, SlidersHorizontal, ChevronRight, X as CloseIcon,
+  Maximize2, Minimize2
 } from 'lucide-react';
 import axios from 'axios';
 import PaymentModal from '../components/pos/PaymentModal';
+import { getApiEndpoint } from '../config/app.config';
 import CustomerModal from '../components/pos/CustomerModal';
 import FilterPanel from '../components/pos/FilterPanel';
 import TransactionHistory from '../components/pos/TransactionHistory';
@@ -242,7 +244,17 @@ const getPlantTypeBadgeStyle = (plantType: string | undefined): React.CSSPropert
   };
 };
 
-export default function POS() {
+interface POSProps {
+  hideHeader?: boolean;
+  isFullscreen?: boolean;
+  onFullscreenToggle?: () => void;
+}
+
+export default function POS({
+  hideHeader = false,
+  isFullscreen = false,
+  onFullscreenToggle
+}: POSProps = {}) {
   // Get store context
   const { currentStore } = useStoreContext();
 
@@ -275,7 +287,6 @@ export default function POS() {
   const [barcodeInput, setBarcodeInput] = useState('');
   const [scannerEnabled, setScannerEnabled] = useState(false);
   const [mobileCartOpen, setMobileCartOpen] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const posContainerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [detectedScanners, setDetectedScanners] = useState<any[]>([]);
@@ -355,7 +366,7 @@ export default function POS() {
         params.append('store_id', currentStore.id);
       }
 
-      const response = await axios.get(`http://localhost:5024/api/search/products?${params}`);
+      const response = await axios.get(getApiEndpoint(`/search/products?${params}`));
       const productsData = response.data.products || [];
 
       // Map API response to our Product interface
@@ -450,7 +461,7 @@ export default function POS() {
   const detectScanners = async () => {
     setDetectingHardware(true);
     try {
-      const response = await axios.get('http://localhost:5024/api/hardware/scanners/detect');
+      const response = await axios.get(getApiEndpoint(`/hardware/scanners/detect`));
       setDetectedScanners(response.data);
       
       // Auto-select first connected scanner if none selected
@@ -473,7 +484,7 @@ export default function POS() {
   const testScanner = async (scannerId: string) => {
     setTestingScanner(scannerId);
     try {
-      const response = await axios.get(`http://localhost:5024/api/hardware/scanners/${scannerId}/test`);
+      const response = await axios.get(getApiEndpoint(`/hardware/scanners/${scannerId}/test`));
       if (response.data.success) {
         alert(`Scanner test successful! Test barcode: ${response.data.test_barcode}`);
       } else {
@@ -522,7 +533,7 @@ export default function POS() {
           if (currentStore?.id) {
             searchParams.store_id = currentStore.id;
           }
-          const products = await axios.get(`http://localhost:5024/api/search/products`, {
+          const products = await axios.get(getApiEndpoint(`/search/products`), {
             params: searchParams
           });
           if (products.data.products?.length > 0) {
@@ -706,7 +717,7 @@ export default function POS() {
   const fetchProductDetails = async (productId: string) => {
     setLoadingProductDetails(true);
     try {
-      const response = await axios.get(`http://localhost:5024/api/products/details/${productId}`, {
+      const response = await axios.get(getApiEndpoint(`/products/details/${productId}`), {
         params: {
           store_id: currentStore?.id
         }
@@ -793,36 +804,7 @@ export default function POS() {
     }
   };
 
-  // Toggle fullscreen mode
-  const toggleFullscreen = () => {
-    if (!posContainerRef.current) return;
-    
-    if (!document.fullscreenElement) {
-      posContainerRef.current.requestFullscreen().then(() => {
-        setIsFullscreen(true);
-      }).catch((err) => {
-        console.error('Error attempting to enable fullscreen:', err);
-      });
-    } else {
-      document.exitFullscreen().then(() => {
-        setIsFullscreen(false);
-      }).catch((err) => {
-        console.error('Error attempting to exit fullscreen:', err);
-      });
-    }
-  };
 
-  // Listen for fullscreen changes
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
-
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    return () => {
-      document.removeEventListener('fullscreenchange', handleFullscreenChange);
-    };
-  }, []);
 
   // Auto-detect scanners when settings tab is opened
   useEffect(() => {
@@ -844,94 +826,184 @@ export default function POS() {
         />
       )}
 
-      {/* Header */}
-      <div className="bg-white  border-b">
-        <div className="px-3 sm:px-6 py-3 sm:py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6">
-              <h1 className="text-lg sm:text-2xl font-bold">Point of Sale</h1>
-              {currentStore && (
-                <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 text-accent-700 rounded-lg">
-                  <Building2 className="w-4 h-4" />
-                  <span className="text-sm font-medium">{currentStore.name}</span>
+      {/* Header - Only show if not hidden */}
+      {!hideHeader && (
+        <div className="bg-white  border-b">
+          <div className="px-3 sm:px-6 py-3 sm:py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6">
+                <h1 className="text-lg sm:text-2xl font-bold">Point of Sale</h1>
+                {currentStore && (
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 text-accent-700 rounded-lg">
+                    <Building2 className="w-4 h-4" />
+                    <span className="text-sm font-medium">{currentStore.name}</span>
+                  </div>
+                )}
+                <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-primary-50 text-primary-700 rounded-lg">
+                  <Calendar className="w-4 h-4" />
+                  <span className="text-sm font-medium">Valid ID Date: {getValidAgeDate()} or earlier</span>
                 </div>
-              )}
-              <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-primary-50 text-primary-700 rounded-lg">
-                <Calendar className="w-4 h-4" />
-                <span className="text-sm font-medium">Valid ID Date: {getValidAgeDate()} or earlier</span>
+              </div>
+              <div className="flex items-center gap-2 sm:gap-6">
+                <button
+                  onClick={() => setScannerEnabled(!scannerEnabled)}
+                  className={`p-2 rounded-lg transition-colors ${
+                    scannerEnabled
+                      ? 'bg-primary-100 text-primary-600 hover:bg-green-200'
+                      : 'hover:bg-gray-50'
+                  }`}
+                  title={scannerEnabled ? 'Scanner Enabled' : 'Scanner Disabled'}
+                >
+                  <Scan className="w-5 h-5" />
+                </button>
+                {/* Only show fullscreen toggle if we have the handler (not in standalone POS page) */}
+                {onFullscreenToggle && (
+                  <button
+                    onClick={onFullscreenToggle}
+                    className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                    title={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+                  >
+                    {isFullscreen ? (
+                      <Minimize2 className="w-5 h-5 text-gray-600" />
+                    ) : (
+                      <Maximize2 className="w-5 h-5 text-gray-600" />
+                    )}
+                  </button>
+                )}
               </div>
             </div>
-            <div className="flex items-center gap-2 sm:gap-6">
+
+            {/* Tabs */}
+            <div className="flex gap-1 sm:gap-6 mt-3 sm:mt-4 overflow-x-auto">
               <button
-                onClick={() => setScannerEnabled(!scannerEnabled)}
-                className={`p-2 rounded-lg transition-colors ${
-                  scannerEnabled 
-                    ? 'bg-primary-100 text-primary-600 hover:bg-green-200' 
-                    : 'hover:bg-gray-50'
+                onClick={() => setActiveTab('sale')}
+                className={`px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium whitespace-nowrap ${
+                  activeTab === 'sale' ? 'bg-accent-500 text-white' : 'text-gray-600 hover:bg-gray-50'
                 }`}
-                title={scannerEnabled ? 'Scanner Enabled' : 'Scanner Disabled'}
               >
-                <Scan className="w-5 h-5" />
+                <ShoppingCart className="w-4 h-4 inline mr-1 sm:mr-2" />
+                <span className="text-sm sm:text-base">New Sale</span>
               </button>
-              <button 
-                onClick={toggleFullscreen}
-                className={`p-2 rounded-lg transition-colors ${
-                  isFullscreen 
-                    ? 'bg-blue-100 text-accent-600 hover:bg-blue-200' 
-                    : 'hover:bg-gray-50'
+              <button
+                onClick={() => setActiveTab('parked')}
+                className={`px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium whitespace-nowrap ${
+                  activeTab === 'parked' ? 'bg-accent-500 text-white' : 'text-gray-600 hover:bg-gray-50'
                 }`}
-                title={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
               >
-                {isFullscreen ? (
-                  <Minimize className="w-5 h-5" />
-                ) : (
-                  <Maximize className="w-5 h-5" />
-                )}
+                <PauseCircle className="w-4 h-4 inline mr-1 sm:mr-2" />
+                <span className="text-sm sm:text-base">Parked ({parkedSales.length})</span>
+              </button>
+              <button
+                onClick={() => setActiveTab('history')}
+                className={`px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium whitespace-nowrap ${
+                  activeTab === 'history' ? 'bg-accent-500 text-white' : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                <History className="w-4 h-4 inline mr-1 sm:mr-2" />
+                <span className="text-sm sm:text-base">History</span>
+              </button>
+              <button
+                onClick={() => setActiveTab('settings')}
+                className={`px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium whitespace-nowrap ${
+                  activeTab === 'settings' ? 'bg-accent-500 text-white' : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                <Settings className="w-4 h-4 inline mr-1 sm:mr-2" />
+                <span className="text-sm sm:text-base">Settings</span>
               </button>
             </div>
           </div>
-          
-          {/* Tabs */}
-          <div className="flex gap-1 sm:gap-6 mt-3 sm:mt-4 overflow-x-auto">
-            <button
-              onClick={() => setActiveTab('sale')}
-              className={`px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium whitespace-nowrap ${
-                activeTab === 'sale' ? 'bg-accent-500 text-white' : 'text-gray-600 hover:bg-gray-50'
-              }`}
-            >
-              <ShoppingCart className="w-4 h-4 inline mr-1 sm:mr-2" />
-              <span className="text-sm sm:text-base">New Sale</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('parked')}
-              className={`px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium whitespace-nowrap ${
-                activeTab === 'parked' ? 'bg-accent-500 text-white' : 'text-gray-600 hover:bg-gray-50'
-              }`}
-            >
-              <PauseCircle className="w-4 h-4 inline mr-1 sm:mr-2" />
-              <span className="text-sm sm:text-base">Parked ({parkedSales.length})</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('history')}
-              className={`px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium whitespace-nowrap ${
-                activeTab === 'history' ? 'bg-accent-500 text-white' : 'text-gray-600 hover:bg-gray-50'
-              }`}
-            >
-              <History className="w-4 h-4 inline mr-1 sm:mr-2" />
-              <span className="text-sm sm:text-base">History</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('settings')}
-              className={`px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium whitespace-nowrap ${
-                activeTab === 'settings' ? 'bg-accent-500 text-white' : 'text-gray-600 hover:bg-gray-50'
-              }`}
-            >
-              <Settings className="w-4 h-4 inline mr-1 sm:mr-2" />
-              <span className="text-sm sm:text-base">Settings</span>
-            </button>
+        </div>
+      )}
+
+      {/* Alternative compact header when embedded in Apps page */}
+      {hideHeader && (
+        <div className="bg-white border-b">
+          <div className="px-3 sm:px-6 py-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                {currentStore && (
+                  <div className="flex items-center gap-2 px-2 py-1 bg-blue-50 text-accent-700 rounded text-sm">
+                    <Building2 className="w-3.5 h-3.5" />
+                    <span className="font-medium">{currentStore.name}</span>
+                  </div>
+                )}
+                <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-primary-50 text-primary-700 rounded text-sm">
+                  <Calendar className="w-3.5 h-3.5" />
+                  <span>Valid ID: {getValidAgeDate()} or earlier</span>
+                </div>
+
+                {/* Compact tabs */}
+                <div className="flex gap-1">
+                  <button
+                    onClick={() => setActiveTab('sale')}
+                    className={`px-3 py-1 rounded text-sm font-medium ${
+                      activeTab === 'sale' ? 'bg-accent-500 text-white' : 'text-gray-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    <ShoppingCart className="w-3.5 h-3.5 inline mr-1" />
+                    New Sale
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('parked')}
+                    className={`px-3 py-1 rounded text-sm font-medium ${
+                      activeTab === 'parked' ? 'bg-accent-500 text-white' : 'text-gray-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    <PauseCircle className="w-3.5 h-3.5 inline mr-1" />
+                    Parked ({parkedSales.length})
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('history')}
+                    className={`px-3 py-1 rounded text-sm font-medium ${
+                      activeTab === 'history' ? 'bg-accent-500 text-white' : 'text-gray-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    <History className="w-3.5 h-3.5 inline mr-1" />
+                    History
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('settings')}
+                    className={`px-3 py-1 rounded text-sm font-medium ${
+                      activeTab === 'settings' ? 'bg-accent-500 text-white' : 'text-gray-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    <Settings className="w-3.5 h-3.5 inline mr-1" />
+                    Settings
+                  </button>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setScannerEnabled(!scannerEnabled)}
+                  className={`p-1.5 rounded-lg transition-colors ${
+                    scannerEnabled
+                      ? 'bg-primary-100 text-primary-600 hover:bg-green-200'
+                      : 'hover:bg-gray-50'
+                  }`}
+                  title={scannerEnabled ? 'Scanner Enabled' : 'Scanner Disabled'}
+                >
+                  <Scan className="w-4 h-4" />
+                </button>
+                {/* Fullscreen toggle button */}
+                {onFullscreenToggle && (
+                  <button
+                    onClick={onFullscreenToggle}
+                    className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+                    title={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+                  >
+                    {isFullscreen ? (
+                      <Minimize2 className="w-4 h-4 text-gray-600" />
+                    ) : (
+                      <Maximize2 className="w-4 h-4 text-gray-600" />
+                    )}
+                  </button>
+                )}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Main Content */}
       {activeTab === 'sale' && (
@@ -972,7 +1044,7 @@ export default function POS() {
                         if (currentStore?.id) {
                           searchParams.store_id = currentStore.id;
                         }
-                        const response = await axios.get(`http://localhost:5024/api/search/products`, {
+                        const response = await axios.get(getApiEndpoint(`/search/products`), {
                           params: searchParams
                         });
 

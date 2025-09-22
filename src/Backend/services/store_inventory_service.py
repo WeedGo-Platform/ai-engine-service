@@ -82,7 +82,7 @@ class StoreInventoryService:
                         s.name as store_name,
                         s.store_code
                     FROM ocs_inventory si
-                    LEFT JOIN ocs_product_catalog p ON si.sku = p.ocs_variant_number
+                    LEFT JOIN ocs_product_catalog p ON LOWER(TRIM(si.sku)) = LOWER(TRIM(p.ocs_variant_number))
                     JOIN stores s ON si.store_id = s.id
                     WHERE si.store_id = $1 AND si.sku = $2
                 """
@@ -117,8 +117,8 @@ class StoreInventoryService:
         """
         try:
             async with self.db_pool.acquire() as conn:
-                # Build dynamic WHERE clause
-                where_conditions = ["si.store_id = $1"]
+                # Build dynamic WHERE clause - include available filter by default for kiosk
+                where_conditions = ["si.store_id = $1", "si.is_available = true"]
                 params = [store_id]
                 param_counter = 2
                 
@@ -127,21 +127,50 @@ class StoreInventoryService:
                         where_conditions.append(f"p.category = ${param_counter}")
                         params.append(filters['category'])
                         param_counter += 1
-                    
+
+                    if filters.get('subcategory'):
+                        where_conditions.append(f"p.sub_category = ${param_counter}")
+                        params.append(filters['subcategory'])
+                        param_counter += 1
+
+                    if filters.get('strain_type'):
+                        # Plant type/strain type filter
+                        where_conditions.append(f"p.plant_type = ${param_counter}")
+                        params.append(filters['strain_type'])
+                        param_counter += 1
+
+                    if filters.get('size'):
+                        # Size filter - match product size/weight
+                        where_conditions.append(f"p.size = ${param_counter}")
+                        params.append(filters['size'])
+                        param_counter += 1
+
+                    if filters.get('quick_filter'):
+                        # Handle quick filters
+                        if filters['quick_filter'] == 'trending':
+                            # Sort by popularity/sales - handled in ORDER BY
+                            pass
+                        elif filters['quick_filter'] == 'new':
+                            # New arrivals - items added in last 30 days
+                            where_conditions.append("si.created_at >= CURRENT_DATE - INTERVAL '30 days'")
+                        elif filters['quick_filter'] == 'staff-picks':
+                            # Staff picks - use rating as a proxy for featured
+                            where_conditions.append("p.rating >= 4.5")
+
                     if filters.get('brand'):
                         where_conditions.append(f"p.brand = ${param_counter}")
                         params.append(filters['brand'])
                         param_counter += 1
-                    
+
                     if filters.get('low_stock'):
                         where_conditions.append("si.quantity_available <= si.reorder_point")
-                    
+
                     if filters.get('out_of_stock'):
                         where_conditions.append("si.quantity_available = 0")
-                    
+
                     if filters.get('search'):
                         where_conditions.append(
-                            f"(p.name ILIKE ${param_counter} OR si.sku ILIKE ${param_counter})"
+                            f"(p.product_name ILIKE ${param_counter} OR si.sku ILIKE ${param_counter})"
                         )
                         params.append(f"%{filters['search']}%")
                         param_counter += 1
@@ -152,36 +181,86 @@ class StoreInventoryService:
                 count_query = f"""
                     SELECT COUNT(*)
                     FROM ocs_inventory si
-                    LEFT JOIN ocs_product_catalog p ON si.sku = p.ocs_variant_number
+                    LEFT JOIN ocs_product_catalog p ON LOWER(TRIM(si.sku)) = LOWER(TRIM(p.ocs_variant_number))
                     WHERE {where_clause}
                 """
                 total_count = await conn.fetchval(count_query, *params)
 
-                # Get paginated results
+                # Get paginated results with batch tracking details
                 params.extend([limit, offset])
                 list_query = f"""
                     SELECT
                         si.*,
                         p.product_name,
                         p.category,
+                        p.sub_category as subcategory,
                         p.brand,
                         p.image_url,
                         p.product_name as name,
-                        STRING_AGG(DISTINCT bt.batch_lot, ', ' ORDER BY bt.batch_lot) as batch_lot
+                        p.plant_type,
+                        p.size,
+                        p.thc_content_per_unit as thc_content,
+                        p.cbd_content_per_unit as cbd_content,
+                        p.rating,
+                        p.rating_count,
+                        p.product_short_description as description,
+                        STRING_AGG(DISTINCT bt.batch_lot, ', ' ORDER BY bt.batch_lot) as batch_lot,
+                        -- Aggregate batch details as JSON array
+                        COALESCE(
+                            JSON_AGG(
+                                CASE WHEN bt.batch_lot IS NOT NULL THEN
+                                    JSON_BUILD_OBJECT(
+                                        'batch_lot', bt.batch_lot,
+                                        'case_gtin', bt.case_gtin,
+                                        'each_gtin', bt.each_gtin,
+                                        'gtin_barcode', bt.gtin_barcode,
+                                        'packaged_on_date', bt.packaged_on_date,
+                                        'quantity_received', bt.quantity_received,
+                                        'quantity_remaining', bt.quantity_remaining,
+                                        'unit_cost', bt.unit_cost,
+                                        'received_date', bt.received_date,
+                                        'purchase_order_id', bt.purchase_order_id,
+                                        'supplier_name', s.name,
+                                        'supplier_id', po.supplier_id,
+                                        'vendor', poi.vendor,
+                                        'brand', poi.brand,
+                                        'po_number', po.po_number
+                                    )
+                                ELSE NULL
+                                END
+                            ) FILTER (WHERE bt.batch_lot IS NOT NULL),
+                            '[]'::json
+                        ) as batch_details
                     FROM ocs_inventory si
-                    LEFT JOIN ocs_product_catalog p ON si.sku = p.ocs_variant_number
+                    LEFT JOIN ocs_product_catalog p ON LOWER(TRIM(si.sku)) = LOWER(TRIM(p.ocs_variant_number))
                     LEFT JOIN batch_tracking bt ON si.sku = bt.sku AND si.store_id = bt.store_id AND bt.is_active = true AND bt.quantity_remaining > 0
+                    LEFT JOIN purchase_orders po ON bt.purchase_order_id = po.id
+                    LEFT JOIN provincial_suppliers s ON po.supplier_id = s.id
+                    LEFT JOIN purchase_order_items poi ON po.id = poi.purchase_order_id AND bt.sku = poi.sku AND bt.batch_lot = poi.batch_lot
                     WHERE {where_clause}
                     GROUP BY si.id, si.store_id, si.sku, si.quantity_on_hand, si.quantity_available,
                              si.quantity_reserved, si.unit_cost, si.retail_price, si.reorder_point,
                              si.reorder_quantity, si.last_restock_date, si.is_available, si.created_at,
-                             si.updated_at, p.product_name, p.category, p.brand, p.image_url
+                             si.updated_at, p.product_name, p.category, p.sub_category, p.brand, p.image_url,
+                             p.plant_type, p.size, p.thc_content_per_unit, p.cbd_content_per_unit,
+                             p.rating, p.rating_count, p.product_short_description
                     ORDER BY COALESCE(p.product_name, si.sku)
                     LIMIT ${param_counter} OFFSET ${param_counter + 1}
                 """
-                
+
                 results = await conn.fetch(list_query, *params)
-                return [dict(r) for r in results], total_count
+
+                # Process results to handle JSON data properly
+                inventory_items = []
+                for row in results:
+                    item = dict(row)
+                    # Parse batch_details JSON if it's a string
+                    if 'batch_details' in item and isinstance(item['batch_details'], str):
+                        import json
+                        item['batch_details'] = json.loads(item['batch_details'])
+                    inventory_items.append(item)
+
+                return inventory_items, total_count
                 
         except Exception as e:
             logger.error(f"Error getting store inventory list: {str(e)}")
@@ -569,7 +648,135 @@ class StoreInventoryService:
     # =====================================================
     # Store Transfer Methods
     # =====================================================
-    
+    # Batch-Level Operations
+    # =====================================================
+
+    async def adjust_batch_quantity(
+        self,
+        store_id: UUID,
+        sku: str,
+        batch_lot: str,
+        adjustment: int,
+        reason: str
+    ) -> bool:
+        """
+        Adjust quantity for a specific batch
+
+        Args:
+            store_id: Store UUID
+            sku: Product SKU
+            batch_lot: Batch lot number
+            adjustment: Quantity adjustment (positive or negative)
+            reason: Reason for adjustment
+
+        Returns:
+            Success status
+        """
+        try:
+            async with self.db_pool.acquire() as conn:
+                # Update batch tracking quantity
+                result = await conn.execute("""
+                    UPDATE batch_tracking
+                    SET quantity_remaining = quantity_remaining + $1,
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE batch_lot = $2
+                    AND sku = $3
+                    AND store_id = $4
+                    AND quantity_remaining + $1 >= 0
+                """, adjustment, batch_lot, sku, store_id)
+
+                if result == "UPDATE 0":
+                    raise ValueError(f"Batch {batch_lot} not found or insufficient quantity")
+
+                # Record transaction
+                await conn.execute("""
+                    INSERT INTO ocs_inventory_transactions
+                    (sku, transaction_type, quantity, notes, batch_lot, store_id)
+                    VALUES ($1, 'adjustment', $2, $3, $4, $5)
+                """, sku, adjustment, f"Batch adjustment: {reason}", batch_lot, store_id)
+
+                return True
+
+        except Exception as e:
+            logger.error(f"Error adjusting batch quantity: {str(e)}")
+            raise
+
+    async def update_inventory_settings(
+        self,
+        store_id: UUID,
+        sku: str,
+        retail_price: Optional[Decimal] = None,
+        reorder_point: Optional[int] = None,
+        reorder_quantity: Optional[int] = None,
+        is_available: Optional[bool] = None
+    ) -> bool:
+        """
+        Update inventory settings for a SKU in a store
+
+        Args:
+            store_id: Store UUID
+            sku: Product SKU
+            retail_price: Optional new retail price
+            reorder_point: Optional new reorder point
+            reorder_quantity: Optional new reorder quantity
+            is_available: Optional availability status
+
+        Returns:
+            Success status
+        """
+        try:
+            async with self.db_pool.acquire() as conn:
+                # Build update query dynamically
+                update_fields = []
+                params = []
+                param_counter = 1
+
+                if retail_price is not None:
+                    update_fields.append(f"retail_price = ${param_counter}")
+                    params.append(retail_price)
+                    param_counter += 1
+
+                if reorder_point is not None:
+                    update_fields.append(f"reorder_point = ${param_counter}")
+                    params.append(reorder_point)
+                    param_counter += 1
+
+                if reorder_quantity is not None:
+                    update_fields.append(f"reorder_quantity = ${param_counter}")
+                    params.append(reorder_quantity)
+                    param_counter += 1
+
+                if is_available is not None:
+                    update_fields.append(f"is_available = ${param_counter}")
+                    params.append(is_available)
+                    param_counter += 1
+
+                if not update_fields:
+                    return True  # Nothing to update
+
+                # Add timestamp update
+                update_fields.append("updated_at = CURRENT_TIMESTAMP")
+
+                # Add WHERE clause parameters
+                params.extend([store_id, sku])
+
+                query = f"""
+                    UPDATE ocs_inventory
+                    SET {', '.join(update_fields)}
+                    WHERE store_id = ${param_counter} AND sku = ${param_counter + 1}
+                """
+
+                result = await conn.execute(query, *params)
+                return result != "UPDATE 0"
+
+        except Exception as e:
+            logger.error(f"Error updating inventory settings: {str(e)}")
+            raise
+
+    # =====================================================
+    # Transfer Management
+    # =====================================================
+
     async def create_store_transfer(
         self,
         from_store_id: UUID,

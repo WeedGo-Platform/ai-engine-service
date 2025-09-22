@@ -211,7 +211,7 @@ async def get_pos_transactions(
     try:
         pool = await get_db_pool()
         async with pool.acquire() as conn:
-            conditions = ["order_source = 'pos'"]
+            conditions = ["order_source IN ('pos', 'kiosk')"]
             params = []
             param_num = 1
 
@@ -321,7 +321,7 @@ async def resume_pos_transaction(transaction_id: str):
                     receipt_number,
                     pos_metadata
                 FROM orders
-                WHERE id = $1::uuid AND order_status = 'parked' AND order_source = 'pos'
+                WHERE id = $1::uuid AND order_status = 'parked' AND order_source IN ('pos', 'kiosk')
             """
 
             row = await conn.fetchrow(query, transaction_id)

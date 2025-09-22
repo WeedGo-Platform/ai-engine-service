@@ -156,6 +156,43 @@ class SmartAIEngineV5:
             logger.error(f"Intent detection failed: {e}")
             return self._basic_intent_detection(message)
     
+    async def detect_intent_async(self, message: str, language: str = "auto") -> Dict[str, Any]:
+        """Async version of detect intent using the configured detector"""
+        if not self.intent_detector:
+            # Fallback to basic detection
+            return self._basic_intent_detection(message)
+
+        try:
+            # Run intent detection in executor to avoid blocking
+            import asyncio
+            loop = asyncio.get_event_loop()
+
+            # Run the blocking detect call in a thread pool
+            result = await loop.run_in_executor(
+                None,  # Use default executor
+                self.intent_detector.detect,
+                message,
+                language
+            )
+
+            # Ensure result is a dictionary
+            if not isinstance(result, dict):
+                logger.warning(f"Intent detector returned non-dict: {type(result)} - {result}")
+                return self._basic_intent_detection(message)
+
+            # Log detection result
+            logger.info(f"Intent detected (async): {result.get('intent')} (confidence: {result.get('confidence')})")
+
+            return result
+
+        except AttributeError as e:
+            # Handle the specific case where we get a string instead of dict
+            logger.error(f"Intent detection returned invalid type (likely string): {e}")
+            return self._basic_intent_detection(message)
+        except Exception as e:
+            logger.error(f"Async intent detection failed: {e}")
+            return self._basic_intent_detection(message)
+
     def _basic_intent_detection(self, message: str) -> Dict[str, Any]:
         """Basic fallback when intent detector is not available"""
         # No pattern matching - just return general intent
@@ -558,12 +595,16 @@ class SmartAIEngineV5:
         """Get a specific prompt template by type"""
         if not self.use_prompts:
             return None
-        
-        # Search through all loaded prompt files
+
+        # First check agent-specific prompts
+        if self.agent_prompts and prompt_type in self.agent_prompts:
+            return self.agent_prompts[prompt_type]
+
+        # Then search through all loaded prompt files
         for file_prompts in self.loaded_prompts.values():
             if prompt_type in file_prompts:
                 return file_prompts[prompt_type]
-        
+
         return None
     
     def apply_agent_template(self, user_input: str, prompt_type: str) -> str:
@@ -1195,7 +1236,8 @@ class SmartAIEngineV5:
         
         try:
             start_time = time.time()
-            
+            timing_breakdown = {}
+
             # Apply prompt template if specified
             final_prompt = prompt
             used_template = None
@@ -1246,55 +1288,54 @@ class SmartAIEngineV5:
                     template_stop_sequences = template_config.get('stop_sequences', [])
                     logger.info(f"Applied template '{prompt_type}' with max_tokens={template_max_tokens}")
             elif self.use_prompts and not prompt_type:
-                # Auto-detect prompt type based on content and available prompts
+                # SERIAL EXECUTION: Detect intent first, then apply template
                 detected_type = None
-                # Use intent detector for auto-detection instead of hardcoded patterns
+                logger.info(f"Intent detection path: use_prompts={self.use_prompts}, intent_detector={self.intent_detector is not None}")
+
+                # Run intent detection serially if available
                 if self.intent_detector:
-                    intent_result = self.detect_intent(prompt)
-                    # Ensure intent_result is a dictionary before calling .get()
-                    if isinstance(intent_result, dict):
-                        detected_type = intent_result.get('prompt_type', None)
-                    else:
-                        logger.warning(f"detect_intent returned non-dict: {type(intent_result)}")
+                    intent_detect_start = time.time()
+                    try:
+                        intent_result = self.detect_intent(prompt)
+                        timing_breakdown['intent_detection'] = time.time() - intent_detect_start
+                        logger.info(f"Serial intent detection completed: {intent_result} (took {timing_breakdown['intent_detection']:.2f}s)")
+                        # Extract the prompt_type from the intent result
+                        if isinstance(intent_result, dict):
+                            detected_type = intent_result.get('prompt_type') or intent_result.get('intent')
+                        else:
+                            detected_type = intent_result
+                    except Exception as e:
+                        logger.warning(f"Intent detection failed: {e}")
                         detected_type = None
                 else:
-                    # Fallback to no auto-detection if intent detector not available
-                    detected_type = None
-                
-                # Use detected type or fall back to default
-                if detected_type:
+                    logger.warning("Intent detector not available, skipping intent detection")
+
+                # Apply template based on detected intent or use default
+                if detected_type and self.get_prompt_template(detected_type):
                     try:
                         template_applied, template_config = self.apply_prompt_template_with_config(prompt, detected_type)
+                        if template_applied and template_applied != prompt:
+                            final_prompt = template_applied
+                            used_template = detected_type
+                            if isinstance(template_config, dict):
+                                template_max_tokens = template_config.get('max_tokens') or (self.system_config.get('default_max_tokens') if self.system_config else None)
+                                template_stop_sequences = template_config.get('stop_sequences', [])
+                            logger.info(f"Applied detected template '{detected_type}'")
                     except ValueError as e:
-                        logger.error(f"Failed to unpack template result for detected type: {e}")
-                        template_applied = prompt
-                        template_config = {}
-                    if template_applied and template_applied != prompt:
-                        final_prompt = template_applied
-                        used_template = detected_type
-                        # Ensure template_config is a dict before calling .get()
-                        if not isinstance(template_config, dict):
-                            template_config = {}
-                        template_max_tokens = template_config.get('max_tokens') or (self.system_config.get('default_max_tokens') if self.system_config else None)
-                        template_stop_sequences = template_config.get('stop_sequences', [])
-                        logger.info(f"Auto-detected and applied template '{detected_type}'")
+                        logger.error(f"Failed to apply detected template: {e}")
                 elif self.get_prompt_template('default'):
-                    # Use default template for any unmatched input
+                    # Use default template for unmatched or failed detection
                     try:
                         template_applied, template_config = self.apply_prompt_template_with_config(prompt, 'default')
+                        if template_applied and template_applied != prompt:
+                            final_prompt = template_applied
+                            used_template = 'default'
+                            if isinstance(template_config, dict):
+                                template_max_tokens = template_config.get('max_tokens') or (self.system_config.get('default_max_tokens') if self.system_config else None)
+                                template_stop_sequences = template_config.get('stop_sequences', [])
+                            logger.info(f"Applied default template")
                     except ValueError as e:
-                        logger.error(f"Failed to unpack template result for default: {e}")
-                        template_applied = prompt
-                        template_config = {}
-                    if template_applied and template_applied != prompt:
-                        final_prompt = template_applied
-                        used_template = 'default'
-                        # Ensure template_config is a dict before calling .get()
-                        if not isinstance(template_config, dict):
-                            template_config = {}
-                        template_max_tokens = template_config.get('max_tokens') or (self.system_config.get('default_max_tokens') if self.system_config else None)
-                        template_stop_sequences = template_config.get('stop_sequences', [])
-                        logger.info(f"Applied default template for unmatched input")
+                        logger.error(f"Failed to apply default template: {e}")
                 else:
                     # Default to general conversation if available
                     if self.get_prompt_template('general_conversation'):
@@ -1346,6 +1387,20 @@ class SmartAIEngineV5:
             logger.info(f"Generating with max_tokens={final_max_tokens}, temp={actual_temperature:.2f}, stops={len(stop_sequences)}")
             logger.debug(f"Final prompt preview: {final_prompt[:100]}...")
             
+            # Debug timing for model inference
+            inference_start = time.time()
+
+            # Check if model is loaded
+            if not self.current_model:
+                logger.error("No model loaded! Cannot generate response.")
+                return {
+                    "text": "I apologize, but the AI model is not currently loaded. Please try again later.",
+                    "model": "none",
+                    "error": "Model not loaded"
+                }
+
+            logger.info(f"Starting model inference with {self.current_model_name}")
+
             # Optimize sampling parameters for faster generation
             response = self.current_model(
                 final_prompt,
@@ -1358,8 +1413,16 @@ class SmartAIEngineV5:
                 stream=False,
                 repeat_penalty=self.get_config_repeat_penalty()  # Use config value
             )
-            
+
+            inference_time = time.time() - inference_start
+            timing_breakdown['model_inference'] = inference_time
+            logger.info(f"Model inference completed in {inference_time:.2f}s")
+
             elapsed_ms = (time.time() - start_time) * 1000
+
+            # Log complete timing breakdown
+            parallel_note = " (PARALLEL)" if timing_breakdown.get('intent_detection_started', False) else ""
+            logger.info(f"generate() timing breakdown - Total: {elapsed_ms:.0f}ms | Intent{parallel_note}: {timing_breakdown.get('intent_detection', 0)*1000:.0f}ms | Inference: {timing_breakdown.get('model_inference', 0)*1000:.0f}ms")
             
             # Ensure response is a dict
             if isinstance(response, str):
@@ -1424,35 +1487,340 @@ class SmartAIEngineV5:
                 "used_prompt": self.use_prompts
             }
     
+    async def generate_async(self,
+                 prompt: str,
+                 prompt_type: Optional[str] = None,
+                 max_tokens: int = None,
+                 temperature: float = None,
+                 top_p: float = None,
+                 top_k: int = 40,
+                 use_tools: bool = False,
+                 use_context: bool = False,
+                 session_id: Optional[str] = None) -> Dict:
+        """Async version of generate with proper parallel intent detection"""
+        start_time = time.time()
+        timing_breakdown = {}
+
+        if not self.current_model:
+            return {"error": "No model loaded", "text": "", "model": "none"}
+
+        try:
+            # Get config values if not specified
+            if temperature is None:
+                temperature = self.get_config_temperature()
+            if top_p is None:
+                top_p = self.get_config_top_p()
+            if max_tokens is None:
+                max_tokens = self.get_config_max_tokens()
+
+            # Initialize variables
+            final_prompt = prompt
+            used_template = None
+            template_max_tokens = None
+            template_stop_sequences = []
+            detected_intent = None
+
+            # Add context if requested
+            if use_context:
+                context_start = time.time()
+                final_prompt = self._add_context_to_prompt(prompt, session_id)
+                timing_breakdown['add_context'] = time.time() - context_start
+
+            # Handle prompt templates
+            if prompt_type and self.use_prompts:
+                # User specified a prompt type - use it directly
+                try:
+                    template_applied, template_config = self.apply_prompt_template_with_config(prompt, prompt_type)
+                    if template_applied and template_applied != prompt:
+                        final_prompt = template_applied
+                        used_template = prompt_type
+                        if isinstance(template_config, dict):
+                            template_max_tokens = template_config.get('max_tokens')
+                            template_stop_sequences = template_config.get('stop_sequences', [])
+                except ValueError as e:
+                    logger.error(f"Failed to apply template: {e}")
+
+            elif self.use_prompts and not prompt_type:
+                # SERIAL ASYNC EXECUTION: Detect intent first, then apply template
+                detected_type = None
+                logger.info(f"Async intent detection path: use_prompts={self.use_prompts}, intent_detector={self.intent_detector is not None}")
+
+                # Run intent detection serially if available
+                if self.intent_detector:
+                    intent_detect_start = time.time()
+                    try:
+                        # Run async intent detection serially
+                        intent_result = await self.detect_intent_async(prompt)
+                        timing_breakdown['intent_detection'] = time.time() - intent_detect_start
+                        logger.info(f"Serial async intent detection completed: {intent_result} (took {timing_breakdown['intent_detection']:.2f}s)")
+                        # Extract the prompt_type from the intent result
+                        if isinstance(intent_result, dict):
+                            detected_type = intent_result.get('prompt_type') or intent_result.get('intent')
+                        else:
+                            detected_type = intent_result
+                    except Exception as e:
+                        logger.warning(f"Async intent detection failed: {e}")
+                        detected_type = None
+                else:
+                    logger.warning("Intent detector not available in async, skipping intent detection")
+
+                # Apply template based on detected intent or use default
+                if detected_type and self.get_prompt_template(detected_type):
+                    try:
+                        template_applied, template_config = self.apply_prompt_template_with_config(prompt, detected_type)
+                        logger.info(f"🔍 Template result - Original: '{prompt[:50]}...' Applied: '{template_applied[:100]}...'")
+                        if template_applied and template_applied != prompt:
+                            final_prompt = template_applied
+                            used_template = detected_type
+                            if isinstance(template_config, dict):
+                                template_max_tokens = template_config.get('max_tokens')
+                                template_stop_sequences = template_config.get('stop_sequences', [])
+                            logger.info(f"Applied detected template '{detected_type}'")
+                        else:
+                            logger.warning(f"⚠️ Template not applied or same as original - detected_type: {detected_type}")
+                    except Exception as e:
+                        logger.error(f"Failed to apply detected template: {e}")
+                elif self.get_prompt_template('default'):
+                    # Use default template for unmatched or failed detection
+                    try:
+                        template_applied, template_config = self.apply_prompt_template_with_config(prompt, 'default')
+                        if template_applied and template_applied != prompt:
+                            final_prompt = template_applied
+                            used_template = 'default'
+                            if isinstance(template_config, dict):
+                                template_max_tokens = template_config.get('max_tokens')
+                                template_stop_sequences = template_config.get('stop_sequences', [])
+                            logger.info("Applied default template")
+                    except Exception as e:
+                        logger.error(f"Failed to apply default template: {e}")
+
+            # Apply system config if no template used
+            if self.system_config and not used_template:
+                system_instruction = self._get_system_instruction()
+                if system_instruction and 'prompt_format' in self.system_config:
+                    final_prompt = self.system_config['prompt_format'].format(
+                        system=system_instruction, user=prompt
+                    )
+
+            # Determine response style
+            response_style = None
+            if self.system_config and 'system' in self.system_config:
+                response_style = self.system_config['system'].get('default_behavior', {}).get('response_style', 'conversational')
+
+            # Adjust parameters based on response style
+            if response_style == 'conversational':
+                actual_temperature = min(temperature + 0.1, 1.0)
+                actual_top_p = top_p
+            elif response_style == 'formal':
+                actual_temperature = max(temperature - 0.2, 0.1)
+                actual_top_p = max(top_p - 0.1, 0.8)
+            else:
+                actual_temperature = temperature
+                actual_top_p = top_p
+
+            # Use template max_tokens if specified
+            final_max_tokens = template_max_tokens if template_max_tokens else max_tokens
+
+            # Get stop sequences
+            stop_sequences = template_stop_sequences if template_stop_sequences else \
+                            self.system_config.get('default_stop_sequences', []) if self.system_config else []
+
+            # Log parameters
+            logger.info(f"Generating async with max_tokens={final_max_tokens}, temp={actual_temperature:.2f}")
+
+            # Run model inference in executor to avoid blocking
+            inference_start = time.time()
+            loop = asyncio.get_event_loop()
+
+            # Run the blocking model call in executor
+            response = await loop.run_in_executor(
+                None,
+                lambda: self.current_model(
+                    final_prompt,
+                    max_tokens=final_max_tokens,
+                    temperature=actual_temperature,
+                    top_p=actual_top_p,
+                    top_k=top_k,
+                    echo=False,
+                    stop=stop_sequences[:8],
+                    stream=False,
+                    repeat_penalty=self.get_config_repeat_penalty()
+                )
+            )
+
+            inference_time = time.time() - inference_start
+            timing_breakdown['model_inference'] = inference_time
+            logger.info(f"Async model inference completed in {inference_time:.2f}s")
+
+            elapsed_ms = (time.time() - start_time) * 1000
+
+            # Log timing breakdown
+            parallel_note = " (ASYNC)" if timing_breakdown.get('intent_detection_started', False) else ""
+            logger.info(f"generate_async() timing - Total: {elapsed_ms:.0f}ms | Intent{parallel_note}: {timing_breakdown.get('intent_detection', 0)*1000:.0f}ms | Inference: {timing_breakdown.get('model_inference', 0)*1000:.0f}ms")
+
+            # Process response
+            if isinstance(response, str):
+                response = {"choices": [{"text": response}]}
+
+            if response and isinstance(response, dict) and response.get("choices"):
+                text = response["choices"][0].get("text", "")
+
+                # Apply safety guidelines
+                text = self.apply_safety_guidelines(prompt, text)
+
+                # Calculate metrics
+                completion_tokens = response.get("usage", {}).get("completion_tokens", 0)
+                tokens_per_sec = completion_tokens / (elapsed_ms / 1000) if elapsed_ms > 0 else 0
+
+                return {
+                    "text": text,
+                    "model": self.current_model_name,
+                    "time_ms": round(elapsed_ms),
+                    "tokens": completion_tokens,
+                    "tokens_per_sec": round(tokens_per_sec, 1),
+                    "used_prompt": self.use_prompts,
+                    "prompt_template": used_template,
+                    "detected_intent": detected_intent.get('intent') if detected_intent else None,
+                    "async_generation": True,
+                    "error": None
+                }
+            else:
+                return {
+                    "error": "No response from model",
+                    "text": "",
+                    "model": self.current_model_name,
+                    "time_ms": round(elapsed_ms),
+                    "async_generation": True
+                }
+
+        except Exception as e:
+            logger.error(f"Async generation error: {e}")
+            return {
+                "error": str(e),
+                "text": "",
+                "model": self.current_model_name,
+                "time_ms": 0,
+                "async_generation": True
+            }
+
     async def get_user_context(self, user_id: str, session_id: Optional[str] = None) -> Dict[str, Any]:
         """Fetch user context from the UserContextService"""
         try:
+            logger.info(f"[SmartAIEngineV5] get_user_context starting - User ID: {user_id}, Session ID: {session_id}")
+
             # Import here to avoid circular dependencies
             from services.user_context_service import UserContextService
             import asyncpg
             import os
-            
+
             # Create a database connection
-            conn = await asyncpg.connect(
-                host=os.getenv('DB_HOST', 'localhost'),
-                port=int(os.getenv('DB_PORT', 5434)),
-                database=os.getenv('DB_NAME', 'ai_engine'),
-                user=os.getenv('DB_USER', 'weedgo'),
-                password=os.getenv('DB_PASSWORD', 'your_password_here')
-            )
+            db_config = {
+                'host': os.getenv('DB_HOST', 'localhost'),
+                'port': int(os.getenv('DB_PORT', 5434)),
+                'database': os.getenv('DB_NAME', 'ai_engine'),
+                'user': os.getenv('DB_USER', 'weedgo'),
+                'password': os.getenv('DB_PASSWORD', 'your_password_here')
+            }
+            logger.info(f"[SmartAIEngineV5] Connecting to database at {db_config['host']}:{db_config['port']}/{db_config['database']}")
+
+            conn = await asyncpg.connect(**db_config)
             
             try:
+                logger.info(f"[SmartAIEngineV5] Database connected, creating UserContextService")
                 context_service = UserContextService(conn)
+
+                logger.info(f"[SmartAIEngineV5] Fetching complete user context")
                 user_context = await context_service.get_complete_user_context(user_id, session_id)
+
+                logger.info(f"[SmartAIEngineV5] User context retrieved - Has profile: {bool(user_context.get('user_profile'))}, "
+                           f"Purchase count: {len(user_context.get('recent_purchases', []))}, "
+                           f"Chat history count: {len(user_context.get('conversation_context', {}).get('messages', []))}")
+
                 return user_context
             finally:
                 await conn.close()
+                logger.info(f"[SmartAIEngineV5] Database connection closed")
                 
         except Exception as e:
-            logger.error(f"Error getting user context: {str(e)}")
+            logger.error(f"[SmartAIEngineV5] Error getting user context: {str(e)}")
+            logger.exception("[SmartAIEngineV5] Full stack trace:")
             return {}
     
-    def get_response(self, message: str, session_id: Optional[str] = None, 
+    async def get_response_async(self, message: str, session_id: Optional[str] = None,
+                    user_id: Optional[str] = None, max_tokens: int = 500,
+                    include_context: bool = True) -> str:
+        """
+        Async version of get_response for better performance
+        """
+        try:
+            # Debug timing
+            timing_start = time.time()
+            timing_points = {}
+
+            # Build context-aware prompt if user_id is provided
+            context_prompt = message
+
+            if include_context and user_id:
+                # Use proper async call
+                context_start = time.time()
+                user_context = await self.get_user_context(user_id, session_id)
+                timing_points['user_context'] = time.time() - context_start
+
+                if user_context and user_context.get('user_profile'):
+                    # Build context-aware prompt (same as before)
+                    context_parts = []
+
+                    # Add user profile info
+                    profile = user_context['user_profile']
+                    if profile:
+                        context_parts.append(f"User: {profile.get('first_name', '')} {profile.get('last_name', '')}")
+                        if profile.get('age_verified'):
+                            context_parts.append("Age verified: 21+")
+
+                    # Add order history if available
+                    if user_context.get('order_history'):
+                        context_parts.append(f"Previous orders: {len(user_context['order_history'])}")
+
+                    # Add preferences if available
+                    if user_context.get('preferences'):
+                        prefs = user_context['preferences']
+                        if prefs:
+                            context_parts.append(f"Preferences: {prefs}")
+
+                    # Build final context prompt
+                    context_prompt = f"""
+User Context:
+{chr(10).join(context_parts)}
+
+Current message: {message}
+
+Please provide a personalized response based on the user's history and preferences."""
+
+            # Generate response using the async generate method
+            generate_start = time.time()
+            result = await self.generate_async(
+                prompt=context_prompt,
+                max_tokens=max_tokens,
+                use_context=True,
+                session_id=session_id
+            )
+            timing_points['generate'] = time.time() - generate_start
+
+            # Log timing breakdown
+            total_time = time.time() - timing_start
+            logger.info(f"get_response_async timing - Total: {total_time:.3f}s | Context: {timing_points.get('user_context', 0):.3f}s | Generate: {timing_points.get('generate', 0):.3f}s")
+
+            # Extract just the text from the result
+            if isinstance(result, dict):
+                return result.get('text', 'I apologize, but I encountered an error processing your request.')
+            else:
+                return str(result)
+
+        except Exception as e:
+            logger.error(f"Error in get_response_async: {str(e)}")
+            return "I apologize, but I'm having trouble processing your request. Please try again."
+
+    def get_response(self, message: str, session_id: Optional[str] = None,
                     user_id: Optional[str] = None, max_tokens: int = 500,
                     include_context: bool = True) -> str:
         """
@@ -1460,20 +1828,32 @@ class SmartAIEngineV5:
         This is the method called by chat endpoints
         """
         try:
+            # Log entry point
+            logger.info(f"[SmartAIEngineV5] get_response called - User ID: {user_id}, Session ID: {session_id}, Include context: {include_context}")
+
+            # Debug timing
+            timing_start = time.time()
+            timing_points = {}
+
             # Build context-aware prompt if user_id is provided
             context_prompt = message
-            
+
             if include_context and user_id:
+                logger.info(f"[SmartAIEngineV5] Fetching user context for user_id: {user_id}")
                 # Try to get user context (sync wrapper for async function)
+                context_start = time.time()
                 import asyncio
                 try:
                     loop = asyncio.get_event_loop()
                 except RuntimeError:
                     loop = asyncio.new_event_loop()
                     asyncio.set_event_loop(loop)
-                
+
                 user_context = loop.run_until_complete(self.get_user_context(user_id, session_id))
-                
+                timing_points['user_context'] = time.time() - context_start
+
+                logger.info(f"[SmartAIEngineV5] User context fetched in {timing_points['user_context']:.3f}s - Has profile: {bool(user_context and user_context.get('user_profile'))}")
+
                 if user_context and user_context.get('user_profile'):
                     # Build context-aware prompt
                     context_parts = []
@@ -1516,6 +1896,8 @@ class SmartAIEngineV5:
                     
                     if context_parts:
                         context_info = "\n".join(context_parts)
+                        logger.info(f"[SmartAIEngineV5] Context built with {len(context_parts)} parts")
+                        logger.debug(f"[SmartAIEngineV5] Context details: {context_info[:200]}...")
                         context_prompt = f"""Context about the user:
 {context_info}
 
@@ -1524,13 +1906,22 @@ Current message: {message}
 Please provide a personalized response based on the user's history and preferences."""
             
             # Generate response using the existing generate method
+            logger.info(f"[SmartAIEngineV5] Sending prompt to LLM with context: {bool(user_id and include_context)}")
+            logger.debug(f"[SmartAIEngineV5] Full prompt being sent to LLM:\n{context_prompt[:500]}...")
+
+            generate_start = time.time()
             result = self.generate(
                 prompt=context_prompt,
                 max_tokens=max_tokens,
                 use_context=True,
                 session_id=session_id
             )
-            
+            timing_points['generate'] = time.time() - generate_start
+
+            # Log timing breakdown
+            total_time = time.time() - timing_start
+            logger.info(f"get_response timing - Total: {total_time:.3f}s | Context: {timing_points.get('user_context', 0):.3f}s | Generate: {timing_points.get('generate', 0):.3f}s")
+
             # Extract just the text from the result
             if isinstance(result, dict):
                 return result.get('text', 'I apologize, but I encountered an error processing your request.')

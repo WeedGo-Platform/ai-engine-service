@@ -49,6 +49,19 @@ def decode_token(token: str) -> dict:
 
 
 # Pydantic Models for API
+class ProvinceTerritory(BaseModel):
+    """Province/Territory response model"""
+    id: UUID
+    code: str
+    name: str
+    type: str
+    tax_rate: float
+    cannabis_tax_rate: float
+    min_age: int
+    regulatory_body: Optional[str]
+    delivery_allowed: bool
+    pickup_allowed: bool
+
 class StoreAddressModel(BaseModel):
     street: str
     city: str
@@ -70,7 +83,7 @@ class StoreHoursModel(BaseModel):
 class CreateStoreRequest(BaseModel):
     tenant_id: UUID
     province_code: str = Field(..., min_length=2, max_length=2, pattern="^[A-Z]{2}$")
-    store_code: str = Field(..., min_length=2, max_length=20, pattern="^[A-Z0-9_-]+$")
+    store_code: Optional[str] = Field(None, min_length=2, max_length=50, pattern="^[A-Z0-9_-]+$")  # Made optional and extended to 50 chars
     name: str = Field(..., min_length=1, max_length=100)
     address: StoreAddressModel
     phone: Optional[str] = Field(None, max_length=20)
@@ -221,10 +234,34 @@ async def create_store(
 ):
     """Create a new store"""
     try:
+        # Auto-generate store code if not provided
+        if not request.store_code:
+            # Generate store code from name and make it unique
+            import re
+            import random
+            import string
+
+            # Clean the name and convert to uppercase
+            base_code = re.sub(r'[^A-Z0-9\s]', '', request.name.upper())
+            base_code = re.sub(r'\s+', '-', base_code).strip('-')
+
+            # Add province code as prefix
+            base_code = f"{request.province_code}-{base_code}"
+
+            # Ensure it's not too long (max 50 chars minus potential suffix)
+            if len(base_code) > 45:
+                base_code = base_code[:45]
+
+            # Add random suffix to ensure uniqueness
+            suffix = ''.join(random.choices(string.digits, k=3))
+            store_code = f"{base_code}-{suffix}"
+        else:
+            store_code = request.store_code
+
         store = await service.create_store(
             tenant_id=request.tenant_id,
             province_code=request.province_code,
-            store_code=request.store_code,
+            store_code=store_code,
             name=request.name,
             address=request.address.dict(),
             phone=request.phone,
@@ -280,6 +317,48 @@ async def create_store(
     except Exception as e:
         logger.error(f"Error creating store: {e}")
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to create store")
+
+
+@router.get("/provinces", response_model=List[ProvinceTerritory])
+async def get_provinces():
+    """Get all active provinces and territories"""
+    try:
+        pool = await get_db_pool()
+        async with pool.acquire() as conn:
+            rows = await conn.fetch("""
+                SELECT
+                    id,
+                    code,
+                    name,
+                    type,
+                    tax_rate,
+                    cannabis_tax_rate,
+                    min_age,
+                    regulatory_body,
+                    delivery_allowed,
+                    pickup_allowed
+                FROM provinces_territories
+                ORDER BY type, name
+            """)
+
+            return [
+                ProvinceTerritory(
+                    id=row['id'],
+                    code=row['code'],
+                    name=row['name'],
+                    type=row['type'],
+                    tax_rate=float(row['tax_rate']),
+                    cannabis_tax_rate=float(row['cannabis_tax_rate']) if row['cannabis_tax_rate'] else 0,
+                    min_age=row['min_age'],
+                    regulatory_body=row['regulatory_body'],
+                    delivery_allowed=row['delivery_allowed'],
+                    pickup_allowed=row['pickup_allowed']
+                )
+                for row in rows
+            ]
+    except Exception as e:
+        logger.error(f"Error fetching provinces: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to fetch provinces")
 
 
 @router.get("/{store_id}", response_model=StoreResponse)

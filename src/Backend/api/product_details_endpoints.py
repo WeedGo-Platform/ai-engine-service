@@ -99,7 +99,7 @@ async def get_product_details(
         # Build query with optional store filter
         query = """
             SELECT * FROM inventory_products_view
-            WHERE ocs_variant_number = $1
+            WHERE LOWER(ocs_variant_number) = LOWER($1)
         """
         params = [product_id]
 

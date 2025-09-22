@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { X, Plus, Trash2, Package, DollarSign } from 'lucide-react';
 import { useStoreContext } from '../contexts/StoreContext';
+import { getApiEndpoint } from '../config/app.config';
 import StoreSelector from './StoreSelector';
 
 interface POItem {
@@ -28,8 +29,7 @@ interface CreatePurchaseOrderModalProps {
 const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({ 
   isOpen, 
   onClose, 
-  suppliers,
-  products 
+  suppliers 
 }) => {
   const queryClient = useQueryClient();
   const { currentStore } = useStoreContext();
@@ -41,22 +41,97 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
   const [items, setItems] = useState<POItem[]>([]);
   const [error, setError] = useState<string | null>(null);
   
-  // Set defaults when modal opens
+  // Auto-select provincial supplier based on store's province
   useEffect(() => {
-    if (isOpen) {
-      // Find OCS Wholesale supplier
-      const ocsSupplier = suppliers?.find((s: any) => 
-        s.name?.toLowerCase().includes('ocs') || 
-        s.name?.toLowerCase().includes('wholesale')
-      );
-      if (ocsSupplier) {
-        setSupplierId(ocsSupplier.id);
+    const fetchProvincialSupplier = async () => {
+      if (isOpen && currentStore) {
+        // Check if store has province_territory_id
+        if (currentStore.province_territory_id) {
+          try {
+            // Fetch the provincial supplier for the store's province/territory ID
+            const response = await fetch(getApiEndpoint(`/suppliers/by-province-territory-id/${currentStore.province_territory_id}`), {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            });
+
+            if (response.ok) {
+              const provincialSupplier = await response.json();
+              setSupplierId(provincialSupplier.id);
+              console.log(`Auto-selected provincial supplier by territory ID:`, provincialSupplier.name);
+              return; // Exit if we found the supplier
+            }
+          } catch (error) {
+            console.error('Error fetching provincial supplier by territory ID:', error);
+          }
+        }
+
+        // Fallback to province_code if province_territory_id is not available
+        if (currentStore.province_code) {
+          try {
+            const response = await fetch(getApiEndpoint(`/suppliers/by-province/${currentStore.province_code}`), {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            });
+
+            if (response.ok) {
+              const provincialSupplier = await response.json();
+              setSupplierId(provincialSupplier.id);
+              console.log(`Auto-selected provincial supplier by province code:`, provincialSupplier.name);
+              return;
+            }
+          } catch (error) {
+            console.error('Error fetching provincial supplier by province code:', error);
+          }
+        }
+
+        // Fallback to finding supplier in the suppliers list
+        if (suppliers?.length > 0) {
+          // First try to match by provinces_territories_id
+          if (currentStore.province_territory_id) {
+            const provincialSupplier = suppliers.find((s: any) =>
+              s.provinces_territories_id === currentStore.province_territory_id
+            );
+            if (provincialSupplier) {
+              setSupplierId(provincialSupplier.id);
+              console.log('Found provincial supplier in list by territory ID:', provincialSupplier.name);
+              return;
+            }
+          }
+
+          // Then try to match by province_code
+          if (currentStore.province_code) {
+            const provincialSupplier = suppliers.find((s: any) =>
+              s.province_code === currentStore.province_code
+            );
+            if (provincialSupplier) {
+              setSupplierId(provincialSupplier.id);
+              console.log('Found provincial supplier in list by province code:', provincialSupplier.name);
+              return;
+            }
+          }
+
+          // Default to first supplier if no match found
+          setSupplierId(suppliers[0].id);
+          console.log('Using default supplier:', suppliers[0].name);
+        }
+      } else if (isOpen && suppliers?.length > 0 && !currentStore) {
+        // If no store selected, use first supplier
+        setSupplierId(suppliers[0].id);
+        console.log('No store selected, using first supplier');
       }
-      
+    };
+
+    if (isOpen) {
+      fetchProvincialSupplier();
+
       // Set today's date as default
       const today = new Date().toISOString().split('T')[0];
       setExpectedDate(today);
-      
+
       // Add one empty item by default
       if (items.length === 0) {
         setItems([{
@@ -68,7 +143,7 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
         }]);
       }
     }
-  }, [isOpen, suppliers]);
+  }, [isOpen, currentStore, suppliers]);
   
   const addItem = () => {
     setItems([...items, {
@@ -127,7 +202,7 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
         }
       };
       
-      const response = await fetch('http://localhost:5024/api/inventory/purchase-orders', {
+      const response = await fetch(getApiEndpoint('/inventory/purchase-orders'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

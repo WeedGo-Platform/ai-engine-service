@@ -48,6 +48,15 @@ from api.store_hours_endpoints import router as store_hours_router
 from api.store_inventory_endpoints import router as store_inventory_router
 from api.payment_settings_endpoints import router as payment_settings_router
 from api.payment_provider_endpoints import router as payment_provider_router
+
+# Import kiosk endpoints
+try:
+    from api.kiosk_endpoints import router as kiosk_router
+    KIOSK_ENABLED = True
+except ImportError as e:
+    print(f"ERROR: Failed to import kiosk endpoints: {e}")
+    KIOSK_ENABLED = False
+    kiosk_router = None
 from api.client_payment_endpoints import router as client_payment_router
 from api.store_payment_endpoints import router as store_payment_router
 from api.payment_session_endpoints import router as payment_session_router
@@ -180,7 +189,7 @@ async def lifespan(app: FastAPI):
         
         # Auto-load smallest model with dispensary agent and zac personality on startup
         logger.info("Auto-loading default model configuration...")
-        
+
         # Find the smallest model
         smallest_model = None
         smallest_size = float('inf')
@@ -192,7 +201,7 @@ async def lifespan(app: FastAPI):
                     smallest_model = model_name
             except:
                 continue
-        
+
         if smallest_model:
             logger.info(f"Loading smallest model: {smallest_model} ({smallest_size / (1024**3):.2f} GB)")
             # Load model with dispensary agent and zac personality
@@ -209,19 +218,19 @@ async def lifespan(app: FastAPI):
             logger.warning("No models available to auto-load")
         
         logger.info(f"V5 Engine ready with {len(v5_engine.available_models)} models available")
-        
+
         # Register function schemas
         logger.info("Registering function schemas...")
         registry = get_function_registry()
-        
+
         # Load and register actual tool implementations
         logger.info("Loading tool implementations...")
         try:
             from services.tools.product_search_tool import ProductSearchTool
-            
+
             # Create tool instances
             product_search_tool = ProductSearchTool()
-            
+
             # Register tools with the v5 engine's tool manager if available
             if hasattr(v5_engine, 'tool_manager') and v5_engine.tool_manager:
                 # Register product search wrapper
@@ -390,6 +399,13 @@ app.include_router(payment_provider_router)  # Payment provider management endpo
 app.include_router(client_payment_router)  # Client payment endpoints
 app.include_router(store_payment_router)  # Store payment terminal and device endpoints
 app.include_router(payment_session_router)  # Payment session endpoints for Clover integration
+
+# Kiosk endpoints
+if KIOSK_ENABLED and kiosk_router:
+    app.include_router(kiosk_router)  # Self-serve kiosk endpoints
+    logger.info("Kiosk endpoints registered successfully")
+else:
+    logger.error("Kiosk endpoints not loaded - router is None or disabled")
 
 # Import and include admin endpoints (unified admin + model management)
 from api.admin_endpoints import router as admin_router

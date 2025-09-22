@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { getApiEndpoint } from '../../config/app.config';
 import { X, Search, UserPlus, User, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import axios from 'axios';
 
@@ -48,7 +49,7 @@ export default function CustomerModal({ isOpen, onClose, onSelect }: CustomerMod
     setError(null);
 
     try {
-      const response = await axios.get(`http://localhost:5024/api/customers/search`, {
+      const response = await axios.get(getApiEndpoint('/customers/search'), {
         params: { q: query }
       });
       setCustomers(response.data.customers || []);
@@ -85,12 +86,12 @@ export default function CustomerModal({ isOpen, onClose, onSelect }: CustomerMod
     setError(null);
 
     try {
-      const response = await axios.post(`http://localhost:5024/api/customers`, newCustomer);
+      const response = await axios.post(getApiEndpoint('/customers'), newCustomer);
       const created = response.data;
       
       // Verify age
       if (newCustomer.birth_date) {
-        const ageResponse = await axios.post(`http://localhost:5024/api/customers/verify-age`, {
+        const ageResponse = await axios.post(getApiEndpoint('/customers/verify-age'), {
           birth_date: newCustomer.birth_date
         });
         created.is_verified = ageResponse.data.is_valid;

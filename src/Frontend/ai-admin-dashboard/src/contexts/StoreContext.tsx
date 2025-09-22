@@ -39,6 +39,8 @@ interface Store {
   pos_enabled: boolean;
   ecommerce_enabled: boolean;
   status: 'active' | 'inactive' | 'suspended';
+  province_code?: string;
+  province_territory_id?: string;
   created_at: string;
   updated_at: string;
 }

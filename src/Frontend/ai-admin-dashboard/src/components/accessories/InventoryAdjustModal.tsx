@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   X, Plus, Minus, Edit2, AlertTriangle,
-  Package, TrendingUp, TrendingDown, RefreshCw
+  Package, TrendingDown, RefreshCw
 } from 'lucide-react';
 
 interface InventoryAdjustModalProps {

@@ -22,7 +22,7 @@ class WhisperSTTHandler(STTHandler):
     
     def __init__(self, model_name: str = "base", config: Optional[AudioConfig] = None):
         """Initialize with Whisper model
-        
+
         Args:
             model_name: Model size (tiny, base, small, medium, large)
             config: Audio configuration
@@ -30,22 +30,15 @@ class WhisperSTTHandler(STTHandler):
         super().__init__(config)
         self.model_name = model_name
         self.model = None
-        self.model_path = Path(f"models/voice/whisper/{model_name}.pt")
+        self.model_path = Path(f"models/voice/whisper/{model_name}.bin")
         
     async def initialize(self) -> bool:
         """Initialize and load Whisper model"""
         try:
             self.set_state(VoiceState.PROCESSING)
-            
-            # Check if local model exists
-            if not self.model_path.exists():
-                logger.error(f"Model file not found: {self.model_path}")
-                self.set_state(VoiceState.ERROR)
-                return False
-            
-            # Load model from local file
-            logger.info(f"Loading Whisper {self.model_name} model from {self.model_path}")
-            
+
+            logger.info(f"Initializing Whisper {self.model_name} model")
+
             # Run model loading in thread pool to avoid blocking
             loop = asyncio.get_event_loop()
             self.model = await loop.run_in_executor(
@@ -69,16 +62,21 @@ class WhisperSTTHandler(STTHandler):
     def _load_model_sync(self):
         """Synchronously load the model (for thread pool execution)"""
         try:
-            # Load model with explicit path
-            model = whisper.load_model(
-                self.model_name,
-                download_root=str(self.model_path.parent),
-                in_memory=True
-            )
+            # Try loading by model name first (this will use Whisper's built-in loading)
+            logger.info(f"Loading Whisper model: {self.model_name}")
+            model = whisper.load_model(self.model_name)
+            logger.info(f"Successfully loaded Whisper model: {self.model_name}")
             return model
         except Exception as e:
-            logger.error(f"Error loading model: {e}")
-            return None
+            logger.error(f"Error loading model by name: {e}")
+            # Try loading from file path
+            try:
+                logger.info(f"Trying to load from file path: {self.model_path}")
+                model = whisper.load_model(str(self.model_path))
+                return model
+            except Exception as e2:
+                logger.error(f"File path loading also failed: {e2}")
+                return None
     
     async def transcribe(
         self, 

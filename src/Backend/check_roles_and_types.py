@@ -84,15 +84,15 @@ async def check_database():
         print("\n3. CHECKING CUSTOMER_TYPE DEFINITIONS:")
         print("-" * 40)
         
-        # Check customers table
+        # Check profiles table
         customer_type_info = await conn.fetchrow("""
-            SELECT 
+            SELECT
                 column_name,
                 data_type,
                 column_default,
                 is_nullable
             FROM information_schema.columns
-            WHERE table_name = 'customers' AND column_name = 'customer_type'
+            WHERE table_name = 'profiles' AND column_name = 'customer_type'
         """)
         
         if customer_type_info:
@@ -104,20 +104,20 @@ async def check_database():
             # Get distinct customer types
             types = await conn.fetch("""
                 SELECT DISTINCT customer_type, COUNT(*) as count
-                FROM customers
+                FROM profiles
                 WHERE customer_type IS NOT NULL
                 GROUP BY customer_type
                 ORDER BY customer_type
             """)
             
             if types:
-                print("\n  Existing customer_type values in customers table:")
+                print("\n  Existing customer_type values in profiles table:")
                 for ctype in types:
-                    print(f"    - {ctype['customer_type']}: {ctype['count']} customers")
+                    print(f"    - {ctype['customer_type']}: {ctype['count']} profiles")
             else:
-                print("\n  No customer_type values found in customers table")
+                print("\n  No customer_type values found in profiles table")
         else:
-            print("  No 'customer_type' column found in customers table")
+            print("  No 'customer_type' column found in profiles table")
         
         # Check user_profiles table
         profile_type_info = await conn.fetchrow("""
@@ -180,7 +180,7 @@ async def check_database():
                 ON tc.constraint_name = cc.constraint_name
             WHERE tc.table_schema = 'public'
             AND (
-                tc.table_name IN ('users', 'customers', 'user_profiles')
+                tc.table_name IN ('users', 'profiles', 'user_profiles')
                 OR tc.constraint_name LIKE '%role%'
                 OR tc.constraint_name LIKE '%customer_type%'
             )
@@ -200,7 +200,7 @@ async def check_database():
         print("-" * 40)
         print("• User roles are stored as VARCHAR(50) in users.role column")
         print("• Default role value is 'customer' (from migration)")
-        print("• Customer types are stored as VARCHAR(50) in customers.customer_type")
+        print("• Customer types are stored as VARCHAR(50) in profiles.customer_type")
         print("• Default customer_type is 'regular'")
         print("• No dedicated role/permission tables exist")
         print("• No ENUM types or CHECK constraints enforce specific values")

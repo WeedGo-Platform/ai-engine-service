@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { getApiEndpoint } from '../../config/app.config';
 import {
-  X, Scan, Loader2, Check, AlertCircle, Camera,
-  Search, Package, DollarSign, Hash, Image
+  X, Scan, Loader2, Check, AlertCircle,
+  Search, Package, DollarSign
 } from 'lucide-react';
 import axios from 'axios';
 
@@ -50,7 +51,7 @@ const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
     setScanResult(null);
 
     try {
-      const response = await axios.post('http://localhost:5024/api/accessories/barcode/scan', {
+      const response = await axios.post(getApiEndpoint('/accessories/barcode/scan'), {
         barcode,
         store_id: storeId,
         scan_type: 'intake'
@@ -103,7 +104,7 @@ const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
       };
 
       const response = await axios.post(
-        'http://localhost:5024/api/accessories/inventory/intake',
+        getApiEndpoint('/accessories/inventory/intake'),
         intakeData
       );
 

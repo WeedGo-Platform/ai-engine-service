@@ -17,6 +17,7 @@ export interface Store {
   tenant_id: string;
   tenant_code?: string;
   province_territory_id: string;
+  province_code?: string;
   store_code: string;
   name: string;
   address?: Address;

@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   CreditCard,
-  Settings,
   Check,
-  X,
   AlertCircle,
   Eye,
   EyeOff,
@@ -68,8 +66,7 @@ const PAYMENT_METHODS = [
 
 const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> = ({
   tenantId,
-  settings: initialSettings,
-  onSave,
+  settings: initialonSave,
   onValidate
 }) => {
   const [settings, setSettings] = useState<PaymentProviderSettings>(initialSettings || {});

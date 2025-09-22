@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Truck, Shield, Clock, DollarSign, AlertTriangle, CreditCard, Smartphone, Plus, Trash2, Monitor, Tablet, Globe
 } from 'lucide-react';
@@ -101,7 +101,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
     const removeTerminal = (id: string) => {
       setLocalSettings({
         ...localSettings,
-        terminals: localSettings.terminals.filter(t => t.id !== id)
+        terminals: localSettings.terminals.filter((t: any) => t.id !== id)
       });
     };
 
@@ -260,7 +260,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
                 <div>
                   <label className="block text-sm font-medium mb-2">Tip Options (%)</label>
                   <div className="flex gap-2">
-                    {localSettings.tipOptions.map((tip, index) => (
+                    {localSettings.tipOptions.map((tip: any, index: number) => (
                       <input
                         key={index}
                         type="number"

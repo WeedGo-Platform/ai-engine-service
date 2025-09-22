@@ -214,11 +214,12 @@ async def get_dashboard_analytics(
         category_rows = await conn.fetch(category_query, *category_params)
         
         # Convert to percentage
-        total_category_revenue = sum(float(row['revenue']) for row in category_rows)
+        total_category_revenue = sum(float(row['revenue']) if row['revenue'] is not None else 0.0 for row in category_rows)
         categories = {}
         if total_category_revenue > 0:
             for row in category_rows[:5]:  # Top 5 categories
-                categories[row['category']] = round(float(row['revenue']) / total_category_revenue * 100, 1)
+                revenue = float(row['revenue']) if row['revenue'] is not None else 0.0
+                categories[row['category']] = round(revenue / total_category_revenue * 100, 1)
         
         # Get recent orders
         recent_where = "WHERE 1=1"

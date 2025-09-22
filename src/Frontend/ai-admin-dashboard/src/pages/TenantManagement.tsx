@@ -28,6 +28,7 @@ import {
   RefreshCw
 } from 'lucide-react';
 import tenantService, { Tenant, CreateTenantRequest } from '../services/tenantService';
+import { getApiEndpoint } from '../config/app.config';
 import { useAuth } from '../contexts/AuthContext';
 import TenantEditModal from '../components/TenantEditModal';
 
@@ -81,7 +82,7 @@ const TenantManagement: React.FC = () => {
     try {
       const currentTenantId = user?.tenants?.[0]?.id;
       if (currentTenantId) {
-        const response = await fetch(`http://localhost:5024/api/tenants/${currentTenantId}/metrics`);
+        const response = await fetch(getApiEndpoint(`/tenants/${currentTenantId}/metrics`));
         if (response.ok) {
           const metrics = await response.json();
           setTenantMetrics(metrics);
@@ -116,7 +117,7 @@ const TenantManagement: React.FC = () => {
         const currentTenantCode = user?.tenants?.[0]?.code || user?.tenant_code;
         if (currentTenantCode) {
           try {
-            const response = await fetch(`http://localhost:5024/api/tenants/by-code/${currentTenantCode}`);
+            const response = await fetch(getApiEndpoint(`/tenants/by-code/${currentTenantCode}`));
             if (response.ok) {
               const tenantData = await response.json();
               setTenants([tenantData]);
@@ -347,14 +348,19 @@ const TenantManagement: React.FC = () => {
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">{isTenantAdminView ? 'Last Month Revenue (All Stores)' : 'Monthly Revenue'}</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                ${isTenantAdminView ? 
-                  (tenantMetrics?.last_month_revenue?.toLocaleString() || '0') : 
+                ${isTenantAdminView ?
+                  (tenantMetrics?.last_month_revenue?.toLocaleString() || '0') :
                   tenants.reduce((sum, t) => {
                     const price = { enterprise: 299, professional_and_growing_business: 149, small_business: 99, community_and_new_business: 0 };
                     return sum + (price[t.subscription_tier as keyof typeof price] || 0);
                   }, 0)
                 }
               </p>
+              {isTenantAdminView && tenantMetrics?.order_count !== undefined && (
+                <p className="text-xs text-gray-500 mt-1">
+                  {tenantMetrics.order_count} order{tenantMetrics.order_count !== 1 ? 's' : ''}
+                </p>
+              )}
             </div>
             <DollarSign className="w-8 h-8 text-primary-500" />
           </div>
@@ -874,7 +880,7 @@ const TenantFormModal: React.FC<{
     setLoadingUsers(true);
     setUserError(null);
     try {
-      const response = await fetch(`http://localhost:5024/api/tenants/${tenant.id}/users`);
+      const response = await fetch(getApiEndpoint(`/tenants/${tenant.id}/users`));
       if (!response.ok) throw new Error('Failed to fetch users');
       const data = await response.json();
       setTenantUsers(data);
@@ -891,7 +897,7 @@ const TenantFormModal: React.FC<{
     
     try {
       const response = await fetch(
-        `http://localhost:5024/api/tenants/${tenant.id}/users/${userId}/reset-password`,
+        getApiEndpoint(`/tenants/${tenant.id}/users/${userId}/reset-password`),
         { method: 'POST' }
       );
       if (!response.ok) throw new Error('Failed to reset password');
@@ -909,7 +915,7 @@ const TenantFormModal: React.FC<{
     
     try {
       const response = await fetch(
-        `http://localhost:5024/api/tenants/${tenant.id}/users/${userId}`,
+        getApiEndpoint(`/tenants/${tenant.id}/users/${userId}`),
         {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -933,7 +939,7 @@ const TenantFormModal: React.FC<{
     
     try {
       const response = await fetch(
-        `http://localhost:5024/api/tenants/${tenant.id}/users/${userId}`,
+        getApiEndpoint(`/tenants/${tenant.id}/users/${userId}`),
         { method: 'DELETE' }
       );
       if (!response.ok) throw new Error('Failed to delete user');
@@ -951,7 +957,7 @@ const TenantFormModal: React.FC<{
     
     try {
       const response = await fetch(
-        `http://localhost:5024/api/tenants/${tenant.id}/users/${userId}`,
+        getApiEndpoint(`/tenants/${tenant.id}/users/${userId}`),
         {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -990,7 +996,7 @@ const TenantFormModal: React.FC<{
     
     try {
       const response = await fetch(
-        `http://localhost:5024/api/tenants/${tenant.id}/users`,
+        getApiEndpoint(`/tenants/${tenant.id}/users`),
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
