@@ -22,16 +22,16 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const router = useRouter();
-  const { addToCart, getCartItem } = useCartStore();
-  const cartItem = getCartItem(product.id);
+  const { addItem, getCartItem } = useCartStore();
+  const cartItem = getCartItem(product.sku || product.id);
 
   const handlePress = () => {
     router.push(`/product/${product.id}`);
   };
 
-  const handleAddToCart = (e: any) => {
+  const handleAddToCart = async (e: any) => {
     e.stopPropagation();
-    addToCart(product);
+    await addItem(product, 1, product.size);
   };
 
   const getStrainTypeColor = (type?: string) => {

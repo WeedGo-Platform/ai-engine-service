@@ -3,6 +3,7 @@ import { Stack, useRouter, useSegments, useRootNavigation, Slot } from 'expo-rou
 import { View, ActivityIndicator } from 'react-native';
 import { useAuthStore } from '@/stores/authStore';
 import { Colors } from '@/constants/Colors';
+import Toast from 'react-native-toast-message';
 
 export default function RootLayout() {
   const [isReady, setIsReady] = useState(false);
@@ -51,13 +52,16 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack>
-      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="(modals)" options={{ presentation: 'modal', headerShown: false }} />
-      <Stack.Screen name="checkout" options={{ headerShown: false }} />
-      <Stack.Screen name="orders" options={{ headerShown: false }} />
-      <Stack.Screen name="product" options={{ headerShown: false }} />
-    </Stack>
+    <>
+      <Stack>
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="(modals)" options={{ presentation: 'modal', headerShown: false }} />
+        <Stack.Screen name="checkout" options={{ headerShown: false }} />
+        <Stack.Screen name="orders" options={{ headerShown: false }} />
+        <Stack.Screen name="product" options={{ headerShown: false }} />
+      </Stack>
+      <Toast />
+    </>
   );
 }
