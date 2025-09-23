@@ -83,7 +83,6 @@ export function ProductCard({ product }: ProductCardProps) {
           </View>
         )}
       </View>
-
       <View style={styles.info}>
         {product.brand ? (
           <Text style={styles.brand} numberOfLines={1}>

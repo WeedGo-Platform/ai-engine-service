@@ -145,6 +145,7 @@ export interface Product {
   longDescription?: string;
   category: string;
   subCategory?: string;
+  sub_category?: string;  // API field name with underscore
   subSubCategory?: string;
   strainType?: string;
   plantType?: string;

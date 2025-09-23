@@ -56,7 +56,7 @@ class ProductService {
   }
 
   /**
-   * Get all product categories by extracting from product search results
+   * Get all product categories by extracting subcategories from product search results
    */
   async getCategories(): Promise<Category[]> {
     // Get current store from store state
@@ -66,76 +66,37 @@ class ProductService {
       return [];
     }
 
-    // Search products to extract categories dynamically
+    // Search products to extract subcategories dynamically
     const response = await this.searchProducts({
       limit: 100,
       store_id: currentStore.id
     });
 
-    const categoryMap = new Map<string, Category>();
+    const subcategoryMap = new Map<string, Category>();
 
-    // Extract unique categories from products
+    // Extract unique subcategories from products
     if (response.results) {
       response.results.forEach(product => {
-        if (product.category) {
-          const categoryKey = product.category;
+        // Use sub_category field as requested by user
+        if (product.sub_category) {
+          const subcategoryKey = product.sub_category;
 
-          if (!categoryMap.has(categoryKey)) {
-            categoryMap.set(categoryKey, {
-              id: categoryKey.toLowerCase().replace(/\s+/g, '-'),
-              name: product.category,
-              slug: categoryKey.toLowerCase().replace(/\s+/g, '-'),
-              subcategories: new Map()
+          if (!subcategoryMap.has(subcategoryKey)) {
+            subcategoryMap.set(subcategoryKey, {
+              id: subcategoryKey.toLowerCase().replace(/\s+/g, '-'),
+              name: product.sub_category,
+              slug: subcategoryKey.toLowerCase().replace(/\s+/g, '-')
             });
-          }
-
-          const category = categoryMap.get(categoryKey)!;
-
-          // Add subcategory if it exists
-          if (product.subCategory) {
-            if (!category.subcategories) {
-              category.subcategories = new Map();
-            }
-
-            const subKey = product.subCategory;
-            if (!category.subcategories.has(subKey)) {
-              category.subcategories.set(subKey, {
-                id: subKey.toLowerCase().replace(/\s+/g, '-'),
-                name: product.subCategory,
-                slug: subKey.toLowerCase().replace(/\s+/g, '-'),
-                subSubCategories: new Map()
-              });
-            }
-
-            // Add sub-subcategory if it exists
-            if (product.subSubCategory) {
-              const subcategory = category.subcategories.get(subKey)!;
-              if (!subcategory.subSubCategories) {
-                subcategory.subSubCategories = new Map();
-              }
-
-              const subSubKey = product.subSubCategory;
-              if (!subcategory.subSubCategories.has(subSubKey)) {
-                subcategory.subSubCategories.set(subSubKey, {
-                  id: subSubKey.toLowerCase().replace(/\s+/g, '-'),
-                  name: product.subSubCategory,
-                  slug: subSubKey.toLowerCase().replace(/\s+/g, '-')
-                });
-              }
-            }
           }
         }
       });
     }
 
-    // Convert Maps to arrays and return
-    const categories = Array.from(categoryMap.values()).map(cat => ({
-      ...cat,
-      subcategories: cat.subcategories ? Array.from(cat.subcategories.values()).map(sub => ({
-        ...sub,
-        subSubCategories: sub.subSubCategories ? Array.from(sub.subSubCategories.values()) : []
-      })) : []
-    }));
+    // Convert Map to array and return
+    const categories = Array.from(subcategoryMap.values());
+
+    // Sort alphabetically for better UX
+    categories.sort((a, b) => a.name.localeCompare(b.name));
 
     return categories;
   }
