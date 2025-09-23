@@ -3,9 +3,10 @@ import * as SecureStore from 'expo-secure-store';
 import Constants from 'expo-constants';
 import { ApiError } from '@/types/api.types';
 
-// Environment variables
-const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:5024';
+// Environment variables - Using EXPO_PUBLIC_ prefix for Expo environment variables
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3001';
 const TENANT_ID = process.env.EXPO_PUBLIC_TENANT_ID || '00000000-0000-0000-0000-000000000001';
+const API_TIMEOUT = Number(process.env.EXPO_PUBLIC_API_TIMEOUT) || 30000;
 
 // Secure storage keys
 const TOKEN_KEY = 'access_token';
@@ -19,7 +20,7 @@ class ApiClient {
   constructor() {
     this.client = axios.create({
       baseURL: API_URL,
-      timeout: 30000,
+      timeout: API_TIMEOUT,
       headers: {
         'Content-Type': 'application/json',
         'X-Tenant-ID': TENANT_ID,

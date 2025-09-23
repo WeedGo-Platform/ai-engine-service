@@ -98,7 +98,7 @@ export const useAuthStore = create<AuthState>()(
       login: async (phone, password?) => {
         set({ isLoading: true, error: null });
         try {
-          const response = await authService.login(phone);
+          const response = await authService.login({ phone, password });
 
           // Transform API response to expected format
           const authResponse: AuthResponse = {
