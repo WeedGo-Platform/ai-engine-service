@@ -18,15 +18,20 @@ const cardWidth = (width - 48) / 2; // 2 columns with padding
 
 interface ProductCardProps {
   product: Product;
+  onPress?: () => void;
 }
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product, onPress }: ProductCardProps) {
   const router = useRouter();
   const { addItem, getCartItem } = useCartStore();
   const cartItem = getCartItem(product.sku || product.id);
 
   const handlePress = () => {
-    router.push(`/product/${product.id}`);
+    if (onPress) {
+      onPress();
+    } else {
+      router.push(`/product/${product.id}`);
+    }
   };
 
   const handleAddToCart = async (e: any) => {

@@ -74,48 +74,7 @@ export default function StoresScreen() {
       setStores(response);
     } catch (error) {
       console.error('Failed to load stores:', error);
-      // Mock data for demonstration
-      setStores([
-        {
-          id: '1',
-          name: 'WeedGo Downtown',
-          address: '123 King St W, Toronto, ON',
-          phone: '416-555-0001',
-          hours: 'Mon-Sun: 9AM-11PM',
-          latitude: 43.6426,
-          longitude: -79.3871,
-          distance: 0.5,
-          rating: 4.8,
-          reviewCount: 156,
-          image: 'https://example.com/store1.jpg',
-        },
-        {
-          id: '2',
-          name: 'WeedGo Queen West',
-          address: '456 Queen St W, Toronto, ON',
-          phone: '416-555-0002',
-          hours: 'Mon-Sun: 10AM-10PM',
-          latitude: 43.6489,
-          longitude: -79.4044,
-          distance: 1.2,
-          rating: 4.6,
-          reviewCount: 89,
-          image: 'https://example.com/store2.jpg',
-        },
-        {
-          id: '3',
-          name: 'WeedGo Yorkville',
-          address: '789 Bloor St W, Toronto, ON',
-          phone: '416-555-0003',
-          hours: 'Mon-Sun: 9AM-10PM',
-          latitude: 43.6671,
-          longitude: -79.4000,
-          distance: 2.1,
-          rating: 4.9,
-          reviewCount: 234,
-          image: 'https://example.com/store3.jpg',
-        },
-      ] as any);
+      setStores([]);
     } finally {
       setLoading(false);
     }
@@ -163,7 +122,7 @@ export default function StoresScreen() {
           </View>
           <Text style={styles.distance}>{item.distance} km away</Text>
         </View>
-        <Text style={styles.hours}>{item.hours}</Text>
+        <Text style={styles.hours}>{typeof item.hours === 'string' ? item.hours : 'Hours vary'}</Text>
       </View>
       <View style={styles.storeActions}>
         <TouchableOpacity

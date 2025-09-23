@@ -55,11 +55,11 @@ export function FloatingChatBubble() {
       context.startX = translateX.value;
       context.startY = translateY.value;
     },
-    onActive: (event, context) => {
+    onActive: (event: any, context: any) => {
       translateX.value = context.startX + event.translationX;
       translateY.value = context.startY + event.translationY;
     },
-    onEnd: (event) => {
+    onEnd: (event: any) => {
       // Snap to edge
       const isLeft = translateX.value < SCREEN_WIDTH / 2;
       const targetX = isLeft ? 20 : SCREEN_WIDTH - BUBBLE_SIZE - 20;

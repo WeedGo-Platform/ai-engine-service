@@ -113,7 +113,7 @@ export default function ProductDetailScreen() {
               <View style={styles.terpeneEffects}>
                 {terpene.effects.map((effect, i) => (
                   <Text key={i} style={styles.terpeneEffect}>
-                    {effect}
+                    {terpene.name}
                   </Text>
                 ))}
               </View>
@@ -314,13 +314,13 @@ export default function ProductDetailScreen() {
           )}
 
           {/* Effects */}
-          {product.effects && product.effects.length > 0 && (
+          {product.terpenes && product.terpenes.length > 0 && (
             <View style={styles.effectsContainer}>
               <Text style={styles.sectionTitle}>Effects</Text>
               <View style={styles.effectsList}>
-                {product.effects.map((effect, index) => (
+                {product.terpenes.map((terpene, index) => (
                   <View key={index} style={styles.effectPill}>
-                    <Text style={styles.effectText}>{effect}</Text>
+                    <Text style={styles.effectText}>{terpene.name}</Text>
                   </View>
                 ))}
               </View>

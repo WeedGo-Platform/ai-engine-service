@@ -56,6 +56,21 @@ class StoreService {
   /**
    * Get nearest store based on location
    */
+  async getNearbyStores(latitude?: number, longitude?: number): Promise<Store[]> {
+    try {
+      const params: any = {};
+      if (latitude && longitude) {
+        params.latitude = latitude;
+        params.longitude = longitude;
+      }
+      const response = await apiClient.get<Store[]>('/api/stores/nearby', { params });
+      return response.data;
+    } catch (error) {
+      console.error('Failed to get nearby stores:', error);
+      return [];
+    }
+  }
+
   async getNearestStore(lat: number, lng: number): Promise<Store> {
     const response = await apiClient.get<Store>('/api/stores/nearest', {
       params: { lat, lng },

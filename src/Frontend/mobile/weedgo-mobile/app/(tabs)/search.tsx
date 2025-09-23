@@ -170,21 +170,6 @@ export default function SearchScreen() {
         </View>
       )}
 
-      {/* Recent Searches or Popular Searches */}
-      {!searchQuery && products.length === 0 && !loading && (
-        <View style={styles.suggestionsContainer}>
-          <Text style={styles.suggestionsTitle}>Popular Searches</Text>
-          {['Indica', 'Sativa', 'Edibles', 'Pre-rolls', 'CBD', 'Vapes'].map((term) => (
-            <TouchableOpacity
-              key={term}
-              style={styles.suggestionChip}
-              onPress={() => handleSearch(term)}
-            >
-              <Text style={styles.suggestionText}>{term}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      )}
     </View>
   );
 
@@ -254,7 +239,7 @@ export default function SearchScreen() {
           <FlashList
             data={products}
             renderItem={renderProduct}
-            estimatedItemSize={200}
+            
             numColumns={2}
             contentContainerStyle={styles.listContent}
             ItemSeparatorComponent={() => <View style={{ height: 16 }} />}

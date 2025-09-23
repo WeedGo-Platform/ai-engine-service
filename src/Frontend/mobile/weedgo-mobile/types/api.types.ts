@@ -56,7 +56,7 @@ export interface User {
   id: string;
   phone: string;
   email?: string;
-  profile_id: string;
+  profile_id?: string;
   first_name?: string;
   last_name?: string;
   // Additional properties for component compatibility
@@ -94,8 +94,14 @@ export interface Store {
   name: string;
   store_code: string;
   address: string;
+  city?: string;
   phone: string;
   hours: StoreHours;
+  latitude?: number;
+  longitude?: number;
+  distance?: number;
+  rating?: number;
+  reviewCount?: number;
   delivery_zones: DeliveryZone[];
   pickup_available: boolean;
   delivery_available: boolean;
@@ -178,6 +184,7 @@ export interface Product {
   quantity?: number | null;
   rating?: number;
   reviewCount?: number;
+  effects?: string[];
   featured?: boolean;
   bestseller?: boolean;
   newArrival?: boolean;
@@ -206,6 +213,8 @@ export interface Terpene {
 
 export interface ProductSearchParams {
   q?: string;
+  search?: string;
+  store_id?: string;
   category?: string;
   subcategory?: string;
   brand?: string;
@@ -224,6 +233,7 @@ export interface ProductSearchParams {
 }
 
 export interface ProductSearchResponse {
+  offset?: number;
   results: Product[];  // API returns 'results', not 'products'
   total?: number;
   page?: number;

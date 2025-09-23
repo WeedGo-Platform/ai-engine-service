@@ -21,7 +21,7 @@ class AuthService {
   async checkPhone(phone: string): Promise<CheckPhoneResponse> {
     const response = await apiClient.post<CheckPhoneResponse>(
       '/api/v1/auth/customer/check-phone',
-      { phone } as CheckPhoneRequest
+      data as CheckPhoneRequest
     );
     return response.data;
   }
@@ -40,10 +40,10 @@ class AuthService {
   /**
    * Login an existing customer
    */
-  async login(phone: string): Promise<LoginResponse> {
+  async login(data: { phone: string; password?: string }): Promise<LoginResponse> {
     const response = await apiClient.post<LoginResponse>(
       '/api/v1/auth/customer/login',
-      { phone } as LoginRequest
+      data as LoginRequest
     );
     return response.data;
   }

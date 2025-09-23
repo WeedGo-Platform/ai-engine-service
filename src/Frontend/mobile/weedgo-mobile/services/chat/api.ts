@@ -34,7 +34,7 @@ class ChatAPI {
       agent,
       personality,
     });
-    return response.data;
+    return response.data as ChatSession;
   }
 
   /**
@@ -42,7 +42,7 @@ class ChatAPI {
    */
   async getSession(sessionId: string): Promise<ChatSession> {
     const response = await apiClient.get(`/chat/session/${sessionId}`);
-    return response.data;
+    return response.data as ChatSession;
   }
 
   /**
@@ -54,7 +54,7 @@ class ChatAPI {
       message,
       user_id: userId,
     });
-    return response.data;
+    return response.data as ChatSession;
   }
 
   /**
@@ -79,7 +79,7 @@ class ChatAPI {
    */
   async getActiveSessions(): Promise<any> {
     const response = await apiClient.get('/chat/sessions');
-    return response.data;
+    return response.data as ChatSession;
   }
 }
 
