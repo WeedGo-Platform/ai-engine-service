@@ -31,7 +31,7 @@ export interface WishlistItem {
 
 interface WishlistState {
   items: WishlistItem[];
-  itemIds: Set<string>; // For quick lookup
+  itemIds: string[]; // Changed from Set to array for Redux serialization
   isLoading: boolean;
   isAdding: boolean;
   isRemoving: boolean;
@@ -41,7 +41,7 @@ interface WishlistState {
 
 const initialState: WishlistState = {
   items: [],
-  itemIds: new Set(),
+  itemIds: [],
   isLoading: false,
   isAdding: false,
   isRemoving: false,
@@ -124,7 +124,7 @@ const wishlistSlice = createSlice({
         try {
           const items = JSON.parse(savedWishlist);
           state.items = items;
-          state.itemIds = new Set(items.map((item: WishlistItem) => item.productId));
+          state.itemIds = items.map((item: WishlistItem) => item.productId);
           state.total = items.length;
         } catch (error) {
           // Invalid data in localStorage
@@ -141,7 +141,7 @@ const wishlistSlice = createSlice({
       })
       .addCase(fetchWishlist.fulfilled, (state, action) => {
         state.items = action.payload;
-        state.itemIds = new Set(action.payload.map((item: WishlistItem) => item.productId));
+        state.itemIds = action.payload.map((item: WishlistItem) => item.productId);
         state.total = action.payload.length;
         state.isLoading = false;
 
@@ -163,9 +163,9 @@ const wishlistSlice = createSlice({
         const newItem = action.payload;
 
         // Check if item already exists
-        if (!state.itemIds.has(newItem.productId)) {
+        if (!state.itemIds.includes(newItem.productId)) {
           state.items.unshift(newItem);
-          state.itemIds.add(newItem.productId);
+          state.itemIds.push(newItem.productId);
           state.total += 1;
 
           // Update localStorage
@@ -192,7 +192,7 @@ const wishlistSlice = createSlice({
         const productId = action.payload;
 
         state.items = state.items.filter(item => item.productId !== productId);
-        state.itemIds.delete(productId);
+        state.itemIds = state.itemIds.filter(id => id !== productId);
         state.total = state.items.length;
 
         // Update localStorage
@@ -215,7 +215,7 @@ const wishlistSlice = createSlice({
       })
       .addCase(clearWishlist.fulfilled, (state) => {
         state.items = [];
-        state.itemIds = new Set();
+        state.itemIds = [];
         state.total = 0;
         state.isLoading = false;
 
@@ -251,13 +251,13 @@ const wishlistSlice = createSlice({
       .addCase(checkWishlistItem.fulfilled, (state, action) => {
         const { productId, isInWishlist } = action.payload;
 
-        if (isInWishlist && !state.itemIds.has(productId)) {
+        if (isInWishlist && !state.itemIds.includes(productId)) {
           // Item is in wishlist on server but not locally - need to sync
           // This typically happens after login
-        } else if (!isInWishlist && state.itemIds.has(productId)) {
+        } else if (!isInWishlist && state.itemIds.includes(productId)) {
           // Item is not in wishlist on server but is locally - remove locally
           state.items = state.items.filter(item => item.productId !== productId);
-          state.itemIds.delete(productId);
+          state.itemIds = state.itemIds.filter(id => id !== productId);
           state.total = state.items.length;
         }
       });
@@ -273,7 +273,7 @@ export const selectWishlistItems = (state: { wishlist: WishlistState }) => state
 export const selectWishlistTotal = (state: { wishlist: WishlistState }) => state.wishlist.total;
 
 export const selectIsInWishlist = (productId: string) => (state: { wishlist: WishlistState }) =>
-  state.wishlist.itemIds.has(productId);
+  state.wishlist.itemIds.includes(productId);
 
 export const selectWishlistLoading = (state: { wishlist: WishlistState }) => ({
   isLoading: state.wishlist.isLoading,
