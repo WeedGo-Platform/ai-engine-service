@@ -6,7 +6,12 @@ class StoreService {
    * Get all available stores for tenant
    */
   async getStores(): Promise<Store[]> {
-    const response = await apiClient.get<Store[]>('/api/stores');
+    const tenantId = process.env.EXPO_PUBLIC_TENANT_ID;
+    if (!tenantId) {
+      console.warn('No tenant ID configured');
+      return [];
+    }
+    const response = await apiClient.get<Store[]>(`/api/stores/tenant/${tenantId}`);
     return response.data;
   }
 

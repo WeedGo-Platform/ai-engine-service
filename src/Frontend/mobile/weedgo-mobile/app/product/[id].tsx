@@ -16,6 +16,7 @@ import useProductsStore from '@/stores/productsStore';
 import useCartStore from '@/stores/cartStore';
 import { Colors } from '@/constants/Colors';
 import { Product, Terpene } from '@/types/api.types';
+import { ReviewsSection } from '@/components/reviews/ReviewsSection';
 
 const { width } = Dimensions.get('window');
 
@@ -245,9 +246,7 @@ export default function ProductDetailScreen() {
           )}
         </View>
 
-        {/* Product Info */}
         <View style={styles.infoContainer}>
-          {/* Brand and Name */}
           <Text style={styles.brand}>{product.brand}</Text>
           <Text style={styles.productName}>{product.name}</Text>
 
@@ -353,6 +352,16 @@ export default function ProductDetailScreen() {
             )}
           </View>
         </View>
+
+        {/* Reviews Section */}
+        {product && (
+          <View style={styles.reviewsSection}>
+            <ReviewsSection
+              productId={product.id}
+              productName={product.name}
+            />
+          </View>
+        )}
       </ScrollView>
 
       {/* Bottom Add to Cart Bar */}
@@ -705,5 +714,10 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 11,
     fontWeight: '600',
+  },
+  reviewsSection: {
+    marginTop: 24,
+    paddingHorizontal: 16,
+    paddingBottom: 16,
   },
 });

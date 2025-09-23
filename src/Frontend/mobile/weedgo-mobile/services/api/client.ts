@@ -6,7 +6,6 @@ import { ApiError } from '@/types/api.types';
 // Environment variables
 const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:5024';
 const TENANT_ID = process.env.EXPO_PUBLIC_TENANT_ID || '00000000-0000-0000-0000-000000000001';
-const STORE_ID = process.env.EXPO_PUBLIC_STORE_ID || '00000000-0000-0000-0000-000000000001';
 
 // Secure storage keys
 const TOKEN_KEY = 'access_token';
@@ -24,7 +23,6 @@ class ApiClient {
       headers: {
         'Content-Type': 'application/json',
         'X-Tenant-ID': TENANT_ID,
-        'X-Store-ID': STORE_ID,
         'X-App-Version': Constants.expoConfig?.version || '1.0.0',
         'X-Platform': Constants.platform?.ios ? 'ios' : 'android',
       },
@@ -34,7 +32,7 @@ class ApiClient {
   }
 
   private setupInterceptors() {
-    // Request interceptor - add auth token
+    // Request interceptor - add auth token and store ID
     this.client.interceptors.request.use(
       async (config: InternalAxiosRequestConfig) => {
         // Skip auth header for auth endpoints
@@ -46,6 +44,20 @@ class ApiClient {
           if (token) {
             config.headers.Authorization = `Bearer ${token}`;
           }
+        }
+
+        // Add current store ID from secure storage if available
+        try {
+          const storeData = await SecureStore.getItemAsync('weedgo-store-storage');
+          if (storeData) {
+            const parsed = JSON.parse(storeData);
+            const currentStore = parsed?.state?.currentStore;
+            if (currentStore?.id) {
+              config.headers['X-Store-ID'] = currentStore.id;
+            }
+          }
+        } catch (error) {
+          // Store not available yet, skip adding header
         }
 
         // Log request in development
@@ -226,3 +238,8 @@ export const apiClient = new ApiClient();
 
 // Export types for convenience
 export type { ApiError } from '@/types/api.types';
+export type ApiResponse<T = any> = {
+  data: T;
+  message?: string;
+  error?: string;
+};

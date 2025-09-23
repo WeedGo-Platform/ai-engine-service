@@ -51,11 +51,10 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <TouchableOpacity style={styles.card} onPress={handlePress}>
-      {/* Product Image */}
       <View style={styles.imageContainer}>
-        {product.image_url ? (
+        {product.image || product.images?.[0] ? (
           <Image
-            source={{ uri: product.image_url }}
+            source={{ uri: product.image || product.images[0] }}
             style={styles.image}
             resizeMode="cover"
           />
@@ -65,78 +64,74 @@ export function ProductCard({ product }: ProductCardProps) {
           </View>
         )}
 
-        {/* Stock Badge */}
-        {!product.in_stock && (
+        {!product.inStock && (
           <View style={styles.outOfStockBadge}>
             <Text style={styles.outOfStockText}>Out of Stock</Text>
           </View>
         )}
 
-        {/* Strain Type Badge */}
-        {product.strain_type && (
+        {product.strainType && (
           <View
             style={[
               styles.strainBadge,
-              { backgroundColor: getStrainTypeColor(product.strain_type) },
+              { backgroundColor: getStrainTypeColor(product.strainType?.toLowerCase()) },
             ]}
           >
             <Text style={styles.strainText}>
-              {product.strain_type.toUpperCase()}
+              {(product.strainType || '').toUpperCase()}
             </Text>
           </View>
         )}
       </View>
 
-      {/* Product Info */}
       <View style={styles.info}>
-        {/* Brand */}
-        <Text style={styles.brand} numberOfLines={1}>
-          {product.brand}
-        </Text>
+        {product.brand ? (
+          <Text style={styles.brand} numberOfLines={1}>
+            {product.brand}
+          </Text>
+        ) : null}
 
-        {/* Name */}
         <Text style={styles.name} numberOfLines={2}>
-          {product.name}
+          {product.name || 'Unnamed Product'}
         </Text>
 
-        {/* THC/CBD Content */}
         <View style={styles.cannabinoids}>
-          {product.thc_content !== undefined && product.thc_content > 0 && (
-            <Text style={styles.thc}>THC {product.thc_content}%</Text>
+          {product.thcContent?.display && product.thcContent.display !== "0.0-0.0%" && (
+            <Text style={styles.thc}>THC {product.thcContent.display}</Text>
           )}
-          {product.cbd_content !== undefined && product.cbd_content > 0 && (
-            <Text style={styles.cbd}>CBD {product.cbd_content}%</Text>
+          {product.cbdContent?.display && product.cbdContent.display !== "0.0-0.0%" && (
+            <Text style={styles.cbd}>CBD {product.cbdContent.display}</Text>
           )}
         </View>
 
-        {/* Rating */}
         {product.rating && product.rating > 0 && (
           <View style={styles.rating}>
             <Ionicons name="star" size={12} color="#FFB800" />
             <Text style={styles.ratingText}>{product.rating.toFixed(1)}</Text>
-            {product.rating_count && (
-              <Text style={styles.ratingCount}>({product.rating_count})</Text>
+            {product.reviewCount !== undefined && (
+              <Text style={styles.ratingCount}>({product.reviewCount})</Text>
             )}
           </View>
         )}
 
-        {/* Price and Add Button */}
         <View style={styles.footer}>
           <View>
-            <Text style={styles.price}>${product.price}</Text>
-            {product.size && (
+            <Text style={styles.price}>
+              ${product.price || product.basePrice || '0.00'}
+            </Text>
+            {product.size ? (
               <Text style={styles.size}>{product.size}</Text>
-            )}
+            ) : null}
           </View>
 
           <TouchableOpacity
             style={[
               styles.addButton,
-              !product.in_stock && styles.addButtonDisabled,
+              !product.inStock && styles.addButtonDisabled,
               cartItem && styles.addButtonAdded,
             ]}
             onPress={handleAddToCart}
-            disabled={!product.in_stock}
+            disabled={!product.inStock}
           >
             {cartItem ? (
               <>

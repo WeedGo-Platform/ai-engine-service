@@ -59,6 +59,11 @@ export interface User {
   profile_id: string;
   first_name?: string;
   last_name?: string;
+  // Additional properties for component compatibility
+  firstName?: string;
+  lastName?: string;
+  profileId?: string;
+  profile_image?: string;
 }
 
 export interface Profile {
@@ -129,29 +134,67 @@ export interface DeliveryZone {
   estimated_time: string;
 }
 
-// Product Types
+// Product Types - matches actual API response
 export interface Product {
   id: string;
   sku: string;
+  slug?: string;
   name: string;
   brand: string;
-  category: string;
-  subcategory?: string;
   description: string;
-  image_url: string;
+  longDescription?: string;
+  category: string;
+  subCategory?: string;
+  subSubCategory?: string;
+  strainType?: string;
+  plantType?: string;
+  strain?: string | null;
   images?: string[];
+  image?: string;
+  sizes?: Array<{
+    id: string;
+    name: string;
+    price: number | null;
+    inStock: boolean;
+  }>;
+  size?: string;
+  price?: number | null;
+  basePrice?: number;
+  compareAtPrice?: number | null;
+  onSale?: boolean;
+  thcContent?: {
+    min: number;
+    max: number;
+    display: string;
+  };
+  cbdContent?: {
+    min: number;
+    max: number;
+    display: string;
+  };
+  inStock?: boolean;
+  stockStatus?: string;
+  quantity?: number | null;
+  rating?: number;
+  reviewCount?: number;
+  featured?: boolean;
+  bestseller?: boolean;
+  newArrival?: boolean;
+  tags?: string[];
+  terpenes?: Terpene[] | null;
+  ocsItemNumber?: number;
+  ocsVariantNumber?: string;
+  gtin?: string;
+
+  // Legacy compatibility fields
+  image_url?: string;
   thc_content?: number;
   cbd_content?: number;
-  strain_type?: 'indica' | 'sativa' | 'hybrid' | 'cbd';
-  terpenes?: Terpene[];
-  effects?: string[];
-  price: number;
-  size?: string;
-  unit_of_measure: string;
-  rating?: number;
+  strain_type?: string;
+  in_stock?: boolean;
   rating_count?: number;
-  in_stock: boolean;
   quantity_available?: number;
+  unit_of_measure?: string;
 }
 
 export interface Terpene {
@@ -180,9 +223,11 @@ export interface ProductSearchParams {
 }
 
 export interface ProductSearchResponse {
-  products: Product[];
-  total: number;
-  facets: {
+  results: Product[];  // API returns 'results', not 'products'
+  total?: number;
+  page?: number;
+  limit?: number;
+  facets?: {
     categories: CategoryCount[];
     brands: BrandCount[];
     price_ranges: PriceRange[];

@@ -21,6 +21,7 @@ import { StoreSelector } from '@/components/StoreSelector';
 import { CategoryTiles } from '@/components/CategoryTiles';
 import { QuickFilters } from '@/components/QuickFilters';
 import { ProductCard } from '@/components/ProductCard';
+import { EmptyState } from '@/components/EmptyState';
 import { Product } from '@/types/api.types';
 
 const { width } = Dimensions.get('window');
@@ -182,29 +183,47 @@ export default function HomeScreen() {
   const renderEmpty = () => {
     if (loading) return null;
 
+    // Different empty states based on context
+    if (searchQuery) {
+      return (
+        <EmptyState
+          icon="search-outline"
+          title="No products found"
+          subtitle={`We couldn't find any products matching "${searchQuery}"`}
+          actionLabel="Clear search"
+          onAction={() => {
+            setSearchQuery('');
+            handleSearch('');
+          }}
+          suggestions={['Indica', 'Sativa', 'Edibles', 'Pre-rolls']}
+          onSuggestionPress={handleSearch}
+        />
+      );
+    }
+
+    if (filters.category || filters.quickFilter) {
+      return (
+        <EmptyState
+          icon="filter-outline"
+          title="No products match your filters"
+          subtitle="Try adjusting your filters or browse all products"
+          actionLabel="Clear filters"
+          onAction={() => {
+            setFilters({ category: undefined, quickFilter: undefined });
+          }}
+        />
+      );
+    }
+
+    // Store has no inventory
     return (
-      <View style={styles.emptyContainer}>
-        <Ionicons name="search-outline" size={64} color={Colors.light.gray} />
-        <Text style={styles.emptyTitle}>No products found</Text>
-        <Text style={styles.emptyText}>
-          {searchQuery
-            ? `No results for "${searchQuery}"`
-            : filters.category
-            ? `No products in this category`
-            : `No products available`}
-        </Text>
-        {(searchQuery || filters.category) && (
-          <TouchableOpacity
-            style={styles.clearButton}
-            onPress={() => {
-              setSearchQuery('');
-              setFilters({ category: undefined, quickFilter: undefined });
-            }}
-          >
-            <Text style={styles.clearButtonText}>Clear filters</Text>
-          </TouchableOpacity>
-        )}
-      </View>
+      <EmptyState
+        icon="storefront-outline"
+        title="Store inventory coming soon"
+        subtitle="This store is currently updating their product catalog. Please check back later or try the AI chat assistant for help."
+        actionLabel="Open Chat"
+        onAction={() => router.push('/(tabs)/chat')}
+      />
     );
   };
 
@@ -247,7 +266,6 @@ export default function HomeScreen() {
         ListEmptyComponent={renderEmpty}
         ListFooterComponent={renderFooter}
         numColumns={2}
-        estimatedItemSize={250}
         keyExtractor={(item) => item.id}
         refreshControl={
           <RefreshControl
@@ -260,7 +278,6 @@ export default function HomeScreen() {
         onEndReachedThreshold={0.8}
         contentContainerStyle={styles.listContent}
         ItemSeparatorComponent={() => <View style={{ height: 0 }} />}
-        columnWrapperStyle={styles.row}
         showsVerticalScrollIndicator={false}
       />
     </SafeAreaView>

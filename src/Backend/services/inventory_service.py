@@ -122,7 +122,13 @@ class InventoryService:
                                    expected_date: date,
                                    notes: Optional[str] = None,
                                    excel_filename: str = None,
-                                   store_id: UUID = None) -> UUID:
+                                   store_id: UUID = None,
+                                   shipment_id: Optional[str] = None,
+                                   container_id: Optional[str] = None,
+                                   vendor: Optional[str] = None,
+                                   ocs_order_number: Optional[str] = None,
+                                   tenant_id: Optional[UUID] = None,
+                                   created_by: Optional[UUID] = None) -> UUID:
         """Create a new purchase order"""
         try:
             async with self.db.transaction():
@@ -158,14 +164,16 @@ class InventoryService:
                 # Create purchase order
                 po_query = """
                     INSERT INTO purchase_orders
-                    (po_number, supplier_id, expected_date, status, total_amount, notes, store_id)
-                    VALUES ($1, $2, $3, 'pending', $4, $5, $6)
+                    (po_number, supplier_id, expected_date, status, total_amount, notes, store_id,
+                     shipment_id, container_id, vendor, created_by)
+                    VALUES ($1, $2, $3, 'pending', $4, $5, $6, $7, $8, $9, $10)
                     RETURNING id
                 """
-                
+
                 po_id = await self.db.fetchval(
                     po_query,
-                    po_number, supplier_id, expected_date, total_amount, notes, store_id
+                    po_number, supplier_id, expected_date, total_amount, notes, store_id,
+                    shipment_id, container_id, vendor, created_by
                 )
                 
                 # Add items to purchase order
@@ -176,17 +184,18 @@ class InventoryService:
 
                     item_query = """
                         INSERT INTO purchase_order_items
-                        (purchase_order_id, sku, batch_lot, quantity_ordered,
+                        (purchase_order_id, sku, item_name, batch_lot, quantity_ordered,
                          unit_cost, case_gtin, gtin_barcode, each_gtin,
                          vendor, brand, packaged_on_date,
                          shipped_qty, uom, uom_conversion, uom_conversion_qty)
-                        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+                        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
                     """
 
                     await self.db.execute(
                         item_query,
                         po_id,
                         item['sku'],
+                        item.get('item_name'),  # From Excel ItemName column
                         item['batch_lot'],  # Required from Excel
                         item['quantity'],
                         Decimal(str(item['unit_cost'])),

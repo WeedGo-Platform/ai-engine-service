@@ -27,8 +27,8 @@ export default function OTPVerifyScreen() {
   const [resendTimer, setResendTimer] = useState(RESEND_TIMEOUT);
   const [canResend, setCanResend] = useState(false);
 
-  const inputs = useRef<(TextInput | null)[]>([]);
-  const timerRef = useRef<NodeJS.Timeout>();
+  const inputs = useRef<(TextInput | null)[]>(new Array(OTP_LENGTH).fill(null));
+  const timerRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   const { phone, sessionId, resetPassword } = useLocalSearchParams<{
     phone: string;
@@ -124,17 +124,18 @@ export default function OTPVerifyScreen() {
     Keyboard.dismiss();
 
     try {
-      await verifyOTP(otpCode, sessionId);
+      await verifyOTP(phone, otpCode, sessionId);
 
       // Check for biometric availability after successful verification
       const biometricAvailable = await biometricAuth.isAvailable();
 
       if (biometricAvailable && !resetPassword) {
-        const biometricType = await biometricAuth.getBiometricTypeName();
+        const biometricType = await biometricAuth.getType();
+        const biometricTypeName = biometricAuth.getDisplayName(biometricType);
 
         Alert.alert(
           'Enable Quick Login',
-          `Would you like to enable ${biometricType} for faster sign-in next time?`,
+          `Would you like to enable ${biometricTypeName} for faster sign-in next time?`,
           [
             {
               text: 'Not Now',
@@ -145,14 +146,14 @@ export default function OTPVerifyScreen() {
               text: 'Enable',
               onPress: async () => {
                 const result = await biometricAuth.authenticate(
-                  `Enable ${biometricType} for WeedGo`
+                  `Enable ${biometricTypeName} for WeedGo`
                 );
 
                 if (result.success) {
                   await setBiometricEnabled(true);
                   Alert.alert(
                     'Success',
-                    `${biometricType} enabled successfully!`,
+                    `${biometricTypeName} enabled successfully!`,
                     [{ text: 'OK', onPress: () => navigateToHome() }]
                   );
                 } else {
@@ -197,7 +198,7 @@ export default function OTPVerifyScreen() {
 
     setLoading(true);
     try {
-      await resendOTP(sessionId);
+      await resendOTP(phone, sessionId);
 
       // Clear OTP inputs
       setOtp(new Array(OTP_LENGTH).fill(''));
@@ -240,7 +241,7 @@ export default function OTPVerifyScreen() {
           {otp.map((digit, index) => (
             <TextInput
               key={index}
-              ref={(ref) => (inputs.current[index] = ref)}
+              ref={(ref) => { inputs.current[index] = ref; }}
               style={[
                 styles.otpInput,
                 digit ? styles.otpInputFilled : {},
@@ -249,7 +250,7 @@ export default function OTPVerifyScreen() {
               value={digit}
               onChangeText={(value) => handleOtpChange(value, index)}
               onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent.key, index)}
-              onPaste={(e) => handlePaste(e, index)}
+              onPaste={(e: any) => handlePaste(e, index)}
               keyboardType="number-pad"
               maxLength={1}
               selectTextOnFocus

@@ -50,7 +50,7 @@ export default function CartScreen() {
   const handleCheckout = async () => {
     const isValid = await validateCart();
     if (isValid) {
-      router.push('/checkout');
+      router.push('/checkout/');
     }
   };
 

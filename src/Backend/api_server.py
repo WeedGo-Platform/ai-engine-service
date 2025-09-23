@@ -306,7 +306,18 @@ app = FastAPI(
 # Add CORS middleware - allow localhost on any port
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3003", "http://localhost:3004", "http://localhost:3000", "http://localhost:5024", "http://localhost:5173", "http://localhost:5174"],  # Allow specific localhost ports including admin dashboard
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:3001",  # Default commerce dev port
+        "http://localhost:3003",
+        "http://localhost:3004",
+        "http://localhost:3005",  # Pot Palace template
+        "http://localhost:3006",  # Modern template
+        "http://localhost:3007",  # Headless template
+        "http://localhost:5024",
+        "http://localhost:5173",
+        "http://localhost:5174"
+    ],  # Allow all commerce app ports
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
