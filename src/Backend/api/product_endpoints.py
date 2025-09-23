@@ -224,7 +224,7 @@ def transform_product_for_frontend(product: Dict[str, Any], include_variants: bo
 # Add alternative search endpoint for SearchBar component
 @router.get("/search")
 async def search_products_alt(
-    q: str = Query(...),
+    q: str = Query("", description="Search query (optional)"),
     limit: int = Query(10, ge=1, le=50),
     store_id: Optional[str] = Query(None),
     x_store_id: Optional[str] = Header(None, alias="X-Store-ID"),
@@ -234,24 +234,40 @@ async def search_products_alt(
     # Use header if provided, otherwise fall back to query param
     effective_store_id = x_store_id or store_id
     try:
-        query = """
-            SELECT DISTINCT ON (p.ocs_item_number)
-                p.*,
-                i.quantity_available,
-                i.retail_price,
-                CASE WHEN i.quantity_available > 0 THEN true ELSE false END as in_stock
-            FROM inventory_products_view p
-            LEFT JOIN ocs_inventory i ON UPPER(p.ocs_variant_number) = UPPER(i.sku)
-            WHERE (
-                p.product_name ILIKE $1 OR
-                p.brand ILIKE $1 OR
-                p.category ILIKE $1 OR
-                p.ocs_variant_number ILIKE $1
-            )
-        """
-
-        params = [f"%{q}%"]
-        param_count = 1
+        # Base query
+        if q and q.strip():
+            # Search with query
+            query = """
+                SELECT DISTINCT ON (p.ocs_item_number)
+                    p.*,
+                    i.quantity_available,
+                    i.retail_price,
+                    CASE WHEN i.quantity_available > 0 THEN true ELSE false END as in_stock
+                FROM inventory_products_view p
+                LEFT JOIN ocs_inventory i ON UPPER(p.ocs_variant_number) = UPPER(i.sku)
+                WHERE (
+                    p.product_name ILIKE $1 OR
+                    p.brand ILIKE $1 OR
+                    p.category ILIKE $1 OR
+                    p.ocs_variant_number ILIKE $1
+                )
+            """
+            params = [f"%{q}%"]
+            param_count = 1
+        else:
+            # Return all products if no query
+            query = """
+                SELECT DISTINCT ON (p.ocs_item_number)
+                    p.*,
+                    i.quantity_available,
+                    i.retail_price,
+                    CASE WHEN i.quantity_available > 0 THEN true ELSE false END as in_stock
+                FROM inventory_products_view p
+                LEFT JOIN ocs_inventory i ON UPPER(p.ocs_variant_number) = UPPER(i.sku)
+                WHERE 1=1
+            """
+            params = []
+            param_count = 0
 
         if store_id:
             param_count += 1

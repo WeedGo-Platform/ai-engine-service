@@ -1,15 +1,36 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '@/stores/authStore';
 import { Colors } from '@/constants/Colors';
 import { biometricAuth } from '@/utils/biometric';
+import { authService } from '@/services/api/auth';
 
 export default function ProfileScreen() {
   const router = useRouter();
-  const { user, isAuthenticated, logout, biometricEnabled, setBiometricEnabled } = useAuthStore();
+  const { user, isAuthenticated, logout, biometricEnabled, setBiometricEnabled, isLoading } = useAuthStore();
+  const [profileLoading, setProfileLoading] = React.useState(false);
+
+  // Fetch user profile on mount if authenticated
+  useEffect(() => {
+    if (isAuthenticated && !user) {
+      fetchUserProfile();
+    }
+  }, [isAuthenticated]);
+
+  const fetchUserProfile = async () => {
+    setProfileLoading(true);
+    try {
+      const profile = await authService.getProfile();
+      useAuthStore.setState({ user: profile });
+    } catch (error) {
+      console.log('Failed to fetch profile:', error);
+    } finally {
+      setProfileLoading(false);
+    }
+  };
 
   const handleLogout = () => {
     Alert.alert(
@@ -70,6 +91,18 @@ export default function ProfileScreen() {
     );
   }
 
+  // Show loading state while fetching profile
+  if (profileLoading || isLoading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={Colors.light.primary} />
+          <Text style={styles.loadingText}>Loading profile...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -83,7 +116,7 @@ export default function ProfileScreen() {
             )}
           </View>
           <Text style={styles.userName}>
-            {user?.first_name} {user?.last_name}
+            {user?.first_name || user?.firstName} {user?.last_name || user?.lastName}
           </Text>
           <Text style={styles.userPhone}>{user?.phone}</Text>
           {user?.email && <Text style={styles.userEmail}>{user?.email}</Text>}
@@ -324,5 +357,15 @@ const styles = StyleSheet.create({
     color: Colors.light.gray,
     textAlign: 'center',
     marginBottom: 20,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 12,
+    fontSize: 14,
+    color: Colors.light.gray,
   },
 });

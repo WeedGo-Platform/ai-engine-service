@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Location from 'expo-location';
 import { Store, DayHours } from '@/types/api.types';
 import { storeService } from '@/services/api/stores';
 
@@ -22,6 +23,8 @@ interface StoreState {
   isCurrentlyOpen: () => boolean;
   getStoreHours: () => string;
   getDeliveryInfo: (postalCode: string) => Promise<any>;
+  findNearestStore: (stores: Store[], lat: number, lng: number) => Store;
+  calculateDistance: (lat1: number, lon1: number, lat2: number, lon2: number) => number;
 }
 
 const useStoreStore = create<StoreState>()(
@@ -43,9 +46,25 @@ const useStoreStore = create<StoreState>()(
           const stores = await storeService.getStores();
           set({ stores, loading: false });
 
-          // If no current store selected, select the first one
+          // If no current store selected, try to select based on location
           if (!get().currentStore && stores.length > 0) {
-            set({ currentStore: stores[0] });
+            // Try to get user location and select nearest store
+            try {
+              // Request location permission
+              const { status } = await Location.requestForegroundPermissionsAsync();
+              if (status === 'granted') {
+                const location = await Location.getCurrentPositionAsync({});
+                const nearestStore = get().findNearestStore(stores, location.coords.latitude, location.coords.longitude);
+                set({ currentStore: nearestStore });
+              } else {
+                // If location not available, select the first store
+                set({ currentStore: stores[0] });
+              }
+            } catch (locationError) {
+              // Fallback to first store if location fails
+              console.log('Location not available, using first store');
+              set({ currentStore: stores[0] });
+            }
             await get().checkStoreAvailability();
           }
         } catch (error: any) {
@@ -106,7 +125,10 @@ const useStoreStore = create<StoreState>()(
             nextOpenTime: availability.next_open_time,
           });
         } catch (error) {
-          console.error('Failed to check store availability:', error);
+          // If the availability endpoint doesn't exist, fall back to checking hours
+          console.warn('Store availability endpoint not found, checking hours locally');
+          const isOpen = get().isCurrentlyOpen();
+          set({ isStoreOpen: isOpen });
         }
       },
 
@@ -116,7 +138,7 @@ const useStoreStore = create<StoreState>()(
         if (!currentStore || !currentStore.hours) return false;
 
         const now = new Date();
-        const dayOfWeek = now.toLocaleLowerCase('en-US', { weekday: 'long' }).toLowerCase() as keyof typeof currentStore.hours;
+        const dayOfWeek = now.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase() as keyof typeof currentStore.hours;
         const currentTime = now.toTimeString().slice(0, 5); // HH:MM format
 
         const todayHours = currentStore.hours[dayOfWeek] as DayHours | undefined;
@@ -139,7 +161,7 @@ const useStoreStore = create<StoreState>()(
         }
 
         const now = new Date();
-        const dayOfWeek = now.toLocaleLowerCase('en-US', { weekday: 'long' }).toLowerCase() as keyof typeof currentStore.hours;
+        const dayOfWeek = now.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase() as keyof typeof currentStore.hours;
         const todayHours = currentStore.hours[dayOfWeek] as DayHours | undefined;
 
         if (!todayHours || todayHours.is_closed) {
@@ -165,6 +187,40 @@ const useStoreStore = create<StoreState>()(
           throw new Error(error.message || 'Failed to check delivery availability');
         }
       },
+
+      // Calculate distance between two coordinates (Haversine formula)
+      calculateDistance: (lat1: number, lon1: number, lat2: number, lon2: number) => {
+        const R = 6371; // Radius of the earth in km
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a =
+          Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+          Math.sin(dLon/2) * Math.sin(dLon/2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        const d = R * c; // Distance in km
+        return d;
+      },
+
+      // Find nearest store to given coordinates
+      findNearestStore: (stores: Store[], lat: number, lng: number) => {
+        if (stores.length === 0) return stores[0];
+
+        let nearestStore = stores[0];
+        let minDistance = Infinity;
+
+        stores.forEach(store => {
+          if (store.latitude && store.longitude) {
+            const distance = get().calculateDistance(lat, lng, store.latitude, store.longitude);
+            if (distance < minDistance) {
+              minDistance = distance;
+              nearestStore = store;
+            }
+          }
+        });
+
+        return nearestStore;
+      },
     }),
     {
       name: 'weedgo-store-storage',
@@ -177,3 +233,4 @@ const useStoreStore = create<StoreState>()(
 );
 
 export default useStoreStore;
+export { useStoreStore };

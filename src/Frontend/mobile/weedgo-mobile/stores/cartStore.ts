@@ -139,6 +139,7 @@ const useCartStore = create<CartStore>()(
           const response = await cartService.addItem({
             product_id: product.id,
             quantity,
+            size: size || product.size, // Include size in the request
           });
 
           // Refresh cart from server
@@ -469,3 +470,4 @@ const useCartStore = create<CartStore>()(
 );
 
 export default useCartStore;
+export { useCartStore };

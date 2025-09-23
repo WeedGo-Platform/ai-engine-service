@@ -9,6 +9,8 @@ import {
   VerifyOTPRequest,
   VerifyOTPResponse,
   RefreshTokenResponse,
+  User,
+  Profile,
 } from '@/types/api.types';
 
 class AuthService {
@@ -142,6 +144,25 @@ class AuthService {
     } catch (error) {
       return false;
     }
+  }
+
+  /**
+   * Get user profile
+   */
+  async getProfile(): Promise<User> {
+    const response = await apiClient.get<{ data: Profile }>('/api/v1/profile');
+    // Transform profile to User format
+    const profile = response.data.data;
+    return {
+      id: profile.id,
+      phone: profile.phone,
+      email: profile.email,
+      profile_id: profile.id,
+      first_name: profile.first_name,
+      last_name: profile.last_name,
+      firstName: profile.first_name,
+      lastName: profile.last_name,
+    } as User;
   }
 }
 

@@ -27,13 +27,17 @@ class CartService {
    * Create a new cart session
    */
   async createSession(): Promise<string> {
-    const response = await apiClient.post<{ session_id: string }>(
-      '/api/v1/cart/create-session'
-    );
+    // The /api/cart endpoint manages sessions automatically
+    // Just use a default session ID or get from cart response
+    try {
+      const response = await apiClient.get<Cart>('/api/cart/');
+      this.sessionId = response.data.id || response.data.session_id || 'default';
+    } catch (error) {
+      // If cart doesn't exist, use default session
+      this.sessionId = 'default';
+    }
 
-    this.sessionId = response.data.session_id;
     await SecureStore.setItemAsync(CART_SESSION_KEY, this.sessionId);
-
     return this.sessionId;
   }
 
@@ -56,24 +60,27 @@ class CartService {
    * Get current cart
    */
   async getCart(): Promise<Cart> {
-    const sessionId = await this.getSessionId();
-
-    const response = await apiClient.get<Cart>(
-      `/api/v1/cart/${sessionId}`
-    );
-
+    const response = await apiClient.get<Cart>('/api/cart/');
     return response.data;
   }
 
   /**
    * Add item to cart
    */
-  async addItem(data: AddToCartRequest): Promise<CartItem> {
-    const sessionId = await this.getSessionId();
+  async addItem(data: AddToCartRequest & { store_id?: string }): Promise<CartItem> {
+    // Import the store to get current store ID
+    const { default: useStoreStore } = await import('@/stores/storeStore');
+    const currentStore = useStoreStore.getState().currentStore;
+
+    const requestData = {
+      ...data,
+      store_id: currentStore?.id,
+      size: data.size || undefined // Ensure size is included if provided
+    };
 
     const response = await apiClient.post<CartItem>(
-      `/api/v1/cart/${sessionId}/items`,
-      data
+      '/api/cart/items',
+      requestData
     );
 
     return response.data;
@@ -83,10 +90,8 @@ class CartService {
    * Update cart item quantity
    */
   async updateItem(itemId: string, quantity: number): Promise<CartItem> {
-    const sessionId = await this.getSessionId();
-
     const response = await apiClient.put<CartItem>(
-      `/api/v1/cart/${sessionId}/items/${itemId}`,
+      `/api/cart/items/${itemId}`,
       { quantity } as UpdateCartItemRequest
     );
 
@@ -97,20 +102,14 @@ class CartService {
    * Remove item from cart
    */
   async removeItem(itemId: string): Promise<void> {
-    const sessionId = await this.getSessionId();
-
-    await apiClient.delete(
-      `/api/v1/cart/${sessionId}/items/${itemId}`
-    );
+    await apiClient.delete(`/api/cart/items/${itemId}`);
   }
 
   /**
    * Clear entire cart
    */
   async clearCart(): Promise<void> {
-    const sessionId = await this.getSessionId();
-
-    await apiClient.delete(`/api/v1/cart/${sessionId}`);
+    await apiClient.delete('/api/cart/');
 
     // Clear stored session
     this.sessionId = null;
@@ -121,10 +120,8 @@ class CartService {
    * Apply promo code
    */
   async applyPromoCode(promoCode: string): Promise<{ success: boolean; discount: number }> {
-    const sessionId = await this.getSessionId();
-
     const response = await apiClient.post<{ success: boolean; discount: number }>(
-      `/api/v1/cart/${sessionId}/promo`,
+      '/api/cart/promo',
       { promo_code: promoCode } as ApplyPromoRequest
     );
 
@@ -135,19 +132,15 @@ class CartService {
    * Remove promo code
    */
   async removePromoCode(): Promise<void> {
-    const sessionId = await this.getSessionId();
-
-    await apiClient.delete(`/api/v1/cart/${sessionId}/promo`);
+    await apiClient.delete('/api/cart/promo');
   }
 
   /**
    * Validate cart before checkout
    */
   async validateCart(): Promise<{ valid: boolean; issues: string[] }> {
-    const sessionId = await this.getSessionId();
-
     const response = await apiClient.post<{ valid: boolean; issues: string[] }>(
-      `/api/v1/cart/${sessionId}/validate`
+      '/api/cart/validate'
     );
 
     return response.data;
@@ -193,10 +186,8 @@ class CartService {
    * Merge guest cart with user cart after login
    */
   async mergeCart(): Promise<Cart> {
-    const sessionId = await this.getSessionId();
-
     const response = await apiClient.post<Cart>(
-      `/api/v1/cart/${sessionId}/merge`
+      '/api/cart/merge'
     );
 
     return response.data;
@@ -206,10 +197,8 @@ class CartService {
    * Calculate delivery fee
    */
   async calculateDeliveryFee(addressId: string): Promise<{ fee: number; estimated_time: string }> {
-    const sessionId = await this.getSessionId();
-
     const response = await apiClient.post<{ fee: number; estimated_time: string }>(
-      `/api/v1/cart/${sessionId}/delivery-fee`,
+      '/api/cart/delivery-fee',
       { address_id: addressId }
     );
 
@@ -220,10 +209,8 @@ class CartService {
    * Set delivery method
    */
   async setDeliveryMethod(method: 'delivery' | 'pickup'): Promise<Cart> {
-    const sessionId = await this.getSessionId();
-
     const response = await apiClient.post<Cart>(
-      `/api/v1/cart/${sessionId}/delivery-method`,
+      '/api/cart/delivery-method',
       { method }
     );
 

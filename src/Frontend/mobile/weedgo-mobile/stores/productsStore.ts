@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { productService } from '@/services/api/products';
 import { Product, Category } from '@/types/api.types';
+import useStoreStore from '@/stores/storeStore';
 
 interface ProductFilters {
   category?: string;
@@ -33,7 +34,6 @@ interface ProductsStore {
     total: number;
     hasMore: boolean;
   };
-  selectedStoreId: string | null;
   searchQuery: string;
 
   // Actions
@@ -67,15 +67,16 @@ const useProductsStore = create<ProductsStore>((set, get) => ({
     total: 0,
     hasMore: true,
   },
-  selectedStoreId: process.env.EXPO_PUBLIC_STORE_ID || null,
   searchQuery: '',
 
   // Load products with current filters
   loadProducts: async (reset = false) => {
     const state = get();
-    const { selectedStoreId, filters, pagination } = state;
+    const { filters, pagination } = state;
 
-    if (!selectedStoreId) {
+    // Get current store from storeStore
+    const currentStore = useStoreStore.getState().currentStore;
+    if (!currentStore) {
       set({ error: 'No store selected' });
       return;
     }
@@ -89,7 +90,7 @@ const useProductsStore = create<ProductsStore>((set, get) => ({
       const offset = reset ? 0 : pagination.page * pagination.limit;
 
       const response = await productService.getStoreInventory(
-        selectedStoreId,
+        currentStore.id,
         {
           category: filters.category,
           subcategory: filters.subcategory,
@@ -97,7 +98,7 @@ const useProductsStore = create<ProductsStore>((set, get) => ({
           strain_type: filters.strainType,
           size: filters.size,
           quick_filter: filters.quickFilter,
-          search: filters.search || undefined,
+          search: filters.search || '',
           limit: pagination.limit,
           offset,
         }
@@ -211,10 +212,9 @@ const useProductsStore = create<ProductsStore>((set, get) => ({
     }
   },
 
-  // Set selected store
+  // Set selected store (now just triggers reload since store is managed in storeStore)
   setSelectedStore: (storeId: string) => {
     set({
-      selectedStoreId: storeId,
       products: [],
       pagination: { page: 0, limit: 20, total: 0, hasMore: true }
     });

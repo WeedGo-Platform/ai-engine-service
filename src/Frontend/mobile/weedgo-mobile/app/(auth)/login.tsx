@@ -70,7 +70,7 @@ export default function LoginScreen() {
         {
           text: 'Sign In',
           onPress: async () => {
-            const result = await biometricAuth.quickAuthenticate();
+            const result = await biometricAuth.authenticate('Sign in with biometrics');
             if (result.success) {
               router.replace('/(tabs)');
             } else if (result.error) {
@@ -83,7 +83,7 @@ export default function LoginScreen() {
   };
 
   const handlePhoneChange = (text: string) => {
-    const formatted = formatPhoneOnType(text, phone);
+    const formatted = formatPhoneOnType(text);
     setPhone(formatted);
 
     // Clear error when user starts typing

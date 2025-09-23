@@ -2,45 +2,45 @@ import { useEffect, useState } from 'react';
 import { Stack, useRouter, useSegments, useRootNavigation, Slot } from 'expo-router';
 import { View, ActivityIndicator } from 'react-native';
 import { useAuthStore } from '@/stores/authStore';
+import useStoreStore from '@/stores/storeStore';
 import { Colors } from '@/constants/Colors';
 import Toast from 'react-native-toast-message';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { FloatingChatBubble } from '@/components/FloatingChatBubble';
 
 export default function RootLayout() {
   const [isReady, setIsReady] = useState(false);
   const { isAuthenticated, isLoading, loadStoredAuth } = useAuthStore();
+  const { loadStores } = useStoreStore();
   const segments = useSegments();
   const router = useRouter();
   const rootNav = useRootNavigation();
 
-  // Load stored auth on mount
+  // Load stored auth and stores on mount
   useEffect(() => {
-    const initAuth = async () => {
-      await loadStoredAuth();
+    const initApp = async () => {
+      // Load auth and stores in parallel
+      await Promise.all([
+        loadStoredAuth(),
+        loadStores() // This will fetch stores and set nearest as default
+      ]);
       setIsReady(true);
     };
-    initAuth();
+    initApp();
   }, []);
 
-  // Handle auth navigation
+  // Handle auth navigation - SIMPLIFIED FOR NOW
   useEffect(() => {
     if (!isReady || !rootNav?.isReady()) return;
 
     const inAuthGroup = segments[0] === '(auth)';
-    const inProtectedGroup = segments[0] === '(tabs)' ||
-                            segments[0] === 'checkout' ||
-                            segments[0] === 'orders' ||
-                            segments[0] === 'product';
 
-    if (!isAuthenticated && inProtectedGroup) {
-      // User is not authenticated and trying to access protected route
-      // Redirect to login
-      router.replace('/(auth)/login');
-    } else if (isAuthenticated && inAuthGroup) {
-      // User is authenticated but in auth flow
-      // Redirect to home
+    // Skip auth for now - go directly to products page
+    if (segments.length === 0 || inAuthGroup) {
+      // If at root or in auth, redirect to main app
       router.replace('/(tabs)');
     }
-  }, [isAuthenticated, segments, isReady, rootNav?.isReady()]);
+  }, [segments, isReady, rootNav?.isReady()]);
 
   // Show loading screen while checking auth
   if (!isReady || isLoading) {
@@ -52,7 +52,7 @@ export default function RootLayout() {
   }
 
   return (
-    <>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <Stack>
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -61,7 +61,8 @@ export default function RootLayout() {
         <Stack.Screen name="orders" options={{ headerShown: false }} />
         <Stack.Screen name="product" options={{ headerShown: false }} />
       </Stack>
+      {/* Chat disabled for now: {isAuthenticated && <FloatingChatBubble />} */}
       <Toast />
-    </>
+    </GestureHandlerRootView>
   );
 }

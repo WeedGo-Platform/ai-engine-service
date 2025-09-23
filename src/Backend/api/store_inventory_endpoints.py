@@ -626,6 +626,376 @@ async def batch_update_inventory(
 
 
 # =====================================================
+# Pricing Endpoints
+# =====================================================
+
+@router.get("/pricing/settings")
+async def get_pricing_settings(
+    store_id: UUID = Depends(verify_store_access),
+    service: StoreInventoryService = Depends(get_store_inventory_service)
+):
+    """Get store pricing settings including default markup"""
+    try:
+        async with service.db_pool.acquire() as conn:
+            # Try to get existing settings from store_settings table
+            query = """
+                SELECT value
+                FROM store_settings
+                WHERE store_id = $1
+                AND category = 'pricing'
+                AND key = 'default_markup'
+            """
+            result = await conn.fetchrow(query, store_id)
+
+            if result and result['value']:
+                return result['value']
+            else:
+                # Return default settings if none exist
+                return {
+                    'default_markup_percentage': 25.0,
+                    'default_markup_enabled': True
+                }
+    except Exception as e:
+        logger.error(f"Error getting pricing settings: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/pricing/settings")
+async def update_pricing_settings(
+    settings: Dict[str, Any] = Body(...),
+    store_id: UUID = Depends(verify_store_access),
+    service: StoreInventoryService = Depends(get_store_inventory_service)
+):
+    """Update store pricing settings"""
+    try:
+        async with service.db_pool.acquire() as conn:
+            # Upsert settings into store_settings table
+            query = """
+                INSERT INTO store_settings (store_id, category, key, value)
+                VALUES ($1, 'pricing', 'default_markup', $2::jsonb)
+                ON CONFLICT (store_id, category, key)
+                DO UPDATE SET
+                    value = $2::jsonb,
+                    updated_at = CURRENT_TIMESTAMP
+                RETURNING value
+            """
+
+            import json
+            settings_json = json.dumps(settings)
+            result = await conn.fetchrow(query, store_id, settings_json)
+            return result['value']
+    except Exception as e:
+        logger.error(f"Error updating pricing settings: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/pricing/categories")
+async def get_pricing_categories(
+    store_id: UUID = Depends(verify_store_access),
+    service: StoreInventoryService = Depends(get_store_inventory_service)
+):
+    """Get category hierarchy with pricing rules"""
+    try:
+        async with service.db_pool.acquire() as conn:
+            # Get all category combinations from product catalog
+            catalog_query = """
+                SELECT DISTINCT
+                    category,
+                    sub_category,
+                    sub_sub_category
+                FROM ocs_product_catalog
+                WHERE category IS NOT NULL
+                ORDER BY category, sub_category, sub_sub_category
+            """
+
+            categories = await conn.fetch(catalog_query)
+
+            # Get pricing rules for this store
+            pricing_query = """
+                SELECT
+                    category,
+                    sub_category,
+                    sub_sub_category,
+                    markup_percentage
+                FROM pricing_rules
+                WHERE store_id = $1
+            """
+
+            pricing_rules = await conn.fetch(pricing_query, store_id)
+
+            # Build pricing lookup
+            pricing_map = {}
+            for rule in pricing_rules:
+                key = (
+                    rule['category'] or '',
+                    rule['sub_category'] or '',
+                    rule['sub_sub_category'] or ''
+                )
+                pricing_map[key] = rule['markup_percentage']
+
+            # Build hierarchical structure with pricing
+            hierarchy = {}
+            for cat in categories:
+                category = cat['category']
+                sub_category = cat['sub_category']
+                sub_sub_category = cat['sub_sub_category']
+
+                if category not in hierarchy:
+                    hierarchy[category] = {
+                        'name': category,
+                        'markup': pricing_map.get((category, '', ''), None),
+                        'subcategories': {}
+                    }
+
+                if sub_category:
+                    if sub_category not in hierarchy[category]['subcategories']:
+                        hierarchy[category]['subcategories'][sub_category] = {
+                            'name': sub_category,
+                            'markup': pricing_map.get((category, sub_category, ''), None),
+                            'subsubcategories': {}
+                        }
+
+                    if sub_sub_category:
+                        hierarchy[category]['subcategories'][sub_category]['subsubcategories'][sub_sub_category] = {
+                            'name': sub_sub_category,
+                            'markup': pricing_map.get((category, sub_category, sub_sub_category), None)
+                        }
+
+            return hierarchy
+    except Exception as e:
+        logger.error(f"Error getting pricing categories: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/pricing/update")
+async def update_pricing_rule(
+    pricing_data: Dict[str, Any] = Body(...),
+    store_id: UUID = Depends(verify_store_access),
+    service: StoreInventoryService = Depends(get_store_inventory_service)
+):
+    """Update pricing rule for a category or specific SKU"""
+    try:
+        async with service.db_pool.acquire() as conn:
+            if 'sku' in pricing_data:
+                # Update specific product pricing override
+                query = """
+                    UPDATE ocs_inventory
+                    SET
+                        retail_price = unit_cost * (1 + $2::numeric / 100),
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE store_id = $1 AND sku = $3
+                    RETURNING sku, retail_price
+                """
+                result = await conn.fetchrow(
+                    query,
+                    store_id,
+                    pricing_data['markup_percentage'],
+                    pricing_data['sku']
+                )
+            else:
+                # Upsert category pricing rule
+                query = """
+                    INSERT INTO pricing_rules (
+                        store_id, category, sub_category, sub_sub_category, markup_percentage
+                    )
+                    VALUES ($1, $2, $3, $4, $5)
+                    ON CONFLICT (store_id, category, sub_category, sub_sub_category)
+                    DO UPDATE SET
+                        markup_percentage = $5,
+                        updated_at = CURRENT_TIMESTAMP
+                    RETURNING id, markup_percentage
+                """
+
+                result = await conn.fetchrow(
+                    query,
+                    store_id,
+                    pricing_data.get('category'),
+                    pricing_data.get('sub_category'),
+                    pricing_data.get('sub_sub_category'),
+                    pricing_data['markup_percentage']
+                )
+
+                # Also update all affected products if requested
+                if pricing_data.get('apply_to_products', False):
+                    update_query = """
+                        UPDATE ocs_inventory i
+                        SET
+                            retail_price = i.unit_cost * (1 + $5::numeric / 100),
+                            updated_at = CURRENT_TIMESTAMP
+                        FROM ocs_product_catalog pc
+                        WHERE i.store_id = $1
+                        AND i.sku = pc.ocs_variant_number
+                        AND ($2::text IS NULL OR pc.category = $2)
+                        AND ($3::text IS NULL OR pc.sub_category = $3)
+                        AND ($4::text IS NULL OR pc.sub_sub_category = $4)
+                    """
+
+                    await conn.execute(
+                        update_query,
+                        store_id,
+                        pricing_data.get('category'),
+                        pricing_data.get('sub_category'),
+                        pricing_data.get('sub_sub_category'),
+                        pricing_data['markup_percentage']
+                    )
+
+            return {'success': True, 'result': dict(result) if result else None}
+    except Exception as e:
+        logger.error(f"Error updating pricing rule: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/product-pricing/{sku}")
+async def get_product_pricing(
+    sku: str,
+    store_id: UUID = Depends(verify_store_access),
+    service: StoreInventoryService = Depends(get_store_inventory_service)
+):
+    """Get pricing information for a specific SKU"""
+    try:
+        async with service.db_pool.acquire() as conn:
+            # Get inventory and product info
+            query = """
+                SELECT
+                    i.sku,
+                    i.unit_cost,
+                    i.retail_price,
+                    pc.category,
+                    pc.sub_category,
+                    pc.sub_sub_category
+                FROM ocs_inventory i
+                LEFT JOIN ocs_product_catalog pc ON i.sku = pc.ocs_variant_number
+                WHERE i.store_id = $1 AND i.sku = $2
+            """
+
+            product = await conn.fetchrow(query, store_id, sku)
+
+            # If product doesn't exist in inventory, check catalog
+            if not product:
+                catalog_query = """
+                    SELECT
+                        ocs_variant_number as sku,
+                        category,
+                        sub_category,
+                        sub_sub_category
+                    FROM ocs_product_catalog
+                    WHERE ocs_variant_number = $1
+                """
+                product = await conn.fetchrow(catalog_query, sku)
+
+            if not product:
+                return {
+                    'sku': sku,
+                    'override_price': None,
+                    'category_pricing': None
+                }
+
+            # Check for override price (if retail price differs from calculated)
+            override_price = None
+            if product.get('retail_price') and product.get('unit_cost'):
+                expected_markup = await get_category_markup(
+                    conn, store_id,
+                    product.get('category'),
+                    product.get('sub_category'),
+                    product.get('sub_sub_category')
+                )
+                expected_price = float(product['unit_cost']) * (1 + expected_markup / 100)
+                if abs(float(product['retail_price']) - expected_price) > 0.01:
+                    override_price = float(product['retail_price'])
+
+            # Get category pricing rules
+            pricing_rules_query = """
+                SELECT
+                    CASE
+                        WHEN sub_sub_category IS NOT NULL THEN 'sub_sub_category'
+                        WHEN sub_category IS NOT NULL THEN 'sub_category'
+                        ELSE 'category'
+                    END as level,
+                    markup_percentage
+                FROM pricing_rules
+                WHERE store_id = $1
+                AND ($2::text IS NULL OR category = $2 OR category IS NULL)
+                AND ($3::text IS NULL OR sub_category = $3 OR sub_category IS NULL)
+                AND ($4::text IS NULL OR sub_sub_category = $4 OR sub_sub_category IS NULL)
+                ORDER BY
+                    CASE
+                        WHEN sub_sub_category IS NOT NULL THEN 3
+                        WHEN sub_category IS NOT NULL THEN 2
+                        ELSE 1
+                    END DESC
+            """
+
+            pricing_rules = await conn.fetch(
+                pricing_rules_query,
+                store_id,
+                product.get('category'),
+                product.get('sub_category'),
+                product.get('sub_sub_category')
+            )
+
+            category_pricing = {
+                'category_markup': None,
+                'sub_category_markup': None,
+                'sub_sub_category_markup': None
+            }
+
+            for rule in pricing_rules:
+                if rule['level'] == 'category':
+                    category_pricing['category_markup'] = float(rule['markup_percentage'])
+                elif rule['level'] == 'sub_category':
+                    category_pricing['sub_category_markup'] = float(rule['markup_percentage'])
+                elif rule['level'] == 'sub_sub_category':
+                    category_pricing['sub_sub_category_markup'] = float(rule['markup_percentage'])
+
+            return {
+                'sku': sku,
+                'override_price': override_price,
+                'category_pricing': category_pricing
+            }
+    except Exception as e:
+        logger.error(f"Error getting product pricing: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+async def get_category_markup(conn, store_id, category, sub_category, sub_sub_category):
+    """Helper function to get the applicable markup for a category"""
+    # Check for most specific rule first
+    query = """
+        SELECT markup_percentage
+        FROM pricing_rules
+        WHERE store_id = $1
+        AND ($2::text IS NULL OR category = $2)
+        AND ($3::text IS NULL OR sub_category = $3)
+        AND ($4::text IS NULL OR sub_sub_category = $4)
+        ORDER BY
+            CASE
+                WHEN sub_sub_category IS NOT NULL THEN 3
+                WHEN sub_category IS NOT NULL THEN 2
+                ELSE 1
+            END DESC
+        LIMIT 1
+    """
+
+    result = await conn.fetchrow(query, store_id, category, sub_category, sub_sub_category)
+
+    if result:
+        return float(result['markup_percentage'])
+
+    # Fall back to default markup
+    settings_query = """
+        SELECT value->>'default_markup_percentage' as markup
+        FROM store_settings
+        WHERE store_id = $1 AND category = 'pricing' AND key = 'default_markup'
+    """
+
+    settings = await conn.fetchrow(settings_query, store_id)
+    if settings and settings['markup']:
+        return float(settings['markup'])
+
+    return 25.0  # Default fallback
+
+
+# =====================================================
 # Export Router
 # =====================================================
 

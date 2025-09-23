@@ -6,12 +6,13 @@ import {
   StyleSheet,
   ScrollView,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/Colors';
 
 interface CategoryTileProps {
   id: string;
   name: string;
-  icon: string;
+  icon: keyof typeof Ionicons.glyphMap;
   color: string;
   isSelected?: boolean;
   onPress: (id: string) => void;
@@ -34,7 +35,12 @@ const CategoryTile: React.FC<CategoryTileProps> = ({
       ]}
       onPress={() => onPress(id)}
     >
-      <Text style={[styles.icon, isSelected && styles.selectedIcon]}>{icon}</Text>
+      <Ionicons
+        name={icon}
+        size={32}
+        color={isSelected ? Colors.light.primary : Colors.light.gray}
+        style={[styles.iconStyle, isSelected && styles.selectedIcon]}
+      />
       <Text style={[styles.name, isSelected && styles.selectedName]}>{name}</Text>
     </TouchableOpacity>
   );
@@ -46,13 +52,13 @@ interface CategoryTilesProps {
 }
 
 const categories = [
-  { id: 'flower', name: 'Flower', icon: '🌸', color: '#E8F5E9' },
-  { id: 'prerolls', name: 'Pre-Rolls', icon: '🍃', color: '#F1F8E9' },
-  { id: 'edibles', name: 'Edibles', icon: '🍫', color: '#EFEBE9' },
-  { id: 'concentrates', name: 'Concentrates', icon: '💎', color: '#FFF8E1' },
-  { id: 'vapes', name: 'Vapes', icon: '💨', color: '#E3F2FD' },
-  { id: 'topicals', name: 'Topicals', icon: '🧴', color: '#FCE4EC' },
-  { id: 'accessories', name: 'Gear', icon: '🔧', color: '#F5F5F5' },
+  { id: 'flower', name: 'Flower', icon: 'flower-outline' as keyof typeof Ionicons.glyphMap, color: '#E8F5E9' },
+  { id: 'prerolls', name: 'Pre-Rolls', icon: 'leaf-outline' as keyof typeof Ionicons.glyphMap, color: '#F1F8E9' },
+  { id: 'edibles', name: 'Edibles', icon: 'nutrition-outline' as keyof typeof Ionicons.glyphMap, color: '#EFEBE9' },
+  { id: 'concentrates', name: 'Concentrates', icon: 'water-outline' as keyof typeof Ionicons.glyphMap, color: '#FFF8E1' },
+  { id: 'vapes', name: 'Vapes', icon: 'cloud-outline' as keyof typeof Ionicons.glyphMap, color: '#E3F2FD' },
+  { id: 'topicals', name: 'Topicals', icon: 'hand-left-outline' as keyof typeof Ionicons.glyphMap, color: '#FCE4EC' },
+  { id: 'accessories', name: 'Gear', icon: 'construct-outline' as keyof typeof Ionicons.glyphMap, color: '#F5F5F5' },
 ];
 
 export function CategoryTiles({ selectedCategory, onSelectCategory }: CategoryTilesProps) {
@@ -106,8 +112,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.light.primary,
     borderWidth: 2,
   },
-  icon: {
-    fontSize: 28,
+  iconStyle: {
     marginBottom: 4,
   },
   selectedIcon: {

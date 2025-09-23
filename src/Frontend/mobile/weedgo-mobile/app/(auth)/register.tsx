@@ -48,8 +48,8 @@ export default function RegisterScreen() {
     try {
       const response = await register({
         phone,
-        first_name: firstName.trim(),
-        last_name: lastName.trim(),
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
         email: email.trim() || undefined,
       });
 
@@ -108,7 +108,7 @@ export default function RegisterScreen() {
           {/* Phone Display */}
           <View style={styles.phoneDisplay}>
             <Ionicons name="call" size={20} color={Colors.light.gray} />
-            <Text style={styles.phoneText}>{getDisplayPhone(phone, true)}</Text>
+            <Text style={styles.phoneText}>{getDisplayPhone(phone)}</Text>
             <Ionicons name="checkmark-circle" size={20} color={Colors.light.success} />
           </View>
 
