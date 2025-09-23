@@ -144,7 +144,6 @@ export default function SearchScreen() {
             <>
               <Text style={styles.filterTitle}>Categories</Text>
               <CategoryTiles
-                categories={categories}
                 selectedCategory={filters.category}
                 onSelectCategory={handleCategorySelect}
               />
