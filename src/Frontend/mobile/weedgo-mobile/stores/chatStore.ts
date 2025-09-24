@@ -221,7 +221,18 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 
   addMessage: (message: ChatMessage) => {
     set((state) => {
-      const newMessages = [...state.messages, message];
+      // Check if message with this ID already exists to prevent duplicates
+      const existingIndex = state.messages.findIndex(msg => msg.id === message.id);
+
+      let newMessages;
+      if (existingIndex >= 0) {
+        // Replace existing message
+        newMessages = [...state.messages];
+        newMessages[existingIndex] = message;
+      } else {
+        // Add new message
+        newMessages = [...state.messages, message];
+      }
 
       // Keep only the last MAX_HISTORY_MESSAGES
       const trimmedMessages = newMessages.slice(-MAX_HISTORY_MESSAGES);
@@ -229,8 +240,10 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       // Save to AsyncStorage
       get().saveHistory(trimmedMessages);
 
-      // Increment unread count if assistant message
-      const unreadCount = message.type === 'assistant' ? state.unreadCount + 1 : state.unreadCount;
+      // Increment unread count if assistant message and it's new
+      const unreadCount = message.type === 'assistant' && existingIndex === -1
+        ? state.unreadCount + 1
+        : state.unreadCount;
 
       return { messages: trimmedMessages, unreadCount };
     });

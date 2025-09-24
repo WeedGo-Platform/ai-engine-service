@@ -18,7 +18,7 @@ import useProductsStore from '@/stores/productsStore';
 import { ProductCard } from '@/components/ProductCard';
 import { CategoryTiles } from '@/components/CategoryTiles';
 import { QuickFilters } from '@/components/QuickFilters';
-import { Colors } from '@/constants/Colors';
+import { Colors, BorderRadius, Shadows } from '@/constants/Colors';
 import { Product } from '@/types/api.types';
 
 const { width } = Dimensions.get('window');
@@ -28,6 +28,8 @@ export default function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchTimer, setSearchTimer] = useState<NodeJS.Timeout | null>(null);
   const [showFilters, setShowFilters] = useState(false);
+  const isDark = true; // Force dark mode
+  const theme = isDark ? Colors.dark : Colors.light;
 
   const {
     products,
@@ -107,7 +109,7 @@ export default function SearchScreen() {
       {/* Search Bar */}
       <View style={styles.searchContainer}>
         <View style={styles.searchBar}>
-          <Ionicons name="search" size={20} color={Colors.light.gray} />
+          <Ionicons name="search" size={20} color={theme.textSecondary} />
           <TextInput
             style={styles.searchInput}
             placeholder="Search products, brands, strains..."
@@ -119,7 +121,7 @@ export default function SearchScreen() {
           />
           {searchQuery.length > 0 && (
             <TouchableOpacity onPress={handleClearSearch}>
-              <Ionicons name="close-circle" size={20} color={Colors.light.gray} />
+              <Ionicons name="close-circle" size={20} color={theme.textSecondary} />
             </TouchableOpacity>
           )}
         </View>
@@ -131,7 +133,7 @@ export default function SearchScreen() {
           <Ionicons
             name="options-outline"
             size={24}
-            color={filters.category || filters.quickFilter ? Colors.light.primary : Colors.light.text}
+            color={filters.category || filters.quickFilter ? theme.primary : theme.text}
           />
         </TouchableOpacity>
       </View>
@@ -188,7 +190,7 @@ export default function SearchScreen() {
     if (searchQuery && products.length === 0) {
       return (
         <View style={styles.emptyContainer}>
-          <Ionicons name="search-outline" size={64} color={Colors.light.gray} />
+          <Ionicons name="search-outline" size={64} color={theme.textSecondary} />
           <Text style={styles.emptyTitle}>No products found</Text>
           <Text style={styles.emptySubtext}>
             Try adjusting your search or filters
@@ -200,7 +202,7 @@ export default function SearchScreen() {
     if (!searchQuery) {
       return (
         <View style={styles.emptyContainer}>
-          <Ionicons name="search-outline" size={64} color={Colors.light.gray} />
+          <Ionicons name="search-outline" size={64} color={theme.textSecondary} />
           <Text style={styles.emptyTitle}>Search for products</Text>
           <Text style={styles.emptySubtext}>
             Find your favorite strains, edibles, and more
@@ -217,7 +219,7 @@ export default function SearchScreen() {
     if (!pagination.hasMore || !loading) return null;
     return (
       <View style={styles.footerLoader}>
-        <ActivityIndicator size="small" color={Colors.light.primary} />
+        <ActivityIndicator size="small" color={theme.primary} />
       </View>
     );
   };
@@ -233,7 +235,7 @@ export default function SearchScreen() {
 
         {loading && products.length === 0 ? (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={Colors.light.primary} />
+            <ActivityIndicator size="large" color={theme.primary} />
           </View>
         ) : (
           <FlashList
@@ -261,16 +263,20 @@ export default function SearchScreen() {
   );
 }
 
+const isDark = true;
+const theme = isDark ? Colors.dark : Colors.light;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.light.background,
+    backgroundColor: theme.background,
   },
   headerContainer: {
-    backgroundColor: Colors.light.card,
+    backgroundColor: theme.glass,
     paddingBottom: 8,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.light.border,
+    borderBottomColor: theme.glassBorder,
+    backdropFilter: 'blur(10px)',
   },
   searchContainer: {
     flexDirection: 'row',
@@ -283,24 +289,30 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.light.inputBackground,
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    height: 44,
+    backgroundColor: theme.inputBackground,
+    borderRadius: BorderRadius.xl,
+    paddingHorizontal: 16,
+    height: 48,
     gap: 8,
+    borderWidth: 1,
+    borderColor: theme.glassBorder,
+    ...Shadows.small,
   },
   searchInput: {
     flex: 1,
     fontSize: 16,
-    color: Colors.light.text,
+    color: theme.text,
   },
   filterButton: {
-    width: 44,
-    height: 44,
-    backgroundColor: Colors.light.inputBackground,
-    borderRadius: 12,
+    width: 48,
+    height: 48,
+    backgroundColor: theme.glass,
+    borderRadius: BorderRadius.full,
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: theme.glassBorder,
+    ...Shadows.small,
   },
   filtersContainer: {
     paddingHorizontal: 16,
@@ -308,8 +320,8 @@ const styles = StyleSheet.create({
   },
   filterTitle: {
     fontSize: 14,
-    fontWeight: '600',
-    color: Colors.light.text,
+    fontWeight: '700',
+    color: theme.text,
     marginBottom: 8,
     marginTop: 8,
   },
@@ -319,29 +331,31 @@ const styles = StyleSheet.create({
   },
   resultsText: {
     fontSize: 14,
-    color: Colors.light.gray,
+    color: theme.textSecondary,
   },
   suggestionsContainer: {
     padding: 16,
   },
   suggestionsTitle: {
     fontSize: 16,
-    fontWeight: '600',
-    color: Colors.light.text,
+    fontWeight: '700',
+    color: theme.text,
     marginBottom: 12,
   },
   suggestionChip: {
     paddingHorizontal: 16,
     paddingVertical: 8,
-    backgroundColor: Colors.light.inputBackground,
-    borderRadius: 20,
+    backgroundColor: theme.glass,
+    borderRadius: BorderRadius.xl,
     marginRight: 8,
     marginBottom: 8,
     alignSelf: 'flex-start',
+    borderWidth: 1,
+    borderColor: theme.glassBorder,
   },
   suggestionText: {
     fontSize: 14,
-    color: Colors.light.text,
+    color: theme.text,
   },
   listContent: {
     paddingHorizontal: 16,
@@ -360,13 +374,13 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: Colors.light.text,
+    fontWeight: '700',
+    color: theme.text,
     marginTop: 16,
   },
   emptySubtext: {
     fontSize: 14,
-    color: Colors.light.gray,
+    color: theme.textSecondary,
     marginTop: 8,
   },
   footerLoader: {
@@ -378,9 +392,10 @@ const styles = StyleSheet.create({
     bottom: 100,
     left: 16,
     right: 16,
-    backgroundColor: Colors.light.error,
+    backgroundColor: theme.error,
     padding: 12,
-    borderRadius: 8,
+    borderRadius: BorderRadius.lg,
+    ...Shadows.medium,
   },
   errorText: {
     color: 'white',

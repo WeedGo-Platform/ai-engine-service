@@ -70,9 +70,35 @@ export function useVoiceInput(options: UseVoiceInputOptions = {}) {
         playThroughEarpieceAndroid: false,
       });
 
-      // Start recording
+      // Start recording with custom options for better compatibility
+      const recordingOptions = {
+        android: {
+          extension: '.m4a',
+          outputFormat: Audio.AndroidOutputFormat.MPEG_4,
+          audioEncoder: Audio.AndroidAudioEncoder.AAC,
+          sampleRate: 44100,
+          numberOfChannels: 2,
+          bitRate: 128000,
+        },
+        ios: {
+          extension: '.m4a',
+          outputFormat: Audio.IOSOutputFormat.MPEG4AAC,
+          audioQuality: Audio.IOSAudioQuality.HIGH,
+          sampleRate: 44100,
+          numberOfChannels: 2,
+          bitRate: 128000,
+          linearPCMBitDepth: 16,
+          linearPCMIsBigEndian: false,
+          linearPCMIsFloat: false,
+        },
+        web: {
+          mimeType: 'audio/webm',
+          bitsPerSecond: 128000,
+        },
+      };
+
       const { recording: newRecording } = await Audio.Recording.createAsync(
-        Audio.RecordingOptionsPresets.HIGH_QUALITY
+        recordingOptions
       );
 
       recording.current = newRecording;
@@ -80,7 +106,8 @@ export function useVoiceInput(options: UseVoiceInputOptions = {}) {
 
       // Set a maximum recording duration of 30 seconds
       setTimeout(async () => {
-        if (recording.current && isRecording) {
+        if (recording.current) {
+          console.log('Auto-stopping recording after 30 seconds');
           await stopRecording();
         }
       }, 30000);
@@ -130,6 +157,9 @@ export function useVoiceInput(options: UseVoiceInputOptions = {}) {
 
   const transcribeAudio = async (uri: string) => {
     try {
+      console.log('Starting transcription for URI:', uri);
+      console.log('API URL:', `${API_URL}/api/voice/transcribe`);
+
       // Create form data with the audio file
       const formData = new FormData();
 
@@ -153,36 +183,61 @@ export function useVoiceInput(options: UseVoiceInputOptions = {}) {
       });
 
       if (!response.ok) {
-        throw new Error(`Transcription failed: ${response.statusText}`);
+        const errorData = await response.text();
+        console.error('Transcription API error:', response.status, errorData);
+        throw new Error(`Transcription failed: ${response.status} - ${errorData}`);
       }
 
       const data = await response.json();
-      console.log('Transcription response:', data);
+      console.log('Transcription response:', JSON.stringify(data, null, 2));
 
       // Handle different response formats
       let transcribedText = null;
 
-      // Check for nested result.transcription format
+      // Check various possible response formats
       if (data.result && typeof data.result === 'object') {
-        transcribedText = data.result.transcription;
-      } else {
-        transcribedText = data.text || data.transcription || data.result;
+        transcribedText = data.result.transcription || data.result.text;
       }
 
-      if (transcribedText) {
+      if (!transcribedText) {
+        transcribedText = data.text || data.transcription || data.transcript || data.result;
+      }
+
+      // Also check for nested transcription object
+      if (!transcribedText && data.data) {
+        transcribedText = data.data.transcription || data.data.text || data.data.transcript;
+      }
+
+      if (transcribedText && transcribedText.trim()) {
+        console.log('Transcribed text:', transcribedText);
         options.onTranscription?.(transcribedText);
-      } else if (data.result?.has_speech === false) {
+      } else if (data.result?.has_speech === false || data.has_speech === false) {
         // No speech detected in the audio
-        throw new Error('No speech detected. Please try speaking again.');
+        console.log('No speech detected in audio');
+        throw new Error('No speech detected. Please try speaking clearly.');
       } else {
-        console.warn('Transcription response format:', data);
-        throw new Error('Failed to transcribe audio. Please try again.');
+        console.warn('Unable to extract transcription from response:', data);
+        throw new Error('Unable to process audio. Please try again.');
       }
 
-    } catch (error) {
-      console.error('Failed to transcribe audio', error);
+    } catch (error: any) {
+      console.error('Transcription error details:', error);
       options.onError?.(error);
-      Alert.alert('Transcription Error', 'Failed to transcribe audio. Please try again.');
+
+      // Provide more specific error messages
+      let errorMessage = 'Failed to transcribe audio. ';
+
+      if (error.message.includes('No speech detected')) {
+        errorMessage = 'No speech detected. Please speak clearly and try again.';
+      } else if (error.message.includes('Network')) {
+        errorMessage = 'Network error. Please check your connection.';
+      } else if (error.message.includes('422')) {
+        errorMessage = 'Invalid audio format. Please try again.';
+      } else {
+        errorMessage += error.message || 'Please try again.';
+      }
+
+      Alert.alert('Transcription Error', errorMessage);
     }
   };
 

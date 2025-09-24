@@ -988,3 +988,83 @@ async def get_session_info(
     except Exception as e:
         logger.error(f"Error getting session info: {e}")
         raise HTTPException(status_code=500, detail="Failed to get session info")
+
+@router.get("/categories")
+async def get_categories(
+    store_id: Optional[str] = None,
+    db: asyncpg.Connection = Depends(get_db)
+):
+    """
+    Get all product categories with counts
+    """
+    try:
+        query = """
+            SELECT
+                LOWER(REPLACE(category, ' ', '-')) as id,
+                category as name,
+                LOWER(REPLACE(category, ' ', '-')) as slug,
+                NULL as description,
+                NULL as image_url,
+                COUNT(DISTINCT ocs_variant_number) as product_count,
+                json_build_array() as subcategories
+            FROM ocs_product_catalog
+            WHERE category IS NOT NULL
+            GROUP BY category
+            ORDER BY product_count DESC
+        """
+
+        rows = await db.fetch(query)
+
+        categories = []
+        for row in rows:
+            category = dict(row)
+            # Convert product_count to int
+            category['product_count'] = int(category['product_count'])
+            categories.append(category)
+
+        return categories
+
+    except Exception as e:
+        logger.error(f"Error fetching categories: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/brands")
+async def get_brands(
+    store_id: Optional[str] = None,
+    db: asyncpg.Connection = Depends(get_db)
+):
+    """
+    Get all product brands with counts
+    """
+    try:
+        query = """
+            SELECT
+                LOWER(REPLACE(brand, ' ', '-')) as id,
+                brand as name,
+                LOWER(REPLACE(brand, ' ', '-')) as slug,
+                NULL as logo_url,
+                NULL as description,
+                NULL as website,
+                COUNT(DISTINCT ocs_variant_number) as product_count
+            FROM ocs_product_catalog
+            WHERE brand IS NOT NULL
+            GROUP BY brand
+            ORDER BY product_count DESC
+            LIMIT 100
+        """
+
+        rows = await db.fetch(query)
+
+        brands = []
+        for row in rows:
+            brand = dict(row)
+            # Convert product_count to int
+            brand['product_count'] = int(brand['product_count'])
+            brands.append(brand)
+
+        return brands
+
+    except Exception as e:
+        logger.error(f"Error fetching brands: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))

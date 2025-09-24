@@ -6,7 +6,8 @@ import {
   StyleSheet,
   ScrollView,
 } from 'react-native';
-import { Colors } from '@/constants/Colors';
+import { Colors, Gradients, BorderRadius, Shadows } from '@/constants/Colors';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface FilterPill {
   id: string;
@@ -20,6 +21,14 @@ const quickFilters: FilterPill[] = [
   { id: 'staff-picks', label: 'Staff Picks', icon: '⭐' },
   { id: 'on-sale', label: 'On Sale', icon: '💰' },
 ];
+
+// Gradient colors for each filter
+const filterGradients: Record<string, string[]> = {
+  'trending': Gradients.warm,
+  'new': Gradients.purple,
+  'staff-picks': Gradients.accent,
+  'on-sale': Gradients.secondary,
+};
 
 interface QuickFiltersProps {
   selectedFilter?: string;
@@ -43,21 +52,30 @@ export function QuickFilters({ selectedFilter, onSelectFilter }: QuickFiltersPro
         {quickFilters.map((filter) => (
           <TouchableOpacity
             key={filter.id}
-            style={[
-              styles.pill,
-              selectedFilter === filter.id && styles.selectedPill,
-            ]}
             onPress={() => handlePress(filter.id)}
+            activeOpacity={0.8}
+            style={styles.pillContainer}
           >
-            {filter.icon && <Text style={styles.icon}>{filter.icon}</Text>}
-            <Text
-              style={[
-                styles.label,
-                selectedFilter === filter.id && styles.selectedLabel,
-              ]}
-            >
-              {filter.label}
-            </Text>
+            {selectedFilter === filter.id ? (
+              <LinearGradient
+                colors={filterGradients[filter.id] || Gradients.primary}
+                style={styles.pill}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+              >
+                {filter.icon && <Text style={styles.icon}>{filter.icon}</Text>}
+                <Text style={[styles.label, styles.selectedLabel]}>
+                  {filter.label}
+                </Text>
+              </LinearGradient>
+            ) : (
+              <View style={[styles.pill, styles.unselectedPill]}>
+                {filter.icon && <Text style={styles.icon}>{filter.icon}</Text>}
+                <Text style={styles.label}>
+                  {filter.label}
+                </Text>
+              </View>
+            )}
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -70,8 +88,8 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   title: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 18,
+    fontWeight: '700',
     color: Colors.light.text,
     marginBottom: 12,
     paddingHorizontal: 16,
@@ -80,31 +98,37 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     gap: 8,
   },
+  pillContainer: {
+    marginRight: 8,
+  },
   pill: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: Colors.light.border,
-    marginRight: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: BorderRadius.full,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
+    ...Shadows.small,
   },
-  selectedPill: {
-    backgroundColor: Colors.light.primary,
-    borderColor: Colors.light.primary,
+  unselectedPill: {
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    borderColor: Colors.light.border,
   },
   icon: {
-    fontSize: 14,
-    marginRight: 4,
+    fontSize: 16,
+    marginRight: 6,
   },
   label: {
     fontSize: 14,
     color: Colors.light.text,
-    fontWeight: '500',
+    fontWeight: '600',
   },
   selectedLabel: {
     color: 'white',
+    fontWeight: '700',
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
 });

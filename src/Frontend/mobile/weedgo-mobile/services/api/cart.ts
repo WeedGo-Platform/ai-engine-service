@@ -72,18 +72,29 @@ class CartService {
     const { default: useStoreStore } = await import('@/stores/storeStore');
     const currentStore = useStoreStore.getState().currentStore;
 
+    if (!currentStore?.id) {
+      throw new Error('No store selected. Please select a store first.');
+    }
+
     const requestData = {
-      ...data,
-      store_id: currentStore?.id,
+      product_id: data.product_id,
+      quantity: data.quantity || 1,
+      store_id: currentStore.id,
       size: data.size || undefined // Ensure size is included if provided
     };
 
-    const response = await apiClient.post<CartItem>(
-      '/api/cart/items',
-      requestData
-    );
+    console.log('Adding to cart with data:', requestData);
 
-    return response.data;
+    try {
+      const response = await apiClient.post<CartItem>(
+        '/api/cart/items',
+        requestData
+      );
+      return response.data;
+    } catch (error: any) {
+      console.error('Cart API error:', error.response?.data || error);
+      throw error;
+    }
   }
 
   /**

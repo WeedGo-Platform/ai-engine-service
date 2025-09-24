@@ -100,7 +100,17 @@ class ApiClient {
             status: error.response?.status,
             url: originalRequest?.url,
             message: error.response?.data?.message || error.message,
+            data: error.response?.data,
+            detail: error.response?.data?.detail,
+            params: originalRequest?.params,
           });
+
+          // Log validation errors more clearly
+          if (error.response?.data?.detail && Array.isArray(error.response.data.detail)) {
+            console.error('Validation errors:', error.response.data.detail.map((d: any) =>
+              `${d.loc?.join('.')} - ${d.msg}`
+            ).join(', '));
+          }
         }
 
         // Handle 401 - Token expired

@@ -128,7 +128,7 @@ class ChatWebSocketService {
             case 'response':
             case 'message':
               this.emit('response', {
-                id: data.id || `msg_${Date.now()}`,
+                id: data.id || `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
                 type: data.response_type || 'text',
                 content: data.content || data.message,
                 products: data.products,

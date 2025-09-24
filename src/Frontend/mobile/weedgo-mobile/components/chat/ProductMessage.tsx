@@ -33,7 +33,7 @@ interface ProductMessageProps {
 
 export function ProductMessage({ products, message }: ProductMessageProps) {
   const router = useRouter();
-  const { addToCart } = useCartStore();
+  const { addItem } = useCartStore();
 
   const handleAddToCart = (product: Product) => {
     if (product.inventory_quantity === 0) {
@@ -41,7 +41,7 @@ export function ProductMessage({ products, message }: ProductMessageProps) {
       return;
     }
 
-    addToCart(product);
+    addItem(product, 1);
     Toast.show({
       type: 'success',
       text1: 'Added to cart',

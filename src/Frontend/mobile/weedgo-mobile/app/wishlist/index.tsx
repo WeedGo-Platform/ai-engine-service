@@ -20,7 +20,7 @@ import { Product } from '@/types/api.types';
 export default function WishlistScreen() {
   const router = useRouter();
   const { items, removeFromWishlist, clearWishlist } = useWishlistStore();
-  const { addToCart } = useCartStore();
+  const { addItem } = useCartStore();
   const [removingIds, setRemovingIds] = React.useState<Set<string>>(new Set());
 
   const handleProductPress = (product: Product) => {
@@ -38,7 +38,7 @@ export default function WishlistScreen() {
   };
 
   const handleAddToCart = async (product: Product) => {
-    await addToCart(product);
+    await addItem(product, 1);
     // Optionally remove from wishlist after adding to cart
     // await removeFromWishlist(product.id);
   };

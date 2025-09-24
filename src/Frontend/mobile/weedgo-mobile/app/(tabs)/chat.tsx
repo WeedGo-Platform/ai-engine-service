@@ -8,7 +8,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
-  StyleSheet,
   ActivityIndicator,
   ScrollView,
 } from 'react-native';
@@ -17,28 +16,40 @@ import { useChatStore } from '../../stores/chatStore';
 import { MessageBubble } from '../../components/chat/MessageBubble';
 import { TypingIndicator } from '../../components/chat/TypingIndicator';
 import { SuggestionChips } from '../../components/chat/SuggestionChips';
-import { useVoiceInput } from '../../hooks/useVoiceInput';
-import { Colors } from '@/constants/Colors';
+import { useSimpleTranscription } from '../../hooks/useSimpleTranscription';
+import { Colors, GlassStyles, BorderRadius, Shadows } from '@/constants/Colors';
+import { glassChatStyles as styles } from '@/constants/GlassmorphismStyles';
+import { BlurView } from 'expo-blur';
 
 export default function ChatScreen() {
   const [inputText, setInputText] = useState('');
+  const [isTTSEnabled, setIsTTSEnabled] = useState(true);
   const flatListRef = useRef<FlatList>(null);
   const inputRef = useRef<TextInput>(null);
+  const isDark = true; // Force dark mode
+  const theme = isDark ? Colors.dark : Colors.light;
 
   const {
     messages,
     isTyping,
     isConnected,
     connect,
-    sendMessage,
+    sendMessage: sendChatMessage,
     markAsRead,
     clearChat,
   } = useChatStore();
 
-  const { isRecording, startRecording, stopRecording } = useVoiceInput({
+  const {
+    isRecording,
+    transcript,
+    startRecording,
+    stopRecording,
+  } = useSimpleTranscription({
     onTranscription: (text: string) => {
-      if (text) {
-        sendMessage(text, true);
+      if (text.trim()) {
+        setInputText(text);
+        // Auto-send the message
+        handleSendMessage(text, true);
       }
     },
   });
@@ -63,10 +74,16 @@ export default function ChatScreen() {
     }
   }, [messages]);
 
+  const handleSendMessage = (text: string, fromVoice: boolean = false) => {
+    if (text.trim()) {
+      sendChatMessage(text, fromVoice);
+      setInputText('');
+    }
+  };
+
   const handleSend = () => {
     if (inputText.trim()) {
-      sendMessage(inputText);
-      setInputText('');
+      handleSendMessage(inputText);
     }
   };
 
@@ -74,8 +91,13 @@ export default function ChatScreen() {
     if (isRecording) {
       await stopRecording();
     } else {
+      setInputText('');
       await startRecording();
     }
+  };
+
+  const handleSpeakerToggle = () => {
+    setIsTTSEnabled(!isTTSEnabled);
   };
 
   const renderMessage = ({ item }: { item: any }) => {
@@ -89,9 +111,21 @@ export default function ChatScreen() {
           <Text style={styles.headerTitle}>WeedGo AI</Text>
           <View style={[styles.statusDot, isConnected ? styles.connected : styles.disconnected]} />
         </View>
-        <TouchableOpacity onPress={clearChat} style={styles.clearButton}>
-          <Ionicons name="trash-outline" size={20} color="#666" />
-        </TouchableOpacity>
+        <View style={styles.headerRight}>
+          <TouchableOpacity
+            onPress={handleSpeakerToggle}
+            style={[styles.speakerButton, !isTTSEnabled && styles.speakerButtonOff]}
+          >
+            <Ionicons
+              name={isTTSEnabled ? "volume-high" : "volume-mute"}
+              size={22}
+              color={isTTSEnabled ? Colors.light.primary : "#999"}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={clearChat} style={styles.clearButton}>
+            <Ionicons name="trash-outline" size={20} color="#666" />
+          </TouchableOpacity>
+        </View>
       </View>
     );
   };
@@ -127,6 +161,16 @@ export default function ChatScreen() {
         />
 
         <View style={styles.inputContainer}>
+          {/* Recording indicator */}
+          {isRecording && (
+            <View style={styles.transcriptIndicator}>
+              <View style={styles.transcriptHeader}>
+                <View style={styles.listeningDot} />
+                <Text style={styles.transcriptLabel}>Recording... Speak now</Text>
+              </View>
+            </View>
+          )}
+
           <View style={styles.inputWrapper}>
             <TextInput
               ref={inputRef}
@@ -156,7 +200,7 @@ export default function ChatScreen() {
               onPress={handleSend}
               disabled={!inputText.trim()}
             >
-              <Ionicons name="send" size={20} color="#fff" />
+              <Ionicons name="chatbubble" size={20} color="#fff" />
             </TouchableOpacity>
           </View>
         </View>
@@ -164,100 +208,3 @@ export default function ChatScreen() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.light.background,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 16,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-  },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: Colors.light.text,
-  },
-  statusDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    marginLeft: 8,
-  },
-  connected: {
-    backgroundColor: Colors.light.primary,
-  },
-  disconnected: {
-    backgroundColor: '#ef4444',
-  },
-  clearButton: {
-    padding: 8,
-  },
-  keyboardAvoid: {
-    flex: 1,
-  },
-  messagesList: {
-    paddingHorizontal: 16,
-    paddingTop: 8,
-    paddingBottom: 16,
-  },
-  inputContainer: {
-    backgroundColor: '#fff',
-    borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    paddingBottom: Platform.OS === 'ios' ? 24 : 8,
-  },
-  inputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    backgroundColor: '#f9f9f9',
-    borderRadius: 24,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    minHeight: 48,
-  },
-  textInput: {
-    flex: 1,
-    fontSize: 16,
-    color: Colors.light.text,
-    maxHeight: 100,
-    paddingTop: Platform.OS === 'ios' ? 4 : 0,
-    paddingBottom: Platform.OS === 'ios' ? 4 : 0,
-  },
-  voiceButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 8,
-    backgroundColor: '#f0fdf4',
-  },
-  recording: {
-    backgroundColor: '#ef4444',
-  },
-  sendButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: Colors.light.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 8,
-  },
-  sendButtonDisabled: {
-    backgroundColor: '#ccc',
-  },
-});

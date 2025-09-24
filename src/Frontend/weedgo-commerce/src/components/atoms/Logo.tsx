@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { clsx } from 'clsx';
+import { tenantApi, TenantSettings } from '@api/tenant';
 
 export interface LogoProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
@@ -10,7 +11,7 @@ export interface LogoProps {
 }
 
 /**
- * Logo component for WeedGo brand identity
+ * Logo component that displays the tenant's logo or business name
  * Responsive and theme-aware
  */
 export const Logo: React.FC<LogoProps> = ({
@@ -19,43 +20,72 @@ export const Logo: React.FC<LogoProps> = ({
   linkToHome = true,
   className
 }) => {
+  const [tenant, setTenant] = useState<TenantSettings | null>(null);
+  const tenantId = import.meta.env.VITE_TENANT_ID;
+
+  useEffect(() => {
+    if (tenantId) {
+      tenantApi.getTenantSettings(tenantId).then(settings => {
+        if (settings) {
+          setTenant(settings);
+          console.log('Tenant settings loaded:', settings);
+        }
+      }).catch(err => {
+        console.error('Failed to load tenant settings:', err);
+      });
+    }
+  }, [tenantId]);
+
   const sizeClasses = {
     sm: {
-      icon: 'h-8 w-8',
+      height: 'h-8',
       text: 'text-xl'
     },
     md: {
-      icon: 'h-10 w-10',
+      height: 'h-10',
       text: 'text-2xl'
     },
     lg: {
-      icon: 'h-12 w-12',
+      height: 'h-12',
       text: 'text-3xl'
     },
     xl: {
-      icon: 'h-16 w-16',
+      height: 'h-16',
       text: 'text-4xl'
     }
   };
 
+  // Construct full logo URL
+  const logoUrl = tenant?.logo_url ?
+    (tenant.logo_url.startsWith('http') ? tenant.logo_url : `http://localhost:5024${tenant.logo_url}`)
+    : null;
+
+  const [imageError, setImageError] = useState(false);
+
   const logoContent = (
     <div className={clsx('flex items-center space-x-2', className)}>
-      <div
-        className={clsx(
-          sizeClasses[size].icon,
-          'bg-gradient-to-br from-primary-500 to-primary-700 rounded-full flex items-center justify-center shadow-lg transform transition-transform hover:scale-105'
-        )}
-      >
-        <span className="text-white font-bold text-xl">W</span>
-      </div>
-      {showText && (
+      {logoUrl && !imageError ? (
+        <img
+          src={logoUrl}
+          alt={tenant?.display_name || tenant?.business_name || tenant?.name || 'Logo'}
+          className={clsx(
+            sizeClasses[size].height,
+            'object-contain'
+          )}
+          onError={(e) => {
+            console.error('Logo failed to load:', logoUrl);
+            setImageError(true);
+          }}
+        />
+      ) : null}
+      {showText && tenant && (
         <span
           className={clsx(
             sizeClasses[size].text,
-            'font-bold bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent dark:from-primary-400 dark:to-primary-600'
+            'font-bold text-primary-600 dark:text-primary-400'
           )}
         >
-          WeedGo
+          {tenant.display_name || tenant.business_name || tenant.name || ''}
         </span>
       )}
     </div>
@@ -63,7 +93,7 @@ export const Logo: React.FC<LogoProps> = ({
 
   if (linkToHome) {
     return (
-      <Link to="/" className="inline-block" aria-label="WeedGo Home">
+      <Link to="/" className="inline-block" aria-label="Home">
         {logoContent}
       </Link>
     );

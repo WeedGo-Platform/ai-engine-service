@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Stack, useRouter, useSegments, useRootNavigation, Slot } from 'expo-router';
-import { View, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator, useColorScheme } from 'react-native';
 import { useAuthStore } from '@/stores/authStore';
 import useStoreStore from '@/stores/storeStore';
 import { Colors } from '@/constants/Colors';
 import Toast from 'react-native-toast-message';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { FloatingChatBubble } from '@/components/FloatingChatBubble';
+import { BlurView } from 'expo-blur';
 
 export default function RootLayout() {
   const [isReady, setIsReady] = useState(false);
@@ -15,6 +16,9 @@ export default function RootLayout() {
   const segments = useSegments();
   const router = useRouter();
   const rootNav = useRootNavigation();
+  const colorScheme = useColorScheme();
+  const isDark = true; // Force dark mode for now
+  const theme = isDark ? Colors.dark : Colors.light;
 
   // Load stored auth and stores on mount
   useEffect(() => {
@@ -45,15 +49,27 @@ export default function RootLayout() {
   // Show loading screen while checking auth
   if (!isReady || isLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.light.background }}>
-        <ActivityIndicator size="large" color={Colors.light.primary} />
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.background }}>
+        <ActivityIndicator size="large" color={theme.primary} />
       </View>
     );
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Stack>
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor: theme.background }}>
+      <Stack
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: 'transparent',
+          },
+          headerTransparent: true,
+          headerBlurEffect: isDark ? 'dark' : 'light',
+          headerTintColor: theme.text,
+          contentStyle: {
+            backgroundColor: theme.background,
+          },
+        }}
+      >
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="(modals)" options={{ presentation: 'modal', headerShown: false }} />

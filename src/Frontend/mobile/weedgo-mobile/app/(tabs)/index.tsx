@@ -16,7 +16,8 @@ import { useRouter } from 'expo-router';
 import { useAuthStore } from '@/stores/authStore';
 import useProductsStore from '@/stores/productsStore';
 import useCartStore from '@/stores/cartStore';
-import { Colors } from '@/constants/Colors';
+import { Colors, BorderRadius, Shadows, Gradients } from '@/constants/Colors';
+import { LinearGradient } from 'expo-linear-gradient';
 import { StoreSelector } from '@/components/StoreSelector';
 import { CategoryTiles } from '@/components/CategoryTiles';
 import { QuickFilters } from '@/components/QuickFilters';
@@ -30,6 +31,8 @@ export default function HomeScreen() {
   const router = useRouter();
   const { user, isAuthenticated } = useAuthStore();
   const { getItemCount } = useCartStore();
+  const isDark = false; // Use light theme for colorful design
+  const theme = isDark ? Colors.dark : Colors.light;
   const {
     products,
     loading,
@@ -110,14 +113,19 @@ export default function HomeScreen() {
 
       {/* Search Bar */}
       <View style={styles.searchContainer}>
-        <View style={styles.searchBar}>
-          <Ionicons name="search" size={20} color={Colors.light.gray} />
+        <LinearGradient
+          colors={['rgba(255, 255, 255, 0.95)', 'rgba(250, 250, 255, 0.95)']}
+          style={styles.searchBar}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+        >
+          <Ionicons name="search" size={20} color={theme.primary} />
           <TextInput
             style={styles.searchInput}
             placeholder="Search products..."
             value={searchQuery}
             onChangeText={handleSearch}
-            placeholderTextColor={Colors.light.gray}
+            placeholderTextColor={theme.textSecondary}
             returnKeyType="search"
           />
           {searchQuery.length > 0 && (
@@ -127,22 +135,29 @@ export default function HomeScreen() {
                 searchProducts('');
               }}
             >
-              <Ionicons name="close-circle" size={20} color={Colors.light.gray} />
+              <Ionicons name="close-circle" size={20} color={theme.textSecondary} />
             </TouchableOpacity>
           )}
-        </View>
+        </LinearGradient>
 
         {/* Cart Icon */}
         <TouchableOpacity
-          style={styles.cartButton}
           onPress={() => router.push('/(tabs)/cart')}
+          activeOpacity={0.8}
         >
-          <Ionicons name="cart-outline" size={24} color={Colors.light.text} />
+          <LinearGradient
+            colors={Gradients.primary}
+            style={styles.cartButton}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+          >
+            <Ionicons name="cart-outline" size={24} color="white" />
           {getItemCount() > 0 && (
             <View style={styles.cartBadge}>
               <Text style={styles.cartBadgeText}>{getItemCount()}</Text>
             </View>
           )}
+          </LinearGradient>
         </TouchableOpacity>
       </View>
 
@@ -233,7 +248,7 @@ export default function HomeScreen() {
 
     return (
       <View style={styles.footerLoader}>
-        <ActivityIndicator size="small" color={Colors.light.primary} />
+        <ActivityIndicator size="small" color={theme.primary} />
       </View>
     );
   };
@@ -243,7 +258,7 @@ export default function HomeScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.errorContainer}>
-          <Ionicons name="alert-circle-outline" size={64} color={Colors.light.error} />
+          <Ionicons name="alert-circle-outline" size={64} color={theme.error} />
           <Text style={styles.errorTitle}>Oops! Something went wrong</Text>
           <Text style={styles.errorText}>{error}</Text>
           <TouchableOpacity
@@ -258,7 +273,13 @@ export default function HomeScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <LinearGradient
+      colors={[theme.gradientStart, theme.gradientMid, theme.gradientEnd]}
+      style={styles.gradientContainer}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0.5, y: 1 }}
+    >
+      <SafeAreaView style={styles.container}>
       <FlashList
         data={products}
         renderItem={renderProduct}
@@ -271,7 +292,7 @@ export default function HomeScreen() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={handleRefresh}
-            tintColor={Colors.light.primary}
+            tintColor={theme.primary}
           />
         }
         onEndReached={handleLoadMore}
@@ -280,7 +301,8 @@ export default function HomeScreen() {
         ItemSeparatorComponent={() => <View style={{ height: 0 }} />}
         showsVerticalScrollIndicator={false}
       />
-    </SafeAreaView>
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
 
@@ -291,10 +313,16 @@ const quickFilterTitles: Record<string, string> = {
   'on-sale': 'On Sale',
 };
 
+const isDark = false; // Use light theme for colorful design
+const theme = isDark ? Colors.dark : Colors.light;
+
 const styles = StyleSheet.create({
+  gradientContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
-    backgroundColor: Colors.light.background,
+    backgroundColor: 'transparent',
   },
   searchContainer: {
     flexDirection: 'row',
@@ -307,39 +335,51 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'white',
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    height: 44,
-    borderWidth: 1,
-    borderColor: Colors.light.border,
+    borderRadius: BorderRadius.xl,
+    paddingHorizontal: 16,
+    height: 48,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
+    ...Shadows.medium,
   },
   searchInput: {
     flex: 1,
     fontSize: 16,
-    color: Colors.light.text,
+    color: theme.text,
     marginLeft: 8,
   },
   cartButton: {
     position: 'relative',
-    padding: 8,
+    width: 48,
+    height: 48,
+    borderRadius: BorderRadius.full,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
+    ...Shadows.colorful,
   },
   cartBadge: {
     position: 'absolute',
-    top: 2,
-    right: 2,
-    backgroundColor: Colors.light.primary,
-    borderRadius: 10,
-    minWidth: 20,
-    height: 20,
+    top: -4,
+    right: -4,
+    backgroundColor: theme.accent,
+    borderRadius: BorderRadius.full,
+    minWidth: 22,
+    height: 22,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 4,
+    borderWidth: 2,
+    borderColor: 'white',
+    shadowColor: theme.accent,
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
   },
   cartBadgeText: {
-    color: 'white',
+    color: theme.text,
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: '700',
   },
   productsHeader: {
     flexDirection: 'row',
@@ -350,19 +390,20 @@ const styles = StyleSheet.create({
   },
   productsTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: Colors.light.text,
+    fontWeight: '700',
+    color: theme.text,
   },
   productCount: {
     fontSize: 14,
-    color: Colors.light.gray,
+    color: theme.textSecondary,
   },
   listContent: {
     paddingBottom: 20,
+    paddingHorizontal: 16,
   },
   row: {
-    paddingHorizontal: 16,
     justifyContent: 'space-between',
+    gap: 16,
   },
   emptyContainer: {
     flex: 1,
@@ -374,21 +415,22 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: Colors.light.text,
+    color: theme.text,
     marginTop: 16,
   },
   emptyText: {
     fontSize: 14,
-    color: Colors.light.gray,
+    color: theme.textSecondary,
     textAlign: 'center',
     marginTop: 8,
   },
   clearButton: {
     marginTop: 16,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    backgroundColor: Colors.light.primary,
-    borderRadius: 20,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    backgroundColor: theme.primary,
+    borderRadius: BorderRadius.xl,
+    ...Shadows.small,
   },
   clearButtonText: {
     color: 'white',
@@ -404,12 +446,12 @@ const styles = StyleSheet.create({
   errorTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: Colors.light.text,
+    color: theme.text,
     marginTop: 16,
   },
   errorText: {
     fontSize: 14,
-    color: Colors.light.gray,
+    color: theme.textSecondary,
     textAlign: 'center',
     marginTop: 8,
   },
@@ -417,8 +459,9 @@ const styles = StyleSheet.create({
     marginTop: 16,
     paddingHorizontal: 24,
     paddingVertical: 12,
-    backgroundColor: Colors.light.primary,
-    borderRadius: 8,
+    backgroundColor: theme.primary,
+    borderRadius: BorderRadius.xl,
+    ...Shadows.medium,
   },
   retryButtonText: {
     color: 'white',

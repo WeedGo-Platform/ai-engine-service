@@ -13,6 +13,10 @@ import {
 import { addItem } from '@features/cart/cartSlice';
 import { IProduct } from '@templates/types';
 import toast from 'react-hot-toast';
+import { seoRouteHandler } from '@services/seo/RouteHandler';
+import Breadcrumbs from '@components/common/Breadcrumbs';
+import { useSEO, usePaginationSEO } from '@hooks/useSEO';
+import { Helmet } from 'react-helmet-async';
 
 const ProductsPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -31,7 +35,7 @@ const ProductsPage: React.FC = () => {
     error,
   } = useSelector((state: RootState) => state.products);
 
-  const storeId = localStorage.getItem('store_id') || 'store_001';
+  const storeId = localStorage.getItem('selected_store_id');
 
   // Local state for UI controls
   const [selectedCategory, setSelectedCategory] = useState<string>('');
@@ -39,6 +43,23 @@ const ProductsPage: React.FC = () => {
   const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 });
   const [sortBy, setSortBy] = useState<string>('name_asc');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+
+  // SEO Configuration
+  const categoryName = selectedCategory || 'Cannabis';
+  const pageTitle = `${categoryName} Products | Cannabis Dispensary Near Me`;
+  const pageDescription = `Browse our selection of ${categoryName.toLowerCase()} products. Premium quality cannabis available for same-day delivery. ${total ? `${total} products available.` : ''}`;
+
+  useSEO({
+    title: pageTitle,
+    description: pageDescription,
+    keywords: ['cannabis', 'products', categoryName.toLowerCase(), 'dispensary', 'delivery'],
+    ogTitle: pageTitle,
+    ogDescription: pageDescription,
+  });
+
+  // Pagination SEO for multiple pages
+  const totalPages = Math.ceil(total / limit);
+  usePaginationSEO(page + 1, totalPages, '/products');
 
   // Load initial data
   useEffect(() => {
@@ -84,9 +105,20 @@ const ProductsPage: React.FC = () => {
     toast.success(`${product.name} added to cart!`);
   };
 
-  // Navigate to product detail
+  // Navigate to product detail with SEO-friendly URL
   const handleProductClick = (product: IProduct) => {
-    navigate(`/products/${product.sku}`);
+    // Get current city from selected store or default
+    const currentCity = localStorage.getItem('selected_city') || 'toronto';
+
+    // Generate SEO-friendly URL using slug
+    const seoUrl = seoRouteHandler.generateProductUrl({
+      slug: product.slug, // Use the actual slug field from the product
+      name: product.name,
+      category: product.category,
+      city: currentCity
+    });
+
+    navigate(seoUrl);
   };
 
   // Clear all filters
@@ -99,9 +131,18 @@ const ProductsPage: React.FC = () => {
     dispatch(fetchProducts({ storeId, page: 0, limit }));
   };
 
+  // Generate breadcrumb items
+  const breadcrumbItems = [
+    { name: 'Products', current: !selectedCategory },
+    ...(selectedCategory ? [{ name: selectedCategory, current: true }] : [])
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4">
+        {/* Breadcrumb Navigation */}
+        <Breadcrumbs items={breadcrumbItems} className="mb-6" />
+
         <h1 className="text-3xl font-bold mb-8">Cannabis Products</h1>
 
         {/* Filters Section */}
@@ -247,9 +288,9 @@ const ProductsPage: React.FC = () => {
               ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
               : "space-y-4"
             }>
-              {products.map((product) => (
+              {products.map((product, index) => (
                 <div
-                  key={product.id}
+                  key={`${product.id}-${index}`}
                   className={`bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-lg transition-shadow cursor-pointer
                     ${viewMode === 'list' ? 'flex' : ''}`}
                   onClick={() => handleProductClick(product)}

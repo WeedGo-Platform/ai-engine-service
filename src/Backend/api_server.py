@@ -308,11 +308,12 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "http://localhost:3001",  # Default commerce dev port
+        "http://localhost:3001",  # Pot Palace template port
+        "http://localhost:3002",  # Modern template port
         "http://localhost:3003",
         "http://localhost:3004",
-        "http://localhost:3005",  # Pot Palace template
-        "http://localhost:3006",  # Modern template
+        "http://localhost:3005",
+        "http://localhost:3006",
         "http://localhost:3007",  # Headless template
         "http://localhost:5024",
         "http://localhost:5173",
@@ -594,6 +595,14 @@ try:
     logger.info("Provincial catalog upload endpoints loaded successfully")
 except Exception as e:
     logger.warning(f"Failed to load provincial catalog upload endpoints: {e}")
+
+# Import and include SEO/Sitemap endpoints
+try:
+    from api.sitemap_endpoints import router as sitemap_router
+    app.include_router(sitemap_router)
+    logger.info("SEO/Sitemap endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load SEO/Sitemap endpoints: {e}")
 
 # Add global rate limiting
 @app.middleware("http")

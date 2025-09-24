@@ -83,11 +83,13 @@ export abstract class BaseService {
   }
 
   protected getStoreId(): string | null {
-    return localStorage.getItem('store_id') || import.meta.env.VITE_STORE_ID;
+    // Get the store ID from selected store (managed by StoreContext)
+    return localStorage.getItem('selected_store_id');
   }
 
   protected getTenantId(): string | null {
-    return localStorage.getItem('tenant_id') || import.meta.env.VITE_TENANT_ID;
+    // Single source of truth from environment
+    return import.meta.env.VITE_TENANT_ID;
   }
 
   protected async handleUnauthorized(): Promise<void> {
