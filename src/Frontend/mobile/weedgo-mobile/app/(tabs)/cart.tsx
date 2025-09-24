@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Gradients, Colors } from '@/constants/Colors';
 import useCartStore from '@/stores/cartStore';
 import { CartItem } from '@/components/cart/CartItem';
 import { OrderSummary } from '@/components/cart/OrderSummary';
@@ -64,12 +66,12 @@ export default function CartScreen() {
           options={{
             title: 'Cart',
             headerShown: true,
-            headerStyle: { backgroundColor: '#1a1a1a' },
-            headerTintColor: '#fff',
+            headerTransparent: true,
+            headerTintColor: Colors.light.text,
           }}
         />
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#00ff00" />
+          <ActivityIndicator size="large" color={Colors.light.primary} />
           <Text style={styles.loadingText}>Loading cart...</Text>
         </View>
       </SafeAreaView>
@@ -83,8 +85,8 @@ export default function CartScreen() {
           options={{
             title: 'Cart',
             headerShown: true,
-            headerStyle: { backgroundColor: '#1a1a1a' },
-            headerTintColor: '#fff',
+            headerTransparent: true,
+            headerTintColor: Colors.light.text,
           }}
         />
         <EmptyCart />
@@ -98,8 +100,8 @@ export default function CartScreen() {
         options={{
           title: `Cart (${itemCount})`,
           headerShown: true,
-          headerStyle: { backgroundColor: '#1a1a1a' },
-          headerTintColor: '#fff',
+          headerTransparent: true,
+          headerTintColor: Colors.light.text,
         }}
       />
 
@@ -109,7 +111,7 @@ export default function CartScreen() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={handleRefresh}
-            tintColor="#00ff00"
+            tintColor={Colors.light.primary}
           />
         }
         contentContainerStyle={styles.scrollContent}
@@ -141,18 +143,25 @@ export default function CartScreen() {
 
         {/* Checkout Button */}
         <TouchableOpacity
-          style={[styles.checkoutButton, loading && styles.disabledButton]}
           onPress={handleCheckout}
           disabled={loading}
+          activeOpacity={0.9}
         >
-          {loading ? (
-            <ActivityIndicator color="#000" />
-          ) : (
-            <>
-              <Text style={styles.checkoutButtonText}>Checkout</Text>
-              <Text style={styles.checkoutTotal}>${total.toFixed(2)}</Text>
-            </>
-          )}
+          <LinearGradient
+            colors={loading ? ['#cccccc', '#aaaaaa'] : Gradients.button}
+            style={[styles.checkoutButton, loading && styles.disabledButton]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+          >
+            {loading ? (
+              <ActivityIndicator color="white" />
+            ) : (
+              <>
+                <Text style={styles.checkoutButtonText}>Checkout</Text>
+                <Text style={styles.checkoutTotal}>${total.toFixed(2)}</Text>
+              </>
+            )}
+          </LinearGradient>
         </TouchableOpacity>
 
         {/* Minimum order notice if applicable */}

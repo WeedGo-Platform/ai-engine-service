@@ -2,9 +2,20 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '@store/index';
+import { useSEO } from '@hooks/useSEO';
+import { Helmet } from 'react-helmet-async';
 
 const Home: React.FC = () => {
   const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
+
+  // SEO Configuration
+  useSEO({
+    title: 'Cannabis Dispensary Near Me | Same-Day Delivery',
+    description: 'Premium cannabis delivery at your fingertips. Browse our selection of top-quality products and get them delivered to your door. Order online for same-day delivery.',
+    keywords: ['cannabis', 'dispensary', 'delivery', 'near me', 'weed', 'marijuana'],
+    ogTitle: 'Cannabis Dispensary Near Me | Same-Day Delivery',
+    ogDescription: 'Premium cannabis delivery at your fingertips. Order online for same-day delivery.',
+  });
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-primary-50 to-white">

@@ -20,8 +20,9 @@ from core.dependencies import get_tenant_service
 
 router = APIRouter(prefix="/api/uploads", tags=["uploads"])
 
-# Configuration
-STORAGE_ROOT = Path("storage")
+# Configuration - Use absolute path to ensure consistency
+BACKEND_DIR = Path(__file__).parent.parent.resolve()  # Get Backend directory
+STORAGE_ROOT = BACKEND_DIR / "storage"
 TENANTS_DIR = STORAGE_ROOT / "tenants"
 ALLOWED_IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
 MAX_FILE_SIZE = 2 * 1024 * 1024  # 2MB

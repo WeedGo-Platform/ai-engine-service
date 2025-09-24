@@ -85,6 +85,46 @@ def serialize_product(row) -> Dict[str, Any]:
     return product
 
 
+@router.get("/by-slug")
+async def get_product_by_slug(
+    slug: str = Query(..., description="Product slug for SEO-friendly URL"),
+    store_id: Optional[str] = Query(None, description="Store ID for inventory data"),
+    conn = Depends(get_db_connection)
+):
+    """
+    Get product details by slug for SEO-friendly URLs
+    """
+    try:
+        # Query using slug field
+        query = """
+            SELECT * FROM inventory_products_view
+            WHERE slug = $1
+        """
+        params = [slug]
+
+        if store_id:
+            query += " AND store_id = $2"
+            params.append(store_id)
+
+        query += " LIMIT 1"
+
+        # Execute query
+        row = await conn.fetchrow(query, *params)
+
+        if not row:
+            raise HTTPException(status_code=404, detail=f"Product with slug '{slug}' not found")
+
+        # Convert to dictionary and serialize
+        product = serialize_product(row)
+        return product
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching product by slug: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch product details")
+
+
 @router.get("/details/{product_id}")
 async def get_product_details(
     product_id: str,

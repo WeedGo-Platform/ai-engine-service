@@ -1,9 +1,13 @@
 import { StyleSheet } from 'react-native';
+import { Colors, BorderRadius, Shadows, Gradients } from '@/constants/Colors';
+
+const isDark = false; // Use light theme for colorful design
+const theme = isDark ? Colors.dark : Colors.light;
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: theme.background,
   },
   scrollView: {
     flex: 1,
@@ -19,15 +23,15 @@ export const styles = StyleSheet.create({
   loadingText: {
     marginTop: 16,
     fontSize: 16,
-    color: '#666',
+    color: theme.textSecondary,
   },
   section: {
     marginTop: 20,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#1a1a1a',
+    fontSize: 20,
+    fontWeight: '700',
+    color: theme.text,
     marginBottom: 12,
     marginHorizontal: 16,
   },
@@ -38,43 +42,48 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#00ff00',
     marginHorizontal: 16,
     marginTop: 24,
     marginBottom: 16,
-    paddingVertical: 16,
+    paddingVertical: 18,
     paddingHorizontal: 24,
-    borderRadius: 25,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 6,
-    elevation: 5,
+    borderRadius: BorderRadius.xxl,
+    overflow: 'hidden',
+    ...Shadows.colorful,
+    elevation: 8,
   },
   checkoutButtonText: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#000',
+    fontWeight: '700',
+    color: 'white',
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   checkoutTotal: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#000',
+    fontWeight: '700',
+    color: 'white',
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   disabledButton: {
     opacity: 0.7,
   },
   minimumNotice: {
-    backgroundColor: '#fff3cd',
+    backgroundColor: theme.warning + '20',
     marginHorizontal: 16,
     marginBottom: 20,
-    padding: 12,
-    borderRadius: 8,
+    padding: 14,
+    borderRadius: BorderRadius.lg,
     borderLeftWidth: 4,
-    borderLeftColor: '#ffc107',
+    borderLeftColor: theme.warning,
+    ...Shadows.small,
   },
   minimumNoticeText: {
     fontSize: 14,
-    color: '#856404',
+    color: theme.text,
+    fontWeight: '500',
   },
 });

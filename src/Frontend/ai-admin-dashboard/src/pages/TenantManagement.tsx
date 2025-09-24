@@ -179,15 +179,18 @@ const TenantManagement: React.FC = () => {
       if (logoFile) {
         const formData = new FormData();
         formData.append('file', logoFile);
-        
+
         const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5024'}/api/uploads/tenant/${id}/logo`, {
           method: 'POST',
           body: formData,
         });
-        
+
         if (!response.ok) {
-          throw new Error('Failed to upload logo');
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.detail || 'Failed to upload logo');
         }
+
+        console.log('Logo uploaded successfully');
       }
       
       setEditingTenant(null);
@@ -439,8 +442,8 @@ const TenantManagement: React.FC = () => {
               <div className="flex items-start justify-between mb-6">
                 <div className="flex items-start gap-6">
                   {tenants[0]?.logo_url && (
-                    <img 
-                      src={tenants[0].logo_url} 
+                    <img
+                      src={tenants[0].logo_url.startsWith('http') ? tenants[0].logo_url : `${import.meta.env.VITE_API_URL || 'http://localhost:5024'}${tenants[0].logo_url}`}
                       alt={`${tenants[0].name} logo`}
                       className="w-16 h-16 object-contain rounded"
                     />
@@ -575,8 +578,8 @@ const TenantManagement: React.FC = () => {
                     <td className="px-6 py-4">
                       <div className="flex items-start gap-4">
                         {tenant.logo_url && (
-                          <img 
-                            src={tenant.logo_url} 
+                          <img
+                            src={tenant.logo_url.startsWith('http') ? tenant.logo_url : `${import.meta.env.VITE_API_URL || 'http://localhost:5024'}${tenant.logo_url}`}
                             alt={`${tenant.name} logo`}
                             className="w-10 h-10 object-contain rounded"
                             onError={(e) => {
@@ -707,10 +710,11 @@ const TenantManagement: React.FC = () => {
             setShowTenantModal(false);
             setSelectedTenant(null);
           }}
-          onSave={async (updatedTenant) => {
-            await handleUpdateTenant(selectedTenant.id, updatedTenant);
+          onSave={async (updatedTenant, logoFile) => {
+            await handleUpdateTenant(selectedTenant.id, updatedTenant, logoFile);
             setShowTenantModal(false);
             setSelectedTenant(null);
+            fetchTenants(); // Refresh tenants to show updated logo
           }}
           readOnly={false}
           showUsersTab={true}

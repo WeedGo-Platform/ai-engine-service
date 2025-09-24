@@ -1,0 +1,59 @@
+# Robots.txt for WeedGo Commerce
+# Allow search engines to crawl all content
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /checkout/
+Disallow: /cart/
+Disallow: /profile/
+Disallow: /login
+Disallow: /register
+Disallow: /reset-password
+Disallow: /verify-email
+Disallow: /*.json$
+Disallow: /*?*sort=
+Disallow: /*?*filter=
+Disallow: /*?*page=
+
+# Allow important pages
+Allow: /products
+Allow: /dispensary-near-me/
+Allow: /cannabis/
+Allow: /brands/
+Allow: /about
+Allow: /contact
+
+# Specific bot rules
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 1
+
+# Block bad bots
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: Rogerbot
+Disallow: /
+
+# Sitemap locations
+Sitemap: https://weedgo.com/api/seo/sitemap.xml
+Sitemap: https://weedgo.com/api/seo/sitemap-index.xml

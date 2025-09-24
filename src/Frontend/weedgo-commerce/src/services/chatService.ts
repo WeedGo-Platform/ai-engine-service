@@ -37,7 +37,7 @@ class ChatService {
       const response = await this.apiClient.post('/chat/search', {
         query: text,
         context,
-        store_id: localStorage.getItem('storeId') || 'store_001'
+        store_id: localStorage.getItem('selected_store_id')
       });
 
       return {
@@ -76,7 +76,7 @@ class ChatService {
     try {
       const response = await this.apiClient.post('/chat/recommendations', {
         preferences,
-        store_id: localStorage.getItem('storeId') || 'default'
+        store_id: localStorage.getItem('selected_store_id')
       });
 
       return response.data.products || [];
@@ -91,7 +91,7 @@ class ChatService {
       const response = await this.apiClient.get('/kiosk/products/search', {
         params: {
           q: query,
-          store_id: localStorage.getItem('storeId') || 'store_001'
+          store_id: localStorage.getItem('selected_store_id')
         }
       });
 

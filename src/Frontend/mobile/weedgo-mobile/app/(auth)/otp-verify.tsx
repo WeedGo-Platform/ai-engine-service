@@ -98,22 +98,6 @@ export default function OTPVerifyScreen() {
     }
   };
 
-  const handlePaste = async (event: any, index: number) => {
-    const pastedText = event.nativeEvent.text;
-
-    // Check if pasted text is a valid OTP
-    if (/^\d{6}$/.test(pastedText)) {
-      const otpArray = pastedText.split('');
-      setOtp(otpArray);
-
-      // Focus last input
-      inputs.current[OTP_LENGTH - 1]?.focus();
-
-      // Auto-submit
-      handleVerify(pastedText);
-    }
-  };
-
   const handleVerify = async (otpCode: string) => {
     if (otpCode.length !== OTP_LENGTH) {
       Alert.alert('Invalid Code', 'Please enter a 6-digit verification code');
@@ -250,7 +234,6 @@ export default function OTPVerifyScreen() {
               value={digit}
               onChangeText={(value) => handleOtpChange(value, index)}
               onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent.key, index)}
-              onPaste={(e: any) => handlePaste(e, index)}
               keyboardType="number-pad"
               maxLength={1}
               selectTextOnFocus

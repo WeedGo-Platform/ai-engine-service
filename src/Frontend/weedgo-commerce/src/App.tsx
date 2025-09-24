@@ -6,6 +6,7 @@ import { store } from '@store/index';
 import { restoreSession } from '@features/auth/authSlice';
 import { restoreCart } from '@features/cart/cartSlice';
 import { TemplateProvider } from '@templates/TemplateProvider';
+import { TenantProvider } from '@contexts/TenantContext';
 import { StoreProvider } from '@contexts/StoreContext';
 import { AgeVerificationProvider } from '@contexts/AgeVerificationContext';
 import LoadingScreen from '@components/common/LoadingScreen';
@@ -16,6 +17,7 @@ import ErrorBoundary from '@components/ErrorBoundary';
 const Home = lazy(() => import('@pages/Home'));
 const ProductsPage = lazy(() => import('@pages/ProductsPage'));
 const ProductDetail = lazy(() => import('@pages/ProductDetail'));
+const ProductDetailSEO = lazy(() => import('@pages/ProductDetailSEO'));
 const Cart = lazy(() => import('@pages/Cart'));
 const Checkout = lazy(() => import('@pages/Checkout'));
 const Login = lazy(() => import('@pages/Login'));
@@ -41,15 +43,22 @@ function App() {
     <ErrorBoundary>
       <Provider store={store}>
         <TemplateProvider>
-          <StoreProvider>
-            <AgeVerificationProvider>
-              <Router>
+          <TenantProvider>
+            <StoreProvider>
+              <AgeVerificationProvider>
+                <Router>
               <Suspense fallback={<LoadingScreen />}>
                 <MainLayout>
                   <Routes>
                 {/* Public Routes */}
                 <Route path="/" element={<Home />} />
                 <Route path="/products" element={<ProductsPage />} />
+                {/* SEO-friendly product routes */}
+                <Route path="/dispensary-near-me/:city/:slug" element={<ProductDetailSEO />} />
+                <Route path="/cannabis/:category/:slug" element={<ProductDetailSEO />} />
+                <Route path="/product/:identifier" element={<ProductDetailSEO />} />
+
+                {/* Legacy SKU route for backward compatibility */}
                 <Route path="/products/:sku" element={<ProductDetail />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/login" element={<Login />} />
@@ -92,10 +101,11 @@ function App() {
             }}
           />
         </Router>
-            </AgeVerificationProvider>
-        </StoreProvider>
-      </TemplateProvider>
-    </Provider>
+              </AgeVerificationProvider>
+            </StoreProvider>
+          </TenantProvider>
+        </TemplateProvider>
+      </Provider>
     </ErrorBoundary>
   );
 }

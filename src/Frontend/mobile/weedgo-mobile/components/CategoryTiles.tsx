@@ -7,7 +7,8 @@ import {
   ScrollView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors } from '@/constants/Colors';
+import { Colors, Gradients, BorderRadius, Shadows } from '@/constants/Colors';
+import { LinearGradient } from 'expo-linear-gradient';
 import useProductsStore from '@/stores/productsStore';
 
 interface CategoryTileProps {
@@ -27,22 +28,44 @@ const CategoryTile: React.FC<CategoryTileProps> = ({
   isSelected,
   onPress,
 }) => {
+  const theme = Colors.light;
+
+  // Get gradient colors based on category
+  const getGradientColors = () => {
+    const categoryLower = id.toLowerCase();
+    if (categoryLower.includes('flower')) return Gradients.primary;
+    if (categoryLower.includes('edible')) return Gradients.warm;
+    if (categoryLower.includes('vape')) return Gradients.cool;
+    if (categoryLower.includes('concentrate')) return Gradients.sunset;
+    if (categoryLower.includes('pre-roll') || categoryLower.includes('preroll')) return Gradients.sativa;
+    if (categoryLower.includes('oil') || categoryLower.includes('capsule')) return Gradients.purple;
+    if (categoryLower.includes('topical')) return Gradients.secondary;
+    return Gradients.ocean;
+  };
+
   return (
     <TouchableOpacity
-      style={[
-        styles.tile,
-        isSelected && styles.selectedTile,
-        { backgroundColor: isSelected ? color : 'white' }
-      ]}
+      style={styles.tileContainer}
       onPress={() => onPress(id)}
+      activeOpacity={0.8}
     >
-      <Ionicons
-        name={icon}
-        size={32}
-        color={isSelected ? Colors.light.primary : Colors.light.gray}
-        style={[styles.iconStyle, isSelected && styles.selectedIcon]}
-      />
-      <Text style={[styles.name, isSelected && styles.selectedName]}>{name}</Text>
+      <LinearGradient
+        colors={isSelected ? getGradientColors() : ['rgba(255, 255, 255, 0.95)', color]}
+        style={[
+          styles.tile,
+          isSelected && styles.selectedTile,
+        ]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      >
+        <Ionicons
+          name={icon}
+          size={32}
+          color={isSelected ? 'white' : theme.primary}
+          style={[styles.iconStyle, isSelected && styles.selectedIcon]}
+        />
+        <Text style={[styles.name, isSelected && styles.selectedName]}>{name}</Text>
+      </LinearGradient>
     </TouchableOpacity>
   );
 };
@@ -110,62 +133,62 @@ const categoryIconMap: Record<string, keyof typeof Ionicons.glyphMap> = {
   seeds: 'leaf-outline',
 };
 
-// Color mapping for subcategories
+// Color mapping for subcategories - vibrant colors
 const categoryColorMap: Record<string, string> = {
   // Flower subcategories
-  flower: '#E8F5E9',
-  'dried flower': '#E8F5E9',
-  'whole flower': '#E8F5E9',
-  'milled flower': '#E1F5FE',
+  flower: '#E8FFE8',
+  'dried flower': '#E8FFE8',
+  'whole flower': '#D4FFEA',
+  'milled flower': '#C1FFE1',
 
   // Pre-rolls subcategories
-  'pre-roll': '#F1F8E9',
-  'pre-rolls': '#F1F8E9',
-  preroll: '#F1F8E9',
-  prerolls: '#F1F8E9',
-  'infused pre-rolls': '#FFF9C4',
+  'pre-roll': '#FFE8D6',
+  'pre-rolls': '#FFE8D6',
+  preroll: '#FFE8D6',
+  prerolls: '#FFE8D6',
+  'infused pre-rolls': '#FFD4A3',
 
   // Edibles subcategories
-  edibles: '#EFEBE9',
-  edible: '#EFEBE9',
-  gummies: '#FFECB3',
-  chocolates: '#EFEBE9',
-  beverages: '#E0F2F1',
-  baked: '#FFF3E0',
+  edibles: '#FFE8F7',
+  edible: '#FFE8F7',
+  gummies: '#FFD6F3',
+  chocolates: '#FFC4ED',
+  beverages: '#E8F4FF',
+  baked: '#FFF4E8',
 
   // Concentrates subcategories
-  concentrates: '#FFF8E1',
-  concentrate: '#FFF8E1',
-  'hash & kief': '#FFF8E1',
-  resin: '#FFE0B2',
-  rosin: '#FFECB3',
-  distillate: '#FFF9C4',
+  concentrates: '#FFF0D4',
+  concentrate: '#FFF0D4',
+  'hash & kief': '#FFE8C1',
+  resin: '#FFDBA3',
+  rosin: '#FFCE85',
+  distillate: '#FFC167',
 
   // Vapes subcategories
-  vapes: '#E3F2FD',
-  vape: '#E3F2FD',
-  cartridges: '#E3F2FD',
-  'vape kits': '#E1F5FE',
-  'disposable vapes': '#E0F7FA',
+  vapes: '#E8F0FF',
+  vape: '#E8F0FF',
+  cartridges: '#D6E8FF',
+  'vape kits': '#C4DFFF',
+  'disposable vapes': '#B3D6FF',
 
   // Oils & Capsules
-  oils: '#F3E5F5',
-  oil: '#F3E5F5',
-  capsules: '#EDE7F6',
+  oils: '#F4E8FF',
+  oil: '#F4E8FF',
+  capsules: '#EDD6FF',
 
   // Topicals subcategories
-  topicals: '#FCE4EC',
-  topical: '#FCE4EC',
-  'bath & body': '#FCE4EC',
+  topicals: '#FFE8EA',
+  topical: '#FFE8EA',
+  'bath & body': '#FFD6DA',
 
   // Other
-  accessories: '#F5F5F5',
-  accessory: '#F5F5F5',
-  gear: '#F5F5F5',
-  cbd: '#E8F5E9',
-  tinctures: '#F3E5F5',
-  tincture: '#F3E5F5',
-  seeds: '#C8E6C9',
+  accessories: '#F0F0FF',
+  accessory: '#F0F0FF',
+  gear: '#E8E8FF',
+  cbd: '#E8F7FF',
+  tinctures: '#F0E8FF',
+  tincture: '#F0E8FF',
+  seeds: '#C8FFC8',
 };
 
 export function CategoryTiles({ selectedCategory, onSelectCategory }: CategoryTilesProps) {
@@ -204,8 +227,8 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   title: {
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 20,
+    fontWeight: '700',
     color: Colors.light.text,
     marginBottom: 12,
     paddingHorizontal: 16,
@@ -214,33 +237,42 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     gap: 12,
   },
+  tileContainer: {
+    marginRight: 12,
+  },
   tile: {
-    width: 80,
-    height: 80,
-    borderRadius: 12,
+    width: 85,
+    height: 85,
+    borderRadius: BorderRadius.xl,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
-    borderWidth: 1,
-    borderColor: Colors.light.border,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
+    ...Shadows.small,
   },
   selectedTile: {
-    borderColor: Colors.light.primary,
+    borderColor: 'rgba(255, 255, 255, 0.8)',
     borderWidth: 2,
+    ...Shadows.colorful,
   },
   iconStyle: {
     marginBottom: 4,
   },
   selectedIcon: {
-    transform: [{ scale: 1.1 }],
+    transform: [{ scale: 1.2 }],
   },
   name: {
     fontSize: 11,
     color: Colors.light.text,
-    fontWeight: '500',
+    fontWeight: '600',
+    textAlign: 'center',
+    paddingHorizontal: 4,
   },
   selectedName: {
-    color: Colors.light.primary,
-    fontWeight: '600',
+    color: 'white',
+    fontWeight: '700',
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
 });

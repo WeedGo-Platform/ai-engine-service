@@ -154,12 +154,13 @@ const useCartStore = create<CartStore>()(
           });
         } catch (error: any) {
           console.error('Failed to add item to cart:', error);
-          set({ loading: false, error: error.message });
+          const errorMessage = error.response?.data?.message || error.message || 'Could not add item to cart';
+          set({ loading: false, error: errorMessage });
 
           Toast.show({
             type: 'error',
             text1: 'Error',
-            text2: 'Could not add item to cart',
+            text2: errorMessage,
             position: 'bottom',
           });
         }

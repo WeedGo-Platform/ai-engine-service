@@ -53,6 +53,7 @@ export interface IModalProps {
 export interface IProduct {
   id: string;
   sku: string;
+  slug: string; // SEO-friendly URL slug
   name: string;
   description: string;
   category: string;

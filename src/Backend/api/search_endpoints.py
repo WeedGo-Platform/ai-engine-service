@@ -202,6 +202,7 @@ async def search_products(
             SELECT
                 p.ocs_variant_number as id,
                 p.ocs_variant_number as sku,
+                p.slug,
                 p.product_name as name,
                 p.brand,
                 p.category,
@@ -249,6 +250,7 @@ async def search_products(
                 p.brand ILIKE ${param_counter} OR
                 p.category ILIKE ${param_counter} OR
                 p.ocs_variant_number ILIKE ${param_counter} OR
+                p.slug = ${param_counter + 1} OR
                 COALESCE(p.gtin::TEXT, '') ILIKE ${param_counter} OR
                 COALESCE(p.ocs_item_number::TEXT, '') ILIKE ${param_counter} OR
                 EXISTS (
@@ -263,8 +265,10 @@ async def search_products(
                     AND bt.quantity_remaining > 0
                 )
             )""")
-            # Always use wildcards for search
+            # Always use wildcards for search except for exact slug match
             actual_params.append(f"%{q}%")
+            param_counter += 1
+            actual_params.append(q)  # Exact match for slug
 
         if id:
             param_counter += 1
@@ -293,7 +297,7 @@ async def search_products(
 
         # Add GROUP BY
         actual_query += """
-            GROUP BY p.ocs_variant_number, p.product_name, p.brand, p.category,
+            GROUP BY p.ocs_variant_number, p.slug, p.product_name, p.brand, p.category,
                      p.sub_category, p.plant_type, p.strain_type, p.pack_size, p.unit_price, p.image_url,
                      p.gtin, p.ocs_item_number,
                      p.maximum_thc_content_percent, p.maximum_cbd_content_percent

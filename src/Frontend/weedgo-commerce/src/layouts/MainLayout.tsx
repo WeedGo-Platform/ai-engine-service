@@ -16,6 +16,7 @@ import {
 import { RootState } from '@store/index';
 import ChatInterface from '@components/chat/ChatInterface';
 import StoreSelector from '@components/common/StoreSelector';
+import Logo from '@components/atoms/Logo';
 import { logout } from '@features/auth/authSlice';
 
 interface MainLayoutProps {
@@ -112,12 +113,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           <div className="container-max">
             <div className="flex items-center justify-between">
               {/* Logo */}
-              <Link to="/" className="flex items-center space-x-2">
-                <div className="h-10 w-10 bg-primary-500 rounded-full flex items-center justify-center">
-                  <span className="text-white font-bold text-xl">W</span>
-                </div>
-                <span className="text-2xl font-bold text-primary-600">WeedGo</span>
-              </Link>
+              <Logo size="md" showText={true} linkToHome={true} />
 
               {/* Desktop Navigation */}
               <div className="hidden md:flex items-center space-x-8">

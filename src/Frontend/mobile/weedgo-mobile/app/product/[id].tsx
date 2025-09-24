@@ -24,7 +24,7 @@ export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { loadProductDetails, getProductById } = useProductsStore();
-  const { addToCart, getCartItem } = useCartStore();
+  const { addItem, getCartItem } = useCartStore();
 
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
@@ -62,7 +62,7 @@ export default function ProductDetailScreen() {
 
   const handleAddToCart = () => {
     if (!product) return;
-    addToCart(product, quantity, selectedSize);
+    addItem(product, quantity, selectedSize);
     // Show success feedback
   };
 
@@ -246,8 +246,7 @@ export default function ProductDetailScreen() {
           )}
         </View>
 
-        <View style={styles.infoContainer}>
-          <Text style={styles.brand}>{product.brand}</Text>
+        <View style={styles.infoContainer}><Text style={styles.brand}>{product.brand}</Text>
           <Text style={styles.productName}>{product.name}</Text>
 
           {/* Price and Size */}

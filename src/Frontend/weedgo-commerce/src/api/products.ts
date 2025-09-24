@@ -4,6 +4,7 @@ import apiClient from './client';
 export interface Product {
   id: string;
   sku: string;
+  slug: string; // SEO-friendly URL slug
   name: string;
   brand: string;
   category: string;
@@ -12,9 +13,11 @@ export interface Product {
   strain_type: string | null;
   size: number;
   image_url: string;
+  images?: string[]; // Multiple product images
   gtin: number;
   ocs_item_number: number;
   price: number;
+  original_price?: number; // For showing discounts
   unit_price: number;
   available_quantity: number;
   in_stock: boolean;
@@ -26,6 +29,8 @@ export interface Product {
   description?: string;
   effects?: string[];
   terpenes?: string[];
+  rating?: number;
+  review_count?: number;
 }
 
 export interface ProductFilters {
@@ -147,6 +152,20 @@ export const productsApi = {
       return null;
     } catch (error) {
       console.error('Failed to fetch product:', error);
+      return null;
+    }
+  },
+
+  // Get single product by slug for SEO-friendly URLs
+  getProductBySlug: async (slug: string, storeId?: string): Promise<Product | null> => {
+    try {
+      const params = new URLSearchParams({ slug });
+      if (storeId) params.append('store_id', storeId);
+
+      const response = await apiClient.get<Product>(`/api/products/by-slug?${params.toString()}`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch product by slug:', error);
       return null;
     }
   },

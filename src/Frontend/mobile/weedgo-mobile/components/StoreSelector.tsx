@@ -10,7 +10,8 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import useStoreStore from '@/stores/storeStore';
-import { Colors } from '@/constants/Colors';
+import { Colors, Gradients, BorderRadius, Shadows } from '@/constants/Colors';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Store } from '@/types/api.types';
 
 export function StoreSelector() {
@@ -29,14 +30,21 @@ export function StoreSelector() {
   if (!currentStore) {
     return (
       <TouchableOpacity
-        style={styles.selector}
         onPress={() => setModalVisible(true)}
+        activeOpacity={0.8}
       >
-        <View style={styles.selectorContent}>
-          <Ionicons name="location-outline" size={20} color={Colors.light.primary} />
-          <Text style={styles.selectText}>Select a store</Text>
-          <Ionicons name="chevron-down" size={20} color={Colors.light.gray} />
-        </View>
+        <LinearGradient
+          colors={Gradients.primary}
+          style={styles.selector}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+        >
+          <View style={styles.selectorContent}>
+            <Ionicons name="location-outline" size={20} color="white" />
+            <Text style={[styles.selectText, { color: 'white' }]}>Select a store</Text>
+            <Ionicons name="chevron-down" size={20} color="white" />
+          </View>
+        </LinearGradient>
       </TouchableOpacity>
     );
   }
@@ -44,19 +52,26 @@ export function StoreSelector() {
   return (
     <>
       <TouchableOpacity
-        style={styles.selector}
         onPress={() => setModalVisible(true)}
+        activeOpacity={0.8}
       >
-        <View style={styles.selectorContent}>
-          <View style={styles.storeInfo}>
-            <View style={styles.storeHeader}>
-              <Ionicons name="location" size={18} color={Colors.light.primary} />
-              <Text style={styles.storeName}>{currentStore.name}</Text>
-              <Ionicons name="chevron-down" size={18} color={Colors.light.gray} />
+        <LinearGradient
+          colors={['rgba(255, 255, 255, 0.98)', 'rgba(240, 250, 255, 0.95)']}
+          style={styles.selector}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+        >
+          <View style={styles.selectorContent}>
+            <View style={styles.storeInfo}>
+              <View style={styles.storeHeader}>
+                <Ionicons name="location" size={18} color={Colors.light.primary} />
+                <Text style={styles.storeName}>{currentStore.name}</Text>
+                <Ionicons name="chevron-down" size={18} color={Colors.light.primary} />
+              </View>
+              <Text style={styles.storeHours}>{getStoreHours()}</Text>
             </View>
-            <Text style={styles.storeHours}>{getStoreHours()}</Text>
           </View>
-        </View>
+        </LinearGradient>
       </TouchableOpacity>
 
       <Modal
@@ -119,11 +134,14 @@ export function StoreSelector() {
 
 const styles = StyleSheet.create({
   selector: {
-    backgroundColor: 'white',
     paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.light.border,
+    paddingVertical: 14,
+    marginHorizontal: 16,
+    marginVertical: 8,
+    borderRadius: BorderRadius.xl,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
+    ...Shadows.medium,
   },
   selectorContent: {
     flexDirection: 'row',

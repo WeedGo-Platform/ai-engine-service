@@ -65,14 +65,14 @@ apiClient.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
 
-    // Add store ID header
-    const storeId = localStorage.getItem('store_id') || import.meta.env.VITE_STORE_ID;
+    // Add store ID header from selected store (managed by StoreContext)
+    const storeId = localStorage.getItem('selected_store_id');
     if (storeId) {
       config.headers['X-Store-ID'] = storeId;
     }
 
-    // Add tenant ID header
-    const tenantId = localStorage.getItem('tenant_id') || import.meta.env.VITE_TENANT_ID;
+    // Add tenant ID header - single source of truth from environment
+    const tenantId = import.meta.env.VITE_TENANT_ID;
     if (tenantId) {
       config.headers['X-Tenant-ID'] = tenantId;
     }

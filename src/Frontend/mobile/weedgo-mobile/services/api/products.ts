@@ -49,7 +49,7 @@ class ProductService {
     if (params.price_max !== undefined) apiParams.price_max = params.price_max;
 
     const response = await apiClient.get<ProductSearchResponse>(
-      '/api/products/search',
+      '/api/search/products',
       { params: apiParams }
     );
     return response.data;

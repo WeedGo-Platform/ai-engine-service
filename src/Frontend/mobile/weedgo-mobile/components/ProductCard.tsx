@@ -11,10 +11,13 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Product } from '@/types/api.types';
 import useCartStore from '@/stores/cartStore';
-import { Colors } from '@/constants/Colors';
+import { Colors, BorderRadius, Shadows, Gradients } from '@/constants/Colors';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const { width } = Dimensions.get('window');
-const cardWidth = (width - 48) / 2; // 2 columns with padding
+const cardWidth = (width - 32 - 16) / 2; // 2 columns with 16px padding on each side and 16px gap
+const isDark = false; // Use light theme for colorful design
+const theme = isDark ? Colors.dark : Colors.light;
 
 interface ProductCardProps {
   product: Product;
@@ -24,6 +27,27 @@ interface ProductCardProps {
 export function ProductCard({ product, onPress }: ProductCardProps) {
   const router = useRouter();
   const { addItem, getCartItem } = useCartStore();
+
+  // Guard against invalid product
+  if (!product || typeof product !== 'object') {
+    return null;
+  }
+
+  // Map API fields to expected fields
+  const mappedProduct = {
+    ...product,
+    image: product.image_url || product.image,
+    strainType: product.plant_type || product.strain_type || product.strainType,
+    inStock: product.in_stock !== undefined ? product.in_stock : product.inStock,
+    thcContent: typeof product.thc_content === 'number'
+      ? { display: `${product.thc_content}%` }
+      : product.thcContent,
+    cbdContent: typeof product.cbd_content === 'number'
+      ? { display: `${product.cbd_content}%` }
+      : product.cbdContent,
+    price: product.price || product.basePrice || 0
+  };
+
   const cartItem = getCartItem(product.sku || product.id);
 
   const handlePress = () => {
@@ -39,138 +63,191 @@ export function ProductCard({ product, onPress }: ProductCardProps) {
     await addItem(product, 1, product.size);
   };
 
-  const getStrainTypeColor = (type?: string) => {
-    switch (type) {
-      case 'indica':
-        return '#9C27B0';
-      case 'sativa':
-        return '#4CAF50';
-      case 'hybrid':
-        return '#FF9800';
-      case 'cbd':
-        return '#2196F3';
-      default:
-        return Colors.light.gray;
+  const formatStrainType = (type?: string | null) => {
+    if (!type) return '';
+    const lowerType = type.toLowerCase();
+    // Simplify to just the main strain type
+    if (lowerType.includes('indica')) {
+      return 'INDICA';
+    } else if (lowerType.includes('sativa')) {
+      return 'SATIVA';
+    } else if (lowerType.includes('hybrid')) {
+      return 'HYBRID';
+    } else if (lowerType.includes('blend')) {
+      return 'BLEND';
+    } else if (lowerType.includes('cbd')) {
+      return 'CBD';
+    }
+    return type.toUpperCase();
+  };
+
+  const getStrainTypeGradient = (type?: string | null): [string, string] => {
+    if (!type) return ['#6B7280', '#4B5563'];
+    const lowerType = type.toLowerCase();
+    if (lowerType?.includes('indica')) {
+      return ['#3B82F6', '#2563EB']; // Blue gradient for Indica/Indica Dominant
+    } else if (lowerType?.includes('sativa')) {
+      return ['#FB923C', '#F97316']; // Bright orange gradient for Sativa/Sativa Dominant
+    } else if (lowerType?.includes('hybrid')) {
+      return ['#10B981', '#059669']; // Green gradient for Hybrid
+    } else if (lowerType?.includes('blend')) {
+      return ['#A855F7', '#9333EA']; // Purple gradient for Blend
+    } else if (lowerType?.includes('cbd')) {
+      return ['#06B6D4', '#0891B2']; // Teal gradient for CBD
+    } else {
+      return ['#6B7280', '#4B5563']; // Default gray gradient
+    }
+  };
+
+  const getStrainTypeColor = (type?: string | null) => {
+    if (!type) return '#6B7280';
+    const lowerType = type.toLowerCase();
+    if (lowerType?.includes('indica')) {
+      return '#3B82F6'; // Blue for Indica/Indica Dominant
+    } else if (lowerType?.includes('sativa')) {
+      return '#FB923C'; // Bright orange for Sativa/Sativa Dominant
+    } else if (lowerType?.includes('hybrid')) {
+      return '#10B981'; // Green for Hybrid
+    } else if (lowerType?.includes('blend')) {
+      return '#A855F7'; // Purple for Blend
+    } else if (lowerType?.includes('cbd')) {
+      return '#06B6D4'; // Teal for CBD
+    } else {
+      return '#6B7280'; // Gray default
     }
   };
 
   return (
-    <TouchableOpacity style={styles.card} onPress={handlePress}>
-      <View style={styles.imageContainer}>
-        {product.image || product.images?.[0] ? (
-          <Image
-            source={{ uri: product.image || product.images[0] }}
-            style={styles.image}
-            resizeMode="cover"
-          />
-        ) : (
-          <View style={styles.placeholderImage}>
-            <Ionicons name="leaf-outline" size={40} color={Colors.light.gray} />
-          </View>
-        )}
+    <TouchableOpacity style={styles.cardContainer} onPress={handlePress} activeOpacity={0.95}>
+      <LinearGradient
+        colors={isDark ? Gradients.cardDark : Gradients.card}
+        style={styles.card}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      >
+        <View style={styles.imageContainer}>
+          {mappedProduct.image ? (
+            <Image
+              source={{ uri: mappedProduct.image }}
+              style={styles.image}
+              resizeMode="cover"
+            />
+          ) : (
+            <View style={styles.placeholderImage}>
+              <Ionicons name="leaf-outline" size={40} color={Colors.light.gray} />
+            </View>
+          )}
 
-        {!product.inStock && (
-          <View style={styles.outOfStockBadge}>
-            <Text style={styles.outOfStockText}>Out of Stock</Text>
-          </View>
-        )}
+          {!mappedProduct.inStock && (
+            <View style={styles.outOfStockBadge}>
+              <Text style={styles.outOfStockText}>Out of Stock</Text>
+            </View>
+          )}
 
-        {product.strainType && (
-          <View
-            style={[
-              styles.strainBadge,
-              { backgroundColor: getStrainTypeColor(product.strainType?.toLowerCase()) },
-            ]}
-          >
-            <Text style={styles.strainText}>
-              {(product.strainType || '').toUpperCase()}
+          {mappedProduct.strainType && (
+            <LinearGradient
+              colors={getStrainTypeGradient(mappedProduct.strainType)}
+              style={styles.strainBadge}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+            >
+              <Text style={styles.strainText}>
+                {formatStrainType(mappedProduct.strainType)}
+              </Text>
+            </LinearGradient>
+          )}
+        </View>
+        <View style={styles.info}>
+          {Boolean(product.brand) && (
+            <Text style={styles.brand} numberOfLines={1}>
+              {String(product.brand)}
             </Text>
-          </View>
-        )}
-      </View>
-      <View style={styles.info}>
-        {product.brand ? (
-          <Text style={styles.brand} numberOfLines={1}>
-            {product.brand}
+          )}
+
+          <Text style={styles.name} numberOfLines={2}>
+            {product.name || 'Unnamed Product'}
           </Text>
-        ) : null}
 
-        <Text style={styles.name} numberOfLines={2}>
-          {product.name || 'Unnamed Product'}
-        </Text>
-
-        <View style={styles.cannabinoids}>
-          {product.thcContent?.display && product.thcContent.display !== "0.0-0.0%" && (
-            <Text style={styles.thc}>THC {product.thcContent.display}</Text>
-          )}
-          {product.cbdContent?.display && product.cbdContent.display !== "0.0-0.0%" && (
-            <Text style={styles.cbd}>CBD {product.cbdContent.display}</Text>
-          )}
-        </View>
-
-        {product.rating && product.rating > 0 && (
-          <View style={styles.rating}>
-            <Ionicons name="star" size={12} color="#FFB800" />
-            <Text style={styles.ratingText}>{product.rating.toFixed(1)}</Text>
-            {product.reviewCount !== undefined && (
-              <Text style={styles.ratingCount}>({product.reviewCount})</Text>
+          <View style={styles.cannabinoids}>
+            {mappedProduct.thcContent?.display && mappedProduct.thcContent.display !== "0%" && mappedProduct.thcContent.display !== "0.0-0.0%" && (
+              <Text style={styles.thc}>THC {mappedProduct.thcContent.display}</Text>
+            )}
+            {mappedProduct.cbdContent?.display && mappedProduct.cbdContent.display !== "0%" && mappedProduct.cbdContent.display !== "0.0-0.0%" && (
+              <Text style={styles.cbd}>CBD {mappedProduct.cbdContent.display}</Text>
             )}
           </View>
-        )}
 
-        <View style={styles.footer}>
-          <View>
-            <Text style={styles.price}>
-              ${product.price || product.basePrice || '0.00'}
-            </Text>
-            {product.size ? (
-              <Text style={styles.size}>{product.size}</Text>
-            ) : null}
+          {product.rating && product.rating > 0 && (
+            <View style={styles.rating}>
+              <Ionicons name="star" size={12} color="#FFC107" />
+              <Text style={styles.ratingText}>{product.rating.toFixed(1)}</Text>
+              {product.reviewCount !== undefined && (
+                <Text style={styles.ratingCount}>({product.reviewCount})</Text>
+              )}
+            </View>
+          )}
+
+          <View style={styles.footer}>
+            <View>
+              <Text style={styles.price}>
+                ${typeof mappedProduct.price === 'number' ? mappedProduct.price.toFixed(2) : '0.00'}
+              </Text>
+              {product.size && (
+                <Text style={styles.size}>{product.size}</Text>
+              )}
+            </View>
+
+            <TouchableOpacity
+              onPress={handleAddToCart}
+              disabled={!mappedProduct.inStock}
+              activeOpacity={0.8}
+            >
+              <LinearGradient
+                colors={cartItem ? ['#10B981', '#059669'] : ['#3B82F6', '#2563EB']}
+                style={[
+                  styles.addButton,
+                  !mappedProduct.inStock && styles.addButtonDisabled,
+                ]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+              >
+                {cartItem ? (
+                  <React.Fragment>
+                    <Ionicons name="checkmark" size={16} color="white" />
+                    <Text style={styles.addButtonText}>{cartItem.quantity}</Text>
+                  </React.Fragment>
+                ) : (
+                  <Ionicons name="add" size={20} color="white" />
+                )}
+              </LinearGradient>
+            </TouchableOpacity>
           </View>
-
-          <TouchableOpacity
-            style={[
-              styles.addButton,
-              !product.inStock && styles.addButtonDisabled,
-              cartItem && styles.addButtonAdded,
-            ]}
-            onPress={handleAddToCart}
-            disabled={!product.inStock}
-          >
-            {cartItem ? (
-              <>
-                <Ionicons name="checkmark" size={16} color="white" />
-                <Text style={styles.addButtonText}>{cartItem.quantity}</Text>
-              </>
-            ) : (
-              <Ionicons name="add" size={20} color="white" />
-            )}
-          </TouchableOpacity>
         </View>
-      </View>
+      </LinearGradient>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
+  cardContainer: {
     width: cardWidth,
-    backgroundColor: 'white',
-    borderRadius: 12,
     marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 3,
+  },
+  card: {
+    width: '100%',
+    borderRadius: BorderRadius.xl,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
+    overflow: 'hidden',
+    ...Shadows.colorful,
   },
   imageContainer: {
     width: '100%',
     height: cardWidth * 0.8,
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
+    borderTopLeftRadius: BorderRadius.xl,
+    borderTopRightRadius: BorderRadius.xl,
     overflow: 'hidden',
-    backgroundColor: Colors.light.backgroundSecondary,
+    backgroundColor: theme.surface,
   },
   image: {
     width: '100%',
@@ -181,7 +258,7 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Colors.light.backgroundSecondary,
+    backgroundColor: theme.surface,
   },
   outOfStockBadge: {
     position: 'absolute',
@@ -189,34 +266,39 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: 'rgba(239, 68, 68, 0.85)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   outOfStockText: {
     color: 'white',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '700',
+    letterSpacing: 1,
   },
   strainBadge: {
     position: 'absolute',
     top: 8,
     left: 8,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: BorderRadius.full,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
+    ...Shadows.small,
   },
   strainText: {
     color: 'white',
-    fontSize: 10,
-    fontWeight: '600',
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 0.5,
   },
   info: {
     padding: 12,
   },
   brand: {
     fontSize: 11,
-    color: Colors.light.gray,
+    color: theme.textTertiary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     marginBottom: 2,
@@ -224,7 +306,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 14,
     fontWeight: '600',
-    color: Colors.light.text,
+    color: theme.text,
     marginBottom: 6,
     minHeight: 36,
   },
@@ -235,13 +317,25 @@ const styles = StyleSheet.create({
   },
   thc: {
     fontSize: 12,
-    color: '#9C27B0',
-    fontWeight: '500',
+    color: '#FF6B35',
+    fontWeight: '700',
+    backgroundColor: 'rgba(255, 107, 53, 0.15)',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: BorderRadius.md,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 107, 53, 0.3)',
   },
   cbd: {
     fontSize: 12,
-    color: '#2196F3',
-    fontWeight: '500',
+    color: '#4A90E2',
+    fontWeight: '700',
+    backgroundColor: 'rgba(74, 144, 226, 0.15)',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: BorderRadius.md,
+    borderWidth: 1,
+    borderColor: 'rgba(74, 144, 226, 0.3)',
   },
   rating: {
     flexDirection: 'row',
@@ -251,12 +345,12 @@ const styles = StyleSheet.create({
   },
   ratingText: {
     fontSize: 12,
-    color: Colors.light.text,
+    color: theme.text,
     fontWeight: '500',
   },
   ratingCount: {
     fontSize: 11,
-    color: Colors.light.gray,
+    color: theme.textSecondary,
   },
   footer: {
     flexDirection: 'row',
@@ -265,29 +359,28 @@ const styles = StyleSheet.create({
   },
   price: {
     fontSize: 18,
-    fontWeight: '700',
-    color: Colors.light.primary,
+    fontWeight: '800',
+    color: '#059669',
   },
   size: {
     fontSize: 11,
-    color: Colors.light.gray,
+    color: theme.textSecondary,
     marginTop: 2,
   },
   addButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: Colors.light.primary,
+    width: 40,
+    height: 40,
+    borderRadius: BorderRadius.full,
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
     gap: 2,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
+    ...Shadows.medium,
   },
   addButtonDisabled: {
-    backgroundColor: Colors.light.gray,
-  },
-  addButtonAdded: {
-    backgroundColor: Colors.light.success,
+    opacity: 0.4,
   },
   addButtonText: {
     color: 'white',

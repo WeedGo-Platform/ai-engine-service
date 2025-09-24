@@ -66,7 +66,7 @@ interface TenantEditModalProps {
   tenant: any;
   isOpen: boolean;
   onClose: () => void;
-  onSave: (updatedTenant: any) => Promise<void>;
+  onSave: (updatedTenant: any, logoFile?: File | null) => Promise<void>;
   readOnly?: boolean;
   showUsersTab?: boolean;
 }
@@ -264,7 +264,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      await onSave(editedTenant);
+      await onSave(editedTenant, logoFile);
       onClose();
     } catch (error) {
       console.error('Failed to save tenant:', error);
@@ -397,8 +397,12 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
                       Logo
                     </label>
                     <div className="flex items-center gap-6">
-                      {logoPreview && (
-                        <img src={logoPreview} alt="Logo preview" className="w-16 h-16 object-contain border rounded" />
+                      {(logoPreview || editedTenant?.logo_url) && (
+                        <img
+                          src={logoPreview || (editedTenant.logo_url.startsWith('http') ? editedTenant.logo_url : `${import.meta.env.VITE_API_URL || 'http://localhost:5024'}${editedTenant.logo_url}`)}
+                          alt="Logo"
+                          className="w-16 h-16 object-contain border rounded"
+                        />
                       )}
                       <input
                         type="file"
