@@ -287,7 +287,7 @@ export default function HomeScreen() {
         ListEmptyComponent={renderEmpty}
         ListFooterComponent={renderFooter}
         numColumns={2}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => `${item.id}-${index}`}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}

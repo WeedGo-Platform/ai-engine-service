@@ -276,12 +276,13 @@ async def get_promotion_analytics(
 @router.get("/recommendations/similar/{product_id}")
 async def get_similar_products(
     product_id: str,
+    store_id: str = Query(..., description="Store ID to check inventory"),
     limit: int = Query(5, ge=1, le=20),
     service: RecommendationService = Depends(get_recommendation_service)
 ):
-    """Get products similar to the given product"""
+    """Get products similar to the given product that are in stock at the specified store"""
     try:
-        products = await service.get_similar_products(product_id, limit)
+        products = await service.get_similar_products(product_id, store_id, limit)
         return {"products": products}
     except Exception as e:
         logger.error(f"Error getting similar products: {str(e)}")
@@ -291,12 +292,13 @@ async def get_similar_products(
 @router.get("/recommendations/complementary/{product_id}")
 async def get_complementary_products(
     product_id: str,
+    store_id: str = Query(..., description="Store ID to check inventory"),
     limit: int = Query(5, ge=1, le=20),
     service: RecommendationService = Depends(get_recommendation_service)
 ):
-    """Get products that complement the given product"""
+    """Get products that complement the given product and are in stock at the specified store"""
     try:
-        products = await service.get_complementary_products(product_id, limit)
+        products = await service.get_complementary_products(product_id, store_id, limit)
         return {"products": products}
     except Exception as e:
         logger.error(f"Error getting complementary products: {str(e)}")
@@ -305,13 +307,14 @@ async def get_complementary_products(
 
 @router.get("/recommendations/trending")
 async def get_trending_products(
+    store_id: str = Query(..., description="Store ID to check inventory"),
     category: Optional[str] = None,
     limit: int = Query(10, ge=1, le=50),
     service: RecommendationService = Depends(get_recommendation_service)
 ):
-    """Get trending products"""
+    """Get trending products that are in stock at the specified store"""
     try:
-        products = await service.get_trending_products(category, limit)
+        products = await service.get_trending_products(store_id, category, limit)
         return {"products": products}
     except Exception as e:
         logger.error(f"Error getting trending products: {str(e)}")
@@ -336,12 +339,13 @@ async def get_personalized_recommendations(
 @router.get("/recommendations/upsell/{product_id}")
 async def get_upsell_products(
     product_id: str,
+    store_id: str = Query(..., description="Store ID to check inventory"),
     limit: int = Query(3, ge=1, le=10),
     service: RecommendationService = Depends(get_recommendation_service)
 ):
-    """Get upsell recommendations for a product"""
+    """Get upsell recommendations for a product that are in stock at the specified store"""
     try:
-        products = await service.get_upsell_products(product_id, limit)
+        products = await service.get_upsell_products(product_id, store_id, limit)
         return {"products": products}
     except Exception as e:
         logger.error(f"Error getting upsell products: {str(e)}")
@@ -351,12 +355,13 @@ async def get_upsell_products(
 @router.get("/recommendations/frequently-bought/{product_id}")
 async def get_frequently_bought_together(
     product_id: str,
+    store_id: str = Query(..., description="Store ID to check inventory"),
     limit: int = Query(3, ge=1, le=10),
     service: RecommendationService = Depends(get_recommendation_service)
 ):
-    """Get products frequently bought with the given product"""
+    """Get products frequently bought with the given product that are in stock at the specified store"""
     try:
-        products = await service.get_frequently_bought_together(product_id, limit)
+        products = await service.get_frequently_bought_together(product_id, store_id, limit)
         return {"products": products}
     except Exception as e:
         logger.error(f"Error getting frequently bought products: {str(e)}")

@@ -166,7 +166,7 @@ export default function StoresScreen() {
       <FlatList
         data={stores}
         renderItem={renderStoreCard}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => `${item.id}-${index}`}
         contentContainerStyle={styles.listContainer}
         showsVerticalScrollIndicator={false}
       />

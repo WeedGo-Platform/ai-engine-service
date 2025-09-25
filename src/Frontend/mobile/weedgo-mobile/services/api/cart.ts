@@ -28,17 +28,18 @@ class CartService {
    */
   async createSession(): Promise<string> {
     // The /api/cart endpoint manages sessions automatically
-    // Just use a default session ID or get from cart response
+    // Get the session ID from the cart response
     try {
       const response = await apiClient.get<Cart>('/api/cart/');
-      this.sessionId = response.data.id || response.data.session_id || 'default';
+      this.sessionId = response.data.session_id || response.data.id;
+      if (this.sessionId) {
+        await SecureStore.setItemAsync(CART_SESSION_KEY, this.sessionId);
+      }
     } catch (error) {
-      // If cart doesn't exist, use default session
-      this.sessionId = 'default';
+      console.error('Failed to create cart session:', error);
     }
 
-    await SecureStore.setItemAsync(CART_SESSION_KEY, this.sessionId);
-    return this.sessionId;
+    return this.sessionId || '';
   }
 
   /**
@@ -61,13 +62,27 @@ class CartService {
    */
   async getCart(): Promise<Cart> {
     const response = await apiClient.get<Cart>('/api/cart/');
+
+    // Save the session ID from the response if available
+    const sessionId = response.data?.session_id;
+    if (sessionId && sessionId !== this.sessionId) {
+      this.sessionId = sessionId;
+      await SecureStore.setItemAsync(CART_SESSION_KEY, sessionId);
+    }
+
     return response.data;
   }
 
   /**
    * Add item to cart
    */
-  async addItem(data: AddToCartRequest & { store_id?: string }): Promise<CartItem> {
+  async addItem(data: AddToCartRequest & {
+    store_id?: string;
+    sku?: string;
+    name?: string;
+    category?: string;
+    price?: number;
+  }): Promise<CartItem> {
     // Import the store to get current store ID
     const { default: useStoreStore } = await import('@/stores/storeStore');
     const currentStore = useStoreStore.getState().currentStore;
@@ -80,16 +95,29 @@ class CartService {
       product_id: data.product_id,
       quantity: data.quantity || 1,
       store_id: currentStore.id,
-      size: data.size || undefined // Ensure size is included if provided
+      size: data.size || undefined,
+      // Include required product fields for API
+      sku: data.sku,
+      name: data.name,
+      category: data.category,
+      price: data.price
     };
 
     console.log('Adding to cart with data:', requestData);
 
     try {
-      const response = await apiClient.post<CartItem>(
+      const response = await apiClient.post<any>(
         '/api/cart/items',
         requestData
       );
+
+      // Save the session ID from the response if available
+      const sessionId = response.data?.cart?.session_id || response.data?.session_id;
+      if (sessionId && sessionId !== this.sessionId) {
+        this.sessionId = sessionId;
+        await SecureStore.setItemAsync(CART_SESSION_KEY, sessionId);
+      }
+
       return response.data;
     } catch (error: any) {
       console.error('Cart API error:', error.response?.data || error);

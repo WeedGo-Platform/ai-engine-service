@@ -43,7 +43,7 @@ export function OrderSummary() {
 
       <SummaryRow label="Tax (HST 13%)" value={`$${tax.toFixed(2)}`} />
 
-      {deliveryFee > 0 && (
+      {!!deliveryFee && deliveryFee > 0 && (
         <SummaryRow label="Delivery Fee" value={`$${deliveryFee.toFixed(2)}`} />
       )}
 

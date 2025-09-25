@@ -26,43 +26,49 @@ class RecommendationService:
     async def get_similar_products(
         self,
         product_id: str,
+        store_id: str,  # Required to check inventory
         limit: int = 5
     ) -> List[Dict[str, Any]]:
-        """Get products similar to the given product"""
+        """Get products similar to the given product that are in stock"""
         async with self.db_pool.acquire() as conn:
             # Get the source product details
             source = await conn.fetchrow("""
-                SELECT category, sub_category, strain_type, 
-                       thc_max_percent as thc_percentage, cbd_max_percent as cbd_percentage, unit_price
-                FROM product_catalog
+                SELECT category, sub_category, strain_type,
+                       maximum_thc_content_percent as thc_percentage, maximum_cbd_content_percent as cbd_percentage, unit_price
+                FROM ocs_product_catalog
                 WHERE ocs_variant_number = $1
             """, product_id)
             
             if not source:
                 return []
             
-            # Find similar products based on category, strain, and cannabinoid content
+            # Find similar products that are in stock at the specified store
             query = """
-                SELECT 
-                    ocs_variant_number as product_id,
-                    product_name,
-                    brand,
-                    category,
-                    strain_type,
-                    thc_max_percent as thc_percentage,
-                    cbd_max_percent as cbd_percentage,
-                    unit_price,
-                    image_url,
-                    ABS(thc_max_percent - $4) as thc_diff,
-                    ABS(cbd_max_percent - $5) as cbd_diff,
-                    ABS(unit_price - $6) as price_diff
-                FROM product_catalog
-                WHERE ocs_variant_number != $1
-                AND category = $2
-                AND ($3 IS NULL OR strain_type = $3)
-                ORDER BY 
-                    thc_diff + cbd_diff + (price_diff / 10) ASC
-                LIMIT $7
+                SELECT
+                    pc.ocs_variant_number as product_id,
+                    pc.product_name,
+                    pc.brand,
+                    pc.category,
+                    pc.strain_type,
+                    pc.maximum_thc_content_percent as thc_percentage,
+                    pc.maximum_cbd_content_percent as cbd_percentage,
+                    pc.unit_price,
+                    pc.image_url,
+                    inv.quantity_available,
+                    inv.is_available
+                FROM ocs_product_catalog pc
+                INNER JOIN ocs_inventory inv ON LOWER(pc.ocs_variant_number) = LOWER(inv.sku)
+                WHERE pc.ocs_variant_number != $1
+                AND pc.category = $2
+                AND ($3::text IS NULL OR pc.strain_type = $3::text)
+                AND inv.store_id = $7::uuid
+                AND inv.quantity_available > 0
+                AND inv.is_available = true
+                ORDER BY
+                    ABS(COALESCE(pc.maximum_thc_content_percent, 0) - $4) +
+                    ABS(COALESCE(pc.maximum_cbd_content_percent, 0) - $5) +
+                    (ABS(COALESCE(pc.unit_price, 0) - $6) / 10) ASC
+                LIMIT $8
             """
             
             products = await conn.fetch(
@@ -73,6 +79,7 @@ class RecommendationService:
                 source['thc_percentage'] or 0,
                 source['cbd_percentage'] or 0,
                 source['unit_price'] or 0,
+                store_id,
                 limit
             )
             
@@ -92,6 +99,7 @@ class RecommendationService:
     async def get_complementary_products(
         self,
         product_id: str,
+        store_id: str,  # Required to check inventory
         limit: int = 5
     ) -> List[Dict[str, Any]]:
         """Get products that complement the given product"""
@@ -99,7 +107,7 @@ class RecommendationService:
             # Get the source product category
             source = await conn.fetchrow("""
                 SELECT category, sub_category
-                FROM product_catalog
+                FROM ocs_product_catalog
                 WHERE ocs_variant_number = $1
             """, product_id)
             
@@ -121,22 +129,26 @@ class RecommendationService:
             if not complement_categories:
                 return []
             
-            # Find complementary products
+            # Find complementary products that are in stock
             query = """
-                SELECT 
-                    ocs_variant_number as product_id,
-                    product_name,
-                    brand,
-                    category,
-                    unit_price,
-                    image_url
-                FROM product_catalog
-                WHERE category = ANY($1)
+                SELECT
+                    pc.ocs_variant_number as product_id,
+                    pc.product_name,
+                    pc.brand,
+                    pc.category,
+                    pc.unit_price,
+                    pc.image_url
+                FROM ocs_product_catalog pc
+                INNER JOIN ocs_inventory inv ON LOWER(pc.ocs_variant_number) = LOWER(inv.sku)
+                WHERE pc.category = ANY($1)
+                AND inv.store_id = $3::uuid
+                AND inv.quantity_available > 0
+                AND inv.is_available = true
                 ORDER BY RANDOM()
                 LIMIT $2
             """
             
-            products = await conn.fetch(query, complement_categories, limit)
+            products = await conn.fetch(query, complement_categories, limit, store_id)
             
             # Store recommendations
             for product in products:
@@ -153,57 +165,77 @@ class RecommendationService:
     
     async def get_trending_products(
         self,
+        store_id: str,  # Required to check inventory
         category: Optional[str] = None,
         limit: int = 10
     ) -> List[Dict[str, Any]]:
         """Get trending products based on recent sales"""
         async with self.db_pool.acquire() as conn:
-            # Get products with high recent activity
-            # Since we don't have real sales data yet, we'll use inventory movements
+            # Get trending products that are in stock
+            # Since we don't have inventory_movements table, use a simpler approach
             query = """
-                SELECT 
+                SELECT
                     pc.ocs_variant_number as product_id,
                     pc.product_name,
                     pc.brand,
                     pc.category,
                     pc.unit_price,
                     pc.image_url,
-                    pc.thc_max_percent as thc_percentage,
-                    pc.cbd_max_percent as cbd_percentage,
-                    COUNT(im.id) as movement_count,
-                    SUM(ABS(im.quantity)) as total_movement
-                FROM product_catalog pc
-                LEFT JOIN inventory_movements im ON pc.ocs_variant_number = im.sku
-                    AND im.created_at > CURRENT_TIMESTAMP - INTERVAL '7 days'
+                    pc.maximum_thc_content_percent as thc_percentage,
+                    pc.maximum_cbd_content_percent as cbd_percentage,
+                    pc.strain_type,
+                    inv.quantity_available
+                FROM ocs_product_catalog pc
+                INNER JOIN ocs_inventory inv ON LOWER(pc.ocs_variant_number) = LOWER(inv.sku)
                 WHERE ($1::VARCHAR IS NULL OR pc.category = $1)
-                GROUP BY pc.ocs_variant_number, pc.product_name, pc.brand, 
-                         pc.category, pc.unit_price, pc.image_url,
-                         pc.thc_max_percent, pc.cbd_max_percent
-                ORDER BY movement_count DESC, total_movement DESC
+                AND inv.store_id = $3::uuid
+                AND inv.quantity_available > 0
+                AND inv.is_available = true
+                ORDER BY
+                    CASE
+                        WHEN pc.category IN ('Flower', 'Pre-Roll') THEN 1
+                        WHEN pc.category IN ('Edibles', 'Beverages') THEN 2
+                        WHEN pc.category IN ('Vapes', 'Concentrates') THEN 3
+                        ELSE 4
+                    END,
+                    inv.quantity_available DESC,
+                    pc.unit_price ASC
                 LIMIT $2
             """
-            
-            products = await conn.fetch(query, category, limit)
-            
-            # If no movements, get random popular categories
-            if not products:
+
+            products = await conn.fetch(query, category, limit, store_id)
+
+            # If no products found with category filter, try without it
+            if not products and category:
                 query = """
-                    SELECT 
-                        ocs_variant_number as product_id,
-                        product_name,
-                        brand,
-                        category,
-                        unit_price,
-                        image_url,
-                        thc_max_percent as thc_percentage,
-                        cbd_max_percent as cbd_percentage
-                    FROM product_catalog
-                    WHERE ($1::VARCHAR IS NULL OR category = $1)
-                    AND category IN ('Flower', 'Pre-Roll', 'Vapes', 'Edibles')
-                    ORDER BY RANDOM()
+                    SELECT
+                        pc.ocs_variant_number as product_id,
+                        pc.product_name,
+                        pc.brand,
+                        pc.category,
+                        pc.unit_price,
+                        pc.image_url,
+                        pc.maximum_thc_content_percent as thc_percentage,
+                        pc.maximum_cbd_content_percent as cbd_percentage,
+                        pc.strain_type,
+                        inv.quantity_available
+                    FROM ocs_product_catalog pc
+                    INNER JOIN ocs_inventory inv ON LOWER(pc.ocs_variant_number) = LOWER(inv.sku)
+                    WHERE inv.store_id = $3::uuid
+                    AND inv.quantity_available > 0
+                    AND inv.is_available = true
+                    ORDER BY
+                        CASE
+                            WHEN pc.category IN ('Flower', 'Pre-Roll') THEN 1
+                            WHEN pc.category IN ('Edibles', 'Beverages') THEN 2
+                            WHEN pc.category IN ('Vapes', 'Concentrates') THEN 3
+                            ELSE 4
+                        END,
+                        inv.quantity_available DESC,
+                        pc.unit_price ASC
                     LIMIT $2
                 """
-                products = await conn.fetch(query, category, limit)
+                products = await conn.fetch(query, None, limit, store_id)
             
             return [dict(p) for p in products]
     
@@ -224,7 +256,7 @@ class RecommendationService:
                     COUNT(*) as purchase_count
                 FROM purchase_order_items poi
                 JOIN purchase_orders po ON poi.purchase_order_id = po.id
-                JOIN product_catalog pc ON poi.sku = pc.ocs_variant_number
+                JOIN ocs_product_catalog pc ON poi.sku = pc.ocs_variant_number
                 WHERE po.tenant_id = $1
                 GROUP BY pc.category, pc.strain_type
                 ORDER BY purchase_count DESC
@@ -251,7 +283,7 @@ class RecommendationService:
                         cbd_max_percent as cbd_percentage,
                         unit_price,
                         image_url
-                    FROM product_catalog
+                    FROM ocs_product_catalog
                     WHERE category = $1
                     AND ($2 IS NULL OR strain_type = $2)
                     AND ($3 IS NULL OR ABS(thc_max_percent - $3) < 5)
@@ -286,6 +318,7 @@ class RecommendationService:
     async def get_upsell_products(
         self,
         product_id: str,
+        store_id: str,  # Required to check inventory
         limit: int = 3
     ) -> List[Dict[str, Any]]:
         """Get higher-value alternatives to the given product"""
@@ -293,29 +326,33 @@ class RecommendationService:
             # Get the source product
             source = await conn.fetchrow("""
                 SELECT category, sub_category, unit_price, thc_max_percent as thc_percentage
-                FROM product_catalog
+                FROM ocs_product_catalog
                 WHERE ocs_variant_number = $1
             """, product_id)
             
             if not source:
                 return []
             
-            # Find similar but higher-priced products
+            # Find similar but higher-priced products that are in stock
             query = """
-                SELECT 
-                    ocs_variant_number as product_id,
-                    product_name,
-                    brand,
-                    category,
-                    unit_price,
-                    image_url,
-                    thc_max_percent as thc_percentage,
-                    (unit_price - $3) as price_diff
-                FROM product_catalog
-                WHERE ocs_variant_number != $1
-                AND category = $2
-                AND unit_price > $3
-                AND unit_price <= $3 * 1.5  -- Max 50% more expensive
+                SELECT
+                    pc.ocs_variant_number as product_id,
+                    pc.product_name,
+                    pc.brand,
+                    pc.category,
+                    pc.unit_price,
+                    pc.image_url,
+                    pc.maximum_thc_content_percent as thc_percentage,
+                    (pc.unit_price - $3) as price_diff
+                FROM ocs_product_catalog pc
+                INNER JOIN ocs_inventory inv ON LOWER(pc.ocs_variant_number) = LOWER(inv.sku)
+                WHERE pc.ocs_variant_number != $1
+                AND pc.category = $2
+                AND pc.unit_price > $3
+                AND pc.unit_price <= $3 * 1.5  -- Max 50% more expensive
+                AND inv.store_id = $5::uuid
+                AND inv.quantity_available > 0
+                AND inv.is_available = true
                 ORDER BY price_diff ASC
                 LIMIT $4
             """
@@ -325,7 +362,8 @@ class RecommendationService:
                 product_id,
                 source['category'],
                 source['unit_price'] or 0,
-                limit
+                limit,
+                store_id
             )
             
             # Store recommendations
@@ -344,14 +382,15 @@ class RecommendationService:
     async def get_frequently_bought_together(
         self,
         product_id: str,
+        store_id: str,  # Required to check inventory
         limit: int = 3
     ) -> List[Dict[str, Any]]:
         """Get products frequently bought with the given product"""
         async with self.db_pool.acquire() as conn:
-            # Check for existing recommendations
+            # Check for existing recommendations that are in stock
             query = """
-                SELECT 
-                    pr.recommended_product_id,
+                SELECT
+                    pr.recommended_product_id as product_id,
                     pc.product_name,
                     pc.brand,
                     pc.category,
@@ -359,21 +398,25 @@ class RecommendationService:
                     pc.image_url,
                     pr.score
                 FROM product_recommendations pr
-                JOIN product_catalog pc ON pr.recommended_product_id = pc.ocs_variant_number
+                JOIN ocs_product_catalog pc ON pr.recommended_product_id = pc.ocs_variant_number
+                JOIN ocs_inventory inv ON LOWER(pc.ocs_variant_number) = LOWER(inv.sku)
                 WHERE pr.product_id = $1
                 AND pr.recommendation_type = 'crosssell'
                 AND pr.active = true
+                AND inv.store_id = $3::uuid
+                AND inv.quantity_available > 0
+                AND inv.is_available = true
                 ORDER BY pr.score DESC
                 LIMIT $2
             """
-            
-            products = await conn.fetch(query, product_id, limit)
-            
+
+            products = await conn.fetch(query, product_id, limit, store_id)
+
             if products:
                 return [dict(p) for p in products]
             
             # Fallback to complementary products
-            return await self.get_complementary_products(product_id, limit)
+            return await self.get_complementary_products(product_id, store_id, limit)
     
     async def _store_recommendation(
         self,
@@ -494,8 +537,8 @@ class RecommendationService:
                     pr.conversion_rate,
                     pr.revenue_impact
                 FROM product_recommendations pr
-                JOIN product_catalog pc1 ON pr.product_id = pc1.ocs_variant_number
-                JOIN product_catalog pc2 ON pr.recommended_product_id = pc2.ocs_variant_number
+                JOIN ocs_product_catalog pc1 ON pr.product_id = pc1.ocs_variant_number
+                JOIN ocs_product_catalog pc2 ON pr.recommended_product_id = pc2.ocs_variant_number
                 WHERE pr.active = true
                 AND pr.revenue_impact > 0
                 ORDER BY pr.revenue_impact DESC

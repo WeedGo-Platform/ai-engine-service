@@ -33,22 +33,25 @@ export function ProductCard({ product, onPress }: ProductCardProps) {
     return null;
   }
 
-  // Map API fields to expected fields
-  const mappedProduct = {
-    ...product,
-    image: product.image_url || product.image,
-    strainType: product.plant_type || product.strain_type || product.strainType,
-    inStock: product.in_stock !== undefined ? product.in_stock : product.inStock,
-    thcContent: typeof product.thc_content === 'number'
-      ? { display: `${product.thc_content}%` }
-      : product.thcContent,
-    cbdContent: typeof product.cbd_content === 'number'
-      ? { display: `${product.cbd_content}%` }
-      : product.cbdContent,
-    price: product.price || product.basePrice || 0
-  };
+  // Debug: Log disabled to prevent console spam
+  // Uncomment to debug:
+  // console.log('ProductCard received product with keys:', Object.keys(product));
+  // console.log('Product stock field:', product.in_stock);
 
-  const cartItem = getCartItem(product.sku || product.id);
+  // Use API fields directly - check all possible image sources
+  const image = product.image || product.image_url || (product.images && product.images[0]);
+  const strainType = product.strain_type;
+  const inStock = product.in_stock;
+  const price = product.price;
+  const thcContent = typeof product.thc_content === 'number'
+    ? { display: `${product.thc_content}%` }
+    : undefined;
+  const cbdContent = typeof product.cbd_content === 'number'
+    ? { display: `${product.cbd_content}%` }
+    : undefined;
+
+
+  const cartItem = getCartItem(product.sku);
 
   const handlePress = () => {
     if (onPress) {
@@ -126,33 +129,29 @@ export function ProductCard({ product, onPress }: ProductCardProps) {
         end={{ x: 1, y: 1 }}
       >
         <View style={styles.imageContainer}>
-          {mappedProduct.image ? (
+          {!!image && (
             <Image
-              source={{ uri: mappedProduct.image }}
+              source={{ uri: image }}
               style={styles.image}
               resizeMode="cover"
             />
-          ) : (
-            <View style={styles.placeholderImage}>
-              <Ionicons name="leaf-outline" size={40} color={Colors.light.gray} />
-            </View>
           )}
 
-          {!mappedProduct.inStock && (
+          {inStock === false && (
             <View style={styles.outOfStockBadge}>
               <Text style={styles.outOfStockText}>Out of Stock</Text>
             </View>
           )}
 
-          {mappedProduct.strainType && (
+          {!!strainType && (
             <LinearGradient
-              colors={getStrainTypeGradient(mappedProduct.strainType)}
+              colors={getStrainTypeGradient(strainType)}
               style={styles.strainBadge}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
             >
               <Text style={styles.strainText}>
-                {formatStrainType(mappedProduct.strainType)}
+                {formatStrainType(strainType)}
               </Text>
             </LinearGradient>
           )}
@@ -167,21 +166,20 @@ export function ProductCard({ product, onPress }: ProductCardProps) {
           <Text style={styles.name} numberOfLines={2}>
             {product.name || 'Unnamed Product'}
           </Text>
-
           <View style={styles.cannabinoids}>
-            {mappedProduct.thcContent?.display && mappedProduct.thcContent.display !== "0%" && mappedProduct.thcContent.display !== "0.0-0.0%" && (
-              <Text style={styles.thc}>THC {mappedProduct.thcContent.display}</Text>
+            {!!(thcContent?.display && thcContent.display !== "0%" && thcContent.display !== "0.0-0.0%") && (
+              <Text style={styles.thc}>THC {thcContent.display}</Text>
             )}
-            {mappedProduct.cbdContent?.display && mappedProduct.cbdContent.display !== "0%" && mappedProduct.cbdContent.display !== "0.0-0.0%" && (
-              <Text style={styles.cbd}>CBD {mappedProduct.cbdContent.display}</Text>
+            {!!(cbdContent?.display && cbdContent.display !== "0%" && cbdContent.display !== "0.0-0.0%") && (
+              <Text style={styles.cbd}>CBD {cbdContent.display}</Text>
             )}
           </View>
 
-          {product.rating && product.rating > 0 && (
+          {!!product.rating && product.rating > 0 && (
             <View style={styles.rating}>
               <Ionicons name="star" size={12} color="#FFC107" />
               <Text style={styles.ratingText}>{product.rating.toFixed(1)}</Text>
-              {product.reviewCount !== undefined && (
+              {product.reviewCount !== undefined && product.reviewCount !== null && (
                 <Text style={styles.ratingCount}>({product.reviewCount})</Text>
               )}
             </View>
@@ -190,23 +188,22 @@ export function ProductCard({ product, onPress }: ProductCardProps) {
           <View style={styles.footer}>
             <View>
               <Text style={styles.price}>
-                ${typeof mappedProduct.price === 'number' ? mappedProduct.price.toFixed(2) : '0.00'}
+                ${price ? price.toFixed(2) : '0.00'}
               </Text>
-              {product.size && (
+              {!!product.size && (
                 <Text style={styles.size}>{product.size}</Text>
               )}
             </View>
-
             <TouchableOpacity
               onPress={handleAddToCart}
-              disabled={!mappedProduct.inStock}
+              disabled={inStock === false}
               activeOpacity={0.8}
             >
               <LinearGradient
                 colors={cartItem ? ['#10B981', '#059669'] : ['#3B82F6', '#2563EB']}
                 style={[
                   styles.addButton,
-                  !mappedProduct.inStock && styles.addButtonDisabled,
+                  inStock === false && styles.addButtonDisabled,
                 ]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}

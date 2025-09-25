@@ -103,7 +103,7 @@ export function ProductMessage({ products, message }: ProductMessageProps) {
 
               <View style={styles.priceRow}>
                 <Text style={styles.price}>${product.price.toFixed(2)}</Text>
-                {product.inventory_quantity === 0 && (
+                {product.inventory_quantity !== undefined && product.inventory_quantity === 0 && (
                   <Text style={styles.outOfStock}>Out of Stock</Text>
                 )}
               </View>
@@ -111,7 +111,7 @@ export function ProductMessage({ products, message }: ProductMessageProps) {
               <TouchableOpacity
                 style={[
                   styles.addButton,
-                  product.inventory_quantity === 0 && styles.addButtonDisabled
+                  product.inventory_quantity !== undefined && product.inventory_quantity === 0 && styles.addButtonDisabled
                 ]}
                 onPress={(e) => {
                   e.stopPropagation();

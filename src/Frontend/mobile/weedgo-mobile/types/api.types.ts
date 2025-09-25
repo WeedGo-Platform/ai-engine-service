@@ -234,7 +234,8 @@ export interface ProductSearchParams {
 
 export interface ProductSearchResponse {
   offset?: number;
-  results: Product[];  // API returns 'results', not 'products'
+  results?: Product[];  // Some endpoints return 'results'
+  products?: Product[];  // /api/search/products returns 'products'
   total?: number;
   page?: number;
   limit?: number;

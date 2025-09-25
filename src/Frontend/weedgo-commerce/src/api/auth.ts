@@ -67,7 +67,7 @@ export interface VerifyEmailRequest {
 export const authApi = {
   login: async (data: LoginRequest): Promise<LoginResponse> => {
     try {
-      const response = await apiClient.post<LoginResponse>('/api/auth/login', data);
+      const response = await apiClient.post<LoginResponse>('/api/v1/auth/customer/login', data);
       // Store tokens
       if (response.data.access) {
         localStorage.setItem('access_token', response.data.access);
@@ -78,13 +78,13 @@ export const authApi = {
       return response.data;
     } catch (error: any) {
       console.error('Login failed:', error);
-      throw new Error(error.response?.data?.message || 'Invalid email or password');
+      throw new Error(error.response?.data?.detail || error.response?.data?.message || 'Invalid email or password');
     }
   },
 
   register: async (data: RegisterRequest): Promise<LoginResponse> => {
     try {
-      const response = await apiClient.post<LoginResponse>('/api/auth/register', data);
+      const response = await apiClient.post<LoginResponse>('/api/v1/auth/customer/register', data);
       // Store tokens
       if (response.data.access) {
         localStorage.setItem('access_token', response.data.access);
@@ -94,7 +94,7 @@ export const authApi = {
       return response.data;
     } catch (error: any) {
       console.error('Registration failed:', error);
-      throw new Error(error.response?.data?.message || 'Registration failed. Please try again.');
+      throw new Error(error.response?.data?.detail || error.response?.data?.message || 'Registration failed. Please try again.');
     }
   },
 

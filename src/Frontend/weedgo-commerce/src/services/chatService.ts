@@ -34,10 +34,27 @@ class ChatService {
 
   async sendMessage(text: string, context?: any): Promise<ChatResponse> {
     try {
+      // Get user ID from localStorage (stored when user logs in)
+      const token = localStorage.getItem('access_token');
+      let userId = null;
+
+      // Try to decode the JWT token to get user ID
+      if (token) {
+        try {
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          userId = payload.user_id || payload.sub || payload.id;
+          console.log('Extracted user ID from token:', userId);
+        } catch (e) {
+          console.warn('Could not decode token for user ID:', e);
+        }
+      }
+
       const response = await this.apiClient.post('/chat/search', {
         query: text,
         context,
-        store_id: localStorage.getItem('selected_store_id')
+        store_id: localStorage.getItem('selected_store_id'),
+        user_id: userId,
+        session_id: localStorage.getItem('session_id')
       });
 
       return {
@@ -74,9 +91,23 @@ class ChatService {
 
   async getProductRecommendations(preferences: any): Promise<any[]> {
     try {
+      // Get user ID from token for personalized recommendations
+      const token = localStorage.getItem('access_token');
+      let userId = null;
+
+      if (token) {
+        try {
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          userId = payload.user_id || payload.sub || payload.id;
+        } catch (e) {
+          console.warn('Could not decode token for user ID');
+        }
+      }
+
       const response = await this.apiClient.post('/chat/recommendations', {
         preferences,
-        store_id: localStorage.getItem('selected_store_id')
+        store_id: localStorage.getItem('selected_store_id'),
+        user_id: userId
       });
 
       return response.data.products || [];

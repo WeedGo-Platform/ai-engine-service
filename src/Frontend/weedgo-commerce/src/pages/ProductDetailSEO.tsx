@@ -5,6 +5,8 @@ import { HelmetProvider } from 'react-helmet-async';
 import { ShoppingCartIcon, HeartIcon, ShareIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
 import { productsApi, Product } from '@api/products';
+import { recommendationsApi, RecommendedProduct } from '@api/recommendations';
+import { ProductRecommendations } from '@components/ProductRecommendations';
 import { addItem } from '@features/cart/cartSlice';
 import { RootState } from '@store/index';
 import toast from 'react-hot-toast';
@@ -30,6 +32,9 @@ const ProductDetailSEO: React.FC = () => {
   const [quantity, setQuantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [similarProducts, setSimilarProducts] = useState<RecommendedProduct[]>([]);
+  const [frequentlyBought, setFrequentlyBought] = useState<RecommendedProduct[]>([]);
+  const [loadingRecommendations, setLoadingRecommendations] = useState(false);
 
   const { selectedStore } = useSelector((state: RootState) => state.store || {});
   const currentCity = selectedStore?.city || 'toronto';
@@ -37,6 +42,40 @@ const ProductDetailSEO: React.FC = () => {
   useEffect(() => {
     loadProduct();
   }, [productSlug]);
+
+  // Fetch recommendations when product changes
+  useEffect(() => {
+    const fetchRecommendations = async () => {
+      if (!product) return;
+
+      setLoadingRecommendations(true);
+      try {
+        // Try using SKU first, fall back to ID if needed
+        const productIdentifier = product.sku || product.id;
+
+        // Fetch multiple types of recommendations in parallel
+        const [similar, frequently] = await Promise.allSettled([
+          recommendationsApi.getSimilarProducts(productIdentifier, 8),
+          recommendationsApi.getFrequentlyBoughtTogether(productIdentifier, 4)
+        ]);
+
+        // Handle results even if some fail
+        if (similar.status === 'fulfilled') {
+          setSimilarProducts(similar.value);
+        }
+        if (frequently.status === 'fulfilled') {
+          setFrequentlyBought(frequently.value);
+        }
+      } catch (error) {
+        console.error('Error fetching product recommendations:', error);
+        // Don't show errors to users for optional features
+      } finally {
+        setLoadingRecommendations(false);
+      }
+    };
+
+    fetchRecommendations();
+  }, [product]);
 
   const loadProduct = async () => {
     if (!productSlug) return;
@@ -459,6 +498,39 @@ const ProductDetailSEO: React.FC = () => {
               )}
             </div>
           </div>
+        </div>
+
+        {/* Recommendations Sections */}
+        <div className="container-max py-12 space-y-12">
+          {/* Frequently Bought Together */}
+          {frequentlyBought.length > 0 && (
+            <ProductRecommendations
+              title="Frequently Bought Together"
+              products={frequentlyBought}
+              loading={loadingRecommendations}
+              className="border-t pt-8"
+            />
+          )}
+
+          {/* Similar Products */}
+          {similarProducts.length > 0 && (
+            <ProductRecommendations
+              title="Similar Products"
+              products={similarProducts}
+              loading={loadingRecommendations}
+              className="border-t pt-8"
+            />
+          )}
+
+          {/* Show loading state if still loading and no products yet */}
+          {loadingRecommendations && similarProducts.length === 0 && frequentlyBought.length === 0 && (
+            <ProductRecommendations
+              title="Recommended for You"
+              products={[]}
+              loading={true}
+              className="border-t pt-8"
+            />
+          )}
         </div>
       </div>
     </HelmetProvider>
