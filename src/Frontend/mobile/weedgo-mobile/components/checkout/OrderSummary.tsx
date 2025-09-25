@@ -65,7 +65,7 @@ export function OrderSummary({
           <Text style={styles.summaryValue}>${subtotal.toFixed(2)}</Text>
         </View>
 
-        {deliveryFee > 0 && (
+        {!!deliveryFee && deliveryFee > 0 && (
           <View style={styles.summaryRow}>
             <Text style={styles.summaryLabel}>Delivery Fee</Text>
             <Text style={styles.summaryValue}>

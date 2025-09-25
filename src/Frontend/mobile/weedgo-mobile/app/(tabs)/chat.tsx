@@ -16,7 +16,9 @@ import { useChatStore } from '../../stores/chatStore';
 import { MessageBubble } from '../../components/chat/MessageBubble';
 import { TypingIndicator } from '../../components/chat/TypingIndicator';
 import { SuggestionChips } from '../../components/chat/SuggestionChips';
-import { useSimpleTranscription } from '../../hooks/useSimpleTranscription';
+import { useEnhancedTranscription } from '../../hooks/useEnhancedTranscription';
+import { VoiceRecordingButton } from '../../components/chat/VoiceRecordingButton';
+import { TranscriptDisplay } from '../../components/chat/TranscriptDisplay';
 import { Colors, GlassStyles, BorderRadius, Shadows } from '@/constants/Colors';
 import { glassChatStyles as styles } from '@/constants/GlassmorphismStyles';
 import { BlurView } from 'expo-blur';
@@ -42,16 +44,28 @@ export default function ChatScreen() {
   const {
     isRecording,
     transcript,
+    status: transcriptionStatus,
+    error: transcriptionError,
+    recordingDuration,
+    audioLevel,
     startRecording,
     stopRecording,
-  } = useSimpleTranscription({
+    cancelRecording,
+    resetTranscription,
+  } = useEnhancedTranscription({
     onTranscription: (text: string) => {
       if (text.trim()) {
         setInputText(text);
-        // Auto-send the message
-        handleSendMessage(text, true);
+        // Auto-send the message after a short delay
+        setTimeout(() => {
+          handleSendMessage(text, true);
+          resetTranscription();
+        }, 500);
       }
     },
+    maxDuration: 60000, // 1 minute max recording
+    autoStop: true,
+    language: 'en',
   });
 
   useEffect(() => {
@@ -92,7 +106,14 @@ export default function ChatScreen() {
       await stopRecording();
     } else {
       setInputText('');
+      resetTranscription();
       await startRecording();
+    }
+  };
+
+  const handleVoiceLongPress = () => {
+    if (isRecording) {
+      cancelRecording();
     }
   };
 
@@ -154,22 +175,20 @@ export default function ChatScreen() {
           ref={flatListRef}
           data={messages}
           renderItem={renderMessage}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item, index) => `${item.id}-${index}`}
           contentContainerStyle={styles.messagesList}
           ListFooterComponent={renderFooter}
           onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
         />
 
         <View style={styles.inputContainer}>
-          {/* Recording indicator */}
-          {isRecording && (
-            <View style={styles.transcriptIndicator}>
-              <View style={styles.transcriptHeader}>
-                <View style={styles.listeningDot} />
-                <Text style={styles.transcriptLabel}>Recording... Speak now</Text>
-              </View>
-            </View>
-          )}
+          {/* Enhanced Transcript Display */}
+          <TranscriptDisplay
+            transcript={transcript}
+            isRecording={isRecording}
+            isProcessing={transcriptionStatus === 'processing' || transcriptionStatus === 'transcribing'}
+            error={transcriptionError}
+          />
 
           <View style={styles.inputWrapper}>
             <TextInput
@@ -184,16 +203,19 @@ export default function ChatScreen() {
               returnKeyType="send"
             />
 
-            <TouchableOpacity
-              style={[styles.voiceButton, isRecording && styles.recording]}
-              onPress={handleVoicePress}
-            >
-              <Ionicons
-                name={isRecording ? 'stop' : 'mic'}
-                size={24}
-                color={isRecording ? '#fff' : Colors.light.primary}
+            <View style={styles.voiceButtonWrapper}>
+              <VoiceRecordingButton
+                isRecording={isRecording}
+                onPress={handleVoicePress}
+                disabled={transcriptionStatus === 'processing' || transcriptionStatus === 'transcribing'}
+                size={44}
               />
-            </TouchableOpacity>
+              {isRecording && (
+                <Text style={styles.recordingTime}>
+                  {Math.floor(recordingDuration / 1000)}s
+                </Text>
+              )}
+            </View>
 
             <TouchableOpacity
               style={[styles.sendButton, !inputText.trim() && styles.sendButtonDisabled]}

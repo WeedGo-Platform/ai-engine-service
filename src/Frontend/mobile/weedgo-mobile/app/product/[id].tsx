@@ -33,7 +33,7 @@ export default function ProductDetailScreen() {
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
-  const cartItem = product ? getCartItem(product.id) : undefined;
+  const cartItem = product ? getCartItem(product.sku) : undefined;
 
   useEffect(() => {
     loadProduct();
@@ -239,7 +239,7 @@ export default function ProductDetailScreen() {
           )}
 
           {/* Stock Badge */}
-          {!product.in_stock && (
+          {product.in_stock === false && (
             <View style={styles.outOfStockOverlay}>
               <Text style={styles.outOfStockText}>Out of Stock</Text>
             </View>
@@ -384,14 +384,14 @@ export default function ProductDetailScreen() {
         <TouchableOpacity
           style={[
             styles.addToCartButton,
-            !product.in_stock && styles.addToCartButtonDisabled,
+            product.in_stock === false && styles.addToCartButtonDisabled,
           ]}
           onPress={handleAddToCart}
-          disabled={!product.in_stock}
+          disabled={product.in_stock === false}
         >
           <Ionicons name="cart-outline" size={20} color="white" />
           <Text style={styles.addToCartText}>
-            {!product.in_stock
+            {product.in_stock === false
               ? 'Out of Stock'
               : `Add to Cart • $${(product.price * quantity).toFixed(2)}`}
           </Text>

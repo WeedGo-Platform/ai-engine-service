@@ -94,18 +94,20 @@ const useCartStore = create<CartStore>()(
           await cartService.initialize();
           const cart = await cartService.getCart();
 
-          // Convert API cart items to local cart items
-          const items: CartItem[] = cart.items.map(item => ({
-            id: item.id,
-            product: item.product,
-            quantity: item.quantity,
-            sku: item.product.sku || item.product_id,
-            price: item.price,
-            subtotal: item.subtotal,
-            image: item.product.images?.[0]?.url,
-            name: item.product.name,
-            size: item.product.size,
-          }));
+          // Convert API cart items to local cart items, filtering out invalid items
+          const items: CartItem[] = cart.items
+            .filter(item => item && (item.product || item.product_id))
+            .map(item => ({
+              id: item.id,
+              product: item.product || {} as Product,
+              quantity: item.quantity || 1,
+              sku: item.product?.sku || item.sku || item.product_id || '',
+              price: item.price || 0,
+              subtotal: item.subtotal || 0,
+              image: item.product?.image_url || item.product?.image || (item.product?.images && item.product.images[0]) || item.image_url || '',
+              name: item.product?.name || item.name || 'Unknown Product',
+              size: item.product?.size || item.size,
+            }));
 
           set({
             sessionId: cart.session_id,
@@ -139,7 +141,12 @@ const useCartStore = create<CartStore>()(
           const response = await cartService.addItem({
             product_id: product.id,
             quantity,
-            size: size || product.size, // Include size in the request
+            size: size || product.size,
+            // Include required fields for API
+            sku: product.sku,
+            name: product.name,
+            category: product.category,
+            price: product.price
           });
 
           // Refresh cart from server
@@ -407,18 +414,20 @@ const useCartStore = create<CartStore>()(
         try {
           const cart = await cartService.getCart();
 
-          // Convert API cart items to local cart items
-          const items: CartItem[] = cart.items.map(item => ({
-            id: item.id,
-            product: item.product,
-            quantity: item.quantity,
-            sku: item.product.sku || item.product_id,
-            price: item.price,
-            subtotal: item.subtotal,
-            image: item.product.images?.[0]?.url,
-            name: item.product.name,
-            size: item.product.size,
-          }));
+          // Convert API cart items to local cart items, filtering out invalid items
+          const items: CartItem[] = cart.items
+            .filter(item => item && (item.product || item.product_id))
+            .map(item => ({
+              id: item.id,
+              product: item.product || {} as Product,
+              quantity: item.quantity || 1,
+              sku: item.product?.sku || item.sku || item.product_id || '',
+              price: item.price || 0,
+              subtotal: item.subtotal || 0,
+              image: item.product?.image_url || item.product?.image || (item.product?.images && item.product.images[0]) || item.image_url || '',
+              name: item.product?.name || item.name || 'Unknown Product',
+              size: item.product?.size || item.size,
+            }));
 
           set({
             items,

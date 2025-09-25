@@ -156,6 +156,25 @@ export const glassChatStyles = StyleSheet.create({
     backgroundColor: theme.disabled,
     opacity: 0.5,
   },
+  voiceButtonWrapper: {
+    marginHorizontal: 8,
+    alignItems: 'center',
+  },
+  recordingTime: {
+    fontSize: 11,
+    color: theme.textSecondary,
+    marginTop: 4,
+  },
+  speakerButton: {
+    padding: 8,
+    marginRight: 8,
+  },
+  speakerButtonOff: {
+    opacity: 0.5,
+  },
+  keyboardAvoid: {
+    flex: 1,
+  },
 });
 
 export const glassHomeStyles = StyleSheet.create({

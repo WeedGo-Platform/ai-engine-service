@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { TrashIcon, MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { RootState } from '@store/index';
 import { removeItem, updateQuantity, clearCart } from '@features/cart/cartSlice';
 import { promotionsAPI } from '@api/promotions';
+import { recommendationsApi } from '@api/recommendations';
+import { ProductRecommendations } from '@components/ProductRecommendations';
 import toast from 'react-hot-toast';
 
 const Cart: React.FC = () => {
@@ -12,6 +14,8 @@ const Cart: React.FC = () => {
   const dispatch = useDispatch();
   const [promoCode, setPromoCode] = useState('');
   const [discount, setDiscount] = useState(0);
+  const [trendingProducts, setTrendingProducts] = useState<any[]>([]);
+  const [loadingRecommendations, setLoadingRecommendations] = useState(false);
 
   const { items, total } = useSelector((state: RootState) => state.cart);
   const { selectedStore } = useSelector((state: RootState) => state.store || {});
@@ -26,6 +30,25 @@ const Cart: React.FC = () => {
   const deliveryFee = subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_FEE;
   const discountAmount = subtotal * discount;
   const finalTotal = subtotal + tax + deliveryFee - discountAmount;
+
+  // Fetch trending products to show as recommendations
+  useEffect(() => {
+    const fetchRecommendations = async () => {
+      if (items.length > 0) {
+        setLoadingRecommendations(true);
+        try {
+          const trending = await recommendationsApi.getTrendingProducts(undefined, 10);
+          setTrendingProducts(trending);
+        } catch (error) {
+          console.error('Error fetching recommendations:', error);
+        } finally {
+          setLoadingRecommendations(false);
+        }
+      }
+    };
+
+    fetchRecommendations();
+  }, [items]);
 
   const handleUpdateQuantity = (id: string, newQuantity: number) => {
     if (newQuantity < 1) {
@@ -66,11 +89,6 @@ const Cart: React.FC = () => {
   };
 
   const handleCheckout = () => {
-    if (!selectedStore) {
-      toast.error('Please select a store first');
-      return;
-    }
-
     if (!isAuthenticated) {
       toast('Please login to checkout', {
         icon: '🔒',
@@ -337,6 +355,17 @@ const Cart: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Recommendations Section */}
+      {items.length > 0 && (
+        <div className="mt-16">
+          <ProductRecommendations
+            title="Trending Products You Might Like"
+            products={trendingProducts}
+            loading={loadingRecommendations}
+          />
+        </div>
+      )}
     </div>
   );
 };

@@ -52,7 +52,25 @@ class ProductService {
       '/api/search/products',
       { params: apiParams }
     );
-    return response.data;
+
+    // Handle both response structures (products or results)
+    const data = response.data;
+
+    // Debug: Log the actual structure of the first product
+    if (data.products && data.products.length > 0) {
+      console.log('API Product Keys:', Object.keys(data.products[0]));
+      console.log('First product image_url:', data.products[0].image_url);
+      console.log('First product in_stock:', data.products[0].in_stock);
+    }
+
+    if (!data.results && data.products) {
+      data.results = data.products;
+    }
+    return {
+      ...data,
+      products: data.products || data.results || [],
+      results: data.results || data.products || []
+    };
   }
 
   /**
@@ -148,10 +166,24 @@ class ProductService {
       { params: apiParams }
     );
 
+    // Debug logging - check what the API actually returns
+    const products = response.data.results || response.data.products || [];
+
+    if (products.length > 0) {
+      console.log('getStoreInventory - First product from API:', {
+        all_keys: Object.keys(products[0]),
+        image: products[0].image,
+        image_url: products[0].image_url,
+        in_stock: products[0].in_stock,
+        name: products[0].name
+      });
+    }
+
     // Transform response to match expected format
+    // API returns 'results' for this endpoint
     return {
-      products: response.data.results || [],
-      total: response.data.total || response.data.results?.length || 0
+      products: products,
+      total: response.data.total || products.length || 0
     };
   }
 

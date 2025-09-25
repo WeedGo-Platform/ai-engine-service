@@ -91,7 +91,7 @@ export function StoreSelector() {
 
             <FlatList
               data={stores}
-              keyExtractor={(item) => item.id}
+              keyExtractor={(item, index) => `${item.id}-${index}`}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={[

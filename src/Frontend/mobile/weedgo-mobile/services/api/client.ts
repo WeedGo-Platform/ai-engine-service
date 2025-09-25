@@ -4,7 +4,7 @@ import Constants from 'expo-constants';
 import { ApiError } from '@/types/api.types';
 
 // Environment variables - Using EXPO_PUBLIC_ prefix for Expo environment variables
-const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3001';
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.0.169:5024';
 const TENANT_ID = process.env.EXPO_PUBLIC_TENANT_ID || '00000000-0000-0000-0000-000000000001';
 const API_TIMEOUT = Number(process.env.EXPO_PUBLIC_API_TIMEOUT) || 30000;
 
@@ -18,6 +18,7 @@ class ApiClient {
   private refreshSubscribers: ((token: string) => void)[] = [];
 
   constructor() {
+    console.log('ApiClient initialized with:', { API_URL, TENANT_ID });
     this.client = axios.create({
       baseURL: API_URL,
       timeout: API_TIMEOUT,
@@ -59,6 +60,16 @@ class ApiClient {
           }
         } catch (error) {
           // Store not available yet, skip adding header
+        }
+
+        // Add cart session ID if available
+        try {
+          const cartSessionId = await SecureStore.getItemAsync('cart_session_id');
+          if (cartSessionId) {
+            config.headers['X-Session-ID'] = cartSessionId;
+          }
+        } catch (error) {
+          // Cart session not available yet, skip adding header
         }
 
         // Log request in development

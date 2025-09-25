@@ -214,7 +214,7 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({
             onHelpful={(helpful) => handleHelpful(item.id, helpful)}
           />
         )}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => `${item.id}-${index}`}
         ListEmptyComponent={renderEmpty}
         ListFooterComponent={renderFooter}
         onRefresh={handleRefresh}

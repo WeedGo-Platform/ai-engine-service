@@ -102,7 +102,7 @@ export function FloatingChatBubble() {
         >
           <View style={styles.iconContainer}>
             <Ionicons name="chatbubbles" size={28} color="#fff" />
-            {unreadCount > 0 && (
+            {!!unreadCount && unreadCount > 0 && (
               <View style={styles.badge}>
                 <Text style={styles.badgeText}>
                   {unreadCount > 99 ? '99+' : unreadCount}

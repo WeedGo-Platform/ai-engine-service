@@ -67,7 +67,7 @@ export const ReviewSummary: React.FC<ReviewSummaryProps> = ({
           <Text style={styles.totalReviews}>
             {stats.totalReviews} {stats.totalReviews === 1 ? 'review' : 'reviews'}
           </Text>
-          {stats.recommendationRate > 0 && (
+          {!!stats.recommendationRate && stats.recommendationRate > 0 && (
             <Text style={styles.recommendText}>
               {Math.round(stats.recommendationRate)}% recommend
             </Text>
