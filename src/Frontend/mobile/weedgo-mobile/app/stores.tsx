@@ -17,6 +17,7 @@ import { Colors } from '@/constants/Colors';
 import { router } from 'expo-router';
 import { storeService } from '@/services/api/stores';
 import { Store } from '@/types/api.types';
+import { formatAddress } from '@/utils/formatters';
 
 interface Region {
   latitude: number;
@@ -113,7 +114,7 @@ export default function StoresScreen() {
     >
       <View style={styles.storeInfo}>
         <Text style={styles.storeName}>{item.name}</Text>
-        <Text style={styles.storeAddress}>{item.address}</Text>
+        <Text style={styles.storeAddress}>{formatAddress(item.address)}</Text>
         <View style={styles.storeDetails}>
           <View style={styles.ratingContainer}>
             <Ionicons name="star" size={14} color={Colors.light.star} />

@@ -155,14 +155,21 @@ const useStoreStore = create<StoreState>()(
         const { currentStore, isStoreOpen } = get();
         if (!currentStore) return 'Store hours unavailable';
 
+        // Check if hours exist
+        if (!currentStore.hours) {
+          return 'Hours not available';
+        }
+
         if (!isStoreOpen) {
           const { nextOpenTime } = get();
           return nextOpenTime ? `Opens at ${nextOpenTime}` : 'Closed';
         }
 
         const now = new Date();
-        const dayOfWeek = now.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase() as keyof typeof currentStore.hours;
-        const todayHours = currentStore.hours[dayOfWeek] as DayHours | undefined;
+        const dayOfWeek = now.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+
+        // Safely access hours object
+        const todayHours = currentStore.hours[dayOfWeek as keyof typeof currentStore.hours] as DayHours | undefined;
 
         if (!todayHours || todayHours.is_closed) {
           return 'Closed today';

@@ -13,6 +13,7 @@ import useStoreStore from '@/stores/storeStore';
 import { Colors, Gradients, BorderRadius, Shadows } from '@/constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Store } from '@/types/api.types';
+import { formatShortAddress } from '@/utils/formatters';
 
 export function StoreSelector() {
   const { currentStore, stores, setCurrentStore, getStoreHours, loadStores } = useStoreStore();
@@ -102,7 +103,7 @@ export function StoreSelector() {
                 >
                   <View style={styles.storeItemContent}>
                     <Text style={styles.storeItemName}>{item.name}</Text>
-                    <Text style={styles.storeItemAddress}>{item.address}</Text>
+                    <Text style={styles.storeItemAddress}>{formatShortAddress(item.address)}</Text>
                     <View style={styles.storeFeatures}>
                       {item.pickup_available && (
                         <View style={styles.featureBadge}>

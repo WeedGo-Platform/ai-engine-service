@@ -17,6 +17,7 @@ import { useCartStore } from '@/stores/cartStore';
 import { useOrderStore } from '@/stores/orderStore';
 import { useProfileStore } from '@/stores/profileStore';
 import { useStoreStore } from '@/stores/storeStore';
+import { formatShortAddress } from '@/utils/formatters';
 import { DeliveryMethodToggle } from '@/components/checkout/DeliveryMethodToggle';
 import { AddressSection } from '@/components/checkout/AddressSection';
 import { PaymentSection } from '@/components/checkout/PaymentSection';
@@ -159,7 +160,7 @@ export default function CheckoutScreen() {
               <View style={styles.pickupInfo}>
                 <Text style={styles.storeName}>{selectedStore?.name}</Text>
                 <Text style={styles.storeAddress}>
-                  {selectedStore?.address}, {selectedStore?.city}
+                  {formatShortAddress(selectedStore?.address)}
                 </Text>
                 <TouchableOpacity
                   style={styles.timeSelector}
