@@ -1,9 +1,12 @@
 import React, { createContext, useContext, useMemo, useEffect } from 'react';
 import type { ITemplate } from './types';
+import { ModernTemplate } from './modern';
 // Template imports will be added as we create them
 // import { PotPalaceTemplate } from './pot-palace';
-// import { ModernTemplate } from './modern';
 // import { HeadlessTemplate } from './headless';
+
+// Import theme CSS files
+import './modern/modern.css';
 
 const TemplateContext = createContext<ITemplate | null>(null);
 
@@ -19,8 +22,12 @@ export const TemplateProvider: React.FC<TemplateProviderProps> = ({
   const templateName = templateOverride || import.meta.env.VITE_TEMPLATE || 'modern';
 
   const template = useMemo(() => {
-    // For now, return a placeholder template
-    // This will be replaced with actual template imports
+    // Select the appropriate template based on the name
+    if (templateName === 'modern') {
+      return ModernTemplate;
+    }
+
+    // Default placeholder template for other themes
     const placeholderTemplate: ITemplate = {
       name: templateName,
       theme: {

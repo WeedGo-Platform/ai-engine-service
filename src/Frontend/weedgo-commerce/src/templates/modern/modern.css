@@ -1,0 +1,436 @@
+/* Modern Theme - Sophisticated & Elegant Styles */
+
+/* CSS Variables for Modern Theme */
+.template-modern {
+  --color-primary: #1A0B2E;
+  --color-secondary: #6366F1;
+  --color-accent: #F59E0B;
+  --color-background: #FAF9FC;
+  --color-surface: #FFFFFF;
+  --color-text: #1A1F2E;
+  --color-text-secondary: #64748B;
+  --color-border: #E0E1F6;
+  --color-error: #DC2626;
+  --color-success: #8B5CF6;
+  --color-warning: #F59E0B;
+  --color-info: #3B82F6;
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #1A0B2E 0%, #2D1B69 100%);
+  --gradient-accent: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+  --gradient-warm: linear-gradient(135deg, #F59E0B 0%, #FFC947 100%);
+  --gradient-surface: linear-gradient(180deg, #FFFFFF 0%, #FAF9FC 100%);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(10, 15, 13, 0.04);
+  --shadow-md: 0 4px 12px rgba(10, 15, 13, 0.08);
+  --shadow-lg: 0 12px 24px rgba(10, 15, 13, 0.12);
+  --shadow-xl: 0 24px 48px rgba(10, 15, 13, 0.16);
+  --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.15);
+}
+
+/* Base Styles */
+.template-modern body {
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* Typography Enhancements */
+.template-modern h1,
+.template-modern h2,
+.template-modern h3,
+.template-modern h4,
+.template-modern h5,
+.template-modern h6 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+/* Modern Card Styles */
+.template-modern .card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  position: relative;
+}
+
+.template-modern .card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gradient-accent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.template-modern .card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+  border-color: var(--color-secondary);
+}
+
+.template-modern .card:hover::before {
+  opacity: 1;
+}
+
+/* Button Styles */
+.template-modern .btn-primary {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.template-modern .btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+}
+
+.template-modern .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(10, 15, 13, 0.25);
+}
+
+.template-modern .btn-primary:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.template-modern .btn-secondary {
+  background: transparent;
+  color: var(--color-secondary);
+  border: 2px solid var(--color-secondary);
+  border-radius: 12px;
+  padding: 10px 22px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.template-modern .btn-secondary:hover {
+  background: var(--color-secondary);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.25);
+}
+
+/* Input Fields */
+.template-modern .input-field {
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.template-modern .input-field:focus {
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  outline: none;
+}
+
+.template-modern .input-field::placeholder {
+  color: var(--color-text-secondary);
+  opacity: 0.7;
+}
+
+/* Product Cards */
+.template-modern .product-card {
+  background: var(--color-surface);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.template-modern .product-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 60%, rgba(0, 0, 0, 0.03) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.template-modern .product-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-xl);
+}
+
+.template-modern .product-card:hover::after {
+  opacity: 1;
+}
+
+.template-modern .product-card img {
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.template-modern .product-card:hover img {
+  transform: scale(1.1);
+}
+
+/* Navigation Styles */
+.template-modern nav {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.template-modern nav a {
+  position: relative;
+  font-weight: 500;
+  color: var(--color-text);
+  transition: color 0.2s ease;
+}
+
+.template-modern nav a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--gradient-accent);
+  transform: translateX(-50%);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.template-modern nav a:hover {
+  color: var(--color-secondary);
+}
+
+.template-modern nav a:hover::after,
+.template-modern nav a.active::after {
+  width: 100%;
+}
+
+/* Badge Styles */
+.template-modern .badge {
+  background: var(--gradient-accent);
+  color: white;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Loading Animation */
+.template-modern .loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-secondary);
+  border-radius: 50%;
+  animation: modern-spin 0.8s linear infinite;
+}
+
+@keyframes modern-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Skeleton Loading */
+.template-modern .skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-border) 25%,
+    rgba(226, 232, 240, 0.5) 50%,
+    var(--color-border) 75%
+  );
+  background-size: 200% 100%;
+  animation: modern-shimmer 1.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+@keyframes modern-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Tooltips */
+.template-modern [data-tooltip] {
+  position: relative;
+}
+
+.template-modern [data-tooltip]::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  background: var(--color-primary);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s ease;
+  z-index: 1000;
+}
+
+.template-modern [data-tooltip]:hover::before {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-4px);
+}
+
+/* Smooth Page Transitions */
+.template-modern .page-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.template-modern .page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.template-modern .page-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.template-modern .page-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Floating Action Button */
+.template-modern .fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--gradient-accent);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-lg);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 100;
+}
+
+.template-modern .fab:hover {
+  transform: scale(1.1) rotate(90deg);
+  box-shadow: var(--shadow-xl);
+}
+
+/* Notification Toast */
+.template-modern .toast {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Modern Scrollbar */
+.template-modern ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.template-modern ::-webkit-scrollbar-track {
+  background: var(--color-background);
+  border-radius: 10px;
+}
+
+.template-modern ::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+.template-modern ::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-secondary);
+}
+
+/* Focus Styles */
+.template-modern *:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 2px;
+}
+
+/* Selection */
+.template-modern ::selection {
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--color-text);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .template-modern .card {
+    border-radius: 12px;
+  }
+
+  .template-modern .btn-primary,
+  .template-modern .btn-secondary {
+    border-radius: 10px;
+    padding: 10px 20px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .template-modern.dark {
+    --color-background: #0A0F0D;
+    --color-surface: #1A1F2E;
+    --color-text: #E2E8F0;
+    --color-text-secondary: #94A3B8;
+    --color-border: #2D3748;
+  }
+}
