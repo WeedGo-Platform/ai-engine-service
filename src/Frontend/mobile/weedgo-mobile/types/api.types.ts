@@ -89,11 +89,19 @@ export interface Address {
 }
 
 // Store Types
+export interface StoreAddress {
+  street: string;
+  city: string;
+  province: string;
+  postal_code: string;
+  country: string;
+}
+
 export interface Store {
   id: string;
   name: string;
   store_code: string;
-  address: string;
+  address: string | StoreAddress;
   city?: string;
   phone: string;
   hours: StoreHours;
