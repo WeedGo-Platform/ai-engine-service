@@ -492,7 +492,13 @@ async def websocket_stream(websocket: WebSocket):
         # Audio buffer for accumulation
         audio_buffer = []
         buffer_duration_ms = 0
-        min_buffer_duration_ms = 500  # Process every 500ms
+        min_buffer_duration_ms = 250  # Process every 250ms for real-time feedback
+
+        # Transcript accumulation
+        accumulated_transcript = ""
+        last_partial = ""
+        silence_start = None
+        pause_threshold_ms = 3000  # 3 second pause for auto-send
 
         while True:
             # Receive audio chunk
@@ -510,33 +516,76 @@ async def websocket_stream(websocket: WebSocket):
                     chunk_duration = (len(audio_array) / 16000) * 1000
                     buffer_duration_ms += chunk_duration
 
-                    # Process when buffer is sufficient
+                    # Process when buffer is sufficient (every 250ms)
                     if buffer_duration_ms >= min_buffer_duration_ms:
                         full_audio = np.concatenate(audio_buffer)
 
-                        # Process audio
+                        # Process audio with VAD
                         result = await pipeline.process_audio(
                             full_audio,
                             mode=PipelineMode.AUTO_VAD
                         )
 
-                        # Send transcription if available
-                        if result.get("transcription"):
-                            await websocket.send_json({
-                                "type": "transcription",
-                                "text": result["transcription"]["text"],
-                                "confidence": result["transcription"]["confidence"]
-                            })
-
-                        # Clear buffer if speech was found
+                        # Check for speech
                         if result.get("has_speech"):
-                            audio_buffer.clear()
-                            buffer_duration_ms = 0
-                        elif len(audio_buffer) > 20:  # Limit buffer size
-                            audio_buffer = audio_buffer[-5:]
-                            buffer_duration_ms = (len(audio_buffer) * 100)  # Approximate
+                            # Reset silence timer
+                            silence_start = None
+
+                            # Get transcription
+                            if result.get("transcription"):
+                                new_text = result["transcription"]["text"]
+
+                                # Send partial transcript immediately
+                                if new_text and new_text != last_partial:
+                                    await websocket.send_json({
+                                        "type": "partial",
+                                        "text": new_text,
+                                        "confidence": result["transcription"].get("confidence", 0.5),
+                                        "is_partial": True
+                                    })
+                                    last_partial = new_text
+                                    accumulated_transcript = new_text
+
+                            # Keep a sliding window of audio
+                            audio_buffer = audio_buffer[-2:]  # Keep last 2 chunks for context
+                            buffer_duration_ms = chunk_duration * 2
+                        else:
+                            # No speech detected - track silence
+                            if accumulated_transcript and silence_start is None:
+                                silence_start = time.time()
+
+                            # Check for pause threshold
+                            if silence_start and (time.time() - silence_start) * 1000 >= pause_threshold_ms:
+                                if accumulated_transcript:
+                                    # Send final transcript after pause
+                                    await websocket.send_json({
+                                        "type": "final",
+                                        "text": accumulated_transcript,
+                                        "confidence": 1.0,
+                                        "is_final": True,
+                                        "reason": "pause_detected"
+                                    })
+
+                                    # Reset
+                                    accumulated_transcript = ""
+                                    last_partial = ""
+                                    silence_start = None
+
+                            # Clear old audio to prevent memory growth
+                            if len(audio_buffer) > 10:
+                                audio_buffer = audio_buffer[-3:]
+                                buffer_duration_ms = chunk_duration * 3
 
             elif message.get("type") == "end":
+                # Send any remaining transcript as final
+                if accumulated_transcript:
+                    await websocket.send_json({
+                        "type": "final",
+                        "text": accumulated_transcript,
+                        "confidence": 1.0,
+                        "is_final": True,
+                        "reason": "session_end"
+                    })
                 break
 
     except WebSocketDisconnect:
