@@ -1,4 +1,6 @@
+import { getApiUrl } from '../../config/app.config';
 import React, { useState } from 'react';
+import { getApiUrl } from '../../config/app.config';
 import { X, Send, Bot, UserCircle } from 'lucide-react';
 import { useKiosk } from '../../contexts/KioskContext';
 
@@ -44,7 +46,7 @@ export default function AIAssistant({ isOpen, onClose, currentStore }: AIAssista
 
     try {
       // Call AI chat API
-      const response = await fetch('http://localhost:5024/api/chat', {
+      const response = await fetch(getApiUrl('/api/chat'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

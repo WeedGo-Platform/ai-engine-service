@@ -10,7 +10,9 @@ import {
   SafeAreaView,
   ActivityIndicator,
   ScrollView,
+  StyleSheet,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useChatStore } from '../../stores/chatStore';
 import { MessageBubble } from '../../components/chat/MessageBubble';
@@ -20,7 +22,8 @@ import { useEnhancedTranscription } from '../../hooks/useEnhancedTranscription';
 import { VoiceRecordingButton } from '../../components/chat/VoiceRecordingButton';
 import { TranscriptDisplay } from '../../components/chat/TranscriptDisplay';
 import { Colors, GlassStyles, BorderRadius, Shadows } from '@/constants/Colors';
-import { glassChatStyles as styles } from '@/constants/GlassmorphismStyles';
+import { useTheme } from '@/contexts/ThemeContext';
+import { glassChatStyles as staticStyles } from '@/constants/GlassmorphismStyles';
 import { BlurView } from 'expo-blur';
 
 export default function ChatScreen() {
@@ -28,8 +31,7 @@ export default function ChatScreen() {
   const [isTTSEnabled, setIsTTSEnabled] = useState(true);
   const flatListRef = useRef<FlatList>(null);
   const inputRef = useRef<TextInput>(null);
-  const isDark = true; // Force dark mode
-  const theme = isDark ? Colors.dark : Colors.light;
+  const { theme, isDark } = useTheme();
 
   const {
     messages,
@@ -41,9 +43,69 @@ export default function ChatScreen() {
     clearChat,
   } = useChatStore();
 
+  const styles = React.useMemo(() => ({
+    ...staticStyles,
+    gradientContainer: { flex: 1 },
+    container: { ...staticStyles.container, backgroundColor: 'transparent' },
+    header: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      backgroundColor: 'rgba(142, 142, 147, 0.5)', // Space gray with 50% opacity
+      backdropFilter: 'blur(10px)',
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+      marginTop: Platform.OS === 'ios' ? 10 : 5,
+      marginHorizontal: 16,
+      marginBottom: 8,
+      borderRadius: 30,
+      borderWidth: 1,
+      borderColor: 'rgba(255, 255, 255, 0.5)',
+    },
+    inputContainer: {
+      position: 'relative', // Changed from absolute to work with KeyboardAvoidingView
+      bottom: 0,
+      left: 0,
+      right: 0,
+      paddingBottom: Platform.OS === 'ios' ? 90 : 68, // Space for tab bar
+      paddingTop: 8,
+      paddingHorizontal: 16,
+      backgroundColor: 'transparent',
+    },
+    inputWrapper: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: 'rgba(142, 142, 147, 0.5)', // Same space gray as header
+      backdropFilter: 'blur(10px)',
+      borderRadius: 30,
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+      borderWidth: 1,
+      borderColor: 'rgba(255, 255, 255, 0.5)',
+      marginBottom: 0, // No bottom margin
+      marginTop: 0, // No top margin
+      gap: 8,
+    },
+    textInput: {
+      flex: 1,
+      fontSize: 16,
+      color: theme.text,
+      paddingVertical: 8,
+      paddingHorizontal: 8,
+      minHeight: 36,
+      maxHeight: 100,
+    },
+    messagesList: {
+      paddingHorizontal: 16,
+      paddingBottom: 20, // Reduced since input is no longer absolute
+      paddingTop: 8,
+    },
+  }), [theme, isDark]);
+
   const {
     isRecording,
     transcript,
+    partialTranscript,
     status: transcriptionStatus,
     error: transcriptionError,
     recordingDuration,
@@ -54,18 +116,25 @@ export default function ChatScreen() {
     resetTranscription,
   } = useEnhancedTranscription({
     onTranscription: (text: string) => {
+      // Auto-send when silence detected (2 seconds)
       if (text.trim()) {
-        setInputText(text);
-        // Auto-send the message after a short delay
-        setTimeout(() => {
-          handleSendMessage(text, true);
-          resetTranscription();
-        }, 500);
+        handleSendMessage(text, true);
+        setInputText('');
       }
     },
+    onPartialTranscript: (text: string) => {
+      // Show real-time transcript as user speaks
+      setInputText(text);
+    },
     maxDuration: 60000, // 1 minute max recording
-    autoStop: true,
+    silenceThreshold: 2000, // 2 seconds of silence triggers send
     language: 'en',
+    onError: (error) => {
+      console.log('Transcription error:', error);
+      // Don't show error for connection issues, just reset
+      resetTranscription();
+      setInputText('');
+    },
   });
 
   useEffect(() => {
@@ -102,12 +171,19 @@ export default function ChatScreen() {
   };
 
   const handleVoicePress = async () => {
-    if (isRecording) {
-      await stopRecording();
-    } else {
-      setInputText('');
+    try {
+      if (isRecording) {
+        await stopRecording();
+      } else {
+        setInputText('');
+        resetTranscription();
+        await startRecording();
+      }
+    } catch (error) {
+      console.log('Voice recording error:', error);
+      // Silent error handling - just reset state
       resetTranscription();
-      await startRecording();
+      setInputText('');
     }
   };
 
@@ -163,14 +239,20 @@ export default function ChatScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      {renderHeader()}
+    <LinearGradient
+      colors={isDark ? [theme.background, theme.backgroundSecondary, theme.surface] : [theme.gradientStart, theme.gradientMid, theme.gradientEnd]}
+      style={styles.gradientContainer}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0.5, y: 1 }}
+    >
+      <SafeAreaView style={styles.container}>
+        {renderHeader()}
 
-      <KeyboardAvoidingView
-        style={styles.keyboardAvoid}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
-      >
+        <KeyboardAvoidingView
+          style={styles.keyboardAvoid}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+        >
         <FlatList
           ref={flatListRef}
           data={messages}
@@ -179,16 +261,20 @@ export default function ChatScreen() {
           contentContainerStyle={styles.messagesList}
           ListFooterComponent={renderFooter}
           onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="interactive"
         />
 
         <View style={styles.inputContainer}>
-          {/* Enhanced Transcript Display */}
-          <TranscriptDisplay
-            transcript={transcript}
-            isRecording={isRecording}
-            isProcessing={transcriptionStatus === 'processing' || transcriptionStatus === 'transcribing'}
-            error={transcriptionError}
-          />
+          {/* Enhanced Transcript Display - show partial transcript while recording */}
+          {isRecording && partialTranscript && (
+            <TranscriptDisplay
+              transcript={partialTranscript}
+              isRecording={isRecording}
+              isProcessing={transcriptionStatus === 'processing' || transcriptionStatus === 'transcribing'}
+              error={null} // Don't show errors in UI
+            />
+          )}
 
           <View style={styles.inputWrapper}>
             <TextInput
@@ -228,5 +314,6 @@ export default function ChatScreen() {
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
+    </LinearGradient>
   );
 }

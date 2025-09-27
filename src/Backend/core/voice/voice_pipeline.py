@@ -15,6 +15,8 @@ from .base_handler import VoiceState, AudioConfig
 from .whisper_stt import WhisperSTTHandler
 from .piper_tts import PiperTTSHandler
 from .vad_handler import SileroVADHandler
+from .whisper_wake_word import WhisperWakeWordHandler
+from .wake_word_handler import WakeWordConfig, WakeWordModel
 
 logger = logging.getLogger(__name__)
 
@@ -45,62 +47,103 @@ class VoicePipeline:
     def __init__(
         self,
         stt_model: str = "base",
-        config: Optional[AudioConfig] = None
+        config: Optional[AudioConfig] = None,
+        wake_word_enabled: bool = True
     ):
         """Initialize voice pipeline
-        
+
         Args:
             stt_model: Whisper model size
             config: Audio configuration
+            wake_word_enabled: Enable wake word detection
         """
         self.config = config or AudioConfig()
-        
+
         # Initialize handlers
         self.stt = WhisperSTTHandler(stt_model, self.config)
-        
+
         # Use only Piper neural TTS for production compatibility
         self.tts = PiperTTSHandler(self.config)
         logger.info("Using high-quality Piper neural TTS handler")
-        
+
         self.vad = SileroVADHandler(self.config)
-        
+
+        # Initialize wake word handler if enabled
+        self.wake_word_enabled = wake_word_enabled
+        self.wake_word = None
+        if wake_word_enabled:
+            wake_config = WakeWordConfig(
+                models=[WakeWordModel.HEY_WEEDGO, WakeWordModel.WEEDGO],
+                threshold=0.7,
+                sensitivity=0.6
+            )
+            self.wake_word = WhisperWakeWordHandler(
+                self.config,
+                wake_config,
+                whisper_model="tiny"  # Use tiny model for wake word detection
+            )
+            logger.info("Wake word detection enabled")
+
         # Pipeline state
         self.is_initialized = False
         self.current_session: Optional[VoiceSession] = None
         self.mode = PipelineMode.MANUAL
-        
+        self.wake_word_active = False
+
         # Audio buffer for streaming
         self.audio_buffer = []
         self.silence_counter = 0
         self.silence_threshold = 3  # Number of silent chunks before processing
-        
+
         # Callbacks
         self.on_transcription: Optional[Callable] = None
         self.on_synthesis: Optional[Callable] = None
         self.on_vad_change: Optional[Callable] = None
+        self.on_wake_word: Optional[Callable] = None
     
     async def initialize(self) -> bool:
         """Initialize all voice components"""
         try:
             logger.info("Initializing voice pipeline...")
-            
-            # Initialize all handlers in parallel
-            results = await asyncio.gather(
+
+            # Build initialization tasks
+            init_tasks = [
                 self.stt.initialize(),
                 self.tts.initialize(),
-                self.vad.initialize(),
-                return_exceptions=True
-            )
-            
+                self.vad.initialize()
+            ]
+            names = ["STT", "TTS", "VAD"]
+
+            # Add wake word initialization if enabled
+            if self.wake_word:
+                init_tasks.append(self.wake_word.initialize())
+                names.append("Wake Word")
+
+            # Initialize all handlers in parallel
+            results = await asyncio.gather(*init_tasks, return_exceptions=True)
+
             # Check results
-            for i, (result, name) in enumerate(zip(results, ["STT", "TTS", "VAD"])):
+            for i, (result, name) in enumerate(zip(results, names)):
                 if isinstance(result, Exception):
                     logger.error(f"Failed to initialize {name}: {result}")
                     return False
                 elif not result:
                     logger.error(f"Failed to initialize {name}")
                     return False
-            
+
+            # Load custom wake word models if available
+            if self.wake_word:
+                from pathlib import Path
+                custom_models_dir = Path("models/voice/wake_words")
+                if custom_models_dir.exists():
+                    model_paths = {}
+                    for model_file in custom_models_dir.glob("*.txt"):
+                        model_name = model_file.stem
+                        model_paths[model_name] = model_file
+                    if model_paths:
+                        await self.wake_word.load_models(model_paths)
+                        logger.info(f"Loaded {len(model_paths)} custom wake word models")
+
             self.is_initialized = True
             logger.info("✅ Voice pipeline initialized successfully")
             return True
@@ -185,6 +228,47 @@ class VoicePipeline:
                 if self.on_transcription:
                     await self.on_transcription(transcription)
             
+            elif mode == PipelineMode.WAKE_WORD:
+                # Wake word detection mode
+                if not self.wake_word:
+                    logger.warning("Wake word handler not initialized")
+                    results["error"] = "Wake word detection not available"
+                    return results
+
+                # First detect wake word
+                wake_detection = await self.wake_word.detect(audio)
+                results["wake_word_detection"] = {
+                    "detected": wake_detection.detected,
+                    "wake_word": wake_detection.wake_word,
+                    "confidence": wake_detection.confidence
+                }
+
+                if wake_detection.detected:
+                    logger.info(f"Wake word detected: {wake_detection.wake_word}")
+                    self.wake_word_active = True
+                    results["has_speech"] = True
+
+                    # Trigger wake word callback
+                    if self.on_wake_word:
+                        await self.on_wake_word(wake_detection)
+
+                    # After wake word, process following audio for commands
+                    # This would typically transition to listening mode
+                    # For now, just transcribe the audio after wake word
+                    if wake_detection.audio_context is not None:
+                        transcription = await self.stt.transcribe(
+                            wake_detection.audio_context,
+                            language
+                        )
+                        results["transcription"] = {
+                            "text": transcription.text,
+                            "confidence": transcription.confidence,
+                            "language": transcription.language
+                        }
+
+                        if self.on_transcription:
+                            await self.on_transcription(transcription)
+
             elif mode == PipelineMode.CONTINUOUS:
                 # Add to buffer for continuous processing
                 self.audio_buffer.append(audio)
@@ -341,28 +425,40 @@ class VoicePipeline:
         self,
         on_transcription: Optional[Callable] = None,
         on_synthesis: Optional[Callable] = None,
-        on_vad_change: Optional[Callable] = None
+        on_vad_change: Optional[Callable] = None,
+        on_wake_word: Optional[Callable] = None
     ):
         """Set pipeline callbacks
-        
+
         Args:
             on_transcription: Called when transcription completes
             on_synthesis: Called when synthesis completes
             on_vad_change: Called when VAD state changes
+            on_wake_word: Called when wake word is detected
         """
         self.on_transcription = on_transcription
         self.on_synthesis = on_synthesis
         self.on_vad_change = on_vad_change
+        self.on_wake_word = on_wake_word
+
+        # Register wake word callback with handler
+        if self.wake_word and on_wake_word:
+            self.wake_word.register_callback(on_wake_word)
     
     async def cleanup(self):
         """Clean up all resources"""
         try:
-            await asyncio.gather(
+            cleanup_tasks = [
                 self.stt.cleanup(),
                 self.tts.cleanup(),
-                self.vad.cleanup(),
-                return_exceptions=True
-            )
+                self.vad.cleanup()
+            ]
+
+            # Add wake word cleanup if initialized
+            if self.wake_word:
+                cleanup_tasks.append(self.wake_word.cleanup())
+
+            await asyncio.gather(*cleanup_tasks, return_exceptions=True)
             
             self.is_initialized = False
             self.current_session = None

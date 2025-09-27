@@ -19,9 +19,10 @@ export interface RegisterRequest {
 }
 
 export interface RegisterResponse {
-  success: boolean;
   message: string;
-  otp_sent: boolean;
+  access_token: string;
+  token_type: string;
+  user: User;
 }
 
 export interface LoginRequest {
@@ -29,9 +30,13 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  success: boolean;
-  otp_sent: boolean;
-  session_id: string;
+  message: string;
+  access_token?: string;
+  refresh_token?: string;
+  access?: string;  // Alternative field name used by backend
+  refresh?: string; // Alternative field name used by backend
+  token_type?: string;
+  user: User;
 }
 
 export interface VerifyOTPRequest {
@@ -73,9 +78,16 @@ export interface Profile {
   first_name?: string;
   last_name?: string;
   date_of_birth?: string;
+  profile_image?: string;
+  email_verified?: boolean;
+  phone_verified?: boolean;
+  age_verified?: boolean;
+  age_verified_at?: string;
+  verification_method?: string;
   preferences?: Record<string, any>;
-  medical_info?: Record<string, any>;
   addresses?: Address[];
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface Address {
@@ -101,7 +113,7 @@ export interface Store {
   id: string;
   name: string;
   store_code: string;
-  address: string | StoreAddress;
+  address: StoreAddress;
   city?: string;
   phone: string;
   hours: StoreHours;

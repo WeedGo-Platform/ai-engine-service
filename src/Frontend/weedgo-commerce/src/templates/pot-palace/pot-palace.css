@@ -1,0 +1,255 @@
+/* Pot Palace Theme CSS */
+
+/* Fun, playful cannabis-themed styles */
+.template-pot-palace {
+  font-family: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* Animated gradient background option (can be toggled) */
+.template-pot-palace .animated-bg {
+  animation: psychedelic 10s ease infinite;
+  background-size: 200% 200%;
+}
+
+@keyframes psychedelic {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Fun hover effects */
+.template-pot-palace .hover-grow:hover {
+  transform: scale(1.05) rotate(1deg);
+}
+
+.template-pot-palace .hover-bounce:hover {
+  animation: bounce 0.5s ease;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Emoji animations */
+.template-pot-palace .emoji-spin {
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Wavy text effect */
+.template-pot-palace .wavy-text span {
+  display: inline-block;
+  animation: wave 1.5s ease-in-out infinite;
+  animation-delay: calc(0.1s * var(--i));
+}
+
+@keyframes wave {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Custom scrollbar */
+.template-pot-palace::-webkit-scrollbar {
+  width: 12px;
+}
+
+.template-pot-palace::-webkit-scrollbar-track {
+  background: var(--color-background);
+  border-radius: 10px;
+}
+
+.template-pot-palace::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--color-primary), var(--color-secondary));
+  border-radius: 10px;
+  border: 2px solid var(--color-background);
+}
+
+.template-pot-palace::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--color-secondary), var(--color-accent));
+}
+
+/* Focus styles */
+.template-pot-palace *:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* Selection color */
+.template-pot-palace ::selection {
+  background-color: var(--color-primary);
+  color: var(--color-background);
+}
+
+/* Loading animation */
+.template-pot-palace .loading-leaf {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-20px) rotate(-5deg); }
+  75% { transform: translateY(-10px) rotate(5deg); }
+}
+
+/* Pulse animation for CTAs */
+.template-pot-palace .pulse-cta {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(132, 204, 22, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 20px rgba(132, 204, 22, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(132, 204, 22, 0);
+  }
+}
+
+/* Fun border styles */
+.template-pot-palace .zigzag-border {
+  position: relative;
+}
+
+.template-pot-palace .zigzag-border::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(135deg, var(--color-primary) 25%, transparent 25%) -10px 0,
+              linear-gradient(-135deg, var(--color-primary) 25%, transparent 25%) -10px 0,
+              linear-gradient(45deg, var(--color-secondary) 25%, transparent 25%),
+              linear-gradient(-45deg, var(--color-secondary) 25%, transparent 25%);
+  background-size: 20px 20px;
+}
+
+/* Typography enhancements */
+.template-pot-palace h1,
+.template-pot-palace h2,
+.template-pot-palace h3 {
+  font-family: 'Bebas Neue', cursive;
+  letter-spacing: 0.05em;
+}
+
+/* Card hover effects */
+.template-pot-palace .card-3d {
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  transform-style: preserve-3d;
+}
+
+.template-pot-palace .card-3d:hover {
+  transform: perspective(1000px) rotateX(-10deg) rotateY(10deg) scale(1.05);
+}
+
+/* Rainbow text on hover */
+.template-pot-palace .rainbow-hover:hover {
+  background: linear-gradient(
+    to right,
+    #e91e63,
+    #f44336,
+    #ff9800,
+    #ffeb3b,
+    #4caf50,
+    #2196f3,
+    #9c27b0
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% auto;
+  animation: rainbow 3s linear infinite;
+}
+
+@keyframes rainbow {
+  to { background-position: 200% center; }
+}
+
+/* Override all purple colors with Pot Palace vibrant colors */
+/* Purple-500 overrides - use orange */
+.template-pot-palace .text-purple-500 {
+  color: #FB923C !important; /* Pot Palace orange */
+}
+
+.template-pot-palace .bg-purple-500 {
+  background-color: #FB923C !important;
+}
+
+.template-pot-palace .border-purple-500 {
+  border-color: #FB923C !important;
+}
+
+/* Purple-600 overrides - keep electric purple */
+.template-pot-palace .text-purple-600 {
+  color: #A855F7 !important; /* Pot Palace electric purple */
+}
+
+.template-pot-palace .bg-purple-600 {
+  background-color: #A855F7 !important;
+}
+
+.template-pot-palace .border-purple-600 {
+  border-color: #A855F7 !important;
+}
+
+/* Purple-400 overrides - use lime */
+.template-pot-palace .text-purple-400 {
+  color: #84CC16 !important; /* Pot Palace lime */
+}
+
+.template-pot-palace .bg-purple-400 {
+  background-color: #84CC16 !important;
+}
+
+.template-pot-palace .border-purple-400 {
+  border-color: #84CC16 !important;
+}
+
+/* Purple-900 overrides */
+.template-pot-palace .bg-purple-900 {
+  background-color: #7E22CE !important;
+}
+
+/* Purple hover states */
+.template-pot-palace .hover\:bg-purple-700:hover {
+  background-color: #9333EA !important;
+}
+
+.template-pot-palace .hover\:bg-purple-600:hover {
+  background-color: #9333EA !important;
+}
+
+.template-pot-palace .hover\:bg-purple-500:hover {
+  background-color: #EA580C !important; /* Darker orange on hover */
+}
+
+.template-pot-palace .hover\:text-purple-600:hover {
+  color: #9333EA !important;
+}
+
+/* Purple focus states */
+.template-pot-palace .focus\:ring-purple-500:focus {
+  --tw-ring-color: #FB923C !important;
+}
+
+.template-pot-palace .focus\:border-purple-500:focus {
+  border-color: #FB923C !important;
+}
+
+/* Purple in gradients */
+.template-pot-palace [class*="from-purple"],
+.template-pot-palace [class*="to-purple"],
+.template-pot-palace [class*="via-purple"] {
+  --tw-gradient-from: #A855F7 !important;
+  --tw-gradient-to: #84CC16 !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+}

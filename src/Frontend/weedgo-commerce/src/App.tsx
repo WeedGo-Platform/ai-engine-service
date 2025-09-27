@@ -42,9 +42,9 @@ function App() {
   return (
     <ErrorBoundary>
       <Provider store={store}>
-        <TemplateProvider>
-          <TenantProvider>
-            <StoreProvider>
+        <TenantProvider>
+          <StoreProvider>
+            <TemplateProvider>
               <AgeVerificationProvider>
                 <Router>
               <Suspense fallback={<LoadingScreen />}>
@@ -77,34 +77,35 @@ function App() {
             </MainLayout>
           </Suspense>
 
-          {/* Global Toast Notifications */}
-          <Toaster
-            position="top-right"
-            toastOptions={{
-              duration: 4000,
-              style: {
-                background: '#363636',
-                color: '#fff',
-              },
-              success: {
-                iconTheme: {
-                  primary: '#4CAF50',
-                  secondary: '#fff',
-                },
-              },
-              error: {
-                iconTheme: {
-                  primary: '#F44336',
-                  secondary: '#fff',
-                },
-              },
-            }}
-          />
-        </Router>
+                </Router>
+
+                {/* Global Toast Notifications */}
+                <Toaster
+                  position="top-right"
+                  toastOptions={{
+                    duration: 4000,
+                    style: {
+                      background: '#363636',
+                      color: '#fff',
+                    },
+                    success: {
+                      iconTheme: {
+                        primary: '#4CAF50',
+                        secondary: '#fff',
+                      },
+                    },
+                    error: {
+                      iconTheme: {
+                        primary: '#F44336',
+                        secondary: '#fff',
+                      },
+                    },
+                  }}
+                />
               </AgeVerificationProvider>
-            </StoreProvider>
-          </TenantProvider>
-        </TemplateProvider>
+            </TemplateProvider>
+          </StoreProvider>
+        </TenantProvider>
       </Provider>
     </ErrorBoundary>
   );

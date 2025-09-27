@@ -5,7 +5,7 @@ import { ApiError } from '@/types/api.types';
 
 // Environment variables - Using EXPO_PUBLIC_ prefix for Expo environment variables
 const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.0.169:5024';
-const TENANT_ID = process.env.EXPO_PUBLIC_TENANT_ID || '00000000-0000-0000-0000-000000000001';
+const TENANT_ID = process.env.EXPO_PUBLIC_TENANT_ID || 'ce2d57bc-b3ba-4801-b229-889a9fe9626d'; // Pot Palace tenant
 const API_TIMEOUT = Number(process.env.EXPO_PUBLIC_API_TIMEOUT) || 30000;
 
 // Secure storage keys
@@ -104,9 +104,26 @@ class ApiClient {
       },
       async (error: AxiosError<ApiError>) => {
         const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+        const status = error.response?.status;
+        const url = originalRequest?.url || '';
 
-        // Log error in development
-        if (__DEV__) {
+        // Determine if this is an expected error that shouldn't be logged as an error
+        const isExpectedError = (
+          // Authentication failures are expected when not logged in
+          (status === 401 && !originalRequest._retry) ||
+          // 404s for known fallback endpoints are expected
+          (status === 404 && (
+            url.includes('/api/v1/auth/me') ||
+            url.includes('/api/v1/auth/customer/profile') ||
+            url.includes('/api/v1/auth/customer/profile/image') ||
+            url.includes('/api/v1/auth/customer/addresses') ||
+            url.includes('/api/v1/auth/customer/verify-email') ||
+            url.includes('/api/v1/auth/customer/verify-email/confirm')
+          ))
+        );
+
+        // Log error in development (but not for expected cases)
+        if (__DEV__ && !isExpectedError) {
           console.error('API Error:', {
             status: error.response?.status,
             url: originalRequest?.url,
@@ -133,22 +150,27 @@ class ApiClient {
             try {
               const refreshToken = await SecureStore.getItemAsync(REFRESH_TOKEN_KEY);
               if (!refreshToken) {
-                throw new Error('No refresh token available');
+                // Silently handle missing refresh token - user just needs to login
+                await this.clearTokens();
+                this.redirectToLogin();
+                return Promise.reject(error);
               }
 
               const response = await this.refreshAccessToken(refreshToken);
-              const { access_token, refresh_token } = response.data;
+              // Handle both field name formats from backend
+              const accessToken = response.data.access_token || response.data.access;
+              const newRefreshToken = response.data.refresh_token || response.data.refresh;
 
               // Save new tokens
-              await SecureStore.setItemAsync(TOKEN_KEY, access_token);
-              await SecureStore.setItemAsync(REFRESH_TOKEN_KEY, refresh_token);
+              await SecureStore.setItemAsync(TOKEN_KEY, accessToken);
+              await SecureStore.setItemAsync(REFRESH_TOKEN_KEY, newRefreshToken);
 
               // Notify all subscribers
-              this.onRefreshed(access_token);
+              this.onRefreshed(accessToken);
               this.refreshSubscribers = [];
 
               // Retry original request
-              originalRequest.headers.Authorization = `Bearer ${access_token}`;
+              originalRequest.headers.Authorization = `Bearer ${accessToken}`;
               return this.client(originalRequest);
             } catch (refreshError) {
               // Refresh failed - clear tokens and redirect to login

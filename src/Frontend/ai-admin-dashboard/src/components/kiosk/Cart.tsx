@@ -1,4 +1,6 @@
+import { getApiUrl } from '../../config/app.config';
 import React, { useState } from 'react';
+import { getApiUrl } from '../../config/app.config';
 import { ChevronLeft, Plus, Minus, Trash2, ShoppingCart } from 'lucide-react';
 import { useKiosk } from '../../contexts/KioskContext';
 import ProductRecommendations from './ProductRecommendations';
@@ -80,7 +82,7 @@ export default function Cart({ onBack, onCheckout, currentStore }: CartProps) {
                 {/* Product Image */}
                 <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                   <img
-                    src={item.image || '/api/placeholder/80/80'}
+                    src={item.image || 'api/placeholder/80/80'}
                     alt={item.name}
                     className="w-full h-full object-cover"
                   />

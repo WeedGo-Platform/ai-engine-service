@@ -4,47 +4,50 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '@/stores/authStore';
+import { useThemeStore } from '@/stores/themeStore';
+import { useTheme } from '@/contexts/ThemeContext';
 import { Colors, BorderRadius, Shadows, Gradients } from '@/constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
-import { biometricAuth } from '@/utils/biometric';
-import { authService } from '@/services/api/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ProfileScreen() {
   const router = useRouter();
-  const { user, isAuthenticated, logout, biometricEnabled, setBiometricEnabled, isLoading } = useAuthStore();
-  const [profileLoading, setProfileLoading] = React.useState(false);
+  const {
+    user,
+    isAuthenticated,
+    logout,
+    biometricEnabled,
+    biometricAvailable,
+    biometricType,
+    enableBiometric,
+    disableBiometric,
+    checkBiometricAvailability,
+    isLoading
+  } = useAuthStore();
+  const { mode: themeMode, setThemeMode } = useThemeStore();
+  const { theme, isDark } = useTheme();
   const [selectedLanguage, setSelectedLanguage] = React.useState('en');
-  const [selectedTheme, setSelectedTheme] = React.useState('light');
-  const isDark = selectedTheme === 'dark';
-  const theme = isDark ? Colors.dark : Colors.light;
+  const styles = React.useMemo(() => createStyles(theme, isDark), [theme, isDark]);
 
-  // Fetch user profile and settings on mount if authenticated
+  // Redirect to login if not authenticated
   useEffect(() => {
-    if (isAuthenticated && !user) {
-      fetchUserProfile();
+    if (!isAuthenticated && !isLoading) {
+      router.replace('/(auth)/login');
     }
-    loadUserSettings();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, isLoading]);
 
-  const fetchUserProfile = async () => {
-    setProfileLoading(true);
-    try {
-      const profile = await authService.getProfile();
-      useAuthStore.setState({ user: profile });
-    } catch (error) {
-      console.log('Failed to fetch profile:', error);
-    } finally {
-      setProfileLoading(false);
+  // Load user settings on mount if authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadUserSettings();
+      checkBiometricAvailability();
     }
-  };
+  }, [isAuthenticated]);
 
   const loadUserSettings = async () => {
     try {
       const language = await AsyncStorage.getItem('user_language');
-      const theme = await AsyncStorage.getItem('user_theme');
       if (language) setSelectedLanguage(language);
-      if (theme) setSelectedTheme(theme);
     } catch (error) {
       console.log('Failed to load settings:', error);
     }
@@ -56,10 +59,10 @@ export default function ProfileScreen() {
     // Here you would trigger app-wide language change
   };
 
-  const handleThemeChange = async (theme: string) => {
-    setSelectedTheme(theme);
-    await AsyncStorage.setItem('user_theme', theme);
-    // Here you would trigger app-wide theme change
+  const handleThemeChange = () => {
+    // Cycle through: light -> dark -> system
+    const nextMode = themeMode === 'light' ? 'dark' : themeMode === 'dark' ? 'system' : 'light';
+    setThemeMode(nextMode);
   };
 
   const handleLogout = () => {
@@ -83,54 +86,87 @@ export default function ProfileScreen() {
   const handleBiometricToggle = async () => {
     if (!biometricEnabled) {
       // Enable biometric
-      const available = await biometricAuth.isAvailable();
-      if (!available) {
-        Alert.alert('Not Available', 'Biometric authentication is not available on this device');
+      if (!biometricAvailable) {
+        Alert.alert(
+          'Not Available',
+          `${biometricType} is not available on this device. Please ensure it's set up in your device settings.`
+        );
         return;
       }
 
-      const result = await biometricAuth.authenticate('Enable biometric login');
-      if (result.success) {
-        await setBiometricEnabled(true);
-        Alert.alert('Success', 'Biometric login enabled');
+      // Check if user has email stored
+      const userEmail = user?.email || user?.phone;
+      if (!userEmail) {
+        Alert.alert(
+          'Account Required',
+          'Please ensure you are logged in with email/phone and password to enable biometric login.'
+        );
+        return;
       }
+
+      // Prompt for password to enable biometric
+      Alert.prompt(
+        `Enable ${biometricType}`,
+        'Enter your password to enable biometric login',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Enable',
+            onPress: async (password) => {
+              if (!password) {
+                Alert.alert('Error', 'Password is required');
+                return;
+              }
+
+              const success = await enableBiometric(userEmail, password);
+              if (success) {
+                Alert.alert(
+                  'Success',
+                  `${biometricType} login has been enabled. You can now sign in quickly using ${biometricType}.`
+                );
+              } else {
+                Alert.alert(
+                  'Failed',
+                  `Unable to enable ${biometricType}. Please try again.`
+                );
+              }
+            },
+          },
+        ],
+        'secure-text'
+      );
     } else {
       // Disable biometric
-      await setBiometricEnabled(false);
-      Alert.alert('Success', 'Biometric login disabled');
+      Alert.alert(
+        `Disable ${biometricType}`,
+        `Are you sure you want to disable ${biometricType} login?`,
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Disable',
+            style: 'destructive',
+            onPress: async () => {
+              const success = await disableBiometric();
+              if (success) {
+                Alert.alert(
+                  'Success',
+                  `${biometricType} login has been disabled.`
+                );
+              } else {
+                Alert.alert(
+                  'Failed',
+                  `Unable to disable ${biometricType}. Please try again.`
+                );
+              }
+            },
+          },
+        ]
+      );
     }
   };
 
-  if (!isAuthenticated) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.guestContainer}>
-          <Ionicons name="person-circle" size={80} color={theme.textSecondary} />
-          <Text style={styles.guestTitle}>Sign in to view your profile</Text>
-          <Text style={styles.guestSubtext}>
-            Create an account or sign in to access your orders, favorites, and more
-          </Text>
-          <TouchableOpacity
-            style={styles.signInButton}
-            onPress={() => router.push('/(auth)/login')}
-            activeOpacity={0.8}
-          >
-            <LinearGradient
-              colors={Gradients.primary}
-              style={styles.signInGradient}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-            >
-              <Text style={styles.signInButtonText}>Sign In / Create Account</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
-    );
-  }
-
-  // Show loading state while fetching profile
-  if (profileLoading || isLoading) {
+  // Show loading state while checking auth
+  if (isLoading || !isAuthenticated) {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.loadingContainer}>
@@ -329,11 +365,13 @@ export default function ProfileScreen() {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.menuItem} onPress={() => handleThemeChange(selectedTheme === 'light' ? 'dark' : 'light')}>
+          <TouchableOpacity style={styles.menuItem} onPress={handleThemeChange}>
             <Ionicons name="color-palette-outline" size={24} color={theme.text} />
             <Text style={styles.menuText}>Theme</Text>
             <View style={styles.menuRight}>
-              <Text style={styles.menuValue}>{selectedTheme === 'light' ? 'Light' : 'Dark'}</Text>
+              <Text style={styles.menuValue}>
+                {themeMode === 'system' ? 'System' : themeMode === 'light' ? 'Light' : 'Dark'}
+              </Text>
               <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
             </View>
           </TouchableOpacity>
@@ -344,13 +382,31 @@ export default function ProfileScreen() {
             <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.menuItem} onPress={handleBiometricToggle}>
-            <Ionicons name="finger-print-outline" size={24} color={theme.text} />
-            <Text style={styles.menuText}>Biometric Login</Text>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={handleBiometricToggle}
+            disabled={!biometricAvailable}
+          >
+            <Ionicons
+              name={biometricType.includes('Face') ? 'scan-outline' : 'finger-print-outline'}
+              size={24}
+              color={biometricAvailable ? theme.text : theme.textSecondary}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={[styles.menuText, !biometricAvailable && { color: theme.textSecondary }]}>
+                {biometricType} Login
+              </Text>
+              {!biometricAvailable && (
+                <Text style={styles.menuSubtext}>
+                  Not available on this device
+                </Text>
+              )}
+            </View>
             <View
               style={[
                 styles.toggle,
                 biometricEnabled && styles.toggleActive,
+                !biometricAvailable && styles.toggleDisabled,
               ]}
             >
               <View
@@ -362,7 +418,7 @@ export default function ProfileScreen() {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/profile/privacy-security')}>
             <Ionicons name="lock-closed-outline" size={24} color={theme.text} />
             <Text style={styles.menuText}>Privacy & Security</Text>
             <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
@@ -373,19 +429,19 @@ export default function ProfileScreen() {
         <View style={styles.menuSection}>
           <Text style={styles.sectionTitle}>Support</Text>
 
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/profile/help-center')}>
             <Ionicons name="help-circle-outline" size={24} color={theme.text} />
             <Text style={styles.menuText}>Help Center</Text>
             <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/profile/terms-of-service')}>
             <Ionicons name="document-text-outline" size={24} color={theme.text} />
             <Text style={styles.menuText}>Terms of Service</Text>
             <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/profile/privacy-policy')}>
             <Ionicons name="shield-checkmark-outline" size={24} color={theme.text} />
             <Text style={styles.menuText}>Privacy Policy</Text>
             <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
@@ -406,10 +462,8 @@ export default function ProfileScreen() {
   );
 }
 
-const isDark = true;
-const theme = isDark ? Colors.dark : Colors.light;
-
-const styles = StyleSheet.create({
+const createStyles = (theme: typeof Colors.light, isDark: boolean) =>
+  StyleSheet.create({
   gradientContainer: {
     flex: 1,
   },
@@ -658,6 +712,14 @@ const styles = StyleSheet.create({
   },
   toggleDotActive: {
     transform: [{ translateX: 20 }],
+  },
+  toggleDisabled: {
+    opacity: 0.5,
+  },
+  menuSubtext: {
+    fontSize: 12,
+    color: theme.textSecondary,
+    marginTop: 2,
   },
   signOutButton: {
     flexDirection: 'row',

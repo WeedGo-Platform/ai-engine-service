@@ -1,4 +1,6 @@
+import { getApiUrl } from '../../config/app.config';
 import React, { useState, useEffect } from 'react';
+import { getApiUrl } from '../../config/app.config';
 import {
   Search, Filter, ShoppingCart, Info, Plus, Minus,
   ChevronLeft, ChevronRight, MessageCircle, Star,
@@ -120,7 +122,7 @@ export default function ProductBrowsing({ onCartClick, currentStore }: ProductBr
         sort_by: 'name',
       });
 
-      const response = await fetch(`http://localhost:5024/api/kiosk/products/browse?${params}`);
+      const response = await fetch(getApiUrl(`/api/kiosk/products/browse?${params}`));
       const data = await response.json();
       console.log('Fetched products for filters:', data);
 
@@ -185,7 +187,7 @@ export default function ProductBrowsing({ onCartClick, currentStore }: ProductBr
       if (session?.session_id) params.append('session_id', session.session_id);
 
       console.log('Fetching with params:', params.toString()); // Debug what filters are being sent
-      const response = await fetch(`http://localhost:5024/api/kiosk/products/browse?${params}`);
+      const response = await fetch(`${getApiUrl("api/kiosk/products/browse?${params}`);
 
       if (response.ok) {
         const data = await response.json();
@@ -207,7 +209,7 @@ export default function ProductBrowsing({ onCartClick, currentStore }: ProductBr
 
   const fetchRecommendations = async () => {
     try {
-      const response = await fetch('http://localhost:5024/api/kiosk/products/recommendations', {
+      const response = await fetch(getApiUrl('/api/kiosk/products/recommendations'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

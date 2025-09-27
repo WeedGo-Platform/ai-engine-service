@@ -92,14 +92,8 @@ class ChatWebSocketService {
         this.isConnected = true;
         this.reconnectAttempts = 0;
 
-        // Send initial connection message
-        if (!this.sessionId) {
-          this.sendRawMessage({
-            type: 'init',
-            store_id: this.storeId,
-            user_id: this.userId,
-          });
-        }
+        // Don't send init message - the server handles connection automatically
+        // The server sends a 'connection' type message upon successful connection
 
         // Emit connected event
         this.emit('connected', { sessionId: this.sessionId });
@@ -118,6 +112,13 @@ class ChatWebSocketService {
 
           // Handle different message types
           switch (data.type) {
+            case 'connection':
+              // Handle initial connection message from server
+              if (data.session_id) {
+                this.saveSessionId(data.session_id);
+              }
+              break;
+
             case 'session':
               // Save new session ID
               if (data.session_id) {

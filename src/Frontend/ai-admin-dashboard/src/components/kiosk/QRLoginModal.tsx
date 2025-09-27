@@ -1,4 +1,6 @@
+import { getApiUrl } from '../../config/app.config';
 import React, { useState, useEffect } from 'react';
+import { getApiUrl } from '../../config/app.config';
 import { X, Scan, Loader2, CheckCircle2 } from 'lucide-react';
 import QRCode from 'qrcode';
 
@@ -66,7 +68,7 @@ export default function QRLoginModal({
   const generateQRCode = async () => {
     try {
       // Generate QR session on backend
-      const response = await fetch('http://localhost:5024/api/kiosk/auth/qr-generate', {
+      const response = await fetch(getApiUrl('/api/kiosk/auth/qr-generate'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       });
@@ -108,7 +110,7 @@ export default function QRLoginModal({
     setIsPolling(true);
     const pollInterval = setInterval(async () => {
       try {
-        const response = await fetch(`http://localhost:5024/api/kiosk/auth/check-qr/${code}`);
+        const response = await fetch(`${getApiUrl("api/kiosk/auth/check-qr/${code}`);
 
         if (response.ok) {
           const data = await response.json();
@@ -137,7 +139,7 @@ export default function QRLoginModal({
     setError('');
 
     try {
-      const response = await fetch('http://localhost:5024/api/kiosk/auth/manual-code', {
+      const response = await fetch(getApiUrl('/api/kiosk/auth/manual-code'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code: manualCode }),

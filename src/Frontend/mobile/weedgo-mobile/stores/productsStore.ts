@@ -108,14 +108,6 @@ const useProductsStore = create<ProductsStore>((set, get) => ({
         ? response.products
         : [...state.products, ...response.products];
 
-      // Debug: Check first product
-      if (newProducts.length > 0) {
-        console.log('Store - First product:', {
-          id: newProducts[0].id,
-          image_url: newProducts[0].image_url,
-          in_stock: newProducts[0].in_stock
-        });
-      }
 
       set({
         products: newProducts,

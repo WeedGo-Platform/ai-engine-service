@@ -17,20 +17,31 @@ logger = logging.getLogger(__name__)
 
 class SileroVADHandler(VADHandler):
     """Voice Activity Detection using Silero VAD"""
-    
+
     def __init__(self, config: Optional[AudioConfig] = None):
         """Initialize VAD handler"""
         super().__init__(config)
         self.model = None
         self.model_path = Path("models/voice/silero/silero_vad.onnx")
         self.ort_session = None
-        
-        # VAD parameters
-        self.threshold = 0.5
+
+        # VAD parameters - tuned for Silero VAD model
+        self.threshold = 0.01  # Very aggressive threshold for testing
         self.min_speech_duration_ms = 250
         self.min_silence_duration_ms = 100
         self.speech_pad_ms = 30
-        
+
+        # Silero VAD hidden state for streaming (renamed to avoid conflict with base class state)
+        self.vad_state = None  # Combined state tensor for ONNX model
+        self.last_sr = 16000  # Sample rate
+        self.reset_states()
+
+    def reset_states(self, batch_size: int = 1):
+        """Reset the hidden states for the Silero VAD model"""
+        # Silero VAD expects a single state tensor with shape [2, batch, 128]
+        # where state[0] is h and state[1] is c
+        self.vad_state = np.zeros((2, batch_size, 128), dtype=np.float32)
+
     async def initialize(self) -> bool:
         """Initialize VAD model"""
         try:
@@ -112,7 +123,7 @@ class SileroVADHandler(VADHandler):
     async def detect(
         self,
         audio: Union[np.ndarray, bytes],
-        threshold: float = 0.5
+        threshold: Optional[float] = None
     ) -> VADResult:
         """Detect voice activity in audio
         
@@ -124,25 +135,23 @@ class SileroVADHandler(VADHandler):
             VADResult with detection results
         """
         start_time = time.time()
-        
+
+        # Use instance threshold if not provided
+        if threshold is None:
+            threshold = self.threshold
+
         try:
-            self.set_state(VoiceState.PROCESSING)
-            
+            # Don't set state here as it causes serialization issues with executor
+
             # Convert bytes to numpy if needed
             if isinstance(audio, bytes):
                 audio = self._bytes_to_numpy(audio)
-            
+
             # Preprocess audio for VAD
             audio = self._preprocess_audio_for_vad(audio)
-            
-            # Run VAD detection
-            loop = asyncio.get_event_loop()
-            speech_segments = await loop.run_in_executor(
-                None,
-                self._detect_speech_sync,
-                audio,
-                threshold
-            )
+
+            # Run VAD detection directly (ONNX is thread-safe)
+            speech_segments = self._detect_speech_sync(audio, threshold)
             
             # Calculate metrics
             has_speech = len(speech_segments) > 0
@@ -278,18 +287,45 @@ class SileroVADHandler(VADHandler):
         """Get speech probability for audio window"""
         try:
             if self.ort_session:
-                # Use ONNX model
-                # Prepare input
-                input_tensor = window.astype(np.float32).reshape(1, -1)
-                
-                # Run inference
+                # Use ONNX model with proper inputs
+                # Ensure window is float32 and properly shaped
+                if window.dtype != np.float32:
+                    window = window.astype(np.float32)
+
+                # Silero expects (batch_size, chunk_size)
+                if window.ndim == 1:
+                    input_tensor = window.reshape(1, -1)
+                else:
+                    input_tensor = window
+
+                # Prepare sample rate tensor
+                sr = np.array(self.last_sr, dtype=np.int64)
+
+                # Run inference with all required inputs
                 outputs = self.ort_session.run(
                     None,
-                    {self.ort_session.get_inputs()[0].name: input_tensor}
+                    {
+                        'input': input_tensor,
+                        'state': self.vad_state,
+                        'sr': sr
+                    }
                 )
-                
-                return float(outputs[0][0])
-                
+
+                # Update state for next iteration
+                if len(outputs) > 1 and outputs[1] is not None:
+                    self.vad_state = outputs[1]
+
+                # Extract probability from output shape (batch_size, 1)
+                prob_array = outputs[0]
+                if isinstance(prob_array, np.ndarray):
+                    # Silero outputs shape (batch_size, 1)
+                    if prob_array.shape == (1, 1):
+                        return float(prob_array[0, 0])
+                    else:
+                        return float(prob_array.flatten()[0])
+                else:
+                    return float(prob_array)
+
             elif self.model:
                 # Use PyTorch model
                 with torch.no_grad():
@@ -299,15 +335,18 @@ class SileroVADHandler(VADHandler):
             else:
                 # Fallback to energy-based detection
                 return self._energy_based_vad(window)
-                
+
         except Exception as e:
             logger.error(f"Error in speech detection: {e}")
-            return 0.0
+            # Try energy-based VAD as fallback
+            return self._energy_based_vad(window)
     
     def _energy_based_vad(self, window: np.ndarray) -> float:
         """Simple energy-based VAD as fallback"""
+        if len(window) == 0:
+            return 0.0
         energy = np.sum(window ** 2) / len(window)
-        # Normalize to 0-1 range
+        # Normalize to 0-1 range (assuming normalized audio [-1, 1])
         max_energy = 1.0  # Maximum possible energy for normalized audio
         return min(energy / max_energy, 1.0)
     
@@ -341,9 +380,56 @@ class SileroVADHandler(VADHandler):
         return audio
     
     def _bytes_to_numpy(self, audio_bytes: bytes) -> np.ndarray:
-        """Convert audio bytes to numpy array"""
-        audio = np.frombuffer(audio_bytes, dtype=np.int16)
-        return audio.astype(np.float32) / 32768.0
+        """Convert audio bytes to numpy array
+
+        Handles both raw PCM and WAV file formats
+        """
+        import wave
+        import io
+
+        # Check if this is a WAV file (starts with RIFF header)
+        if audio_bytes[:4] == b'RIFF':
+            # Parse WAV file
+            try:
+                wav_buffer = io.BytesIO(audio_bytes)
+                with wave.open(wav_buffer, 'rb') as wav_file:
+                    # Get audio parameters
+                    n_channels = wav_file.getnchannels()
+                    sampwidth = wav_file.getsampwidth()
+                    framerate = wav_file.getframerate()
+                    n_frames = wav_file.getnframes()
+
+                    # Read audio data
+                    audio_data = wav_file.readframes(n_frames)
+
+                    # Convert to numpy array based on sample width
+                    if sampwidth == 2:  # 16-bit
+                        audio = np.frombuffer(audio_data, dtype=np.int16)
+                    elif sampwidth == 1:  # 8-bit
+                        audio = np.frombuffer(audio_data, dtype=np.uint8)
+                        audio = audio.astype(np.int16) - 128  # Convert to signed
+                    elif sampwidth == 4:  # 32-bit
+                        audio = np.frombuffer(audio_data, dtype=np.int32)
+                        audio = (audio / 65536).astype(np.int16)  # Scale to 16-bit
+                    else:
+                        raise ValueError(f"Unsupported sample width: {sampwidth}")
+
+                    # Handle stereo to mono conversion
+                    if n_channels == 2:
+                        audio = audio.reshape(-1, 2).mean(axis=1).astype(np.int16)
+
+                    # Convert to float32 normalized to [-1, 1]
+                    return audio.astype(np.float32) / 32768.0
+
+            except Exception as e:
+                logger.warning(f"Failed to parse as WAV file: {e}. Treating as raw PCM.")
+                # Fall back to raw PCM
+                audio = np.frombuffer(audio_bytes, dtype=np.int16)
+                return audio.astype(np.float32) / 32768.0
+        else:
+            # Assume raw PCM data
+            audio = np.frombuffer(audio_bytes, dtype=np.int16)
+            return audio.astype(np.float32) / 32768.0
     
     def _calculate_confidence(self, segments: List[tuple], total_length: int) -> float:
         """Calculate overall confidence based on speech segments"""
@@ -392,5 +478,6 @@ class SileroVADHandler(VADHandler):
         """Clean up resources"""
         self.ort_session = None
         self.model = None
+        self.reset_states()
         self.set_state(VoiceState.IDLE)
         logger.info("VAD handler cleaned up")

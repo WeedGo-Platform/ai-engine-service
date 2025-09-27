@@ -7,6 +7,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from './AuthContext';
+import { getApiUrl } from '../config/app.config';
 
 // =====================================================
 // Type Definitions
@@ -88,7 +89,6 @@ interface StoreProviderProps {
 const STORE_CONTEXT_KEY = 'weedgo_active_store';
 const STORE_CACHE_KEY = 'weedgo_stores_cache';
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
-const API_BASE_URL = 'http://localhost:5024';
 
 // =====================================================
 // Context Creation
@@ -121,7 +121,7 @@ const storeService = {
     const token = localStorage.getItem('weedgo_auth_access_token') ||
                   sessionStorage.getItem('weedgo_auth_access_token');
 
-    const response = await fetch(`${API_BASE_URL}/api/stores/tenant/active`, {
+    const response = await fetch(getApiUrl('/api/stores/tenant/active'), {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -131,7 +131,7 @@ const storeService = {
 
     if (!response.ok) {
       // Fallback to fetch all stores if tenant endpoint doesn't exist
-      const fallbackResponse = await fetch(`${API_BASE_URL}/api/stores`, {
+      const fallbackResponse = await fetch(getApiUrl('/api/stores'), {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -157,7 +157,7 @@ const storeService = {
     const token = localStorage.getItem('weedgo_auth_access_token') || 
                   sessionStorage.getItem('weedgo_auth_access_token');
     
-    const response = await fetch(`${API_BASE_URL}/api/stores/${storeId}/select`, {
+    const response = await fetch(getApiUrl(`/api/stores/${storeId}/select`), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -182,7 +182,7 @@ const storeService = {
     const token = localStorage.getItem('weedgo_auth_access_token') || 
                   sessionStorage.getItem('weedgo_auth_access_token');
     
-    const response = await fetch(`${API_BASE_URL}/api/stores/${storeId}/inventory/stats`, {
+    const response = await fetch(getApiUrl(`/api/stores/${storeId}/inventory/stats`), {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -457,10 +457,12 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({
       // Auto-select store if needed
       if (!currentStore) {
         const isStoreManager = user?.role === 'store_manager';
+        const isSuperAdminRole = user?.role === 'super_admin';
+        const isTenantAdminRole = user?.role === 'tenant_admin';
 
-        // For store managers or users with single store, auto-select it
-        if (allStores.length === 1) {
-          console.log('Auto-selecting single store:', allStores[0]);
+        // For store managers or users with single store (but NOT admins), auto-select it
+        if (allStores.length === 1 && !isSuperAdminRole && !isTenantAdminRole) {
+          console.log('Auto-selecting single store for non-admin:', allStores[0]);
           const store = allStores[0];
           setCurrentStore(store);
           if (persistSelection) {
@@ -468,15 +470,23 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({
           }
           window.localStorage.setItem('X-Store-ID', store.id);
         } else if (persistSelection) {
-          // Try to restore previous selection
-          const storedId = storageUtils.getStoredStoreId();
-          if (storedId) {
-            const store = allStores.find(s => s.id === storedId);
-            if (store) {
-              console.log('Restoring stored selection:', store);
-              setCurrentStore(store);
-              window.localStorage.setItem('X-Store-ID', store.id);
+          // Try to restore previous selection ONLY for non-admin users
+          // Admin users should explicitly select a store each session
+          if (!isSuperAdminRole && !isTenantAdminRole) {
+            const storedId = storageUtils.getStoredStoreId();
+            if (storedId) {
+              const store = allStores.find(s => s.id === storedId);
+              if (store) {
+                console.log('Restoring stored selection for non-admin:', store);
+                setCurrentStore(store);
+                window.localStorage.setItem('X-Store-ID', store.id);
+              }
             }
+          } else {
+            // Clear any stored selection for admin users
+            console.log('Admin user detected, clearing stored selection');
+            storageUtils.clearStoreId();
+            window.localStorage.removeItem('X-Store-ID');
           }
         }
       } else if (currentStore && currentStore.id && !currentStore.name) {

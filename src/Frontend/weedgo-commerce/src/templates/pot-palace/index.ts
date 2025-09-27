@@ -34,19 +34,19 @@ export const PotPalaceTemplate: ITemplate = {
   name: 'pot-palace',
   theme: {
     colors: {
-      // Vibrant, playful cannabis-inspired color palette
-      primary: '#2E7D32',        // Cannabis green
-      secondary: '#FDD835',       // Sunny yellow
-      accent: '#8B4513',          // Earthy brown
-      background: '#FFF8E1',      // Warm cream background
-      surface: '#FFFFFF',         // White surfaces
-      text: '#212121',           // Dark gray text
-      textSecondary: '#757575',  // Medium gray text
-      border: '#BDBDBD',         // Light gray borders
-      error: '#F44336',
-      success: '#4CAF50',
-      warning: '#FF9800',
-      info: '#03A9F4'
+      // Vibrant, playful cannabis-inspired color palette - NO GRADIENTS!
+      primary: '#84CC16',        // Bright lime green
+      secondary: '#FB923C',      // Vibrant orange
+      accent: '#A855F7',         // Electric purple
+      background: '#FFFBEB',     // Warm cream background
+      surface: '#FFFFFF',        // White surfaces
+      text: '#581C87',           // Deep purple text
+      textSecondary: '#EA580C',  // Orange text
+      border: '#C084FC',         // Purple borders
+      error: '#EF4444',
+      success: '#84CC16',
+      warning: '#F97316',
+      info: '#06B6D4'
     },
     spacing: {
       xs: '0.25rem',

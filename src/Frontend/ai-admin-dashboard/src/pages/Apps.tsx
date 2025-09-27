@@ -104,13 +104,17 @@ export default function Apps() {
   const { currentStore, selectStore } = useStoreContext();
   const { user, isSuperAdmin, isTenantAdminOnly, isStoreManager } = useAuth();
 
-  // Check if store selection is needed when switching to kiosk or menu-display tab
+  // Check if store selection is needed for admin users on any tab
   useEffect(() => {
-    if ((activeTab === 'kiosk' || activeTab === 'menu-display') && !currentStore) {
+    // For admin users (Super Admin or Tenant Admin), require store selection for ALL tabs
+    if ((isSuperAdmin() || isTenantAdminOnly()) && !currentStore) {
       // Show store selection modal if no store is selected
       setShowStoreSelectionModal(true);
+    } else if ((activeTab === 'kiosk' || activeTab === 'menu-display') && !currentStore) {
+      // For other users, still require store selection for kiosk and menu-display
+      setShowStoreSelectionModal(true);
     }
-  }, [activeTab, currentStore]);
+  }, [activeTab, currentStore, isSuperAdmin, isTenantAdminOnly]);
 
   const handleStoreSelect = async (tenantId: string, storeId: string, storeName: string, tenantName?: string) => {
     try {
@@ -249,38 +253,69 @@ export default function Apps() {
 
       {/* Content */}
       <div className="flex-1 overflow-hidden">
-        {activeTab === 'pos' && (
-          <div ref={posContainerRef} className="h-full">
-            <POS
-              hideHeader={true}
-              isFullscreen={isFullscreen}
-              onFullscreenToggle={handlePOSFullscreenToggle}
-            />
+        {/* Show warning message for admin users without store selection */}
+        {(isSuperAdmin() || isTenantAdminOnly()) && !currentStore && (
+          <div className="h-full flex items-center justify-center bg-gray-50">
+            <div className="text-center">
+              <div className="mb-4">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-warning-100 rounded-full">
+                  <Monitor className="w-8 h-8 text-warning-600" />
+                </div>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Store Selection Required</h3>
+              <p className="text-gray-500 mb-4">Please select a store to access the {activeTab === 'pos' ? 'Point of Sale' : activeTab === 'kiosk' ? 'Self-Service Kiosk' : 'Menu Display'}</p>
+              <button
+                onClick={() => setShowStoreSelectionModal(true)}
+                className="px-4 py-2 bg-accent-500 text-white rounded-lg hover:bg-accent-600 transition-colors"
+              >
+                Select Store
+              </button>
+            </div>
           </div>
         )}
 
-        {activeTab === 'kiosk' && (
-          <div ref={kioskContainerRef} className="h-full">
-            {console.log('Rendering kiosk tab with store:', currentStore)}
-            <KioskProvider>
-              <KioskApp currentStore={currentStore} />
-            </KioskProvider>
-          </div>
-        )}
+        {/* Only render content if store is selected or user is not admin */}
+        {(!isSuperAdmin() && !isTenantAdminOnly() || currentStore) && (
+          <>
+            {activeTab === 'pos' && (
+              <div ref={posContainerRef} className="h-full">
+                <POS
+                  hideHeader={true}
+                  isFullscreen={isFullscreen}
+                  onFullscreenToggle={handlePOSFullscreenToggle}
+                />
+              </div>
+            )}
 
-        {activeTab === 'menu-display' && (
-          <div className="h-full">
-            <MenuDisplay />
-          </div>
+            {activeTab === 'kiosk' && (
+              <div ref={kioskContainerRef} className="h-full">
+                {console.log('Rendering kiosk tab with store:', currentStore)}
+                <KioskProvider>
+                  <KioskApp currentStore={currentStore} />
+                </KioskProvider>
+              </div>
+            )}
+
+            {activeTab === 'menu-display' && (
+              <div className="h-full">
+                <MenuDisplay />
+              </div>
+            )}
+          </>
         )}
       </div>
 
-      {/* Store Selection Modal */}
+      {/* Store Selection Modal - Make it persistent for admin users without store */}
       {showStoreSelectionModal && (
         <StoreSelectionModal
           isOpen={showStoreSelectionModal}
           onSelect={handleStoreSelect}
-          onClose={() => setShowStoreSelectionModal(false)}
+          onClose={() => {
+            // Only allow closing if a store is selected or user is not admin
+            if (currentStore || (!isSuperAdmin() && !isTenantAdminOnly())) {
+              setShowStoreSelectionModal(false);
+            }
+          }}
         />
       )}
     </div>

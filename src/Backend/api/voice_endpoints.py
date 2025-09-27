@@ -57,7 +57,7 @@ async def transcribe_audio(
             pipeline_mode = PipelineMode[mode.upper()]
         except KeyError:
             pipeline_mode = PipelineMode.AUTO_VAD
-        
+
         # Process audio
         result = await pipeline.process_audio(
             audio_data,
@@ -118,6 +118,137 @@ async def synthesize_speech(
     except Exception as e:
         logger.error(f"Synthesis error: {e}")
         raise HTTPException(500, f"Synthesis failed: {str(e)}")
+
+@router.post("/wake_word/detect")
+async def detect_wake_word(
+    audio: UploadFile = File(...),
+    sensitivity: float = Form(0.5)
+) -> Dict[str, Any]:
+    """Detect wake word in audio
+
+    Args:
+        audio: Audio file
+        sensitivity: Detection sensitivity (0.0-1.0)
+
+    Returns:
+        Wake word detection result
+    """
+    try:
+        # Get pipeline
+        pipeline = await get_pipeline()
+
+        # Check if wake word is enabled
+        if not pipeline.wake_word:
+            raise HTTPException(400, "Wake word detection not enabled")
+
+        # Read audio data
+        audio_data = await audio.read()
+
+        # Update sensitivity
+        pipeline.wake_word.wake_config.sensitivity = sensitivity
+
+        # Detect wake word
+        detection = await pipeline.wake_word.detect(audio_data)
+
+        return {
+            "status": "success",
+            "detected": detection.detected,
+            "wake_word": detection.wake_word,
+            "confidence": detection.confidence,
+            "timestamp_ms": detection.timestamp_ms
+        }
+
+    except Exception as e:
+        logger.error(f"Wake word detection error: {e}")
+        raise HTTPException(500, f"Wake word detection failed: {str(e)}")
+
+@router.get("/wake_word/models")
+async def get_wake_word_models() -> Dict[str, Any]:
+    """Get available wake word models
+
+    Returns:
+        List of available wake word models
+    """
+    try:
+        # Get pipeline
+        pipeline = await get_pipeline()
+
+        if not pipeline.wake_word:
+            return {"models": [], "enabled": False}
+
+        models = await pipeline.wake_word.get_supported_models()
+
+        return {
+            "status": "success",
+            "models": models,
+            "enabled": True,
+            "config": {
+                "threshold": pipeline.wake_word.wake_config.threshold,
+                "sensitivity": pipeline.wake_word.wake_config.sensitivity
+            }
+        }
+
+    except Exception as e:
+        logger.error(f"Error getting wake word models: {e}")
+        raise HTTPException(500, f"Failed to get wake word models: {str(e)}")
+
+@router.post("/wake_word/configure")
+async def configure_wake_word(
+    threshold: float = Form(0.5),
+    sensitivity: float = Form(0.5),
+    enabled_models: str = Form(None)
+) -> Dict[str, Any]:
+    """Configure wake word detection
+
+    Args:
+        threshold: Detection threshold (0.0-1.0)
+        sensitivity: Overall sensitivity
+        enabled_models: Comma-separated list of enabled models
+
+    Returns:
+        Configuration result
+    """
+    try:
+        # Get pipeline
+        pipeline = await get_pipeline()
+
+        if not pipeline.wake_word:
+            raise HTTPException(400, "Wake word detection not enabled")
+
+        # Update configuration
+        from core.voice.wake_word_handler import WakeWordConfig, WakeWordModel
+
+        config = WakeWordConfig(
+            threshold=threshold,
+            sensitivity=sensitivity
+        )
+
+        # Parse enabled models
+        if enabled_models:
+            model_list = []
+            for model_name in enabled_models.split(","):
+                model_name = model_name.strip().upper()
+                try:
+                    model = WakeWordModel[model_name]
+                    model_list.append(model)
+                except KeyError:
+                    logger.warning(f"Unknown wake word model: {model_name}")
+            config.models = model_list
+
+        pipeline.wake_word.update_config(config)
+
+        return {
+            "status": "success",
+            "config": {
+                "threshold": config.threshold,
+                "sensitivity": config.sensitivity,
+                "models": [m.value for m in config.models]
+            }
+        }
+
+    except Exception as e:
+        logger.error(f"Wake word configuration error: {e}")
+        raise HTTPException(500, f"Failed to configure wake word: {str(e)}")
 
 @router.post("/detect_speech")
 async def detect_speech(

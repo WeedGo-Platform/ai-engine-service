@@ -16,6 +16,7 @@ import { useRouter } from 'expo-router';
 import { useAuthStore } from '@/stores/authStore';
 import useProductsStore from '@/stores/productsStore';
 import useCartStore from '@/stores/cartStore';
+import { useTheme } from '@/contexts/ThemeContext';
 import { Colors, BorderRadius, Shadows, Gradients } from '@/constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StoreSelector } from '@/components/StoreSelector';
@@ -31,8 +32,7 @@ export default function HomeScreen() {
   const router = useRouter();
   const { user, isAuthenticated } = useAuthStore();
   const { getItemCount } = useCartStore();
-  const isDark = false; // Use light theme for colorful design
-  const theme = isDark ? Colors.dark : Colors.light;
+  const { theme, isDark } = useTheme();
   const {
     products,
     loading,
@@ -50,6 +50,8 @@ export default function HomeScreen() {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [searchTimer, setSearchTimer] = useState<NodeJS.Timeout | null>(null);
+
+  const styles = React.useMemo(() => createStyles(theme, isDark), [theme, isDark]);
 
   // Load initial data
   useEffect(() => {
@@ -139,26 +141,6 @@ export default function HomeScreen() {
             </TouchableOpacity>
           )}
         </LinearGradient>
-
-        {/* Cart Icon */}
-        <TouchableOpacity
-          onPress={() => router.push('/(tabs)/cart')}
-          activeOpacity={0.8}
-        >
-          <LinearGradient
-            colors={Gradients.primary}
-            style={styles.cartButton}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-          >
-            <Ionicons name="cart-outline" size={24} color="white" />
-          {getItemCount() > 0 && (
-            <View style={styles.cartBadge}>
-              <Text style={styles.cartBadgeText}>{getItemCount()}</Text>
-            </View>
-          )}
-          </LinearGradient>
-        </TouchableOpacity>
       </View>
 
       {/* Categories */}
@@ -273,36 +255,39 @@ export default function HomeScreen() {
   }
 
   return (
-    <LinearGradient
-      colors={[theme.gradientStart, theme.gradientMid, theme.gradientEnd]}
-      style={styles.gradientContainer}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 0.5, y: 1 }}
-    >
-      <SafeAreaView style={styles.container}>
-      <FlashList
-        data={products}
-        renderItem={renderProduct}
-        ListHeaderComponent={renderHeader}
-        ListEmptyComponent={renderEmpty}
-        ListFooterComponent={renderFooter}
-        numColumns={2}
-        keyExtractor={(item, index) => `${item.id}-${index}`}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={handleRefresh}
-            tintColor={theme.primary}
+    <View style={{ flex: 1 }}>
+      <LinearGradient
+        colors={[theme.gradientStart, theme.gradientMid, theme.gradientEnd]}
+        style={styles.gradientContainer}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0.5, y: 1 }}
+      >
+        <SafeAreaView style={styles.container}>
+          <FlashList
+            data={products}
+            renderItem={renderProduct}
+            ListHeaderComponent={renderHeader}
+            ListEmptyComponent={renderEmpty}
+            ListFooterComponent={renderFooter}
+            numColumns={2}
+            keyExtractor={(item, index) => `${item.id}-${index}`}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={handleRefresh}
+                tintColor={theme.primary}
+              />
+            }
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.8}
+            contentContainerStyle={styles.listContent}
+            ItemSeparatorComponent={() => <View style={{ height: 0 }} />}
+            showsVerticalScrollIndicator={false}
           />
-        }
-        onEndReached={handleLoadMore}
-        onEndReachedThreshold={0.8}
-        contentContainerStyle={styles.listContent}
-        ItemSeparatorComponent={() => <View style={{ height: 0 }} />}
-        showsVerticalScrollIndicator={false}
-      />
-      </SafeAreaView>
-    </LinearGradient>
+        </SafeAreaView>
+      </LinearGradient>
+
+    </View>
   );
 }
 
@@ -313,10 +298,7 @@ const quickFilterTitles: Record<string, string> = {
   'on-sale': 'On Sale',
 };
 
-const isDark = false; // Use light theme for colorful design
-const theme = isDark ? Colors.dark : Colors.light;
-
-const styles = StyleSheet.create({
+const createStyles = (theme: any, isDark: boolean) => StyleSheet.create({
   gradientContainer: {
     flex: 1,
   },
@@ -340,6 +322,7 @@ const styles = StyleSheet.create({
     height: 48,
     borderWidth: 1.5,
     borderColor: 'rgba(255, 255, 255, 0.5)',
+    marginRight: 12,
     ...Shadows.medium,
   },
   searchInput: {
@@ -347,39 +330,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: theme.text,
     marginLeft: 8,
-  },
-  cartButton: {
-    position: 'relative',
-    width: 48,
-    height: 48,
-    borderRadius: BorderRadius.full,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1.5,
-    borderColor: 'rgba(255, 255, 255, 0.5)',
-    ...Shadows.colorful,
-  },
-  cartBadge: {
-    position: 'absolute',
-    top: -4,
-    right: -4,
-    backgroundColor: theme.accent,
-    borderRadius: BorderRadius.full,
-    minWidth: 22,
-    height: 22,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 4,
-    borderWidth: 2,
-    borderColor: 'white',
-    shadowColor: theme.accent,
-    shadowOpacity: 0.5,
-    shadowRadius: 4,
-  },
-  cartBadgeText: {
-    color: theme.text,
-    fontSize: 11,
-    fontWeight: '700',
   },
   productsHeader: {
     flexDirection: 'row',

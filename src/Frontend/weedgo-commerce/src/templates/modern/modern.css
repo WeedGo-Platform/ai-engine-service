@@ -1,285 +1,349 @@
-/* Modern Theme - Sophisticated & Elegant Styles */
+/* Modern Theme - Space Gray Apple-Inspired Design System */
 
-/* CSS Variables for Modern Theme */
+/* CSS Variables for Space Gray Theme */
 .template-modern {
-  --color-primary: #1A0B2E;
-  --color-secondary: #6366F1;
-  --color-accent: #F59E0B;
-  --color-background: #FAF9FC;
+  --color-space-gray: #1D1D1F;
+  --color-space-gray-light: #2C2C2E;
+  --color-space-gray-lighter: #3A3A3C;
+  --color-system-gray: #86868B;
+  --color-system-gray-2: #AEAEB2;
+  --color-system-gray-3: #C7C7CC;
+  --color-system-gray-4: #D1D1D6;
+  --color-system-gray-5: #E5E5EA;
+  --color-system-gray-6: #F2F2F7;
+
+  /* System Colors */
+  --color-primary: var(--color-space-gray);
+  --color-secondary: var(--color-system-gray);
+  --color-accent: #0A84FF;
+  --color-background: #F5F5F7;
   --color-surface: #FFFFFF;
-  --color-text: #1A1F2E;
-  --color-text-secondary: #64748B;
-  --color-border: #E0E1F6;
-  --color-error: #DC2626;
-  --color-success: #8B5CF6;
-  --color-warning: #F59E0B;
-  --color-info: #3B82F6;
+  --color-text: var(--color-space-gray);
+  --color-text-secondary: var(--color-system-gray);
+  --color-border: var(--color-system-gray-4);
 
-  /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #1A0B2E 0%, #2D1B69 100%);
-  --gradient-accent: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
-  --gradient-warm: linear-gradient(135deg, #F59E0B 0%, #FFC947 100%);
-  --gradient-surface: linear-gradient(180deg, #FFFFFF 0%, #FAF9FC 100%);
+  /* Apple System Colors */
+  --color-error: #FF3B30;
+  --color-success: #34C759;
+  --color-warning: #FF9500;
+  --color-info: #0A84FF;
+  --color-purple: #AF52DE;
+  --color-teal: #5AC8FA;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(10, 15, 13, 0.04);
-  --shadow-md: 0 4px 12px rgba(10, 15, 13, 0.08);
-  --shadow-lg: 0 12px 24px rgba(10, 15, 13, 0.12);
-  --shadow-xl: 0 24px 48px rgba(10, 15, 13, 0.16);
-  --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.15);
+  /* Shadows - Subtle and refined */
+  --shadow-sm: 0 1px 3px rgba(29, 29, 31, 0.08);
+  --shadow-md: 0 4px 6px rgba(29, 29, 31, 0.12);
+  --shadow-lg: 0 10px 20px rgba(29, 29, 31, 0.15);
+  --shadow-xl: 0 20px 40px rgba(29, 29, 31, 0.2);
+  --shadow-inset: inset 0 1px 3px rgba(29, 29, 31, 0.08);
+
+  /* Blur Effects */
+  --blur-sm: 8px;
+  --blur-md: 20px;
+  --blur-lg: 40px;
+  --blur-xl: 64px;
 }
 
-/* Base Styles */
+/* Base Styles with SF Pro Font Stack */
+.template-modern {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'kern' 1;
+}
+
 .template-modern body {
   background: var(--color-background);
   color: var(--color-text);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-weight: 400;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.022em;
+  line-height: 1.47059;
 }
 
-/* Typography Enhancements */
+/* Typography - Clean and Minimal */
 .template-modern h1,
 .template-modern h2,
 .template-modern h3,
 .template-modern h4,
 .template-modern h5,
 .template-modern h6 {
-  font-family: 'Poppins', sans-serif;
   font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
+  letter-spacing: -0.031em;
+  line-height: 1.1;
+  color: var(--color-space-gray);
 }
 
-/* Modern Card Styles */
+.template-modern h1 { font-size: 3rem; font-weight: 700; }
+.template-modern h2 { font-size: 2.25rem; }
+.template-modern h3 { font-size: 1.75rem; }
+.template-modern h4 { font-size: 1.5rem; }
+.template-modern h5 { font-size: 1.25rem; }
+.template-modern h6 { font-size: 1rem; }
+
+/* Modern Card Styles with Glass Morphism */
 .template-modern .card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(var(--blur-md)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--blur-md)) saturate(180%);
+  border: 1px solid rgba(209, 209, 214, 0.5);
+  border-radius: 12px;
   box-shadow: var(--shadow-sm);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   overflow: hidden;
-  position: relative;
-}
-
-.template-modern .card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--gradient-accent);
-  opacity: 0;
-  transition: opacity 0.3s ease;
 }
 
 .template-modern .card:hover {
+  transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
-  transform: translateY(-4px);
-  border-color: var(--color-secondary);
+  background: rgba(255, 255, 255, 0.95);
 }
 
-.template-modern .card:hover::before {
+/* Navigation Bar - Space Gray with Blur */
+.template-modern nav,
+.template-modern .navbar {
+  background: rgba(29, 29, 31, 0.92);
+  backdrop-filter: blur(var(--blur-md)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--blur-md)) saturate(180%);
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
+  color: #F5F5F7;
+}
+
+.template-modern nav a,
+.template-modern .navbar a {
+  color: #F5F5F7;
+  font-weight: 400;
+  font-size: 0.9375rem;
+  letter-spacing: -0.01em;
+  transition: opacity 0.2s ease;
+  opacity: 0.9;
+}
+
+.template-modern nav a:hover,
+.template-modern .navbar a:hover {
   opacity: 1;
 }
 
-/* Button Styles */
-.template-modern .btn-primary {
-  background: var(--color-primary);
-  color: white;
+.template-modern nav a.active,
+.template-modern .navbar a.active {
+  opacity: 1;
+  font-weight: 500;
+}
+
+/* Buttons - iOS/macOS Style */
+.template-modern .btn,
+.template-modern button {
+  font-size: 0.9375rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   border: none;
-  border-radius: 12px;
-  padding: 12px 24px;
-  font-weight: 500;
-  font-size: 0.95rem;
-  letter-spacing: 0.02em;
-  transition: all 0.2s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.template-modern .btn-primary::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.15);
-  transform: translate(-50%, -50%);
-  transition: width 0.6s ease, height 0.6s ease;
-}
-
-.template-modern .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(10, 15, 13, 0.25);
-}
-
-.template-modern .btn-primary:hover::before {
-  width: 300px;
-  height: 300px;
-}
-
-.template-modern .btn-secondary {
-  background: transparent;
-  color: var(--color-secondary);
-  border: 2px solid var(--color-secondary);
-  border-radius: 12px;
-  padding: 10px 22px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-.template-modern .btn-secondary:hover {
-  background: var(--color-secondary);
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.25);
-}
-
-/* Input Fields */
-.template-modern .input-field {
-  background: var(--color-surface);
-  border: 2px solid var(--color-border);
-  border-radius: 10px;
-  padding: 12px 16px;
-  font-size: 0.95rem;
-  transition: all 0.2s ease;
-}
-
-.template-modern .input-field:focus {
-  border-color: var(--color-secondary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-  outline: none;
-}
-
-.template-modern .input-field::placeholder {
-  color: var(--color-text-secondary);
-  opacity: 0.7;
-}
-
-/* Product Cards */
-.template-modern .product-card {
-  background: var(--color-surface);
-  border-radius: 16px;
-  overflow: hidden;
-  transition: all 0.3s ease;
   cursor: pointer;
-  position: relative;
 }
 
-.template-modern .product-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 60%, rgba(0, 0, 0, 0.03) 100%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
+.template-modern .btn-primary,
+.template-modern button.primary {
+  background: var(--color-space-gray);
+  color: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.template-modern .btn-primary:hover,
+.template-modern button.primary:hover {
+  background: var(--color-space-gray-light);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.template-modern .btn-secondary,
+.template-modern button.secondary {
+  background: var(--color-system-gray-6);
+  color: var(--color-space-gray);
+  border: 1px solid var(--color-system-gray-4);
+}
+
+.template-modern .btn-secondary:hover,
+.template-modern button.secondary:hover {
+  background: var(--color-system-gray-5);
+  border-color: var(--color-system-gray-3);
+}
+
+.template-modern .btn-ghost,
+.template-modern button.ghost {
+  background: transparent;
+  color: var(--color-accent);
+  padding: 0.375rem 0.75rem;
+}
+
+.template-modern .btn-ghost:hover,
+.template-modern button.ghost:hover {
+  background: rgba(10, 132, 255, 0.08);
+}
+
+/* Input Fields - macOS Style */
+.template-modern input,
+.template-modern textarea,
+.template-modern select,
+.template-modern .input-field {
+  background: white;
+  border: 1px solid var(--color-system-gray-4);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9375rem;
+  color: var(--color-space-gray);
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-inset);
+}
+
+.template-modern input:focus,
+.template-modern textarea:focus,
+.template-modern select:focus,
+.template-modern .input-field:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.1), var(--shadow-inset);
+}
+
+.template-modern input::placeholder,
+.template-modern textarea::placeholder,
+.template-modern .input-field::placeholder {
+  color: var(--color-system-gray-2);
+}
+
+/* Product Cards - Clean Apple Store Style */
+.template-modern .product-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-system-gray-5);
 }
 
 .template-modern .product-card:hover {
-  transform: translateY(-8px) scale(1.02);
+  transform: translateY(-4px) scale(1.01);
   box-shadow: var(--shadow-xl);
-}
-
-.template-modern .product-card:hover::after {
-  opacity: 1;
+  border-color: var(--color-system-gray-4);
 }
 
 .template-modern .product-card img {
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .template-modern .product-card:hover img {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
-/* Navigation Styles */
-.template-modern nav {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.template-modern nav a {
-  position: relative;
-  font-weight: 500;
-  color: var(--color-text);
-  transition: color 0.2s ease;
-}
-
-.template-modern nav a::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 50%;
-  width: 0;
-  height: 2px;
-  background: var(--gradient-accent);
-  transform: translateX(-50%);
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.template-modern nav a:hover {
-  color: var(--color-secondary);
-}
-
-.template-modern nav a:hover::after,
-.template-modern nav a.active::after {
-  width: 100%;
-}
-
-/* Badge Styles */
+/* Badges - iOS Style */
 .template-modern .badge {
-  background: var(--gradient-accent);
-  color: white;
-  border-radius: 20px;
-  padding: 4px 12px;
+  background: var(--color-system-gray-6);
+  color: var(--color-space-gray);
+  border-radius: 12px;
+  padding: 0.25rem 0.625rem;
   font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
+  font-weight: 500;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 0.25rem;
+  border: 1px solid var(--color-system-gray-5);
 }
 
-/* Loading Animation */
+.template-modern .badge-primary {
+  background: var(--color-space-gray);
+  color: white;
+  border-color: var(--color-space-gray-light);
+}
+
+.template-modern .badge-success {
+  background: rgba(52, 199, 89, 0.1);
+  color: var(--color-success);
+  border-color: var(--color-success);
+}
+
+.template-modern .badge-warning {
+  background: rgba(255, 149, 0, 0.1);
+  color: var(--color-warning);
+  border-color: var(--color-warning);
+}
+
+.template-modern .badge-error {
+  background: rgba(255, 59, 48, 0.1);
+  color: var(--color-error);
+  border-color: var(--color-error);
+}
+
+/* Loading States */
 .template-modern .loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid var(--color-border);
-  border-top-color: var(--color-secondary);
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--color-system-gray-5);
+  border-top-color: var(--color-space-gray);
   border-radius: 50%;
-  animation: modern-spin 0.8s linear infinite;
+  animation: modern-spin 0.6s linear infinite;
 }
 
 @keyframes modern-spin {
   to { transform: rotate(360deg); }
 }
 
-/* Skeleton Loading */
+/* Skeleton Loading - Apple Style */
 .template-modern .skeleton {
   background: linear-gradient(
     90deg,
-    var(--color-border) 25%,
-    rgba(226, 232, 240, 0.5) 50%,
-    var(--color-border) 75%
+    var(--color-system-gray-6) 0%,
+    var(--color-system-gray-5) 50%,
+    var(--color-system-gray-6) 100%
   );
   background-size: 200% 100%;
   animation: modern-shimmer 1.5s ease-in-out infinite;
-  border-radius: 8px;
+  border-radius: 6px;
 }
 
 @keyframes modern-shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
-/* Tooltips */
+/* Modern Scrollbar - macOS Style */
+.template-modern::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.template-modern::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.template-modern::-webkit-scrollbar-thumb {
+  background: var(--color-system-gray-3);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.template-modern::-webkit-scrollbar-thumb:hover {
+  background: var(--color-system-gray-2);
+  background-clip: padding-box;
+}
+
+/* Focus Styles - Accessibility */
+.template-modern *:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Selection - System Blue */
+.template-modern ::selection {
+  background: rgba(10, 132, 255, 0.2);
+  color: var(--color-text);
+}
+
+/* Tooltips - iOS Style */
 .template-modern [data-tooltip] {
   position: relative;
 }
@@ -289,12 +353,14 @@
   position: absolute;
   bottom: 100%;
   left: 50%;
-  transform: translateX(-50%) translateY(8px);
-  background: var(--color-primary);
+  transform: translateX(-50%) translateY(4px);
+  background: rgba(29, 29, 31, 0.95);
+  backdrop-filter: blur(var(--blur-sm));
   color: white;
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 0.875rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 400;
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
@@ -307,130 +373,184 @@
   transform: translateX(-50%) translateY(-4px);
 }
 
-/* Smooth Page Transitions */
-.template-modern .page-enter {
-  opacity: 0;
-  transform: translateY(20px);
+/* Modal/Dialog - iOS Style */
+.template-modern .modal,
+.template-modern .dialog {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(var(--blur-xl)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--blur-xl)) saturate(180%);
+  border-radius: 16px;
+  box-shadow: 0 30px 60px rgba(29, 29, 31, 0.3);
+  border: 0.5px solid rgba(209, 209, 214, 0.5);
 }
 
-.template-modern .page-enter-active {
-  opacity: 1;
-  transform: translateY(0);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.template-modern .modal-backdrop,
+.template-modern .dialog-backdrop {
+  background: rgba(29, 29, 31, 0.4);
+  backdrop-filter: blur(var(--blur-sm));
+  -webkit-backdrop-filter: blur(var(--blur-sm));
 }
 
-.template-modern .page-exit {
-  opacity: 1;
-  transform: translateY(0);
+/* Dropdown Menu - macOS Style */
+.template-modern .dropdown-menu {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(var(--blur-md)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--blur-md)) saturate(180%);
+  border: 0.5px solid rgba(209, 209, 214, 0.5);
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(29, 29, 31, 0.2);
+  padding: 0.25rem;
 }
 
-.template-modern .page-exit-active {
-  opacity: 0;
-  transform: translateY(-20px);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.template-modern .dropdown-item {
+  padding: 0.375rem 0.75rem;
+  border-radius: 4px;
+  color: var(--color-space-gray);
+  transition: background 0.15s ease;
 }
 
-/* Floating Action Button */
-.template-modern .fab {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: var(--gradient-accent);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--shadow-lg);
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 100;
+.template-modern .dropdown-item:hover {
+  background: var(--color-system-gray-6);
 }
 
-.template-modern .fab:hover {
-  transform: scale(1.1) rotate(90deg);
-  box-shadow: var(--shadow-xl);
+/* Tables - Clean Apple Style */
+.template-modern table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
-/* Notification Toast */
-.template-modern .toast {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: var(--shadow-lg);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.template-modern th {
+  background: var(--color-system-gray-6);
+  color: var(--color-space-gray);
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--color-system-gray-4);
 }
 
-@keyframes slideInRight {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
+.template-modern td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--color-system-gray-5);
+  color: var(--color-space-gray);
 }
 
-/* Modern Scrollbar */
-.template-modern ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+.template-modern tr:hover {
+  background: var(--color-system-gray-6);
 }
 
-.template-modern ::-webkit-scrollbar-track {
-  background: var(--color-background);
-  border-radius: 10px;
-}
-
-.template-modern ::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: 10px;
-  transition: background 0.2s ease;
-}
-
-.template-modern ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-text-secondary);
-}
-
-/* Focus Styles */
-.template-modern *:focus-visible {
-  outline: 2px solid var(--color-secondary);
-  outline-offset: 2px;
-}
-
-/* Selection */
-.template-modern ::selection {
-  background: rgba(99, 102, 241, 0.15);
-  color: var(--color-text);
-}
-
-/* Responsive adjustments */
+/* Responsive Design */
 @media (max-width: 768px) {
   .template-modern .card {
-    border-radius: 12px;
+    border-radius: 8px;
   }
 
-  .template-modern .btn-primary,
-  .template-modern .btn-secondary {
-    border-radius: 10px;
-    padding: 10px 20px;
+  .template-modern nav,
+  .template-modern .navbar {
+    padding: 0.75rem;
   }
 }
 
-/* Dark mode support */
+/* Dark Mode Support */
 @media (prefers-color-scheme: dark) {
   .template-modern.dark {
-    --color-background: #0A0F0D;
-    --color-surface: #1A1F2E;
-    --color-text: #E2E8F0;
-    --color-text-secondary: #94A3B8;
-    --color-border: #2D3748;
+    --color-background: #000000;
+    --color-surface: #1C1C1E;
+    --color-text: #F5F5F7;
+    --color-text-secondary: #98989F;
+    --color-border: #38383A;
+    --color-system-gray-6: #1C1C1E;
+    --color-system-gray-5: #2C2C2E;
+    --color-system-gray-4: #38383A;
+    --color-system-gray-3: #48484A;
+    --color-system-gray-2: #636366;
+    --color-system-gray: #8E8E93;
   }
+
+  .template-modern.dark .card {
+    background: rgba(28, 28, 30, 0.8);
+    border-color: rgba(56, 56, 58, 0.5);
+  }
+
+  .template-modern.dark nav,
+  .template-modern.dark .navbar {
+    background: rgba(0, 0, 0, 0.92);
+    border-bottom-color: rgba(56, 56, 58, 0.5);
+  }
+}
+
+/* Override all purple colors with Modern System Blue */
+/* Purple-500 overrides */
+.template-modern .text-purple-500 {
+  color: #0A84FF !important; /* System blue instead of purple */
+}
+
+.template-modern .bg-purple-500 {
+  background-color: #0A84FF !important;
+}
+
+.template-modern .border-purple-500 {
+  border-color: #0A84FF !important;
+}
+
+/* Purple-600 overrides */
+.template-modern .text-purple-600 {
+  color: #0A84FF !important; /* System blue instead of purple */
+}
+
+.template-modern .bg-purple-600 {
+  background-color: #0A84FF !important;
+}
+
+.template-modern .border-purple-600 {
+  border-color: #0A84FF !important;
+}
+
+/* Purple-400 overrides */
+.template-modern .text-purple-400 {
+  color: #5AC8FA !important; /* System teal */
+}
+
+.template-modern .bg-purple-400 {
+  background-color: #5AC8FA !important;
+}
+
+.template-modern .border-purple-400 {
+  border-color: #5AC8FA !important;
+}
+
+/* Purple hover states */
+.template-modern .hover\:bg-purple-700:hover {
+  background-color: #0073E6 !important;
+}
+
+.template-modern .hover\:bg-purple-600:hover {
+  background-color: #0073E6 !important;
+}
+
+.template-modern .hover\:bg-purple-500:hover {
+  background-color: #0073E6 !important;
+}
+
+.template-modern .hover\:text-purple-600:hover {
+  color: #0073E6 !important;
+}
+
+/* Purple focus states */
+.template-modern .focus\:ring-purple-500:focus {
+  --tw-ring-color: #0A84FF !important;
+}
+
+.template-modern .focus\:border-purple-500:focus {
+  border-color: #0A84FF !important;
+}
+
+/* Purple in gradients */
+.template-modern [class*="from-purple"],
+.template-modern [class*="to-purple"],
+.template-modern [class*="via-purple"] {
+  --tw-gradient-from: #0A84FF !important;
+  --tw-gradient-to: #0073E6 !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
 }

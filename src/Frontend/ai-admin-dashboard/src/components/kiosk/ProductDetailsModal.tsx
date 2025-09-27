@@ -1,4 +1,6 @@
+import { getApiUrl } from '../../config/app.config';
 import React, { useState, useEffect } from 'react';
+import { getApiUrl } from '../../config/app.config';
 import {
   X, ShoppingCart, Package, Info, Leaf, Star,
   Heart, Share2, TrendingUp, Award, Clock,
@@ -83,7 +85,7 @@ export default function ProductDetailsModal({
 
         // Fetch comprehensive product details with all 97 fields
         const detailsResponse = await fetch(
-          `http://localhost:5024/api/products/details/${encodeURIComponent(productId)}${storeId ? `?store_id=${storeId}` : ''}`
+          getApiUrl(`/api/products/details/${encodeURIComponent(productId)}${storeId ? `?store_id=${storeId}` : ''}`)
         );
 
         if (detailsResponse.ok) {
@@ -113,7 +115,7 @@ export default function ProductDetailsModal({
 
         // Fetch ratings summary
         const ratingsResponse = await fetch(
-          `http://localhost:5024/api/v1/reviews/products/${sku}/ratings`
+          getApiUrl(`/api/v1/reviews/products/${sku}/ratings`)
         );
 
         if (ratingsResponse.ok) {
@@ -123,7 +125,7 @@ export default function ProductDetailsModal({
 
         // Fetch reviews list
         const reviewsResponse = await fetch(
-          `http://localhost:5024/api/v1/reviews/products/${sku}/reviews?page=${reviewsPage}&limit=10`
+          getApiUrl(`/api/v1/reviews/products/${sku}/reviews?page=${reviewsPage}&limit=10`)
         );
 
         if (reviewsResponse.ok) {

@@ -166,18 +166,7 @@ class ProductService {
       { params: apiParams }
     );
 
-    // Debug logging - check what the API actually returns
     const products = response.data.results || response.data.products || [];
-
-    if (products.length > 0) {
-      console.log('getStoreInventory - First product from API:', {
-        all_keys: Object.keys(products[0]),
-        image: products[0].image,
-        image_url: products[0].image_url,
-        in_stock: products[0].in_stock,
-        name: products[0].name
-      });
-    }
 
     // Transform response to match expected format
     // API returns 'results' for this endpoint
