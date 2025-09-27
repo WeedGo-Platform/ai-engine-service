@@ -5,7 +5,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Toaster } from 'react-hot-toast';
 import {
   Home, Package, ShoppingCart, Users, FileText, Leaf, Menu, X, LogOut, Settings,
-  Building2, Store, Tag, Sparkles, Upload, ChevronRight, PanelLeftClose, PanelLeft, Database, Truck, Bot, AppWindow
+  Building2, Store, Tag, Sparkles, Upload, ChevronRight, PanelLeftClose, PanelLeft, Database, Truck, Bot, AppWindow, MessageSquare
 } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { StoreProvider, useStoreContext } from './contexts/StoreContext';
@@ -42,6 +42,7 @@ import DeliveryManagement from './pages/DeliveryManagement';
 import AIManagement from './pages/AIManagement';
 import VoiceAPITest from './pages/VoiceAPITest';
 import Apps from './pages/Apps';
+import Communications from './pages/Communications';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -102,6 +103,7 @@ function Layout() {
         { name: 'Purchase Orders', href: '/dashboard/purchase-orders', icon: FileText, permission: 'store' },
         { name: 'Promotions', href: '/dashboard/promotions', icon: Tag, permission: 'store' },
         { name: 'Recommendations', href: '/dashboard/recommendations', icon: Sparkles, permission: 'store' },
+        { name: 'Communications', href: '/dashboard/communications', icon: MessageSquare, permission: 'store' },
       ];
     } else {
       // For admins (tenant admin and super admin), show all applicable items
@@ -117,6 +119,7 @@ function Layout() {
         { name: 'Purchase Orders', href: '/dashboard/purchase-orders', icon: FileText, permission: 'store' },
         { name: 'Promotions', href: '/dashboard/promotions', icon: Tag, permission: 'store' },
         { name: 'Recommendations', href: '/dashboard/recommendations', icon: Sparkles, permission: 'store' },
+        { name: 'Communications', href: '/dashboard/communications', icon: MessageSquare, permission: 'store' },
         { name: 'Deliveries', href: '/dashboard/deliveries', icon: Truck, permission: 'store' },
         { name: 'AI', href: '/dashboard/ai', icon: Bot, permission: 'all' },
         { name: 'Provincial Catalog', href: '/dashboard/provincial-catalog', icon: Upload, permission: 'super_admin' },
@@ -412,6 +415,7 @@ const router = createBrowserRouter([
       { path: 'purchase-orders', element: <PurchaseOrders /> },
       { path: 'promotions', element: <Promotions /> },
       { path: 'recommendations', element: <Recommendations /> },
+      { path: 'communications', element: <Communications /> },
       { path: 'deliveries', element: <DeliveryManagement /> },
       { path: 'ai', element: <AIManagement /> },
       { path: 'voice-test', element: <VoiceAPITest /> },
@@ -439,7 +443,8 @@ const router = createBrowserRouter([
   }
 ], {
   future: {
-    v7_relativeSplatPath: true
+    v7_relativeSplatPath: true,
+    v7_startTransition: true
   }
 });
 
