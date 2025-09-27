@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Bot, Loader2, AlertCircle, CheckCircle, Cpu, Settings, Database, FileCode, ChevronDown, ChevronRight, Eye, Edit } from 'lucide-react';
+import { Bot, Loader2, AlertCircle, CheckCircle, Cpu, Settings, Database, FileCode, ChevronDown, ChevronRight, Eye, Edit, Brain } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import toast from 'react-hot-toast';
 import JsonEditor from '../components/JsonEditor';
+import AGIDashboard from './agi/AGIDashboard';
 
 interface Model {
   name: string;
@@ -19,7 +20,7 @@ const AIManagement: React.FC = () => {
   const [isLoadingModel, setIsLoadingModel] = useState(false);
   const [modelLoadStatus, setModelLoadStatus] = useState<string>('');
   const [modelError, setModelError] = useState<string>('');
-  const [activeTab, setActiveTab] = useState<'models' | 'configuration'>('models');
+  const [activeTab, setActiveTab] = useState<'agi' | 'models' | 'configuration'>('agi');
   const [configuration, setConfiguration] = useState<any>(null);
   const [isLoadingConfig, setIsLoadingConfig] = useState(false);
   const [expandedSections, setExpandedSections] = useState<{ [key: string]: boolean }>({});
@@ -277,6 +278,17 @@ const AIManagement: React.FC = () => {
           {/* Tabs */}
           <div className="flex gap-4 mb-6 border-b border-gray-200 dark:border-gray-700">
             <button
+              onClick={() => setActiveTab('agi')}
+              className={`pb-3 px-1 font-medium transition-colors flex items-center gap-2 ${
+                activeTab === 'agi'
+                  ? 'text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 dark:border-indigo-400'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+              }`}
+            >
+              <Brain className="h-4 w-4" />
+              AGI Engine
+            </button>
+            <button
               onClick={() => setActiveTab('models')}
               className={`pb-3 px-1 font-medium transition-colors ${
                 activeTab === 'models'
@@ -300,6 +312,7 @@ const AIManagement: React.FC = () => {
 
           {/* Tab Content */}
           <div className="space-y-6">
+            {activeTab === 'agi' && <AGIDashboard />}
             {activeTab === 'models' && (
               <div>
                 {/* Current Status */}

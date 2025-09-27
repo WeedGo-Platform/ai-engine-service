@@ -28,7 +28,7 @@ const OrderHistory = lazy(() => import('@pages/OrderHistory'));
 const AgeVerification = lazy(() => import('@pages/AgeVerification'));
 
 // Admin pages
-const AGIDashboard = lazy(() => import('@pages/admin/agi/AGIDashboard'));
+// AGI Dashboard moved to AI Admin Dashboard application
 
 function App() {
   useEffect(() => {
@@ -74,8 +74,7 @@ function App() {
                 <Route path="/orders" element={<OrderHistory />} />
                 <Route path="/track/:orderId" element={<OrderTracking />} />
 
-                {/* Admin Routes */}
-                <Route path="/admin/agi" element={<AGIDashboard />} />
+                {/* Admin Routes - AGI Dashboard moved to AI Admin Dashboard application */}
 
                 {/* Fallback */}
                 <Route path="*" element={<Navigate to="/" replace />} />

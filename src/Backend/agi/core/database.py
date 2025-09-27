@@ -388,6 +388,21 @@ class AGIDatabaseManager:
                 VALUES ($1, $2, $3, $4)
             """, metric_type, operation, value, json.dumps(metadata or {}))
 
+    async def execute(self, query: str, *args) -> None:
+        """Execute a query without returning results"""
+        async with self.pool.acquire() as conn:
+            await conn.execute(query, *args)
+
+    async def fetchone(self, query: str, *args) -> Optional[asyncpg.Record]:
+        """Execute a query and fetch one result"""
+        async with self.pool.acquire() as conn:
+            return await conn.fetchrow(query, *args)
+
+    async def fetchall(self, query: str, *args) -> List[asyncpg.Record]:
+        """Execute a query and fetch all results"""
+        async with self.pool.acquire() as conn:
+            return await conn.fetch(query, *args)
+
 # Singleton instance
 _db_manager: Optional[AGIDatabaseManager] = None
 
