@@ -12,7 +12,12 @@ import {
   GestureHandlerRootView,
 } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import useCartStore from '@/stores/cartStore';
+import { Colors, BorderRadius, Shadows, Gradients } from '@/constants/Colors';
+
+const isDark = true;
+const theme = isDark ? Colors.dark : Colors.light;
 
 interface CartItemProps {
   item: any; // Using any to match the CartItem interface from store
@@ -54,11 +59,18 @@ export function CartItem({ item }: CartItemProps) {
         ]}
       >
         <TouchableOpacity
-          style={styles.deleteButton}
           onPress={() => removeItem(item.sku)}
+          style={{ flex: 1 }}
         >
-          <Ionicons name="trash-outline" size={24} color="#fff" />
-          <Text style={styles.deleteText}>Delete</Text>
+          <LinearGradient
+            colors={['#FF6B9D', '#FF5587']}
+            style={styles.deleteButton}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+          >
+            <Ionicons name="trash-outline" size={24} color="#fff" />
+            <Text style={styles.deleteText}>Delete</Text>
+          </LinearGradient>
         </TouchableOpacity>
       </Animated.View>
     );
@@ -72,10 +84,21 @@ export function CartItem({ item }: CartItemProps) {
       >
         <View style={styles.container}>
           {/* Product Image */}
-          <Image
-            source={{ uri: item.image || 'https://via.placeholder.com/80' }}
-            style={styles.image}
-          />
+          <View style={styles.imageContainer}>
+            <Image
+              source={
+                item.image && item.image.trim() !== ''
+                  ? { uri: item.image }
+                  : require('@/assets/icon.png')
+              }
+              style={styles.image}
+              resizeMode={item.image && item.image.trim() !== '' ? "cover" : "contain"}
+              defaultSource={require('@/assets/icon.png')}
+              onError={() => {
+                // Image failed to load, but defaultSource will handle it
+              }}
+            />
+          </View>
 
           {/* Product Details */}
           <View style={styles.details}>
@@ -93,23 +116,37 @@ export function CartItem({ item }: CartItemProps) {
           {/* Quantity Controls */}
           <View style={styles.quantityContainer}>
             <TouchableOpacity
-              style={styles.quantityButton}
               onPress={handleDecrease}
+              activeOpacity={0.7}
             >
-              <Ionicons
-                name={item.quantity === 1 ? "trash-outline" : "remove"}
-                size={20}
-                color="#fff"
-              />
+              <LinearGradient
+                colors={item.quantity === 1 ? ['#FF6B9D', '#FF5587'] : ['#74B9FF', '#8BE9FD']}
+                style={styles.quantityButton}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+              >
+                <Ionicons
+                  name={item.quantity === 1 ? "trash-outline" : "remove"}
+                  size={20}
+                  color="#fff"
+                />
+              </LinearGradient>
             </TouchableOpacity>
 
             <Text style={styles.quantity}>{item.quantity}</Text>
 
             <TouchableOpacity
-              style={styles.quantityButton}
               onPress={handleIncrease}
+              activeOpacity={0.7}
             >
-              <Ionicons name="add" size={20} color="#fff" />
+              <LinearGradient
+                colors={['#74B9FF', '#8BE9FD']}
+                style={styles.quantityButton}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+              >
+                <Ionicons name="add" size={20} color="#fff" />
+              </LinearGradient>
             </TouchableOpacity>
           </View>
 
@@ -129,22 +166,27 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: theme.glass,
     padding: 12,
     marginHorizontal: 16,
     marginVertical: 8,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    borderRadius: BorderRadius.xl,
+    borderWidth: 1,
+    borderColor: theme.glassBorder,
+    ...Shadows.medium,
   },
-  image: {
+  imageContainer: {
     width: 80,
     height: 80,
-    borderRadius: 8,
-    backgroundColor: '#f0f0f0',
+    borderRadius: BorderRadius.lg,
+    overflow: 'hidden',
+    backgroundColor: theme.inputBackground,
+    borderWidth: 1,
+    borderColor: theme.glassBorder,
+  },
+  image: {
+    width: '100%',
+    height: '100%',
   },
   details: {
     flex: 1,
@@ -153,18 +195,18 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1a1a1a',
+    color: theme.text,
     marginBottom: 4,
   },
   size: {
     fontSize: 14,
-    color: '#666',
+    color: theme.textSecondary,
     marginBottom: 4,
   },
   price: {
     fontSize: 14,
-    color: '#00ff00',
-    fontWeight: '500',
+    color: theme.textSecondary,
+    fontWeight: '600',
   },
   quantityContainer: {
     flexDirection: 'row',
@@ -174,15 +216,15 @@ const styles = StyleSheet.create({
   quantityButton: {
     width: 32,
     height: 32,
-    borderRadius: 16,
-    backgroundColor: '#00ff00',
+    borderRadius: BorderRadius.full,
     justifyContent: 'center',
     alignItems: 'center',
+    ...Shadows.small,
   },
   quantity: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#1a1a1a',
+    fontWeight: '700',
+    color: theme.text,
     marginHorizontal: 12,
     minWidth: 20,
     textAlign: 'center',
@@ -192,8 +234,8 @@ const styles = StyleSheet.create({
   },
   total: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#1a1a1a',
+    fontWeight: '800',
+    color: theme.text,
   },
   deleteContainer: {
     width: 100,
@@ -202,11 +244,11 @@ const styles = StyleSheet.create({
   },
   deleteButton: {
     flex: 1,
-    backgroundColor: '#ff3b30',
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: 16,
-    borderRadius: 12,
+    borderRadius: BorderRadius.xl,
+    ...Shadows.medium,
   },
   deleteText: {
     color: '#fff',

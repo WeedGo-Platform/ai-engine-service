@@ -82,6 +82,7 @@ class CartService {
     name?: string;
     category?: string;
     price?: number;
+    image?: string;
   }): Promise<CartItem> {
     // Import the store to get current store ID
     const { default: useStoreStore } = await import('@/stores/storeStore');
@@ -100,10 +101,9 @@ class CartService {
       sku: data.sku,
       name: data.name,
       category: data.category,
-      price: data.price
+      price: data.price,
+      image_url: data.image  // API expects image_url field
     };
-
-    console.log('Adding to cart with data:', requestData);
 
     try {
       const response = await apiClient.post<any>(

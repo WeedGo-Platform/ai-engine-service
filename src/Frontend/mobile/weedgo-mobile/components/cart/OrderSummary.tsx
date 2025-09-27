@@ -1,18 +1,31 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 import useCartStore from '@/stores/cartStore';
+import { Colors, BorderRadius, Shadows } from '@/constants/Colors';
+
+const isDark = true;
+const theme = isDark ? Colors.dark : Colors.light;
 
 interface SummaryRowProps {
   label: string;
   value: string;
+  icon?: string;
+  iconColor?: string;
   highlight?: boolean;
   bold?: boolean;
 }
 
-function SummaryRow({ label, value, highlight, bold }: SummaryRowProps) {
+function SummaryRow({ label, value, icon, iconColor, highlight, bold }: SummaryRowProps) {
   return (
     <View style={styles.row}>
-      <Text style={[styles.label, bold && styles.boldText]}>{label}</Text>
+      <View style={styles.labelContainer}>
+        {icon && (
+          <Ionicons name={icon as any} size={16} color={iconColor || theme.textSecondary} />
+        )}
+        <Text style={[styles.label, bold && styles.boldText]}>{label}</Text>
+      </View>
       <Text
         style={[
           styles.value,
@@ -30,68 +43,172 @@ export function OrderSummary() {
   const { subtotal, tax, deliveryFee, discount, total } = useCartStore();
 
   return (
-    <View style={styles.container}>
-      <SummaryRow label="Subtotal" value={`$${subtotal.toFixed(2)}`} />
-
-      {discount > 0 && (
+    <LinearGradient
+      colors={['rgba(138, 43, 226, 0.05)', 'rgba(30, 144, 255, 0.05)']}
+      style={styles.container}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+    >
+      <View style={styles.content}>
         <SummaryRow
-          label="Discount"
-          value={`-$${discount.toFixed(2)}`}
-          highlight
+          label="Subtotal"
+          value={`$${subtotal.toFixed(2)}`}
+          icon="basket"
+          iconColor={theme.primary}
         />
-      )}
 
-      <SummaryRow label="Tax (HST 13%)" value={`$${tax.toFixed(2)}`} />
+        {discount > 0 && (
+          <SummaryRow
+            label="Discount"
+            value={`-$${discount.toFixed(2)}`}
+            icon="pricetag"
+            iconColor={theme.success}
+            highlight
+          />
+        )}
 
-      {!!deliveryFee && deliveryFee > 0 && (
-        <SummaryRow label="Delivery Fee" value={`$${deliveryFee.toFixed(2)}`} />
-      )}
+        <SummaryRow
+          label="Tax (HST 13%)"
+          value={`$${tax.toFixed(2)}`}
+          icon="receipt"
+          iconColor={theme.strainCBD}
+        />
 
-      <View style={styles.divider} />
+        {!!deliveryFee && deliveryFee > 0 && (
+          <SummaryRow
+            label="Delivery Fee"
+            value={`$${deliveryFee.toFixed(2)}`}
+            icon="car"
+            iconColor={theme.strainHybrid}
+          />
+        )}
 
-      <SummaryRow label="Total" value={`$${total.toFixed(2)}`} bold />
-    </View>
+        <LinearGradient
+          colors={['rgba(255, 255, 255, 0.1)', 'rgba(255, 255, 255, 0.05)']}
+          style={styles.divider}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+        />
+
+        <View style={styles.totalRow}>
+          <View style={styles.totalLabelContainer}>
+            <Ionicons name="wallet" size={20} color={theme.primary} />
+            <Text style={styles.totalLabel}>Total</Text>
+          </View>
+          <LinearGradient
+            colors={[theme.primary, theme.strainSativa]}
+            style={styles.totalValueContainer}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+          >
+            <Text style={styles.totalValue}>${total.toFixed(2)}</Text>
+          </LinearGradient>
+        </View>
+
+        {/* Savings indicator */}
+        {discount > 0 && (
+          <View style={styles.savingsContainer}>
+            <Ionicons name="checkmark-circle" size={16} color={theme.success} />
+            <Text style={styles.savingsText}>
+              You're saving ${discount.toFixed(2)}!
+            </Text>
+          </View>
+        )}
+      </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
-    marginHorizontal: 16,
-    padding: 16,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    marginHorizontal: 20,
+    borderRadius: BorderRadius.xl,
+    borderWidth: 1,
+    borderColor: theme.glassBorder,
+    overflow: 'hidden',
+    ...Shadows.medium,
+  },
+  content: {
+    backgroundColor: theme.glass,
+    padding: 20,
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginVertical: 8,
+    marginVertical: 10,
+  },
+  labelContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   label: {
-    fontSize: 16,
-    color: '#666',
+    fontSize: 15,
+    color: theme.textSecondary,
+    fontWeight: '500',
   },
   value: {
-    fontSize: 16,
-    color: '#1a1a1a',
+    fontSize: 15,
+    color: theme.text,
+    fontWeight: '600',
   },
   highlightText: {
-    color: '#00ff00',
-    fontWeight: '600',
+    color: theme.success,
+    fontWeight: '700',
   },
   boldText: {
     fontWeight: 'bold',
-    fontSize: 18,
-    color: '#1a1a1a',
+    fontSize: 17,
+    color: theme.text,
   },
   divider: {
-    height: 1,
-    backgroundColor: '#e0e0e0',
-    marginVertical: 12,
+    height: 2,
+    marginVertical: 16,
+    borderRadius: 1,
+  },
+  totalRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  totalLabelContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  totalLabel: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: theme.text,
+  },
+  totalValueContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: BorderRadius.full,
+    ...Shadows.small,
+  },
+  totalValue: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: 'white',
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+  },
+  savingsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 16,
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: theme.glassBorder,
+  },
+  savingsText: {
+    fontSize: 14,
+    color: theme.success,
+    fontWeight: '600',
   },
 });

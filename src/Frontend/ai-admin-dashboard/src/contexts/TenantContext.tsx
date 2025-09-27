@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from './AuthContext';
+import { getApiUrl } from '../config/app.config';
 
 // =====================================================
 // Type Definitions
@@ -32,7 +33,6 @@ interface TenantProviderProps {
 // =====================================================
 
 const TENANT_CONTEXT_KEY = 'weedgo_active_tenant';
-const API_BASE_URL = 'http://localhost:5024';
 
 // =====================================================
 // Context Creation

@@ -1,4 +1,6 @@
+import { getApiUrl } from '../../config/app.config';
 import React from 'react';
+import { getApiUrl } from '../../config/app.config';
 import { Plus, Info, Star, TrendingUp, Award, Clock, Leaf, Sparkles } from 'lucide-react';
 
 interface ProductCardProps {

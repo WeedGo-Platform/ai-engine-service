@@ -21,7 +21,7 @@ class AuthService {
   async checkPhone(phone: string): Promise<CheckPhoneResponse> {
     const response = await apiClient.post<CheckPhoneResponse>(
       '/api/v1/auth/customer/check-phone',
-      data as CheckPhoneRequest
+      { phone } as CheckPhoneRequest
     );
     return response.data;
   }
@@ -40,10 +40,10 @@ class AuthService {
   /**
    * Login an existing customer
    */
-  async login(data: { phone: string; password?: string }): Promise<LoginResponse> {
+  async login(data: { email: string; password: string }): Promise<LoginResponse> {
     const response = await apiClient.post<LoginResponse>(
       '/api/v1/auth/customer/login',
-      data as LoginRequest
+      data
     );
     return response.data;
   }
@@ -57,12 +57,12 @@ class AuthService {
       data
     );
 
-    // Save tokens after successful verification
-    if (response.data.access_token && response.data.refresh_token) {
-      await apiClient.saveTokens(
-        response.data.access_token,
-        response.data.refresh_token
-      );
+    // Save tokens after successful verification (handle both field name formats)
+    const accessToken = response.data.access_token || response.data.access;
+    const refreshToken = response.data.refresh_token || response.data.refresh;
+
+    if (accessToken && refreshToken) {
+      await apiClient.saveTokens(accessToken, refreshToken);
     }
 
     return response.data;
@@ -100,12 +100,12 @@ class AuthService {
       }
     );
 
-    // Save new tokens
-    if (response.data.access_token && response.data.refresh_token) {
-      await apiClient.saveTokens(
-        response.data.access_token,
-        response.data.refresh_token
-      );
+    // Save new tokens (handle both field name formats)
+    const accessToken = response.data.access_token || response.data.access;
+    const newRefreshToken = response.data.refresh_token || response.data.refresh;
+
+    if (accessToken && newRefreshToken) {
+      await apiClient.saveTokens(accessToken, newRefreshToken);
     }
 
     return response.data;
@@ -115,16 +115,19 @@ class AuthService {
    * Logout the user
    */
   async logout(): Promise<void> {
+    // Note: Logout endpoint not yet implemented in backend
+    // For now, just clear local tokens
+    // TODO: Uncomment when backend implements /api/v1/auth/logout
+    /*
     try {
-      // Call logout endpoint
       await apiClient.post('/api/v1/auth/logout');
     } catch (error) {
-      // Log error but don't throw - we still want to clear local tokens
       console.error('Logout API call failed:', error);
-    } finally {
-      // Clear local tokens regardless
-      await apiClient.logout();
     }
+    */
+
+    // Clear local tokens
+    await apiClient.logout();
   }
 
   /**
@@ -148,21 +151,65 @@ class AuthService {
 
   /**
    * Get user profile
+   * Note: Currently the user data comes from login/register response
+   * This method is kept for future use when a dedicated profile endpoint is available
    */
   async getProfile(): Promise<User> {
-    const response = await apiClient.get<{ data: Profile }>('/api/v1/profile');
-    // Transform profile to User format
-    const profile = response.data.data;
-    return {
-      id: profile.id,
-      phone: profile.phone,
-      email: profile.email,
-      profile_id: profile.id,
-      first_name: profile.first_name,
-      last_name: profile.last_name,
-      firstName: profile.first_name,
-      lastName: profile.last_name,
-    } as User;
+    // For now, return empty user as profile comes from login
+    // This prevents 404 errors until the backend implements the profile endpoint
+    throw new Error('Profile endpoint not implemented. User data comes from login response.');
+  }
+
+  /**
+   * Request password reset
+   */
+  async requestPasswordReset(data: {
+    identifier: string; // email or phone
+  }): Promise<{
+    success: boolean;
+    message: string;
+    session_id: string;
+  }> {
+    const response = await apiClient.post<{
+      success: boolean;
+      message: string;
+      session_id: string;
+    }>('/api/v1/auth/password-reset/request', data);
+    return response.data;
+  }
+
+  /**
+   * Verify reset OTP
+   */
+  async verifyResetOTP(data: {
+    session_id: string;
+    code: string;
+  }): Promise<{
+    success: boolean;
+    message: string;
+  }> {
+    const response = await apiClient.post<{
+      success: boolean;
+      message: string;
+    }>('/api/v1/auth/password-reset/verify', data);
+    return response.data;
+  }
+
+  /**
+   * Reset password with new password
+   */
+  async resetPassword(data: {
+    session_id: string;
+    new_password: string;
+  }): Promise<{
+    success: boolean;
+    message: string;
+  }> {
+    const response = await apiClient.post<{
+      success: boolean;
+      message: string;
+    }>('/api/v1/auth/password-reset/reset', data);
+    return response.data;
   }
 }
 

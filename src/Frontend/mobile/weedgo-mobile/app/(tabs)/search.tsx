@@ -10,14 +10,15 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlashList } from '@shopify/flash-list';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 import useProductsStore from '@/stores/productsStore';
 import { ProductCard } from '@/components/ProductCard';
 import { CategoryTiles } from '@/components/CategoryTiles';
 import { QuickFilters } from '@/components/QuickFilters';
+import { useTheme } from '@/contexts/ThemeContext';
 import { Colors, BorderRadius, Shadows } from '@/constants/Colors';
 import { Product } from '@/types/api.types';
 
@@ -28,8 +29,7 @@ export default function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchTimer, setSearchTimer] = useState<NodeJS.Timeout | null>(null);
   const [showFilters, setShowFilters] = useState(false);
-  const isDark = true; // Force dark mode
-  const theme = isDark ? Colors.dark : Colors.light;
+  const { theme, isDark } = useTheme();
 
   const {
     products,
@@ -44,6 +44,8 @@ export default function SearchScreen() {
     searchProducts,
     loadMore,
   } = useProductsStore();
+
+  const styles = React.useMemo(() => createStyles(theme, isDark), [theme, isDark]);
 
   // Load categories on mount
   useEffect(() => {
@@ -225,63 +227,69 @@ export default function SearchScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={0}
+    <View style={{ flex: 1 }}>
+      <LinearGradient
+        colors={isDark ? [theme.background, theme.backgroundSecondary, theme.surface] : [theme.gradientStart, theme.gradientMid, theme.gradientEnd]}
+        style={styles.gradientContainer}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0.5, y: 1 }}
       >
-        {renderHeader()}
+        <KeyboardAvoidingView
+          style={styles.container}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={0}
+        >
+          {renderHeader()}
 
-        {loading && products.length === 0 ? (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={theme.primary} />
-          </View>
-        ) : (
-          <FlashList
-            data={products}
-            renderItem={renderProduct}
-            
-            numColumns={2}
-            contentContainerStyle={styles.listContent}
-            ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
-            ListEmptyComponent={renderEmpty}
-            ListFooterComponent={renderFooter}
-            onEndReached={handleLoadMore}
-            onEndReachedThreshold={0.5}
-            showsVerticalScrollIndicator={false}
-          />
-        )}
+          {loading && products.length === 0 ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color={theme.primary} />
+            </View>
+          ) : (
+            <FlashList
+              data={products}
+              renderItem={renderProduct}
 
-        {error && (
-          <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>{error}</Text>
-          </View>
-        )}
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+              numColumns={2}
+              contentContainerStyle={styles.listContent}
+              ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
+              ListEmptyComponent={renderEmpty}
+              ListFooterComponent={renderFooter}
+              onEndReached={handleLoadMore}
+              onEndReachedThreshold={0.5}
+              showsVerticalScrollIndicator={false}
+            />
+          )}
+
+          {error && (
+            <View style={styles.errorContainer}>
+              <Text style={styles.errorText}>{error}</Text>
+            </View>
+          )}
+        </KeyboardAvoidingView>
+      </LinearGradient>
+    </View>
   );
 }
 
-const isDark = true;
-const theme = isDark ? Colors.dark : Colors.light;
-
-const styles = StyleSheet.create({
+const createStyles = (theme: any, isDark: boolean) => StyleSheet.create({
+  gradientContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
-    backgroundColor: theme.background,
+    backgroundColor: 'transparent',
   },
   headerContainer: {
     backgroundColor: theme.glass,
     paddingBottom: 8,
     borderBottomWidth: 1,
     borderBottomColor: theme.glassBorder,
-    backdropFilter: 'blur(10px)',
   },
   searchContainer: {
     flexDirection: 'row',
     paddingHorizontal: 16,
-    paddingTop: 12,
+    paddingTop: Platform.OS === 'ios' ? 50 : 40, // Add padding for status bar
     paddingBottom: 8,
     gap: 8,
   },

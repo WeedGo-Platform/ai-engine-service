@@ -1,4 +1,6 @@
+import { getApiUrl } from '../../config/app.config';
 import React, { useState } from 'react';
+import { getApiUrl } from '../../config/app.config';
 import { ChevronLeft, ShoppingBag, Loader2, AlertCircle, User, Mail, Phone } from 'lucide-react';
 import { useKiosk } from '../../contexts/KioskContext';
 import { useKioskSession } from '../../hooks/useKioskSession';
@@ -66,7 +68,7 @@ export default function Checkout({ onBack, onComplete, currentStore }: CheckoutP
       console.log('Request body being sent:', requestBody);
 
       // Create order with pay at pickup
-      const response = await fetch('http://localhost:5024/api/kiosk/order/create', {
+      const response = await fetch(getApiUrl('/api/kiosk/order/create'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBody)

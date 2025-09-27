@@ -18,7 +18,7 @@ interface Product {
   id: string;
   name: string;
   price: number;
-  image_url: string;
+  image: string;
   thc_content?: number;
   cbd_content?: number;
   category?: string;
@@ -73,7 +73,7 @@ export function ProductMessage({ products, message }: ProductMessageProps) {
             activeOpacity={0.9}
           >
             <Image
-              source={{ uri: product.image_url }}
+              source={{ uri: product.image }}
               style={styles.productImage}
             />
 

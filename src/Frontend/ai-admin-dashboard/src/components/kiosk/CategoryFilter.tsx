@@ -1,4 +1,6 @@
+import { getApiUrl } from '../../config/app.config';
 import React from 'react';
+import { getApiUrl } from '../../config/app.config';
 import { LucideIcon } from 'lucide-react';
 
 interface CategoryFilterProps {

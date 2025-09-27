@@ -19,6 +19,7 @@ export interface Store {
   delivery_available?: boolean;
   pickup_available?: boolean;
   image_url?: string;
+  template?: string;
 }
 
 export const storesApi = {
@@ -26,7 +27,24 @@ export const storesApi = {
   getTenantStores: async (tenantId: string): Promise<Store[]> => {
     try {
       const response = await apiClient.get<Store[]>(`/api/stores/tenant/${tenantId}`);
-      return response.data;
+      const stores = response.data;
+
+      // Temporarily assign templates based on store name for testing
+      // TODO: Remove this when backend provides template data
+      stores.forEach(store => {
+        if (store.name?.toLowerCase().includes('pot palace') ||
+            store.store_code?.toLowerCase().includes('pot-palace')) {
+          store.template = 'pot-palace';
+        } else if (store.name?.toLowerCase().includes('london') ||
+                   store.store_code?.toLowerCase().includes('london')) {
+          store.template = 'modern';
+        } else {
+          // Default template
+          store.template = 'modern';
+        }
+      });
+
+      return stores;
     } catch (error) {
       console.error('Failed to fetch stores:', error);
       // Return empty array if API fails

@@ -31,6 +31,7 @@ export interface Store {
   pickup_available: boolean;
   hours?: StoreHours;
   settings?: StoreSettings;
+  template?: string;
 }
 
 export interface StoreHours {

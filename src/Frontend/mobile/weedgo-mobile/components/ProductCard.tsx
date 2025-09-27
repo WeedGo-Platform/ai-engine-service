@@ -36,19 +36,15 @@ export function ProductCard({ product, onPress }: ProductCardProps) {
   // Debug: Log disabled to prevent console spam
   // Uncomment to debug:
   // console.log('ProductCard received product with keys:', Object.keys(product));
-  // console.log('Product stock field:', product.in_stock);
+  // console.log('Product stock field:', product.inStock);
 
-  // Use API fields directly - check all possible image sources
-  const image = product.image || product.image_url || (product.images && product.images[0]);
-  const strainType = product.strain_type;
-  const inStock = product.in_stock;
+  // Use API fields directly
+  const image = product.image || product.images?.[0];
+  const strainType = product.strainType;
+  const inStock = product.inStock;
   const price = product.price;
-  const thcContent = typeof product.thc_content === 'number'
-    ? { display: `${product.thc_content}%` }
-    : undefined;
-  const cbdContent = typeof product.cbd_content === 'number'
-    ? { display: `${product.cbd_content}%` }
-    : undefined;
+  const thcContent = product.thcContent;
+  const cbdContent = product.cbdContent;
 
 
   const cartItem = getCartItem(product.sku);

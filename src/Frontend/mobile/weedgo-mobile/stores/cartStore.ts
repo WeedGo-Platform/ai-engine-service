@@ -94,30 +94,32 @@ const useCartStore = create<CartStore>()(
           await cartService.initialize();
           const cart = await cartService.getCart();
 
-          // Convert API cart items to local cart items, filtering out invalid items
-          const items: CartItem[] = cart.items
-            .filter(item => item && (item.product || item.product_id))
+          // Convert API cart items to local cart items
+          // API returns flat items with direct fields, NOT nested under product
+          const items: CartItem[] = (cart.items || [])
+            .filter(item => item && item.id)
             .map(item => ({
               id: item.id,
-              product: item.product || {} as Product,
+              product: {} as Product, // API doesn't return nested product
               quantity: item.quantity || 1,
-              sku: item.product?.sku || item.sku || item.product_id || '',
+              sku: item.sku || '',
               price: item.price || 0,
               subtotal: item.subtotal || 0,
-              image: item.product?.image_url || item.product?.image || (item.product?.images && item.product.images[0]) || item.image_url || '',
-              name: item.product?.name || item.name || 'Unknown Product',
-              size: item.product?.size || item.size,
+              image: item.image_url || item.image || '',  // Try both fields
+              name: item.name || 'Unknown Product',
+              size: item.size,
             }));
+
 
           set({
             sessionId: cart.session_id,
             items,
             subtotal: cart.subtotal,
-            tax: cart.tax,
+            tax: cart.tax_amount || 0,  // API uses tax_amount
             deliveryFee: cart.delivery_fee || 0,
-            discount: cart.discount || 0,
-            total: cart.total,
-            promoCode: cart.promo_code || null,
+            discount: cart.discount_amount || 0,  // API uses discount_amount
+            total: cart.total_amount || 0,  // API uses total_amount
+            promoCode: cart.discount_code || null,
             loading: false,
           });
         } catch (error: any) {
@@ -138,6 +140,9 @@ const useCartStore = create<CartStore>()(
         set({ loading: true, error: null });
 
         try {
+          // Get the product image from the Product object
+          const productImage = product.image || product.images?.[0] || '';
+
           const response = await cartService.addItem({
             product_id: product.id,
             quantity,
@@ -146,11 +151,19 @@ const useCartStore = create<CartStore>()(
             sku: product.sku,
             name: product.name,
             category: product.category,
-            price: product.price
+            price: product.price,
+            // Include image for better cart display
+            image: productImage
           });
 
-          // Refresh cart from server
-          await get().refreshCart();
+          // Update sessionId if it was returned
+          const newSessionId = response?.cart?.session_id || response?.session_id;
+          if (newSessionId && newSessionId !== state.sessionId) {
+            set({ sessionId: newSessionId });
+          }
+
+          // Always load the full cart after adding an item
+          await get().loadSession();
 
           // Show success toast
           Toast.show({
@@ -407,36 +420,39 @@ const useCartStore = create<CartStore>()(
 
       // Refresh cart from server
       refreshCart: async () => {
-        const state = get();
-
-        if (!state.sessionId) return;
-
         try {
           const cart = await cartService.getCart();
 
-          // Convert API cart items to local cart items, filtering out invalid items
-          const items: CartItem[] = cart.items
-            .filter(item => item && (item.product || item.product_id))
+          // Update sessionId if it was returned
+          if (cart.session_id) {
+            set({ sessionId: cart.session_id });
+          }
+
+          // Convert API cart items to local cart items
+          // API returns flat items with direct fields, NOT nested under product
+          const items: CartItem[] = (cart.items || [])
+            .filter(item => item && item.id)
             .map(item => ({
               id: item.id,
-              product: item.product || {} as Product,
+              product: {} as Product, // API doesn't return nested product
               quantity: item.quantity || 1,
-              sku: item.product?.sku || item.sku || item.product_id || '',
+              sku: item.sku || '',
               price: item.price || 0,
               subtotal: item.subtotal || 0,
-              image: item.product?.image_url || item.product?.image || (item.product?.images && item.product.images[0]) || item.image_url || '',
-              name: item.product?.name || item.name || 'Unknown Product',
-              size: item.product?.size || item.size,
+              image: item.image_url || item.image || '',  // Try both fields
+              name: item.name || 'Unknown Product',
+              size: item.size,
             }));
+
 
           set({
             items,
             subtotal: cart.subtotal,
-            tax: cart.tax,
+            tax: cart.tax_amount || cart.tax || 0,
             deliveryFee: cart.delivery_fee || 0,
-            discount: cart.discount || 0,
-            total: cart.total,
-            promoCode: cart.promo_code || null,
+            discount: cart.discount_amount || cart.discount || 0,
+            total: cart.total_amount || cart.total || 0,
+            promoCode: cart.discount_code || cart.promo_code || null,
             loading: false,
           });
         } catch (error: any) {

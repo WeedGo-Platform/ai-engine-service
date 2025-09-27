@@ -259,4 +259,8 @@ export const Gradients = {
   cardDark: ['rgba(22, 33, 62, 0.95)', 'rgba(53, 59, 125, 0.9)'] as [string, string],
   button: ['#00D084', '#00F5A0', '#00B371'] as [string, string, string],
   buttonSecondary: ['#FF6B9D', '#FF79C6', '#FF5587'] as [string, string, string],
+  success: ['#00D084', '#00F5A0'] as [string, string],
+  // Background gradients for screens
+  darkBackground: ['#1A1A2E', '#16213E', '#0F3460'] as [string, string, string],
+  lightBackground: ['#FFFFFF', '#FFF5F7', '#F8F9FA'] as [string, string, string],
 };

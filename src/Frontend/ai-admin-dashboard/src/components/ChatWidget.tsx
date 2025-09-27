@@ -24,6 +24,7 @@ import {
 // import VoiceVisualization from './chat/VoiceVisualization';
 import { useAuth } from '../contexts/AuthContext';
 import { voiceApi } from '../services/voiceApi';
+import { getApiUrl } from '../config/app.config';
 
 type RecordingState = 'idle' | 'recording' | 'processing' | 'error' | 'requesting';
 
@@ -153,7 +154,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
     const fetchAgents = async () => {
       setLoadingAgents(true);
       try {
-        const response = await fetch('http://localhost:5024/api/admin/agents', {
+        const response = await fetch(getApiUrl('/api/admin/agents'), {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
             'Content-Type': 'application/json'
@@ -183,7 +184,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
   const fetchPersonalities = async (agentId: string) => {
     setLoadingPersonalities(true);
     try {
-      const response = await fetch(`http://localhost:5024/api/admin/agents/${agentId}/personalities`, {
+      const response = await fetch(getApiUrl(`/api/admin/agents/${agentId}/personalities`), {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json'

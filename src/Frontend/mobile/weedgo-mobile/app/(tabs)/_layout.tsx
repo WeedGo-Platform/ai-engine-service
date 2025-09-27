@@ -3,14 +3,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { View, Text, StyleSheet, Platform } from 'react-native';
 import { Colors, GlassStyles, BorderRadius, Gradients, Shadows } from '@/constants/Colors';
 import { useAuthStore } from '@/stores/authStore';
+import { useTheme } from '@/contexts/ThemeContext';
 import { CartBadge } from '@/components/CartBadge';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function TabsLayout() {
   const { isAuthenticated } = useAuthStore();
-  const isDark = false; // Use light theme for colorful design
-  const theme = isDark ? Colors.dark : Colors.light;
+  const { theme, isDark } = useTheme();
 
   return (
     <Tabs
@@ -43,7 +43,7 @@ export default function TabsLayout() {
         },
         tabBarBackground: () => (
           <LinearGradient
-            colors={['rgba(255, 255, 255, 0.98)', 'rgba(250, 250, 255, 0.95)']}
+            colors={isDark ? ['rgba(30, 30, 50, 0.98)', 'rgba(22, 33, 62, 0.95)'] : ['rgba(255, 255, 255, 0.98)', 'rgba(250, 250, 255, 0.95)']}
             style={StyleSheet.absoluteFillObject}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
@@ -108,7 +108,7 @@ export default function TabsLayout() {
               />
             </View>
           ),
-          headerTitle: 'Search Products',
+          headerShown: false,
         }}
       />
       <Tabs.Screen
@@ -139,7 +139,6 @@ export default function TabsLayout() {
           headerShown: false,
         }}
       />
-      {/* Temporarily disabled due to duplicate key errors
       <Tabs.Screen
         name="chat"
         options={{
@@ -161,11 +160,9 @@ export default function TabsLayout() {
               />
             </View>
           ),
-          headerTitle: 'WeedGo AI',
           headerShown: false,
         }}
       />
-      */}
       <Tabs.Screen
         name="profile"
         options={{
@@ -187,7 +184,7 @@ export default function TabsLayout() {
               />
             </View>
           ),
-          headerTitle: isAuthenticated ? 'My Profile' : 'Account',
+          headerShown: false,
         }}
       />
     </Tabs>

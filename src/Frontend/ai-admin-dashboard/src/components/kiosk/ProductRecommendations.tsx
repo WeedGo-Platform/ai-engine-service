@@ -1,4 +1,6 @@
+import { getApiUrl } from '../../config/app.config';
 import React, { useState, useEffect } from 'react';
+import { getApiUrl } from '../../config/app.config';
 import { Plus, Sparkles } from 'lucide-react';
 import { useKiosk } from '../../contexts/KioskContext';
 
@@ -51,7 +53,7 @@ export default function ProductRecommendations({
         category: item.category
       }));
 
-      const response = await fetch('http://localhost:5024/api/kiosk/products/recommendations', {
+      const response = await fetch(getApiUrl('/api/kiosk/products/recommendations'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

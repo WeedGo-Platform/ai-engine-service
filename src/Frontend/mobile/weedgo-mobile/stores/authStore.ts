@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authService } from '@/services/api/auth';
+import { apiClient } from '@/services/api/client';
+import { biometricAuthService } from '@/services/biometricAuth';
 
 interface User {
   id: string;
@@ -39,6 +41,8 @@ interface AuthState {
   isLoading: boolean;
   error: string | null;
   biometricEnabled: boolean;
+  biometricAvailable: boolean;
+  biometricType: string;
 
   // Actions
   setUser: (user: User | null) => void;
@@ -54,6 +58,13 @@ interface AuthState {
   clearError: () => void;
   setBiometricEnabled: (enabled: boolean) => void;
   quickAuthenticate: () => Promise<void>;
+
+  // Biometric methods
+  checkBiometricAvailability: () => Promise<void>;
+  loginWithBiometric: () => Promise<AuthResponse | null>;
+  enableBiometric: (email: string, password: string) => Promise<boolean>;
+  disableBiometric: () => Promise<boolean>;
+  getSavedBiometricEmail: () => Promise<string | null>;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -67,6 +78,8 @@ export const useAuthStore = create<AuthState>()(
       isLoading: false,
       error: null,
       biometricEnabled: false,
+      biometricAvailable: false,
+      biometricType: 'Biometric',
 
       // Set user
       setUser: (user) => set({ user, isAuthenticated: !!user }),
@@ -94,20 +107,48 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
-      // Login with phone (and optional password)
-      login: async (phone, password?) => {
+      // Login with email/phone (and optional password)
+      login: async (identifier, password?) => {
         set({ isLoading: true, error: null });
         try {
-          const response = await authService.login({ phone, password });
+          console.log('Login attempt with identifier:', identifier);
+          // Determine if identifier is email or phone
+          const isEmail = identifier.includes('@');
+          const loginData = isEmail
+            ? { email: identifier, password: password || '' }
+            : { email: identifier, password: password || '' }; // API expects email field
 
-          // Transform API response to expected format
+          console.log('Login data being sent:', loginData);
+          const response = await authService.login(loginData);
+          console.log('Login API response:', response);
+
+          // Save tokens and user data (handle both field name formats)
+          const accessToken = response.access_token || response.access;
+          const refreshToken = response.refresh_token || response.refresh || '';
+
+          if (response && accessToken) {
+            console.log('Setting user data and tokens');
+            set({
+              user: response.user,
+              accessToken: accessToken,
+              refreshToken: refreshToken,
+              isAuthenticated: true,
+              isLoading: false,
+            });
+
+            // Save tokens to API client
+            await apiClient.saveTokens(accessToken, refreshToken);
+          } else {
+            throw new Error('Invalid response from login API');
+          }
+
+          // Return success response
           const authResponse: AuthResponse = {
-            sessionId: response.session_id,
-            requiresOtp: response.otp_sent,
-            success: response.success,
+            sessionId: '',
+            requiresOtp: false,
+            success: true,
           };
 
-          set({ isLoading: false });
           return authResponse;
         } catch (error: any) {
           set({
@@ -135,16 +176,6 @@ export const useAuthStore = create<AuthState>()(
             isAuthenticated: true,
             isLoading: false,
           });
-
-          // Fetch user profile after successful verification
-          if (response.access_token) {
-            try {
-              const profile = await authService.getProfile();
-              set({ user: profile });
-            } catch (profileError) {
-              console.log('Failed to fetch profile after login:', profileError);
-            }
-          }
         } catch (error: any) {
           set({
             error: error.message || 'OTP verification failed',
@@ -160,14 +191,26 @@ export const useAuthStore = create<AuthState>()(
         try {
           const response = await authService.register(data);
 
-          // Transform API response to expected format
+          // Save tokens and user data
+          set({
+            user: response.user,
+            accessToken: response.access_token,
+            isAuthenticated: true,
+            isLoading: false,
+          });
+
+          // Save tokens to API client
+          if (response.access_token) {
+            await apiClient.saveTokens(response.access_token, '');
+          }
+
+          // Return success response
           const authResponse: AuthResponse = {
-            sessionId: response.session_id || 'temp-session',
-            requiresOtp: response.otp_sent,
-            success: response.success,
+            sessionId: '',
+            requiresOtp: false,
+            success: true,
           };
 
-          set({ isLoading: false });
           return authResponse;
         } catch (error: any) {
           set({
@@ -199,12 +242,16 @@ export const useAuthStore = create<AuthState>()(
           console.error('Logout error:', error);
         }
 
+        // Clear biometric data on logout
+        await biometricAuthService.clearBiometricData();
+
         set({
           user: null,
           accessToken: null,
           refreshToken: null,
           isAuthenticated: false,
           error: null,
+          biometricEnabled: false,
         });
       },
 
@@ -270,6 +317,108 @@ export const useAuthStore = create<AuthState>()(
           throw new Error('No stored authentication');
         }
       },
+
+      // Check biometric availability
+      checkBiometricAvailability: async () => {
+        try {
+          const isAvailable = await biometricAuthService.isAvailable();
+          const biometricType = await biometricAuthService.getBiometricTypeName();
+          const isEnabled = await biometricAuthService.isBiometricEnabled();
+
+          set({
+            biometricAvailable: isAvailable,
+            biometricType,
+            biometricEnabled: isEnabled,
+          });
+        } catch (error) {
+          console.error('Error checking biometric availability:', error);
+          set({
+            biometricAvailable: false,
+            biometricEnabled: false,
+          });
+        }
+      },
+
+      // Login with biometric
+      loginWithBiometric: async () => {
+        set({ isLoading: true, error: null });
+        try {
+          // Get stored credentials using biometric authentication
+          const credentials = await biometricAuthService.getCredentials();
+
+          if (!credentials) {
+            set({ isLoading: false });
+            return null;
+          }
+
+          // Use the credentials to login
+          const response = await authService.login({
+            email: credentials.email,
+            password: credentials.password,
+          });
+
+          // Save tokens and user data
+          if (response && response.access_token) {
+            set({
+              user: response.user,
+              accessToken: response.access_token,
+              refreshToken: response.refresh_token || '',
+              isAuthenticated: true,
+              isLoading: false,
+            });
+
+            // Save tokens to API client
+            await apiClient.saveTokens(response.access_token, response.refresh_token || '');
+
+            return {
+              sessionId: '',
+              requiresOtp: false,
+              success: true,
+            };
+          }
+
+          throw new Error('Invalid response from login API');
+        } catch (error: any) {
+          set({
+            error: error.message || 'Biometric login failed',
+            isLoading: false,
+          });
+          return null;
+        }
+      },
+
+      // Enable biometric authentication
+      enableBiometric: async (email: string, password: string) => {
+        try {
+          const success = await biometricAuthService.enableBiometric({ email, password });
+          if (success) {
+            set({ biometricEnabled: true });
+          }
+          return success;
+        } catch (error: any) {
+          set({ error: error.message || 'Failed to enable biometric' });
+          return false;
+        }
+      },
+
+      // Disable biometric authentication
+      disableBiometric: async () => {
+        try {
+          const success = await biometricAuthService.disableBiometric();
+          if (success) {
+            set({ biometricEnabled: false });
+          }
+          return success;
+        } catch (error: any) {
+          set({ error: error.message || 'Failed to disable biometric' });
+          return false;
+        }
+      },
+
+      // Get saved biometric email
+      getSavedBiometricEmail: async () => {
+        return await biometricAuthService.getSavedEmail();
+      },
     }),
     {
       name: 'auth-storage',
@@ -279,7 +428,14 @@ export const useAuthStore = create<AuthState>()(
         accessToken: state.accessToken,
         refreshToken: state.refreshToken,
         biometricEnabled: state.biometricEnabled,
+        // Don't persist isAuthenticated - it should be derived from tokens
       }),
+      onRehydrateStorage: () => (state) => {
+        // After rehydration, set isAuthenticated based on token presence
+        if (state) {
+          state.isAuthenticated = !!(state.accessToken && state.user);
+        }
+      },
     }
   )
 );

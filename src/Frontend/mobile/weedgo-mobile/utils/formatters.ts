@@ -1,16 +1,11 @@
 import { StoreAddress } from '@/types/api.types';
 
-export function formatAddress(address: string | StoreAddress | undefined): string {
+export function formatAddress(address: StoreAddress | undefined): string {
   if (!address) {
     return 'Address not available';
   }
 
-  // If address is already a string, return it
-  if (typeof address === 'string') {
-    return address;
-  }
-
-  // Format the address object
+  // Format the full address
   const parts = [];
 
   if (address.street) {
@@ -33,6 +28,7 @@ export function formatAddress(address: string | StoreAddress | undefined): strin
     parts.push(address.postal_code);
   }
 
+  // Only include country if it's not Canada (assumed default)
   if (address.country && address.country !== 'Canada') {
     parts.push(address.country);
   }
@@ -40,14 +36,9 @@ export function formatAddress(address: string | StoreAddress | undefined): strin
   return parts.join(', ') || 'Address not available';
 }
 
-export function formatShortAddress(address: string | StoreAddress | undefined): string {
+export function formatShortAddress(address: StoreAddress | undefined): string {
   if (!address) {
     return 'Address not available';
-  }
-
-  // If address is already a string, return it
-  if (typeof address === 'string') {
-    return address;
   }
 
   // Format short address (street and city only)

@@ -172,7 +172,7 @@ export default function ProductDetailScreen() {
 
   const images = product.images && product.images.length > 0
     ? product.images
-    : [product.image_url];
+    : [product.image];
 
   return (
     <SafeAreaView style={styles.container}>
@@ -239,14 +239,15 @@ export default function ProductDetailScreen() {
           )}
 
           {/* Stock Badge */}
-          {product.in_stock === false && (
+          {product.inStock === false && (
             <View style={styles.outOfStockOverlay}>
               <Text style={styles.outOfStockText}>Out of Stock</Text>
             </View>
           )}
         </View>
 
-        <View style={styles.infoContainer}><Text style={styles.brand}>{product.brand}</Text>
+        <View style={styles.infoContainer}>
+          <Text style={styles.brand}>{product.brand}</Text>
           <Text style={styles.productName}>{product.name}</Text>
 
           {/* Price and Size */}
@@ -384,14 +385,14 @@ export default function ProductDetailScreen() {
         <TouchableOpacity
           style={[
             styles.addToCartButton,
-            product.in_stock === false && styles.addToCartButtonDisabled,
+            product.inStock === false && styles.addToCartButtonDisabled,
           ]}
           onPress={handleAddToCart}
-          disabled={product.in_stock === false}
+          disabled={product.inStock === false}
         >
           <Ionicons name="cart-outline" size={20} color="white" />
           <Text style={styles.addToCartText}>
-            {product.in_stock === false
+            {product.inStock === false
               ? 'Out of Stock'
               : `Add to Cart • $${(product.price * quantity).toFixed(2)}`}
           </Text>

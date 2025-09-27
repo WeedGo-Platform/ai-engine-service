@@ -2,7 +2,7 @@
 Tenant Management API Endpoints
 """
 
-from fastapi import APIRouter, HTTPException, Depends, Query, status
+from fastapi import APIRouter, HTTPException, Depends, Query, status, Body
 from typing import List, Dict, Optional, Any
 from datetime import datetime
 from uuid import UUID
@@ -1067,6 +1067,156 @@ async def toggle_tenant_user_active(
     except Exception as e:
         logger.error(f"Error toggling user active status: {e}")
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to toggle user status")
+
+
+@router.get("/{tenant_id}/communication-settings")
+async def get_tenant_communication_settings(
+    tenant_id: UUID,
+    pool: asyncpg.Pool = Depends(get_db_pool)
+):
+    """Get communication settings for a tenant (SMS/Email API configurations)"""
+    try:
+        async with pool.acquire() as conn:
+            settings = await conn.fetchval("""
+                SELECT settings FROM tenants WHERE id = $1
+            """, tenant_id)
+
+            if settings is None:
+                raise HTTPException(status_code=404, detail="Tenant not found")
+
+            # Extract communication settings from tenant settings
+            communication_settings = settings.get('communication', {}) if settings else {}
+
+            # Return default structure if not set
+            if not communication_settings:
+                communication_settings = {
+                    'sms': {
+                        'provider': 'twilio',
+                        'enabled': False,
+                        'twilio': {
+                            'accountSid': '',
+                            'authToken': '',
+                            'phoneNumber': '',
+                            'verifyServiceSid': ''
+                        }
+                    },
+                    'email': {
+                        'provider': 'sendgrid',
+                        'enabled': False,
+                        'sendgrid': {
+                            'apiKey': '',
+                            'fromEmail': '',
+                            'fromName': '',
+                            'replyToEmail': ''
+                        }
+                    }
+                }
+
+            return {"settings": communication_settings}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting communication settings: {e}")
+        raise HTTPException(status_code=500, detail="Failed to get communication settings")
+
+
+@router.put("/{tenant_id}/communication-settings")
+async def update_tenant_communication_settings(
+    tenant_id: UUID,
+    request: Dict[str, Any] = Body(...),
+    pool: asyncpg.Pool = Depends(get_db_pool)
+):
+    """Update communication settings for a tenant (SMS/Email API configurations)"""
+    try:
+        async with pool.acquire() as conn:
+            # Get current settings
+            current_settings = await conn.fetchval("""
+                SELECT settings FROM tenants WHERE id = $1
+            """, tenant_id)
+
+            if current_settings is None:
+                raise HTTPException(status_code=404, detail="Tenant not found")
+
+            # Update communication settings
+            if not current_settings:
+                current_settings = {}
+
+            # Store the communication settings
+            current_settings['communication'] = request.get('settings', {})
+
+            # Update tenant settings
+            await conn.execute("""
+                UPDATE tenants
+                SET settings = $1, updated_at = CURRENT_TIMESTAMP
+                WHERE id = $2
+            """, current_settings, tenant_id)
+
+            return {"message": "Communication settings updated successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating communication settings: {e}")
+        raise HTTPException(status_code=500, detail="Failed to update communication settings")
+
+
+@router.post("/{tenant_id}/communication-settings/validate")
+async def validate_communication_channel(
+    tenant_id: UUID,
+    request: Dict[str, Any] = Body(...),
+    pool: asyncpg.Pool = Depends(get_db_pool)
+):
+    """Validate communication channel configuration (SMS or Email)"""
+    try:
+        channel = request.get('channel')
+
+        if channel not in ['sms', 'email']:
+            raise HTTPException(status_code=400, detail="Invalid channel. Must be 'sms' or 'email'")
+
+        async with pool.acquire() as conn:
+            # Get tenant communication settings
+            settings = await conn.fetchval("""
+                SELECT settings FROM tenants WHERE id = $1
+            """, tenant_id)
+
+            if settings is None:
+                raise HTTPException(status_code=404, detail="Tenant not found")
+
+            communication_settings = settings.get('communication', {}) if settings else {}
+
+            # Validate based on channel
+            if channel == 'sms':
+                sms_settings = communication_settings.get('sms', {})
+                if sms_settings.get('provider') == 'twilio':
+                    twilio_config = sms_settings.get('twilio', {})
+                    if not twilio_config.get('accountSid') or not twilio_config.get('authToken'):
+                        return {"valid": False, "message": "Twilio Account SID and Auth Token are required"}
+                    if not twilio_config.get('phoneNumber'):
+                        return {"valid": False, "message": "Twilio phone number is required"}
+
+                    # TODO: Actual Twilio validation call
+                    # For now, just check if values are present
+                    return {"valid": True, "message": "SMS configuration appears valid"}
+
+            elif channel == 'email':
+                email_settings = communication_settings.get('email', {})
+                if email_settings.get('provider') == 'sendgrid':
+                    sendgrid_config = email_settings.get('sendgrid', {})
+                    if not sendgrid_config.get('apiKey'):
+                        return {"valid": False, "message": "SendGrid API Key is required"}
+                    if not sendgrid_config.get('fromEmail'):
+                        return {"valid": False, "message": "From Email address is required"}
+
+                    # TODO: Actual SendGrid validation call
+                    # For now, just check if values are present
+                    return {"valid": True, "message": "Email configuration appears valid"}
+
+            return {"valid": False, "message": f"No configuration found for {channel}"}
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error validating communication channel: {e}")
+        raise HTTPException(status_code=500, detail="Failed to validate communication channel")
 
 
 @router.get("/{tenant_id}/metrics")

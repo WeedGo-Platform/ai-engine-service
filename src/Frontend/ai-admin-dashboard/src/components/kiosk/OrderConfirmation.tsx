@@ -1,4 +1,6 @@
+import { getApiUrl } from '../../config/app.config';
 import React, { useEffect, useState } from 'react';
+import { getApiUrl } from '../../config/app.config';
 import { CheckCircle, ShoppingBag, MapPin, Clock, Home } from 'lucide-react';
 import { useKiosk } from '../../contexts/KioskContext';
 

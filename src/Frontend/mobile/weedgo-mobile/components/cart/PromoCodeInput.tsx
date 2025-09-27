@@ -8,7 +8,12 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import useCartStore from '@/stores/cartStore';
+import { Colors, BorderRadius, Shadows } from '@/constants/Colors';
+
+const isDark = true;
+const theme = isDark ? Colors.dark : Colors.light;
 
 export function PromoCodeInput() {
   const [code, setCode] = useState('');
@@ -28,7 +33,7 @@ export function PromoCodeInput() {
       <View style={styles.appliedContainer}>
         <View style={styles.appliedContent}>
           <View style={styles.appliedLeft}>
-            <Ionicons name="checkmark-circle" size={24} color="#00ff00" />
+            <Ionicons name="checkmark-circle" size={24} color={theme.success} />
             <View style={styles.appliedText}>
               <Text style={styles.appliedCode}>{promoCode}</Text>
               <Text style={styles.appliedDiscount}>
@@ -63,15 +68,22 @@ export function PromoCodeInput() {
           editable={!loading}
         />
         <TouchableOpacity
-          style={[styles.applyButton, loading && styles.disabledButton]}
           onPress={handleApply}
           disabled={loading || !code.trim()}
+          activeOpacity={0.8}
         >
-          {loading ? (
-            <ActivityIndicator size="small" color="#000" />
-          ) : (
-            <Text style={styles.applyButtonText}>Apply</Text>
-          )}
+          <LinearGradient
+            colors={loading || !code.trim() ? ['#666', '#444'] : [theme.primary, theme.primaryLight]}
+            style={styles.applyButton}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+          >
+            {loading ? (
+              <ActivityIndicator size="small" color="white" />
+            ) : (
+              <Text style={styles.applyButtonText}>Apply</Text>
+            )}
+          </LinearGradient>
         </TouchableOpacity>
       </View>
     </View>
@@ -80,57 +92,54 @@ export function PromoCodeInput() {
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 16,
+    marginHorizontal: 20,
   },
   inputContainer: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    backgroundColor: theme.glass,
+    borderRadius: BorderRadius.xl,
+    borderWidth: 1,
+    borderColor: theme.glassBorder,
+    ...Shadows.medium,
   },
   input: {
     flex: 1,
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontSize: 16,
-    color: '#1a1a1a',
+    color: theme.text,
   },
   applyButton: {
-    backgroundColor: '#00ff00',
     paddingHorizontal: 24,
+    paddingVertical: 14,
     justifyContent: 'center',
-    borderTopRightRadius: 12,
-    borderBottomRightRadius: 12,
+    borderTopRightRadius: BorderRadius.xl - 1,
+    borderBottomRightRadius: BorderRadius.xl - 1,
   },
   applyButtonText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#000',
+    fontWeight: '700',
+    color: 'white',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   disabledButton: {
     opacity: 0.5,
   },
   appliedContainer: {
-    marginHorizontal: 16,
+    marginHorizontal: 20,
   },
   appliedContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: theme.glass,
     padding: 16,
-    borderRadius: 12,
+    borderRadius: BorderRadius.xl,
     borderWidth: 2,
-    borderColor: '#00ff00',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    borderColor: theme.success,
+    ...Shadows.medium,
   },
   appliedLeft: {
     flexDirection: 'row',
@@ -141,13 +150,14 @@ const styles = StyleSheet.create({
   },
   appliedCode: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#1a1a1a',
+    fontWeight: '700',
+    color: theme.text,
   },
   appliedDiscount: {
     fontSize: 14,
-    color: '#00ff00',
+    color: theme.success,
     marginTop: 2,
+    fontWeight: '600',
   },
   removeButton: {
     paddingHorizontal: 16,
@@ -155,7 +165,7 @@ const styles = StyleSheet.create({
   },
   removeText: {
     fontSize: 14,
-    color: '#ff3b30',
+    color: theme.secondary,
     fontWeight: '600',
   },
 });

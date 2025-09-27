@@ -1,7 +1,7 @@
 import { apiClient, ApiResponse } from './client';
 import { Order, CreateOrderData } from '@/stores/orderStore';
 
-export const orderService = {
+export const ordersService = {
   // Create a new order
   createOrder: (data: CreateOrderData): Promise<ApiResponse<Order>> => {
     return apiClient.post('/orders', data);
