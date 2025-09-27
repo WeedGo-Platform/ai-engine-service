@@ -1,4 +1,3 @@
-import { getApiUrl } from '../../config/app.config';
 import React, { useState } from 'react';
 import { getApiUrl } from '../../config/app.config';
 import { ChevronLeft, Plus, Minus, Trash2, ShoppingCart } from 'lucide-react';

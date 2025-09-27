@@ -27,6 +27,9 @@ const OrderTracking = lazy(() => import('@pages/OrderTracking'));
 const OrderHistory = lazy(() => import('@pages/OrderHistory'));
 const AgeVerification = lazy(() => import('@pages/AgeVerification'));
 
+// Admin pages
+const AGIDashboard = lazy(() => import('@pages/admin/agi/AGIDashboard'));
+
 function App() {
   useEffect(() => {
     // Restore user session and cart on app load
@@ -70,6 +73,9 @@ function App() {
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/orders" element={<OrderHistory />} />
                 <Route path="/track/:orderId" element={<OrderTracking />} />
+
+                {/* Admin Routes */}
+                <Route path="/admin/agi" element={<AGIDashboard />} />
 
                 {/* Fallback */}
                 <Route path="*" element={<Navigate to="/" replace />} />

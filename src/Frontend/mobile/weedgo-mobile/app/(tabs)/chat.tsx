@@ -80,7 +80,7 @@ export default function ChatScreen() {
       marginBottom: 8,
       backgroundColor: 'rgba(255, 255, 255, 0.95)',
       borderRadius: 12,
-      maxHeight: 120,
+      maxHeight: 480,  // Increased by 4x from 120
       shadowColor: '#000',
       shadowOffset: { width: 0, height: -2 },
       shadowOpacity: 0.1,

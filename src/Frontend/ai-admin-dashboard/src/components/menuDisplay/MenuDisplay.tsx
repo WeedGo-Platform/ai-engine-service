@@ -1,4 +1,3 @@
-import { getApiUrl } from '../../config/app.config';
 import React, { useState, useEffect } from 'react';
 import { getApiUrl } from '../../config/app.config';
 import { Leaf, Monitor, RefreshCw, Maximize2 } from 'lucide-react';
@@ -60,7 +59,7 @@ export default function MenuDisplay() {
     try {
       setLoading(true);
       const response = await fetch(
-        `${getApiUrl("/api/kiosk/products/browse?store_id=${currentStore.id}&limit=500`
+        `${getApiUrl('/api/kiosk/products/browse')}?store_id=${currentStore.id}&limit=500`
       );
 
       if (response.ok) {

@@ -1,4 +1,3 @@
-import { getApiUrl } from '../../config/app.config';
 import React, { useState } from 'react';
 import { getApiUrl } from '../../config/app.config';
 import { X, Phone, Mail, ChevronRight, Loader2 } from 'lucide-react';
@@ -83,7 +82,7 @@ export default function CustomerAuthModal({
     try {
       const identifier = authMethod === 'phone' ? phoneNumber : email;
 
-      const response = await fetch(getApiUrl('api/kiosk/auth/send-code', {
+      const response = await fetch(getApiUrl('/api/kiosk/auth/send-code'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -112,7 +111,7 @@ export default function CustomerAuthModal({
     try {
       const identifier = authMethod === 'phone' ? phoneNumber : email;
 
-      const response = await fetch(getApiUrl('api/kiosk/auth/verify', {
+      const response = await fetch(getApiUrl('/api/kiosk/auth/verify'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
