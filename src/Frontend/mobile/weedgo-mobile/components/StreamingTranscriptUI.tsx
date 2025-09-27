@@ -31,6 +31,7 @@ interface StreamingTranscriptUIProps {
   onClearTranscripts?: () => void;
   onSendTranscript?: (text: string) => void; // Callback when transcript should be sent
   audioLevel?: number; // 0-1 normalized audio level
+  compact?: boolean; // Compact mode for non-blocking display
 }
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -49,6 +50,7 @@ export const StreamingTranscriptUI: React.FC<StreamingTranscriptUIProps> = ({
   onClearTranscripts,
   onSendTranscript,
   audioLevel = 0,
+  compact = false,
 }) => {
   // Animation values
   const pulseAnim = useRef(new Animated.Value(1)).current;
@@ -157,6 +159,55 @@ export const StreamingTranscriptUI: React.FC<StreamingTranscriptUIProps> = ({
     }
   };
 
+  // Compact mode styles
+  if (compact) {
+    return (
+      <View style={compactStyles.container}>
+        {/* Minimal status indicator */}
+        <View style={compactStyles.header}>
+          <View style={compactStyles.statusRow}>
+            <View style={[compactStyles.dot, { backgroundColor: isConnected ? '#4CAF50' : '#F44336' }]} />
+            <Text style={compactStyles.statusText}>
+              {isRecording ? 'Recording...' : 'Ready'}
+            </Text>
+            {latencyMs > 0 && (
+              <Text style={compactStyles.latencyText}>({latencyMs}ms)</Text>
+            )}
+          </View>
+          {/* Stop button */}
+          {isRecording && (
+            <TouchableOpacity onPress={onStopRecording} style={compactStyles.stopButton}>
+              <Ionicons name="stop-circle" size={24} color="#FF5252" />
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {/* Transcript Display */}
+        <ScrollView
+          ref={scrollViewRef}
+          style={compactStyles.transcriptContainer}
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Combined transcript */}
+          <Text style={compactStyles.transcript}>
+            {finalTranscript}
+            {partialTranscript && (
+              <Text style={[compactStyles.partialText, { opacity: 0.4 + (partialConfidence * 0.6) }]}>
+                {' '}{partialTranscript}
+              </Text>
+            )}
+          </Text>
+        </ScrollView>
+
+        {/* Error Display */}
+        {error && (
+          <Text style={compactStyles.errorText}>{error}</Text>
+        )}
+      </View>
+    );
+  }
+
+  // Full mode (original implementation)
   return (
     <View style={styles.container}>
       {/* Connection Status Bar */}
@@ -328,6 +379,58 @@ export const StreamingTranscriptUI: React.FC<StreamingTranscriptUIProps> = ({
     </View>
   );
 };
+
+const compactStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 8,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  statusRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  dot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+  },
+  statusText: {
+    fontSize: 12,
+    color: '#666',
+    fontWeight: '500',
+  },
+  latencyText: {
+    fontSize: 10,
+    color: '#999',
+  },
+  stopButton: {
+    padding: 4,
+  },
+  transcriptContainer: {
+    flex: 1,
+    maxHeight: 80,
+  },
+  transcript: {
+    fontSize: 14,
+    lineHeight: 20,
+    color: '#333',
+  },
+  partialText: {
+    fontStyle: 'italic',
+  },
+  errorText: {
+    fontSize: 11,
+    color: '#F44336',
+    marginTop: 4,
+  },
+});
 
 const styles = StyleSheet.create({
   container: {
