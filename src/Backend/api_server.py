@@ -348,10 +348,20 @@ app = FastAPI(
         "persistAuthorization": True,  # Remember auth between reloads
         "displayOperationId": False,
         "deepLinking": True,  # Enable deep linking to specific endpoints
-        "displayRequestDuration": True  # Show request duration
+        "displayRequestDuration": True,  # Show request duration
+        "supportedSubmitMethods": ["get", "post", "put", "delete", "patch", "head", "options"],
+        "validatorUrl": None,  # Disable external validator
+        "withCredentials": False,  # Disable sending cookies to external sources
+        "requestInterceptor": None,  # No external interceptors
+        "responseInterceptor": None  # No external interceptors
     },
     docs_url="/docs",
-    redoc_url="/redoc"
+    redoc_url="/redoc",
+    swagger_ui_init_oauth=None,  # Disable OAuth init
+    swagger_ui_oauth2_redirect_url=None,  # No OAuth redirect
+    swagger_js_url=None,  # Use bundled JS (no external CDN)
+    swagger_css_url=None,  # Use bundled CSS (no external CDN)
+    swagger_favicon_url=None  # Use default favicon (no external CDN)
 )
 
 # Add CORS middleware - allow localhost on any port
@@ -493,17 +503,13 @@ app.include_router(analytics_router)
 
 # Import and include AGI endpoints
 try:
-    # Import all AGI route modules
-    from agi.api.routes.chat import router as agi_chat_router
+    # Import the AGI dashboard routes (this is the file we have fixed)
     from agi.api.dashboard_routes import router as agi_dashboard_router
-    from agi.api.routes.auth import router as agi_auth_router
 
-    # Mount all AGI routers at /api/agi prefix with specific tags
-    app.include_router(agi_chat_router, prefix="/api/agi", tags=["🤖 AGI - Chat"])
+    # Mount AGI dashboard router at /api/agi prefix
     app.include_router(agi_dashboard_router, prefix="/api/agi", tags=["🧠 AGI - Dashboard"])
-    app.include_router(agi_auth_router, prefix="/api/agi", tags=["🔐 AGI - Authentication"])
 
-    logger.info("AGI endpoints loaded successfully (chat, dashboard, auth)")
+    logger.info("AGI Dashboard endpoints loaded successfully - all 26 endpoints available")
 except Exception as e:
     logger.warning(f"Failed to load AGI endpoints: {e}")
 

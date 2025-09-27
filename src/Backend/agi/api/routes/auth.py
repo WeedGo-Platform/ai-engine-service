@@ -23,7 +23,7 @@ from agi.core.database import get_db_manager
 from agi.security import get_audit_logger
 from agi.security.audit_logger import AuditEventType, AuditSeverity
 
-router = APIRouter(prefix="/api/v1/auth")
+router = APIRouter(prefix="/auth")
 
 
 class LoginRequest(BaseModel):

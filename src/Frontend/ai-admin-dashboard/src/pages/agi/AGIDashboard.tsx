@@ -80,8 +80,8 @@ const AGIDashboard: React.FC = () => {
   const [wsConnection, setWsConnection] = useState<WebSocket | null>(null);
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
 
-  const apiBaseUrl = 'http://localhost:5024/agi/api';
-  const wsUrl = 'ws://localhost:5024/agi/ws';
+  const apiBaseUrl = 'http://localhost:5024/api/agi';
+  const wsUrl = 'ws://localhost:5024/api/agi/ws';
 
   // Fetch agents data
   const fetchAgents = useCallback(async () => {

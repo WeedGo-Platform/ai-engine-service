@@ -1,5 +1,5 @@
 """
-AGI Dashboard API Routes - Fixed Version
+AGI Dashboard API Routes
 Provides REST endpoints for the admin dashboard
 """
 
@@ -11,9 +11,10 @@ import json
 import asyncio
 import csv
 import io
-import random
 
 from agi.agents import CoordinatorAgent, ResearchAgent, AnalystAgent, ExecutorAgent, ValidatorAgent
+from agi.security import get_access_control, get_content_filter, get_rate_limiter, get_audit_logger
+from agi.learning import get_feedback_collector, get_pattern_engine, get_learning_adapter
 from agi.core.interfaces import AgentState, AgentTask
 
 router = APIRouter()
@@ -39,9 +40,6 @@ class ConnectionManager:
 
 manager = ConnectionManager()
 
-# Storage for agent data (in production, use database)
-agents_data = {}
-
 # Agent Management Endpoints
 
 @router.get("/agents")
@@ -63,25 +61,16 @@ async def get_agents():
         capabilities = agent.get_capabilities()
         state = agent.get_state()
 
-        # Store agent data for updates
-        agent_id = f"agent_{agent_type}"
-        if agent_id not in agents_data:
-            agents_data[agent_id] = {
-                "name": f"{agent_type.capitalize()} Agent",
-                "type": agent_type,
-                "model": capabilities.get("model", "unknown"),
-            }
-
         # Mock some statistics (in production, fetch from database)
         agents.append({
-            "id": agent_id,
-            "name": agents_data[agent_id].get("name", f"{agent_type.capitalize()} Agent"),
+            "id": f"agent_{agent_type}",
+            "name": f"{agent_type.capitalize()} Agent",
             "type": agent_type,
-            "model": agents_data[agent_id].get("model", capabilities.get("model", "unknown")),
+            "model": capabilities.get("model", "unknown"),
             "status": "active" if state == AgentState.EXECUTING else "idle",
-            "tasks": 100 + len(agent_type) * 10,
-            "successRate": 95 + len(agent_type) % 5,
-            "currentLoad": 30 + len(agent_type) * 10
+            "tasks": 100 + len(agent_type) * 10,  # Mock data
+            "successRate": 95 + len(agent_type) % 5,  # Mock data
+            "currentLoad": 30 + len(agent_type) * 10  # Mock data
         })
 
     return agents
@@ -89,21 +78,12 @@ async def get_agents():
 @router.get("/agents/{agent_id}")
 async def get_agent(agent_id: str):
     """Get specific agent details"""
-    # Check if agent exists
-    if agent_id in agents_data:
-        agent_info = agents_data[agent_id]
-    else:
-        agent_info = {
-            "name": f"Agent {agent_id}",
-            "type": "research",
-            "model": "claude-3-sonnet"
-        }
-
+    # Mock implementation - replace with actual agent lookup
     return {
         "id": agent_id,
-        "name": agent_info.get("name", f"Agent {agent_id}"),
-        "type": agent_info.get("type", "research"),
-        "model": agent_info.get("model", "claude-3-sonnet"),
+        "name": f"Agent {agent_id}",
+        "type": "research",
+        "model": "claude-3-sonnet",
         "status": "active",
         "tasks": 142,
         "successRate": 99.2,
@@ -114,35 +94,6 @@ async def get_agent(agent_id: str):
             {"id": "task_2", "description": "Analyze user feedback", "status": "in_progress"}
         ]
     }
-
-@router.put("/agents/{agent_id}")
-async def update_agent(agent_id: str, update_data: dict):
-    """Update an agent configuration"""
-    if agent_id not in agents_data:
-        agents_data[agent_id] = {}
-
-    agents_data[agent_id].update(update_data)
-
-    await manager.broadcast({
-        "type": "agent_update",
-        "agentId": agent_id,
-        "update": update_data
-    })
-
-    return {"success": True, "agent_id": agent_id, "updated": update_data}
-
-@router.delete("/agents/{agent_id}")
-async def delete_agent(agent_id: str):
-    """Delete an agent (disable it)"""
-    if agent_id in agents_data:
-        agents_data[agent_id]["status"] = "disabled"
-
-    await manager.broadcast({
-        "type": "agent_deleted",
-        "agentId": agent_id
-    })
-
-    return {"success": True, "agent_id": agent_id, "message": "Agent disabled"}
 
 @router.post("/agents/{agent_id}/actions")
 async def execute_agent_action(agent_id: str, action_data: dict):
@@ -178,37 +129,6 @@ async def get_stats():
         "activeUsers": 127,
         "peakLoad": 89,  # percentage
         "uptime": 99.9  # percentage
-    }
-
-@router.get("/stats/history")
-async def get_stats_history(period: str = Query("24h", regex="^(1h|6h|24h|7d|30d)$")):
-    """Get historical statistics"""
-    # Mock historical data
-    history = []
-
-    if period == "1h":
-        points = 12  # 5-minute intervals
-    elif period == "6h":
-        points = 12  # 30-minute intervals
-    elif period == "24h":
-        points = 24  # hourly
-    elif period == "7d":
-        points = 7  # daily
-    else:  # 30d
-        points = 30  # daily
-
-    base_time = datetime.now()
-    for i in range(points):
-        history.append({
-            "timestamp": (base_time - timedelta(hours=i)).isoformat(),
-            "requests": random.randint(500, 1500),
-            "success_rate": 95 + random.random() * 5,
-            "response_time": 200 + random.randint(0, 100)
-        })
-
-    return {
-        "period": period,
-        "data": history
     }
 
 @router.get("/agents/{agent_id}/stats")
@@ -263,31 +183,14 @@ async def get_audit_logs(
     limit: int = Query(100, le=1000)
 ):
     """Get audit logs with filtering"""
-    # Mock audit logs - in production, fetch from database
-    logs = []
+    audit_logger = await get_audit_logger()
 
-    for i in range(min(limit, 50)):
-        timestamp = datetime.now() - timedelta(minutes=i*5)
-
-        # Apply filters if provided
-        if start_time and timestamp < start_time:
-            continue
-        if end_time and timestamp > end_time:
-            continue
-
-        log_entry = {
-            "id": f"log_{i}",
-            "timestamp": timestamp.isoformat(),
-            "user_id": user_id if user_id else f"user_{i % 5}",
-            "event_type": event_type if event_type else f"event.type.{i % 3}",
-            "description": f"Event {i} occurred",
-            "status": "success" if i % 10 != 0 else "failed",
-            "metadata": {
-                "ip_address": f"192.168.1.{i % 255}",
-                "user_agent": "Mozilla/5.0"
-            }
-        }
-        logs.append(log_entry)
+    logs = await audit_logger.query_logs(
+        start_time=start_time,
+        end_time=end_time,
+        user_id=user_id,
+        limit=limit
+    )
 
     return logs
 
@@ -296,7 +199,9 @@ async def get_audit_logs(
 @router.get("/security/status")
 async def get_security_status():
     """Get current security system status"""
-    # Mock security status - in production, fetch from security modules
+    content_filter = await get_content_filter()
+    rate_limiter = await get_rate_limiter()
+
     return {
         "contentFiltering": "active",
         "rateLimiting": "active",
@@ -308,7 +213,7 @@ async def get_security_status():
             "timestamp": datetime.now().isoformat()
         },
         "activeRules": {
-            "content_filter": 12,
+            "content_filter": len(content_filter.patterns),
             "rate_limits": 6
         }
     }
@@ -316,55 +221,32 @@ async def get_security_status():
 @router.get("/security/events")
 async def get_security_events(limit: int = Query(50, le=500)):
     """Get recent security events"""
-    # Mock security events
-    events = []
+    audit_logger = await get_audit_logger()
 
-    event_types = ["authentication", "authorization", "threat_blocked", "rate_limit", "content_filter"]
-    severities = ["low", "medium", "high", "critical"]
+    # Query security-related events
+    events = await audit_logger.query_logs(limit=limit)
 
-    for i in range(min(limit, 20)):
-        events.append({
-            "id": f"security_event_{i}",
-            "timestamp": (datetime.now() - timedelta(minutes=i*10)).isoformat(),
-            "event_type": f"security.{event_types[i % len(event_types)]}",
-            "severity": severities[i % len(severities)],
-            "description": f"Security event {i} detected",
-            "action_taken": "blocked" if i % 3 == 0 else "logged",
-            "user_id": f"user_{i % 10}" if i % 2 == 0 else None
-        })
+    security_events = [
+        event for event in events
+        if event.get("event_type", "").startswith("security.")
+    ]
 
-    return events
-
-@router.get("/security/threats")
-async def get_security_threats():
-    """Get threat analysis"""
-    return {
-        "total_threats": 156,
-        "threats_blocked": 148,
-        "threats_passed": 8,
-        "threat_categories": {
-            "sql_injection": 45,
-            "xss": 32,
-            "csrf": 12,
-            "ddos": 67
-        },
-        "recent_threats": [
-            {
-                "id": "threat_1",
-                "type": "sql_injection",
-                "timestamp": datetime.now().isoformat(),
-                "source_ip": "192.168.1.100",
-                "blocked": True
-            }
-        ]
-    }
+    return security_events
 
 @router.put("/security/rules/{rule}")
 async def update_security_rule(rule: str, rule_data: dict):
     """Update a security rule"""
     value = rule_data.get("value")
 
-    # Mock update - in production, update actual security rules
+    if rule == "content_filtering":
+        content_filter = await get_content_filter()
+        # Update content filter settings
+        pass
+    elif rule == "rate_limiting":
+        rate_limiter = await get_rate_limiter()
+        # Update rate limiting rules
+        pass
+
     await manager.broadcast({
         "type": "security_update",
         "rule": rule,
@@ -378,9 +260,11 @@ async def update_security_rule(rule: str, rule_data: dict):
 @router.get("/learning/metrics")
 async def get_learning_metrics():
     """Get learning system metrics"""
-    # Mock metrics - in production, fetch from learning system
+    pattern_engine = await get_pattern_engine()
+    feedback_collector = await get_feedback_collector()
+
     return {
-        "patternCount": 847,
+        "patternCount": 847,  # Mock - fetch from pattern engine
         "feedbackPositive": 92,  # percentage
         "adaptationsToday": 34,
         "learningRate": 0.85,
@@ -390,7 +274,9 @@ async def get_learning_metrics():
 @router.get("/learning/patterns")
 async def get_patterns(limit: int = Query(50, le=500)):
     """Get recognized patterns"""
-    # Mock patterns
+    pattern_engine = await get_pattern_engine()
+
+    # Mock patterns - in production, fetch from pattern engine
     patterns = []
     for i in range(min(limit, 10)):
         patterns.append({
@@ -406,22 +292,9 @@ async def get_patterns(limit: int = Query(50, le=500)):
 @router.get("/learning/feedback")
 async def get_feedback(limit: int = Query(50, le=500)):
     """Get recent feedback"""
-    # Mock feedback data
-    feedback_data = []
+    feedback_collector = await get_feedback_collector()
 
-    sentiments = ["positive", "negative", "neutral"]
-    categories = ["accuracy", "speed", "relevance", "helpfulness"]
-
-    for i in range(min(limit, 20)):
-        feedback_data.append({
-            "id": f"feedback_{i}",
-            "timestamp": (datetime.now() - timedelta(hours=i)).isoformat(),
-            "sentiment": sentiments[i % len(sentiments)],
-            "category": categories[i % len(categories)],
-            "score": 0.7 + (i % 30) / 100,
-            "message": f"Feedback message {i}",
-            "user_id": f"user_{i % 10}"
-        })
+    feedback_data = await feedback_collector.get_recent_feedback(limit=limit)
 
     return feedback_data
 
@@ -430,7 +303,9 @@ async def get_feedback(limit: int = Query(50, le=500)):
 @router.get("/rate-limits")
 async def get_rate_limits():
     """Get current rate limit rules"""
-    # Mock rate limits
+    rate_limiter = await get_rate_limiter()
+
+    # Mock rate limits - in production, fetch from rate limiter
     return [
         {"rule": "global_requests", "limit": 10000, "window": 60, "current": 3421},
         {"rule": "user_requests", "limit": 100, "window": 60, "current": 42},
@@ -441,14 +316,11 @@ async def get_rate_limits():
 @router.put("/rate-limits/{rule}")
 async def update_rate_limit(rule: str, limit_data: dict):
     """Update a rate limit rule"""
+    rate_limiter = await get_rate_limiter()
     new_limit = limit_data.get("limit")
 
-    # Mock update
-    await manager.broadcast({
-        "type": "rate_limit_update",
-        "rule": rule,
-        "limit": new_limit
-    })
+    # Update rate limit in system
+    # await rate_limiter.update_rule(rule, new_limit)
 
     return {"success": True, "rule": rule, "limit": new_limit}
 
@@ -457,6 +329,7 @@ async def update_rate_limit(rule: str, limit_data: dict):
 @router.post("/system/restart-agents")
 async def restart_agents():
     """Restart all agents"""
+    # Implement agent restart logic
     await manager.broadcast({
         "type": "system_action",
         "action": "restart_agents",
@@ -476,6 +349,8 @@ async def restart_agents():
 @router.post("/system/clear-cache")
 async def clear_cache():
     """Clear system cache"""
+    # Implement cache clearing logic
+
     await manager.broadcast({
         "type": "system_action",
         "action": "clear_cache",
@@ -484,77 +359,16 @@ async def clear_cache():
 
     return {"success": True, "action": "clear_cache", "cleared_items": 1247}
 
-@router.post("/system/backup")
-async def create_backup():
-    """Create system backup"""
-    backup_id = f"backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-
-    await manager.broadcast({
-        "type": "system_action",
-        "action": "backup",
-        "backup_id": backup_id,
-        "status": "in_progress"
-    })
-
-    await asyncio.sleep(2)  # Simulate backup
-
-    await manager.broadcast({
-        "type": "system_action",
-        "action": "backup",
-        "backup_id": backup_id,
-        "status": "completed"
-    })
-
-    return {
-        "success": True,
-        "action": "backup",
-        "backup_id": backup_id,
-        "size_mb": 1234,
-        "timestamp": datetime.now().isoformat()
-    }
-
-@router.post("/system/restore")
-async def restore_backup(restore_data: dict):
-    """Restore from backup"""
-    backup_id = restore_data.get("backup_id", "backup_123")
-
-    await manager.broadcast({
-        "type": "system_action",
-        "action": "restore",
-        "backup_id": backup_id,
-        "status": "in_progress"
-    })
-
-    await asyncio.sleep(3)  # Simulate restore
-
-    await manager.broadcast({
-        "type": "system_action",
-        "action": "restore",
-        "backup_id": backup_id,
-        "status": "completed"
-    })
-
-    return {
-        "success": True,
-        "action": "restore",
-        "backup_id": backup_id,
-        "restored_at": datetime.now().isoformat()
-    }
-
 @router.get("/system/export-logs")
 async def export_logs(format: str = Query("json", regex="^(json|csv)$")):
     """Export system logs"""
-    # Mock logs
-    logs = []
+    audit_logger = await get_audit_logger()
 
-    for i in range(100):
-        logs.append({
-            "id": f"log_{i}",
-            "timestamp": (datetime.now() - timedelta(minutes=i)).isoformat(),
-            "level": "INFO" if i % 5 != 0 else "WARNING",
-            "message": f"Log entry {i}",
-            "module": f"module_{i % 10}"
-        })
+    # Get logs from last 24 hours
+    logs = await audit_logger.query_logs(
+        start_time=datetime.now() - timedelta(days=1),
+        limit=10000
+    )
 
     if format == "csv":
         # Convert to CSV
@@ -602,17 +416,6 @@ async def websocket_endpoint(websocket: WebSocket):
     except WebSocketDisconnect:
         manager.disconnect(websocket)
 
-# Health check endpoint
-@router.get("/health")
-async def health_check():
-    """Health check endpoint"""
-    return {
-        "status": "healthy",
-        "service": "AGI Dashboard API",
-        "timestamp": datetime.now().isoformat(),
-        "uptime": "99.9%"
-    }
-
 # Background task to send periodic updates
 async def send_periodic_updates():
     """Send periodic updates to connected clients"""
@@ -621,8 +424,8 @@ async def send_periodic_updates():
 
         # Get current stats
         stats = {
-            "totalRequests": 8462 + int(asyncio.get_event_loop().time()) % 100,
-            "successRate": 98.5 + (int(asyncio.get_event_loop().time()) % 10) / 10
+            "totalRequests": 8462 + asyncio.get_event_loop().time() % 100,
+            "successRate": 98.5 + (asyncio.get_event_loop().time() % 10) / 10
         }
 
         await manager.broadcast({
