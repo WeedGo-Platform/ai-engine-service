@@ -1,4 +1,3 @@
-import { getApiUrl } from '../../config/app.config';
 import React, { useState } from 'react';
 import { getApiUrl } from '../../config/app.config';
 import { X, Send, Bot, UserCircle } from 'lucide-react';

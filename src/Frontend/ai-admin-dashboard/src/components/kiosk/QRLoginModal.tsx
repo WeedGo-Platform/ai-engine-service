@@ -1,4 +1,3 @@
-import { getApiUrl } from '../../config/app.config';
 import React, { useState, useEffect } from 'react';
 import { getApiUrl } from '../../config/app.config';
 import { X, Scan, Loader2, CheckCircle2 } from 'lucide-react';
@@ -110,7 +109,7 @@ export default function QRLoginModal({
     setIsPolling(true);
     const pollInterval = setInterval(async () => {
       try {
-        const response = await fetch(`${getApiUrl("api/kiosk/auth/check-qr/${code}`);
+        const response = await fetch(getApiUrl(`/api/kiosk/auth/check-qr/${code}`));
 
         if (response.ok) {
           const data = await response.json();

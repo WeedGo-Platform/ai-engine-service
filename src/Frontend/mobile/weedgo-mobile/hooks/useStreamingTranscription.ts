@@ -57,6 +57,8 @@ export const useStreamingTranscription = (config: Partial<StreamingConfig> = {})
   const chunkTimerRef = useRef<NodeJS.Timer | null>(null);
   const reconnectAttemptsRef = useRef(0);
   const sessionIdRef = useRef<string>('');
+  const lastChunkIndexRef = useRef(0); // Track last chunk sent
+  const audioChunksRef = useRef<string[]>([]); // Store audio chunks
   const metricsRef = useRef({
     packetsSent: 0,
     packetsReceived: 0,
@@ -102,6 +104,7 @@ export const useStreamingTranscription = (config: Partial<StreamingConfig> = {})
       ws.onmessage = (event) => {
         try {
           const message = JSON.parse(event.data);
+          console.log('[RT] Received message:', message.type, message);
           handleWebSocketMessage(message);
         } catch (error) {
           console.error('[RT] Failed to parse message:', error);
@@ -230,27 +233,23 @@ export const useStreamingTranscription = (config: Partial<StreamingConfig> = {})
       // Create recording with streaming configuration
       const recording = new Audio.Recording();
 
-      // Configure for streaming (16kHz, mono, 16-bit PCM)
+      // Configure for streaming - use m4a for iOS compatibility
       const recordingOptions = {
-        ...Audio.RecordingOptionsPresets.HIGH_QUALITY,
         android: {
-          ...Audio.RecordingOptionsPresets.HIGH_QUALITY.android,
           extension: '.wav',
           outputFormat: Audio.AndroidOutputFormat.DEFAULT,
           audioEncoder: Audio.AndroidAudioEncoder.DEFAULT,
-          sampleRate: mergedConfig.sampleRate,
-          numberOfChannels: 1,
-        },
-        ios: {
-          ...Audio.RecordingOptionsPresets.HIGH_QUALITY.ios,
-          extension: '.wav',
-          audioQuality: Audio.IOSAudioQuality.HIGH,
-          sampleRate: mergedConfig.sampleRate,
+          sampleRate: 16000,
           numberOfChannels: 1,
           bitRate: 128000,
-          linearPCMBitDepth: 16,
-          linearPCMIsBigEndian: false,
-          linearPCMIsFloat: false,
+        },
+        ios: {
+          extension: '.m4a',
+          outputFormat: Audio.IOSOutputFormat.MPEG4AAC,
+          audioQuality: Audio.IOSAudioQuality.HIGH,
+          sampleRate: 44100, // iOS prefers standard sample rates
+          numberOfChannels: 1,
+          bitRate: 128000,
         },
         web: {
           mimeType: 'audio/wav',
@@ -279,10 +278,12 @@ export const useStreamingTranscription = (config: Partial<StreamingConfig> = {})
         await connectWebSocket();
       }
 
-      // Start chunking timer
+      // Start chunking timer with proper reset
+      lastChunkIndexRef.current = 0;
+      audioChunksRef.current = [];
       startChunking();
 
-      console.log('[RT] Recording started');
+      console.log('[RT] Recording started with streaming');
     } catch (error) {
       console.error('[RT] Failed to start recording:', error);
       setState(prev => ({ ...prev, error: 'Failed to start recording', isRecording: false }));
@@ -298,6 +299,10 @@ export const useStreamingTranscription = (config: Partial<StreamingConfig> = {})
       clearInterval(chunkTimerRef.current);
     }
 
+    // Reset chunk tracking
+    lastChunkIndexRef.current = 0;
+    audioChunksRef.current = [];
+
     // Create chunking timer
     chunkTimerRef.current = setInterval(async () => {
       if (recordingRef.current && websocketRef.current?.readyState === WebSocket.OPEN) {
@@ -305,18 +310,37 @@ export const useStreamingTranscription = (config: Partial<StreamingConfig> = {})
           // Get current recording URI
           const uri = recordingRef.current.getURI();
           if (uri) {
-            // Read audio file and send chunk
-            const audioData = await FileSystem.readAsStringAsync(uri, {
-              encoding: FileSystem.EncodingType.Base64,
+            // Read entire audio file
+            const fullAudioData = await FileSystem.readAsStringAsync(uri, {
+              encoding: 'base64',
             });
 
-            // Send audio chunk via WebSocket
-            websocketRef.current.send(JSON.stringify({
-              type: 'audio',
-              data: audioData,
-              timestamp: Date.now(),
-              seq: metricsRef.current.packetsSent++,
-            }));
+            // Calculate chunk size based on duration
+            const estimatedChunkSize = Math.floor(fullAudioData.length * (mergedConfig.chunkDurationMs / 1000) / 10);
+
+            // Extract new chunk (only the part we haven't sent yet)
+            if (fullAudioData.length > lastChunkIndexRef.current) {
+              const newChunk = fullAudioData.slice(
+                lastChunkIndexRef.current,
+                Math.min(lastChunkIndexRef.current + estimatedChunkSize, fullAudioData.length)
+              );
+
+              if (newChunk.length > 0) {
+                // Send only the new audio chunk
+                websocketRef.current.send(JSON.stringify({
+                  type: 'audio',
+                  data: newChunk,
+                  timestamp: Date.now(),
+                  seq: metricsRef.current.packetsSent++,
+                }));
+
+                // Update last chunk index
+                lastChunkIndexRef.current += newChunk.length;
+                audioChunksRef.current.push(newChunk);
+
+                console.log(`[RT] Sent chunk ${metricsRef.current.packetsSent}, size: ${newChunk.length}`);
+              }
+            }
           }
         } catch (error) {
           console.error('[RT] Error sending audio chunk:', error);
