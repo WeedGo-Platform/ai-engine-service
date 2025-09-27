@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
   ScrollView,
   StyleSheet,
+  Modal,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -18,9 +19,9 @@ import { useChatStore } from '../../stores/chatStore';
 import { MessageBubble } from '../../components/chat/MessageBubble';
 import { TypingIndicator } from '../../components/chat/TypingIndicator';
 import { SuggestionChips } from '../../components/chat/SuggestionChips';
-import { useEnhancedTranscription } from '../../hooks/useEnhancedTranscription';
+import { useStreamingTranscription } from '../../hooks/useStreamingTranscription';
 import { VoiceRecordingButton } from '../../components/chat/VoiceRecordingButton';
-import { TranscriptDisplay } from '../../components/chat/TranscriptDisplay';
+import { StreamingTranscriptUI } from '../../components/StreamingTranscriptUI';
 import { Colors, GlassStyles, BorderRadius, Shadows } from '@/constants/Colors';
 import { useTheme } from '@/contexts/ThemeContext';
 import { glassChatStyles as staticStyles } from '@/constants/GlassmorphismStyles';
@@ -29,9 +30,12 @@ import { BlurView } from 'expo-blur';
 export default function ChatScreen() {
   const [inputText, setInputText] = useState('');
   const [isTTSEnabled, setIsTTSEnabled] = useState(true);
+  const [showTranscriptModal, setShowTranscriptModal] = useState(false);
+  const [pendingTranscript, setPendingTranscript] = useState('');
   const flatListRef = useRef<FlatList>(null);
   const inputRef = useRef<TextInput>(null);
   const { theme, isDark } = useTheme();
+  const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const {
     messages,
@@ -51,91 +55,121 @@ export default function ChatScreen() {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      backgroundColor: 'rgba(142, 142, 147, 0.5)', // Space gray with 50% opacity
-      backdropFilter: 'blur(10px)',
-      paddingVertical: 10,
-      paddingHorizontal: 20,
-      marginTop: Platform.OS === 'ios' ? 10 : 5,
-      marginHorizontal: 16,
-      marginBottom: 8,
-      borderRadius: 30,
-      borderWidth: 1,
-      borderColor: 'rgba(255, 255, 255, 0.5)',
+      padding: 16,
+      paddingTop: Platform.OS === 'ios' ? 48 : 16,
+      backgroundColor: 'rgba(255,255,255,0.05)',
+      borderBottomWidth: 0.5,
+      borderBottomColor: 'rgba(255,255,255,0.1)',
     },
-    inputContainer: {
-      position: 'relative', // Changed from absolute to work with KeyboardAvoidingView
-      bottom: 0,
-      left: 0,
-      right: 0,
-      paddingBottom: Platform.OS === 'ios' ? 90 : 68, // Space for tab bar
-      paddingTop: 8,
-      paddingHorizontal: 16,
-      backgroundColor: 'transparent',
+    headerTitle: {
+      fontSize: 20,
+      fontWeight: '600',
+      color: '#fff',
     },
-    inputWrapper: {
+    headerActions: {
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: 'rgba(142, 142, 147, 0.5)', // Same space gray as header
-      backdropFilter: 'blur(10px)',
-      borderRadius: 30,
-      paddingHorizontal: 12,
-      paddingVertical: 8,
-      borderWidth: 1,
-      borderColor: 'rgba(255, 255, 255, 0.5)',
-      marginBottom: 0, // No bottom margin
-      marginTop: 0, // No top margin
-      gap: 8,
-    },
-    textInput: {
-      flex: 1,
-      fontSize: 16,
-      color: theme.text,
-      paddingVertical: 8,
-      paddingHorizontal: 8,
-      minHeight: 36,
-      maxHeight: 100,
+      gap: 16,
     },
     messagesList: {
       paddingHorizontal: 16,
-      paddingBottom: 20, // Reduced since input is no longer absolute
+      paddingBottom: 20,
       paddingTop: 8,
+    },
+    transcriptModal: {
+      flex: 1,
+      backgroundColor: 'rgba(0,0,0,0.9)',
+      justifyContent: 'flex-end',
+    },
+    transcriptContainer: {
+      backgroundColor: '#fff',
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
+      maxHeight: '80%',
+      minHeight: 300,
     },
   }), [theme, isDark]);
 
+  // Handle sending final transcript to chat
+  const handleSendTranscript = useCallback((text: string) => {
+    if (text.trim()) {
+      sendChatMessage(text, true);
+      setShowTranscriptModal(false);
+      setPendingTranscript('');
+    }
+  }, [sendChatMessage]);
+
+  // Initialize streaming transcription with callbacks
   const {
     isRecording,
-    transcript,
+    isConnected: wsConnected,
     partialTranscript,
-    status: transcriptionStatus,
-    error: transcriptionError,
-    recordingDuration,
-    audioLevel,
-    startRecording,
-    stopRecording,
-    cancelRecording,
-    resetTranscription,
-  } = useEnhancedTranscription({
-    onTranscription: (text: string) => {
-      // Auto-send when silence detected (2 seconds)
-      if (text.trim()) {
-        handleSendMessage(text, true);
-        setInputText('');
-      }
-    },
-    onPartialTranscript: (text: string) => {
-      // Show real-time transcript as user speaks
-      setInputText(text);
-    },
-    maxDuration: 60000, // 1 minute max recording
-    silenceThreshold: 2000, // 2 seconds of silence triggers send
-    language: 'en',
-    onError: (error) => {
-      console.log('Transcription error:', error);
-      // Don't show error for connection issues, just reset
-      resetTranscription();
-      setInputText('');
-    },
+    partialConfidence,
+    finalTranscript,
+    connectionQuality,
+    latencyMs,
+    error,
+    startRecording: startStreamingRecording,
+    stopRecording: stopStreamingRecording,
+    clearTranscripts,
+    connectWebSocket,
+    disconnect,
+  } = useStreamingTranscription({
+    chunkDurationMs: 250,
+    enableWebRTC: false,
+    autoReconnect: true,
   });
+
+  // Auto-stop on 3 seconds of silence
+  useEffect(() => {
+    if (isRecording && !partialTranscript && pendingTranscript) {
+      // Start silence timer
+      if (!silenceTimerRef.current) {
+        silenceTimerRef.current = setTimeout(() => {
+          console.log('[CHAT] Auto-stopping due to 3 seconds of silence');
+          handleStopRecording();
+        }, 3000);
+      }
+    } else if (partialTranscript) {
+      // Clear silence timer when speech detected
+      if (silenceTimerRef.current) {
+        clearTimeout(silenceTimerRef.current);
+        silenceTimerRef.current = null;
+      }
+    }
+
+    return () => {
+      if (silenceTimerRef.current) {
+        clearTimeout(silenceTimerRef.current);
+        silenceTimerRef.current = null;
+      }
+    };
+  }, [isRecording, partialTranscript, pendingTranscript]);
+
+  // Handle partial transcripts - accumulate them
+  useEffect(() => {
+    if (partialTranscript) {
+      setPendingTranscript(partialTranscript);
+    }
+  }, [partialTranscript]);
+
+  // Handle final transcripts (sent on pause detection)
+  useEffect(() => {
+    if (finalTranscript && finalTranscript.trim()) {
+      // Check for sentence ending punctuation
+      const endsWithPunctuation = /[.!?]$/.test(finalTranscript.trim());
+
+      if (endsWithPunctuation) {
+        // Send immediately if it's a complete sentence
+        handleSendTranscript(finalTranscript);
+        clearTranscripts();
+        setPendingTranscript('');
+      } else {
+        // Keep accumulating if not a complete sentence
+        setPendingTranscript(finalTranscript);
+      }
+    }
+  }, [finalTranscript, handleSendTranscript, clearTranscripts]);
 
   useEffect(() => {
     // Connect to chat when screen loads
@@ -145,6 +179,7 @@ export default function ChatScreen() {
     return () => {
       // Mark as read when leaving
       markAsRead();
+      disconnect();
     };
   }, []);
 
@@ -170,26 +205,53 @@ export default function ChatScreen() {
     }
   };
 
-  const handleVoicePress = async () => {
+  const handleStartRecording = async () => {
     try {
-      if (isRecording) {
-        await stopRecording();
-      } else {
-        setInputText('');
-        resetTranscription();
-        await startRecording();
+      setShowTranscriptModal(true);
+      setPendingTranscript('');
+      clearTranscripts();
+
+      // Connect WebSocket if not connected
+      if (!wsConnected) {
+        await connectWebSocket();
       }
+
+      await startStreamingRecording();
     } catch (error) {
-      console.log('Voice recording error:', error);
-      // Silent error handling - just reset state
-      resetTranscription();
-      setInputText('');
+      console.error('[CHAT] Failed to start recording:', error);
+      setShowTranscriptModal(false);
     }
   };
 
-  const handleVoiceLongPress = () => {
+  const handleStopRecording = async () => {
+    try {
+      await stopStreamingRecording();
+
+      // Send any pending transcript
+      if (pendingTranscript && pendingTranscript.trim()) {
+        handleSendTranscript(pendingTranscript);
+      }
+
+      // Clear state
+      clearTranscripts();
+      setPendingTranscript('');
+      setShowTranscriptModal(false);
+
+      // Clear silence timer
+      if (silenceTimerRef.current) {
+        clearTimeout(silenceTimerRef.current);
+        silenceTimerRef.current = null;
+      }
+    } catch (error) {
+      console.error('[CHAT] Failed to stop recording:', error);
+    }
+  };
+
+  const handleVoicePress = async () => {
     if (isRecording) {
-      cancelRecording();
+      await handleStopRecording();
+    } else {
+      await handleStartRecording();
     }
   };
 
@@ -197,62 +259,48 @@ export default function ChatScreen() {
     setIsTTSEnabled(!isTTSEnabled);
   };
 
-  const renderMessage = ({ item }: { item: any }) => {
-    return <MessageBubble message={item} />;
-  };
-
-  const renderHeader = () => {
-    return (
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <Text style={styles.headerTitle}>WeedGo AI</Text>
-          <View style={[styles.statusDot, isConnected ? styles.connected : styles.disconnected]} />
-        </View>
-        <View style={styles.headerRight}>
-          <TouchableOpacity
-            onPress={handleSpeakerToggle}
-            style={[styles.speakerButton, !isTTSEnabled && styles.speakerButtonOff]}
-          >
-            <Ionicons
-              name={isTTSEnabled ? "volume-high" : "volume-mute"}
-              size={22}
-              color={isTTSEnabled ? Colors.light.primary : "#999"}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={clearChat} style={styles.clearButton}>
-            <Ionicons name="trash-outline" size={20} color="#666" />
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  };
+  const renderMessage = ({ item, index }) => (
+    <MessageBubble
+      message={item}
+      isLast={index === messages.length - 1}
+      onSpeak={isTTSEnabled ? undefined : null}
+    />
+  );
 
   const renderFooter = () => {
-    return (
-      <>
-        {messages.length === 0 || messages[messages.length - 1]?.type === 'assistant' ? (
-          <SuggestionChips />
-        ) : null}
-        {isTyping && <TypingIndicator />}
-      </>
-    );
+    if (isTyping) {
+      return <TypingIndicator />;
+    }
+    return null;
   };
 
   return (
     <LinearGradient
-      colors={isDark ? [theme.background, theme.backgroundSecondary, theme.surface] : [theme.gradientStart, theme.gradientMid, theme.gradientEnd]}
+      colors={isDark ? ['#1a1a2e', '#16213e'] : ['#667eea', '#764ba2']}
       style={styles.gradientContainer}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 0.5, y: 1 }}
     >
-      <SafeAreaView style={styles.container}>
-        {renderHeader()}
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>AI Assistant</Text>
+        <View style={styles.headerActions}>
+          <TouchableOpacity onPress={handleSpeakerToggle}>
+            <Ionicons
+              name={isTTSEnabled ? 'volume-high' : 'volume-mute'}
+              size={24}
+              color="#fff"
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={clearChat}>
+            <Ionicons name="trash-outline" size={24} color="#fff" />
+          </TouchableOpacity>
+        </View>
+      </View>
 
-        <KeyboardAvoidingView
-          style={styles.keyboardAvoid}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
-        >
+      <KeyboardAvoidingView
+        style={styles.keyboardAvoid}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
         <FlatList
           ref={flatListRef}
           data={messages}
@@ -266,16 +314,6 @@ export default function ChatScreen() {
         />
 
         <View style={styles.inputContainer}>
-          {/* Enhanced Transcript Display - show partial transcript while recording */}
-          {isRecording && partialTranscript && (
-            <TranscriptDisplay
-              transcript={partialTranscript}
-              isRecording={isRecording}
-              isProcessing={transcriptionStatus === 'processing' || transcriptionStatus === 'transcribing'}
-              error={null} // Don't show errors in UI
-            />
-          )}
-
           <View style={styles.inputWrapper}>
             <TextInput
               ref={inputRef}
@@ -293,14 +331,9 @@ export default function ChatScreen() {
               <VoiceRecordingButton
                 isRecording={isRecording}
                 onPress={handleVoicePress}
-                disabled={transcriptionStatus === 'processing' || transcriptionStatus === 'transcribing'}
+                disabled={false}
                 size={44}
               />
-              {isRecording && (
-                <Text style={styles.recordingTime}>
-                  {Math.floor(recordingDuration / 1000)}s
-                </Text>
-              )}
             </View>
 
             <TouchableOpacity
@@ -308,11 +341,38 @@ export default function ChatScreen() {
               onPress={handleSend}
               disabled={!inputText.trim()}
             >
-              <Ionicons name="chatbubble" size={20} color="#fff" />
+              <Ionicons name="send" size={20} color="#fff" />
             </TouchableOpacity>
           </View>
         </View>
       </KeyboardAvoidingView>
+
+      {/* Streaming Transcript Modal */}
+      <Modal
+        visible={showTranscriptModal}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={handleStopRecording}
+      >
+        <View style={styles.transcriptModal}>
+          <View style={styles.transcriptContainer}>
+            <StreamingTranscriptUI
+              isRecording={isRecording}
+              isConnected={wsConnected}
+              partialTranscript={partialTranscript}
+              partialConfidence={partialConfidence}
+              finalTranscript={pendingTranscript}
+              connectionQuality={connectionQuality}
+              latencyMs={latencyMs}
+              error={error}
+              onStartRecording={handleStartRecording}
+              onStopRecording={handleStopRecording}
+              onClearTranscripts={clearTranscripts}
+              onSendTranscript={handleSendTranscript}
+            />
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
     </LinearGradient>
   );
