@@ -53,7 +53,8 @@ class BaseTool(ITool):
         return ToolDefinition(
             name=self.name,
             description=self.description,
-            parameters=self.parameters,
+            parameters=[],  # Convert parameters dict to list later if needed
+            returns="Tool execution result",
             examples=self.examples
         )
 
@@ -289,23 +290,55 @@ class WebSearchTool(BaseTool):
 
         except Exception as e:
             logger.error(f"Web search failed: {e}")
-            # Return mock results for demo
+            # Try DuckDuckGo Instant Answer API as fallback
+            try:
+                import json
+                encoded_query = urllib.parse.quote(query)
+                api_url = f"https://api.duckduckgo.com/?q={encoded_query}&format=json&no_html=1"
+
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(api_url, headers=headers, timeout=aiohttp.ClientTimeout(total=5)) as response:
+                        if response.status == 200:
+                            data = await response.json()
+                            results = []
+
+                            # Extract information from API response
+                            if data.get('Abstract'):
+                                results.append({
+                                    "title": data.get('Heading', 'Summary'),
+                                    "snippet": data.get('AbstractText', ''),
+                                    "url": data.get('AbstractURL', '')
+                                })
+
+                            # Add related topics
+                            for topic in data.get('RelatedTopics', [])[:max_results-1]:
+                                if isinstance(topic, dict) and 'Text' in topic:
+                                    results.append({
+                                        "title": topic.get('Text', '').split(' - ')[0][:100],
+                                        "snippet": topic.get('Text', ''),
+                                        "url": topic.get('FirstURL', '')
+                                    })
+
+                            if results:
+                                return {
+                                    "query": query,
+                                    "results": results[:max_results],
+                                    "count": len(results),
+                                    "source": "duckduckgo_api"
+                                }
+            except Exception as api_error:
+                logger.debug(f"API fallback also failed: {api_error}")
+
+            # Final fallback - return informative message
             return {
                 "query": query,
-                "results": [
-                    {
-                        "title": "Example Result 1",
-                        "snippet": f"Information about {query}...",
-                        "url": "https://example.com/1"
-                    },
-                    {
-                        "title": "Example Result 2",
-                        "snippet": f"More details on {query}...",
-                        "url": "https://example.com/2"
-                    }
-                ],
-                "count": 2,
-                "note": "Using fallback results due to search API issue"
+                "results": [{
+                    "title": "Search Temporarily Unavailable",
+                    "snippet": f"Unable to perform web search for '{query}'. The search service is currently unavailable.",
+                    "url": ""
+                }],
+                "count": 0,
+                "error": "Search service unavailable"
             }
 
     def _parse_search_results(self, html: str, max_results: int) -> List[Dict[str, str]]:

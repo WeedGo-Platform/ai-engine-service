@@ -300,14 +300,55 @@ async def lifespan(app: FastAPI):
 # Configure app with same settings
 app = FastAPI(
     lifespan=lifespan,
-    title="V5 AI Engine",
-    description="Industry-standard AI engine with complete security and features",
+    title="WeedGo AI Engine API",
+    description="""## 🚀 WeedGo AI Platform API Documentation
+
+### Available Services:
+- **🤖 AGI**: Advanced AI chat, learning, and automation
+- **🛍️ Commerce**: Products, orders, cart, and inventory
+- **👥 Customer**: Authentication, profiles, and preferences
+- **🏪 Store**: Store management, hours, and settings
+- **💳 Payments**: Payment processing and transactions
+- **🎙️ Voice**: Voice recognition and transcription
+- **📊 Analytics**: Business intelligence and reporting
+- **⚙️ Admin**: System administration and monitoring
+
+### Quick Start:
+1. Authenticate using `/api/auth/login` or API key
+2. Use the search/filter box to find endpoints (enabled below)
+3. Test endpoints directly from this interface
+""",
     version="5.0.0",
-    # Disable external CDN for Swagger UI
+    openapi_tags=[
+        {"name": "🤖 AGI - Chat", "description": "AI chat and conversation endpoints"},
+        {"name": "🧠 AGI - Dashboard", "description": "AI system monitoring and management"},
+        {"name": "🔐 AGI - Authentication", "description": "AGI authentication and API keys"},
+        {"name": "🛍️ Products", "description": "Product catalog and search"},
+        {"name": "🛒 Cart", "description": "Shopping cart management"},
+        {"name": "📦 Orders", "description": "Order processing and history"},
+        {"name": "👤 Customers", "description": "Customer profiles and authentication"},
+        {"name": "🏪 Stores", "description": "Store configuration and management"},
+        {"name": "💰 Payments", "description": "Payment processing and methods"},
+        {"name": "🎙️ Voice", "description": "Voice input and transcription"},
+        {"name": "📊 Analytics", "description": "Business analytics and reporting"},
+        {"name": "⚙️ Admin", "description": "System administration"},
+        {"name": "🖥️ Kiosk", "description": "Self-service kiosk interface"},
+        {"name": "📍 Inventory", "description": "Inventory and stock management"},
+        {"name": "🔧 Hardware", "description": "Hardware detection and management"}
+    ],
     swagger_ui_parameters={
-        "syntaxHighlight": False,
-        "tryItOutEnabled": True,
-        "docExpansion": "none",
+        "syntaxHighlight": True,  # Enable syntax highlighting
+        "tryItOutEnabled": True,  # Enable try it out by default
+        "docExpansion": "list",  # Show endpoint list by default
+        "filter": True,  # Enable search/filter box
+        "showExtensions": True,
+        "showCommonExtensions": True,
+        "tagsSorter": "alpha",  # Sort tags alphabetically
+        "operationsSorter": "alpha",  # Sort operations alphabetically
+        "persistAuthorization": True,  # Remember auth between reloads
+        "displayOperationId": False,
+        "deepLinking": True,  # Enable deep linking to specific endpoints
+        "displayRequestDuration": True  # Show request duration
     },
     docs_url="/docs",
     redoc_url="/redoc"
@@ -335,6 +376,20 @@ app.add_middleware(
     expose_headers=["*"],
     max_age=3600,
 )
+
+# Add ASGI-based middleware for AGI streaming support
+try:
+    from agi.api.middleware.asgi_middleware import (
+        ASGILoggingMiddleware,
+        ASGIValidationMiddleware,
+        ASGIErrorHandlerMiddleware
+    )
+    app.add_middleware(ASGILoggingMiddleware)
+    app.add_middleware(ASGIValidationMiddleware)
+    app.add_middleware(ASGIErrorHandlerMiddleware)
+    logger.info("ASGI middleware for streaming support loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load ASGI middleware: {e}")
 
 # Add security headers middleware with relaxed CSP for Swagger UI
 @app.middleware("http")
@@ -435,6 +490,22 @@ from api.admin_endpoints import router as admin_router
 from api.analytics_endpoints import router as analytics_router
 app.include_router(admin_router)
 app.include_router(analytics_router)
+
+# Import and include AGI endpoints
+try:
+    # Import all AGI route modules
+    from agi.api.routes.chat import router as agi_chat_router
+    from agi.api.dashboard_routes import router as agi_dashboard_router
+    from agi.api.routes.auth import router as agi_auth_router
+
+    # Mount all AGI routers at /api/agi prefix with specific tags
+    app.include_router(agi_chat_router, prefix="/api/agi", tags=["🤖 AGI - Chat"])
+    app.include_router(agi_dashboard_router, prefix="/api/agi", tags=["🧠 AGI - Dashboard"])
+    app.include_router(agi_auth_router, prefix="/api/agi", tags=["🔐 AGI - Authentication"])
+
+    logger.info("AGI endpoints loaded successfully (chat, dashboard, auth)")
+except Exception as e:
+    logger.warning(f"Failed to load AGI endpoints: {e}")
 
 # Import and include inventory endpoints
 from api.inventory_endpoints import router as inventory_router

@@ -17,7 +17,7 @@ from agi.security import get_access_control, get_content_filter, get_rate_limite
 from agi.learning import get_feedback_collector, get_pattern_engine, get_learning_adapter
 from agi.core.interfaces import AgentState, AgentTask
 
-router = APIRouter(prefix="/agi/api", tags=["AGI Dashboard"])
+router = APIRouter(prefix="/agi/api")
 
 # WebSocket manager for real-time updates
 class ConnectionManager:

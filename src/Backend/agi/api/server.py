@@ -4,6 +4,7 @@ Serves the AGI system on port 5024 at /api/agi/*
 """
 
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
+from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
@@ -12,7 +13,7 @@ import asyncio
 import logging
 import json
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from agi.orchestrator import get_orchestrator
 from agi.core.interfaces import ConversationContext, Message, MessageRole
@@ -22,6 +23,15 @@ from agi.core.database import get_db_manager
 from agi.tools import get_tool_registry
 from agi.analytics import get_metrics_collector, get_conversation_analyzer, get_insights_generator
 from agi.prompts import get_persona_manager, get_template_engine
+from agi.api.middleware.asgi_middleware import (
+    ASGIErrorHandlerMiddleware,
+    ASGIValidationMiddleware,
+    ASGILoggingMiddleware
+)
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Import dashboard routes
 try:
@@ -31,9 +41,44 @@ except ImportError:
     DASHBOARD_AVAILABLE = False
     logger.warning("Dashboard routes not available")
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# Import auth routes
+try:
+    from agi.api.routes.auth import router as auth_router
+    AUTH_AVAILABLE = True
+except ImportError:
+    AUTH_AVAILABLE = False
+    logger.warning("Auth routes not available")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Handle startup and shutdown events"""
+    # Startup
+    try:
+        logger.info("Starting AGI API Server on port 5024...")
+
+        # Initialize orchestrator
+        orchestrator = await get_orchestrator()
+
+        # Initialize model registry
+        registry = await get_model_registry()
+
+        # Initialize database
+        db = await get_db_manager()
+
+        logger.info("AGI API Server initialized successfully")
+    except Exception as e:
+        logger.error(f"Failed to initialize AGI API Server: {e}")
+        raise
+
+    yield
+
+    # Shutdown
+    try:
+        db = await get_db_manager()
+        await db.close()
+        logger.info("AGI API Server shut down cleanly")
+    except Exception as e:
+        logger.error(f"Error during shutdown: {e}")
 
 # Create FastAPI app
 app = FastAPI(
@@ -42,7 +87,8 @@ app = FastAPI(
     version="1.0.0",
     docs_url="/api/agi/docs",
     redoc_url="/api/agi/redoc",
-    openapi_url="/api/agi/openapi.json"
+    openapi_url="/api/agi/openapi.json",
+    lifespan=lifespan
 )
 
 # Configure CORS
@@ -55,10 +101,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Add ASGI-based middleware that properly handles streaming responses
+app.add_middleware(ASGILoggingMiddleware)
+app.add_middleware(ASGIValidationMiddleware)
+app.add_middleware(ASGIErrorHandlerMiddleware)
+
 # Include dashboard router if available
 if DASHBOARD_AVAILABLE:
     app.include_router(dashboard_router)
     logger.info("Dashboard routes registered successfully")
+
+if AUTH_AVAILABLE:
+    app.include_router(auth_router)
+    logger.info("Auth routes registered successfully")
 
 # Request/Response Models
 class ChatRequest(BaseModel):
@@ -104,44 +159,13 @@ class SessionInfo(BaseModel):
 # Active sessions
 active_sessions: Dict[str, ConversationContext] = {}
 
-@app.on_event("startup")
-async def startup_event():
-    """Initialize AGI system on startup"""
-    try:
-        logger.info("Starting AGI API Server on port 5024...")
-
-        # Initialize orchestrator
-        orchestrator = await get_orchestrator()
-
-        # Initialize model registry
-        registry = await get_model_registry()
-
-        # Initialize database
-        db = await get_db_manager()
-
-        logger.info("AGI API Server initialized successfully")
-
-    except Exception as e:
-        logger.error(f"Failed to initialize AGI API Server: {e}")
-        raise
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    """Cleanup on shutdown"""
-    try:
-        db = await get_db_manager()
-        await db.close()
-        logger.info("AGI API Server shut down cleanly")
-    except Exception as e:
-        logger.error(f"Error during shutdown: {e}")
-
 # Health Check
 @app.get("/api/agi/health")
 async def health_check():
     """Health check endpoint"""
     return {
         "status": "healthy",
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "version": "1.0.0"
     }
 
@@ -362,7 +386,7 @@ async def list_sessions():
             session_id=session_id,
             tenant_id=context.tenant_id,
             user_id=context.user_id,
-            created_at=datetime.utcnow().isoformat(),
+            created_at=datetime.now(timezone.utc).isoformat(),
             message_count=len(context.messages)
         ))
 
@@ -399,10 +423,24 @@ async def list_tools():
 
         tool_list = []
         for tool_def in tools:
+            # Convert parameter list to dict if needed
+            params = tool_def.parameters
+            if isinstance(params, list):
+                # Convert list of ToolParameter to dict
+                params_dict = {}
+                for param in params:
+                    params_dict[param.name] = {
+                        "type": param.type,
+                        "description": param.description,
+                        "required": param.required,
+                        "default": getattr(param, "default", None)
+                    }
+                params = params_dict
+
             tool_list.append(ToolInfo(
                 name=tool_def.name,
                 description=tool_def.description,
-                parameters=tool_def.parameters,
+                parameters=params,
                 examples=tool_def.examples
             ))
 
@@ -484,7 +522,7 @@ async def get_stats():
                 "count": len(tools),
                 "available": [t.name for t in tools]
             },
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.now(timezone.utc).isoformat()
         }
 
     except Exception as e:
@@ -504,7 +542,7 @@ async def get_metrics(
         from agi.analytics.metrics import MetricType
 
         # Get metrics for time window
-        end_time = datetime.utcnow()
+        end_time = datetime.now(timezone.utc)
         start_time = end_time - timedelta(hours=hours)
 
         # Convert metric_type string to enum if provided
@@ -572,7 +610,7 @@ async def get_insights(hours: int = 24):
 
         return {
             "insights": [i.to_dict() for i in insights],
-            "generated_at": datetime.utcnow().isoformat(),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
             "time_window_hours": hours
         }
     except Exception as e:
@@ -913,7 +951,7 @@ async def health_check():
     try:
         health = {
             "status": "healthy",
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "components": {}
         }
 
@@ -971,7 +1009,7 @@ async def health_check():
         return {
             "status": "unhealthy",
             "error": str(e),
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.now(timezone.utc).isoformat()
         }
 
 # Main entry point for running the server

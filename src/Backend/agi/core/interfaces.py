@@ -5,7 +5,7 @@ Following SOLID principles - these are the contracts for all components
 
 from abc import ABC, abstractmethod
 from typing import Dict, List, Any, Optional, AsyncIterator, Tuple
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from datetime import datetime
 import uuid
@@ -205,6 +205,7 @@ class ToolDefinition:
     description: str
     parameters: List[ToolParameter]
     returns: str
+    examples: Optional[List[str]] = None
 
 @dataclass
 class ToolResult:
@@ -456,6 +457,53 @@ class IPipelineStage(ABC):
 
 # ============================================================================
 # Monitoring Interfaces
+# ============================================================================
+# User and Authentication Interfaces
+# ============================================================================
+
+@dataclass
+class IUser:
+    """User interface for authentication and authorization"""
+    id: str
+    username: str
+    email: Optional[str] = None
+    full_name: Optional[str] = None
+    roles: List[str] = field(default_factory=lambda: ["user"])
+    permissions: List[str] = field(default_factory=list)
+    is_active: bool = True
+    is_system: bool = False
+    is_verified: bool = False
+    tenant_id: Optional[str] = None
+    metadata: Dict[str, Any] = field(default_factory=dict)
+    created_at: Optional[datetime] = None
+    last_login: Optional[datetime] = None
+
+    def has_role(self, role: str) -> bool:
+        """Check if user has a specific role"""
+        return role in self.roles
+
+    def has_permission(self, permission: str) -> bool:
+        """Check if user has a specific permission"""
+        return permission in self.permissions
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for serialization"""
+        return {
+            "id": self.id,
+            "username": self.username,
+            "email": self.email,
+            "full_name": self.full_name,
+            "roles": self.roles,
+            "permissions": self.permissions,
+            "is_active": self.is_active,
+            "is_system": self.is_system,
+            "is_verified": self.is_verified,
+            "tenant_id": self.tenant_id,
+            "metadata": self.metadata,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "last_login": self.last_login.isoformat() if self.last_login else None
+        }
+
 # ============================================================================
 
 class IMetrics(ABC):
