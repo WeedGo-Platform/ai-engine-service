@@ -108,7 +108,7 @@ app.add_middleware(ASGIErrorHandlerMiddleware)
 
 # Include dashboard router if available
 if DASHBOARD_AVAILABLE:
-    app.include_router(dashboard_router)
+    app.include_router(dashboard_router, prefix="/api/agi")
     logger.info("Dashboard routes registered successfully")
 
 if AUTH_AVAILABLE:

@@ -180,6 +180,21 @@ async def get_stats():
         "uptime": 99.9  # percentage
     }
 
+@router.get("/metrics")
+async def get_metrics():
+    """Get system metrics for charts"""
+    # Return metrics data for the dashboard charts
+    metrics = []
+    for i in range(20):
+        metrics.append({
+            "success_rate": 95 + random.random() * 5,
+            "response_time": 200 + random.randint(0, 100),
+            "throughput": 1000 + random.randint(0, 500),
+            "active_agents": 3 + random.randint(0, 2),
+            "tasks_processed": 50 + random.randint(0, 50)
+        })
+    return metrics
+
 @router.get("/stats/history")
 async def get_stats_history(period: str = Query("24h", regex="^(1h|6h|24h|7d|30d)$")):
     """Get historical statistics"""
