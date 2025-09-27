@@ -40,6 +40,7 @@ import ProvincialCatalogVirtual from './pages/ProvincialCatalogVirtual';
 import DatabaseManagement from './pages/DatabaseManagement';
 import DeliveryManagement from './pages/DeliveryManagement';
 import AIManagement from './pages/AIManagement';
+import AGIDashboard from './pages/agi/AGIDashboard';
 import VoiceAPITest from './pages/VoiceAPITest';
 import Apps from './pages/Apps';
 import Communications from './pages/Communications';
@@ -121,7 +122,8 @@ function Layout() {
         { name: 'Recommendations', href: '/dashboard/recommendations', icon: Sparkles, permission: 'store' },
         { name: 'Communications', href: '/dashboard/communications', icon: MessageSquare, permission: 'store' },
         { name: 'Deliveries', href: '/dashboard/deliveries', icon: Truck, permission: 'store' },
-        { name: 'AI', href: '/dashboard/ai', icon: Bot, permission: 'all' },
+        { name: 'AI Configuration', href: '/dashboard/ai', icon: Settings, permission: 'all' },
+        { name: 'AGI Management', href: '/dashboard/agi', icon: Bot, permission: 'all' },
         { name: 'Provincial Catalog', href: '/dashboard/provincial-catalog', icon: Upload, permission: 'super_admin' },
         { name: 'Database', href: '/dashboard/database', icon: Database, permission: 'super_admin' },
       ];
@@ -418,6 +420,7 @@ const router = createBrowserRouter([
       { path: 'communications', element: <Communications /> },
       { path: 'deliveries', element: <DeliveryManagement /> },
       { path: 'ai', element: <AIManagement /> },
+      { path: 'agi', element: <AGIDashboard /> },
       { path: 'voice-test', element: <VoiceAPITest /> },
       {
         path: 'provincial-catalog',
