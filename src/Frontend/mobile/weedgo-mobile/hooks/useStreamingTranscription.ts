@@ -30,7 +30,7 @@ interface StreamingConfig {
 const DEFAULT_CONFIG: StreamingConfig = {
   chunkDurationMs: 250, // 250ms chunks as per requirement
   sampleRate: 16000,
-  apiUrl: 'ws://10.0.2.2:5024/api/voice/ws/stream', // Android emulator
+  apiUrl: 'ws://10.0.0.169:5024/api/voice/ws/stream', // Use actual server IP
   enableWebRTC: true,
   autoReconnect: true,
 };
@@ -73,12 +73,8 @@ export const useStreamingTranscription = (config: Partial<StreamingConfig> = {})
         websocketRef.current.close();
       }
 
-      // Determine API URL based on platform
-      const wsUrl = Platform.select({
-        ios: mergedConfig.apiUrl.replace('10.0.2.2', 'localhost'),
-        android: mergedConfig.apiUrl,
-        default: mergedConfig.apiUrl,
-      });
+      // Use the configured API URL directly
+      const wsUrl = mergedConfig.apiUrl;
 
       console.log(`[RT] Connecting to WebSocket: ${wsUrl}`);
 
