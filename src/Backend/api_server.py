@@ -32,8 +32,9 @@ from core.function_schemas import get_function_registry
 
 # Import voice endpoints
 from api.voice_endpoints import router as voice_router
+from api.voice_websocket import router as voice_ws_router
 
-# Import chat endpoints  
+# Import chat endpoints
 from api.chat_endpoints import router as chat_router
 
 # Import authentication endpoints
@@ -85,6 +86,15 @@ try:
 except ImportError as e:
     logger.warning(f"Accessories endpoints not available: {e}")
     ACCESSORIES_ENABLED = False
+
+# Import communication endpoints
+try:
+    from api.communication_endpoints import router as communication_router
+    COMMUNICATION_ENABLED = True
+    logger.info("Communication endpoints loaded successfully")
+except ImportError as e:
+    logger.warning(f"Communication endpoints not available: {e}")
+    COMMUNICATION_ENABLED = False
 
 # V5 Services
 from services.smart_ai_engine_v5 import SmartAIEngineV5
@@ -384,6 +394,7 @@ app.include_router(otp_auth_router)   # OTP authentication endpoints
 app.include_router(admin_auth_router)  # Admin authentication endpoints
 app.include_router(context_auth_router)  # Context switching authentication
 app.include_router(voice_router)
+app.include_router(voice_ws_router)  # WebSocket endpoints for continuous voice listening
 app.include_router(chat_router)
 app.include_router(tenant_router)  # Tenant management endpoints
 
@@ -428,6 +439,11 @@ app.include_router(analytics_router)
 # Import and include inventory endpoints
 from api.inventory_endpoints import router as inventory_router
 app.include_router(inventory_router)
+
+# Include communication endpoints if available
+if COMMUNICATION_ENABLED and communication_router:
+    app.include_router(communication_router)
+    logger.info("Communication endpoints registered successfully")
 
 # Import and include shelf location endpoints
 try:
@@ -475,6 +491,11 @@ if HARDWARE_ENABLED:
 if ACCESSORIES_ENABLED:
     app.include_router(accessories_router)
     logger.info("Accessories management endpoints enabled")
+
+# Add communication endpoints
+if COMMUNICATION_ENABLED:
+    app.include_router(communication_router)
+    logger.info("Communication management endpoints enabled")
 
 # Import and include order endpoints
 try:
