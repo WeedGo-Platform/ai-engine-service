@@ -11,7 +11,6 @@ import {
   ActivityIndicator,
   ScrollView,
   StyleSheet,
-  Modal,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -30,7 +29,7 @@ import { BlurView } from 'expo-blur';
 export default function ChatScreen() {
   const [inputText, setInputText] = useState('');
   const [isTTSEnabled, setIsTTSEnabled] = useState(true);
-  const [showTranscriptModal, setShowTranscriptModal] = useState(false);
+  const [showTranscript, setShowTranscript] = useState(false);
   const [pendingTranscript, setPendingTranscript] = useState('');
   const flatListRef = useRef<FlatList>(null);
   const inputRef = useRef<TextInput>(null);
@@ -76,17 +75,17 @@ export default function ChatScreen() {
       paddingBottom: 20,
       paddingTop: 8,
     },
-    transcriptModal: {
-      flex: 1,
-      backgroundColor: 'rgba(0,0,0,0.9)',
-      justifyContent: 'flex-end' as const,
-    },
-    transcriptContainer: {
-      backgroundColor: '#fff',
-      borderTopLeftRadius: 20,
-      borderTopRightRadius: 20,
-      maxHeight: '80%' as any,
-      minHeight: 300,
+    transcriptBox: {
+      marginHorizontal: 16,
+      marginBottom: 8,
+      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+      borderRadius: 12,
+      maxHeight: 120,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: -2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
     },
   }), [theme, isDark]);
 
@@ -94,7 +93,7 @@ export default function ChatScreen() {
   const handleSendTranscript = useCallback((text: string) => {
     if (text.trim()) {
       sendChatMessage(text, true);
-      setShowTranscriptModal(false);
+      setShowTranscript(false);
       setPendingTranscript('');
     }
   }, [sendChatMessage]);
@@ -207,7 +206,7 @@ export default function ChatScreen() {
 
   const handleStartRecording = async () => {
     try {
-      setShowTranscriptModal(true);
+      setShowTranscript(true);
       setPendingTranscript('');
       clearTranscripts();
 
@@ -219,7 +218,7 @@ export default function ChatScreen() {
       await startStreamingRecording();
     } catch (error) {
       console.error('[CHAT] Failed to start recording:', error);
-      setShowTranscriptModal(false);
+      setShowTranscript(false);
     }
   };
 
@@ -235,7 +234,7 @@ export default function ChatScreen() {
       // Clear state
       clearTranscripts();
       setPendingTranscript('');
-      setShowTranscriptModal(false);
+      setShowTranscript(false);
 
       // Clear silence timer
       if (silenceTimerRef.current) {
@@ -312,6 +311,27 @@ export default function ChatScreen() {
           keyboardDismissMode="interactive"
         />
 
+        {/* Non-blocking Transcript UI - positioned above input */}
+        {showTranscript && (
+          <View style={styles.transcriptBox}>
+            <StreamingTranscriptUI
+              isRecording={isRecording}
+              isConnected={wsConnected}
+              partialTranscript={partialTranscript}
+              partialConfidence={partialConfidence}
+              finalTranscript={pendingTranscript}
+              connectionQuality={connectionQuality}
+              latencyMs={latencyMs}
+              error={error}
+              onStartRecording={handleStartRecording}
+              onStopRecording={handleStopRecording}
+              onClearTranscripts={clearTranscripts}
+              onSendTranscript={handleSendTranscript}
+              compact={true}
+            />
+          </View>
+        )}
+
         <View style={styles.inputContainer}>
           <View style={styles.inputWrapper}>
             <TextInput
@@ -346,32 +366,6 @@ export default function ChatScreen() {
         </View>
       </KeyboardAvoidingView>
 
-      {/* Streaming Transcript Modal */}
-      <Modal
-        visible={showTranscriptModal}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={handleStopRecording}
-      >
-        <View style={styles.transcriptModal}>
-          <View style={styles.transcriptContainer}>
-            <StreamingTranscriptUI
-              isRecording={isRecording}
-              isConnected={wsConnected}
-              partialTranscript={partialTranscript}
-              partialConfidence={partialConfidence}
-              finalTranscript={pendingTranscript}
-              connectionQuality={connectionQuality}
-              latencyMs={latencyMs}
-              error={error}
-              onStartRecording={handleStartRecording}
-              onStopRecording={handleStopRecording}
-              onClearTranscripts={clearTranscripts}
-              onSendTranscript={handleSendTranscript}
-            />
-          </View>
-        </View>
-      </Modal>
     </SafeAreaView>
     </LinearGradient>
   );
