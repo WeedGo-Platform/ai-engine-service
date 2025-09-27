@@ -52,9 +52,9 @@ export default function ChatScreen() {
     gradientContainer: { flex: 1 },
     container: { ...staticStyles.container, backgroundColor: 'transparent' },
     header: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      flexDirection: 'row' as const,
+      justifyContent: 'space-between' as const,
+      alignItems: 'center' as const,
       padding: 16,
       paddingTop: Platform.OS === 'ios' ? 48 : 16,
       backgroundColor: 'rgba(255,255,255,0.05)',
@@ -63,12 +63,12 @@ export default function ChatScreen() {
     },
     headerTitle: {
       fontSize: 20,
-      fontWeight: '600',
+      fontWeight: '600' as const,
       color: '#fff',
     },
     headerActions: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: 'row' as const,
+      alignItems: 'center' as const,
       gap: 16,
     },
     messagesList: {
@@ -79,13 +79,13 @@ export default function ChatScreen() {
     transcriptModal: {
       flex: 1,
       backgroundColor: 'rgba(0,0,0,0.9)',
-      justifyContent: 'flex-end',
+      justifyContent: 'flex-end' as const,
     },
     transcriptContainer: {
       backgroundColor: '#fff',
       borderTopLeftRadius: 20,
       borderTopRightRadius: 20,
-      maxHeight: '80%',
+      maxHeight: '80%' as any,
       minHeight: 300,
     },
   }), [theme, isDark]);
@@ -259,10 +259,9 @@ export default function ChatScreen() {
     setIsTTSEnabled(!isTTSEnabled);
   };
 
-  const renderMessage = ({ item, index }) => (
+  const renderMessage = ({ item, index }: { item: any; index: number }) => (
     <MessageBubble
       message={item}
-      isLast={index === messages.length - 1}
       onSpeak={isTTSEnabled ? undefined : null}
     />
   );
