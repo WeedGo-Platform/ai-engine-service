@@ -23,6 +23,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useStoreContext } from '../contexts/StoreContext';
 import InventoryEditModal from '../components/InventoryEditModal';
 import { getApiEndpoint } from '../config/app.config';
+import { usePersistentState, usePersistentFilters } from '../hooks/usePersistentState';
 
 interface InventoryItem {
   id: string;
@@ -83,9 +84,11 @@ interface InventoryItem {
 }
 
 const Inventory: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterCategory, setFilterCategory] = useState('all');
-  const [filterStatus, setFilterStatus] = useState('all');
+  const [filters, setFilters] = usePersistentFilters('inventory', {
+    searchTerm: '',
+    category: 'all',
+    status: 'all'
+  });
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingItem, setEditingItem] = useState<InventoryItem | null>(null);
@@ -98,18 +101,18 @@ const Inventory: React.FC = () => {
 
   // Fetch inventory data for current store
   const { data: inventory, isLoading } = useQuery({
-    queryKey: ['inventory', currentStore?.id, searchTerm, filterCategory, filterStatus],
+    queryKey: ['inventory', currentStore?.id, filters.searchTerm, filters.category, filters.status],
     queryFn: async () => {
       if (!currentStore) return [];
       
       const params: any = {
         store_id: currentStore.id
       };
-      if (searchTerm) params.search = searchTerm;
-      if (filterCategory !== 'all') params.category = filterCategory;
-      if (filterStatus !== 'all') {
-        if (filterStatus === 'low_stock') params.low_stock = true;
-        else if (filterStatus === 'out_of_stock') params.out_of_stock = true;
+      if (filters.searchTerm) params.search = filters.searchTerm;
+      if (filters.category !== 'all') params.category = filters.category;
+      if (filters.status !== 'all') {
+        if (filters.status === 'low_stock') params.low_stock = true;
+        else if (filters.status === 'out_of_stock') params.out_of_stock = true;
       }
       
       // Use the new store-inventory endpoint
@@ -182,16 +185,16 @@ const Inventory: React.FC = () => {
 
   // Filter inventory items
   const filteredItems = inventory?.filter((item: any) => {
-    const matchesSearch = !searchTerm || 
-      item.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.sku?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.batch_lot?.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesCategory = filterCategory === 'all' || item.category === filterCategory;
-    const matchesStatus = filterStatus === 'all' || 
-      (filterStatus === 'in_stock' && item.stock_status === 'in_stock') ||
-      (filterStatus === 'low_stock' && item.stock_status === 'low_stock') ||
-      (filterStatus === 'out_of_stock' && item.stock_status === 'out_of_stock');
+    const matchesSearch = !filters.searchTerm ||
+      item.name?.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
+      item.sku?.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
+      item.batch_lot?.toLowerCase().includes(filters.searchTerm.toLowerCase());
+
+    const matchesCategory = filters.category === 'all' || item.category === filters.category;
+    const matchesStatus = filters.status === 'all' ||
+      (filters.status === 'in_stock' && item.stock_status === 'in_stock') ||
+      (filters.status === 'low_stock' && item.stock_status === 'low_stock') ||
+      (filters.status === 'out_of_stock' && item.stock_status === 'out_of_stock');
     
     return matchesSearch && matchesCategory && matchesStatus;
   }) || [];
@@ -284,16 +287,16 @@ const Inventory: React.FC = () => {
               <input
                 type="text"
                 placeholder="Search products, SKU, or batch/lot..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                value={filters.searchTerm}
+                onChange={(e) => setFilters(prev => ({ ...prev, searchTerm: e.target.value }))}
                 className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               />
             </div>
           </div>
 
           <select
-            value={filterCategory}
-            onChange={(e) => setFilterCategory(e.target.value)}
+            value={filters.category}
+            onChange={(e) => setFilters(prev => ({ ...prev, category: e.target.value }))}
             className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
           >
             <option value="all">All Categories</option>
@@ -306,8 +309,8 @@ const Inventory: React.FC = () => {
           </select>
 
           <select
-            value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
+            value={filters.status}
+            onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
             className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
           >
             <option value="all">All Status</option>

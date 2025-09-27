@@ -10,16 +10,20 @@ import {
 import tenantService, { Tenant } from '../services/tenantService';
 import paymentService, { PaymentProviderSettings } from '../services/paymentService';
 import PaymentProviderSettingsComponent from '../components/PaymentProviderSettings';
+import CommunicationSettingsComponent, { CommunicationSettings } from '../components/CommunicationSettings';
+import communicationService from '../services/communicationService';
+import { usePersistentTab } from '../hooks/usePersistentState';
 
 const TenantSettings: React.FC = () => {
   const { tenantCode } = useParams<{ tenantCode: string }>();
   const navigate = useNavigate();
   const [tenant, setTenant] = useState<Tenant | null>(null);
   const [paymentSettings, setPaymentSettings] = useState<PaymentProviderSettings | null>(null);
+  const [communicationSettings, setCommunicationSettings] = useState<CommunicationSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'general' | 'payment'>('general');
+  const [activeTab, setActiveTab] = usePersistentTab<'general' | 'payment' | 'communication'>('tenant_settings', 'general');
 
   useEffect(() => {
     if (tenantCode) {
@@ -46,8 +50,10 @@ const TenantSettings: React.FC = () => {
       setLoading(true);
       const tenantData = await tenantService.getTenantByCode(tenantCode!);
       const paymentData = await paymentService.getTenantPaymentSettings(tenantData.id);
+      const communicationData = await communicationService.getTenantCommunicationSettings(tenantData.id);
       setTenant(tenantData);
       setPaymentSettings(paymentData);
+      setCommunicationSettings(communicationData);
     } catch (err) {
       setError('Failed to load tenant settings');
       console.error(err);
@@ -72,6 +78,30 @@ const TenantSettings: React.FC = () => {
       const result = await paymentService.validatePaymentProvider(tenant!.id, provider);
       if (result.valid) {
         setSuccess(`${provider} configuration is valid`);
+      } else {
+        setError(result.message);
+      }
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  const handleSaveCommunicationSettings = async (settings: CommunicationSettings) => {
+    try {
+      await communicationService.updateTenantCommunicationSettings(tenant!.id, settings);
+      setCommunicationSettings(settings);
+      setSuccess('Communication settings updated successfully');
+    } catch (err) {
+      setError('Failed to update communication settings');
+      throw err;
+    }
+  };
+
+  const handleValidateCommunicationChannel = async (channel: 'sms' | 'email') => {
+    try {
+      const result = await communicationService.validateCommunicationChannel(tenant!.id, channel);
+      if (result.valid) {
+        setSuccess(`${channel.toUpperCase()} configuration is valid`);
       } else {
         setError(result.message);
       }
@@ -158,6 +188,16 @@ const TenantSettings: React.FC = () => {
             }`}
           >
             Payment Settings
+          </button>
+          <button
+            onClick={() => setActiveTab('communication')}
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+              activeTab === 'communication'
+                ? 'border-blue-500 text-accent-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
+            }`}
+          >
+            Communication Settings
           </button>
         </nav>
       </div>
@@ -254,6 +294,15 @@ const TenantSettings: React.FC = () => {
           settings={paymentSettings}
           onSave={handleSavePaymentSettings}
           onValidate={handleValidateProvider}
+        />
+      )}
+
+      {activeTab === 'communication' && communicationSettings && (
+        <CommunicationSettingsComponent
+          tenantId={tenant?.id || ''}
+          settings={communicationSettings}
+          onSave={handleSaveCommunicationSettings}
+          onValidate={handleValidateCommunicationChannel}
         />
       )}
     </div>

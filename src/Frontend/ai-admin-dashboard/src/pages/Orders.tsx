@@ -3,10 +3,11 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../services/api';
 import { Order, Customer, Product } from '../types';
 import { ShoppingCart, Clock, CheckCircle, XCircle, Package, Truck, CreditCard, Eye } from 'lucide-react';
+import { usePersistentState } from '../hooks/usePersistentState';
 
 const Orders: React.FC = () => {
   const queryClient = useQueryClient();
-  const [selectedStatus, setSelectedStatus] = useState<string>('all');
+  const [selectedStatus, setSelectedStatus] = usePersistentState<string>('orders_status_filter', 'all');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   const { data: orders, isLoading, error } = useQuery({

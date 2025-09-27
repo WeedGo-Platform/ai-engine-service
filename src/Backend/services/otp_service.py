@@ -3,12 +3,7 @@ OTP Service for handling one-time passcode authentication
 Integrates with Twilio for SMS and SendGrid for email
 """
 
-import os
 import random
-from dotenv import load_dotenv
-
-# Load environment variables
-load_dotenv()
 import string
 import json
 import asyncio
@@ -16,6 +11,7 @@ import logging
 import socket
 from datetime import datetime, timedelta
 from typing import Optional, Dict, Any, Literal
+from uuid import UUID
 import asyncpg
 from twilio.rest import Client as TwilioClient
 from twilio.base.exceptions import TwilioException
@@ -28,28 +24,35 @@ logger = logging.getLogger(__name__)
 
 class OTPService:
     """Service for managing OTP generation, sending, and verification"""
-    
-    def __init__(self):
-        """Initialize OTP service with Twilio and SendGrid"""
-        # Twilio configuration
-        self.twilio_account_sid = os.getenv('TWILIO_ACCOUNT_SID')
-        self.twilio_auth_token = os.getenv('TWILIO_AUTH_TOKEN')
-        self.twilio_phone_number = os.getenv('TWILIO_PHONE_NUMBER')
-        self.twilio_verify_service_sid = os.getenv('TWILIO_VERIFY_SERVICE_SID')
+
+    def __init__(self, tenant_id: Optional[str] = None, db_pool: Optional[asyncpg.Pool] = None):
+        """Initialize OTP service with Twilio and SendGrid from tenant settings"""
+        self.tenant_id = tenant_id
+        self.db_pool = db_pool
+        self.tenant_settings = {}
+
+        # Initialize with empty values - will be populated from tenant settings
+        self.twilio_account_sid = None
+        self.twilio_auth_token = None
+        self.twilio_phone_number = None
+        self.twilio_verify_service_sid = None
+
+        self.sendgrid_api_key = None
+        self.sendgrid_from_email = 'noreply@weedgo.com'
+        self.sendgrid_from_name = 'WeedGo'
+
+        # Load tenant settings if available
+        if self.tenant_id and self.db_pool:
+            asyncio.create_task(self._load_tenant_settings())
         
-        # SendGrid configuration
-        self.sendgrid_api_key = os.getenv('SENDGRID_API_KEY')
-        self.sendgrid_from_email = os.getenv('SENDGRID_FROM_EMAIL', 'noreply@weedgo.com')
-        self.sendgrid_from_name = os.getenv('SENDGRID_FROM_NAME', 'WeedGo')
-        
-        # OTP configuration
-        self.otp_length = int(os.getenv('OTP_LENGTH', '6'))
-        self.otp_expiry_minutes = int(os.getenv('OTP_EXPIRY_MINUTES', '10'))
-        self.otp_max_attempts = int(os.getenv('OTP_MAX_ATTEMPTS', '3'))
-        
-        # Rate limiting configuration
-        self.rate_limit_max_requests = int(os.getenv('OTP_RATE_LIMIT_MAX', '5'))
-        self.rate_limit_window_minutes = int(os.getenv('OTP_RATE_LIMIT_WINDOW', '60'))
+        # OTP configuration (hardcoded defaults, can be moved to tenant settings if needed)
+        self.otp_length = 6
+        self.otp_expiry_minutes = 10
+        self.otp_max_attempts = 3
+
+        # Rate limiting configuration (hardcoded defaults)
+        self.rate_limit_max_requests = 5
+        self.rate_limit_window_minutes = 60
         
         # Initialize clients
         self.twilio_client = None
@@ -69,6 +72,46 @@ class OTPService:
                 logger.info("SendGrid client initialized successfully")
             except Exception as e:
                 logger.error(f"Failed to initialize SendGrid client: {e}")
+
+    async def _load_tenant_settings(self):
+        """Load tenant communication settings from database"""
+        if self.tenant_id and self.db_pool:
+            try:
+                async with self.db_pool.acquire() as conn:
+                    settings = await conn.fetchval("""
+                        SELECT settings FROM tenants WHERE id = $1
+                    """, UUID(self.tenant_id) if isinstance(self.tenant_id, str) else self.tenant_id)
+
+                    if settings and 'communication' in settings:
+                        comm_settings = settings['communication']
+
+                        # Update Twilio settings from tenant (no fallback)
+                        if 'sms' in comm_settings and comm_settings['sms'].get('provider') == 'twilio':
+                            twilio_config = comm_settings['sms'].get('twilio', {})
+                            self.twilio_account_sid = twilio_config.get('accountSid')
+                            self.twilio_auth_token = twilio_config.get('authToken')
+                            self.twilio_phone_number = twilio_config.get('phoneNumber')
+                            self.twilio_verify_service_sid = twilio_config.get('verifyServiceSid')
+
+                            # Reinitialize Twilio client with new settings
+                            if self.twilio_account_sid and self.twilio_auth_token:
+                                self.twilio_client = TwilioClient(self.twilio_account_sid, self.twilio_auth_token)
+
+                        # Update SendGrid settings from tenant (no fallback)
+                        if 'email' in comm_settings and comm_settings['email'].get('provider') == 'sendgrid':
+                            sg_config = comm_settings['email'].get('sendgrid', {})
+                            self.sendgrid_api_key = sg_config.get('apiKey')
+                            self.sendgrid_from_email = sg_config.get('fromEmail', 'noreply@weedgo.com')
+                            self.sendgrid_from_name = sg_config.get('fromName', 'WeedGo')
+
+                            # Reinitialize SendGrid client with new settings
+                            if self.sendgrid_api_key:
+                                self.sendgrid_client = SendGridAPIClient(self.sendgrid_api_key)
+
+                        self.tenant_settings = comm_settings
+                        logger.info(f"Loaded tenant settings for tenant {self.tenant_id}")
+            except Exception as e:
+                logger.warning(f"Failed to load tenant settings: {e}")
     
     def generate_otp(self, length: Optional[int] = None) -> str:
         """Generate a random OTP code"""
