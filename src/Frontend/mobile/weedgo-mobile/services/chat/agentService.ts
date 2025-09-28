@@ -132,12 +132,12 @@ class AgentService {
    */
   async updateAgentPersonality(agentId: string, personalityId: string): Promise<boolean> {
     try {
-      const response = await fetch(`${API_URL}/api/admin/agents/${agentId}/personality`, {
+      // personality_id is a query parameter, not in the body
+      const response = await fetch(`${API_URL}/api/admin/agents/${agentId}/personality?personality_id=${personalityId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ personality_id: personalityId }),
       });
 
       if (!response.ok) {
