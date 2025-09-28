@@ -32,6 +32,7 @@ interface ChatStore {
   agent: Agent | null;
   personality: Personality | null;
   personalityName: string;
+  getHeaderTitle: () => string;
 
   // Actions
   connect: () => Promise<void>;
@@ -78,6 +79,16 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   agent: null,
   personality: null,
   personalityName: 'AI Assistant',
+
+  getHeaderTitle: () => {
+    const state = get();
+    if (state.agent && state.personality) {
+      const agentName = state.agent.name || state.agent.id;
+      const personalityName = state.personality.name || state.personality.id;
+      return `AI-${agentName}-${personalityName}`;
+    }
+    return 'AI Assistant';
+  },
 
   connect: async () => {
     const auth = useAuthStore.getState();
