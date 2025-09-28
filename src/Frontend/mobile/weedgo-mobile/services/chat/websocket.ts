@@ -300,8 +300,8 @@ class ChatWebSocketService {
       session_id: this.sessionId,
       store_id: context?.store_id || this.storeId,
       user_id: context?.user_id || this.userId,
-      agent_id: this.agentId,
-      personality_id: this.personalityId,
+      agent: this.agentId,
+      personality: this.personalityId,
     };
 
     this.sendRawMessage(message);

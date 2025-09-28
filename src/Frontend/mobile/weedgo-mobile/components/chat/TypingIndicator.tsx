@@ -8,8 +8,10 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { Colors } from '@/constants/Colors';
+import { useChatStore } from '../../stores/chatStore';
 
 export function TypingIndicator() {
+  const { personalityName } = useChatStore();
   const dot1Opacity = useSharedValue(0.3);
   const dot2Opacity = useSharedValue(0.3);
   const dot3Opacity = useSharedValue(0.3);
@@ -62,7 +64,7 @@ export function TypingIndicator() {
   return (
     <View style={styles.container}>
       <View style={styles.bubble}>
-        <Text style={styles.text}>WeedGo AI is typing</Text>
+        <Text style={styles.text}>{personalityName || 'AI Assistant'} is typing</Text>
         <View style={styles.dots}>
           <Animated.View style={[styles.dot, dot1Style]} />
           <Animated.View style={[styles.dot, dot2Style]} />
