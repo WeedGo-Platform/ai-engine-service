@@ -457,17 +457,8 @@ export const useChatStore = create<ChatStore>((set, get) => ({
         personalityName: newPersonality.name || 'AI Assistant'
       });
 
-      // Disconnect and reconnect with new personality
-      chatWebSocketService.disconnect();
-      set({ isConnected: false });
-
-      // Reconnect with the new personality
-      const auth = useAuthStore.getState();
-      const currentStore = useStoreStore.getState().currentStore;
-      const storeId = currentStore?.id || auth.user?.store_id;
-      const userId = auth.user?.id;
-
-      await chatWebSocketService.connect(storeId, userId, agent.id, personalityId);
+      // Send session update to backend (like dashboard does)
+      chatWebSocketService.sendSessionUpdate(agent.id, personalityId);
 
       // Add a message about the personality change
       const changeMessage: ChatMessage = {
