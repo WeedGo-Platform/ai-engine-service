@@ -51,6 +51,8 @@ export default function ChatScreen() {
     isTyping,
     isConnected,
     personalityName,
+    personality,
+    getHeaderTitle,
     connect,
     sendMessage: sendChatMessage,
     markAsRead,
@@ -301,7 +303,11 @@ export default function ChatScreen() {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <View>
-          <Text style={styles.headerTitle}>{personalityName}</Text>
+          <Text style={styles.headerTitle}>
+            {isTyping && personality ?
+              `${personality.name || personality.id} is thinking...` :
+              getHeaderTitle()}
+          </Text>
         </View>
         <View style={styles.headerActions}>
           <TouchableOpacity onPress={handleSpeakerToggle}>
