@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { Audio } from 'expo-av';
 import { Alert } from 'react-native';
-import * as FileSystem from 'expo-file-system/legacy';
+import { readAsStringAsync } from 'expo-file-system/legacy';
 import * as Haptics from 'expo-haptics';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:5024';
@@ -251,8 +251,8 @@ export function useEnhancedTranscription(options: UseEnhancedTranscriptionOption
       // Read file as base64
       let base64Audio;
       try {
-        base64Audio = await FileSystem.readAsStringAsync(uri, {
-          encoding: FileSystem.EncodingType.Base64,
+        base64Audio = await readAsStringAsync(uri, {
+          encoding: 'base64',
         });
         console.log('Audio file read successfully, size:', base64Audio.length);
       } catch (readError) {

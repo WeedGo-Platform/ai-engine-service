@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import chatWebSocketService, { ChatResponse } from '../services/chat/websocket';
+import agentService, { Agent, Personality } from '../services/chat/agentService';
 import { useAuthStore } from './authStore';
 import useStoreStore from './storeStore';
 import useCartStore from './cartStore';
@@ -28,6 +29,9 @@ interface ChatStore {
   isConnected: boolean;
   sessionId: string | null;
   unreadCount: number;
+  agent: Agent | null;
+  personality: Personality | null;
+  personalityName: string;
 
   // Actions
   connect: () => Promise<void>;
@@ -71,6 +75,9 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   isConnected: false,
   sessionId: null,
   unreadCount: 0,
+  agent: null,
+  personality: null,
+  personalityName: 'AI Assistant',
 
   connect: async () => {
     const auth = useAuthStore.getState();
@@ -79,8 +86,21 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     const userId = auth.user?.id;
 
     try {
-      // Connect to WebSocket service
-      await chatWebSocketService.connect(storeId, userId);
+      // Fetch agent and personality from API
+      const agentData = await agentService.getDispensaryAgentPersonality();
+      if (agentData) {
+        set({
+          agent: agentData.agent,
+          personality: agentData.personality,
+          personalityName: agentData.personality.name || 'AI Assistant'
+        });
+
+        // Connect to WebSocket with agent and personality IDs
+        await chatWebSocketService.connect(storeId, userId, agentData.agent.id, agentData.personality.id);
+      } else {
+        // Fallback to regular connection if agent fetch fails
+        await chatWebSocketService.connect(storeId, userId);
+      }
 
       // Listen for WebSocket events
       chatWebSocketService.on('connected', (data) => {
@@ -118,14 +138,35 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       });
 
       chatWebSocketService.on('error', (error) => {
-        console.error('Chat error:', error);
-        set({ isTyping: false });
+        // Only show error message if not retrying
+        if (!error.isRetrying) {
+          console.error('Chat error:', error);
+          set({ isTyping: false });
 
-        // Add error message to chat
+          const errorMessage: ChatMessage = {
+            id: generateMessageId('error'),
+            type: 'system',
+            content: `Connection error: ${error.message || 'Please try again'}`,
+            timestamp: new Date(),
+          };
+          get().addMessage(errorMessage);
+        }
+      });
+
+      chatWebSocketService.on('reconnecting', (info) => {
+        console.log(`Chat reconnecting: attempt ${info.attempt} of ${info.maxAttempts}`);
+        // Don't show system messages for reconnection attempts
+        set({ isConnected: false, isTyping: false });
+      });
+
+      chatWebSocketService.on('connection_failed', (error) => {
+        console.error('Chat connection failed:', error);
+        set({ isConnected: false, isTyping: false });
+
         const errorMessage: ChatMessage = {
           id: generateMessageId('error'),
           type: 'system',
-          content: `Connection error: ${error.message || 'Please try again'}`,
+          content: 'Unable to connect to chat. Please check your internet connection and try again.',
           timestamp: new Date(),
         };
         get().addMessage(errorMessage);
@@ -143,13 +184,18 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     // Load history from local storage
     await get().loadHistory();
 
-    // Add welcome message if no messages
+    // Add welcome message from the personality if no messages
     const messages = get().messages;
     if (messages.length === 0) {
+      const personalityName = get().personalityName;
+      const welcomeContent = personalityName.toLowerCase() === 'marcel' ?
+        `Yo! Welcome! I'm ${personalityName}, your budtender at WeedGo! 🔥 Ready to find something amazing today? Whether you're looking for that perfect indica to chill or something to get creative - I've got you covered!` :
+        `Hi! I'm ${personalityName}, your cannabis consultant at WeedGo. How can I help you find the perfect product today?`;
+
       const welcomeMessage: ChatMessage = {
         id: generateMessageId('welcome'),
         type: 'assistant',
-        content: 'Hi! I\'m your WeedGo AI assistant. How can I help you find the perfect cannabis products today?',
+        content: welcomeContent,
         timestamp: new Date(),
       };
       get().addMessage(welcomeMessage);
@@ -184,7 +230,9 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       const storeId = currentStore?.id || auth.user?.store_id;
       const userId = auth.user?.id;
 
-      chatWebSocketService.connect(storeId, userId).then(() => {
+      const agent = get().agent;
+      const personality = get().personality;
+      chatWebSocketService.connect(storeId, userId, agent?.id, personality?.id).then(() => {
         // Send message after reconnection
         chatWebSocketService.sendMessage(text, isVoice, {
           store_id: storeId,
@@ -283,11 +331,16 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     AsyncStorage.removeItem(CHAT_HISTORY_KEY);
     chatWebSocketService.clearSession();
 
-    // Add welcome message
+    // Add fresh start message from the personality
+    const personalityName = get().personalityName;
+    const freshStartContent = personalityName.toLowerCase() === 'marcel' ?
+      `Fresh start! 🔥 What can I help you find today? Looking for something specific or want me to show you what's fire right now?` :
+      `Let's start fresh! What can I help you find today?`;
+
     const welcomeMessage: ChatMessage = {
       id: generateMessageId('welcome'),
       type: 'assistant',
-      content: 'Chat cleared. How can I help you today?',
+      content: freshStartContent,
       timestamp: new Date(),
     };
     get().addMessage(welcomeMessage);

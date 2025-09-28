@@ -26,8 +26,10 @@ export interface ChatResponse {
 class ChatWebSocketService {
   private ws: WebSocket | null = null;
   private reconnectAttempts = 0;
-  private maxReconnectAttempts = 5;
+  private maxReconnectAttempts = 10;
   private reconnectTimeout: NodeJS.Timeout | null = null;
+  private baseReconnectDelay = 1000; // Start with 1 second
+  private maxReconnectDelay = 30000; // Max 30 seconds
   private messageQueue: Message[] = [];
   private isConnected = false;
   private sessionId: string | null = null;
@@ -36,6 +38,8 @@ class ChatWebSocketService {
   private wsUrl: string = '';
   private storeId: string | null = null;
   private userId: string | null = null;
+  private agentId: string | null = null;
+  private personalityId: string | null = null;
 
   constructor() {
     this.loadSessionId();
@@ -61,7 +65,7 @@ class ChatWebSocketService {
     }
   }
 
-  async connect(storeId?: string, userId?: string) {
+  async connect(storeId?: string, userId?: string, agentId?: string, personalityId?: string) {
     if (this.isConnected && this.ws?.readyState === WebSocket.OPEN) {
       console.log('Already connected to chat');
       return;
@@ -69,13 +73,19 @@ class ChatWebSocketService {
 
     this.storeId = storeId || this.storeId;
     this.userId = userId || this.userId;
+    this.agentId = agentId || this.agentId;
+    this.personalityId = personalityId || this.personalityId;
 
     // Build WebSocket URL with query parameters
-    const baseUrl = process.env.EXPO_PUBLIC_WS_URL || 'ws://10.0.0.29:5024';
+    // Use API URL and convert to WebSocket protocol
+    const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.0.29:5024';
+    const baseUrl = apiUrl.replace('http://', 'ws://').replace('https://', 'wss://');
     const params = new URLSearchParams();
     if (this.sessionId) params.append('session_id', this.sessionId);
     if (this.storeId) params.append('store_id', this.storeId);
     if (this.userId) params.append('user_id', this.userId);
+    if (this.agentId) params.append('agent_id', this.agentId);
+    if (this.personalityId) params.append('personality_id', this.personalityId);
 
     this.wsUrl = `${baseUrl}/chat/ws${params.toString() ? '?' + params.toString() : ''}`;
 
@@ -92,8 +102,15 @@ class ChatWebSocketService {
         this.isConnected = true;
         this.reconnectAttempts = 0;
 
-        // Don't send init message - the server handles connection automatically
-        // The server sends a 'connection' type message upon successful connection
+        // Send session_update to set agent and personality
+        if (this.agentId && this.personalityId) {
+          this.sendRawMessage({
+            type: 'session_update',
+            agent_id: this.agentId,
+            personality_id: this.personalityId
+          });
+          console.log(`Setting agent: ${this.agentId}, personality: ${this.personalityId}`);
+        }
 
         // Emit connected event
         this.emit('connected', { sessionId: this.sessionId });
@@ -124,6 +141,11 @@ class ChatWebSocketService {
               if (data.session_id) {
                 this.saveSessionId(data.session_id);
               }
+              break;
+
+            case 'session_updated':
+              // Log successful personality update
+              console.log('Personality updated:', data.agent, data.personality);
               break;
 
             case 'response':
@@ -170,9 +192,19 @@ class ChatWebSocketService {
         }
       };
 
-      this.ws.onerror = (error) => {
-        console.error('WebSocket error:', error);
-        this.emit('error', { message: 'Connection error', error });
+      this.ws.onerror = (error: any) => {
+        // Only log critical errors, not connection failures during reconnects
+        if (this.reconnectAttempts === 0) {
+          console.error('WebSocket error:', error);
+          this.emit('error', {
+            message: 'Connection error',
+            error,
+            isRetrying: this.reconnectAttempts < this.maxReconnectAttempts,
+          });
+        } else {
+          // During reconnection, only log to console
+          console.log(`WebSocket reconnection attempt ${this.reconnectAttempts} failed`);
+        }
       };
 
       this.ws.onclose = (event) => {
@@ -213,13 +245,31 @@ class ChatWebSocketService {
       clearTimeout(this.reconnectTimeout);
     }
 
-    const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempts), 30000);
+    // Use exponential backoff starting from 1 second
+    const delay = Math.min(
+      this.baseReconnectDelay * Math.pow(1.5, this.reconnectAttempts),
+      this.maxReconnectDelay
+    );
     this.reconnectAttempts++;
 
-    console.log(`Reconnecting in ${delay}ms (attempt ${this.reconnectAttempts})`);
+    console.log(`Reconnecting in ${delay}ms (attempt ${this.reconnectAttempts} of ${this.maxReconnectAttempts})`);
+
+    // Emit reconnecting event with attempt info
+    this.emit('reconnecting', {
+      attempt: this.reconnectAttempts,
+      maxAttempts: this.maxReconnectAttempts,
+      delay,
+    });
 
     this.reconnectTimeout = setTimeout(() => {
-      this.setupWebSocket();
+      if (this.reconnectAttempts <= this.maxReconnectAttempts) {
+        this.setupWebSocket();
+      } else {
+        console.error('Max reconnection attempts reached. Connection failed.');
+        this.emit('connection_failed', {
+          reason: 'Max reconnection attempts reached',
+        });
+      }
     }, delay);
   }
 
@@ -250,6 +300,8 @@ class ChatWebSocketService {
       session_id: this.sessionId,
       store_id: context?.store_id || this.storeId,
       user_id: context?.user_id || this.userId,
+      agent_id: this.agentId,
+      personality_id: this.personalityId,
     };
 
     this.sendRawMessage(message);
@@ -280,7 +332,7 @@ class ChatWebSocketService {
     // Reconnect with new session
     if (this.isConnected) {
       this.disconnect();
-      this.connect(this.storeId, this.userId);
+      this.connect(this.storeId, this.userId, this.agentId, this.personalityId);
     }
   }
 
@@ -309,13 +361,45 @@ class ChatWebSocketService {
     }
   }
 
+  // Manual reconnection
+  reconnect() {
+    // Reset attempts for manual reconnection
+    this.reconnectAttempts = 0;
+
+    if (this.ws?.readyState === WebSocket.OPEN) {
+      this.disconnect();
+    }
+
+    if (this.reconnectTimeout) {
+      clearTimeout(this.reconnectTimeout);
+      this.reconnectTimeout = null;
+    }
+
+    // Immediate reconnect for manual trigger
+    this.setupWebSocket();
+  }
+
+  // Reset connection attempts (useful when app comes back to foreground)
+  resetReconnectAttempts() {
+    this.reconnectAttempts = 0;
+  }
+
   // Getters
   getIsConnected() {
-    return this.isConnected;
+    return this.isConnected && this.ws?.readyState === WebSocket.OPEN;
   }
 
   getSessionId() {
     return this.sessionId;
+  }
+
+  getConnectionState() {
+    return {
+      isConnected: this.isConnected,
+      reconnectAttempts: this.reconnectAttempts,
+      maxReconnectAttempts: this.maxReconnectAttempts,
+      readyState: this.ws?.readyState,
+    };
   }
 }
 

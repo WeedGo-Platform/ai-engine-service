@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { Audio } from 'expo-av';
 import { Alert } from 'react-native';
-import * as FileSystem from 'expo-file-system';
+import { readAsStringAsync } from 'expo-file-system/legacy';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:5024';
 
@@ -63,8 +63,8 @@ export function useSimpleTranscription(options: UseSimpleTranscriptionOptions = 
       console.log('Recording stopped, URI:', uri);
 
       // Read file as base64
-      const base64Audio = await FileSystem.readAsStringAsync(uri, {
-        encoding: FileSystem.EncodingType.Base64,
+      const base64Audio = await readAsStringAsync(uri, {
+        encoding: 'base64',
       });
 
       // Send to backend

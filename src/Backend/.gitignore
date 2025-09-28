@@ -1,0 +1,4 @@
+
+# Deprecated server files (DO NOT USE)
+agi/api/_deprecated_*.py
+agi/api/server.py

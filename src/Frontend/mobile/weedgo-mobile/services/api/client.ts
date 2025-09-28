@@ -2,9 +2,9 @@ import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'ax
 import * as SecureStore from 'expo-secure-store';
 import Constants from 'expo-constants';
 import { ApiError } from '@/types/api.types';
+import { API_URL } from '../../config/api';
 
 // Environment variables - Using EXPO_PUBLIC_ prefix for Expo environment variables
-const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.0.169:5024';
 const TENANT_ID = process.env.EXPO_PUBLIC_TENANT_ID || 'ce2d57bc-b3ba-4801-b229-889a9fe9626d'; // Pot Palace tenant
 const API_TIMEOUT = Number(process.env.EXPO_PUBLIC_API_TIMEOUT) || 30000;
 
