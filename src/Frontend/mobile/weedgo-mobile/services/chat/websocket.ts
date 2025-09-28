@@ -84,8 +84,7 @@ class ChatWebSocketService {
     if (this.sessionId) params.append('session_id', this.sessionId);
     if (this.storeId) params.append('store_id', this.storeId);
     if (this.userId) params.append('user_id', this.userId);
-    if (this.agentId) params.append('agent_id', this.agentId);
-    if (this.personalityId) params.append('personality_id', this.personalityId);
+    // Don't send agent_id and personality_id as URL params - they're managed via session_update
 
     this.wsUrl = `${baseUrl}/chat/ws${params.toString() ? '?' + params.toString() : ''}`;
 
@@ -302,8 +301,7 @@ class ChatWebSocketService {
       session_id: this.sessionId,
       store_id: context?.store_id || this.storeId,
       user_id: context?.user_id || this.userId,
-      agent: this.agentId,
-      personality: this.personalityId,
+      // Don't send agent/personality in messages - they're managed at session level
     };
 
     this.sendRawMessage(message);
