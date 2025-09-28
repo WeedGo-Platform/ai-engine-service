@@ -101,23 +101,8 @@ class ChatWebSocketService {
         this.isConnected = true;
         this.reconnectAttempts = 0;
 
-        // Always send session_update to set agent and personality
-        // Use defaults if not provided
-        const agentToSend = this.agentId || 'dispensary';
-        const personalityToSend = this.personalityId || 'marcel';
-
-        this.sendRawMessage({
-          type: 'session_update',
-          agent: agentToSend,
-          personality: personalityToSend
-        });
-        console.log(`Setting agent: ${agentToSend}, personality: ${personalityToSend}`);
-
-        // Emit connected event
-        this.emit('connected', { sessionId: this.sessionId });
-
-        // Process queued messages
-        this.processMessageQueue();
+        // Don't send session_update here - wait for connection message with session_id
+        // The server needs to send us the session_id first
 
         // Start ping interval to keep connection alive
         this.startPingInterval();
@@ -134,13 +119,50 @@ class ChatWebSocketService {
               // Handle initial connection message from server
               if (data.session_id) {
                 this.saveSessionId(data.session_id);
+
+                // NOW send session_update after we have the session_id
+                const agentToSend = this.agentId || 'dispensary';
+                const personalityToSend = this.personalityId || 'marcel';
+
+                this.sendRawMessage({
+                  type: 'session_update',
+                  agent: agentToSend,
+                  personality: personalityToSend
+                });
+                console.log(`[WebSocket] Session ${data.session_id} established, setting agent: ${agentToSend}, personality: ${personalityToSend}`);
+
+                // Emit connected event with session ID
+                this.emit('connected', { sessionId: data.session_id });
+
+                // Process queued messages now that session is established
+                this.processMessageQueue();
               }
               break;
 
             case 'session':
               // Save new session ID
               if (data.session_id) {
+                const isNewSession = this.sessionId !== data.session_id;
                 this.saveSessionId(data.session_id);
+
+                // If this is a new session, send session_update
+                if (isNewSession) {
+                  const agentToSend = this.agentId || 'dispensary';
+                  const personalityToSend = this.personalityId || 'marcel';
+
+                  this.sendRawMessage({
+                    type: 'session_update',
+                    agent: agentToSend,
+                    personality: personalityToSend
+                  });
+                  console.log(`[WebSocket] New session ${data.session_id}, setting agent: ${agentToSend}, personality: ${personalityToSend}`);
+
+                  // Emit connected event with session ID
+                  this.emit('connected', { sessionId: data.session_id });
+
+                  // Process queued messages
+                  this.processMessageQueue();
+                }
               }
               break;
 
