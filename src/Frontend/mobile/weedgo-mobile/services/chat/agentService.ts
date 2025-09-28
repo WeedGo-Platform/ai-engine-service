@@ -8,21 +8,16 @@ const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.0.29:5024';
 export interface Agent {
   id: string;
   name: string;
-  type: string;
-  description?: string;
-  is_active: boolean;
-  created_at: string;
+  has_prompts: boolean;
+  has_config: boolean;
+  path: string;
 }
 
 export interface Personality {
   id: string;
   name: string;
-  agent_id: string;
-  system_prompt?: string;
-  description?: string;
-  voice_settings?: any;
-  is_default: boolean;
-  created_at: string;
+  filename: string;
+  path: string;
 }
 
 class AgentService {
@@ -31,12 +26,12 @@ class AgentService {
    */
   async getAgents(): Promise<Agent[]> {
     try {
-      const response = await fetch(`${API_URL}/agents`);
+      const response = await fetch(`${API_URL}/api/admin/agents`);
       if (!response.ok) {
         throw new Error(`Failed to fetch agents: ${response.status}`);
       }
       const data = await response.json();
-      return data.agents || [];
+      return data.agents || data || [];
     } catch (error) {
       console.error('[AgentService] Failed to fetch agents:', error);
       throw error;
@@ -61,12 +56,12 @@ class AgentService {
    */
   async getPersonalities(agentId: string): Promise<Personality[]> {
     try {
-      const response = await fetch(`${API_URL}/agents/${agentId}/personalities`);
+      const response = await fetch(`${API_URL}/api/admin/agents/${agentId}/personalities`);
       if (!response.ok) {
         throw new Error(`Failed to fetch personalities: ${response.status}`);
       }
       const data = await response.json();
-      return data.personalities || [];
+      return data.personalities || data || [];
     } catch (error) {
       console.error(`[AgentService] Failed to fetch personalities for agent ${agentId}:`, error);
       throw error;
@@ -86,9 +81,8 @@ class AgentService {
 
       // 2. Find the dispensary agent
       const dispensaryAgent = agents.find(agent =>
-        agent.type === 'dispensary' ||
-        agent.name?.toLowerCase().includes('dispensary') ||
-        agent.name?.toLowerCase().includes('budtender')
+        agent.id === 'dispensary' ||
+        agent.name?.toLowerCase() === 'dispensary'
       );
 
       if (!dispensaryAgent) {
@@ -109,8 +103,8 @@ class AgentService {
 
       // 4. Use the first personality (or find Marcel specifically)
       let selectedPersonality = personalities.find(p =>
-        p.name?.toLowerCase() === 'marcel' ||
-        p.is_default
+        p.id === 'marcel' ||
+        p.name?.toLowerCase() === 'marcel'
       ) || personalities[0];
 
       console.log('[AgentService] Selected personality:', selectedPersonality);
