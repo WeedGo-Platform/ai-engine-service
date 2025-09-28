@@ -106,8 +106,8 @@ class ChatWebSocketService {
         if (this.agentId && this.personalityId) {
           this.sendRawMessage({
             type: 'session_update',
-            agent_id: this.agentId,
-            personality_id: this.personalityId
+            agent: this.agentId,
+            personality: this.personalityId
           });
           console.log(`Setting agent: ${this.agentId}, personality: ${this.personalityId}`);
         }
