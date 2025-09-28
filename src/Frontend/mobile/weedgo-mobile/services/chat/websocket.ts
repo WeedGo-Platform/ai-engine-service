@@ -38,8 +38,8 @@ class ChatWebSocketService {
   private wsUrl: string = '';
   private storeId: string | null = null;
   private userId: string | null = null;
-  private agentId: string | null = null;
-  private personalityId: string | null = null;
+  private agentId: string | null = 'dispensary';  // Default to dispensary for mobile
+  private personalityId: string | null = 'marcel';  // Default to marcel for mobile
 
   constructor() {
     this.loadSessionId();
@@ -102,15 +102,17 @@ class ChatWebSocketService {
         this.isConnected = true;
         this.reconnectAttempts = 0;
 
-        // Send session_update to set agent and personality
-        if (this.agentId && this.personalityId) {
-          this.sendRawMessage({
-            type: 'session_update',
-            agent: this.agentId,
-            personality: this.personalityId
-          });
-          console.log(`Setting agent: ${this.agentId}, personality: ${this.personalityId}`);
-        }
+        // Always send session_update to set agent and personality
+        // Use defaults if not provided
+        const agentToSend = this.agentId || 'dispensary';
+        const personalityToSend = this.personalityId || 'marcel';
+
+        this.sendRawMessage({
+          type: 'session_update',
+          agent: agentToSend,
+          personality: personalityToSend
+        });
+        console.log(`Setting agent: ${agentToSend}, personality: ${personalityToSend}`);
 
         // Emit connected event
         this.emit('connected', { sessionId: this.sessionId });
