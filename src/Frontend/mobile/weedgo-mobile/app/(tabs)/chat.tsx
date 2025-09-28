@@ -18,23 +18,33 @@ import { useChatStore } from '../../stores/chatStore';
 import { MessageBubble } from '../../components/chat/MessageBubble';
 import { TypingIndicator } from '../../components/chat/TypingIndicator';
 import { SuggestionChips } from '../../components/chat/SuggestionChips';
-import { useStreamingTranscription } from '../../hooks/useStreamingTranscription';
+import { useMultilingualVoiceTranscription } from '../../hooks/useMultilingualVoiceTranscription';
 import { VoiceRecordingButton } from '../../components/chat/VoiceRecordingButton';
-import { StreamingTranscriptUI } from '../../components/StreamingTranscriptUI';
+import { cleanupTranscript } from '../../utils/transcriptCleaner';
 import { Colors, GlassStyles, BorderRadius, Shadows } from '@/constants/Colors';
 import { useTheme } from '@/contexts/ThemeContext';
 import { glassChatStyles as staticStyles } from '@/constants/GlassmorphismStyles';
 import { BlurView } from 'expo-blur';
 
+// Voice configuration
+const VOICE_CONFIG = {
+  autoPauseMs: 2000,  // Send chunk after 2 seconds pause
+  autoStopMs: 2000,   // Stop recording after 2 seconds silence
+  language: 'en-US'
+};
+
 export default function ChatScreen() {
   const [inputText, setInputText] = useState('');
   const [isTTSEnabled, setIsTTSEnabled] = useState(true);
-  const [showTranscript, setShowTranscript] = useState(false);
   const [pendingTranscript, setPendingTranscript] = useState('');
+  const [sentenceBuffer, setSentenceBuffer] = useState('');
+  const [lastSentTranscript, setLastSentTranscript] = useState('');
+  const [localError, setLocalError] = useState<string | null>(null);
   const flatListRef = useRef<FlatList>(null);
   const inputRef = useRef<TextInput>(null);
   const { theme, isDark } = useTheme();
   const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const sentTranscriptsRef = useRef<Set<string>>(new Set());
 
   const {
     messages,
@@ -54,11 +64,10 @@ export default function ChatScreen() {
       flexDirection: 'row' as const,
       justifyContent: 'space-between' as const,
       alignItems: 'center' as const,
-      padding: 16,
-      paddingTop: Platform.OS === 'ios' ? 48 : 16,
-      backgroundColor: 'rgba(255,255,255,0.05)',
-      borderBottomWidth: 0.5,
-      borderBottomColor: 'rgba(255,255,255,0.1)',
+      paddingHorizontal: 16,
+      paddingTop: Platform.OS === 'ios' ? 8 : 8,
+      paddingBottom: 8,
+      backgroundColor: 'transparent',
     },
     headerTitle: {
       fontSize: 20,
@@ -75,17 +84,46 @@ export default function ChatScreen() {
       paddingBottom: 20,
       paddingTop: 8,
     },
-    transcriptBox: {
+    transcriptContainer: {
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      paddingHorizontal: 16,
+      paddingVertical: 12,
       marginHorizontal: 16,
       marginBottom: 8,
-      backgroundColor: 'rgba(255, 255, 255, 0.95)',
       borderRadius: 12,
-      maxHeight: 480,  // Increased by 4x from 120
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: -2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      elevation: 3,
+      borderWidth: 1,
+      borderColor: 'rgba(255, 255, 255, 0.2)',
+    },
+    transcriptHeader: {
+      flexDirection: 'row' as const,
+      alignItems: 'center' as const,
+      marginBottom: 8,
+      gap: 8,
+    },
+    recordingIndicator: {
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+      backgroundColor: '#FF4444',
+    },
+    transcriptLabel: {
+      fontSize: 12,
+      fontWeight: '600' as const,
+      color: 'rgba(255, 255, 255, 0.8)',
+      flex: 1,
+    },
+    languageIndicator: {
+      fontSize: 11,
+      color: '#fff',
+      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+      paddingHorizontal: 8,
+      paddingVertical: 2,
+      borderRadius: 8,
+    },
+    transcriptText: {
+      fontSize: 14,
+      color: '#fff',
+      lineHeight: 20,
     },
   }), [theme, isDark]);
 
@@ -93,82 +131,63 @@ export default function ChatScreen() {
   const handleSendTranscript = useCallback((text: string) => {
     if (text.trim()) {
       sendChatMessage(text, true);
-      setShowTranscript(false);
       setPendingTranscript('');
     }
   }, [sendChatMessage]);
 
-  // Initialize streaming transcription with callbacks
+  // Initialize multilingual voice transcription
   const {
     isRecording,
-    isConnected: wsConnected,
-    partialTranscript,
-    partialConfidence,
-    finalTranscript,
-    connectionQuality,
-    latencyMs,
-    error,
-    startRecording: startStreamingRecording,
-    stopRecording: stopStreamingRecording,
-    clearTranscripts,
-    connectWebSocket,
-    disconnect,
-  } = useStreamingTranscription({
-    chunkDurationMs: 250,
-    enableWebRTC: false,
-    autoReconnect: true,
+    isTranscribing,
+    transcript,
+    liveTranscript,
+    error: voiceError,
+    isConnected: voiceConnected,
+    detectedLanguage,
+    currentLanguage,
+    startRecording,
+    stopRecording,
+    toggleRecording,
+    clearTranscript,
+    setLanguage,
+    connect: connectVoice,
+    disconnect: disconnectVoice,
+  } = useMultilingualVoiceTranscription({
+    autoPauseMs: VOICE_CONFIG.autoPauseMs,
+    autoStopMs: VOICE_CONFIG.autoStopMs,
+    preferredLanguages: ['en-US', 'fr-FR', 'yo-NG', 'es-ES'], // Add user's preferred languages
+    autoDetect: true,
+    onTranscriptComplete: (text: string, language: string) => {
+      // Send the transcript as a message with detected language
+      console.log(`[Chat] Transcript complete in ${language}:`, text);
+      if (text.trim()) {
+        sendChatMessage(text, true);
+        setPendingTranscript('');
+      }
+    }
   });
 
-  // Auto-stop on 3 seconds of silence
+  // No need for manual silence detection - the hook handles it
+
+  // Log voice errors (don't send as messages)
   useEffect(() => {
-    if (isRecording && !partialTranscript && pendingTranscript) {
-      // Start silence timer
-      if (!silenceTimerRef.current) {
-        silenceTimerRef.current = setTimeout(() => {
-          console.log('[CHAT] Auto-stopping due to 3 seconds of silence');
-          handleStopRecording();
-        }, 3000);
-      }
-    } else if (partialTranscript) {
-      // Clear silence timer when speech detected
-      if (silenceTimerRef.current) {
-        clearTimeout(silenceTimerRef.current);
-        silenceTimerRef.current = null;
-      }
+    if (voiceError) {
+      console.error('[CHAT] Voice error:', voiceError);
+      setLocalError(voiceError);
+      setTimeout(() => setLocalError(null), 3000);
     }
+  }, [voiceError]);
 
-    return () => {
-      if (silenceTimerRef.current) {
-        clearTimeout(silenceTimerRef.current);
-        silenceTimerRef.current = null;
-      }
-    };
-  }, [isRecording, partialTranscript, pendingTranscript]);
-
-  // Handle partial transcripts - accumulate them
+  // Handle real-time transcript updates
   useEffect(() => {
-    if (partialTranscript) {
-      setPendingTranscript(partialTranscript);
+    // Show the live transcript immediately
+    if (transcript || liveTranscript) {
+      const displayText = transcript || liveTranscript;
+      setPendingTranscript(cleanupTranscript(displayText));
+    } else {
+      setPendingTranscript('');
     }
-  }, [partialTranscript]);
-
-  // Handle final transcripts (sent on pause detection)
-  useEffect(() => {
-    if (finalTranscript && finalTranscript.trim()) {
-      // Check for sentence ending punctuation
-      const endsWithPunctuation = /[.!?]$/.test(finalTranscript.trim());
-
-      if (endsWithPunctuation) {
-        // Send immediately if it's a complete sentence
-        handleSendTranscript(finalTranscript);
-        clearTranscripts();
-        setPendingTranscript('');
-      } else {
-        // Keep accumulating if not a complete sentence
-        setPendingTranscript(finalTranscript);
-      }
-    }
-  }, [finalTranscript, handleSendTranscript, clearTranscripts]);
+  }, [transcript, liveTranscript]);
 
   useEffect(() => {
     // Connect to chat when screen loads
@@ -178,18 +197,23 @@ export default function ChatScreen() {
     return () => {
       // Mark as read when leaving
       markAsRead();
-      disconnect();
+      disconnectVoice();
     };
   }, []);
 
+  // Track message count to detect new messages
+  const prevMessageCountRef = useRef(messages.length);
+
   useEffect(() => {
-    // Scroll to bottom when new messages arrive
-    if (messages.length > 0) {
+    // Only scroll when new messages are added
+    if (messages.length > prevMessageCountRef.current) {
+      // Small delay to ensure content is rendered
       setTimeout(() => {
         flatListRef.current?.scrollToEnd({ animated: true });
-      }, 100);
+      }, 50);
     }
-  }, [messages]);
+    prevMessageCountRef.current = messages.length;
+  }, [messages.length]);
 
   const handleSendMessage = (text: string, fromVoice: boolean = false) => {
     if (text.trim()) {
@@ -206,35 +230,31 @@ export default function ChatScreen() {
 
   const handleStartRecording = async () => {
     try {
-      setShowTranscript(true);
       setPendingTranscript('');
-      clearTranscripts();
+      setSentenceBuffer('');
+      clearTranscript();
+      sentTranscriptsRef.current.clear(); // Clear sent transcripts when starting new recording
 
-      // Connect WebSocket if not connected
-      if (!wsConnected) {
-        await connectWebSocket();
+      const success = await startRecording();
+      if (!success) {
+        setLocalError('Failed to start recording');
       }
-
-      await startStreamingRecording();
     } catch (error) {
       console.error('[CHAT] Failed to start recording:', error);
-      setShowTranscript(false);
     }
   };
 
   const handleStopRecording = async () => {
     try {
-      await stopStreamingRecording();
+      await stopRecording();
 
-      // Send any pending transcript
-      if (pendingTranscript && pendingTranscript.trim()) {
-        handleSendTranscript(pendingTranscript);
-      }
+      // No need to send pending transcript - the hook handles it via onTranscriptComplete
 
       // Clear state
-      clearTranscripts();
+      clearTranscript();
       setPendingTranscript('');
-      setShowTranscript(false);
+      setSentenceBuffer('');
+      sentTranscriptsRef.current.clear(); // Clear sent transcripts
 
       // Clear silence timer
       if (silenceTimerRef.current) {
@@ -279,7 +299,9 @@ export default function ChatScreen() {
     >
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>AI Assistant</Text>
+        <View>
+          <Text style={styles.headerTitle}>AI Assistant</Text>
+        </View>
         <View style={styles.headerActions}>
           <TouchableOpacity onPress={handleSpeakerToggle}>
             <Ionicons
@@ -306,33 +328,30 @@ export default function ChatScreen() {
           keyExtractor={(item, index) => `${item.id}-${index}`}
           contentContainerStyle={styles.messagesList}
           ListFooterComponent={renderFooter}
-          onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="interactive"
         />
 
-        {/* Non-blocking Transcript UI - positioned above input */}
-        {showTranscript && (
-          <View style={styles.transcriptBox}>
-            <StreamingTranscriptUI
-              isRecording={isRecording}
-              isConnected={wsConnected}
-              partialTranscript={partialTranscript}
-              partialConfidence={partialConfidence}
-              finalTranscript={pendingTranscript}
-              connectionQuality={connectionQuality}
-              latencyMs={latencyMs}
-              error={error}
-              onStartRecording={handleStartRecording}
-              onStopRecording={handleStopRecording}
-              onClearTranscripts={clearTranscripts}
-              onSendTranscript={handleSendTranscript}
-              compact={true}
-            />
-          </View>
-        )}
-
         <View style={styles.inputContainer}>
+          {/* Live Transcript Display - Under Input */}
+          {isRecording && (pendingTranscript || isTranscribing) && (
+            <View style={styles.transcriptContainer}>
+              <View style={styles.transcriptHeader}>
+                <View style={styles.recordingIndicator} />
+                <Text style={styles.transcriptLabel}>
+                  {isTranscribing ? 'Listening...' : 'Processing...'}
+                </Text>
+                {detectedLanguage && detectedLanguage !== currentLanguage && (
+                  <Text style={styles.languageIndicator}>
+                    {detectedLanguage.split('-')[0].toUpperCase()}
+                  </Text>
+                )}
+              </View>
+              <Text style={styles.transcriptText}>
+                {pendingTranscript || 'Start speaking...'}
+              </Text>
+            </View>
+          )}
           <View style={styles.inputWrapper}>
             <TextInput
               ref={inputRef}
