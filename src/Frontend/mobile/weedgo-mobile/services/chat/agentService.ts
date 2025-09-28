@@ -124,6 +124,34 @@ class AgentService {
       return null;
     }
   }
+
+  /**
+   * Update the personality for a specific agent
+   * @param agentId The agent ID (e.g., 'dispensary')
+   * @param personalityId The new personality ID to set
+   */
+  async updateAgentPersonality(agentId: string, personalityId: string): Promise<boolean> {
+    try {
+      const response = await fetch(`${API_URL}/api/admin/agents/${agentId}/personality`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ personality_id: personalityId }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to update personality: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('[AgentService] Successfully updated personality:', data);
+      return true;
+    } catch (error) {
+      console.error(`[AgentService] Failed to update personality for agent ${agentId}:`, error);
+      return false;
+    }
+  }
 }
 
 // Export singleton instance
