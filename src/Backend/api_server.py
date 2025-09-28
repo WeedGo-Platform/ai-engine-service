@@ -214,14 +214,14 @@ async def lifespan(app: FastAPI):
 
         if smallest_model:
             logger.info(f"Loading smallest model: {smallest_model} ({smallest_size / (1024**3):.2f} GB)")
-            # Load model with dispensary agent and zac personality
+            # Load model with dispensary agent and marcel personality
             success = v5_engine.load_model(
                 model_name=smallest_model,
                 agent_id="dispensary",
-                personality_id="zac"
+                personality_id="marcel"
             )
             if success:
-                logger.info(f"✅ Successfully loaded {smallest_model} with dispensary/zac configuration")
+                logger.info(f"✅ Successfully loaded {smallest_model} with dispensary/marcel configuration")
             else:
                 logger.warning(f"Failed to load default model configuration")
         else:
