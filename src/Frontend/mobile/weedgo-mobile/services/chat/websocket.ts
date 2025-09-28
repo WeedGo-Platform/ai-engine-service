@@ -120,16 +120,19 @@ class ChatWebSocketService {
               if (data.session_id) {
                 this.saveSessionId(data.session_id);
 
-                // NOW send session_update after we have the session_id
-                const agentToSend = this.agentId || 'dispensary';
-                const personalityToSend = this.personalityId || 'marcel';
+                // Add a small delay to ensure session is fully established on backend
+                setTimeout(() => {
+                  // NOW send session_update after session is established
+                  const agentToSend = this.agentId || 'dispensary';
+                  const personalityToSend = this.personalityId || 'marcel';
 
-                this.sendRawMessage({
-                  type: 'session_update',
-                  agent: agentToSend,
-                  personality: personalityToSend
-                });
-                console.log(`[WebSocket] Session ${data.session_id} established, setting agent: ${agentToSend}, personality: ${personalityToSend}`);
+                  this.sendRawMessage({
+                    type: 'session_update',
+                    agent: agentToSend,
+                    personality: personalityToSend
+                  });
+                  console.log(`[WebSocket] Session ${data.session_id} established, setting agent: ${agentToSend}, personality: ${personalityToSend}`);
+                }, 100); // 100ms delay to ensure session is ready
 
                 // Emit connected event with session ID
                 this.emit('connected', { sessionId: data.session_id });
