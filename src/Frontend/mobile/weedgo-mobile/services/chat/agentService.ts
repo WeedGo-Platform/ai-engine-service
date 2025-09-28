@@ -1,0 +1,131 @@
+/**
+ * Agent Service
+ * Handles fetching agents and personalities from the API
+ */
+
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.0.29:5024';
+
+export interface Agent {
+  id: string;
+  name: string;
+  type: string;
+  description?: string;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface Personality {
+  id: string;
+  name: string;
+  agent_id: string;
+  system_prompt?: string;
+  description?: string;
+  voice_settings?: any;
+  is_default: boolean;
+  created_at: string;
+}
+
+class AgentService {
+  /**
+   * Get all available agents
+   */
+  async getAgents(): Promise<Agent[]> {
+    try {
+      const response = await fetch(`${API_URL}/agents`);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch agents: ${response.status}`);
+      }
+      const data = await response.json();
+      return data.agents || [];
+    } catch (error) {
+      console.error('[AgentService] Failed to fetch agents:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get a specific agent by type
+   */
+  async getAgentByType(type: string): Promise<Agent | null> {
+    try {
+      const agents = await this.getAgents();
+      return agents.find(agent => agent.type === type) || null;
+    } catch (error) {
+      console.error(`[AgentService] Failed to get agent by type ${type}:`, error);
+      return null;
+    }
+  }
+
+  /**
+   * Get personalities for a specific agent
+   */
+  async getPersonalities(agentId: string): Promise<Personality[]> {
+    try {
+      const response = await fetch(`${API_URL}/agents/${agentId}/personalities`);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch personalities: ${response.status}`);
+      }
+      const data = await response.json();
+      return data.personalities || [];
+    } catch (error) {
+      console.error(`[AgentService] Failed to fetch personalities for agent ${agentId}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get the dispensary agent and its first personality
+   */
+  async getDispensaryAgentPersonality(): Promise<{ agent: Agent; personality: Personality } | null> {
+    try {
+      console.log('[AgentService] Fetching dispensary agent...');
+
+      // 1. Get all agents
+      const agents = await this.getAgents();
+      console.log('[AgentService] Available agents:', agents.map(a => ({ id: a.id, name: a.name, type: a.type })));
+
+      // 2. Find the dispensary agent
+      const dispensaryAgent = agents.find(agent =>
+        agent.type === 'dispensary' ||
+        agent.name?.toLowerCase().includes('dispensary') ||
+        agent.name?.toLowerCase().includes('budtender')
+      );
+
+      if (!dispensaryAgent) {
+        console.error('[AgentService] No dispensary agent found');
+        return null;
+      }
+
+      console.log('[AgentService] Found dispensary agent:', dispensaryAgent);
+
+      // 3. Get personalities for this agent
+      const personalities = await this.getPersonalities(dispensaryAgent.id);
+      console.log('[AgentService] Available personalities:', personalities.map(p => ({ id: p.id, name: p.name })));
+
+      if (personalities.length === 0) {
+        console.error('[AgentService] No personalities found for dispensary agent');
+        return null;
+      }
+
+      // 4. Use the first personality (or find Marcel specifically)
+      let selectedPersonality = personalities.find(p =>
+        p.name?.toLowerCase() === 'marcel' ||
+        p.is_default
+      ) || personalities[0];
+
+      console.log('[AgentService] Selected personality:', selectedPersonality);
+
+      return {
+        agent: dispensaryAgent,
+        personality: selectedPersonality
+      };
+    } catch (error) {
+      console.error('[AgentService] Failed to get dispensary agent personality:', error);
+      return null;
+    }
+  }
+}
+
+// Export singleton instance
+const agentService = new AgentService();
+export default agentService;

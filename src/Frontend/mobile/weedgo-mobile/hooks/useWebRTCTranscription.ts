@@ -25,7 +25,7 @@ const DEFAULT_CONFIG: WebRTCConfig = {
     { urls: 'stun:stun.l.google.com:19302' },
     { urls: 'stun:stun1.l.google.com:19302' }
   ],
-  apiUrl: 'http://10.0.0.169:5024/api/voice/rtc',
+  apiUrl: getApiUrl() + '/api/voice/rtc',
   enableDataChannel: true,
   enableAudioTrack: true,
 };

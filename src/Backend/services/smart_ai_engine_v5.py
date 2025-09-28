@@ -84,6 +84,7 @@ class SmartAIEngineV5:
         
         # Initialize intent detector
         self.intent_detector = None
+        self._detecting_intent = False  # Flag to prevent recursion during intent detection
         self._initialize_intent_detector()
         
         logger.info(f"SmartAIEngineV5 initialized with {len(self.available_models)} models")

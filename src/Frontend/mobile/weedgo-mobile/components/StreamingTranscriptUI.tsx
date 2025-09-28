@@ -32,6 +32,7 @@ interface StreamingTranscriptUIProps {
   onSendTranscript?: (text: string) => void; // Callback when transcript should be sent
   audioLevel?: number; // 0-1 normalized audio level
   compact?: boolean; // Compact mode for non-blocking display
+  showAlways?: boolean; // Keep UI visible even when not recording
 }
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -51,6 +52,7 @@ export const StreamingTranscriptUI: React.FC<StreamingTranscriptUIProps> = ({
   onSendTranscript,
   audioLevel = 0,
   compact = false,
+  showAlways = false,
 }) => {
   // Animation values
   const pulseAnim = useRef(new Animated.Value(1)).current;
@@ -159,49 +161,114 @@ export const StreamingTranscriptUI: React.FC<StreamingTranscriptUIProps> = ({
     }
   };
 
-  // Compact mode styles
+  // Compact mode styles (enhanced for better visibility)
   if (compact) {
+    // Only show when recording or showAlways is true
+    if (!isRecording && !showAlways && !finalTranscript && !partialTranscript) {
+      return null;
+    }
+
     return (
       <View style={compactStyles.container}>
-        {/* Minimal status indicator */}
+        {/* Status Header with Recording Indicator */}
         <View style={compactStyles.header}>
           <View style={compactStyles.statusRow}>
-            <View style={[compactStyles.dot, { backgroundColor: isConnected ? '#4CAF50' : '#F44336' }]} />
-            <Text style={compactStyles.statusText}>
-              {isRecording ? 'Recording...' : 'Ready'}
-            </Text>
-            {latencyMs > 0 && (
+            {isRecording && (
+              <>
+                <Animated.View
+                  style={[
+                    compactStyles.recordingDot,
+                    {
+                      opacity: pulseAnim.interpolate({
+                        inputRange: [1, 1.2],
+                        outputRange: [1, 0.3],
+                      }),
+                    },
+                  ]}
+                />
+                <Text style={compactStyles.statusText}>Recording...</Text>
+              </>
+            )}
+            {!isRecording && finalTranscript && (
+              <Text style={compactStyles.statusText}>Transcript Ready</Text>
+            )}
+            {latencyMs > 0 && isRecording && (
               <Text style={compactStyles.latencyText}>({latencyMs}ms)</Text>
             )}
           </View>
-          {/* Stop button */}
-          {isRecording && (
-            <TouchableOpacity onPress={onStopRecording} style={compactStyles.stopButton}>
-              <Ionicons name="stop-circle" size={24} color="#FF5252" />
-            </TouchableOpacity>
-          )}
+
+          {/* Action Buttons */}
+          <View style={compactStyles.actionButtons}>
+            {/* Clear button when there's text */}
+            {(finalTranscript || partialTranscript) && onClearTranscripts && !isRecording && (
+              <TouchableOpacity onPress={onClearTranscripts} style={compactStyles.clearButton}>
+                <Ionicons name="close-circle" size={20} color="#999" />
+              </TouchableOpacity>
+            )}
+
+            {/* Stop button when recording */}
+            {isRecording && (
+              <TouchableOpacity onPress={onStopRecording} style={compactStyles.stopButton}>
+                <Ionicons name="stop-circle" size={28} color="#FF5252" />
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
 
-        {/* Transcript Display */}
+        {/* Enhanced Transcript Display */}
         <ScrollView
           ref={scrollViewRef}
           style={compactStyles.transcriptContainer}
-          showsVerticalScrollIndicator={false}
+          contentContainerStyle={compactStyles.transcriptContent}
+          showsVerticalScrollIndicator={true}
         >
-          {/* Combined transcript */}
-          <Text style={compactStyles.transcript}>
-            {finalTranscript}
-            {partialTranscript && (
-              <Text style={[compactStyles.partialText, { opacity: 0.4 + (partialConfidence * 0.6) }]}>
-                {' '}{partialTranscript}
-              </Text>
-            )}
-          </Text>
+          {/* Show listening indicator when no text */}
+          {isRecording && !finalTranscript && !partialTranscript && (
+            <View style={compactStyles.listeningIndicator}>
+              <ActivityIndicator size="small" color="#2196F3" />
+              <Text style={compactStyles.listeningText}>Listening...</Text>
+            </View>
+          )}
+
+          {/* Display transcript */}
+          {(finalTranscript || partialTranscript) && (
+            <Text style={compactStyles.transcript}>
+              {finalTranscript}
+              {partialTranscript && (
+                <>
+                  {finalTranscript && ' '}
+                  <Text style={[
+                    compactStyles.partialText,
+                    {
+                      opacity: 0.5 + (partialConfidence * 0.5),
+                      color: isRecording ? '#2196F3' : '#666',
+                    }
+                  ]}>
+                    {partialTranscript}
+                  </Text>
+                  {isRecording && (
+                    <Text style={compactStyles.cursor}>|</Text>
+                  )}
+                </>
+              )}
+            </Text>
+          )}
         </ScrollView>
 
         {/* Error Display */}
         {error && (
-          <Text style={compactStyles.errorText}>{error}</Text>
+          <View style={compactStyles.errorContainer}>
+            <Ionicons name="alert-circle-outline" size={14} color="#F44336" />
+            <Text style={compactStyles.errorText}>{error}</Text>
+          </View>
+        )}
+
+        {/* Real-time indicators */}
+        {isRecording && (
+          <View style={compactStyles.indicators}>
+            <View style={[compactStyles.qualityDot, { backgroundColor: getQualityColor() }]} />
+            <Text style={compactStyles.qualityText}>{connectionQuality}</Text>
+          </View>
         )}
       </View>
     );
@@ -366,16 +433,7 @@ export const StreamingTranscriptUI: React.FC<StreamingTranscriptUIProps> = ({
         <View style={{ width: 44 }} />
       </View>
 
-      {/* Real-time Metrics (Debug Info) */}
-      {__DEV__ && (
-        <View style={styles.debugInfo}>
-          <Text style={styles.debugText}>
-            Connected: {isConnected ? 'Yes' : 'No'} |
-            Recording: {isRecording ? 'Yes' : 'No'} |
-            Latency: {latencyMs}ms
-          </Text>
-        </View>
-      )}
+      {/* Debug info removed for production */}
     </View>
   );
 };
@@ -383,18 +441,29 @@ export const StreamingTranscriptUI: React.FC<StreamingTranscriptUIProps> = ({
 const compactStyles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 8,
+    padding: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.98)',
+    borderRadius: 12,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 12,
+    paddingBottom: 8,
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#e0e0e0',
   },
   statusRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: 8,
+  },
+  recordingDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#FF5252',
   },
   dot: {
     width: 6,
@@ -402,33 +471,93 @@ const compactStyles = StyleSheet.create({
     borderRadius: 3,
   },
   statusText: {
-    fontSize: 12,
+    fontSize: 13,
     color: '#666',
-    fontWeight: '500',
+    fontWeight: '600',
   },
   latencyText: {
-    fontSize: 10,
+    fontSize: 11,
     color: '#999',
+  },
+  actionButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  clearButton: {
+    padding: 4,
   },
   stopButton: {
     padding: 4,
   },
   transcriptContainer: {
     flex: 1,
-    maxHeight: 80,
+    maxHeight: 240, // Increased 3x from 80
+    minHeight: 100,
+    backgroundColor: '#fafafa',
+    borderRadius: 8,
+    padding: 2,
+  },
+  transcriptContent: {
+    padding: 10,
+    minHeight: 80,
   },
   transcript: {
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: 15,
+    lineHeight: 22,
     color: '#333',
+    letterSpacing: 0.2,
   },
   partialText: {
-    fontStyle: 'italic',
+    fontStyle: 'normal',
+    fontWeight: '500',
+  },
+  cursor: {
+    color: '#2196F3',
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginLeft: 2,
+  },
+  listeningIndicator: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    paddingVertical: 20,
+  },
+  listeningText: {
+    fontSize: 13,
+    color: '#666',
+  },
+  errorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 8,
+    padding: 8,
+    backgroundColor: '#FFEBEE',
+    borderRadius: 6,
   },
   errorText: {
     fontSize: 11,
     color: '#F44336',
-    marginTop: 4,
+    flex: 1,
+  },
+  indicators: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 8,
+  },
+  qualityDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+  },
+  qualityText: {
+    fontSize: 10,
+    color: '#999',
+    textTransform: 'uppercase',
   },
 });
 

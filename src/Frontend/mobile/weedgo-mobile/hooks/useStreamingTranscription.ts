@@ -5,7 +5,7 @@
  */
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { Audio } from 'expo-av';
-import * as FileSystem from 'expo-file-system';
+import { readAsStringAsync } from 'expo-file-system/legacy';
 import { Platform } from 'react-native';
 
 interface TranscriptionState {
@@ -30,7 +30,7 @@ interface StreamingConfig {
 const DEFAULT_CONFIG: StreamingConfig = {
   chunkDurationMs: 250, // 250ms chunks as per requirement
   sampleRate: 16000,
-  apiUrl: 'ws://10.0.0.169:5024/api/voice/ws/stream', // Use actual server IP
+  apiUrl: getVoiceWsUrl(), // Use actual server IP
   enableWebRTC: true,
   autoReconnect: true,
 };
@@ -311,7 +311,7 @@ export const useStreamingTranscription = (config: Partial<StreamingConfig> = {})
           const uri = recordingRef.current.getURI();
           if (uri) {
             // Read entire audio file
-            const fullAudioData = await FileSystem.readAsStringAsync(uri, {
+            const fullAudioData = await readAsStringAsync(uri, {
               encoding: 'base64',
             });
 

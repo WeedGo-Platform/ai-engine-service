@@ -179,7 +179,7 @@ class LLMIntentDetector(IntentDetectorInterface):
         try:
             # Mark that we're detecting intent to prevent recursion
             self.v5_engine._detecting_intent = True
-            
+
             # Use V5 engine for generation - call internal method to avoid recursion
             if hasattr(self.v5_engine, '_generate_internal'):
                 result = self.v5_engine._generate_internal(
@@ -188,6 +188,10 @@ class LLMIntentDetector(IntentDetectorInterface):
                     temperature=0.1,  # Low temperature for consistency
                     top_p=0.9
                 )
+                # Ensure result is properly formatted
+                if not isinstance(result, dict):
+                    logger.warning(f"_generate_internal returned non-dict: {type(result)}")
+                    result = {"text": str(result) if result else "general"}
             else:
                 # Direct model call to avoid recursion
                 result = self._direct_model_call(prompt)
@@ -233,10 +237,10 @@ class LLMIntentDetector(IntentDetectorInterface):
     def _direct_model_call(self, prompt: str) -> Dict[str, Any]:
         """
         Direct model call to avoid recursion
-        
+
         Args:
             prompt: The prompt to send to the model
-            
+
         Returns:
             Model response dictionary
         """
@@ -251,28 +255,63 @@ class LLMIntentDetector(IntentDetectorInterface):
                     stop=["\n", ".", ","],
                     echo=False
                 )
-                
-                # Handle both string and dict responses
+
+                # Handle different response types robustly
+                if response is None:
+                    logger.warning("Model returned None response")
+                    return {"text": "general", "model": self.v5_engine.current_model_name}
+
                 if isinstance(response, str):
                     # If model returns a string directly, use it as the text
+                    text = response.strip() if response else "general"
                     return {
-                        "text": response.strip() if response else "general",
+                        "text": text,
                         "model": self.v5_engine.current_model_name
                     }
                 elif isinstance(response, dict):
-                    # If it's a dict, extract text from choices structure
+                    # Handle different dict structures
+                    text = None
+
+                    # Try to extract text from various possible structures
+                    if "text" in response:
+                        text = response["text"]
+                    elif "choices" in response and isinstance(response["choices"], list) and len(response["choices"]) > 0:
+                        choice = response["choices"][0]
+                        if isinstance(choice, dict):
+                            text = choice.get("text", choice.get("message", {}).get("content"))
+                        elif isinstance(choice, str):
+                            text = choice
+                    elif "content" in response:
+                        text = response["content"]
+                    elif "output" in response:
+                        text = response["output"]
+
+                    # Ensure we have valid text
+                    if text is None or (isinstance(text, str) and not text.strip()):
+                        text = "general"
+                    elif not isinstance(text, str):
+                        text = str(text)
+
                     return {
-                        "text": response.get("choices", [{}])[0].get("text", "general"),
+                        "text": text.strip(),
                         "model": self.v5_engine.current_model_name
                     }
                 else:
-                    # Fallback for unexpected types
+                    # Fallback for unexpected types - try to convert to string
                     logger.warning(f"Unexpected response type from model: {type(response)}")
-                    return {"text": "general", "model": self.v5_engine.current_model_name}
-                    
+                    try:
+                        text = str(response).strip()
+                        if not text:
+                            text = "general"
+                    except:
+                        text = "general"
+                    return {"text": text, "model": self.v5_engine.current_model_name}
+
         except Exception as e:
             logger.error(f"Direct model call failed: {e}")
-        
+            import traceback
+            logger.error(traceback.format_exc())
+
         return {"text": "general", "model": "fallback"}
     
     def _build_classification_prompt(self, message: str, intents: List[str], language: str) -> str:
@@ -317,30 +356,49 @@ Intent:"""
     def _parse_llm_response(self, response: str, valid_intents: List[str]) -> Tuple[str, float]:
         """
         Parse LLM response to extract intent and confidence
-        
+
         Args:
             response: LLM response text
             valid_intents: List of valid intent names
-            
+
         Returns:
             Tuple of (intent, confidence)
         """
+        # Handle None or non-string responses
+        if not response:
+            return "general", 0.3
+
+        if not isinstance(response, str):
+            try:
+                response = str(response)
+            except:
+                return "general", 0.3
+
         response = response.lower().strip()
-        
+
+        # Remove common prefixes that LLM might add
+        prefixes_to_remove = ["intent:", "the intent is:", "intent is", "classified as:", "classification:"]
+        for prefix in prefixes_to_remove:
+            if response.startswith(prefix):
+                response = response[len(prefix):].strip()
+
         # Direct match
         if response in valid_intents:
             return response, 0.95
-        
-        # Check if response contains an intent
+
+        # Check if response contains an intent (but avoid partial matches)
         for intent in valid_intents:
-            if intent in response:
+            # Word boundary check to avoid matching "product" in "production"
+            import re
+            pattern = r'\b' + re.escape(intent) + r'\b'
+            if re.search(pattern, response):
                 return intent, 0.85
-        
+
         # Fuzzy match for close matches
         for intent in valid_intents:
             if self._fuzzy_match(response, intent):
                 return intent, 0.75
-        
+
         # Default fallback
         return "general", 0.5
     

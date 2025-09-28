@@ -268,7 +268,7 @@ export default function LoginScreen() {
             {(() => {
               if (tenant?.logo_url) {
                 // Construct full URL - API returns relative path
-                const baseUrl = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.0.169:5024';
+                const baseUrl = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.0.29:5024';
                 const fullLogoUrl = tenant.logo_url.startsWith('http')
                   ? tenant.logo_url
                   : `${baseUrl}${tenant.logo_url}`;

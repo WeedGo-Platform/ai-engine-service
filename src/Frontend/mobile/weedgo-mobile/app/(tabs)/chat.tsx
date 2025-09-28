@@ -50,6 +50,7 @@ export default function ChatScreen() {
     messages,
     isTyping,
     isConnected,
+    personalityName,
     connect,
     sendMessage: sendChatMessage,
     markAsRead,
@@ -300,7 +301,7 @@ export default function ChatScreen() {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <View>
-          <Text style={styles.headerTitle}>AI Assistant</Text>
+          <Text style={styles.headerTitle}>{personalityName}</Text>
         </View>
         <View style={styles.headerActions}>
           <TouchableOpacity onPress={handleSpeakerToggle}>

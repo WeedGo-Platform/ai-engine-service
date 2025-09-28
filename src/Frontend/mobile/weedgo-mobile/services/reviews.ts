@@ -48,7 +48,7 @@ export interface ReviewFilters {
 }
 
 class ReviewService {
-  private apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.0.169:5024';
+  private apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.0.29:5024';
 
   /**
    * Get reviews for a product
