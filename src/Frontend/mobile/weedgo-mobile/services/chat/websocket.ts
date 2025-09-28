@@ -389,6 +389,25 @@ class ChatWebSocketService {
     return this.isConnected && this.ws?.readyState === WebSocket.OPEN;
   }
 
+  sendSessionUpdate(agentId?: string, personalityId?: string) {
+    const updateMessage = {
+      type: 'session_update',
+      agent: agentId || this.agentId,
+      personality: personalityId || this.personalityId
+    };
+
+    console.log('[WebSocket] Sending session update:', updateMessage);
+
+    if (this.ws?.readyState === WebSocket.OPEN) {
+      this.ws.send(JSON.stringify(updateMessage));
+      // Update local references
+      if (agentId) this.agentId = agentId;
+      if (personalityId) this.personalityId = personalityId;
+    } else {
+      console.warn('[WebSocket] Cannot send session update - WebSocket not connected');
+    }
+  }
+
   getSessionId() {
     return this.sessionId;
   }
