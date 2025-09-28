@@ -18,6 +18,7 @@ import { useChatStore } from '../../stores/chatStore';
 import { MessageBubble } from '../../components/chat/MessageBubble';
 import { TypingIndicator } from '../../components/chat/TypingIndicator';
 import { SuggestionChips } from '../../components/chat/SuggestionChips';
+import { PersonalitySelector } from '../../components/chat/PersonalitySelector';
 import { useMultilingualVoiceTranscription } from '../../hooks/useMultilingualVoiceTranscription';
 import { VoiceRecordingButton } from '../../components/chat/VoiceRecordingButton';
 import { cleanupTranscript } from '../../utils/transcriptCleaner';
@@ -315,6 +316,7 @@ export default function ChatScreen() {
               color="#fff"
             />
           </TouchableOpacity>
+          <PersonalitySelector />
           <TouchableOpacity onPress={clearChat}>
             <Ionicons name="trash-outline" size={24} color="#fff" />
           </TouchableOpacity>

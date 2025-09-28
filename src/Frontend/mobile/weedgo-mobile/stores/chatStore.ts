@@ -34,6 +34,7 @@ interface ChatStore {
   agent: Agent | null;
   personality: Personality | null;
   personalityName: string;
+  availablePersonalities: Personality[];
   getHeaderTitle: () => string;
 
   // Actions
@@ -45,6 +46,10 @@ interface ChatStore {
   loadHistory: () => Promise<void>;
   clearChat: () => void;
   markAsRead: () => void;
+
+  // Personality actions
+  fetchPersonalities: () => Promise<Personality[]>;
+  changePersonality: (personalityId: string) => Promise<boolean>;
 
   // Product actions
   addProductToCart: (product: any) => void;
@@ -81,6 +86,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   agent: null,
   personality: null,
   personalityName: 'AI Assistant',
+  availablePersonalities: [],
 
   getHeaderTitle: () => {
     const state = get();
@@ -405,5 +411,77 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 
   setSuggestions: (suggestions: string[]) => {
     set({ suggestions });
+  },
+
+  fetchPersonalities: async (): Promise<Personality[]> => {
+    try {
+      const agent = get().agent;
+      if (!agent) {
+        console.error('[ChatStore] No agent available to fetch personalities for');
+        return [];
+      }
+
+      const personalities = await agentService.getPersonalities(agent.id);
+      set({ availablePersonalities: personalities });
+      return personalities;
+    } catch (error) {
+      console.error('[ChatStore] Failed to fetch personalities:', error);
+      return [];
+    }
+  },
+
+  changePersonality: async (personalityId: string): Promise<boolean> => {
+    try {
+      const agent = get().agent;
+      if (!agent) {
+        console.error('[ChatStore] No agent available to change personality for');
+        return false;
+      }
+
+      // Update on the backend
+      const success = await agentService.updateAgentPersonality(agent.id, personalityId);
+      if (!success) {
+        return false;
+      }
+
+      // Find the new personality in the available list
+      const newPersonality = get().availablePersonalities.find(p => p.id === personalityId);
+      if (!newPersonality) {
+        console.error('[ChatStore] New personality not found in available list');
+        return false;
+      }
+
+      // Update local state
+      set({
+        personality: newPersonality,
+        personalityName: newPersonality.name || 'AI Assistant'
+      });
+
+      // Disconnect and reconnect with new personality
+      chatWebSocketService.disconnect();
+      set({ isConnected: false });
+
+      // Reconnect with the new personality
+      const auth = useAuthStore.getState();
+      const currentStore = useStoreStore.getState().currentStore;
+      const storeId = currentStore?.id || auth.user?.store_id;
+      const userId = auth.user?.id;
+
+      await chatWebSocketService.connect(storeId, userId, agent.id, personalityId);
+
+      // Add a message about the personality change
+      const changeMessage: ChatMessage = {
+        id: generateMessageId('system'),
+        type: 'system',
+        content: `Switched to ${newPersonality.name} personality`,
+        timestamp: new Date(),
+      };
+      get().addMessage(changeMessage);
+
+      return true;
+    } catch (error) {
+      console.error('[ChatStore] Failed to change personality:', error);
+      return false;
+    }
   },
 }));
