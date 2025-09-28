@@ -438,12 +438,6 @@ export const useChatStore = create<ChatStore>((set, get) => ({
         return false;
       }
 
-      // Update on the backend
-      const success = await agentService.updateAgentPersonality(agent.id, personalityId);
-      if (!success) {
-        return false;
-      }
-
       // Find the new personality in the available list
       const newPersonality = get().availablePersonalities.find(p => p.id === personalityId);
       if (!newPersonality) {
@@ -451,13 +445,14 @@ export const useChatStore = create<ChatStore>((set, get) => ({
         return false;
       }
 
-      // Update local state
+      // Update local state first
       set({
         personality: newPersonality,
         personalityName: newPersonality.name || 'AI Assistant'
       });
 
-      // Send session update to backend (like dashboard does)
+      // Send session update to backend via WebSocket (this is the only way that works)
+      // Don't use the REST API - it requires agent context which we don't have
       chatWebSocketService.sendSessionUpdate(agent.id, personalityId);
 
       // Add a message about the personality change
