@@ -73,7 +73,7 @@ export default function ChatScreen() {
       backgroundColor: 'transparent',
     },
     headerTitle: {
-      fontSize: 20,
+      fontSize: 16,
       fontWeight: '600' as const,
       color: '#fff',
     },
@@ -304,9 +304,7 @@ export default function ChatScreen() {
       <View style={styles.header}>
         <View>
           <Text style={styles.headerTitle}>
-            {isTyping && personality ?
-              `${personality.name || personality.id} is thinking...` :
-              getHeaderTitle()}
+            {getHeaderTitle()}
           </Text>
         </View>
         <View style={styles.headerActions}>

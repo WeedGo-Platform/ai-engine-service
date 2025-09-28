@@ -101,11 +101,17 @@ class AgentService {
         return null;
       }
 
-      // 4. Use the first personality (or find Marcel specifically)
+      // 4. ALWAYS use Marcel personality for dispensary agent
       let selectedPersonality = personalities.find(p =>
         p.id === 'marcel' ||
         p.name?.toLowerCase() === 'marcel'
-      ) || personalities[0];
+      );
+
+      // If Marcel not found (shouldn't happen), log error but use first as fallback
+      if (!selectedPersonality) {
+        console.error('[AgentService] Marcel personality not found! Using fallback:', personalities[0]);
+        selectedPersonality = personalities[0];
+      }
 
       console.log('[AgentService] Selected personality:', selectedPersonality);
 

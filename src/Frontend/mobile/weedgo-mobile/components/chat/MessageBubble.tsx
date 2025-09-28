@@ -7,7 +7,10 @@ import { Colors } from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
 
 interface MessageBubbleProps {
-  message: ChatMessage;
+  message: ChatMessage & {
+    response_time?: number;
+    token_count?: number;
+  };
 }
 
 export function MessageBubble({ message }: MessageBubbleProps) {
@@ -49,14 +52,26 @@ export function MessageBubble({ message }: MessageBubbleProps) {
         )}
       </View>
 
-      <Text style={[
-        styles.time,
-        isUser ? styles.userTime : styles.assistantTime,
-      ]}>
-        {message.timestamp && !isNaN(new Date(message.timestamp).getTime())
-          ? format(new Date(message.timestamp), 'HH:mm')
-          : ''}
-      </Text>
+      <View style={styles.metadata}>
+        <Text style={[
+          styles.time,
+          isUser ? styles.userTime : styles.assistantTime,
+        ]}>
+          {message.timestamp && !isNaN(new Date(message.timestamp).getTime())
+            ? format(new Date(message.timestamp), 'HH:mm')
+            : ''}
+        </Text>
+        {!isUser && message.response_time !== undefined && (
+          <Text style={styles.metaText}>
+            {' • '}{message.response_time.toFixed(2)}s
+          </Text>
+        )}
+        {!isUser && message.token_count !== undefined && (
+          <Text style={styles.metaText}>
+            {' • '}{message.token_count} tokens
+          </Text>
+        )}
+      </View>
     </View>
   );
 }
@@ -132,5 +147,15 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 4,
     right: 8,
+  },
+  metadata: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 4,
+    paddingHorizontal: 4,
+  },
+  metaText: {
+    fontSize: 11,
+    color: '#9ca3af',
   },
 });

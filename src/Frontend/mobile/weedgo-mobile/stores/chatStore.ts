@@ -20,6 +20,8 @@ export interface ChatMessage {
   timestamp: Date;
   isVoice?: boolean;
   status?: 'sending' | 'sent' | 'failed';
+  response_time?: number;
+  token_count?: number;
 }
 
 interface ChatStore {
@@ -83,9 +85,10 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   getHeaderTitle: () => {
     const state = get();
     if (state.agent && state.personality) {
-      const agentName = state.agent.name || state.agent.id;
-      const personalityName = state.personality.name || state.personality.id;
-      return `AI-${agentName}-${personalityName}`;
+      const agentName = (state.agent.name || state.agent.id).charAt(0).toUpperCase() +
+        (state.agent.name || state.agent.id).slice(1).toLowerCase();
+      const personalityName = (state.personality.name || state.personality.id).toLowerCase();
+      return `${agentName} • ${personalityName} • Online`;
     }
     return 'AI Assistant';
   },
@@ -106,11 +109,18 @@ export const useChatStore = create<ChatStore>((set, get) => ({
           personalityName: agentData.personality.name || 'AI Assistant'
         });
 
+        console.log('[ChatStore] Connecting with agent/personality:', {
+          agent: agentData.agent.id,
+          personality: agentData.personality.id,
+          personalityName: agentData.personality.name
+        });
+
         // Connect to WebSocket with agent and personality IDs
         await chatWebSocketService.connect(storeId, userId, agentData.agent.id, agentData.personality.id);
       } else {
-        // Fallback to regular connection if agent fetch fails
-        await chatWebSocketService.connect(storeId, userId);
+        // Fallback to dispensary agent without personality if fetch fails
+        console.warn('[ChatStore] Could not fetch agent data, using dispensary as default');
+        await chatWebSocketService.connect(storeId, userId, 'dispensary', 'marcel');
       }
 
       // Listen for WebSocket events
@@ -119,7 +129,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
         set({ isConnected: true, sessionId: data.sessionId });
       });
 
-      chatWebSocketService.on('response', (data: ChatResponse) => {
+      chatWebSocketService.on('response', (data: ChatResponse & { response_time?: number; token_count?: number }) => {
         const message: ChatMessage = {
           id: data.id,
           type: 'assistant',
@@ -127,6 +137,8 @@ export const useChatStore = create<ChatStore>((set, get) => ({
           products: data.products,
           action: data.action as ChatAction,
           timestamp: new Date(data.timestamp),
+          response_time: data.response_time,
+          token_count: data.token_count,
         };
         get().addMessage(message);
         set({ isTyping: false });
