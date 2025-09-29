@@ -206,16 +206,21 @@ async def websocket_endpoint(websocket: WebSocket):
                         if session_id not in agent_pool.sessions:
                             raise Exception(f"Session {session_id} not found in agent pool")
 
-                        # Use agent pool for generation with cached context
-                        ai_response = await agent_pool.generate_message(
+                        # Use agent pool for generation with cached context and get full response
+                        response_data = await agent_pool.generate_message_with_products(
                             session_id=session_id,
                             message=user_message,
                             user_id=user_id
                         )
+                        ai_response = response_data.get("text", "")
+                        products = response_data.get("products", None)
+                        products_found = response_data.get("products_found", None)
                         timing_points['ai_response'] = time.time() - ai_response_start
                     except Exception as e:
                         logger.error(f"AI engine error: {e}")
                         ai_response = "I apologize, but I'm having trouble processing your request. Please try again."
+                        products = None
+                        products_found = None
                         timing_points['ai_response'] = time.time() - ai_response_start
 
                     # Calculate metrics
@@ -264,7 +269,8 @@ async def websocket_endpoint(websocket: WebSocket):
                         "status": "stop"
                     }), session_id)
 
-                    await manager.send_message(json.dumps({
+                    # Build response message with optional products
+                    response_message = {
                         "type": "message",
                         "role": "assistant",
                         "content": ai_response,
@@ -274,7 +280,14 @@ async def websocket_endpoint(websocket: WebSocket):
                         "prompt_tokens": prompt_tokens,
                         "completion_tokens": completion_tokens,
                         "model": current_model
-                    }), session_id)
+                    }
+
+                    # Include products if they were found
+                    if products:
+                        response_message["products"] = products
+                        response_message["products_found"] = products_found
+
+                    await manager.send_message(json.dumps(response_message), session_id)
                 
                 elif message_type == "voice":
                     # Process voice message
