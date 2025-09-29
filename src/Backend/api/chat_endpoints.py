@@ -13,6 +13,7 @@ import asyncpg
 import os
 from services.smart_ai_engine_v5 import SmartAIEngineV5
 from services.user_context_service import UserContextService
+from services.agent_pool_manager import get_agent_pool
 
 logger = logging.getLogger(__name__)
 
@@ -118,11 +119,21 @@ manager = ConnectionManager()
 async def websocket_endpoint(websocket: WebSocket):
     """Main WebSocket endpoint for chat communication"""
     session_id = str(uuid.uuid4())
-    
+
     try:
         # Accept the connection
         await manager.connect(websocket, session_id)
-        
+
+        # Initialize session in agent pool with default agent/personality
+        agent_pool = get_agent_pool()
+        if agent_pool:
+            await agent_pool.create_session(
+                session_id=session_id,
+                agent_id="dispensary",
+                personality_id="marcel"
+            )
+            logger.info(f"Created agent pool session {session_id} with default dispensary/marcel")
+
         # Send initial connection success message
         await manager.send_message(json.dumps({
             "type": "connection",
@@ -186,21 +197,21 @@ async def websocket_endpoint(websocket: WebSocket):
 
                     try:
                         ai_response_start = time.time()
-                        # Use async version if available
-                        if hasattr(ai_engine, 'get_response_async'):
-                            ai_response = await ai_engine.get_response_async(
-                                user_message,
-                                session_id=session_id,
-                                user_id=user_id,  # Pass user_id for context
-                                max_tokens=500
-                            )
-                        else:
-                            ai_response = ai_engine.get_response(
-                                user_message,
-                                session_id=session_id,
-                                user_id=user_id,  # Pass user_id for context
-                                max_tokens=500
-                            )
+
+                        # Always use agent pool for generation
+                        agent_pool = get_agent_pool()
+                        if not agent_pool:
+                            raise Exception("Agent pool not initialized")
+
+                        if session_id not in agent_pool.sessions:
+                            raise Exception(f"Session {session_id} not found in agent pool")
+
+                        # Use agent pool for generation with cached context
+                        ai_response = await agent_pool.generate_message(
+                            session_id=session_id,
+                            message=user_message,
+                            user_id=user_id
+                        )
                         timing_points['ai_response'] = time.time() - ai_response_start
                     except Exception as e:
                         logger.error(f"AI engine error: {e}")
@@ -310,12 +321,37 @@ async def websocket_endpoint(websocket: WebSocket):
                     chat_sessions[session_id]["agent"] = agent
                     chat_sessions[session_id]["personality"] = personality
 
-                    # Load the agent and personality in the AI engine
+                    # Use agent pool manager for hot-swapping personalities
                     try:
+                        agent_pool = get_agent_pool()
+
+                        # Check if we need to switch agents or just personalities
+                        current_agent = chat_sessions[session_id].get("current_agent")
+                        if current_agent != agent:
+                            # Switch to different agent
+                            success = await agent_pool.switch_agent(
+                                session_id=session_id,
+                                new_agent_id=agent,
+                                personality_id=personality
+                            )
+                            if success:
+                                chat_sessions[session_id]["current_agent"] = agent
+                                logger.info(f"Switched to agent '{agent}' with personality '{personality}' for session {session_id}")
+                        else:
+                            # Just switch personality within same agent (hot-swap)
+                            success = await agent_pool.switch_personality(
+                                session_id=session_id,
+                                new_personality_id=personality,
+                                preserve_context=True
+                            )
+                            if success:
+                                logger.info(f"Hot-swapped personality to '{personality}' for session {session_id}")
+
+                        # Also update the main AI engine for backward compatibility
                         ai_engine.load_agent_personality(agent, personality)
-                        logger.info(f"Loaded agent '{agent}' with personality '{personality}' for session {session_id}")
+
                     except Exception as e:
-                        logger.warning(f"Could not load agent/personality: {e}")
+                        logger.warning(f"Could not switch agent/personality: {e}")
 
                     await manager.send_message(json.dumps({
                         "type": "session_updated",
@@ -351,25 +387,38 @@ async def websocket_endpoint(websocket: WebSocket):
         manager.disconnect(session_id)
 
 @router.post("/session")
-async def create_session(agent: str = "dispensary", personality: str = "friendly"):
+async def create_session(agent: str = "dispensary", personality: str = "marcel"):
     """Create a new chat session"""
     session_id = str(uuid.uuid4())
-    
-    # Load the agent and personality in the AI engine
+
+    # Create session in agent pool manager
+    try:
+        agent_pool = get_agent_pool()
+        await agent_pool.create_session(
+            session_id=session_id,
+            agent_id=agent,
+            personality_id=personality
+        )
+        logger.info(f"Created agent pool session {session_id} with {agent}/{personality}")
+    except Exception as e:
+        logger.warning(f"Could not create agent pool session: {e}")
+
+    # Also load in main AI engine for backward compatibility
     try:
         ai_engine.load_agent_personality(agent, personality)
     except Exception as e:
         logger.warning(f"Could not load agent/personality: {e}")
-    
+
     # Store session data
     chat_sessions[session_id] = {
         "id": session_id,
         "agent": agent,
         "personality": personality,
+        "current_agent": agent,
         "created_at": datetime.utcnow().isoformat(),
         "messages": []
     }
-    
+
     return JSONResponse({
         "session_id": session_id,
         "agent": agent,
