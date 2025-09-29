@@ -37,32 +37,29 @@ async def get_db_connection():
         )
     return await db_pool.acquire()
 
-# Load default model on startup with dispensary agent
+# Load default model on startup with assistant agent
 try:
     from pathlib import Path
 
     # Load the default model configured in system_config.json
     default_model = "qwen2.5_0.5b_instruct_q4_k_m"  # or get from config
 
-    # Get marcel personality for dispensary agent
-    dispensary_personality = "marcel"  # default
-    personalities_dir = Path("prompts/agents/dispensary/personality")
+    # Get the first personality for assistant agent
+    assistant_personality = "friendly"  # default fallback
+    personalities_dir = Path("prompts/agents/assistant/personality")
     if personalities_dir.exists():
         personality_files = list(personalities_dir.glob("*.json"))
-        marcel_file = Path(personalities_dir / "marcel.json")
-        if marcel_file.exists():
-            dispensary_personality = "marcel"
-        elif personality_files:
-            dispensary_personality = personality_files[0].stem
+        if personality_files:
+            assistant_personality = personality_files[0].stem
 
     if default_model in ai_engine.available_models:
-        # Load with dispensary agent and marcel personality
-        success = ai_engine.load_model(default_model, agent_id="dispensary", personality_id=dispensary_personality)
+        # Load with assistant agent and its first available personality
+        success = ai_engine.load_model(default_model, agent_id="assistant", personality_id=assistant_personality)
         if success:
-            logger.info(f"Loaded default model: {default_model} with dispensary/{dispensary_personality}")
+            logger.info(f"Loaded default model: {default_model} with assistant/{assistant_personality}")
         else:
-            # Fallback to assistant if dispensary fails
-            success = ai_engine.load_model(default_model, agent_id="assistant", personality_id="friendly")
+            # Fallback to dispensary if assistant fails
+            success = ai_engine.load_model(default_model, agent_id="dispensary", personality_id="friendly")
             if success:
                 logger.info(f"Loaded default model with dispensary agent as fallback")
             else:
@@ -72,9 +69,9 @@ try:
         # Try to load first available model
         if ai_engine.available_models:
             first_model = list(ai_engine.available_models.keys())[0]
-            success = ai_engine.load_model(first_model, agent_id="dispensary", personality_id=dispensary_personality)
+            success = ai_engine.load_model(first_model, agent_id="assistant", personality_id=assistant_personality)
             if success:
-                logger.info(f"Loaded fallback model: {first_model} with dispensary/{dispensary_personality}")
+                logger.info(f"Loaded fallback model: {first_model} with assistant/{assistant_personality}")
 except Exception as e:
     logger.error(f"Failed to load model on startup: {e}")
 
