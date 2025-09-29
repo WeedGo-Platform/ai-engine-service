@@ -475,6 +475,8 @@ class ChatRequestModel(BaseModel):
     message: str = Field(..., min_length=1, max_length=1000)
     session_id: str = Field(..., pattern='^[a-zA-Z0-9_-]{1,64}$')
     agent_id: Optional[str] = Field(None, pattern='^[a-zA-Z0-9_-]{1,32}$')
+    personality_id: Optional[str] = Field(None, pattern='^[a-zA-Z0-9_-]{1,32}$')
+    user_id: Optional[str] = Field(None)
     
     @validator('message')
     def validate_message(cls, v):

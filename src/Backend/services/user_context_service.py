@@ -40,7 +40,7 @@ class UserContextService:
                     up.created_at
                 FROM users u
                 LEFT JOIN profiles up ON u.id = up.user_id
-                WHERE u.id = $1 OR u.email = $1 OR u.phone = $1
+                WHERE u.id = $1::uuid OR u.email = $1::text OR u.phone = $1::text
             """
             
             result = await self.db.fetchrow(query, user_id)
@@ -233,14 +233,14 @@ class UserContextService:
             
             # Analyze purchase patterns
             patterns_query = """
-                SELECT 
+                SELECT
                     COUNT(*) as total_orders,
                     AVG(total_amount) as avg_order_value,
                     MAX(created_at) as last_order_date,
                     COUNT(DISTINCT DATE(created_at)) as order_days
                 FROM orders
                 WHERE user_id = $1
-                AND status != 'cancelled'
+                AND payment_status != 'cancelled'
             """
             
             patterns = await self.db.fetchrow(patterns_query, user_id)

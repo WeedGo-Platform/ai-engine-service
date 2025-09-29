@@ -513,6 +513,14 @@ try:
 except Exception as e:
     logger.warning(f"Failed to load AGI endpoints: {e}")
 
+# Agent Pool endpoints for multi-agent support
+try:
+    from api.agent_pool_endpoints import router as agent_pool_router
+    app.include_router(agent_pool_router, tags=["Agent Pool"])
+    logger.info(f"Agent Pool endpoints loaded successfully - {len(agent_pool_router.routes)} endpoints available")
+except Exception as e:
+    logger.warning(f"Failed to load agent pool endpoints: {e}")
+
 # Import and include inventory endpoints
 from api.inventory_endpoints import router as inventory_router
 app.include_router(inventory_router)
@@ -789,21 +797,61 @@ async def chat_v5(
     req: Request
 ):
     """
-    V5 Chat endpoint with full features
-    - Authentication required
+    V5 Chat endpoint with agent pool architecture
+    - Uses agent pool for fast response
+    - Session-based context management
     - Rate limited
     - Input validated
-    - Function schemas supported
     """
     try:
-        # Get v5_engine and context_manager from app state
-        v5_engine = getattr(req.app.state, 'v5_engine', None)
-        if not v5_engine:
-            raise HTTPException(
-                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail="V5 engine not initialized"
-            )
-        
+        # Get agent pool (primary method for chat)
+        from services.agent_pool_manager import get_agent_pool
+        agent_pool = get_agent_pool()
+
+        logger.info(f"Agent pool status: {agent_pool is not None}, Sessions count: {len(agent_pool.sessions) if agent_pool else 0}")
+
+        if not agent_pool:
+            # Fallback to v5_engine if agent pool not available
+            v5_engine = getattr(req.app.state, 'v5_engine', None)
+            if not v5_engine:
+                raise HTTPException(
+                    status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                    detail="Chat service not initialized"
+                )
+            logger.warning("Agent pool not available, falling back to direct engine")
+
+        # Generate session ID if not provided
+        session_id = request.session_id or str(uuid.uuid4())
+        user_id = request.user_id or 'anonymous'
+
+        if agent_pool:
+            # Create session in agent pool if it doesn't exist
+            if session_id not in agent_pool.sessions:
+                # Determine agent and personality (default to dispensary/marcel)
+                agent_id = request.agent_id or 'dispensary'
+                personality_id = request.personality_id or 'marcel'
+
+                logger.info(f"Creating new session: {session_id}, agent: {agent_id}, personality: {personality_id}")
+
+                # Create session (it's async)
+                session = await agent_pool.create_session(
+                    session_id=session_id,
+                    agent_id=agent_id,
+                    personality_id=personality_id,
+                    user_id=user_id
+                )
+
+                if not session:
+                    logger.error(f"Failed to create session {session_id} in agent pool")
+                    raise HTTPException(
+                        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                        detail="Failed to create chat session"
+                    )
+
+                logger.info(f"Created new session {session_id} with {agent_id}/{personality_id}")
+            else:
+                logger.info(f"Session {session_id} already exists in agent pool")
+
         context_manager = getattr(req.app.state, 'context_manager', None)
         if not context_manager:
             logger.warning("Context manager not initialized, proceeding without context persistence")
@@ -843,58 +891,95 @@ async def chat_v5(
         
         # Process message
         try:
-            # Make sure the v5_engine has a model loaded
-            if not v5_engine.current_model:
-                # Try to load the default model if none is loaded
-                logger.warning("No model loaded in v5_engine, attempting to load default")
-                v5_engine.load_model("tinyllama_1.1b_chat_v1.0.q4_k_m")
+            # Use agent pool for fast response if available
+            if agent_pool and session_id in agent_pool.sessions:
+                logger.info(f"Using agent pool for session {session_id}")
+
+                # Generate response using agent pool (with cached context)
+                response_text = await agent_pool.generate_message(
+                    session_id=session_id,
+                    message=request.message,
+                    user_id=user_id
+                )
+
+                # Build result dict for compatibility
+                result = {
+                    "text": response_text,
+                    "session_id": session_id,
+                    "agent_pool": True
+                }
+
+                # Skip intent detection and other processing when using agent pool
+                detected_intent = "general"
+                confidence = 1.0
+            else:
+                # Fallback to direct engine if agent pool not available
+                logger.warning(f"Agent pool not available for session {session_id}, using direct engine")
+
+                # Get v5_engine
+                v5_engine = getattr(req.app.state, 'v5_engine', None)
+                if not v5_engine:
+                    raise HTTPException(
+                        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                        detail="V5 engine not initialized"
+                    )
+
+                # Make sure the v5_engine has a model loaded
+                if not v5_engine.current_model:
+                    # Try to load the default model if none is loaded
+                    logger.warning("No model loaded in v5_engine, attempting to load default")
+                    v5_engine.load_model("tinyllama_1.1b_chat_v1.0.q4_k_m")
+
+                # Use the new intent detector for intelligent intent detection
+                intent_result = v5_engine.detect_intent(request.message)
+
+                # Ensure intent_result is a dictionary
+                if not isinstance(intent_result, dict):
+                    logger.warning(f"Intent detector returned non-dict: {type(intent_result)}")
+                    intent_result = {"intent": "general", "confidence": 0.3, "method": "fallback"}
             
-            # Use the new intent detector for intelligent intent detection
-            intent_result = v5_engine.detect_intent(request.message)
+            # Handle intent result only for direct engine path
+            if not (agent_pool and session_id in agent_pool.sessions):
+                # Map intent to prompt type
+                detected_intent = intent_result.get('intent', 'general')
+                confidence = intent_result.get('confidence', 0.5)
+
+                # Log intent detection result
+                logger.info(f"Intent detected: {detected_intent} (confidence: {confidence}, method: {intent_result.get('method', 'unknown')})")
             
-            # Ensure intent_result is a dictionary
-            if not isinstance(intent_result, dict):
-                logger.warning(f"Intent detector returned non-dict: {type(intent_result)}")
-                intent_result = {"intent": "general", "confidence": 0.3, "method": "fallback"}
-            
-            # Map intent to prompt type
-            detected_intent = intent_result.get('intent', 'general')
-            confidence = intent_result.get('confidence', 0.5)
-            
-            # Log intent detection result
-            logger.info(f"Intent detected: {detected_intent} (confidence: {confidence}, method: {intent_result.get('method', 'unknown')})")
-            
-            # Get prompt_type from intent result metadata (loaded from intent.json)
-            # The prompt_type should be included in the intent configuration
-            prompt_type = intent_result.get('prompt_type', None)
-            
-            # If prompt_type is not in the result, let V5 auto-detect
-            if not prompt_type and detected_intent != 'general':
-                # Try to get it from the intent detector's configuration
-                if hasattr(v5_engine.intent_detector, 'intent_config'):
-                    intents = v5_engine.intent_detector.intent_config.get('intents', {})
-                    intent_config = intents.get(detected_intent, {})
-                    prompt_type = intent_config.get('prompt_type', None)
-            
-            # Build prompt with context if available
-            prompt_with_context = request.message
-            if context.get('conversation_history'):
-                prompt_with_context = f"Previous conversation:\n{context['conversation_history']}\n\nCurrent message: {request.message}"
-            
-            # Get tools configuration from system config
-            tools_enabled = False
-            if hasattr(v5_engine, 'system_config') and v5_engine.system_config:
-                tools_enabled = v5_engine.system_config.get('system', {}).get('tools', {}).get('enabled', False)
-            
-            # Generate response using the correct method with prompt type
-            result = v5_engine.generate(
-                prompt=prompt_with_context,
-                prompt_type=prompt_type,  # Pass the detected prompt type
-                session_id=request.session_id,
-                max_tokens=500,
-                use_tools=tools_enabled,  # Use configuration setting
-                use_context=False
-            )
+            # Only process intent and generate for direct engine path
+            if not (agent_pool and session_id in agent_pool.sessions):
+                # Get prompt_type from intent result metadata (loaded from intent.json)
+                # The prompt_type should be included in the intent configuration
+                prompt_type = intent_result.get('prompt_type', None)
+
+                # If prompt_type is not in the result, let V5 auto-detect
+                if not prompt_type and detected_intent != 'general':
+                    # Try to get it from the intent detector's configuration
+                    if hasattr(v5_engine.intent_detector, 'intent_config'):
+                        intents = v5_engine.intent_detector.intent_config.get('intents', {})
+                        intent_config = intents.get(detected_intent, {})
+                        prompt_type = intent_config.get('prompt_type', None)
+
+                # Build prompt with context if available
+                prompt_with_context = request.message
+                if context.get('conversation_history'):
+                    prompt_with_context = f"Previous conversation:\n{context['conversation_history']}\n\nCurrent message: {request.message}"
+
+                # Get tools configuration from system config
+                tools_enabled = False
+                if hasattr(v5_engine, 'system_config') and v5_engine.system_config:
+                    tools_enabled = v5_engine.system_config.get('system', {}).get('tools', {}).get('enabled', False)
+
+                # Generate response using the correct method with prompt type
+                result = v5_engine.generate(
+                    prompt=prompt_with_context,
+                    prompt_type=prompt_type,  # Pass the detected prompt type
+                    session_id=request.session_id,
+                    max_tokens=500,
+                    use_tools=tools_enabled,  # Use configuration setting
+                    use_context=False
+                )
             
             # Ensure result is a dict
             if not isinstance(result, dict):
@@ -903,9 +988,12 @@ async def chat_v5(
             # Log the raw result for debugging
             logger.info(f"Raw generate result: {result}")
             
-            # Extract text from the result
+            # Extract text from the result (handle both agent pool and direct engine responses)
             response_text = ""
-            if isinstance(result, dict):
+            if agent_pool and session_id in agent_pool.sessions:
+                # Response already extracted in agent pool path
+                response_text = result.get("text", "")
+            elif isinstance(result, dict):
                 response_text = result.get("text", "")
                 if result.get("error"):
                     logger.error(f"Error from v5_engine: {result.get('error')}")

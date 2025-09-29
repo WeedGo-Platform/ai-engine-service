@@ -20,14 +20,15 @@ from llama_cpp import Llama
 
 # Import tool and context interfaces
 try:
-    from services.tools.base import ToolManager, ITool, ToolResult
+    from services.tool_manager import ToolManager
+    from services.tools.base import ITool, ToolResult
     from services.tools.dispensary_tools import DispensarySearchTool, DosageCalculatorTool, StrainComparisonTool
     from services.tools.dispensary_tools_db import DispensarySearchToolDB, DispensaryStatsToolDB
     from services.context.base import ContextManager, MemoryContextStore, DatabaseContextStore, IContextStore
     TOOLS_AVAILABLE = True
-except ImportError:
+except ImportError as e:
     TOOLS_AVAILABLE = False
-    logging.warning("Tool and context modules not available")
+    logging.warning(f"Tool and context modules not available: {e}")
 
 # Import intent detector
 try:
@@ -86,7 +87,11 @@ class SmartAIEngineV5:
         self.intent_detector = None
         self._detecting_intent = False  # Flag to prevent recursion during intent detection
         self._initialize_intent_detector()
-        
+
+        # Initialize agent pool manager for multi-agent support
+        self.agent_pool = None
+        self._initialize_agent_pool()
+
         logger.info(f"SmartAIEngineV5 initialized with {len(self.available_models)} models")
         self._log_system_resources()
     
@@ -102,18 +107,30 @@ class SmartAIEngineV5:
         except Exception as e:
             logger.warning(f"Could not get system resources: {e}")
     
+    def _initialize_agent_pool(self):
+        """Initialize agent pool manager for multi-agent support"""
+        try:
+            from services.agent_pool_manager import get_agent_pool
+            self.agent_pool = get_agent_pool()
+            # Set this engine as the shared model
+            self.agent_pool.set_shared_model(self)
+            logger.info(f"Agent pool initialized with {len(self.agent_pool.agents)} agents")
+        except Exception as e:
+            logger.error(f"Failed to initialize agent pool: {e}")
+            self.agent_pool = None
+
     def _initialize_intent_detector(self):
         """Initialize intent detector based on configuration"""
         if not INTENT_DETECTOR_AVAILABLE:
             logger.warning("Intent detector not available")
             return
-        
+
         try:
             # Check config for detector type
             detector_type = "llm"  # default
             if self.system_config:
                 detector_type = self.system_config.get('intent_detection', {}).get('type', 'llm')
-            
+
             # Initialize appropriate detector
             if detector_type == 'llm':
                 self.intent_detector = LLMIntentDetector(v5_engine=self)
@@ -124,7 +141,7 @@ class SmartAIEngineV5:
             else:
                 self.intent_detector = LLMIntentDetector(v5_engine=self)
                 logger.info(f"Unknown detector type '{detector_type}', using LLM detector")
-                
+
         except Exception as e:
             logger.error(f"Failed to initialize intent detector: {e}")
             self.intent_detector = None
@@ -1702,6 +1719,71 @@ class SmartAIEngineV5:
                 "model": self.current_model_name,
                 "time_ms": 0,
                 "async_generation": True
+            }
+
+    async def generate_with_context(
+        self,
+        message: str,
+        context: Dict[str, Any],
+        max_tokens: int = None,
+        temperature: float = None,
+        **kwargs
+    ) -> Dict[str, Any]:
+        """Generate response with specific context (used by agent pool)"""
+        if not self.current_model:
+            return {
+                "error": "No model loaded",
+                "text": "",
+                "model": None
+            }
+
+        try:
+            # Prepare prompt with context
+            system_prompt = context.get("system_prompt", "")
+            traits = context.get("traits", {})
+            style = context.get("style", {})
+            history = context.get("history", [])
+
+            # Build full prompt with personality context
+            full_prompt = ""
+            if system_prompt:
+                full_prompt = f"System: {system_prompt}\n\n"
+
+            # Add conversation history
+            if history:
+                full_prompt += "Previous conversation:\n"
+                for h in history[-5:]:  # Last 5 exchanges
+                    if "user" in h:
+                        full_prompt += f"User: {h['user']}\n"
+                    if "assistant" in h:
+                        full_prompt += f"Assistant: {h['assistant']}\n"
+                full_prompt += "\n"
+
+            # Add current message
+            full_prompt += f"User: {message}\nAssistant:"
+
+            # Apply style settings
+            if temperature is None:
+                temperature = style.get("temperature", 0.7)
+            if max_tokens is None:
+                max_tokens = style.get("max_tokens", 512)
+
+            # Generate response
+            response = self.generate(
+                prompt=full_prompt,
+                max_tokens=max_tokens,
+                temperature=temperature,
+                **kwargs
+            )
+
+            return response
+
+        except Exception as e:
+            logger.error(f"Error in generate_with_context: {e}")
+            return {
+                "error": str(e),
+                "text": "",
+                "model": self.current_model_name
             }
 
     async def get_user_context(self, user_id: str, session_id: Optional[str] = None) -> Dict[str, Any]:
