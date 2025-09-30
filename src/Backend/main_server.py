@@ -8,6 +8,7 @@ import os
 import sys
 import asyncio
 import logging
+import time
 from pathlib import Path
 from typing import Dict, Any, Optional, List
 from contextlib import asynccontextmanager
@@ -63,11 +64,16 @@ from api.store_payment_endpoints import router as store_payment_router
 from api.payment_session_endpoints import router as payment_session_router
 from api.admin_auth import router as admin_auth_router
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+# Configure logging with correlation ID support
+from core.middleware.logging_middleware import (
+    setup_logging_with_correlation_id,
+    PerformanceLoggingMiddleware,
+    MetricsLogger,
+    get_correlation_id
 )
+
+# Setup enhanced logging
+setup_logging_with_correlation_id()
 logger = logging.getLogger(__name__)
 
 # Import hardware endpoints
@@ -362,6 +368,13 @@ app = FastAPI(
     swagger_js_url=None,  # Use bundled JS (no external CDN)
     swagger_css_url=None,  # Use bundled CSS (no external CDN)
     swagger_favicon_url=None  # Use default favicon (no external CDN)
+)
+
+# Add performance logging middleware (before CORS to capture all requests)
+app.add_middleware(
+    PerformanceLoggingMiddleware,
+    log_body=False,  # Set to True for debugging (be careful with sensitive data)
+    slow_request_threshold=2.0  # Log warning for requests taking more than 2 seconds
 )
 
 # Add CORS middleware - allow localhost on any port
@@ -895,11 +908,26 @@ async def chat_v5(
             if agent_pool and session_id in agent_pool.sessions:
                 logger.info(f"Using agent pool for session {session_id}")
 
+                # Track generation time
+                generation_start = time.time()
+
                 # Generate response using agent pool (with cached context)
                 response_text = await agent_pool.generate_message(
                     session_id=session_id,
                     message=request.message,
                     user_id=user_id
+                )
+
+                # Log AI generation metrics
+                generation_time_ms = (time.time() - generation_start) * 1000
+                MetricsLogger.log_operation(
+                    operation="agent_pool_generation",
+                    duration_ms=generation_time_ms,
+                    success=True,
+                    session_id=session_id,
+                    user_id=user_id,
+                    message_length=len(request.message),
+                    response_length=len(response_text) if response_text else 0
                 )
 
                 # Build result dict for compatibility

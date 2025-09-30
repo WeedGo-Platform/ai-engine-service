@@ -739,7 +739,8 @@ class SmartAIEngineV5:
             
             config = {
                 'max_tokens': max_tokens or (self.system_config.get('default_max_tokens') if self.system_config else None),
-                'stop_sequences': stop_sequences
+                'stop_sequences': stop_sequences,
+                'tools': template.get('tools')  # Include tools configuration
             }
         else:
             config = {'max_tokens': self.system_config.get('default_max_tokens') if self.system_config else None, 'stop_sequences': []}
@@ -1214,7 +1215,7 @@ class SmartAIEngineV5:
         """Add conversation context to prompt"""
         if not self.context_manager or not session_id:
             return prompt
-        
+
         try:
             # Get conversation context synchronously (would need async in production)
             # For now, just return prompt
@@ -1222,9 +1223,32 @@ class SmartAIEngineV5:
         except Exception as e:
             logger.warning(f"Failed to add context: {e}")
             return prompt
+
+    def _format_products_for_template(self, products: List[Dict]) -> str:
+        """Format product results for template injection"""
+        if not products:
+            return "No products found matching your criteria."
+
+        formatted_lines = []
+        for i, product in enumerate(products[:5], 1):  # Limit to top 5
+            name = product.get('product_name', 'Unknown Product')
+            sku = product.get('sku', 'N/A')
+            thc = product.get('thc_range', 'N/A')
+            cbd = product.get('cbd_range', 'N/A')
+            price = product.get('price', 'N/A')
+            category = product.get('category', 'N/A')
+
+            formatted_lines.append(
+                f"{i}. {name} ({sku})\n"
+                f"   Category: {category}\n"
+                f"   THC: {thc}, CBD: {cbd}\n"
+                f"   Price: ${price}"
+            )
+
+        return "\n\n".join(formatted_lines)
     
-    def generate(self, 
-                 prompt: str, 
+    async def generate(self,
+                 prompt: str,
                  prompt_type: Optional[str] = None,
                  max_tokens: int = None,
                  temperature: float = None,  # Changed to None to allow config override
@@ -1338,6 +1362,54 @@ class SmartAIEngineV5:
                             if isinstance(template_config, dict):
                                 template_max_tokens = template_config.get('max_tokens') or (self.system_config.get('default_max_tokens') if self.system_config else None)
                                 template_stop_sequences = template_config.get('stop_sequences', [])
+
+                                # Check if template specifies tools to execute
+                                if 'tools' in template_config:
+                                    tool_config = template_config['tools']
+                                    logger.info(f"Template '{detected_type}' specifies tools: {tool_config}")
+
+                                    # Execute tools before prompt generation
+                                    if tool_config.get('execution') == 'before_prompt':
+                                        tool_results = {}
+                                        required_tools = tool_config.get('required', [])
+
+                                        for tool_name in required_tools:
+                                            if tool_name in tool_config.get('parameters', {}):
+                                                # Get tool parameters and substitute variables
+                                                tool_params = tool_config['parameters'][tool_name]
+                                                substituted_params = {}
+
+                                                for param_key, param_value in tool_params.items():
+                                                    # Substitute {message} with actual message
+                                                    if isinstance(param_value, str) and '{message}' in param_value:
+                                                        substituted_params[param_key] = param_value.replace('{message}', prompt)
+                                                    else:
+                                                        substituted_params[param_key] = param_value
+
+                                                # Execute the tool
+                                                logger.info(f"Executing tool '{tool_name}' with params: {substituted_params}")
+                                                tool_result = await self.tool_manager.execute_tool(tool_name, **substituted_params)
+
+                                                if tool_result.get("success"):
+                                                    tool_results[tool_name] = tool_result.get("result", {})
+                                                    product_count = len(tool_result.get("result", {}).get('products', [])) if isinstance(tool_result.get("result"), dict) else 0
+                                                    logger.info(f"Tool '{tool_name}' returned {product_count} products")
+                                                else:
+                                                    logger.error(f"Tool '{tool_name}' failed: {tool_result.get('error')}")
+                                                    tool_results[tool_name] = {"products": [], "error": tool_result.get("error")}
+
+                                        # Inject tool results into template variables
+                                        if 'result_injection' in tool_config and tool_results:
+                                            for tool_name, variable_name in tool_config['result_injection'].items():
+                                                if tool_name in tool_results:
+                                                    # Format tool results for template injection
+                                                    result_data = tool_results[tool_name]
+                                                    if 'products' in result_data:
+                                                        formatted_results = self._format_products_for_template(result_data['products'])
+                                                        # Re-apply template with tool results
+                                                        final_prompt = final_prompt.replace(f"{{{variable_name}}}", formatted_results)
+                                                        logger.info(f"Injected {len(result_data['products'])} products into template variable '{variable_name}'")
+
                             logger.info(f"Applied detected template '{detected_type}'")
                     except ValueError as e:
                         logger.error(f"Failed to apply detected template: {e}")
