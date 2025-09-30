@@ -133,7 +133,7 @@ async def proxy_cart(path: str, request: Request):
 
 
 @router.api_route("/commerce/orders/{path:path}", methods=["GET", "POST", "PATCH"])
-async def proxy_orders(path: str = "", request: Request):
+async def proxy_orders(request: Request, path: str = ""):
     """Proxy order requests to order endpoints"""
     try:
         # Map commerce/orders to /api/orders
@@ -194,7 +194,7 @@ async def proxy_order_tracking(
 
 
 @router.api_route("/pricing/promotions/{path:path}", methods=["GET", "POST"])
-async def proxy_promotions(path: str = "", request: Request):
+async def proxy_promotions(request: Request, path: str = ""):
     """Proxy promotion requests"""
     try:
         # Map pricing/promotions to /api/promotions
