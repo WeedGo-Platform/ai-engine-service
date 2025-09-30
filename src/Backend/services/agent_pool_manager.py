@@ -436,19 +436,16 @@ class AgentPoolManager:
 
         # Use shared model for inference
         if self.shared_model:
-            # Call the v5 engine's generate method with personality context
-            # Build prompt with personality context
-            system_prompt = personality.system_prompt or "You are a helpful assistant."
-            prompt_with_context = f"{system_prompt}\n\nUser: {message}\nAssistant:"
-
-            # Call the actual generate method on v5 engine
-            result = self.shared_model.generate(
-                prompt=prompt_with_context,
+            # Let v5 engine handle intent detection and tool execution
+            # Just pass the raw message - don't wrap it with personality prompt
+            # The v5 engine will handle prompt templates via intent detection
+            result = await self.shared_model.generate(
+                prompt=message,  # Pass raw message for intent detection
                 session_id=session_id,
                 max_tokens=kwargs.get('max_tokens', 500),
                 temperature=personality.style.get('temperature', 0.7) if personality.style else 0.7,
-                use_tools=kwargs.get('use_tools', False),
-                use_context=False  # We're managing context ourselves
+                use_tools=True,  # Enable tools for product search, etc.
+                use_context=True  # Enable context for user history
             )
 
             # Ensure result is a dict
@@ -489,6 +486,28 @@ class AgentPoolManager:
 
         # Return just the text response for compatibility
         return result.get("text", "")
+
+    async def generate_message_with_products(
+        self,
+        session_id: str,
+        message: str,
+        user_id: Optional[str] = None,
+        **kwargs
+    ) -> Dict[str, Any]:
+        """Generate a message response with product information for chat_endpoints"""
+        # Update user_id if provided
+        if user_id and session_id in self.sessions:
+            self.sessions[session_id].user_id = user_id
+
+        # Process the message
+        result = await self.process_message(session_id, message, **kwargs)
+
+        # Return response with products structure expected by chat_endpoints
+        return {
+            "text": result.get("text", ""),
+            "products": result.get("products", None),
+            "products_found": result.get("products_found", None)
+        }
 
     async def _cleanup_old_sessions(self, max_age_minutes: int = 30):
         """Clean up inactive sessions"""

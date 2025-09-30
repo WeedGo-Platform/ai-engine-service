@@ -111,14 +111,14 @@ class ToolManager(IToolManager):
             logger.error(f"Failed to register tool '{tool_name}': {e}")
             return False
     
-    def execute_tool(self, tool_name: str, **kwargs) -> Dict[str, Any]:
+    async def execute_tool(self, tool_name: str, **kwargs) -> Dict[str, Any]:
         """
         Execute a tool with given parameters
-        
+
         Args:
             tool_name: Name of the tool to execute
             **kwargs: Tool parameters
-            
+
         Returns:
             Tool execution result
         """
@@ -128,16 +128,16 @@ class ToolManager(IToolManager):
                 "error": f"Tool '{tool_name}' not found",
                 "available_tools": list(self.tools.keys())
             }
-        
+
         try:
             tool_function = self.tools[tool_name]
-            
+
             # Check if this is a database tool that needs initialization
             if tool_name == "database_search" and tool_name not in self.tool_instances:
                 instance = self._create_database_search_tool()
                 if instance:
                     self.tool_instances[tool_name] = instance
-            
+
             # Execute the tool
             if tool_name in self.tool_instances:
                 # Use the tool instance
@@ -145,13 +145,13 @@ class ToolManager(IToolManager):
             else:
                 # Direct function call
                 result = tool_function(**kwargs)
-            
+
             return {
                 "success": True,
                 "tool": tool_name,
                 "result": result
             }
-            
+
         except Exception as e:
             logger.error(f"Tool execution failed for '{tool_name}': {e}")
             return {

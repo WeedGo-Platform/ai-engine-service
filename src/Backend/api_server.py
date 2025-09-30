@@ -364,6 +364,16 @@ app = FastAPI(
     swagger_favicon_url=None  # Use default favicon (no external CDN)
 )
 
+# Setup correlation ID logging
+from core.middleware.logging_middleware import (
+    PerformanceLoggingMiddleware,
+    setup_logging_with_correlation_id
+)
+setup_logging_with_correlation_id()
+
+# Add Performance Logging Middleware with correlation ID tracking
+app.add_middleware(PerformanceLoggingMiddleware, log_body=False, slow_request_threshold=1.0)
+
 # Add CORS middleware - allow localhost on any port
 app.add_middleware(
     CORSMiddleware,
@@ -701,6 +711,14 @@ try:
     logger.info("SEO/Sitemap endpoints loaded successfully")
 except Exception as e:
     logger.warning(f"Failed to load SEO/Sitemap endpoints: {e}")
+
+# Import and include Logs endpoints
+try:
+    from api.logs_endpoints import router as logs_router
+    app.include_router(logs_router)
+    logger.info("Logs endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load Logs endpoints: {e}")
 
 # Add global rate limiting
 @app.middleware("http")

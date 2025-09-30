@@ -5,7 +5,7 @@
 
 // Get the local machine's IP address
 // Update this when your IP changes or when switching between environments
-const LOCAL_IP = '10.0.0.169';  // Update this with your current IP
+const LOCAL_IP = '10.0.0.29';  // Update this with your current IP
 
 // API Configuration
 export const API_CONFIG = {
