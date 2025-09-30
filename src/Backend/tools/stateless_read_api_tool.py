@@ -335,8 +335,6 @@ class StatelessReadAPITool:
             return self._interpret_inventory_data(data)
         elif "profile" in endpoint:
             return self._interpret_profile_data(data)
-        elif "prescriptions" in endpoint:
-            return self._interpret_prescription_data(data)
         elif "recommendations" in endpoint:
             return self._interpret_recommendations_data(data)
         else:
@@ -409,23 +407,6 @@ class StatelessReadAPITool:
                 response += f" I see you prefer {fav_category} products."
         
         return response
-    
-    def _interpret_prescription_data(self, data: Dict) -> str:
-        """Interpret prescription data"""
-        if not data or not data.get("prescriptions"):
-            return "You don't have any active prescriptions on file."
-        
-        prescriptions = data.get("prescriptions", [])
-        active = [p for p in prescriptions if p.get("status") == "active"]
-        
-        if not active:
-            return "Your prescriptions have expired. You'll need to renew them."
-        
-        if len(active) == 1:
-            exp = active[0].get("expiry_date", "soon")
-            return f"You have an active prescription valid until {exp}."
-        else:
-            return f"You have {len(active)} active prescriptions on file."
     
     def _interpret_recommendations_data(self, data: Dict) -> str:
         """Interpret product recommendations"""
@@ -607,10 +588,6 @@ class ConversationAwareReadTool:
         # Profile patterns
         elif "profile" in query_lower or "my account" in query_lower:
             return "/api/v1/customers/{customer_id}/profile", {}
-        
-        # Prescription patterns
-        elif "prescription" in query_lower:
-            return "/api/v1/customers/{customer_id}/prescriptions", {}
         
         # Recommendations
         elif "recommend" in query_lower:

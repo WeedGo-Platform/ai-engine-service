@@ -18,12 +18,19 @@ interface Product {
   id: string;
   name: string;
   price: number;
-  image: string;
+  image?: string;
+  image_url?: string;
   thc_content?: number;
   cbd_content?: number;
   category?: string;
+  sub_category?: string;
   strain_type?: string;
   inventory_quantity?: number;
+  inventory_count?: number;
+  brand?: string;
+  size?: string;
+  stock_status?: string;
+  short_description?: string;
 }
 
 interface ProductMessageProps {
@@ -36,7 +43,8 @@ export function ProductMessage({ products, message }: ProductMessageProps) {
   const { addItem } = useCartStore();
 
   const handleAddToCart = (product: Product) => {
-    if (product.inventory_quantity === 0) {
+    const inventory = product.inventory_count ?? product.inventory_quantity ?? 0;
+    if (inventory === 0) {
       Alert.alert('Out of Stock', 'This product is currently out of stock.');
       return;
     }
@@ -73,8 +81,9 @@ export function ProductMessage({ products, message }: ProductMessageProps) {
             activeOpacity={0.9}
           >
             <Image
-              source={{ uri: product.image }}
+              source={{ uri: product.image_url || product.image || 'https://via.placeholder.com/180x120' }}
               style={styles.productImage}
+              defaultSource={{ uri: 'https://via.placeholder.com/180x120' }}
             />
 
             <View style={styles.productInfo}>
@@ -82,11 +91,28 @@ export function ProductMessage({ products, message }: ProductMessageProps) {
                 {product.name}
               </Text>
 
-              {product.category && (
-                <View style={styles.badge}>
-                  <Text style={styles.badgeText}>{product.category}</Text>
-                </View>
+              {product.brand && (
+                <Text style={styles.brandText}>{product.brand}</Text>
               )}
+
+              {product.short_description && (
+                <Text style={styles.description} numberOfLines={2}>
+                  {product.short_description}
+                </Text>
+              )}
+
+              <View style={styles.badgeRow}>
+                {product.category && (
+                  <View style={styles.badge}>
+                    <Text style={styles.badgeText}>{product.category}</Text>
+                  </View>
+                )}
+                {product.strain_type && (
+                  <View style={[styles.badge, styles.strainBadge]}>
+                    <Text style={styles.badgeText}>{product.strain_type}</Text>
+                  </View>
+                )}
+              </View>
 
               <View style={styles.cannabinoids}>
                 {product.thc_content !== undefined && (
@@ -102,22 +128,29 @@ export function ProductMessage({ products, message }: ProductMessageProps) {
               </View>
 
               <View style={styles.priceRow}>
-                <Text style={styles.price}>${product.price.toFixed(2)}</Text>
-                {product.inventory_quantity !== undefined && product.inventory_quantity === 0 && (
-                  <Text style={styles.outOfStock}>Out of Stock</Text>
+                <View>
+                  <Text style={styles.price}>${product.price.toFixed(2)}</Text>
+                  {product.size && (
+                    <Text style={styles.sizeText}>{product.size}</Text>
+                  )}
+                </View>
+                {product.stock_status && product.stock_status !== 'In Stock' && (
+                  <Text style={[styles.stockStatus, product.stock_status === 'Out of Stock' && styles.outOfStock]}>
+                    {product.stock_status}
+                  </Text>
                 )}
               </View>
 
               <TouchableOpacity
                 style={[
                   styles.addButton,
-                  product.inventory_quantity !== undefined && product.inventory_quantity === 0 && styles.addButtonDisabled
+                  ((product.inventory_count ?? product.inventory_quantity ?? 0) === 0) && styles.addButtonDisabled
                 ]}
                 onPress={(e) => {
                   e.stopPropagation();
                   handleAddToCart(product);
                 }}
-                disabled={product.inventory_quantity === 0}
+                disabled={(product.inventory_count ?? product.inventory_quantity ?? 0) === 0}
               >
                 <Ionicons name="add" size={20} color="#fff" />
                 <Text style={styles.addButtonText}>Add to Cart</Text>
@@ -171,8 +204,24 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: Colors.light.text,
+    marginBottom: 4,
+    minHeight: 20,
+  },
+  brandText: {
+    fontSize: 12,
+    color: '#888',
+    marginBottom: 4,
+  },
+  description: {
+    fontSize: 11,
+    color: '#666',
     marginBottom: 6,
-    height: 36,
+    lineHeight: 14,
+  },
+  badgeRow: {
+    flexDirection: 'row',
+    gap: 6,
+    marginBottom: 6,
   },
   badge: {
     backgroundColor: Colors.light.primaryLight,
@@ -180,13 +229,25 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     borderRadius: 4,
     alignSelf: 'flex-start',
-    marginBottom: 6,
+  },
+  strainBadge: {
+    backgroundColor: '#e8f5e9',
   },
   badgeText: {
     fontSize: 10,
     color: Colors.light.primary,
     fontWeight: '600',
     textTransform: 'uppercase',
+  },
+  sizeText: {
+    fontSize: 11,
+    color: '#888',
+    marginTop: 2,
+  },
+  stockStatus: {
+    fontSize: 11,
+    color: '#f59e0b',
+    fontWeight: '600',
   },
   cannabinoids: {
     flexDirection: 'row',
