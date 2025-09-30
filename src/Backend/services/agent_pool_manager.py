@@ -14,6 +14,11 @@ from pathlib import Path
 from collections import OrderedDict
 import psutil
 
+# Import intent detection and tools
+from services.intent_detector import LLMIntentDetector
+from services.tools.product_search_tool import ProductSearchTool
+from services.tool_manager import ToolManager
+
 logger = logging.getLogger(__name__)
 
 
@@ -55,6 +60,15 @@ class AgentConfig:
     default_personality: str = ""
     intent_patterns: Dict[str, Any] = field(default_factory=dict)
     tools: List[str] = field(default_factory=list)
+
+    # Intent detection and prompt templates
+    intent_detector: Optional[Any] = None
+    prompt_templates: Dict[str, Any] = field(default_factory=dict)
+    intent_config: Dict[str, Any] = field(default_factory=dict)
+
+    # Tools
+    tool_manager: Optional[Any] = None
+    product_search_tool: Optional[Any] = None
 
     def add_personality(self, personality: PersonalityConfig):
         """Add a personality to this agent"""
@@ -157,20 +171,28 @@ class AgentPoolManager:
         """Load agent configuration from directory"""
         config_file = agent_dir / "config.json"
         if not config_file.exists():
+            logger.warning(f"❌ config.json not found for agent {agent_dir.name}")
             return None
 
         try:
+            logger.info(f"📁 Loading config.json for agent {agent_dir.name}")
             with open(config_file, 'r') as f:
                 data = json.load(f)
+            logger.info(f"  ✅ config.json loaded successfully")
 
             # Load intent patterns if available
             intent_file = agent_dir / "intent.json"
             intent_patterns = {}
             if intent_file.exists():
+                logger.info(f"📁 Loading intent.json for agent {agent_dir.name}")
                 with open(intent_file, 'r') as f:
                     intent_patterns = json.load(f)
+                logger.info(f"  ✅ intent.json loaded: {len(intent_patterns.get('intents', {}))} intents defined")
+                logger.info(f"     Available intents: {list(intent_patterns.get('intents', {}).keys())}")
+            else:
+                logger.warning(f"  ❌ intent.json not found at {intent_file}")
 
-            return AgentConfig(
+            agent_config = AgentConfig(
                 agent_id=agent_dir.name,
                 name=data.get("agent_name", agent_dir.name),
                 description=data.get("description", ""),
@@ -179,6 +201,43 @@ class AgentPoolManager:
                 tools=data.get("enrolled_tools", []),
                 default_personality=data.get("default_personality", "")
             )
+
+            # Initialize intent detection system
+            try:
+                agent_config.intent_detector = LLMIntentDetector(cache_size=1000)
+                success = agent_config.intent_detector.load_intents(agent_dir.name)
+                if success:
+                    logger.info(f"  ✅ Intent detector initialized successfully for {agent_dir.name}")
+                else:
+                    logger.warning(f"  ⚠️ Intent detector initialized but intent.json may not have loaded properly")
+            except Exception as e:
+                logger.error(f"  ❌ Failed to initialize intent detector: {e}")
+                agent_config.intent_detector = None
+
+            # Load prompt templates
+            prompts_file = agent_dir / "prompts.json"
+            if prompts_file.exists():
+                try:
+                    logger.info(f"📁 Loading prompts.json for agent {agent_dir.name}")
+                    with open(prompts_file, 'r') as f:
+                        prompts_data = json.load(f)
+                        agent_config.prompt_templates = prompts_data.get('prompts', {})
+                        logger.info(f"  ✅ prompts.json loaded: {len(agent_config.prompt_templates)} templates")
+                        logger.info(f"     Available templates: {list(agent_config.prompt_templates.keys())}")
+                except Exception as e:
+                    logger.error(f"  ❌ Failed to load prompt templates: {e}")
+            else:
+                logger.warning(f"  ❌ prompts.json not found at {prompts_file}")
+
+            # Initialize tools for dispensary agent
+            if agent_dir.name == "dispensary":
+                try:
+                    agent_config.product_search_tool = ProductSearchTool()
+                    logger.info(f"  - Initialized ProductSearchTool")
+                except Exception as e:
+                    logger.warning(f"  - Failed to initialize ProductSearchTool: {e}")
+
+            return agent_config
         except Exception as e:
             logger.error(f"Failed to load agent config: {e}")
             return None
@@ -419,7 +478,7 @@ class AgentPoolManager:
         message: str,
         **kwargs
     ) -> Dict[str, Any]:
-        """Process a message for a session using the shared model"""
+        """Process a message for a session using intent-based routing"""
 
         session = self.get_session(session_id)
         if not session:
@@ -430,42 +489,145 @@ class AgentPoolManager:
         if not personality:
             raise ValueError("Personality configuration not found")
 
-        # Prepare context with personality
-        context = personality.get_context()
-        context["history"] = session.context_history[-10:]  # Last 10 messages
+        # Get the agent configuration
+        agent_config = self.agents.get(session.agent_id)
+        if not agent_config:
+            raise ValueError(f"Agent configuration not found: {session.agent_id}")
 
-        # Use shared model for inference
-        if self.shared_model:
-            # Call the v5 engine's generate method with personality context
-            # Build prompt with personality context
+        # Step 1: Detect intent
+        intent_result = None
+        detected_intent = "general"
+
+        if hasattr(agent_config, 'intent_detector') and agent_config.intent_detector:
+            try:
+                intent_result = agent_config.intent_detector.detect(message, language="auto")
+                detected_intent = intent_result.get("intent", "general")
+                logger.info(f"Intent detected: {detected_intent} (confidence: {intent_result.get('confidence', 0):.2f})")
+            except Exception as e:
+                logger.warning(f"Intent detection failed: {e}")
+
+        # Step 2: Execute tools for product_search intent
+        tool_results = None
+        logger.debug(f"Checking for product_search: detected_intent={detected_intent}, has_tool={hasattr(agent_config, 'product_search_tool')}, tool={agent_config.product_search_tool if hasattr(agent_config, 'product_search_tool') else 'None'}")
+
+        if detected_intent == "product_search" and hasattr(agent_config, 'product_search_tool') and agent_config.product_search_tool:
+            logger.info(f"Executing ProductSearchTool for query: {message}")
+            try:
+                tool_results = agent_config.product_search_tool.search_products(
+                    query=message,
+                    limit=5
+                )
+                logger.info(f"Product search returned {len(tool_results.get('products', []))} products")
+            except Exception as e:
+                logger.error(f"Product search failed: {e}")
+        elif detected_intent == "product_search":
+            logger.warning(f"Product search intent detected but tool not available. Agent: {session.agent_id}")
+
+        # Step 3: Select appropriate prompt template
+        prompt_template = None
+        max_tokens = 500
+
+        if hasattr(agent_config, 'prompt_templates') and agent_config.prompt_templates:
+            # Map intent to prompt template key
+            template_key = detected_intent
+            if detected_intent == "general":
+                template_key = "general_chat"
+
+            prompt_template = agent_config.prompt_templates.get(template_key)
+            if prompt_template:
+                logger.info(f"Using prompt template: {template_key}")
+
+        # Step 4: Build prompt with template or fallback
+        if prompt_template:
+            # Use intent-specific template
+            template_str = prompt_template.get('template', '')
+
+            # Replace variables in template
+            prompt_with_context = template_str.replace(
+                "{personality_name}", personality.name
+            ).replace(
+                "{message}", message
+            )
+
+            # Add tool results for product search
+            if tool_results and tool_results.get('products'):
+                products_info = "\n\nAvailable products based on your search:\n"
+                for i, product in enumerate(tool_results['products'][:5], 1):
+                    products_info += f"{i}. **{product.get('name', 'Unknown')}** "
+                    if product.get('brand'):
+                        products_info += f"by {product['brand']} "
+                    if product.get('strain_type'):
+                        products_info += f"({product['strain_type']})\n"
+                    else:
+                        products_info += "\n"
+                    if product.get('thc_content'):
+                        products_info += f"   THC: {product['thc_content']}%"
+                    if product.get('cbd_content'):
+                        products_info += f", CBD: {product['cbd_content']}%"
+                    if product.get('price'):
+                        products_info += f"   Price: ${product['price']}"
+                    if product.get('size'):
+                        products_info += f" ({product['size']})"
+                    products_info += "\n"
+                    if product.get('short_description'):
+                        products_info += f"   {product['short_description'][:100]}\n"
+                prompt_with_context += products_info
+
+            # Get max tokens from template constraints
+            constraints = prompt_template.get('constraints', {})
+            max_tokens = constraints.get('max_words', 100) * 2
+        else:
+            # Fallback to personality system prompt
             system_prompt = personality.system_prompt or "You are a helpful assistant."
             prompt_with_context = f"{system_prompt}\n\nUser: {message}\nAssistant:"
 
-            # Call the actual generate method on v5 engine
+        # Step 5: Generate response using shared model
+        if self.shared_model:
             result = self.shared_model.generate(
                 prompt=prompt_with_context,
                 session_id=session_id,
-                max_tokens=kwargs.get('max_tokens', 500),
+                max_tokens=kwargs.get('max_tokens', max_tokens),
                 temperature=personality.style.get('temperature', 0.7) if personality.style else 0.7,
                 use_tools=kwargs.get('use_tools', False),
                 use_context=False  # We're managing context ourselves
             )
 
+            logger.info(f"📝 Raw result from shared_model.generate: type={type(result)}, keys={result.keys() if isinstance(result, dict) else 'N/A'}")
+
             # Ensure result is a dict
             if isinstance(result, str):
-                response = {"text": result}
+                response = {
+                    "text": result,
+                    "intent": detected_intent,
+                    "confidence": intent_result.get("confidence", 0) if intent_result else 0
+                }
             else:
                 response = result
+                # Ensure there's a text field in the response
+                if "text" not in response:
+                    response["text"] = response.get("response", response.get("message", ""))
+                response["intent"] = detected_intent
+                response["confidence"] = intent_result.get("confidence", 0) if intent_result else 0
+
+            # Add product data if available for frontend display
+            if tool_results and tool_results.get('products') and detected_intent == "product_search":
+                response["products"] = tool_results['products'][:5]  # Limit to 5 products for display
+                response["products_found"] = len(tool_results['products'])
+                logger.info(f"✅ Added {response['products_found']} products to response for display")
+            elif detected_intent == "product_search":
+                logger.warning(f"⚠️ Product search intent but no products found. tool_results: {bool(tool_results)}, has products: {tool_results.get('products') if tool_results else None}")
         else:
             response = {
                 "text": "Model not loaded",
-                "error": "No shared model available"
+                "error": "No shared model available",
+                "intent": detected_intent
             }
 
-        # Update session history
+        # Update session history with intent info
         session.context_history.append({
             "user": message,
             "assistant": response.get("text", ""),
+            "intent": detected_intent,
             "timestamp": datetime.now(timezone.utc).isoformat()
         })
 
@@ -489,6 +651,24 @@ class AgentPoolManager:
 
         # Return just the text response for compatibility
         return result.get("text", "")
+
+    async def generate_message_with_products(
+        self,
+        session_id: str,
+        message: str,
+        user_id: Optional[str] = None,
+        **kwargs
+    ) -> Dict[str, Any]:
+        """Generate a message response with full product data"""
+        # Update user_id if provided
+        if user_id and session_id in self.sessions:
+            self.sessions[session_id].user_id = user_id
+
+        # Process the message
+        result = await self.process_message(session_id, message, **kwargs)
+
+        # Return the full response object including products
+        return result
 
     async def _cleanup_old_sessions(self, max_age_minutes: int = 30):
         """Clean up inactive sessions"""
@@ -547,9 +727,15 @@ class AgentPoolManager:
         }
 
     def set_shared_model(self, model):
-        """Set the shared model reference"""
+        """Set the shared model reference and propagate to intent detectors"""
         self.shared_model = model
         logger.info("Shared model reference set")
+
+        # Propagate v5_engine reference to all intent detectors
+        for agent_id, agent_config in self.agents.items():
+            if hasattr(agent_config, 'intent_detector') and agent_config.intent_detector:
+                agent_config.intent_detector.v5_engine = model
+                logger.info(f"  ✅ Updated intent detector for agent {agent_id} with v5_engine reference")
 
 
 # Singleton instance

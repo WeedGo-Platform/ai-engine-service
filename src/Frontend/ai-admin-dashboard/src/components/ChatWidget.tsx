@@ -28,6 +28,24 @@ import { getApiUrl } from '../config/app.config';
 
 type RecordingState = 'idle' | 'recording' | 'processing' | 'error' | 'requesting';
 
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  image?: string;
+  image_url?: string;
+  thc_content?: number;
+  cbd_content?: number;
+  category?: string;
+  sub_category?: string;
+  strain_type?: string;
+  inventory_count?: number;
+  brand?: string;
+  size?: string;
+  stock_status?: string;
+  short_description?: string;
+}
+
 interface Message {
   id: string;
   role: 'user' | 'assistant' | 'system';
@@ -39,6 +57,8 @@ interface Message {
   completionTokens?: number;
   isVoice?: boolean;
   transcription?: string;
+  products?: Product[];
+  products_found?: number;
 }
 
 interface ChatWidgetProps {
@@ -713,7 +733,9 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
         responseTime,
         tokenCount: data.token_count,
         promptTokens: data.prompt_tokens,
-        completionTokens: data.completion_tokens
+        completionTokens: data.completion_tokens,
+        products: data.products,
+        products_found: data.products_found
       };
 
       setMessages(prev => {
@@ -1276,6 +1298,92 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
                             <p className="whitespace-pre-wrap text-sm leading-relaxed">
                               {message.content}
                             </p>
+                            {/* Product Cards Display */}
+                            {message.products && message.products.length > 0 && (
+                              <div className="mt-4">
+                                <div className="text-xs text-gray-600 dark:text-gray-400 mb-2">
+                                  Found {message.products_found || message.products.length} products:
+                                </div>
+                                <div className="overflow-x-auto">
+                                  <div className="flex gap-3" style={{ minWidth: 'max-content' }}>
+                                    {message.products.map((product) => (
+                                      <div
+                                        key={product.id}
+                                        className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                                        style={{ width: '200px', flexShrink: 0 }}
+                                      >
+                                        <img
+                                          src={product.image_url || product.image || 'https://via.placeholder.com/200x150'}
+                                          alt={product.name}
+                                          className="w-full h-32 object-cover rounded-lg mb-2"
+                                          onError={(e) => {
+                                            (e.target as HTMLImageElement).src = 'https://via.placeholder.com/200x150';
+                                          }}
+                                        />
+                                        <h4 className="font-semibold text-xs text-gray-900 dark:text-gray-100 mb-1 line-clamp-2">
+                                          {product.name}
+                                        </h4>
+                                        {product.brand && (
+                                          <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                                            {product.brand}
+                                          </p>
+                                        )}
+                                        {product.short_description && (
+                                          <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 line-clamp-2">
+                                            {product.short_description}
+                                          </p>
+                                        )}
+                                        <div className="flex flex-wrap gap-1 mb-2">
+                                          {product.category && (
+                                            <span className="px-2 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded text-xs">
+                                              {product.category}
+                                            </span>
+                                          )}
+                                          {product.strain_type && (
+                                            <span className="px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded text-xs">
+                                              {product.strain_type}
+                                            </span>
+                                          )}
+                                        </div>
+                                        {(product.thc_content !== undefined || product.cbd_content !== undefined) && (
+                                          <div className="text-xs text-gray-600 dark:text-gray-400 mb-2">
+                                            {product.thc_content !== undefined && (
+                                              <span className="mr-2">THC: {product.thc_content}%</span>
+                                            )}
+                                            {product.cbd_content !== undefined && (
+                                              <span>CBD: {product.cbd_content}%</span>
+                                            )}
+                                          </div>
+                                        )}
+                                        <div className="flex items-center justify-between">
+                                          <span className="text-sm font-bold text-blue-600 dark:text-blue-400">
+                                            ${product.price?.toFixed(2) || 'N/A'}
+                                          </span>
+                                          {product.size && (
+                                            <span className="text-xs text-gray-500 dark:text-gray-400">
+                                              {product.size}
+                                            </span>
+                                          )}
+                                        </div>
+                                        {product.stock_status && (
+                                          <div className="mt-2">
+                                            <span className={`text-xs ${
+                                              product.stock_status === 'In Stock'
+                                                ? 'text-green-600 dark:text-green-400'
+                                                : product.stock_status === 'Low Stock'
+                                                ? 'text-yellow-600 dark:text-yellow-400'
+                                                : 'text-red-600 dark:text-red-400'
+                                            }`}>
+                                              {product.stock_status}
+                                            </span>
+                                          </div>
+                                        )}
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>

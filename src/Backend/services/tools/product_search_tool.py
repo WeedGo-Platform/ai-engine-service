@@ -1,49 +1,71 @@
 """
-Product Search Tool - Bridges FunctionRegistry with actual database search
+Product Search Tool - Uses Repository Pattern with Dependency Injection
 Provides comprehensive product search capabilities for the cannabis dispensary
 """
 
-import json
 import logging
 from typing import Dict, Any, List, Optional
-import psycopg2
-from psycopg2.extras import RealDictCursor
-import os
 
 logger = logging.getLogger(__name__)
 
+
 class ProductSearchTool:
-    """Tool for searching cannabis products in the database"""
-    
-    def __init__(self):
-        """Initialize the product search tool"""
-        self.connection = None
-        self.db_config = {
-            'host': os.getenv('DB_HOST', 'localhost'),
-            'port': int(os.getenv('DB_PORT', 5434)),
-            'database': os.getenv('DB_NAME', 'ai_engine'),
-            'user': os.getenv('DB_USER', 'weedgo'),
-            'password': os.getenv('DB_PASSWORD', 'weedgo')
-        }
-        self._connect()
-        
-    def _connect(self):
-        """Establish database connection"""
+    """Tool for searching cannabis products using repository pattern"""
+
+    def __init__(self, product_repository=None):
+        """
+        Initialize the product search tool with dependency injection
+
+        Args:
+            product_repository: ProductRepository instance (optional)
+        """
+        self.product_repository = product_repository
+
+        # Lazy initialization if repository not provided
+        if not self.product_repository:
+            self._initialize_repository()
+
+        if self.product_repository:
+            count = self.product_repository.get_product_count()
+            logger.info(f"ProductSearchTool initialized with {count} products available")
+        else:
+            logger.warning("ProductSearchTool initialized without repository")
+
+    def _initialize_repository(self):
+        """Lazy initialization of repository with proper dependencies"""
         try:
-            self.connection = psycopg2.connect(
-                **self.db_config,
-                cursor_factory=RealDictCursor
-            )
-            logger.info("ProductSearchTool connected to database")
+            import os
+            import sys
+            from pathlib import Path
+
+            # Add parent directories to path
+            backend_path = Path(__file__).parent.parent.parent
+            sys.path.insert(0, str(backend_path))
+
+            # Import dependencies
+            from services.database_connection_manager import DatabaseConnectionManager
+            from core.repositories.product_repository import ProductRepository
+
+            # Initialize with proper configuration
+            config = {
+                'host': os.getenv('DB_HOST', 'localhost'),
+                'port': int(os.getenv('DB_PORT', 5434)),
+                'database': os.getenv('DB_NAME', 'ai_engine'),
+                'user': os.getenv('DB_USER', 'weedgo'),
+                'password': os.getenv('DB_PASSWORD', 'weedgo123'),
+                'min_conn': 1,
+                'max_conn': 10
+            }
+
+            # Create connection manager and repository
+            connection_manager = DatabaseConnectionManager(default_config=config)
+            self.product_repository = ProductRepository(connection_manager)
+            logger.info("Repository initialized successfully")
+
         except Exception as e:
-            logger.error(f"Failed to connect to database: {e}")
-            self.connection = None
-    
-    def _ensure_connection(self):
-        """Ensure database connection is alive"""
-        if not self.connection or self.connection.closed:
-            self._connect()
-            
+            logger.error(f"Failed to initialize repository: {e}")
+            self.product_repository = None
+
     def search_products(
         self,
         query: Optional[str] = None,
@@ -60,7 +82,7 @@ class ProductSearchTool:
     ) -> Dict[str, Any]:
         """
         Search for products with various filters
-        
+
         Args:
             query: Text search query
             category: Product category (flower, edibles, concentrates, etc.)
@@ -73,129 +95,37 @@ class ProductSearchTool:
             max_price: Maximum price
             effects: List of desired effects
             limit: Maximum number of results
-            
+
         Returns:
             Dictionary with search results
         """
-        self._ensure_connection()
-        
-        if not self.connection:
+        if not self.product_repository:
             return {
                 "success": False,
-                "error": "Database connection not available",
+                "error": "Product repository not available",
                 "products": []
             }
-        
+
         try:
-            # Build dynamic query
-            where_clauses = []
-            params = []
-            
-            # Text search
-            if query:
-                where_clauses.append("(name ILIKE %s OR description ILIKE %s OR brand ILIKE %s)")
-                search_term = f"%{query}%"
-                params.extend([search_term, search_term, search_term])
-            
-            # Category filter
-            if category:
-                where_clauses.append("category ILIKE %s")
-                params.append(f"%{category}%")
-            
-            # Strain type filter
-            if strain_type:
-                where_clauses.append("strain_type ILIKE %s")
-                params.append(f"%{strain_type}%")
-            
-            # THC range
-            if min_thc is not None:
-                where_clauses.append("thc_percentage >= %s")
-                params.append(min_thc)
-            if max_thc is not None:
-                where_clauses.append("thc_percentage <= %s")
-                params.append(max_thc)
-            
-            # CBD range
-            if min_cbd is not None:
-                where_clauses.append("cbd_percentage >= %s")
-                params.append(min_cbd)
-            if max_cbd is not None:
-                where_clauses.append("cbd_percentage <= %s")
-                params.append(max_cbd)
-            
-            # Price range
-            if min_price is not None:
-                where_clauses.append("price >= %s")
-                params.append(min_price)
-            if max_price is not None:
-                where_clauses.append("price <= %s")
-                params.append(max_price)
-            
-            # Effects filter (JSON search)
-            if effects:
-                effects_conditions = []
-                for effect in effects:
-                    effects_conditions.append("effects::text ILIKE %s")
-                    params.append(f"%{effect}%")
-                if effects_conditions:
-                    where_clauses.append(f"({' OR '.join(effects_conditions)})")
-            
-            # Build final query using inventory_products_view
-            base_query = """
-                SELECT 
-                    id,
-                    name,
-                    category,
-                    strain_type,
-                    thc_percentage as thc_content,
-                    cbd_percentage as cbd_content,
-                    price,
-                    brand,
-                    description,
-                    effects,
-                    flavors,
-                    terpenes,
-                    quantity_available as inventory_count,
-                    stock_status,
-                    location,
-                    sku
-                FROM inventory_products_view
-                WHERE quantity_available > 0
-            """
-            
-            if where_clauses:
-                base_query += " AND " + " AND ".join(where_clauses)
-            
-            base_query += " ORDER BY quantity_available DESC, price ASC"
-            base_query += f" LIMIT {limit}"
-            
-            # Execute query
-            cursor = self.connection.cursor()
-            cursor.execute(base_query, params)
-            products = cursor.fetchall()
-            cursor.close()
-            
-            # Format results
-            formatted_products = []
-            for product in products:
-                formatted_product = dict(product)
-                # Parse JSON fields
-                if formatted_product.get('effects') and isinstance(formatted_product['effects'], str):
-                    try:
-                        formatted_product['effects'] = json.loads(formatted_product['effects'])
-                    except:
-                        pass
-                if formatted_product.get('terpenes') and isinstance(formatted_product['terpenes'], str):
-                    try:
-                        formatted_product['terpenes'] = json.loads(formatted_product['terpenes'])
-                    except:
-                        pass
-                formatted_products.append(formatted_product)
-            
+            # Delegate to repository
+            products = self.product_repository.search_products(
+                query=query,
+                category=category,
+                strain_type=strain_type,
+                min_thc=min_thc,
+                max_thc=max_thc,
+                min_cbd=min_cbd,
+                max_cbd=max_cbd,
+                min_price=min_price,
+                max_price=max_price,
+                effects=effects,
+                limit=limit
+            )
+
             return {
                 "success": True,
-                "count": len(formatted_products),
-                "products": formatted_products,
+                "count": len(products),
+                "products": products,
                 "filters_applied": {
                     "query": query,
                     "category": category,
@@ -206,7 +136,7 @@ class ProductSearchTool:
                     "effects": effects
                 }
             }
-            
+
         except Exception as e:
             logger.error(f"Product search failed: {e}")
             return {
@@ -214,61 +144,25 @@ class ProductSearchTool:
                 "error": str(e),
                 "products": []
             }
-    
+
     def get_product_count(self) -> int:
         """Get total number of products in database"""
-        self._ensure_connection()
-        
-        if not self.connection:
+        if not self.product_repository:
             return 0
-        
-        try:
-            cursor = self.connection.cursor()
-            cursor.execute("SELECT COUNT(*) as count FROM inventory_products_view")
-            result = cursor.fetchone()
-            cursor.close()
-            return result['count'] if result else 0
-        except Exception as e:
-            logger.error(f"Failed to get product count: {e}")
-            return 0
-    
+        return self.product_repository.get_product_count()
+
     def get_trending_products(self, limit: int = 10) -> Dict[str, Any]:
-        """Get trending products based on views and sales"""
-        self._ensure_connection()
-        
-        if not self.connection:
-            return {"success": False, "error": "Database connection not available", "products": []}
-        
+        """Get trending products based on availability and popularity"""
+        if not self.product_repository:
+            return {"success": False, "error": "Product repository not available", "products": []}
+
         try:
-            cursor = self.connection.cursor()
-            # Get top-rated and most reviewed products
-            query = """
-                SELECT 
-                    id, name, category, strain_type, 
-                    thc_content, cbd_content, price, brand,
-                    rating, review_count, inventory_count
-                FROM inventory_products_view
-                WHERE in_stock = true
-                ORDER BY 
-                    rating DESC NULLS LAST,
-                    review_count DESC NULLS LAST
-                LIMIT %s
-            """
-            cursor.execute(query, (limit,))
-            products = cursor.fetchall()
-            cursor.close()
-            
+            products = self.product_repository.get_trending_products(limit)
             return {
                 "success": True,
                 "count": len(products),
-                "products": [dict(p) for p in products]
+                "products": products
             }
         except Exception as e:
             logger.error(f"Failed to get trending products: {e}")
             return {"success": False, "error": str(e), "products": []}
-    
-    def close(self):
-        """Close database connection"""
-        if self.connection:
-            self.connection.close()
-            logger.info("ProductSearchTool database connection closed")
