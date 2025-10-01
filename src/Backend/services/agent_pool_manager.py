@@ -79,6 +79,11 @@ class SessionState:
         """Update last activity timestamp"""
         self.last_activity = datetime.now(timezone.utc)
 
+    def store_product_list(self, products: List[Dict[str, Any]]):
+        """Store product list in metadata for later selection"""
+        self.metadata['last_product_list'] = products
+        self.metadata['last_product_list_timestamp'] = datetime.now(timezone.utc).isoformat()
+
 
 class AgentPoolManager:
     """
@@ -107,13 +112,23 @@ class AgentPoolManager:
         # Shared model reference (will be set by SmartAIEngine)
         self.shared_model = None
 
+        # Context manager reference (will be set by main_server)
+        self.context_manager = None
+
+        # Entity extraction and parameter building services (lazy loaded)
+        self.entity_extractor = None
+        self.parameter_builder = None
+        self.user_preference_service = None
+        self.intent_config = None
+
         # Performance metrics
         self.metrics = {
             "total_requests": 0,
             "personality_switches": 0,
             "cache_hits": 0,
             "cache_misses": 0,
-            "active_sessions": 0
+            "active_sessions": 0,
+            "context_loads": 0
         }
 
         # Load configurations
@@ -322,19 +337,49 @@ class AgentPoolManager:
             # Remove oldest inactive session
             await self._cleanup_old_sessions()
 
-        # Create session
+        # Load conversation history from database if context_manager is available
+        context_history = []
+        if self.context_manager:
+            try:
+                db_history = await self.context_manager.get_history(session_id, limit=50)
+
+                if db_history:
+                    logger.info(f"Loaded {len(db_history)} messages from database for session {session_id}")
+
+                    # Convert database format to session format
+                    # Group user/assistant messages into exchanges
+                    for i in range(0, len(db_history), 2):
+                        user_msg = db_history[i] if i < len(db_history) else None
+                        assistant_msg = db_history[i + 1] if i + 1 < len(db_history) else None
+
+                        if user_msg and user_msg.get('role') == 'user':
+                            exchange = {
+                                "user": user_msg.get('content', ''),
+                                "assistant": assistant_msg.get('content', '') if assistant_msg and assistant_msg.get('role') == 'assistant' else '',
+                                "timestamp": user_msg.get('timestamp', datetime.now(timezone.utc).isoformat())
+                            }
+                            context_history.append(exchange)
+
+                    self.metrics["context_loads"] += 1
+            except Exception as e:
+                logger.error(f"Failed to load history from database for session {session_id}: {e}")
+                # Continue with empty history if load fails
+                context_history = []
+
+        # Create session with loaded history
         session = SessionState(
             session_id=session_id,
             agent_id=agent_id,
             personality_id=personality_id,
             user_id=user_id,
+            context_history=context_history,
             metadata=metadata or {}
         )
 
         self.sessions[session_id] = session
         self.metrics["active_sessions"] = len(self.sessions)
 
-        logger.info(f"Created session {session_id}: {agent_id}/{personality_id}")
+        logger.info(f"Created session {session_id}: {agent_id}/{personality_id} with {len(context_history)} historical exchanges")
         return session
 
     async def switch_personality(
@@ -413,6 +458,20 @@ class AgentPoolManager:
             session.update_activity()
         return session
 
+    def store_product_list_for_session(self, session_id: str, products: List[Dict[str, Any]]):
+        """Store product list in session metadata for later selection
+
+        Args:
+            session_id: Session ID
+            products: List of product dictionaries to store
+        """
+        session = self.get_session(session_id)
+        if session:
+            session.store_product_list(products)
+            logger.info(f"Stored {len(products)} products in session {session_id} metadata")
+        else:
+            logger.warning(f"Cannot store product list: session {session_id} not found")
+
     async def process_message(
         self,
         session_id: str,
@@ -434,13 +493,32 @@ class AgentPoolManager:
         context = personality.get_context()
         context["history"] = session.context_history[-10:]  # Last 10 messages
 
+        # Format conversation history for context injection
+        contextual_prompt = message
+        if session.context_history:
+            # Take last 5 exchanges for context (10 messages = 5 exchanges)
+            recent_history = session.context_history[-5:]
+            history_lines = []
+
+            for exchange in recent_history:
+                if exchange.get("user"):
+                    history_lines.append(f"User: {exchange['user']}")
+                if exchange.get("assistant"):
+                    history_lines.append(f"Assistant: {exchange['assistant']}")
+
+            if history_lines:
+                history_text = "\n".join(history_lines)
+                # Prepend conversation history to current message
+                contextual_prompt = f"Previous conversation:\n{history_text}\n\nCurrent message:\n{message}"
+                logger.info(f"Session {session_id}: Injected {len(recent_history)} exchanges into prompt")
+
         # Use shared model for inference
         if self.shared_model:
             # Let v5 engine handle intent detection and tool execution
-            # Just pass the raw message - don't wrap it with personality prompt
+            # Pass message with conversation history context for better continuity
             # The v5 engine will handle prompt templates via intent detection
             result = await self.shared_model.generate(
-                prompt=message,  # Pass raw message for intent detection
+                prompt=contextual_prompt,  # Context-aware prompt with history
                 session_id=session_id,
                 max_tokens=kwargs.get('max_tokens', 500),
                 temperature=personality.style.get('temperature', 0.7) if personality.style else 0.7,
@@ -565,10 +643,113 @@ class AgentPoolManager:
             )
         }
 
+    def _initialize_extraction_services(self):
+        """Initialize entity extraction, parameter building, and user preference services"""
+        try:
+            # Load intent configuration
+            intent_path = Path(__file__).parent.parent / "prompts" / "agents" / "dispensary" / "intent.json"
+            with open(intent_path, 'r') as f:
+                self.intent_config = json.load(f)
+            logger.info("Loaded intent configuration for entity extraction")
+
+            # Initialize entity extractor
+            from services.entity_extractor import EntityExtractor
+            self.entity_extractor = EntityExtractor(self.shared_model, self.intent_config)
+            logger.info("Initialized EntityExtractor")
+
+            # Initialize parameter builder
+            from services.parameter_builder import ParameterBuilder
+            self.parameter_builder = ParameterBuilder(self.shared_model, self.intent_config)
+            logger.info("Initialized ParameterBuilder")
+
+            # Initialize user preference service
+            from services.user_preference_service import UserPreferenceService
+            self.user_preference_service = UserPreferenceService()
+            logger.info("Initialized UserPreferenceService")
+
+        except Exception as e:
+            logger.error(f"Failed to initialize extraction services: {str(e)}", exc_info=True)
+            # Don't fail hard - services will just not be available
+            self.entity_extractor = None
+            self.parameter_builder = None
+            self.user_preference_service = None
+
     def set_shared_model(self, model):
-        """Set the shared model reference"""
+        """Set the shared model reference and initialize entity extraction services"""
         self.shared_model = model
         logger.info("Shared model reference set")
+
+        # Initialize entity extraction and parameter building services
+        self._initialize_extraction_services()
+
+    def set_context_manager(self, context_manager):
+        """Set the context manager reference"""
+        self.context_manager = context_manager
+        logger.info("Context manager reference set in agent pool")
+
+    async def extract_and_build_search_params(
+        self,
+        message: str,
+        session_id: Optional[str] = None,
+        user_id: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Extract entities from message and build search parameters with context
+
+        This is the main entry point for the new LLM-based product search flow.
+        Returns either search parameters or quick actions for disambiguation.
+
+        Args:
+            message: User's natural language query
+            session_id: Optional session ID for conversation context
+            user_id: Optional user ID for personalization
+
+        Returns:
+            Dictionary with either:
+            - {"type": "search", "params": {...}} for direct search
+            - {"type": "quick_actions", "data": {...}} for disambiguation
+            - {"type": "error", "message": "..."} on failure
+        """
+        try:
+            if not self.entity_extractor or not self.parameter_builder:
+                logger.warning("Entity extraction services not initialized, falling back to error")
+                return {
+                    "type": "error",
+                    "message": "Entity extraction services not available"
+                }
+
+            # Step 1: Extract entities from natural language
+            logger.info(f"Extracting entities from: {message[:100]}...")
+            entities = await self.entity_extractor.extract_entities(
+                message=message,
+                session_id=session_id,
+                user_id=user_id
+            )
+
+            # Step 2: Get user preferences if user_id provided
+            user_preferences = None
+            if user_id and self.user_preference_service:
+                try:
+                    user_preferences = await self.user_preference_service.get_user_preferences(user_id)
+                except Exception as e:
+                    logger.warning(f"Failed to get user preferences: {str(e)}")
+                    user_preferences = None
+
+            # Step 3: Build search parameters or generate quick actions
+            result = await self.parameter_builder.build_parameters(
+                entities=entities,
+                user_preferences=user_preferences
+            )
+
+            logger.info(f"Parameter building result: {result.get('type')}")
+            return result
+
+        except Exception as e:
+            logger.error(f"Failed to extract and build search params: {str(e)}", exc_info=True)
+            return {
+                "type": "error",
+                "message": f"Failed to process search query: {str(e)}"
+            }
 
 
 # Singleton instance
