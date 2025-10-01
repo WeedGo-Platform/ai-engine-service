@@ -26,17 +26,22 @@ class ToolManager(IToolManager):
     Single Responsibility: Tool lifecycle and execution management
     """
     
-    def __init__(self):
-        """Initialize the Tool Manager"""
+    def __init__(self, agent_pool=None):
+        """Initialize the Tool Manager
+
+        Args:
+            agent_pool: Optional reference to agent pool for LLM-based features
+        """
         self.tools = {}
         self.tool_instances = {}
         self.agent_tools = {}  # Maps agent_id to enrolled tools
         self.tool_configs = {}
         self.connection_manager = None
-        
+        self.agent_pool = agent_pool  # Store agent pool reference
+
         # Register built-in tools
         self._register_builtin_tools()
-        
+
         logger.info(f"ToolManager initialized with {len(self.tools)} built-in tools")
     
     def _register_builtin_tools(self):
@@ -51,7 +56,18 @@ class ToolManager(IToolManager):
                 "requires_connection": True
             }
         )
-        
+
+        # Register smart product search tool (primary product search)
+        self.register_tool(
+            "smart_product_search",
+            self._create_smart_product_search_tool,
+            {
+                "description": "Search products using API with context awareness",
+                "category": "search",
+                "requires_context": True
+            }
+        )
+
         # Register product search tool (wrapper)
         self.register_tool(
             "search_products",
@@ -61,7 +77,7 @@ class ToolManager(IToolManager):
                 "category": "search"
             }
         )
-        
+
         # Register category search tool
         self.register_tool(
             "search_by_category",
@@ -71,7 +87,7 @@ class ToolManager(IToolManager):
                 "category": "search"
             }
         )
-        
+
         # Register effects search tool
         self.register_tool(
             "search_by_effects",
@@ -132,16 +148,21 @@ class ToolManager(IToolManager):
         try:
             tool_function = self.tools[tool_name]
 
-            # Check if this is a database tool that needs initialization
+            # Check if this is a tool that needs initialization
             if tool_name == "database_search" and tool_name not in self.tool_instances:
                 instance = self._create_database_search_tool()
+                if instance:
+                    self.tool_instances[tool_name] = instance
+
+            if tool_name == "smart_product_search" and tool_name not in self.tool_instances:
+                instance = self._create_smart_product_search_tool()
                 if instance:
                     self.tool_instances[tool_name] = instance
 
             # Execute the tool
             if tool_name in self.tool_instances:
                 # Use the tool instance
-                result = self._execute_tool_instance(tool_name, **kwargs)
+                result = await self._execute_tool_instance(tool_name, **kwargs)
             else:
                 # Direct function call
                 result = tool_function(**kwargs)
@@ -357,19 +378,19 @@ class ToolManager(IToolManager):
     def _create_database_search_tool(self) -> Optional[IDatabaseSearchTool]:
         """
         Create database search tool instance
-        
+
         Returns:
             Database search tool instance or None
         """
         try:
             from services.tools.database_search_tool import DatabaseSearchTool
             from services.database_connection_manager import DatabaseConnectionManager
-            
+
             if not self.connection_manager:
                 self.connection_manager = DatabaseConnectionManager()
-            
+
             tool = DatabaseSearchTool(self.connection_manager)
-            
+
             # Auto-connect with default config
             import os
             config = {
@@ -379,16 +400,37 @@ class ToolManager(IToolManager):
                 'user': os.getenv('DB_USER', 'postgres'),
                 'password': os.getenv('DB_PASSWORD', 'postgres')
             }
-            
+
             if tool.connect(config):
                 logger.info("Database search tool connected")
                 return tool
             else:
                 logger.warning("Database search tool failed to connect")
                 return None
-                
+
         except Exception as e:
             logger.error(f"Failed to create database search tool: {e}")
+            return None
+
+    def _create_smart_product_search_tool(self):
+        """
+        Create smart product search tool instance
+
+        Returns:
+            Smart product search tool instance or None
+        """
+        try:
+            from services.tools.smart_product_search_tool import SmartProductSearchTool
+            import os
+
+            base_url = os.getenv('API_BASE_URL', 'http://localhost:5024')
+            tool = SmartProductSearchTool(base_url=base_url, agent_pool=self.agent_pool)
+
+            logger.info(f"Smart product search tool created with base_url: {base_url}, agent_pool: {self.agent_pool is not None}")
+            return tool
+
+        except Exception as e:
+            logger.error(f"Failed to create smart product search tool: {e}")
             return None
     
     def _initialize_database_tool(self):
@@ -398,21 +440,21 @@ class ToolManager(IToolManager):
             if instance:
                 self.tool_instances["database_search"] = instance
     
-    def _execute_tool_instance(self, tool_name: str, **kwargs) -> Any:
+    async def _execute_tool_instance(self, tool_name: str, **kwargs) -> Any:
         """
         Execute a tool instance method
-        
+
         Args:
             tool_name: Tool name
             **kwargs: Method parameters
-            
+
         Returns:
             Method result
         """
         instance = self.tool_instances.get(tool_name)
         if not instance:
             raise ValueError(f"Tool instance '{tool_name}' not found")
-        
+
         # Determine which method to call based on parameters
         if tool_name == "database_search":
             if "filters" in kwargs:
@@ -434,7 +476,23 @@ class ToolManager(IToolManager):
             else:
                 # Generic search
                 return instance.search(kwargs)
-        
+
+        elif tool_name == "smart_product_search":
+            # Call the smart product search tool with context
+            return await instance.search(
+                query=kwargs.get("query", ""),
+                store_id=kwargs.get("store_id"),
+                limit=kwargs.get("limit", 5),
+                category=kwargs.get("category"),
+                min_thc=kwargs.get("min_thc"),
+                max_thc=kwargs.get("max_thc"),
+                min_cbd=kwargs.get("min_cbd"),
+                max_cbd=kwargs.get("max_cbd"),
+                strain_type=kwargs.get("strain_type"),
+                session_id=kwargs.get("session_id"),
+                user_id=kwargs.get("user_id")
+            )
+
         raise ValueError(f"Unknown tool execution pattern for '{tool_name}'")
     
     # Wrapper functions for database search

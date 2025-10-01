@@ -225,13 +225,13 @@ class SmartAIEngineV5:
         try:
             # Initialize tools if enabled in config
             if self.system_config and self.system_config.get('system', {}).get('tools', {}).get('enabled'):
-                self.tool_manager = ToolManager()
-                
+                self.tool_manager = ToolManager(agent_pool=self.agent_pool)
+
                 # Load agent-specific tools if configured
                 if self.current_agent:
                     self._load_agent_tools(self.current_agent)
-                    
-                logger.info(f"Tool manager initialized with {len(self.tool_manager.list_tools())} tools")
+
+                logger.info(f"Tool manager initialized with {len(self.tool_manager.list_tools())} tools, agent_pool: {self.agent_pool is not None}")
             
             # Initialize context storage if enabled
             if self.system_config and self.system_config.get('system', {}).get('context', {}).get('enabled'):
@@ -684,7 +684,19 @@ class SmartAIEngineV5:
             if '{message}' in template_str:
                 variables.append('message')
         
+        # Get list of tool result variables that should NOT be replaced yet
+        tool_result_vars = set()
+        if isinstance(template_data, dict) and 'tools' in template_data:
+            tool_config = template_data['tools']
+            if 'result_injection' in tool_config:
+                tool_result_vars = set(tool_config['result_injection'].values())
+
         for var in variables:
+            # Skip tool result variables - they will be injected after tool execution
+            if var in tool_result_vars:
+                logger.info(f"Skipping variable '{var}' - will be injected after tool execution")
+                continue
+
             if var == 'message':
                 # Don't replace message in system format
                 if not use_system_format:
@@ -1224,28 +1236,167 @@ class SmartAIEngineV5:
             logger.warning(f"Failed to add context: {e}")
             return prompt
 
+    def _generate_quick_actions(self, products: List[Dict]) -> List[Dict]:
+        """Generate quick action buttons based on product analysis"""
+        if not products:
+            return []
+
+        from collections import defaultdict
+
+        # Analyze products to generate relevant quick actions
+        categories = defaultdict(int)
+        price_ranges = []
+        thc_ranges = []
+
+        for product in products:
+            # Count categories
+            subcategory = product.get('subcategory', product.get('category', ''))
+            if subcategory:
+                categories[subcategory] += 1
+
+            # Collect price data
+            price = product.get('price', 0)
+            if price:
+                price_ranges.append(price)
+
+            # Collect THC data
+            thc_content = product.get('thcContent', {})
+            if isinstance(thc_content, dict):
+                thc_max = thc_content.get('max', 0)
+                if thc_max:
+                    thc_ranges.append(thc_max)
+
+        quick_actions = []
+
+        # Generate category filters (top 3 categories)
+        sorted_categories = sorted(categories.items(), key=lambda x: x[1], reverse=True)[:3]
+        for category, count in sorted_categories:
+            quick_actions.append({
+                "type": "filter",
+                "label": f"{category} ({count})",
+                "action": "filter_category",
+                "value": category
+            })
+
+        # Generate price range filters
+        if price_ranges:
+            min_price = min(price_ranges)
+            max_price = max(price_ranges)
+            mid_price = (min_price + max_price) / 2
+
+            quick_actions.append({
+                "type": "filter",
+                "label": f"Under ${mid_price:.0f}",
+                "action": "filter_price",
+                "value": {"max": mid_price}
+            })
+
+            quick_actions.append({
+                "type": "filter",
+                "label": f"Over ${mid_price:.0f}",
+                "action": "filter_price",
+                "value": {"min": mid_price}
+            })
+
+        # Generate THC filters
+        if thc_ranges:
+            avg_thc = sum(thc_ranges) / len(thc_ranges)
+
+            quick_actions.append({
+                "type": "filter",
+                "label": f"High THC (>{avg_thc:.0f}%)",
+                "action": "filter_thc",
+                "value": {"min": avg_thc}
+            })
+
+            quick_actions.append({
+                "type": "filter",
+                "label": f"Low THC (<{avg_thc:.0f}%)",
+                "action": "filter_thc",
+                "value": {"max": avg_thc}
+            })
+
+        # Add "Show All" action
+        quick_actions.append({
+            "type": "action",
+            "label": "Show All Products",
+            "action": "show_all",
+            "value": None
+        })
+
+        return quick_actions
+
     def _format_products_for_template(self, products: List[Dict]) -> str:
-        """Format product results for template injection"""
+        """Format product results for template injection with categorization"""
         if not products:
             return "No products found matching your criteria."
 
-        formatted_lines = []
-        for i, product in enumerate(products[:5], 1):  # Limit to top 5
-            name = product.get('product_name', 'Unknown Product')
+        # Categorize products
+        from collections import defaultdict
+        categories = defaultdict(list)
+
+        for product in products:
+            # Map API response fields
+            name = product.get('name', 'Unknown Product')
+            brand = product.get('brand', '')
             sku = product.get('sku', 'N/A')
-            thc = product.get('thc_range', 'N/A')
-            cbd = product.get('cbd_range', 'N/A')
-            price = product.get('price', 'N/A')
-            category = product.get('category', 'N/A')
+
+            # Extract THC/CBD from nested content objects
+            thc_content = product.get('thcContent', {})
+            cbd_content = product.get('cbdContent', {})
+            thc = thc_content.get('display', 'N/A') if isinstance(thc_content, dict) else 'N/A'
+            cbd = cbd_content.get('display', 'N/A') if isinstance(cbd_content, dict) else 'N/A'
+
+            # Extract numeric THC for sorting
+            try:
+                thc_num = float(thc_content.get('max', 0)) if isinstance(thc_content, dict) else 0
+            except:
+                thc_num = 0
+
+            price = product.get('price', 0)
+            category = product.get('category', 'Unknown')
+            subcategory = product.get('subcategory', category)
+            plant_type = product.get('plantType', product.get('strainType', ''))
+
+            # Build product display
+            product_display = f"{brand} {name}" if brand else name
+
+            # Store product with metadata
+            categories[subcategory].append({
+                'display': product_display,
+                'thc': thc,
+                'thc_num': thc_num,
+                'cbd': cbd,
+                'price': price,
+                'plant_type': plant_type,
+                'category': category
+            })
+
+        # Build categorized summary
+        formatted_lines = []
+        formatted_lines.append(f"Found {len(products)} products across {len(categories)} categories:\n")
+
+        for subcategory, items in categories.items():
+            # Calculate ranges for this category
+            prices = [p['price'] for p in items if p['price']]
+            thc_values = [p['thc_num'] for p in items if p['thc_num']]
+
+            price_range = f"${min(prices):.2f}-${max(prices):.2f}" if prices else "N/A"
+            thc_range = f"{min(thc_values):.1f}%-{max(thc_values):.1f}%" if thc_values else "N/A"
 
             formatted_lines.append(
-                f"{i}. {name} ({sku})\n"
-                f"   Category: {category}\n"
-                f"   THC: {thc}, CBD: {cbd}\n"
-                f"   Price: ${price}"
+                f"\n{subcategory} ({len(items)} items):\n"
+                f"  Price range: {price_range} | THC range: {thc_range}\n"
             )
 
-        return "\n\n".join(formatted_lines)
+            # List top 3 items from this category
+            for i, item in enumerate(items[:3], 1):
+                formatted_lines.append(
+                    f"  {i}. {item['display']} - {item['plant_type']}\n"
+                    f"     THC: {item['thc']} | CBD: {item['cbd']} | ${item['price']}\n"
+                )
+
+        return "".join(formatted_lines)
     
     async def generate(self,
                  prompt: str,
@@ -1368,10 +1519,18 @@ class SmartAIEngineV5:
                                     tool_config = template_config['tools']
                                     logger.info(f"Template '{detected_type}' specifies tools: {tool_config}")
 
-                                    # Execute tools before prompt generation
-                                    if tool_config.get('execution') == 'before_prompt':
+                                    # Execute tools before prompt generation (check if tool_config is not None)
+                                    if tool_config and tool_config.get('execution') == 'before_prompt':
                                         tool_results = {}
                                         required_tools = tool_config.get('required', [])
+
+                                        # Get session context for store_id if needed
+                                        session_context = {}
+                                        if session_id and self.context_manager:
+                                            try:
+                                                session_context = await self.context_manager.get_context(session_id)
+                                            except Exception as e:
+                                                logger.warning(f"Failed to get session context: {e}")
 
                                         for tool_name in required_tools:
                                             if tool_name in tool_config.get('parameters', {}):
@@ -1382,9 +1541,16 @@ class SmartAIEngineV5:
                                                 for param_key, param_value in tool_params.items():
                                                     # Substitute {message} with actual message
                                                     if isinstance(param_value, str) and '{message}' in param_value:
-                                                        substituted_params[param_key] = param_value.replace('{message}', prompt)
+                                                        substituted_value = param_value.replace('{message}', prompt)
+                                                        substituted_params[param_key] = substituted_value
+                                                        logger.debug(f"Substituted param '{param_key}': '{param_value}' -> '{substituted_value}' (prompt='{prompt}')")
                                                     else:
                                                         substituted_params[param_key] = param_value
+
+                                                # Add store_id from context for smart_product_search
+                                                if tool_name == 'smart_product_search' and 'store_id' in session_context:
+                                                    substituted_params['store_id'] = session_context['store_id']
+                                                    logger.info(f"Added store_id from context: {session_context['store_id']}")
 
                                                 # Execute the tool
                                                 logger.info(f"Executing tool '{tool_name}' with params: {substituted_params}")
@@ -1406,11 +1572,25 @@ class SmartAIEngineV5:
                                                     result_data = tool_results[tool_name]
                                                     if 'products' in result_data:
                                                         formatted_results = self._format_products_for_template(result_data['products'])
-                                                        # Re-apply template with tool results
-                                                        final_prompt = final_prompt.replace(f"{{{variable_name}}}", formatted_results)
-                                                        logger.info(f"Injected {len(result_data['products'])} products into template variable '{variable_name}'")
 
-                            logger.info(f"Applied detected template '{detected_type}'")
+                                                        # Debug: Check before replacement
+                                                        placeholder = f"{{{variable_name}}}"
+                                                        before_exists = placeholder in final_prompt
+                                                        logger.info(f"BEFORE replacement: placeholder '{placeholder}' exists in prompt: {before_exists}")
+                                                        logger.info(f"Formatted results to inject ({len(formatted_results)} chars): {formatted_results[:300]}...")
+
+                                                        # Re-apply template with tool results
+                                                        final_prompt = final_prompt.replace(placeholder, formatted_results)
+
+                                                        # Debug: Check after replacement
+                                                        after_exists = placeholder in final_prompt
+                                                        logger.info(f"AFTER replacement: placeholder '{placeholder}' still exists: {after_exists}")
+                                                        logger.info(f"Injected {len(result_data['products'])} products into template variable '{variable_name}'")
+                                                        logger.info(f"Final prompt after injection (first 1500 chars): {final_prompt[:1500]}")
+                                else:
+                                    logger.info(f"Template '{detected_type}' has no tools")
+
+                                logger.info(f"Applied detected template '{detected_type}'")
                     except ValueError as e:
                         logger.error(f"Failed to apply detected template: {e}")
                 elif self.get_prompt_template('default'):
@@ -1540,7 +1720,23 @@ class SmartAIEngineV5:
                         "applied_temperature": actual_temperature,
                         "safety_guidelines_enabled": self.system_config.get('system', {}).get('safety_guidelines', {}).get('enabled', False)
                     }
-                
+
+                # Extract products and generate quick actions if tool results exist
+                products_array = []
+                quick_actions = []
+
+                if 'tool_results' in locals() and tool_results:
+                    # Extract products from smart_product_search results
+                    for tool_name, result_data in tool_results.items():
+                        if tool_name == 'smart_product_search' and isinstance(result_data, dict):
+                            products_array = result_data.get('products', [])
+                            logger.info(f"Adding {len(products_array)} products to response")
+
+                            # Generate quick actions based on product categories
+                            quick_actions = self._generate_quick_actions(products_array)
+                            logger.info(f"Generated {len(quick_actions)} quick actions")
+                            break
+
                 return {
                     "text": text,
                     "model": self.current_model_name,
@@ -1553,6 +1749,8 @@ class SmartAIEngineV5:
                     "loaded_prompts_count": sum(len(p) for p in self.loaded_prompts.values()) if self.use_prompts else 0,
                     "loaded_files": list(self.loaded_prompts.keys()) if self.use_prompts else [],
                     "final_prompt": final_prompt if used_template else None,
+                    "products": products_array,
+                    "quick_actions": quick_actions,
                     "error": None,
                     **system_info  # Add system config info
                 }

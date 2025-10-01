@@ -212,3 +212,35 @@ async def get_user(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to get user"
         )
+
+
+@router.get("/{user_id}/preferences", status_code=status.HTTP_200_OK)
+async def get_user_preferences(user_id: UUID):
+    """
+    Get user preferences based on purchase history
+
+    Analyzes user's purchase patterns to return:
+    - Favorite product subcategories
+    - Preferred strain types
+    - Typical THC/CBD ranges
+    - Typical price ranges
+    - Confidence scores
+    """
+    try:
+        from services.user_preference_service import UserPreferenceService
+
+        preference_service = UserPreferenceService()
+        preferences = await preference_service.get_user_preferences(str(user_id))
+
+        return {
+            "user_id": str(user_id),
+            "preferences": preferences,
+            "timestamp": "2025-10-01T00:00:00Z"  # Add actual timestamp
+        }
+
+    except Exception as e:
+        logger.error(f"Error getting user preferences: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to get user preferences"
+        )
