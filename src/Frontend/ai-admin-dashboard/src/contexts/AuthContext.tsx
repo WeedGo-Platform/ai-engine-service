@@ -27,6 +27,7 @@ interface User {
 
 interface AuthContextType {
   user: User | null;
+  token: string | null;
   loading: boolean;
   isAuthenticated: boolean;
   permissions: string[];
@@ -331,6 +332,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const value: AuthContextType = {
     user,
+    token: storage.getItem(getStorageKey('access_token')),
     loading,
     isAuthenticated,
     permissions,

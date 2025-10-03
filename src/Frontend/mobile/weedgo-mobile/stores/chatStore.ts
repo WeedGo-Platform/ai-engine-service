@@ -138,7 +138,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       chatWebSocketService.on('response', (data: ChatResponse & { response_time?: number; token_count?: number }) => {
         const message: ChatMessage = {
           id: data.id,
-          type: 'assistant',
+          type: data.products && data.products.length > 0 ? 'product' : 'assistant',
           content: data.content,
           products: data.products,
           action: data.action as ChatAction,

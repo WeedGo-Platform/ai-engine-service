@@ -32,42 +32,9 @@ class SmartProductSearchTool:
         elif "hybrid" in query_lower:
             params["plantType"] = "hybrid"
 
-        # Extract product subcategories (exact matches from database)
-        subcategories = {
-            "pre-roll": "Pre-Rolls",
-            "preroll": "Pre-Rolls",
-            "pre-rolls": "Pre-Rolls",
-            "prerolls": "Pre-Rolls",
-            "pre roll": "Pre-Rolls",
-            "dried flower": "Dried Flower",
-            "flower": "Dried Flower",
-            "flowers": "Dried Flower",
-            "bud": "Dried Flower",
-            "buds": "Dried Flower",
-            "edible": "Edibles",
-            "edibles": "Edibles",
-            "gummies": "Edibles",
-            "gummy": "Edibles",
-            "chocolate": "Edibles",
-            "concentrate": "Concentrates",
-            "concentrates": "Concentrates",
-            "shatter": "Concentrates",
-            "wax": "Concentrates",
-            "vape": "Vaporizers",
-            "vapes": "Vaporizers",
-            "vaporizer": "Vaporizers",
-            "cartridge": "Vaporizers",
-            "cartridges": "Vaporizers",
-            "oil": "Oils & Capsules",
-            "oils": "Oils & Capsules",
-            "capsule": "Oils & Capsules",
-            "capsules": "Oils & Capsules"
-        }
-
-        for keyword, subcategory in subcategories.items():
-            if keyword in query_lower:
-                params["subCategory"] = subcategory
-                break
+        # Note: Subcategory extraction now handled by LLM entity extractor
+        # which dynamically fetches categories/subcategories from /api/products/categories and /api/products/sub-categories
+        # This ensures we always use current database values without hardcoding
 
         # Always filter to in-stock products
         params["inStock"] = "true"
@@ -111,48 +78,61 @@ class SmartProductSearchTool:
         Returns:
             Dict with products list and metadata
         """
+        logger.info(f"[SmartProductSearch] START - Query: '{query}', Store: {store_id}, Session: {session_id}")
+        logger.info(f"[SmartProductSearch] Input params - limit: {limit}, category: {category}, strain_type: {strain_type}")
+
         try:
             # Use LLM-based entity extraction if agent_pool is available
             params = {}
             if self.agent_pool and hasattr(self.agent_pool, 'extract_and_build_search_params'):
                 try:
-                    logger.info(f"Using LLM entity extraction for query: {query}")
+                    logger.info(f"[SmartProductSearch] Using LLM entity extraction for query: {query}")
+                    logger.info(f"[SmartProductSearch] Agent pool available: {self.agent_pool is not None}")
+
                     extraction_result = await self.agent_pool.extract_and_build_search_params(
                         message=query,
                         session_id=session_id,
                         user_id=user_id
                     )
 
+                    logger.info(f"[SmartProductSearch] Extraction result type: {extraction_result.get('type')}")
+                    logger.info(f"[SmartProductSearch] Full extraction result: {extraction_result}")
+
                     # Handle different result types
                     if extraction_result.get("type") == "search":
                         # Use extracted parameters
                         params = extraction_result.get("params", {})
-                        logger.info(f"LLM extracted params: {params}")
+                        logger.info(f"[SmartProductSearch] ✅ LLM extracted search params: {params}")
                     elif extraction_result.get("type") == "quick_actions":
                         # Return quick actions for disambiguation
-                        logger.info(f"LLM needs clarification, returning quick actions")
+                        logger.info(f"[SmartProductSearch] 🔄 LLM needs clarification, returning quick actions")
+                        quick_actions_data = extraction_result.get("data", {})
+                        logger.info(f"[SmartProductSearch] Quick actions data: {quick_actions_data}")
                         return {
                             "success": True,
                             "needs_clarification": True,
-                            "quick_actions": extraction_result.get("data", {}),
+                            "quick_actions": quick_actions_data,
                             "products": []
                         }
                     elif extraction_result.get("type") == "error":
                         # Log error but fall back to legacy extraction
-                        logger.warning(f"LLM extraction error: {extraction_result.get('message')}, falling back to legacy")
+                        error_msg = extraction_result.get('message', 'Unknown error')
+                        logger.warning(f"[SmartProductSearch] ⚠️ LLM extraction error: {error_msg}, falling back to legacy")
                         params = self._extract_search_params_legacy(query)
                     else:
                         # Unknown type, fall back to legacy
-                        logger.warning(f"Unknown extraction result type: {extraction_result.get('type')}, falling back to legacy")
+                        logger.warning(f"[SmartProductSearch] ❓ Unknown extraction result type: {extraction_result.get('type')}, falling back to legacy")
                         params = self._extract_search_params_legacy(query)
 
                 except Exception as e:
-                    logger.error(f"LLM entity extraction failed: {e}, falling back to legacy")
+                    logger.error(f"[SmartProductSearch] ❌ LLM entity extraction failed: {e}, falling back to legacy", exc_info=True)
                     params = self._extract_search_params_legacy(query)
             else:
                 # Fall back to legacy hardcoded extraction
-                logger.info(f"Agent pool not available, using legacy extraction")
+                logger.info(f"[SmartProductSearch] 📌 Agent pool not available, using legacy extraction")
+                logger.info(f"[SmartProductSearch] Agent pool status: {self.agent_pool}")
                 params = self._extract_search_params_legacy(query)
+                logger.info(f"[SmartProductSearch] Legacy extracted params: {params}")
 
             # Set pagination
             params["page"] = 1
@@ -161,6 +141,7 @@ class SmartProductSearchTool:
             # Add store_id if provided
             if store_id:
                 params["store_id"] = store_id
+                logger.info(f"[SmartProductSearch] Added store_id to params: {store_id}")
 
             # Override with explicit parameters if provided
             if category:
@@ -168,35 +149,48 @@ class SmartProductSearchTool:
             if strain_type:
                 params["plantType"] = strain_type
 
-            logger.info(f"Smart product search calling /api/products with params: {params}")
+            logger.info(f"[SmartProductSearch] 🔍 Calling /api/products with final params: {params}")
+            logger.info(f"[SmartProductSearch] API URL: {self.base_url}/api/products")
 
             response = await self.client.get(
                 f"{self.base_url}/api/products",
                 params=params
             )
+
+            logger.info(f"[SmartProductSearch] API Response Status: {response.status_code}")
+
             response.raise_for_status()
 
             data = response.json()
+            logger.info(f"[SmartProductSearch] API Response Keys: {list(data.keys())}")
+
             products = data.get("data", [])  # API returns "data" not "products"
 
-            logger.info(f"Smart product search returned {len(products)} products")
+            logger.info(f"[SmartProductSearch] ✅ Returned {len(products)} products")
+            if products and len(products) > 0:
+                logger.info(f"[SmartProductSearch] First product sample: {products[0].get('name', 'No name')} - {products[0].get('sku', 'No SKU')}")
 
             # Store product list in session metadata for product selection
             if session_id and self.agent_pool and products:
                 try:
+                    logger.info(f"[SmartProductSearch] Storing {len(products)} products in session {session_id}")
                     self.agent_pool.store_product_list_for_session(session_id, products)
                 except Exception as e:
-                    logger.error(f"Failed to store product list in session: {e}")
+                    logger.error(f"[SmartProductSearch] Failed to store product list in session: {e}")
 
-            return {
+            result = {
                 "success": True,
                 "products": products,
                 "total": data.get("total", len(products)),
                 "query": query
             }
 
+            logger.info(f"[SmartProductSearch] END - Success: {result['success']}, Products: {len(products)}")
+            return result
+
         except Exception as e:
-            logger.error(f"Smart product search failed: {e}")
+            logger.error(f"[SmartProductSearch] ❌ FAILED: {e}", exc_info=True)
+            logger.error(f"[SmartProductSearch] Error type: {type(e).__name__}")
             return {
                 "success": False,
                 "error": str(e),

@@ -5,7 +5,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Toaster } from 'react-hot-toast';
 import {
   Home, Package, ShoppingCart, Users, FileText, Leaf, Menu, X, LogOut, Settings,
-  Building2, Store, Tag, Sparkles, Upload, ChevronRight, PanelLeftClose, PanelLeft, Database, Truck, AppWindow, MessageSquare, Brain
+  Building2, Store, Tag, Sparkles, Upload, ChevronRight, PanelLeftClose, PanelLeft, Database, Truck, AppWindow, MessageSquare, Brain, ScrollText
 } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { StoreProvider, useStoreContext } from './contexts/StoreContext';
@@ -43,6 +43,7 @@ import AIManagement from './pages/AIManagement';
 import VoiceAPITest from './pages/VoiceAPITest';
 import Apps from './pages/Apps';
 import Communications from './pages/Communications';
+import LogViewer from './pages/LogViewer';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -125,6 +126,7 @@ function Layout() {
         { name: 'AGI Management', href: '/dashboard/agi', icon: Brain, permission: 'all' },
         { name: 'Provincial Catalog', href: '/dashboard/provincial-catalog', icon: Upload, permission: 'super_admin' },
         { name: 'Database', href: '/dashboard/database', icon: Database, permission: 'super_admin' },
+        { name: 'System Logs', href: '/dashboard/logs', icon: ScrollText, permission: 'super_admin' },
       ];
     }
 
@@ -363,7 +365,7 @@ function Layout() {
   );
 }
 
-// Create router with future flags for v7 compatibility
+// Create router (React Router v7)
 const router = createBrowserRouter([
   {
     path: '/',
@@ -449,18 +451,21 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         )
       },
+      {
+        path: 'logs',
+        element: (
+          <ProtectedRoute requiredPermissions={['system:super_admin']}>
+            <LogViewer />
+          </ProtectedRoute>
+        )
+      },
     ],
   },
   {
     path: '*',
     element: <Navigate to="/" replace />  // Catch-all route redirects to landing
   }
-], {
-  future: {
-    v7_relativeSplatPath: true,
-    v7_startTransition: true
-  }
-});
+]);
 
 function App() {
   return (

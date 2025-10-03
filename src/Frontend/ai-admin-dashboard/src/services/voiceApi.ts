@@ -19,7 +19,7 @@ export const voiceApi = {
    */
   getVoices: async (): Promise<Voice[]> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/auth/voice/voices`, {
+      const response = await fetch(`${API_BASE_URL}/api/voice/voices`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -51,7 +51,7 @@ export const voiceApi = {
       formData.append('speed', '1.0');
       formData.append('format', 'wav');
 
-      const response = await fetch(`${API_BASE_URL}/api/v1/auth/voice/synthesize`, {
+      const response = await fetch(`${API_BASE_URL}/api/voice/synthesize`, {
         method: 'POST',
         body: formData
       });

@@ -96,7 +96,7 @@ export const chatApi = {
       }
     }
     
-    const response = await api.post('/api/chat', payload);
+    const response = await api.post('/api/v1/chat/message', payload);
     return response.data;
   }
 };

@@ -496,21 +496,34 @@ class AgentPoolManager:
         # Format conversation history for context injection
         contextual_prompt = message
         if session.context_history:
-            # Take last 5 exchanges for context (10 messages = 5 exchanges)
-            recent_history = session.context_history[-5:]
+            # Take last 3 exchanges for context (6 messages = 3 exchanges) to avoid exceeding token limit
+            # Model has 4096 token limit, need to leave room for response
+            recent_history = session.context_history[-3:]
             history_lines = []
+
+            # Estimate token count (rough: 1 token ≈ 4 chars)
+            estimated_tokens = len(message) // 4
 
             for exchange in recent_history:
                 if exchange.get("user"):
-                    history_lines.append(f"User: {exchange['user']}")
+                    user_msg = exchange['user'][:200]  # Limit to 200 chars to prevent token overflow
+                    history_lines.append(f"User: {user_msg}")
+                    estimated_tokens += len(user_msg) // 4
                 if exchange.get("assistant"):
-                    history_lines.append(f"Assistant: {exchange['assistant']}")
+                    assistant_msg = exchange['assistant'][:200]  # Limit to 200 chars
+                    history_lines.append(f"Assistant: {assistant_msg}")
+                    estimated_tokens += len(assistant_msg) // 4
+
+                # Stop adding history if approaching token limit
+                if estimated_tokens > 1500:  # Keep well under 4096 limit
+                    logger.warning(f"Truncating context to avoid token limit (estimated: {estimated_tokens})")
+                    break
 
             if history_lines:
                 history_text = "\n".join(history_lines)
                 # Prepend conversation history to current message
                 contextual_prompt = f"Previous conversation:\n{history_text}\n\nCurrent message:\n{message}"
-                logger.info(f"Session {session_id}: Injected {len(recent_history)} exchanges into prompt")
+                logger.info(f"Session {session_id}: Injected {len(history_lines)//2} exchanges (~{estimated_tokens} tokens)")
 
         # Use shared model for inference
         if self.shared_model:
@@ -580,11 +593,15 @@ class AgentPoolManager:
         # Process the message
         result = await self.process_message(session_id, message, **kwargs)
 
+        # Extract products from result
+        products = result.get("products", None)
+        products_found = len(products) if products else None
+
         # Return response with products structure expected by chat_endpoints
         return {
             "text": result.get("text", ""),
-            "products": result.get("products", None),
-            "products_found": result.get("products_found", None)
+            "products": products,
+            "products_found": products_found
         }
 
     async def _cleanup_old_sessions(self, max_age_minutes: int = 30):
@@ -654,13 +671,17 @@ class AgentPoolManager:
 
             # Initialize entity extractor
             from services.entity_extractor import EntityExtractor
-            self.entity_extractor = EntityExtractor(self.shared_model, self.intent_config)
-            logger.info("Initialized EntityExtractor")
+            # Get the actual model from SmartAIEngineV5 (which has current_model, not model)
+            actual_model = getattr(self.shared_model, 'current_model', None) or getattr(self.shared_model, 'model', self.shared_model)
+            self.entity_extractor = EntityExtractor(actual_model, self.intent_config)
+            logger.info(f"Initialized EntityExtractor with model: {type(actual_model).__name__ if actual_model else 'None'}")
 
             # Initialize parameter builder
             from services.parameter_builder import ParameterBuilder
-            self.parameter_builder = ParameterBuilder(self.shared_model, self.intent_config)
-            logger.info("Initialized ParameterBuilder")
+            # Get the actual model from SmartAIEngineV5 (which has current_model, not model)
+            actual_model = getattr(self.shared_model, 'current_model', None) or getattr(self.shared_model, 'model', self.shared_model)
+            self.parameter_builder = ParameterBuilder(actual_model, self.intent_config)
+            logger.info(f"Initialized ParameterBuilder with model: {type(actual_model).__name__ if actual_model else 'None'}")
 
             # Initialize user preference service
             from services.user_preference_service import UserPreferenceService
@@ -681,6 +702,16 @@ class AgentPoolManager:
 
         # Initialize entity extraction and parameter building services
         self._initialize_extraction_services()
+
+        # Update the parameter builder with the actual model if it exists
+        if hasattr(self, 'parameter_builder') and self.parameter_builder:
+            # Get the actual model from SmartAIEngineV5 (which has current_model, not model)
+            actual_model = getattr(model, 'current_model', None) or getattr(model, 'model', None)
+            if actual_model:
+                self.parameter_builder.model = actual_model
+                logger.info("Updated ParameterBuilder with actual model reference")
+            else:
+                logger.warning("No model found in shared model reference - ParameterBuilder may fail")
 
     def set_context_manager(self, context_manager):
         """Set the context manager reference"""

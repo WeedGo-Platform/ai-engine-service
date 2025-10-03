@@ -10,11 +10,72 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import Response
 import contextvars
+from datetime import datetime
+from elasticsearch import Elasticsearch
 
 # Context variable to store correlation ID for the current request
 correlation_id_ctx = contextvars.ContextVar('correlation_id', default=None)
 
 logger = logging.getLogger(__name__)
+
+
+class ElasticsearchHandler(logging.Handler):
+    """
+    Custom Elasticsearch logging handler compatible with Elasticsearch 9.x
+    """
+    def __init__(self, es_hosts, es_index_name, es_additional_fields=None):
+        super().__init__()
+        self.es_client = Elasticsearch(es_hosts)
+        self.es_index_name = es_index_name
+        self.es_additional_fields = es_additional_fields or {}
+
+    def emit(self, record):
+        """
+        Send log record to Elasticsearch
+        """
+        # Prevent infinite recursion by ignoring elasticsearch and urllib3 logs
+        if record.name.startswith('elastic') or record.name.startswith('urllib3'):
+            return
+
+        try:
+            # Build the document to index
+            log_document = {
+                '@timestamp': datetime.utcnow().isoformat(),
+                'level': record.levelname,
+                'logger': record.name,
+                'message': record.getMessage(),
+                'correlation_id': getattr(record, 'correlation_id', 'no-correlation-id'),
+                'module': record.module,
+                'function': record.funcName,
+                'line': record.lineno,
+                'thread': record.thread,
+                'thread_name': record.threadName,
+            }
+
+            # Add additional fields from record extra
+            for key, value in record.__dict__.items():
+                if key not in ['name', 'msg', 'args', 'created', 'filename', 'funcName',
+                              'levelname', 'lineno', 'module', 'msecs', 'message',
+                              'pathname', 'process', 'processName', 'relativeCreated',
+                              'thread', 'threadName', 'exc_info', 'exc_text', 'stack_info',
+                              'correlation_id']:
+                    log_document[key] = value
+
+            # Add configured additional fields
+            log_document.update(self.es_additional_fields)
+
+            # Add exception info if present
+            if record.exc_info:
+                log_document['exception'] = self.format(record)
+
+            # Index the document
+            self.es_client.index(
+                index=f"{self.es_index_name}-{datetime.utcnow().strftime('%Y.%m.%d')}",
+                document=log_document
+            )
+        except Exception as e:
+            # Don't let logging errors crash the application
+            print(f"Failed to send log to Elasticsearch: {e}")
 
 
 class CorrelationIdFilter(logging.Filter):
@@ -230,7 +291,7 @@ def get_correlation_id() -> str:
 
 def setup_logging_with_correlation_id():
     """
-    Setup logging configuration with correlation ID filter
+    Setup logging configuration with correlation ID filter and Elasticsearch handler
     """
     # Add correlation ID filter to all handlers
     correlation_filter = CorrelationIdFilter()
@@ -250,5 +311,21 @@ def setup_logging_with_correlation_id():
     for handler in root_logger.handlers:
         handler.addFilter(correlation_filter)
         handler.setFormatter(logging.Formatter(log_format))
+
+    # Add Elasticsearch handler
+    try:
+        es_handler = ElasticsearchHandler(
+            es_hosts=['http://localhost:9200'],
+            es_index_name="ai-engine-logs",
+            es_additional_fields={
+                'service': 'ai-engine',
+                'environment': 'development'
+            }
+        )
+        es_handler.addFilter(correlation_filter)
+        root_logger.addHandler(es_handler)
+        logger.info("Elasticsearch logging handler configured successfully")
+    except Exception as e:
+        logger.warning(f"Failed to configure Elasticsearch logging handler: {e}")
 
     logger.info("Logging configured with correlation ID support")

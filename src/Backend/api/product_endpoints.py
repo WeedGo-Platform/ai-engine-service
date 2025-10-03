@@ -222,6 +222,106 @@ def transform_product_for_frontend(product: Dict[str, Any], include_variants: bo
 
 
 # Add alternative search endpoint for SearchBar component
+@router.get("/categories")
+async def get_categories(
+    store_id: Optional[str] = Query(None),
+    x_store_id: Optional[str] = Header(None, alias="X-Store-ID"),
+    conn = Depends(get_db_connection)
+):
+    """
+    Get all distinct product categories from the database
+    Used by entity extractor for dynamic category mapping
+    """
+    effective_store_id = x_store_id or store_id
+
+    try:
+        query = """
+            SELECT DISTINCT p.category
+            FROM inventory_products_view p
+            LEFT JOIN ocs_inventory i ON UPPER(p.ocs_variant_number) = UPPER(i.sku)
+            WHERE p.category IS NOT NULL
+            AND p.category != ''
+        """
+
+        params = []
+        if effective_store_id:
+            query += " AND (i.store_id = $1 OR i.store_id IS NULL)"
+            params.append(effective_store_id)
+
+        query += " ORDER BY p.category"
+
+        rows = await conn.fetch(query, *params)
+        categories = [row['category'] for row in rows]
+
+        return {
+            'categories': categories,
+            'count': len(categories)
+        }
+
+    except Exception as e:
+        logger.error(f"Error fetching categories: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/sub-categories")
+async def get_sub_categories(
+    category: Optional[str] = Query(None, description="Filter by parent category"),
+    store_id: Optional[str] = Query(None),
+    x_store_id: Optional[str] = Header(None, alias="X-Store-ID"),
+    conn = Depends(get_db_connection)
+):
+    """
+    Get all distinct product subcategories from the database
+    Optionally filter by parent category
+    Used by entity extractor for dynamic subcategory mapping
+    """
+    effective_store_id = x_store_id or store_id
+
+    try:
+        query = """
+            SELECT DISTINCT p.sub_category, p.category
+            FROM inventory_products_view p
+            LEFT JOIN ocs_inventory i ON UPPER(p.ocs_variant_number) = UPPER(i.sku)
+            WHERE p.sub_category IS NOT NULL
+            AND p.sub_category != ''
+        """
+
+        params = []
+        param_count = 0
+
+        if category:
+            param_count += 1
+            query += f" AND LOWER(p.category) = LOWER(${param_count})"
+            params.append(category)
+
+        if effective_store_id:
+            param_count += 1
+            query += f" AND (i.store_id = ${param_count} OR i.store_id IS NULL)"
+            params.append(effective_store_id)
+
+        query += " ORDER BY p.category, p.sub_category"
+
+        rows = await conn.fetch(query, *params)
+
+        # Return as array of objects with category context
+        subcategories = [
+            {
+                'name': row['sub_category'],
+                'category': row['category']
+            }
+            for row in rows
+        ]
+
+        return {
+            'subcategories': subcategories,
+            'count': len(subcategories)
+        }
+
+    except Exception as e:
+        logger.error(f"Error fetching subcategories: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.get("/search")
 async def search_products_alt(
     q: str = Query("", description="Search query (optional)"),
@@ -748,6 +848,13 @@ async def get_products(
 
         if inStock:
             query += " AND i.quantity_available > 0"
+
+        # Filter out products with invalid THC/CBD content (0.0 or null means incomplete data)
+        # Cannabis products should have valid THC or CBD content
+        query += """ AND (
+            (p.thc_content_per_unit > 0 OR p.cbd_content_per_unit > 0) OR
+            (p.minimum_thc_content_percent > 0 OR p.minimum_cbd_content_percent > 0)
+        )"""
 
         # Mock featured/bestseller/newArrival flags for now
         # In production, these would be actual database fields

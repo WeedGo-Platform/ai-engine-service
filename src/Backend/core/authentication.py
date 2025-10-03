@@ -155,7 +155,9 @@ class JWTAuthentication:
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Token has expired"
             )
-        except jwt.JWTError as e:
+        except (jwt.PyJWTError, Exception) as e:
+            # PyJWT v1.x uses PyJWTError, v2.x uses JWTError
+            # Catch both for compatibility
             logger.error(f"JWT verification failed: {e}")
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,

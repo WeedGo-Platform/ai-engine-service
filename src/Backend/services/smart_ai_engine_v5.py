@@ -76,21 +76,21 @@ class SmartAIEngineV5:
         self.agent_prompts = {}
         self.personality_traits = {}
         self.system_config = self._load_system_config()
-        
-        # Initialize tools and context systems
+
+        # Initialize agent pool manager for multi-agent support (BEFORE tools/context)
+        self.agent_pool = None
+        self._initialize_agent_pool()
+
+        # Initialize tools and context systems (needs agent_pool to be set)
         self.tool_manager = None
         self.context_manager = None
         self.session_id = None
         self._initialize_tools_and_context()
-        
+
         # Initialize intent detector
         self.intent_detector = None
         self._detecting_intent = False  # Flag to prevent recursion during intent detection
         self._initialize_intent_detector()
-
-        # Initialize agent pool manager for multi-agent support
-        self.agent_pool = None
-        self._initialize_agent_pool()
 
         logger.info(f"SmartAIEngineV5 initialized with {len(self.available_models)} models")
         self._log_system_resources()
@@ -1431,6 +1431,9 @@ class SmartAIEngineV5:
             start_time = time.time()
             timing_breakdown = {}
 
+            # Save original user message for tool parameter substitution
+            original_user_message = prompt
+
             # Apply prompt template if specified
             final_prompt = prompt
             used_template = None
@@ -1506,7 +1509,10 @@ class SmartAIEngineV5:
                 # Apply template based on detected intent or use default
                 if detected_type and self.get_prompt_template(detected_type):
                     try:
+                        logger.info(f"[V5-INTENT] 🎯 Applying template for detected type: '{detected_type}'")
                         template_applied, template_config = self.apply_prompt_template_with_config(prompt, detected_type)
+                        logger.info(f"[V5-INTENT] Template config keys: {list(template_config.keys()) if isinstance(template_config, dict) else 'Not a dict'}")
+
                         if template_applied and template_applied != prompt:
                             final_prompt = template_applied
                             used_template = detected_type
@@ -1517,12 +1523,13 @@ class SmartAIEngineV5:
                                 # Check if template specifies tools to execute
                                 if 'tools' in template_config:
                                     tool_config = template_config['tools']
-                                    logger.info(f"Template '{detected_type}' specifies tools: {tool_config}")
+                                    logger.info(f"[V5-TEMPLATE] 📋 Template '{detected_type}' specifies tools: {tool_config}")
 
                                     # Execute tools before prompt generation (check if tool_config is not None)
                                     if tool_config and tool_config.get('execution') == 'before_prompt':
                                         tool_results = {}
                                         required_tools = tool_config.get('required', [])
+                                        logger.info(f"[V5-TEMPLATE] 🔧 Required tools to execute: {required_tools}")
 
                                         # Get session context for store_id if needed
                                         session_context = {}
@@ -1539,11 +1546,11 @@ class SmartAIEngineV5:
                                                 substituted_params = {}
 
                                                 for param_key, param_value in tool_params.items():
-                                                    # Substitute {message} with actual message
+                                                    # Substitute {message} with original user message (not the template)
                                                     if isinstance(param_value, str) and '{message}' in param_value:
-                                                        substituted_value = param_value.replace('{message}', prompt)
+                                                        substituted_value = param_value.replace('{message}', original_user_message)
                                                         substituted_params[param_key] = substituted_value
-                                                        logger.debug(f"Substituted param '{param_key}': '{param_value}' -> '{substituted_value}' (prompt='{prompt}')")
+                                                        logger.debug(f"Substituted param '{param_key}': '{param_value}' -> '{substituted_value}' (original_user_message='{original_user_message}')")
                                                     else:
                                                         substituted_params[param_key] = param_value
 
@@ -1553,8 +1560,22 @@ class SmartAIEngineV5:
                                                     logger.info(f"Added store_id from context: {session_context['store_id']}")
 
                                                 # Execute the tool
-                                                logger.info(f"Executing tool '{tool_name}' with params: {substituted_params}")
+                                                logger.info(f"[V5-TOOL] 🚀 Executing tool '{tool_name}' with params: {substituted_params}")
                                                 tool_result = await self.tool_manager.execute_tool(tool_name, **substituted_params)
+                                                logger.info(f"[V5-TOOL] Tool '{tool_name}' execution complete. Success: {tool_result.get('success')}")
+
+                                                # RECURSION PREVENTION: Check if smart_product_search needs clarification
+                                                if tool_name == 'smart_product_search' and tool_result.get("success"):
+                                                    result_data = tool_result.get("result", {})
+                                                    if result_data.get("needs_clarification") and result_data.get("quick_actions"):
+                                                        logger.info(f"SmartProductSearch needs clarification, returning quick actions to user")
+                                                        # Return quick actions immediately without generating prompt
+                                                        # This prevents the clarification prompt from being treated as a new user message
+                                                        return {
+                                                            "response": result_data.get("quick_actions", {}).get("message", "What would you like?"),
+                                                            "quick_actions": result_data.get("quick_actions", {}).get("quick_actions", []),
+                                                            "needs_clarification": True
+                                                        }
 
                                                 if tool_result.get("success"):
                                                     tool_results[tool_name] = tool_result.get("result", {})
@@ -2475,9 +2496,9 @@ Please provide a personalized response based on the user's history and preferenc
                 prompt = self._add_context_to_prompt(prompt, session_id)
             
             # Stream tokens from model
-            if hasattr(self.model, 'create_completion'):
+            if hasattr(self.current_model, 'create_completion'):
                 # For llama.cpp models
-                stream = self.model.create_completion(
+                stream = self.current_model.create_completion(
                     prompt,
                     max_tokens=500,
                     temperature=0.7,
@@ -2513,9 +2534,9 @@ Please provide a personalized response based on the user's history and preferenc
         """Cleanup resources on shutdown"""
         try:
             # Clear model from memory if needed
-            if hasattr(self, 'model'):
-                del self.model
-                self.model = None
+            if hasattr(self, 'current_model'):
+                del self.current_model
+                self.current_model = None
             
             # Clear tool manager
             if hasattr(self, 'tool_manager'):
