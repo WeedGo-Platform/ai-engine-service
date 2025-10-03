@@ -182,6 +182,18 @@ export const api = {
     getMessage: (sessionId: string, messageId: string) =>
       axiosInstance.get(`/voice/session/${sessionId}/message/${messageId}`),
   },
+
+  // Store Devices
+  devices: {
+    getAll: (storeId: string) => axiosInstance.get(`/admin/stores/${storeId}/devices`),
+    create: (storeId: string, data: any) => axiosInstance.post(`/admin/stores/${storeId}/devices`, data),
+    update: (storeId: string, deviceId: string, data: any) =>
+      axiosInstance.put(`/admin/stores/${storeId}/devices/${deviceId}`, data),
+    delete: (storeId: string, deviceId: string) =>
+      axiosInstance.delete(`/admin/stores/${storeId}/devices/${deviceId}`),
+    getPairCode: (storeId: string, deviceId: string) =>
+      axiosInstance.get(`/admin/stores/${storeId}/devices/${deviceId}/pair-code`),
+  },
 };
 
 export default axiosInstance;

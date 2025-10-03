@@ -34,8 +34,8 @@ from core.function_schemas import get_function_registry
 from api.voice_endpoints import router as voice_router
 from api.voice_websocket import router as voice_ws_router
 
-# Import chat endpoints
-from api.chat_endpoints import router as chat_router
+# Import unified chat system
+from api.chat_integration import initialize_unified_chat_system, register_unified_chat_routes
 
 # Import authentication endpoints
 from api.customer_auth import router as customer_auth_router
@@ -196,7 +196,23 @@ async def lifespan(app: FastAPI):
         context_manager = SimpleHybridContextManager(db_config=db_config)
         await context_manager.initialize()
         app.state.context_manager = context_manager
-        
+
+        # Initialize unified chat system with database-backed storage
+        logger.info("Initializing unified chat system...")
+        try:
+            if v5_engine.agent_pool:
+                v5_engine.agent_pool.set_context_manager(context_manager)
+                logger.info("✅ Context manager bridged to agent pool")
+
+                chat_service = await initialize_unified_chat_system()
+                app.state.chat_service = chat_service
+                logger.info("✅ Unified chat system initialized with database storage and cleanup")
+            else:
+                logger.warning("⚠️ Agent pool not initialized, skipping unified chat system")
+        except Exception as e:
+            logger.error(f"❌ Failed to initialize unified chat system: {e}", exc_info=True)
+            logger.warning("Continuing without unified chat system")
+
         # Auto-load smallest model with dispensary agent and zac personality on startup
         logger.info("Auto-loading default model configuration...")
 
@@ -233,47 +249,12 @@ async def lifespan(app: FastAPI):
         logger.info("Registering function schemas...")
         registry = get_function_registry()
 
-        # Load and register actual tool implementations
-        logger.info("Loading tool implementations...")
-        try:
-            from services.tools.product_search_tool import ProductSearchTool
-
-            # Create tool instances
-            product_search_tool = ProductSearchTool()
-
-            # Register tools with the v5 engine's tool manager if available
-            if hasattr(v5_engine, 'tool_manager') and v5_engine.tool_manager:
-                # Register product search wrapper
-                v5_engine.tool_manager.register_tool(
-                    "search_products",
-                    lambda **kwargs: product_search_tool.search_products(**kwargs),
-                    {
-                        "description": "Search for cannabis products",
-                        "category": "search",
-                        "function_schema": registry.get_schema("search_products")
-                    }
-                )
-                
-                # Get product count for verification
-                product_count = product_search_tool.get_product_count()
-                logger.info(f"ProductSearchTool loaded - Database has {product_count} products")
-                
-                # Register trending products tool
-                v5_engine.tool_manager.register_tool(
-                    "get_trending_products", 
-                    lambda **kwargs: product_search_tool.get_trending_products(**kwargs),
-                    {
-                        "description": "Get trending cannabis products",
-                        "category": "search"
-                    }
-                )
-                
-                logger.info(f"Registered {len(v5_engine.tool_manager.list_tools())} tools with ToolManager")
-            else:
-                logger.warning("ToolManager not available in v5_engine")
-                
-        except Exception as e:
-            logger.error(f"Failed to load tool implementations: {e}")
+        # Tool implementations are now registered via ToolManager (see tool_manager.py)
+        # Smart product search tool with LLM-based entity extraction is available
+        if hasattr(v5_engine, 'tool_manager') and v5_engine.tool_manager:
+            logger.info(f"Tool manager initialized with {len(v5_engine.tool_manager.list_tools())} tools")
+        else:
+            logger.warning("ToolManager not available in v5_engine")
         
         logger.info("V5 AI Engine started successfully")
         
@@ -470,7 +451,14 @@ app.include_router(admin_auth_router)  # Admin authentication endpoints
 app.include_router(context_auth_router)  # Context switching authentication
 app.include_router(voice_router)
 app.include_router(voice_ws_router)  # WebSocket endpoints for continuous voice listening
-app.include_router(chat_router)
+
+# Register unified chat routes (database-backed with Redis caching)
+try:
+    register_unified_chat_routes(app)
+    logger.info("✅ Unified chat routes registered successfully")
+except Exception as e:
+    logger.error(f"❌ Failed to register unified chat routes: {e}", exc_info=True)
+
 app.include_router(tenant_router)  # Tenant management endpoints
 
 # File upload endpoints
@@ -504,6 +492,16 @@ if KIOSK_ENABLED and kiosk_router:
     logger.info("Kiosk endpoints registered successfully")
 else:
     logger.error("Kiosk endpoints not loaded - router is None or disabled")
+
+# Device management endpoints
+try:
+    from api.device_endpoints import router as device_router
+    from api.admin_device_endpoints import router as admin_device_router
+    app.include_router(device_router)  # Device pairing and heartbeat
+    app.include_router(admin_device_router)  # Admin device CRUD
+    logger.info("Device management endpoints registered successfully")
+except Exception as e:
+    logger.error(f"Failed to load device management endpoints: {e}")
 
 # Import and include admin endpoints (unified admin + model management)
 from api.admin_endpoints import router as admin_router
@@ -738,20 +736,32 @@ async def rate_limit_middleware(request: Request, call_next):
     rate_limiter = app.state.rate_limiter
     client_id = rate_limiter.get_client_id(request)
 
-    # Check global rate limit
+    # Check global rate limit - use higher limit in development
+    # In development, React StrictMode causes double mounting, effectively doubling requests
+    is_development = os.environ.get('DEBUG', 'false').lower() == 'true' or os.environ.get('ENV', 'development') == 'development'
+    rate_limit_per_minute = 300 if is_development else 60  # 300 req/min in dev, 60 in prod
+
     allowed, info = await rate_limiter.check_rate_limit(
         client_id,
         resource='global',
-        limit=(60, 60),  # 60 requests per minute
+        limit=(rate_limit_per_minute, 60),  # X requests per minute based on environment
         algorithm='sliding_window'
     )
-    
+
     if not allowed:
-        return JSONResponse(
+        # Create response with CORS headers to prevent browser blocking
+        response = JSONResponse(
             status_code=status.HTTP_429_TOO_MANY_REQUESTS,
             content={"detail": "Too many requests", **info},
-            headers={"Retry-After": str(info.get('retry_after', 60))}
+            headers={
+                "Retry-After": str(info.get('retry_after', 60)),
+                "Access-Control-Allow-Origin": request.headers.get("origin", "http://localhost:3003"),
+                "Access-Control-Allow-Credentials": "true",
+                "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS, PATCH",
+                "Access-Control-Allow-Headers": "*"
+            }
         )
+        return response
     
     return await call_next(request)
 
@@ -905,7 +915,7 @@ async def chat_v5(
                 tools_enabled = v5_engine.system_config.get('system', {}).get('tools', {}).get('enabled', False)
             
             # Generate response using the correct method with prompt type
-            result = v5_engine.generate(
+            result = await v5_engine.generate(
                 prompt=prompt_with_context,
                 prompt_type=prompt_type,  # Pass the detected prompt type
                 session_id=request.session_id,
@@ -934,7 +944,7 @@ async def chat_v5(
             if not response_text or response_text.strip() == "":
                 # Try with a more explicit prompt format for TinyLlama
                 formatted_prompt = f"<|system|>\nYou are a helpful cannabis dispensary assistant.\n<|user|>\n{request.message}\n<|assistant|>\n"
-                result = v5_engine.generate(
+                result = await v5_engine.generate(
                     prompt=formatted_prompt,
                     session_id=request.session_id,
                     max_tokens=500,

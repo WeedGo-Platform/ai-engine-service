@@ -212,9 +212,16 @@ async def websocket_endpoint(websocket: WebSocket):
                             message=user_message,
                             user_id=user_id
                         )
+
+                        logger.info(f"[CHAT-WS] Response data keys: {list(response_data.keys())}")
+                        logger.info(f"[CHAT-WS] Products in response: {len(response_data.get('products', [])) if response_data.get('products') else 0}")
+
                         ai_response = response_data.get("text", "")
                         products = response_data.get("products", None)
                         products_found = response_data.get("products_found", None)
+
+                        logger.info(f"[CHAT-WS] Extracted - products: {len(products) if products else 0}, products_found: {products_found}")
+
                         timing_points['ai_response'] = time.time() - ai_response_start
                     except Exception as e:
                         logger.error(f"AI engine error: {e}")
@@ -286,7 +293,11 @@ async def websocket_endpoint(websocket: WebSocket):
                     if products:
                         response_message["products"] = products
                         response_message["products_found"] = products_found
+                        logger.info(f"[CHAT-WS] ✅ Adding {len(products)} products to WebSocket message")
+                    else:
+                        logger.info(f"[CHAT-WS] ⚠️ No products to add to WebSocket message")
 
+                    logger.info(f"[CHAT-WS] Sending message with keys: {list(response_message.keys())}")
                     await manager.send_message(json.dumps(response_message), session_id)
                 
                 elif message_type == "voice":

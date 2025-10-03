@@ -172,14 +172,17 @@ async def create_device(
         # Verify admin access
         has_access = await verify_admin_access(store_id, authorization, x_tenant_id, db)
         if not has_access:
-            raise HTTPException(status_code=403, detail="Access denied to this store")
+            raise HTTPException(
+                status_code=403,
+                detail="You do not have permission to manage devices for this store. Please contact your administrator."
+            )
 
         # Validate device type
         valid_types = ['kiosk', 'pos', 'menu_display']
         if request.device_type not in valid_types:
             raise HTTPException(
                 status_code=400,
-                detail=f"Invalid device_type. Must be one of: {', '.join(valid_types)}"
+                detail=f"Invalid device type '{request.device_type}'. Must be one of: {', '.join(valid_types)}"
             )
 
         # Normalize device_id to uppercase
@@ -190,7 +193,10 @@ async def create_device(
         row = await db.fetchrow(query, UUID(store_id))
 
         if not row:
-            raise HTTPException(status_code=404, detail="Store not found")
+            raise HTTPException(
+                status_code=404,
+                detail=f"Store with ID '{store_id}' not found. Please verify the store exists."
+            )
 
         settings = json.loads(row['settings']) if isinstance(row['settings'], str) else (row['settings'] or {})
         devices = settings.get('devices', [])
@@ -199,7 +205,7 @@ async def create_device(
         if any(d['device_id'] == device_id for d in devices):
             raise HTTPException(
                 status_code=409,
-                detail=f"Device '{device_id}' already exists in this store"
+                detail=f"Device ID '{device_id}' already exists in this store. Please choose a different Device ID."
             )
 
         # Hash passcode
@@ -244,9 +250,18 @@ async def create_device(
 
     except HTTPException:
         raise
+    except asyncpg.exceptions.PostgresError as e:
+        logger.error(f"Database error creating device: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail="A database error occurred while creating the device. Please try again or contact support."
+        )
     except Exception as e:
-        logger.error(f"Error creating device: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail="Failed to create device")
+        logger.error(f"Unexpected error creating device: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail="An unexpected error occurred while creating the device. Please try again or contact support if the issue persists."
+        )
 
 
 @router.get("/{store_id}/devices", response_model=List[DeviceResponse])
@@ -265,14 +280,20 @@ async def list_devices(
         # Verify admin access
         has_access = await verify_admin_access(store_id, authorization, x_tenant_id, db)
         if not has_access:
-            raise HTTPException(status_code=403, detail="Access denied to this store")
+            raise HTTPException(
+                status_code=403,
+                detail="You do not have permission to access devices for this store."
+            )
 
         # Get store settings
         query = "SELECT settings FROM stores WHERE id = $1"
         row = await db.fetchrow(query, UUID(store_id))
 
         if not row:
-            raise HTTPException(status_code=404, detail="Store not found")
+            raise HTTPException(
+                status_code=404,
+                detail=f"Store with ID '{store_id}' not found."
+            )
 
         settings = json.loads(row['settings']) if isinstance(row['settings'], str) else (row['settings'] or {})
         devices = settings.get('devices', [])
@@ -288,8 +309,11 @@ async def list_devices(
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error listing devices: {e}")
-        raise HTTPException(status_code=500, detail="Failed to list devices")
+        logger.error(f"Error listing devices: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail="An error occurred while retrieving devices. Please try again."
+        )
 
 
 @router.get("/{store_id}/devices/{device_id}", response_model=DeviceResponse)
@@ -305,14 +329,20 @@ async def get_device(
         # Verify admin access
         has_access = await verify_admin_access(store_id, authorization, x_tenant_id, db)
         if not has_access:
-            raise HTTPException(status_code=403, detail="Access denied to this store")
+            raise HTTPException(
+                status_code=403,
+                detail="You do not have permission to access devices for this store."
+            )
 
         # Get store settings
         query = "SELECT settings FROM stores WHERE id = $1"
         row = await db.fetchrow(query, UUID(store_id))
 
         if not row:
-            raise HTTPException(status_code=404, detail="Store not found")
+            raise HTTPException(
+                status_code=404,
+                detail=f"Store with ID '{store_id}' not found."
+            )
 
         settings = json.loads(row['settings']) if isinstance(row['settings'], str) else (row['settings'] or {})
         devices = settings.get('devices', [])
@@ -322,7 +352,10 @@ async def get_device(
         device = next((d for d in devices if d['device_id'] == device_id_upper), None)
 
         if not device:
-            raise HTTPException(status_code=404, detail="Device not found")
+            raise HTTPException(
+                status_code=404,
+                detail=f"Device '{device_id}' not found in this store."
+            )
 
         # Remove passcode_hash
         response_device = {k: v for k, v in device.items() if k != 'passcode_hash'}
@@ -332,7 +365,10 @@ async def get_device(
         raise
     except Exception as e:
         logger.error(f"Error getting device: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get device")
+        raise HTTPException(
+            status_code=500,
+            detail="An error occurred while retrieving the device. Please try again."
+        )
 
 
 @router.put("/{store_id}/devices/{device_id}", response_model=DeviceResponse)
@@ -353,14 +389,20 @@ async def update_device(
         # Verify admin access
         has_access = await verify_admin_access(store_id, authorization, x_tenant_id, db)
         if not has_access:
-            raise HTTPException(status_code=403, detail="Access denied to this store")
+            raise HTTPException(
+                status_code=403,
+                detail="You do not have permission to access devices for this store."
+            )
 
         # Get store settings
         query = "SELECT settings FROM stores WHERE id = $1"
         row = await db.fetchrow(query, UUID(store_id))
 
         if not row:
-            raise HTTPException(status_code=404, detail="Store not found")
+            raise HTTPException(
+                status_code=404,
+                detail=f"Store with ID '{store_id}' not found."
+            )
 
         settings = json.loads(row['settings']) if isinstance(row['settings'], str) else (row['settings'] or {})
         devices = settings.get('devices', [])
@@ -415,7 +457,10 @@ async def update_device(
         raise
     except Exception as e:
         logger.error(f"Error updating device: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail="Failed to update device")
+        raise HTTPException(
+            status_code=500,
+            detail="An error occurred while updating the device. Please try again."
+        )
 
 
 @router.delete("/{store_id}/devices/{device_id}")
@@ -431,14 +476,20 @@ async def delete_device(
         # Verify admin access
         has_access = await verify_admin_access(store_id, authorization, x_tenant_id, db)
         if not has_access:
-            raise HTTPException(status_code=403, detail="Access denied to this store")
+            raise HTTPException(
+                status_code=403,
+                detail="You do not have permission to access devices for this store."
+            )
 
         # Get store settings
         query = "SELECT settings FROM stores WHERE id = $1"
         row = await db.fetchrow(query, UUID(store_id))
 
         if not row:
-            raise HTTPException(status_code=404, detail="Store not found")
+            raise HTTPException(
+                status_code=404,
+                detail=f"Store with ID '{store_id}' not found."
+            )
 
         settings = json.loads(row['settings']) if isinstance(row['settings'], str) else (row['settings'] or {})
         devices = settings.get('devices', [])
@@ -472,7 +523,10 @@ async def delete_device(
         raise
     except Exception as e:
         logger.error(f"Error deleting device: {e}")
-        raise HTTPException(status_code=500, detail="Failed to delete device")
+        raise HTTPException(
+            status_code=500,
+            detail="An error occurred while deleting the device. Please try again."
+        )
 
 
 # Export router

@@ -97,7 +97,10 @@ class ToolTestRequest(BaseModel):
 # Helper functions
 async def check_admin_access(user: Dict = Depends(get_current_user)):
     """Verify admin access"""
-    if user.get('role') not in ['admin', 'superadmin']:
+    # Accept roles from admin_auth.py: super_admin, tenant_admin, store_manager
+    # Also accept legacy roles: admin, superadmin
+    allowed_roles = ['super_admin', 'tenant_admin', 'store_manager', 'admin', 'superadmin']
+    if user.get('role') not in allowed_roles:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Admin access required"

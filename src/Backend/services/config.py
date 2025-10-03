@@ -14,6 +14,7 @@ CONVERSATION_API = f"{API_BASE_URL}/api/conversation"
 
 # Specific endpoints (use .format() for dynamic parameters)
 PRODUCTS_CATEGORIES_ENDPOINT = f"{PRODUCTS_API}/categories"
+PRODUCTS_SUBCATEGORIES_ENDPOINT = f"{PRODUCTS_API}/sub-categories"
 PRODUCTS_SEARCH_ENDPOINT = PRODUCTS_API
 
 USER_PURCHASES_ENDPOINT = f"{USER_API}/{{user_id}}/purchases"

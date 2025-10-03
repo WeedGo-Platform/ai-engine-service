@@ -19,7 +19,7 @@ from services.delivery.base import (
     DeliveryNotFound, StaffNotAvailable, InvalidStatusTransition
 )
 from database.connection import get_db
-from middleware.auth import get_current_user
+from core.authentication import get_current_user
 from middleware.tenant_resolution import tenant_required
 
 logger = logging.getLogger(__name__)

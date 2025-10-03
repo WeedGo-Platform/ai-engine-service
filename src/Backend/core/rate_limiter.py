@@ -37,12 +37,12 @@ class RateLimiter:
         self.redis = redis_client
         self.local_storage = defaultdict(lambda: defaultdict(dict))
         
-        # Default limits
+        # Default limits (increased for better UX while maintaining security)
         self.default_limits = {
-            'global': (60, 60),  # 60 requests per 60 seconds
-            'api': (100, 60),    # 100 API calls per minute
-            'auth': (5, 60),     # 5 auth attempts per minute
-            'expensive': (10, 60),  # 10 expensive operations per minute
+            'global': (300, 60),  # 300 requests per minute (5 req/sec)
+            'api': (500, 60),     # 500 API calls per minute
+            'auth': (10, 60),     # 10 auth attempts per minute
+            'expensive': (30, 60),  # 30 expensive operations per minute
         }
         
         # Burst allowance

@@ -86,7 +86,7 @@ class ChatWebSocketService {
     if (this.userId) params.append('user_id', this.userId);
     // Don't send agent_id and personality_id as URL params - they're managed via session_update
 
-    this.wsUrl = `${baseUrl}/chat/ws${params.toString() ? '?' + params.toString() : ''}`;
+    this.wsUrl = `${baseUrl}/api/v1/chat/ws${params.toString() ? '?' + params.toString() : ''}`;
 
     this.setupWebSocket();
   }

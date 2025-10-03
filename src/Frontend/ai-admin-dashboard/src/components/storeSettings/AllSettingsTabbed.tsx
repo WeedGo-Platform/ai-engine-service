@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Truck, Shield, Clock, DollarSign, AlertTriangle, CreditCard, Smartphone, Plus, Trash2, Monitor, Tablet, Globe
 } from 'lucide-react';
 import paymentService from '../../services/paymentService';
 import OnlinePaymentSettings from './OnlinePaymentSettings';
+import { api } from '../../services/api';
 
 interface AllSettingsTabbedProps {
   storeId: string;
@@ -27,6 +28,7 @@ interface Device {
   platform: 'web' | 'tablet';
   appType: 'pos' | 'kiosk' | 'menu';
   deviceId: string;
+  passcode?: string; // Added for device pairing
   status: 'active' | 'inactive';
   lastActivity?: string;
 }
@@ -346,34 +348,147 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
   // Devices Settings Component
   const DevicesSettings = () => {
     const [localSettings, setLocalSettings] = useState({
-      devices: [] as Device[],
-      ...settings.devices
+      devices: [] as Device[]
     });
+    const [loading, setLoading] = useState(true);
     const [showAddDevice, setShowAddDevice] = useState(false);
     const [newDevice, setNewDevice] = useState({
       name: '',
+      location: '', // Added location field
       platform: 'web' as 'web' | 'tablet',
       appType: 'pos' as 'pos' | 'kiosk' | 'menu',
-      deviceId: ''
+      deviceId: '',
+      passcode: '' // Added passcode field
     });
 
-    const addDevice = () => {
-      if (newDevice.name && newDevice.deviceId) {
-        const device: Device = {
-          id: `device_${Date.now()}`,
-          name: newDevice.name,
-          platform: newDevice.platform,
-          appType: newDevice.appType,
-          deviceId: newDevice.deviceId,
-          status: 'active',
-          lastActivity: new Date().toISOString()
-        };
-        setLocalSettings({
-          ...localSettings,
-          devices: [...localSettings.devices, device]
+    // Fetch devices from API when component loads
+    useEffect(() => {
+      const fetchDevices = async () => {
+        try {
+          console.log('[Devices] Fetching devices for store:', storeId);
+          const response = await api.devices.getAll(storeId);
+          console.log('[Devices] Fetched devices:', response.data);
+
+          // Transform backend response to match Device interface
+          const devices: Device[] = response.data.map((d: any) => ({
+            id: d.device_id,
+            name: d.name,
+            platform: d.configuration?.platform || 'web',
+            appType: d.device_type,
+            deviceId: d.device_id,
+            status: d.status === 'active' || d.status === 'paired' ? 'active' : 'inactive',
+            lastActivity: d.last_seen
+          }));
+
+          setLocalSettings({ devices });
+          setLoading(false);
+        } catch (error: any) {
+          console.error('[Devices] Failed to fetch devices:', error);
+          setLoading(false);
+
+          // Only show error if it's not a 404 (empty store is fine)
+          if (error.response?.status !== 404) {
+            alert('Failed to load devices. Please refresh the page.');
+          }
+        }
+      };
+
+      if (storeId) {
+        fetchDevices();
+      }
+    }, [storeId]);
+
+    const addDevice = async () => {
+      console.log('[Device Creation] Starting...', { newDevice, storeId });
+
+      if (newDevice.name && newDevice.location && newDevice.deviceId && newDevice.passcode) {
+        console.log('[Device Creation] Validation passed, calling API...');
+        try {
+          // Call AI Engine API to create device
+          const response = await api.devices.create(storeId, {
+            device_id: newDevice.deviceId,
+            name: newDevice.name,
+            location: newDevice.location, // User-provided location
+            passcode: newDevice.passcode,
+            device_type: newDevice.appType, // pos, kiosk, menu
+            permissions: {
+              can_process_orders: true,
+              can_access_inventory: true
+            },
+            configuration: {
+              platform: newDevice.platform, // web or tablet
+              application_type: newDevice.appType,
+              idle_timeout: 120,
+              enable_budtender: newDevice.appType === 'kiosk'
+            }
+          });
+
+          // Add device to local state (from API response)
+          const device: Device = {
+            id: response.data.device_id || `device_${Date.now()}`,
+            name: newDevice.name,
+            platform: newDevice.platform,
+            appType: newDevice.appType,
+            deviceId: newDevice.deviceId,
+            status: response.data.status === 'active' || response.data.status === 'paired' ? 'active' : 'inactive',
+            lastActivity: response.data.last_seen || new Date().toISOString()
+          };
+
+          setLocalSettings({
+            ...localSettings,
+            devices: [...localSettings.devices, device]
+          });
+
+          // Store passcode before clearing form
+          const createdPasscode = newDevice.passcode;
+          const createdDeviceId = newDevice.deviceId;
+
+          setNewDevice({ name: '', location: '', platform: 'web', appType: 'pos', deviceId: '', passcode: '' });
+          setShowAddDevice(false);
+
+          // Show success message with passcode (from user input, not backend)
+          console.log('[Device Creation] Success!', response.data);
+          alert(`Device created successfully!\n\nDevice ID: ${createdDeviceId}\nPasscode: ${createdPasscode}\n\n⚠️ Save this passcode - it won't be shown again!`);
+        } catch (error: any) {
+          console.error('[Device Creation] Failed:', error);
+          console.error('[Device Creation] Error details:', error.response?.data);
+
+          // User-friendly error messages
+          const status = error.response?.status;
+          const detail = error.response?.data?.detail || error.message;
+
+          let userMessage = '';
+
+          switch (status) {
+            case 403:
+              userMessage = '🔒 Access Denied\n\nYou do not have permission to add devices to this store.\n\nPlease contact your administrator.';
+              break;
+            case 409:
+              userMessage = `⚠️ Device Already Exists\n\nA device with ID "${newDevice.deviceId}" already exists in this store.\n\nPlease use a different Device ID.`;
+              break;
+            case 400:
+              userMessage = `❌ Invalid Input\n\n${detail}\n\nPlease check your input and try again.`;
+              break;
+            case 404:
+              userMessage = '❌ Store Not Found\n\nThe selected store could not be found.\n\nPlease refresh and try again.';
+              break;
+            case 500:
+              userMessage = '🔧 Server Error\n\nAn error occurred while creating the device.\n\nPlease try again or contact support if the issue persists.';
+              break;
+            default:
+              userMessage = `❌ Failed to Create Device\n\n${detail}`;
+          }
+
+          alert(userMessage);
+        }
+      } else {
+        console.log('[Device Creation] Validation failed. Missing fields:', {
+          hasName: !!newDevice.name,
+          hasLocation: !!newDevice.location,
+          hasDeviceId: !!newDevice.deviceId,
+          hasPasscode: !!newDevice.passcode
         });
-        setNewDevice({ name: '', platform: 'web', appType: 'pos', deviceId: '' });
-        setShowAddDevice(false);
+        alert('Please fill in all required fields: Device Name, Location, Device ID, and Passcode');
       }
     };
 
@@ -410,9 +525,9 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
           {showAddDevice && (
             <div className="mb-4 p-6 bg-gray-50 rounded-lg">
               <h4 className="font-medium mb-3">Add Device</h4>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Device Name</label>
+                  <label className="block text-sm font-medium mb-1">Device Name *</label>
                   <input
                     type="text"
                     placeholder="Front Counter POS"
@@ -421,6 +536,28 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
                     className="w-full px-3 py-2 border rounded-lg"
                   />
                 </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Location *</label>
+                  <input
+                    type="text"
+                    placeholder="Main Floor, Counter 1, etc."
+                    value={newDevice.location}
+                    onChange={(e) => setNewDevice({...newDevice, location: e.target.value})}
+                    className="w-full px-3 py-2 border rounded-lg"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Device ID *</label>
+                  <input
+                    type="text"
+                    placeholder="KIOSK-001"
+                    value={newDevice.deviceId}
+                    onChange={(e) => setNewDevice({...newDevice, deviceId: e.target.value.toUpperCase()})}
+                    className="w-full px-3 py-2 border rounded-lg"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-1">Platform</label>
                   <select
@@ -445,12 +582,13 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Device ID</label>
+                  <label className="block text-sm font-medium mb-1">Passcode *</label>
                   <input
                     type="text"
-                    placeholder="DEV123456"
-                    value={newDevice.deviceId}
-                    onChange={(e) => setNewDevice({...newDevice, deviceId: e.target.value})}
+                    placeholder="4-6 digit code"
+                    value={newDevice.passcode}
+                    onChange={(e) => setNewDevice({...newDevice, passcode: e.target.value.replace(/[^0-9]/g, '')})}
+                    maxLength={6}
                     className="w-full px-3 py-2 border rounded-lg"
                   />
                 </div>
@@ -465,7 +603,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
                 <button
                   onClick={() => {
                     setShowAddDevice(false);
-                    setNewDevice({ name: '', platform: 'web', appType: 'pos', deviceId: '' });
+                    setNewDevice({ name: '', location: '', platform: 'web', appType: 'pos', deviceId: '', passcode: '' });
                   }}
                   className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 text-sm"
                 >
@@ -476,7 +614,11 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
           )}
 
           <div className="space-y-3">
-            {localSettings.devices.length === 0 ? (
+            {loading ? (
+              <div className="text-center py-8 text-gray-500">
+                Loading devices...
+              </div>
+            ) : localSettings.devices.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
                 No devices registered. Click "Add Device" to register a POS, kiosk, or tablet device.
               </div>

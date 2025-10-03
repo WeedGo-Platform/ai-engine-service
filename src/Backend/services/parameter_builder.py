@@ -59,43 +59,51 @@ class ParameterBuilder:
             confidence = entities.get("confidence", 0.0)
             needs_clarification = entities.get("needs_clarification", False)
 
-            logger.info(f"Building parameters: confidence={confidence:.2f}, needs_clarification={needs_clarification}")
+            logger.info(f"[PARAM_BUILDER] Building parameters: confidence={confidence:.2f}, needs_clarification={needs_clarification}")
+            logger.info(f"[PARAM_BUILDER] Entities: {entities}")
 
             # Case 1: High confidence, no clarification needed
             if confidence >= self.confidence_threshold and not needs_clarification:
-                logger.info("High confidence - building direct search parameters")
+                logger.info(f"[PARAM_BUILDER] CASE 1: High confidence ({confidence:.2f} >= {self.confidence_threshold}) + no clarification - building direct search parameters")
                 return {
                     "type": "search",
                     "params": self._build_search_params(entities)
                 }
+            else:
+                logger.info(f"[PARAM_BUILDER] Skipping CASE 1: confidence={confidence:.2f} < {self.confidence_threshold} OR needs_clarification={needs_clarification}")
 
             # Case 2: Needs clarification but we have strong user preferences
             if needs_clarification and self.use_user_preferences and user_preferences:
                 pref_confidence = user_preferences.get("confidence", 0.0)
+                logger.info(f"[PARAM_BUILDER] Checking CASE 2: user_preferences available, pref_confidence={pref_confidence:.2f}, threshold={self.preference_confidence_threshold}")
                 if pref_confidence >= self.preference_confidence_threshold:
-                    logger.info(f"Using user preferences (confidence={pref_confidence:.2f})")
+                    logger.info(f"[PARAM_BUILDER] CASE 2: Using user preferences (confidence={pref_confidence:.2f})")
                     enhanced_entities = self._apply_user_preferences(entities, user_preferences)
                     return {
                         "type": "search",
                         "params": self._build_search_params(enhanced_entities),
                         "applied_preferences": True
                     }
+                else:
+                    logger.info(f"[PARAM_BUILDER] Skipping CASE 2: pref_confidence={pref_confidence:.2f} < {self.preference_confidence_threshold}")
+            else:
+                logger.info(f"[PARAM_BUILDER] Skipping CASE 2: needs_clarification={needs_clarification}, use_user_preferences={self.use_user_preferences}, user_preferences={'present' if user_preferences else 'None'}")
 
             # Case 3: Needs clarification, generate quick actions
             if needs_clarification and self.fallback_to_quick_actions:
-                logger.info("Generating quick actions for disambiguation")
+                logger.info(f"[PARAM_BUILDER] CASE 3: Needs clarification + fallback enabled - generating quick actions")
                 quick_actions = await self._generate_quick_actions(entities)
+                logger.info(f"[PARAM_BUILDER] Quick actions generated: {quick_actions}")
                 return {
                     "type": "quick_actions",
                     "data": quick_actions
                 }
+            else:
+                logger.info(f"[PARAM_BUILDER] Skipping CASE 3: needs_clarification={needs_clarification}, fallback_to_quick_actions={self.fallback_to_quick_actions}")
 
-            # Fallback: Build params with what we have
-            logger.warning("Fallback to building params with available entities")
-            return {
-                "type": "search",
-                "params": self._build_search_params(entities)
-            }
+            # No fallback: If all cases are skipped, this is an error state
+            logger.error("[PARAM_BUILDER] ERROR: All cases skipped - this should never happen")
+            raise ValueError("Parameter building failed: all decision cases skipped")
 
         except Exception as e:
             logger.error(f"Parameter building failed: {str(e)}", exc_info=True)
@@ -200,23 +208,40 @@ class ParameterBuilder:
         try:
             clarification_reason = entities.get("clarification_reason", "")
             strain_type = entities.get("strain_type")
+            product_subcategory = entities.get("product_subcategory")
+            effects = entities.get("effects")
+            thc_range = entities.get("thc_range")
+            cbd_range = entities.get("cbd_range")
+
+            logger.info(f"[QUICK_ACTIONS] Determining quick action type:")
+            logger.info(f"[QUICK_ACTIONS]   - strain_type: {strain_type}")
+            logger.info(f"[QUICK_ACTIONS]   - product_subcategory: {product_subcategory}")
+            logger.info(f"[QUICK_ACTIONS]   - effects: {effects}")
+            logger.info(f"[QUICK_ACTIONS]   - thc_range: {thc_range}")
+            logger.info(f"[QUICK_ACTIONS]   - cbd_range: {cbd_range}")
+            logger.info(f"[QUICK_ACTIONS]   - clarification_reason: {clarification_reason}")
 
             # Determine which quick action type to generate
-            if not entities.get("product_subcategory") and strain_type:
+            if not product_subcategory and strain_type:
                 # Need subcategory clarification
+                logger.info(f"[QUICK_ACTIONS] BRANCH 1: Missing subcategory + has strain_type → _generate_category_quick_actions()")
                 return await self._generate_category_quick_actions(strain_type, entities)
-            elif not entities.get("effects"):
+            elif not effects:
                 # Need effect clarification
+                logger.info(f"[QUICK_ACTIONS] BRANCH 2: Missing effects → _generate_effect_quick_actions()")
                 return await self._generate_effect_quick_actions(entities)
-            elif not entities.get("thc_range") and not entities.get("cbd_range"):
+            elif not thc_range and not cbd_range:
                 # Need potency clarification
+                logger.info(f"[QUICK_ACTIONS] BRANCH 3: Missing potency → _generate_potency_quick_actions()")
                 return await self._generate_potency_quick_actions(entities)
             else:
                 # Generic clarification
+                logger.info(f"[QUICK_ACTIONS] BRANCH 4: Fallback → _generate_generic_quick_actions()")
                 return self._generate_generic_quick_actions(entities)
 
         except Exception as e:
-            logger.error(f"Quick action generation failed: {str(e)}")
+            logger.error(f"[QUICK_ACTIONS] ERROR: Quick action generation failed: {str(e)}", exc_info=True)
+            logger.info(f"[QUICK_ACTIONS] Returning generic fallback due to exception")
             return self._generate_generic_quick_actions(entities)
 
     async def _generate_category_quick_actions(
@@ -225,6 +250,8 @@ class ParameterBuilder:
         entities: Dict[str, Any]
     ) -> Dict[str, Any]:
         """Generate quick actions for subcategory selection"""
+
+        logger.info(f"[CATEGORY_QA] Generating category quick actions for strain_type={strain_type}")
 
         config = self.quick_actions_config.get("category_clarification", {})
         prompt_template = config.get("prompt_template", "")
@@ -246,6 +273,9 @@ class ParameterBuilder:
             available_subcategories=", ".join(available_subcategories)
         )
 
+        logger.info(f"[CATEGORY_QA] Formatted prompt (first 200 chars): {prompt[:200]}...")
+        logger.info(f"[CATEGORY_QA] Calling LLM with max_tokens={config.get('max_tokens', 200)}, temp={config.get('temperature', 0.7)}")
+
         # Call LLM
         response = await self._call_llm(
             prompt,
@@ -253,11 +283,17 @@ class ParameterBuilder:
             temperature=config.get("temperature", 0.7)
         )
 
+        logger.info(f"[CATEGORY_QA] LLM response (first 200 chars): {str(response)[:200]}...")
+
         # Parse and validate
-        return self._parse_quick_actions_response(response)
+        result = self._parse_quick_actions_response(response)
+        logger.info(f"[CATEGORY_QA] Parsed quick actions: {result}")
+        return result
 
     async def _generate_effect_quick_actions(self, entities: Dict[str, Any]) -> Dict[str, Any]:
         """Generate quick actions for effect selection"""
+
+        logger.info(f"[EFFECT_QA] Generating effect quick actions")
 
         config = self.quick_actions_config.get("effect_clarification", {})
         prompt_template = config.get("prompt_template", "")
@@ -265,13 +301,21 @@ class ParameterBuilder:
         product_category = entities.get("product_category", "cannabis products")
         prompt = prompt_template.format(product_category=product_category)
 
+        logger.info(f"[EFFECT_QA] product_category={product_category}")
+        logger.info(f"[EFFECT_QA] Formatted prompt (first 200 chars): {prompt[:200]}...")
+        logger.info(f"[EFFECT_QA] Calling LLM with max_tokens={config.get('max_tokens', 200)}, temp={config.get('temperature', 0.7)}")
+
         response = await self._call_llm(
             prompt,
             max_tokens=config.get("max_tokens", 200),
             temperature=config.get("temperature", 0.7)
         )
 
-        return self._parse_quick_actions_response(response)
+        logger.info(f"[EFFECT_QA] LLM response (first 200 chars): {str(response)[:200]}...")
+
+        result = self._parse_quick_actions_response(response)
+        logger.info(f"[EFFECT_QA] Parsed quick actions: {result}")
+        return result
 
     async def _generate_potency_quick_actions(self, entities: Dict[str, Any]) -> Dict[str, Any]:
         """Generate quick actions for potency selection"""
@@ -307,56 +351,78 @@ class ParameterBuilder:
     async def _call_llm(self, prompt: str, max_tokens: int, temperature: float) -> str:
         """Call LLM for quick action generation"""
         try:
+            logger.info(f"[LLM_CALL] Starting LLM call with prompt length={len(prompt)}, max_tokens={max_tokens}, temp={temperature}")
+
             if hasattr(self.model, 'generate'):
+                logger.info(f"[LLM_CALL] Using model.generate() method")
                 response = await self.model.generate(
                     prompt=prompt,
                     max_tokens=max_tokens,
                     temperature=temperature
                 )
             elif hasattr(self.model, 'complete'):
+                logger.info(f"[LLM_CALL] Using model.complete() method")
                 response = await self.model.complete(
                     prompt=prompt,
                     max_new_tokens=max_tokens,
                     temperature=temperature
                 )
             else:
+                logger.info(f"[LLM_CALL] Using model() callable")
                 response = await self.model(prompt, max_tokens=max_tokens, temperature=temperature)
 
+            logger.info(f"[LLM_CALL] LLM responded, type={type(response)}")
+
             if isinstance(response, dict):
-                return response.get('text', response.get('output', str(response)))
-            return str(response)
+                # Check if response contains text/output field
+                if 'text' in response or 'output' in response:
+                    result = response.get('text', response.get('output', ''))
+                    logger.info(f"[LLM_CALL] Extracted text from dict response, length={len(result)}")
+                    return result
+                else:
+                    # If dict doesn't have text/output, convert to JSON string
+                    result = json.dumps(response, ensure_ascii=False)
+                    logger.info(f"[LLM_CALL] Converted dict to JSON string, length={len(result)}")
+                    return result
+
+            result = str(response)
+            logger.info(f"[LLM_CALL] Converted response to string, length={len(result)}")
+            return result
 
         except Exception as e:
-            logger.error(f"LLM call failed: {str(e)}")
+            logger.error(f"[LLM_CALL] ERROR: LLM call failed: {str(e)}", exc_info=True)
+            logger.error(f"[LLM_CALL] Prompt that caused error (first 300 chars): {prompt[:300]}...")
             raise
 
     def _parse_quick_actions_response(self, response: str) -> Dict[str, Any]:
         """Parse and validate quick actions JSON response"""
         try:
+            logger.info(f"[PARSE_QA] Parsing quick actions response, length={len(response)}")
+            logger.info(f"[PARSE_QA] Response (first 300 chars): {response[:300]}...")
+
             response = response.strip()
             start_idx = response.find('{')
             end_idx = response.rfind('}')
 
             if start_idx == -1 or end_idx == -1:
+                logger.error(f"[PARSE_QA] No JSON found in response")
                 raise ValueError("No JSON found in response")
 
             json_str = response[start_idx:end_idx + 1]
+            logger.info(f"[PARSE_QA] Extracted JSON string (first 200 chars): {json_str[:200]}...")
+
             quick_actions = json.loads(json_str)
+            logger.info(f"[PARSE_QA] Successfully parsed JSON: {quick_actions}")
 
             # Validate against schema
             schema = self.schemas.get("quick_actions_output", {})
             validate(instance=quick_actions, schema=schema)
+            logger.info(f"[PARSE_QA] Schema validation passed")
 
             return quick_actions
 
         except (json.JSONDecodeError, ValidationError) as e:
-            logger.error(f"Failed to parse quick actions: {str(e)}")
-            # Return generic fallback
-            return {
-                "message": "Could you please be more specific about what you're looking for?",
-                "quick_actions": [
-                    {"label": "Flower", "value": "dried flower"},
-                    {"label": "Pre-Rolls", "value": "pre-rolls"},
-                    {"label": "Edibles", "value": "edibles"}
-                ]
-            }
+            logger.error(f"[PARSE_QA] ERROR: Failed to parse quick actions: {str(e)}")
+            logger.error(f"[PARSE_QA] Response that failed to parse (first 500 chars): {response[:500]}...")
+            # No fallback - let the exception propagate
+            raise

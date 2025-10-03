@@ -229,8 +229,16 @@ class AGIApiService {
   }
 
   // WebSocket Connection
+  private pingInterval: NodeJS.Timeout | null = null;
+
   connectWebSocket(onMessage: (msg: WebSocketMessage) => void): void {
     if (this.wsConnection?.readyState === WebSocket.OPEN) {
+      this.wsCallbacks.add(onMessage);
+      return;
+    }
+
+    // Don't create a new connection if one is connecting
+    if (this.wsConnection?.readyState === WebSocket.CONNECTING) {
       this.wsCallbacks.add(onMessage);
       return;
     }
@@ -240,8 +248,12 @@ class AGIApiService {
 
     this.wsConnection.onopen = () => {
       console.log('AGI WebSocket connected');
+      // Clear any existing ping interval
+      if (this.pingInterval) {
+        clearInterval(this.pingInterval);
+      }
       // Send ping to keep connection alive
-      setInterval(() => {
+      this.pingInterval = setInterval(() => {
         if (this.wsConnection?.readyState === WebSocket.OPEN) {
           this.wsConnection.send(JSON.stringify({ type: 'ping' }));
         }
@@ -263,10 +275,20 @@ class AGIApiService {
 
     this.wsConnection.onclose = () => {
       console.log('WebSocket disconnected');
-      // Attempt to reconnect after 5 seconds
+      // Clear ping interval on close
+      if (this.pingInterval) {
+        clearInterval(this.pingInterval);
+        this.pingInterval = null;
+      }
+      // Attempt to reconnect after 5 seconds only if we have active callbacks
+      // and don't already have a connection
       setTimeout(() => {
-        if (this.wsCallbacks.size > 0) {
-          this.wsCallbacks.forEach(cb => this.connectWebSocket(cb));
+        if (this.wsCallbacks.size > 0 && !this.wsConnection) {
+          // Reconnect with the first callback (connectWebSocket will handle all)
+          const firstCallback = this.wsCallbacks.values().next().value;
+          if (firstCallback) {
+            this.connectWebSocket(firstCallback);
+          }
         }
       }, 5000);
     };
@@ -278,7 +300,16 @@ class AGIApiService {
     }
 
     if (this.wsCallbacks.size === 0 && this.wsConnection) {
-      this.wsConnection.close();
+      // Clear ping interval before closing
+      if (this.pingInterval) {
+        clearInterval(this.pingInterval);
+        this.pingInterval = null;
+      }
+      // Only close if connection is open or connecting
+      if (this.wsConnection.readyState === WebSocket.OPEN ||
+          this.wsConnection.readyState === WebSocket.CONNECTING) {
+        this.wsConnection.close();
+      }
       this.wsConnection = null;
     }
   }

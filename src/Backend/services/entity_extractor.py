@@ -5,11 +5,12 @@ Supports multilingual queries and context-aware extraction
 """
 import json
 import logging
+import time
 from typing import Dict, Any, Optional, List
 import aiohttp
 from jsonschema import validate, ValidationError
 
-from services.config import PRODUCTS_CATEGORIES_ENDPOINT, CONVERSATION_HISTORY_ENDPOINT
+from services.config import PRODUCTS_CATEGORIES_ENDPOINT, PRODUCTS_SUBCATEGORIES_ENDPOINT, CONVERSATION_HISTORY_ENDPOINT
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +32,13 @@ class EntityExtractor:
         self.prompt_template = self.config.get("prompt_template", "")
         self.max_tokens = self.config.get("max_tokens", 300)
         self.temperature = self.config.get("temperature", 0.1)
+
+        # Cache for categories and subcategories (5 minute TTL)
+        self._categories_cache = None
+        self._categories_cache_time = 0
+        self._subcategories_cache = None
+        self._subcategories_cache_time = 0
+        self._cache_ttl = 300  # 5 minutes in seconds
 
     async def extract_entities(
         self,
@@ -86,14 +94,14 @@ class EntityExtractor:
         self,
         message: str,
         available_categories: List[str],
-        available_subcategories: Dict[str, List[str]],
+        available_subcategories: List[str],
         conversation_history: List[Dict[str, str]]
     ) -> str:
         """Build extraction prompt with dynamic context"""
 
         # Format categories and subcategories for prompt
         categories_str = ", ".join(available_categories)
-        subcategories_str = json.dumps(available_subcategories, indent=2)
+        subcategories_str = ", ".join(available_subcategories)
 
         # Add conversation context if available
         context_str = ""
@@ -136,8 +144,7 @@ class EntityExtractor:
                 response = await self.model.generate(
                     prompt=prompt,
                     max_tokens=self.max_tokens,
-                    temperature=self.temperature,
-                    stop_sequences=["\n\n", "User:", "Assistant:"]
+                    temperature=self.temperature
                 )
             elif hasattr(self.model, 'complete'):
                 response = await self.model.complete(
@@ -203,7 +210,13 @@ class EntityExtractor:
             raise
 
     async def _fetch_categories(self) -> List[str]:
-        """Fetch available product categories from API"""
+        """Fetch available product categories from API with caching"""
+        # Check cache first
+        current_time = time.time()
+        if self._categories_cache and (current_time - self._categories_cache_time) < self._cache_ttl:
+            logger.debug(f"Using cached categories (age: {int(current_time - self._categories_cache_time)}s)")
+            return self._categories_cache
+
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.get(PRODUCTS_CATEGORIES_ENDPOINT) as resp:
@@ -211,40 +224,65 @@ class EntityExtractor:
                         data = await resp.json()
                         # Adjust based on actual API response format
                         if isinstance(data, dict) and 'categories' in data:
-                            return data['categories']
+                            categories = data['categories']
                         elif isinstance(data, list):
-                            return data
+                            categories = data
                         else:
-                            return list(data.keys()) if isinstance(data, dict) else []
+                            categories = list(data.keys()) if isinstance(data, dict) else []
+
+                        # Update cache
+                        self._categories_cache = categories
+                        self._categories_cache_time = current_time
+                        logger.info(f"Fetched and cached {len(categories)} categories")
+                        return categories
                     else:
                         logger.error(f"Categories API failed with status {resp.status}")
                         raise Exception(f"Categories API returned status {resp.status}")
         except Exception as e:
             logger.error(f"Failed to fetch categories: {str(e)}")
+            # Return cached data if available even if expired
+            if self._categories_cache:
+                logger.warning("Returning expired cache due to API error")
+                return self._categories_cache
             raise
 
-    async def _fetch_subcategories(self) -> Dict[str, List[str]]:
-        """Fetch available subcategories from API"""
+    async def _fetch_subcategories(self) -> List[str]:
+        """Fetch available subcategories from API with caching"""
+        # Check cache first
+        current_time = time.time()
+        if self._subcategories_cache and (current_time - self._subcategories_cache_time) < self._cache_ttl:
+            logger.debug(f"Using cached subcategories (age: {int(current_time - self._subcategories_cache_time)}s)")
+            return self._subcategories_cache
+
         try:
             async with aiohttp.ClientSession() as session:
-                async with session.get(PRODUCTS_CATEGORIES_ENDPOINT) as resp:
+                async with session.get(PRODUCTS_SUBCATEGORIES_ENDPOINT) as resp:
                     if resp.status == 200:
                         data = await resp.json()
-                        # Adjust based on actual API response format
-                        if isinstance(data, dict):
-                            return {
-                                cat: data[cat].get('subcategories', [])
-                                for cat in data
-                                if isinstance(data[cat], dict)
-                            }
+                        # API returns: {"subcategories": [{"name": "Pre-Rolls", "category": "Flower"}, ...]}
+                        if isinstance(data, dict) and 'subcategories' in data:
+                            # Extract just the subcategory names for the LLM prompt
+                            subcategories = [sub['name'] for sub in data['subcategories']]
+                        elif isinstance(data, list):
+                            subcategories = data
                         else:
                             logger.error("Subcategories API returned unexpected format")
                             raise Exception("Unexpected subcategories API response format")
+
+                        # Update cache
+                        self._subcategories_cache = subcategories
+                        self._subcategories_cache_time = current_time
+                        logger.info(f"Fetched and cached {len(subcategories)} subcategories")
+                        return subcategories
                     else:
                         logger.error(f"Subcategories API failed with status {resp.status}")
                         raise Exception(f"Subcategories API returned status {resp.status}")
         except Exception as e:
             logger.error(f"Failed to fetch subcategories: {str(e)}")
+            # Return cached data if available even if expired
+            if self._subcategories_cache:
+                logger.warning("Returning expired cache due to API error")
+                return self._subcategories_cache
             raise
 
     async def _fetch_conversation_history(self, session_id: str) -> List[Dict[str, str]]:

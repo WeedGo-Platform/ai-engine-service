@@ -35,8 +35,8 @@ from core.function_schemas import get_function_registry
 from api.voice_endpoints import router as voice_router
 from api.voice_websocket import router as voice_ws_router
 
-# Import chat endpoints
-from api.chat_endpoints import router as chat_router
+# Import unified chat system
+from api.chat_integration import register_unified_chat_routes
 
 # Import authentication endpoints
 from api.customer_auth import router as customer_auth_router
@@ -63,6 +63,7 @@ from api.client_payment_endpoints import router as client_payment_router
 from api.store_payment_endpoints import router as store_payment_router
 from api.payment_session_endpoints import router as payment_session_router
 from api.admin_auth import router as admin_auth_router
+from api.admin_device_endpoints import router as admin_device_router
 
 # Configure logging with correlation ID support
 from core.middleware.logging_middleware import (
@@ -202,7 +203,26 @@ async def lifespan(app: FastAPI):
         context_manager = SimpleHybridContextManager(db_config=db_config)
         await context_manager.initialize()
         app.state.context_manager = context_manager
-        
+
+        # Bridge context_manager to agent_pool for conversation memory
+        logger.info("Bridging context manager to agent pool...")
+        if v5_engine.agent_pool:
+            v5_engine.agent_pool.set_context_manager(context_manager)
+            logger.info("✅ Context manager successfully bridged to agent pool")
+
+            # Initialize unified chat system with database-backed storage
+            logger.info("Initializing unified chat system...")
+            try:
+                from api.chat_integration import initialize_unified_chat_system
+                chat_service = await initialize_unified_chat_system()
+                app.state.chat_service = chat_service
+                logger.info("✅ Unified chat system initialized with database storage and cleanup")
+            except Exception as e:
+                logger.error(f"❌ Failed to initialize unified chat system: {e}", exc_info=True)
+                logger.warning("Continuing without unified chat system")
+        else:
+            logger.warning("⚠️ Agent pool not initialized, context manager not bridged")
+
         # Auto-load smallest model with dispensary agent and zac personality on startup
         logger.info("Auto-loading default model configuration...")
 
@@ -239,47 +259,12 @@ async def lifespan(app: FastAPI):
         logger.info("Registering function schemas...")
         registry = get_function_registry()
 
-        # Load and register actual tool implementations
-        logger.info("Loading tool implementations...")
-        try:
-            from services.tools.product_search_tool import ProductSearchTool
-
-            # Create tool instances
-            product_search_tool = ProductSearchTool()
-
-            # Register tools with the v5 engine's tool manager if available
-            if hasattr(v5_engine, 'tool_manager') and v5_engine.tool_manager:
-                # Register product search wrapper
-                v5_engine.tool_manager.register_tool(
-                    "search_products",
-                    lambda **kwargs: product_search_tool.search_products(**kwargs),
-                    {
-                        "description": "Search for cannabis products",
-                        "category": "search",
-                        "function_schema": registry.get_schema("search_products")
-                    }
-                )
-                
-                # Get product count for verification
-                product_count = product_search_tool.get_product_count()
-                logger.info(f"ProductSearchTool loaded - Database has {product_count} products")
-                
-                # Register trending products tool
-                v5_engine.tool_manager.register_tool(
-                    "get_trending_products", 
-                    lambda **kwargs: product_search_tool.get_trending_products(**kwargs),
-                    {
-                        "description": "Get trending cannabis products",
-                        "category": "search"
-                    }
-                )
-                
-                logger.info(f"Registered {len(v5_engine.tool_manager.list_tools())} tools with ToolManager")
-            else:
-                logger.warning("ToolManager not available in v5_engine")
-                
-        except Exception as e:
-            logger.error(f"Failed to load tool implementations: {e}")
+        # Tool implementations are now registered via ToolManager (see tool_manager.py)
+        # Smart product search tool with LLM-based entity extraction is available
+        if hasattr(v5_engine, 'tool_manager') and v5_engine.tool_manager:
+            logger.info(f"Tool manager initialized with {len(v5_engine.tool_manager.list_tools())} tools")
+        else:
+            logger.warning("ToolManager not available in v5_engine")
         
         logger.info("V5 AI Engine started successfully")
         
@@ -473,7 +458,14 @@ app.include_router(admin_auth_router)  # Admin authentication endpoints
 app.include_router(context_auth_router)  # Context switching authentication
 app.include_router(voice_router)
 app.include_router(voice_ws_router)  # WebSocket endpoints for continuous voice listening
-app.include_router(chat_router)
+
+# Register unified chat routes (database-backed with Redis caching)
+try:
+    register_unified_chat_routes(app)
+    logger.info("✅ Unified chat routes registered successfully")
+except Exception as e:
+    logger.error(f"❌ Failed to register unified chat routes: {e}", exc_info=True)
+
 app.include_router(tenant_router)  # Tenant management endpoints
 
 # File upload endpoints
@@ -512,6 +504,7 @@ else:
 from api.admin_endpoints import router as admin_router
 from api.analytics_endpoints import router as analytics_router
 app.include_router(admin_router)
+app.include_router(admin_device_router)  # Admin device management endpoints
 app.include_router(analytics_router)
 
 # Import and include AGI endpoints
@@ -723,6 +716,14 @@ try:
 except Exception as e:
     logger.warning(f"Failed to load SEO/Sitemap endpoints: {e}")
 
+# Import and include Logs endpoints
+try:
+    from api.logs_endpoints import router as logs_router
+    app.include_router(logs_router)
+    logger.info("Logs endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load Logs endpoints: {e}")
+
 # Add global rate limiting
 @app.middleware("http")
 async def rate_limit_middleware(request: Request, call_next):
@@ -735,17 +736,22 @@ async def rate_limit_middleware(request: Request, call_next):
     if "/api/inventory" in request.url.path or "/api/store-inventory" in request.url.path:
         return await call_next(request)
 
+    # Skip rate limiting for AGI dashboard, admin endpoints, and admin auth
+    # (authenticated admins have higher trust)
+    if "/api/agi" in request.url.path or "/api/database" in request.url.path or "/api/admin" in request.url.path or "/api/v1/auth/admin" in request.url.path:
+        return await call_next(request)
+
     if not hasattr(app.state, 'rate_limiter'):
         return await call_next(request)
 
     rate_limiter = app.state.rate_limiter
     client_id = rate_limiter.get_client_id(request)
 
-    # Check global rate limit
+    # Check global rate limit (increased for better user experience)
     allowed, info = await rate_limiter.check_rate_limit(
         client_id,
         resource='global',
-        limit=(60, 60),  # 60 requests per minute
+        limit=(300, 60),  # 300 requests per minute (5 requests/second)
         algorithm='sliding_window'
     )
     
@@ -753,7 +759,13 @@ async def rate_limit_middleware(request: Request, call_next):
         return JSONResponse(
             status_code=status.HTTP_429_TOO_MANY_REQUESTS,
             content={"detail": "Too many requests", **info},
-            headers={"Retry-After": str(info.get('retry_after', 60))}
+            headers={
+                "Retry-After": str(info.get('retry_after', 60)),
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Credentials": "true",
+                "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type, Authorization"
+            }
         )
     
     return await call_next(request)
