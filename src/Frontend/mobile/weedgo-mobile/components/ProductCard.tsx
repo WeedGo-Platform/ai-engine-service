@@ -11,6 +11,8 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Product } from '@/types/api.types';
 import useCartStore from '@/stores/cartStore';
+import { useWishlistStore } from '@/stores/wishlistStore';
+import { useAuthStore } from '@/stores/authStore';
 import { Colors, BorderRadius, Shadows, Gradients } from '@/constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -27,6 +29,9 @@ interface ProductCardProps {
 export function ProductCard({ product, onPress }: ProductCardProps) {
   const router = useRouter();
   const { addItem, getCartItem } = useCartStore();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlistStore();
+  const { isAuthenticated } = useAuthStore();
+  const [isWishlistLoading, setIsWishlistLoading] = React.useState(false);
 
   // Guard against invalid product
   if (!product || typeof product !== 'object') {
@@ -48,6 +53,7 @@ export function ProductCard({ product, onPress }: ProductCardProps) {
 
 
   const cartItem = getCartItem(product.sku);
+  const inWishlist = isInWishlist(product.id);
 
   const handlePress = () => {
     if (onPress) {
@@ -60,6 +66,28 @@ export function ProductCard({ product, onPress }: ProductCardProps) {
   const handleAddToCart = async (e: any) => {
     e.stopPropagation();
     await addItem(product, 1, product.size);
+  };
+
+  const handleToggleWishlist = async (e: any) => {
+    e.stopPropagation();
+    if (!isAuthenticated) {
+      // Redirect to login if not authenticated
+      router.push('/(auth)/login');
+      return;
+    }
+
+    setIsWishlistLoading(true);
+    try {
+      if (inWishlist) {
+        await removeFromWishlist(product.id);
+      } else {
+        await addToWishlist(product);
+      }
+    } catch (error) {
+      console.error('Error toggling wishlist:', error);
+    } finally {
+      setIsWishlistLoading(false);
+    }
   };
 
   const formatStrainType = (type?: string | null) => {
@@ -150,6 +178,28 @@ export function ProductCard({ product, onPress }: ProductCardProps) {
                 {formatStrainType(strainType)}
               </Text>
             </LinearGradient>
+          )}
+
+          {isAuthenticated && (
+            <TouchableOpacity
+              style={styles.wishlistButton}
+              onPress={handleToggleWishlist}
+              disabled={isWishlistLoading}
+              activeOpacity={0.8}
+            >
+              <LinearGradient
+                colors={inWishlist ? ['#EF4444', '#DC2626'] : ['rgba(0,0,0,0.5)', 'rgba(0,0,0,0.5)']}
+                style={styles.wishlistButtonGradient}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+              >
+                <Ionicons
+                  name={inWishlist ? 'heart' : 'heart-outline'}
+                  size={18}
+                  color="white"
+                />
+              </LinearGradient>
+            </TouchableOpacity>
           )}
         </View>
         <View style={styles.info}>
@@ -379,5 +429,21 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 12,
     fontWeight: '600',
+  },
+  wishlistButton: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    zIndex: 10,
+  },
+  wishlistButtonGradient: {
+    width: 32,
+    height: 32,
+    borderRadius: BorderRadius.full,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
+    ...Shadows.medium,
   },
 });
