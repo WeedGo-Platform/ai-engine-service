@@ -20,6 +20,7 @@ class WebSocketMessageType(str, Enum):
     SESSION_UPDATE = "session_update"
     SESSION_UPDATED = "session_updated"
     HEARTBEAT = "heartbeat"
+    TOKEN_UPDATE = "token_update"
 
 
 class ChatRequest(BaseModel):

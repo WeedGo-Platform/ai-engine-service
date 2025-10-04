@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_CONFIG } from '../../config/api';
 
 export interface Message {
   id?: string;
@@ -77,16 +78,19 @@ class ChatWebSocketService {
     this.personalityId = personalityId || this.personalityId;
 
     // Build WebSocket URL with query parameters
-    // Use API URL and convert to WebSocket protocol
-    const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.0.29:5024';
-    const baseUrl = apiUrl.replace('http://', 'ws://').replace('https://', 'wss://');
+    // Use centralized API_CONFIG.WS_URL which already handles environment variables and protocol conversion
+    const wsBaseUrl = API_CONFIG.WS_URL.split('/api/v1/chat/ws')[0];
     const params = new URLSearchParams();
     if (this.sessionId) params.append('session_id', this.sessionId);
     if (this.storeId) params.append('store_id', this.storeId);
     if (this.userId) params.append('user_id', this.userId);
     // Don't send agent_id and personality_id as URL params - they're managed via session_update
 
-    this.wsUrl = `${baseUrl}/api/v1/chat/ws${params.toString() ? '?' + params.toString() : ''}`;
+    this.wsUrl = `${wsBaseUrl}/api/v1/chat/ws${params.toString() ? '?' + params.toString() : ''}`;
+
+    console.log('[WebSocket] Connecting to URL:', this.wsUrl);
+    console.log('[WebSocket] API_CONFIG.WS_URL:', API_CONFIG.WS_URL);
+    console.log('[WebSocket] wsBaseUrl:', wsBaseUrl);
 
     this.setupWebSocket();
   }
@@ -183,6 +187,8 @@ class ChatWebSocketService {
                 products: data.products,
                 action: data.action,
                 timestamp: data.timestamp || Date.now(),
+                response_time: data.response_time,
+                token_count: data.token_count,
               });
               break;
 
@@ -195,6 +201,13 @@ class ChatWebSocketService {
 
             case 'typing':
               this.emit('typing', {});
+              break;
+
+            case 'token_update':
+              this.emit('token_update', {
+                message_id: data.message_id,
+                current_tokens: data.current_tokens,
+              });
               break;
 
             case 'error':
@@ -320,7 +333,7 @@ class ChatWebSocketService {
   sendMessage(content: string, isVoice: boolean = false, context?: any) {
     const message = {
       type: 'message',
-      content,
+      message: content,  // Backend expects "message" field, not "content"
       is_voice: isVoice,
       timestamp: Date.now(),
       session_id: this.sessionId,
@@ -329,6 +342,7 @@ class ChatWebSocketService {
       // Don't send agent/personality in messages - they're managed at session level
     };
 
+    console.log('[WebSocket] Sending message:', message);
     this.sendRawMessage(message);
   }
 
