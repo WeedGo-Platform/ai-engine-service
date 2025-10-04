@@ -1772,6 +1772,8 @@ class SmartAIEngineV5:
                     "final_prompt": final_prompt if used_template else None,
                     "products": products_array,
                     "quick_actions": quick_actions,
+                    "detected_intent": intent_result.get('intent') if isinstance(intent_result, dict) and 'intent_result' in locals() else None,
+                    "intent_confidence": intent_result.get('confidence') if isinstance(intent_result, dict) and 'intent_result' in locals() else None,
                     "error": None,
                     **system_info  # Add system config info
                 }

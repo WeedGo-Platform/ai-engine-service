@@ -1,8 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { format } from 'date-fns';
 import { ChatMessage } from '../../stores/chatStore';
 import { ProductMessage } from './ProductMessage';
+import { ResponseMetrics } from './ResponseMetrics';
+import { QuickActionPills } from './QuickActionPills';
 import { Colors } from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -10,10 +13,12 @@ interface MessageBubbleProps {
   message: ChatMessage & {
     response_time?: number;
     token_count?: number;
+    quick_actions?: Array<{ label: string; action: string; data?: any }>;
   };
+  onQuickActionPress?: (action: string, data?: any) => void;
 }
 
-export function MessageBubble({ message }: MessageBubbleProps) {
+export const MessageBubble = React.memo(({ message, onQuickActionPress }: MessageBubbleProps) => {
   const isUser = message.type === 'user';
   const isSystem = message.type === 'system';
 
@@ -26,32 +31,54 @@ export function MessageBubble({ message }: MessageBubbleProps) {
       styles.container,
       isUser ? styles.userContainer : styles.assistantContainer,
     ]}>
-      {message.isVoice && (
-        <View style={styles.voiceIndicator}>
-          <Ionicons name="mic" size={12} color={isUser ? '#fff' : Colors.light.primary} />
+      {isUser ? (
+        <LinearGradient
+          colors={['#8B5CF6', '#7C3AED']}
+          style={[styles.bubble, styles.userBubble]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+        >
+          <Text style={[styles.text, styles.userText]}>
+            {message.content}
+          </Text>
+
+          {message.status === 'sending' && (
+            <View style={styles.statusIndicator}>
+              <Ionicons name="time-outline" size={12} color="#fff" />
+            </View>
+          )}
+        </LinearGradient>
+      ) : (
+        <View style={[
+          styles.bubble,
+          styles.assistantBubble,
+          isSystem && styles.systemBubble,
+        ]}>
+          <Text style={[
+            styles.text,
+            styles.assistantText,
+            isSystem && styles.systemText,
+          ]}>
+            {message.content}
+          </Text>
+
+          {message.status === 'sending' && (
+            <View style={styles.statusIndicator}>
+              <Ionicons name="time-outline" size={12} color="#666" />
+            </View>
+          )}
         </View>
       )}
 
-      <View style={[
-        styles.bubble,
-        isUser ? styles.userBubble : styles.assistantBubble,
-        isSystem && styles.systemBubble,
-      ]}>
-        <Text style={[
-          styles.text,
-          isUser ? styles.userText : styles.assistantText,
-          isSystem && styles.systemText,
-        ]}>
-          {message.content}
-        </Text>
+      {/* Quick Action Pills */}
+      {!isUser && message.quick_actions && message.quick_actions.length > 0 && (
+        <QuickActionPills
+          actions={message.quick_actions}
+          onActionPress={onQuickActionPress || (() => {})}
+        />
+      )}
 
-        {message.status === 'sending' && (
-          <View style={styles.statusIndicator}>
-            <Ionicons name="time-outline" size={12} color={isUser ? '#fff' : '#666'} />
-          </View>
-        )}
-      </View>
-
+      {/* Timestamp with inline metadata */}
       <View style={styles.metadata}>
         <Text style={[
           styles.time,
@@ -60,21 +87,13 @@ export function MessageBubble({ message }: MessageBubbleProps) {
           {message.timestamp && !isNaN(new Date(message.timestamp).getTime())
             ? format(new Date(message.timestamp), 'HH:mm')
             : ''}
+          {!isUser && message.token_count && `, ${message.token_count}t`}
+          {!isUser && message.response_time && `, ${message.response_time.toFixed(1)}s`}
         </Text>
-        {!isUser && message.response_time !== undefined && (
-          <Text style={styles.metaText}>
-            {' • '}{message.response_time.toFixed(2)}s
-          </Text>
-        )}
-        {!isUser && message.token_count !== undefined && (
-          <Text style={styles.metaText}>
-            {' • '}{message.token_count} tokens
-          </Text>
-        )}
       </View>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -90,18 +109,15 @@ const styles = StyleSheet.create({
   bubble: {
     maxWidth: '80%',
     paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingVertical: 12,
     borderRadius: 18,
   },
   userBubble: {
-    backgroundColor: Colors.light.primary,
     borderBottomRightRadius: 4,
   },
   assistantBubble: {
-    backgroundColor: '#fff',
+    backgroundColor: '#F3F4F6',
     borderBottomLeftRadius: 4,
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
   },
   systemBubble: {
     backgroundColor: '#f9fafb',
@@ -115,7 +131,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   assistantText: {
-    color: Colors.light.text,
+    color: '#1F2937',
   },
   systemText: {
     color: '#6b7280',
@@ -128,20 +144,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
   },
   userTime: {
-    color: '#9ca3af',
+    color: '#F59E0B',
+    fontStyle: 'italic',
   },
   assistantTime: {
-    color: '#9ca3af',
-  },
-  voiceIndicator: {
-    position: 'absolute',
-    top: -4,
-    right: 16,
-    backgroundColor: Colors.light.primary,
-    borderRadius: 10,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    zIndex: 1,
+    color: '#F59E0B',
+    fontStyle: 'italic',
   },
   statusIndicator: {
     position: 'absolute',

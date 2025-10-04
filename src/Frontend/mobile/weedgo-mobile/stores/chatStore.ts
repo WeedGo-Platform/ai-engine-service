@@ -22,6 +22,7 @@ export interface ChatMessage {
   status?: 'sending' | 'sent' | 'failed';
   response_time?: number;
   token_count?: number;
+  streaming_tokens?: number;
 }
 
 interface ChatStore {
@@ -136,6 +137,15 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       });
 
       chatWebSocketService.on('response', (data: ChatResponse & { response_time?: number; token_count?: number }) => {
+        console.log('[ChatStore] Received response with metadata:', {
+          id: data.id,
+          response_time: data.response_time,
+          token_count: data.token_count,
+        });
+
+        const state = get();
+        const existingMessage = state.messages.find(msg => msg.id === data.id);
+
         const message: ChatMessage = {
           id: data.id,
           type: data.products && data.products.length > 0 ? 'product' : 'assistant',
@@ -145,9 +155,34 @@ export const useChatStore = create<ChatStore>((set, get) => ({
           timestamp: new Date(data.timestamp),
           response_time: data.response_time,
           token_count: data.token_count,
+          // Preserve streaming_tokens if it exists (will be removed once final token_count is set)
+          streaming_tokens: existingMessage?.streaming_tokens,
         };
+
+        console.log('[ChatStore] Created message object:', {
+          id: message.id,
+          response_time: message.response_time,
+          token_count: message.token_count,
+          streaming_tokens: message.streaming_tokens,
+        });
+
         get().addMessage(message);
         set({ isTyping: false });
+      });
+
+      chatWebSocketService.on('token_update', (data: { message_id: string; current_tokens: number }) => {
+        console.log('[ChatStore] Token update received:', {
+          message_id: data.message_id,
+          current_tokens: data.current_tokens,
+        });
+
+        set((state) => ({
+          messages: state.messages.map((msg) =>
+            msg.id === data.message_id
+              ? { ...msg, streaming_tokens: data.current_tokens }
+              : msg
+          ),
+        }));
       });
 
       chatWebSocketService.on('product_card', (data) => {

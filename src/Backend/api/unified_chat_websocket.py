@@ -147,6 +147,25 @@ class WebSocketConnectionManager:
             }
         )
 
+    async def send_token_update(self, session_id: str, message_id: str, current_tokens: int):
+        """
+        Send token count update to client during response streaming.
+
+        Args:
+            session_id: Session identifier
+            message_id: Message being generated
+            current_tokens: Current token count
+        """
+        await self.send_message(
+            session_id,
+            {
+                "type": WebSocketMessageType.TOKEN_UPDATE.value,
+                "message_id": message_id,
+                "current_tokens": current_tokens,
+                "timestamp": datetime.utcnow().isoformat()
+            }
+        )
+
 
 # Global connection manager instance
 _connection_manager: Optional[WebSocketConnectionManager] = None
@@ -244,15 +263,38 @@ async def handle_websocket_connection(
                     # Stop typing indicator
                     await manager.send_typing_indicator(active_session_id, False)
 
-                    # Send response
+                    # Extract metadata for top-level fields
+                    metadata = response_data.get("metadata", {})
+                    final_token_count = metadata.get("tokens_used", 0)
+
+                    # Generate message ID for this response
+                    message_id = response_data.get("id", datetime.utcnow().isoformat())
+
+                    # Simulate token streaming for UX (send incremental updates)
+                    if final_token_count > 0:
+                        num_updates = min(5, final_token_count // 10)  # Send 5-10 updates
+
+                        for i in range(1, num_updates + 1):
+                            current_tokens = int((final_token_count * i) / (num_updates + 1))
+                            await manager.send_token_update(
+                                active_session_id,
+                                message_id,
+                                current_tokens
+                            )
+                            await asyncio.sleep(0.05)  # 50ms between updates
+
+                    # Send response with extracted metadata fields
                     await manager.send_message(
                         active_session_id,
                         {
                             "type": WebSocketMessageType.MESSAGE.value,
+                            "id": message_id,
                             "content": response_data.get("text", ""),
                             "products": response_data.get("products", []),
                             "quick_actions": response_data.get("quick_actions", []),
-                            "metadata": response_data.get("metadata", {}),
+                            "metadata": metadata,
+                            "response_time": metadata.get("response_time"),
+                            "token_count": metadata.get("tokens_used"),
                             "timestamp": datetime.utcnow().isoformat()
                         }
                     )
@@ -318,13 +360,15 @@ async def handle_websocket_connection(
                     )
 
             # ============================================================
-            # Handle Message Type: "heartbeat"
+            # Handle Message Type: "heartbeat" or "ping"
             # ============================================================
-            elif message_type == "heartbeat":
+            elif message_type in ("heartbeat", "ping"):
+                # Respond with same message type as received (ping->pong, heartbeat->heartbeat)
+                response_type = "pong" if message_type == "ping" else "heartbeat"
                 await manager.send_message(
                     active_session_id,
                     {
-                        "type": "heartbeat",
+                        "type": response_type,
                         "timestamp": datetime.utcnow().isoformat()
                     }
                 )
