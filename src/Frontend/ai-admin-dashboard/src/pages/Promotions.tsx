@@ -1,14 +1,22 @@
+// Enhanced Promotion Wizard with Step-based UI
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Plus, Edit2, Trash2, Calendar, DollarSign,
   Tag, Users, TrendingUp, Package, Copy, CheckCircle,
-  ChevronRight, ChevronDown, Percent, Hash, Search, RotateCcw
+  ChevronRight, ChevronDown, Percent, Hash, Search, RotateCcw, ArrowLeft, ArrowRight
 } from 'lucide-react';
 import { format } from 'date-fns';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useStoreContext } from '../contexts/StoreContext';
+import {
+  Step1BasicInfo,
+  Step2Discount,
+  Step3Scope,
+  Step4Settings,
+  Step5Review
+} from '../components/PromotionWizardSteps';
 
 const API_BASE_URL = 'http://localhost:5024';
 
@@ -35,19 +43,40 @@ interface Promotion {
   end_date?: string;
   active: boolean;
   first_time_customer_only: boolean;
+
+  // Enhanced Promotion System Fields
+  store_id?: string;
+  tenant_id?: string;
+  is_continuous?: boolean;
+  recurrence_type?: string;
+  day_of_week?: number[];
+  time_start?: string;
+  time_end?: string;
+  timezone?: string;
 }
 
 export default function Promotions() {
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [editingPromotion, setEditingPromotion] = useState<Promotion | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [modalMode, setModalMode] = useState<'create' | 'edit' | 'view'>('create');
+  const [selectedPromotion, setSelectedPromotion] = useState<Promotion | null>(null);
   const [activeTab, setActiveTab] = useState<'promotions' | 'tiers' | 'analytics' | 'pricing'>('promotions');
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [promotionToDelete, setPromotionToDelete] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
   const queryClient = useQueryClient();
+  const { currentStore } = useStoreContext();
+  const [userRole] = useState<'platform_admin' | 'tenant_admin' | 'store_manager'>('platform_admin');
 
-  // Fetch active promotions
+  // Fetch all promotions with role-based filtering
   const { data: promotions, isLoading } = useQuery({
-    queryKey: ['promotions'],
+    queryKey: ['promotions', userRole, currentStore?.id],
     queryFn: async () => {
-      const response = await axios.get(`${API_BASE_URL}/api/promotions/active`);
+      const params = new URLSearchParams();
+      if (userRole === 'store_manager' && currentStore?.id) {
+        params.append('store_id', currentStore.id);
+      }
+      const url = `${API_BASE_URL}/api/promotions/list${params.toString() ? `?${params.toString()}` : ''}`;
+      const response = await axios.get(url);
       return response.data.promotions;
     }
   });
@@ -72,17 +101,57 @@ export default function Promotions() {
 
   // Create promotion mutation
   const createPromotion = useMutation({
-    mutationFn: async (data: Partial<Promotion>) => {
-      const response = await axios.post(`${API_BASE_URL}/api/promotions/create`, data);
+    mutationFn: async (data: Partial<Promotion> & { user_role?: string }) => {
+      const { user_role, ...promotionData } = data;
+      const params = new URLSearchParams();
+      if (user_role) params.append('user_role', user_role);
+      const url = `${API_BASE_URL}/api/promotions/create${params.toString() ? `?${params.toString()}` : ''}`;
+      const response = await axios.post(url, promotionData);
       return response.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['promotions'] });
       toast.success('Promotion created successfully!');
-      setShowCreateModal(false);
+      setShowModal(false);
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.detail || 'Failed to create promotion');
+    }
+  });
+
+  // Update promotion mutation
+  const updatePromotion = useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: Partial<Promotion> & { user_role?: string } }) => {
+      const { user_role, ...promotionData } = data;
+      const params = new URLSearchParams();
+      if (user_role) params.append('user_role', user_role);
+      const url = `${API_BASE_URL}/api/promotions/${id}${params.toString() ? `?${params.toString()}` : ''}`;
+      const response = await axios.put(url, promotionData);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['promotions'] });
+      toast.success('Promotion updated successfully!');
+      setShowModal(false);
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.detail || 'Failed to update promotion');
+    }
+  });
+
+  // Delete promotion mutation
+  const deletePromotion = useMutation({
+    mutationFn: async (id: string) => {
+      await axios.delete(`${API_BASE_URL}/api/promotions/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['promotions'] });
+      toast.success('Promotion deleted successfully!');
+      setShowDeleteDialog(false);
+      setPromotionToDelete(null);
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.detail || 'Failed to delete promotion');
     }
   });
 
@@ -126,13 +195,33 @@ export default function Promotions() {
           <p className="text-gray-600">Manage discounts, promotions, and price tiers</p>
         </div>
         <button
-          onClick={() => setShowCreateModal(true)}
+          onClick={() => {
+            setModalMode('create');
+            setSelectedPromotion(null);
+            setShowModal(true);
+          }}
           className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
         >
           <Plus className="h-5 w-5 mr-2" />
-          Create Promotion
+          Create New Promotion
         </button>
       </div>
+
+      {/* Search Bar */}
+      {activeTab === 'promotions' && (
+        <div className="flex items-center space-x-4">
+          <div className="flex-1 relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search promotions by name or code..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            />
+          </div>
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="border-b border-gray-200">
@@ -214,7 +303,13 @@ export default function Promotions() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {promotions?.map((promo: Promotion) => (
+                  {promotions
+                    ?.filter((promo: Promotion) =>
+                      !searchTerm ||
+                      promo.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                      promo.code?.toLowerCase().includes(searchTerm.toLowerCase())
+                    )
+                    .map((promo: Promotion) => (
                     <tr key={promo.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
@@ -278,12 +373,24 @@ export default function Promotions() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button
-                          onClick={() => setEditingPromotion(promo)}
+                          onClick={() => {
+                            setModalMode('edit');
+                            setSelectedPromotion(promo);
+                            setShowModal(true);
+                          }}
                           className="text-indigo-600 hover:text-indigo-900 mr-3"
+                          title="Edit promotion"
                         >
                           <Edit2 className="h-4 w-4" />
                         </button>
-                        <button className="text-danger-600 hover:text-red-900">
+                        <button
+                          onClick={() => {
+                            setPromotionToDelete(promo.id);
+                            setShowDeleteDialog(true);
+                          }}
+                          className="text-danger-600 hover:text-red-900"
+                          title="Delete promotion"
+                        >
                           <Trash2 className="h-4 w-4" />
                         </button>
                       </td>
@@ -402,30 +509,99 @@ export default function Promotions() {
       )}
 
       {/* Create/Edit Modal */}
-      {(showCreateModal || editingPromotion) && (
+      {showModal && (
         <PromotionModal
-          promotion={editingPromotion}
+          mode={modalMode}
+          promotion={selectedPromotion}
           onClose={() => {
-            setShowCreateModal(false);
-            setEditingPromotion(null);
+            setShowModal(false);
+            setSelectedPromotion(null);
           }}
-          onSave={(data) => createPromotion.mutate(data)}
+          onSave={(data) => {
+            if (modalMode === 'edit' && selectedPromotion) {
+              updatePromotion.mutate({ id: selectedPromotion.id, data });
+            } else {
+              createPromotion.mutate(data);
+            }
+          }}
         />
+      )}
+
+      {/* Delete Confirmation Dialog */}
+      {showDeleteDialog && promotionToDelete && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Delete Promotion</h3>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete this promotion? This action cannot be undone.
+            </p>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => {
+                  setShowDeleteDialog(false);
+                  setPromotionToDelete(null);
+                }}
+                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => deletePromotion.mutate(promotionToDelete)}
+                className="px-4 py-2 bg-danger-600 text-white rounded-lg hover:bg-danger-700"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
 }
 
-// Promotion Modal Component
-function PromotionModal({ 
-  promotion, 
-  onClose, 
-  onSave 
-}: { 
+// Enhanced Multi-Step Promotion Wizard Component
+function PromotionModal({
+  mode,
+  promotion,
+  onClose,
+  onSave
+}: {
+  mode: 'create' | 'edit' | 'view';
   promotion?: Promotion | null;
   onClose: () => void;
   onSave: (data: Partial<Promotion>) => void;
 }) {
+  const [currentStep, setCurrentStep] = useState(1);
+  const { currentStore } = useStoreContext();
+  const isEditing = mode === 'edit';
+  const isViewing = mode === 'view';
+
+  // Mock user role - In production, get from auth context
+  const [userRole] = useState<'platform_admin' | 'tenant_admin' | 'store_manager'>('platform_admin');
+  const [selectedStores, setSelectedStores] = useState<string[]>([]);
+  const [selectedTenant, setSelectedTenant] = useState<string | null>(null);
+
+  // Initialize tenant and store selections when editing
+  useEffect(() => {
+    if (promotion && isEditing) {
+      if (promotion.tenant_id) {
+        setSelectedTenant(promotion.tenant_id);
+      }
+      if (promotion.store_id) {
+        setSelectedStores([promotion.store_id]);
+      }
+    }
+  }, [promotion, isEditing]);
+
+  // Define steps based on role
+  const steps = [
+    { id: 1, name: 'Basic Info', description: 'Name and description' },
+    { id: 2, name: 'Discount', description: 'Type and value' },
+    { id: 3, name: 'Scope', description: 'Where and when' },
+    { id: 4, name: 'Settings', description: 'Usage limits' },
+    { id: 5, name: 'Review', description: 'Confirm details' }
+  ];
+
   const [formData, setFormData] = useState<Partial<Promotion>>({
     name: promotion?.name || '',
     code: promotion?.code || '',
@@ -440,252 +616,309 @@ function PromotionModal({
     applies_to: promotion?.applies_to || 'all',
     stackable: promotion?.stackable || false,
     priority: promotion?.priority || 0,
-    start_date: promotion?.start_date || new Date().toISOString(),
+    // Send date in simple ISO format without timezone suffix for backend parsing
+    start_date: promotion?.start_date || new Date().toISOString().split('.')[0],
     end_date: promotion?.end_date || undefined,
     active: promotion?.active !== undefined ? promotion.active : true,
     first_time_customer_only: promotion?.first_time_customer_only || false,
+
+    // Enhanced Promotion System Fields
+    store_id: promotion?.store_id || undefined,
+    tenant_id: promotion?.tenant_id || undefined,
+    is_continuous: promotion?.is_continuous || false,
+    recurrence_type: promotion?.recurrence_type || 'none',
+    day_of_week: promotion?.day_of_week || [],
+    time_start: promotion?.time_start || undefined,
+    time_end: promotion?.time_end || undefined,
+    timezone: promotion?.timezone || 'America/Toronto',
   });
+
+  // Fetch stores for dropdown (filtered by selected tenant)
+  const { data: stores } = useQuery({
+    queryKey: ['stores', selectedTenant],
+    queryFn: async () => {
+      const token = localStorage.getItem('weedgo_auth_access_token') ||
+                    sessionStorage.getItem('weedgo_auth_access_token');
+
+      // Build query params for tenant filtering
+      const params = new URLSearchParams();
+      if (selectedTenant) {
+        params.append('tenant_id', selectedTenant);
+      }
+
+      const url = `${API_BASE_URL}/api/stores${params.toString() ? `?${params.toString()}` : ''}`;
+      const response = await axios.get(url, {
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+      });
+      // API returns array directly, not wrapped in {stores: [...]}
+      return response.data || [];
+    },
+    enabled: userRole !== 'store_manager', // Store managers don't need to fetch stores
+  });
+
+  // Fetch tenants for dropdown (only for platform admins)
+  const { data: tenants } = useQuery({
+    queryKey: ['tenants'],
+    queryFn: async () => {
+      const token = localStorage.getItem('weedgo_auth_access_token') ||
+                    sessionStorage.getItem('weedgo_auth_access_token');
+      const response = await axios.get(`${API_BASE_URL}/api/tenants`, {
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+      });
+      // API returns array directly, not wrapped in {tenants: [...]}
+      return response.data || [];
+    },
+    enabled: userRole === 'platform_admin', // Only platform admins need tenant selection
+  });
+
+  // Handle day of week toggle
+  const toggleDayOfWeek = (day: number) => {
+    const currentDays = formData.day_of_week || [];
+    if (currentDays.includes(day)) {
+      setFormData({
+        ...formData,
+        day_of_week: currentDays.filter(d => d !== day)
+      });
+    } else {
+      setFormData({
+        ...formData,
+        day_of_week: [...currentDays, day].sort()
+      });
+    }
+  };
+
+  // Initialize store context for store managers
+  React.useEffect(() => {
+    if (userRole === 'store_manager' && currentStore) {
+      setFormData(prev => ({ ...prev, store_id: currentStore.id }));
+      setSelectedStores([currentStore.id]);
+    }
+  }, [userRole, currentStore]);
+
+  // Step validation
+  const isStepValid = (step: number): boolean => {
+    switch (step) {
+      case 1:
+        return !!(formData.name && formData.name.trim());
+      case 2:
+        return !!(formData.discount_type && formData.discount_value && formData.discount_value > 0);
+      case 3:
+        return !!(formData.start_date);
+      case 4:
+        return true; // Optional settings
+      case 5:
+        return true; // Review step
+      default:
+        return false;
+    }
+  };
+
+  // Navigation handlers
+  const handleNext = () => {
+    if (currentStep < steps.length && isStepValid(currentStep)) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const handleBack = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(formData);
+
+    // Apply selected stores based on role
+    let finalData: any = { ...formData };
+
+    if (userRole === 'platform_admin' && selectedTenant) {
+      finalData.tenant_id = selectedTenant;
+    }
+
+    if (userRole === 'tenant_admin' || userRole === 'platform_admin') {
+      if (selectedStores.length === 1) {
+        finalData.store_id = selectedStores[0];
+      } else if (selectedStores.length === 0) {
+        // Apply to all stores
+        finalData.store_id = undefined;
+      }
+    }
+
+    if (userRole === 'store_manager' && currentStore) {
+      finalData.store_id = currentStore.id;
+    }
+
+    // Include user_role for backend permission validation
+    finalData.user_role = userRole;
+
+    onSave(finalData);
+  };
+
+  // Toggle store selection for multi-store
+  const toggleStore = (storeId: string) => {
+    setSelectedStores(prev =>
+      prev.includes(storeId)
+        ? prev.filter(id => id !== storeId)
+        : [...prev, storeId]
+    );
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg border border-gray-200 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-6 border-b">
-          <h2 className="text-xl font-semibold text-gray-900">
-            {promotion ? 'Edit Promotion' : 'Create New Promotion'}
-          </h2>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+        {/* Header with Progress */}
+        <div className="p-6 border-b bg-gradient-to-r from-primary-50 to-primary-100">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-2xl font-bold text-gray-900">
+              {mode === 'edit' ? 'Edit Promotion' : mode === 'view' ? 'View Promotion' : 'Create New Promotion'}
+            </h2>
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Step Progress Indicator */}
+          <nav aria-label="Progress">
+            <ol className="flex items-center">
+              {steps.map((step, idx) => (
+                <li key={step.id} className={`relative ${idx !== steps.length - 1 ? 'pr-8 sm:pr-20 flex-1' : ''}`}>
+                  <div className="flex items-center">
+                    <div className="relative flex h-8 w-8 items-center justify-center">
+                      {currentStep > step.id ? (
+                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-600">
+                          <svg className="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                      ) : currentStep === step.id ? (
+                        <div className="relative flex h-8 w-8 items-center justify-center rounded-full border-2 border-primary-600 bg-white">
+                          <span className="text-primary-600 font-semibold">{step.id}</span>
+                          <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs font-medium text-primary-600 whitespace-nowrap hidden sm:block">
+                            {step.name}
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-gray-300 bg-white">
+                          <span className="text-gray-500">{step.id}</span>
+                        </div>
+                      )}
+                    </div>
+                    {idx !== steps.length - 1 && (
+                      <div className="absolute top-4 left-8 right-0 h-0.5 bg-gray-300" style={{
+                        backgroundColor: currentStep > step.id ? '#4f46e5' : '#e5e7eb'
+                      }} />
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </nav>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div className="grid grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Promotion Name *
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+        {/* Form Content */}
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto">
+          <div className="p-6 space-y-6 min-h-[400px]">
+            {/* Step Content */}
+            {currentStep === 1 && (
+              <Step1BasicInfo
+                formData={formData}
+                setFormData={setFormData}
               />
-            </div>
+            )}
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Promo Code
-              </label>
-              <input
-                type="text"
-                value={formData.code}
-                onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
-                placeholder="e.g., SAVE20"
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+            {currentStep === 2 && (
+              <Step2Discount
+                formData={formData}
+                setFormData={setFormData}
               />
-            </div>
+            )}
+
+            {currentStep === 3 && (
+              <Step3Scope
+                formData={formData}
+                setFormData={setFormData}
+                stores={stores}
+                tenants={tenants}
+                selectedStores={selectedStores}
+                toggleStore={toggleStore}
+                setSelectedStores={setSelectedStores}
+                selectedTenant={selectedTenant}
+                setSelectedTenant={setSelectedTenant}
+                userRole={userRole}
+                currentStore={currentStore}
+                toggleDayOfWeek={toggleDayOfWeek}
+              />
+            )}
+
+            {currentStep === 4 && (
+              <Step4Settings
+                formData={formData}
+                setFormData={setFormData}
+              />
+            )}
+
+            {currentStep === 5 && (
+              <Step5Review
+                formData={formData}
+                stores={stores}
+                tenants={tenants}
+                selectedStores={selectedStores}
+                selectedTenant={selectedTenant}
+                userRole={userRole}
+                currentStore={currentStore}
+              />
+            )}
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Description
-            </label>
-            <textarea
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              rows={2}
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-6">
+          {/* Navigation Buttons */}
+          <div className="flex justify-between items-center px-6 py-4 border-t bg-gray-50">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Promotion Type *
-              </label>
-              <select
-                value={formData.type}
-                onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+              {currentStep > 1 && (
+                <button
+                  type="button"
+                  onClick={handleBack}
+                  className="flex items-center px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back
+                </button>
+              )}
+            </div>
+
+            <div className="flex space-x-3">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
               >
-                <option value="percentage">Percentage Discount</option>
-                <option value="fixed_amount">Fixed Amount</option>
-                <option value="bogo">Buy One Get One</option>
-                <option value="bundle">Bundle Deal</option>
-                <option value="tiered">Tiered Discount</option>
-              </select>
+                Cancel
+              </button>
+
+              {currentStep < 5 ? (
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  disabled={!isStepValid(currentStep)}
+                  className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                >
+                  Next
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  className="px-6 py-2 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-lg hover:from-primary-700 hover:to-primary-800 shadow-sm transition-all"
+                >
+                  {mode === 'edit' ? 'Update' : 'Create'} Promotion
+                </button>
+              )}
             </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Discount Type *
-              </label>
-              <select
-                value={formData.discount_type}
-                onChange={(e) => setFormData({ ...formData, discount_type: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-              >
-                <option value="percentage">Percentage</option>
-                <option value="amount">Fixed Amount</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-3 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Discount Value *
-              </label>
-              <input
-                type="number"
-                required
-                min="0"
-                step="0.01"
-                value={formData.discount_value}
-                onChange={(e) => setFormData({ ...formData, discount_value: parseFloat(e.target.value) })}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Min Purchase
-              </label>
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value={formData.min_purchase_amount || ''}
-                onChange={(e) => setFormData({ ...formData, min_purchase_amount: e.target.value ? parseFloat(e.target.value) : undefined })}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Max Discount
-              </label>
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value={formData.max_discount_amount || ''}
-                onChange={(e) => setFormData({ ...formData, max_discount_amount: e.target.value ? parseFloat(e.target.value) : undefined })}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Start Date *
-              </label>
-              <input
-                type="datetime-local"
-                required
-                value={formData.start_date ? formData.start_date.slice(0, 16) : ''}
-                onChange={(e) => setFormData({ ...formData, start_date: new Date(e.target.value).toISOString() })}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                End Date
-              </label>
-              <input
-                type="datetime-local"
-                value={formData.end_date ? formData.end_date.slice(0, 16) : ''}
-                onChange={(e) => setFormData({ ...formData, end_date: e.target.value ? new Date(e.target.value).toISOString() : undefined })}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Usage Limit (Total)
-              </label>
-              <input
-                type="number"
-                min="0"
-                value={formData.total_usage_limit || ''}
-                onChange={(e) => setFormData({ ...formData, total_usage_limit: e.target.value ? parseInt(e.target.value) : undefined })}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Per Customer Limit
-              </label>
-              <input
-                type="number"
-                min="0"
-                value={formData.usage_limit_per_customer || ''}
-                onChange={(e) => setFormData({ ...formData, usage_limit_per_customer: e.target.value ? parseInt(e.target.value) : undefined })}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={formData.stackable}
-                onChange={(e) => setFormData({ ...formData, stackable: e.target.checked })}
-                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-200 rounded"
-              />
-              <span className="ml-2 text-sm text-gray-700">
-                Allow stacking with other promotions
-              </span>
-            </label>
-
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={formData.first_time_customer_only}
-                onChange={(e) => setFormData({ ...formData, first_time_customer_only: e.target.checked })}
-                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-200 rounded"
-              />
-              <span className="ml-2 text-sm text-gray-700">
-                First-time customers only
-              </span>
-            </label>
-
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={formData.active}
-                onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
-                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-200 rounded"
-              />
-              <span className="ml-2 text-sm text-gray-700">
-                Active
-              </span>
-            </label>
-          </div>
-
-          <div className="flex justify-end space-x-3 pt-4 border-t">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-300"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
-            >
-              {promotion ? 'Update' : 'Create'} Promotion
-            </button>
           </div>
         </form>
       </div>
@@ -726,7 +959,7 @@ function PricingConfiguration() {
           ...(token && { 'Authorization': `Bearer ${token}` })
         }
       });
-      return response.data.settings;
+      return response.data.settings || { default_markup_enabled: false, default_markup_percentage: 0 };
     },
     enabled: !!currentStore?.id,
     onSuccess: (data) => {
@@ -787,7 +1020,7 @@ function PricingConfiguration() {
           ...(token && { 'Authorization': `Bearer ${token}` })
         }
       });
-      return response.data.categories;
+      return response.data.categories || [];
     },
     enabled: !!currentStore?.id
   });

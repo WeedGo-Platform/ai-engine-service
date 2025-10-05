@@ -74,6 +74,15 @@ class PromotionCreate(BaseModel):
     hour_of_day: Optional[List[int]] = None
     first_time_customer_only: bool = False
 
+    # NEW FIELDS - Enhanced Promotion System
+    store_id: Optional[UUID] = Field(None, description="Limit promotion to specific store")
+    tenant_id: Optional[UUID] = Field(None, description="Limit promotion to specific tenant")
+    is_continuous: bool = Field(False, description="If true, promotion runs indefinitely")
+    recurrence_type: str = Field('none', description="Recurrence pattern: none, daily, weekly")
+    time_start: Optional[str] = Field(None, description="Daily start time (HH:MM:SS format)")
+    time_end: Optional[str] = Field(None, description="Daily end time (HH:MM:SS format)")
+    timezone: str = Field('America/Toronto', description="IANA timezone for time windows")
+
 
 class ValidateCodeRequest(BaseModel):
     code: str
@@ -120,12 +129,37 @@ async def get_active_promotions(
 @router.post("/create")
 async def create_promotion(
     promotion: PromotionCreate,
+    created_by_user_id: Optional[UUID] = None,
+    user_role: Optional[str] = Query(None, description="User role: platform_admin, tenant_admin, store_manager"),
     service: PromotionService = Depends(get_promotion_service)
 ):
-    """Create a new promotion"""
+    """
+    Create a new promotion with enhanced fields.
+
+    **Permission Levels:**
+    - `platform_admin`: Can create any type of promotion
+    - `tenant_admin`: Must specify tenant_id
+    - `store_manager`: Must specify store_id, cannot specify tenant_id
+
+    **New Features:**
+    - Continuous promotions (no end date)
+    - Recurring schedules (daily/weekly with time windows)
+    - Store/tenant scoping
+    - Timezone support
+    """
     try:
-        result = await service.create_promotion(promotion.dict())
+        result = await service.create_promotion(
+            promotion_data=promotion.dict(),
+            created_by_user_id=created_by_user_id,
+            user_role=user_role
+        )
         return {"success": True, "promotion": result}
+    except ValueError as e:
+        logger.warning(f"Validation error creating promotion: {str(e)}")
+        raise HTTPException(status_code=400, detail=str(e))
+    except PermissionError as e:
+        logger.warning(f"Permission error creating promotion: {str(e)}")
+        raise HTTPException(status_code=403, detail=str(e))
     except Exception as e:
         logger.error(f"Error creating promotion: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -256,6 +290,41 @@ async def assign_price_tier(
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@router.get("/list")
+async def list_all_promotions(
+    tenant_id: Optional[UUID] = Query(None),
+    store_id: Optional[UUID] = Query(None),
+    active_only: bool = Query(False),
+    service: PromotionService = Depends(get_promotion_service)
+):
+    """List all promotions with optional filtering by tenant/store"""
+    try:
+        pool = await get_db_pool()
+        async with pool.acquire() as conn:
+            query = "SELECT * FROM promotions WHERE 1=1"
+            params = []
+
+            if active_only:
+                query += " AND active = $" + str(len(params) + 1)
+                params.append(True)
+
+            if tenant_id:
+                query += " AND tenant_id = $" + str(len(params) + 1)
+                params.append(tenant_id)
+
+            if store_id:
+                query += " AND store_id = $" + str(len(params) + 1)
+                params.append(store_id)
+
+            query += " ORDER BY created_at DESC"
+
+            promotions = await conn.fetch(query, *params)
+            return {"promotions": [dict(p) for p in promotions]}
+    except Exception as e:
+        logger.error(f"Error listing promotions: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.get("/analytics")
 async def get_promotion_analytics(
     start_date: Optional[datetime] = None,
@@ -268,6 +337,137 @@ async def get_promotion_analytics(
         return analytics
     except Exception as e:
         logger.error(f"Error getting analytics: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/{promotion_id}")
+async def get_promotion(
+    promotion_id: UUID,
+    service: PromotionService = Depends(get_promotion_service)
+):
+    """Get a single promotion by ID"""
+    try:
+        pool = await get_db_pool()
+        async with pool.acquire() as conn:
+            promo = await conn.fetchrow(
+                "SELECT * FROM promotions WHERE id = $1",
+                promotion_id
+            )
+            if not promo:
+                raise HTTPException(status_code=404, detail="Promotion not found")
+            return {"promotion": dict(promo)}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting promotion: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.put("/{promotion_id}")
+async def update_promotion(
+    promotion_id: UUID,
+    promotion: PromotionCreate,
+    user_role: Optional[str] = Query(None),
+    service: PromotionService = Depends(get_promotion_service)
+):
+    """Update an existing promotion"""
+    try:
+        pool = await get_db_pool()
+        async with pool.acquire() as conn:
+            # Check if promotion exists
+            existing = await conn.fetchrow(
+                "SELECT * FROM promotions WHERE id = $1",
+                promotion_id
+            )
+            if not existing:
+                raise HTTPException(status_code=404, detail="Promotion not found")
+
+            # Parse and convert dates/times (same logic as create)
+            from datetime import time as time_type
+
+            start_date = promotion.start_date
+            if isinstance(start_date, str):
+                start_date = datetime.fromisoformat(start_date.replace('Z', '+00:00'))
+                if start_date.tzinfo is not None:
+                    start_date = start_date.replace(tzinfo=None)
+
+            end_date = promotion.end_date
+            if end_date:
+                if isinstance(end_date, str):
+                    end_date = datetime.fromisoformat(end_date.replace('Z', '+00:00'))
+                    if end_date.tzinfo is not None:
+                        end_date = end_date.replace(tzinfo=None)
+
+            time_start = promotion.time_start
+            if time_start and isinstance(time_start, str):
+                parts = time_start.split(':')
+                time_start = time_type(int(parts[0]), int(parts[1]), int(parts[2]) if len(parts) > 2 else 0)
+
+            time_end = promotion.time_end
+            if time_end and isinstance(time_end, str):
+                parts = time_end.split(':')
+                time_end = time_type(int(parts[0]), int(parts[1]), int(parts[2]) if len(parts) > 2 else 0)
+
+            # Update promotion
+            updated = await conn.fetchrow("""
+                UPDATE promotions SET
+                    code = $1, name = $2, description = $3, type = $4,
+                    discount_type = $5, discount_value = $6,
+                    min_purchase_amount = $7, max_discount_amount = $8,
+                    usage_limit_per_customer = $9, total_usage_limit = $10,
+                    applies_to = $11, category_ids = $12, brand_ids = $13,
+                    product_ids = $14, stackable = $15, priority = $16,
+                    start_date = $17, end_date = $18, active = $19,
+                    day_of_week = $20, hour_of_day = $21,
+                    first_time_customer_only = $22, store_id = $23,
+                    tenant_id = $24, is_continuous = $25,
+                    recurrence_type = $26, time_start = $27, time_end = $28,
+                    timezone = $29, updated_at = NOW()
+                WHERE id = $30
+                RETURNING *
+            """,
+                promotion.code, promotion.name, promotion.description, promotion.type,
+                promotion.discount_type, promotion.discount_value,
+                promotion.min_purchase_amount, promotion.max_discount_amount,
+                promotion.usage_limit_per_customer, promotion.total_usage_limit,
+                promotion.applies_to, promotion.category_ids, promotion.brand_ids,
+                promotion.product_ids, promotion.stackable, promotion.priority,
+                start_date, end_date, promotion.active,
+                promotion.day_of_week, promotion.hour_of_day,
+                promotion.first_time_customer_only, promotion.store_id,
+                promotion.tenant_id, promotion.is_continuous,
+                promotion.recurrence_type, time_start, time_end,
+                promotion.timezone, promotion_id
+            )
+
+            return {"success": True, "promotion": dict(updated)}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating promotion: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.delete("/{promotion_id}")
+async def delete_promotion(
+    promotion_id: UUID,
+    service: PromotionService = Depends(get_promotion_service)
+):
+    """Delete a promotion"""
+    try:
+        pool = await get_db_pool()
+        async with pool.acquire() as conn:
+            result = await conn.execute(
+                "DELETE FROM promotions WHERE id = $1",
+                promotion_id
+            )
+            if result == "DELETE 0":
+                raise HTTPException(status_code=404, detail="Promotion not found")
+            return {"success": True, "message": "Promotion deleted successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting promotion: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
