@@ -16,6 +16,8 @@ interface OrderSummaryProps {
   tipPercentage: number;
   tipAmount: number;
   total: number;
+  discount?: number;
+  promoCode?: string | null;
   onTipChange: (percentage: number) => void;
 }
 
@@ -26,6 +28,8 @@ export function OrderSummary({
   tipPercentage,
   tipAmount,
   total,
+  discount = 0,
+  promoCode = null,
   onTipChange,
 }: OrderSummaryProps) {
   const [showTipModal, setShowTipModal] = useState(false);
@@ -64,6 +68,19 @@ export function OrderSummary({
           <Text style={styles.summaryLabel}>Subtotal</Text>
           <Text style={styles.summaryValue}>${subtotal.toFixed(2)}</Text>
         </View>
+
+        {/* Show discount if promo code applied */}
+        {discount > 0 && promoCode && (
+          <View style={[styles.summaryRow, styles.discountRow]}>
+            <View style={styles.discountLabelContainer}>
+              <Text style={styles.discountLabel}>Discount</Text>
+              <View style={styles.promoCodeBadge}>
+                <Text style={styles.promoCodeText}>{promoCode}</Text>
+              </View>
+            </View>
+            <Text style={styles.discountValue}>-${discount.toFixed(2)}</Text>
+          </View>
+        )}
 
         {!!deliveryFee && deliveryFee > 0 && (
           <View style={styles.summaryRow}>
@@ -237,6 +254,40 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#27AE60',
     fontWeight: '500',
+  },
+  discountRow: {
+    backgroundColor: '#FFF5F5',
+    padding: 8,
+    borderRadius: 8,
+    marginVertical: 4,
+    borderWidth: 1,
+    borderColor: '#FFE5E5',
+  },
+  discountLabelContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  discountLabel: {
+    fontSize: 14,
+    color: '#27AE60',
+    fontWeight: '500',
+  },
+  promoCodeBadge: {
+    backgroundColor: '#F0FFF4',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 8,
+  },
+  promoCodeText: {
+    fontSize: 11,
+    color: '#27AE60',
+    fontWeight: '600',
+  },
+  discountValue: {
+    fontSize: 14,
+    color: '#27AE60',
+    fontWeight: '600',
   },
   divider: {
     height: 1,

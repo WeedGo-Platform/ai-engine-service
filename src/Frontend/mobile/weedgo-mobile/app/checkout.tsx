@@ -29,7 +29,7 @@ import { Ionicons } from '@expo/vector-icons';
 export default function CheckoutScreen() {
   const router = useRouter();
   const { user } = useAuthStore();
-  const { items, subtotal, tax, total, sessionId, clearCart } = useCartStore();
+  const { items, subtotal, tax, total, sessionId, clearCart, discount, promoCode } = useCartStore();
   const { createOrder } = useOrderStore();
   const { getCheckoutDefaults, defaultAddress, defaultPayment } = useProfileStore();
   const { currentStore: selectedStore } = useStoreStore();
@@ -51,9 +51,9 @@ export default function CheckoutScreen() {
     selectedStore?.id || ''
   );
 
-  // Calculate order totals
+  // Calculate order totals - FIXED: Include discount in calculation
   const tipAmount = subtotal * tipPercentage;
-  const orderTotal = subtotal + tax + (deliveryMethod === 'delivery' ? deliveryFee : 0) + tipAmount;
+  const orderTotal = subtotal - discount + tax + (deliveryMethod === 'delivery' ? deliveryFee : 0) + tipAmount;
 
   // Check if ready to order
   const canPlaceOrder = () => {
@@ -228,6 +228,8 @@ export default function CheckoutScreen() {
             tipPercentage={tipPercentage}
             tipAmount={tipAmount}
             total={orderTotal}
+            discount={discount}
+            promoCode={promoCode}
             onTipChange={setTipPercentage}
           />
 

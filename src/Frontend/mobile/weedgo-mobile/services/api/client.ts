@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
 import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 import { ApiError } from '@/types/api.types';
 import { API_URL } from '../../config/api';
@@ -48,9 +49,9 @@ class ApiClient {
           }
         }
 
-        // Add current store ID from secure storage if available
+        // Add current store ID from AsyncStorage if available
         try {
-          const storeData = await SecureStore.getItemAsync('weedgo-store-storage');
+          const storeData = await AsyncStorage.getItem('weedgo-store-storage');
           if (storeData) {
             const parsed = JSON.parse(storeData);
             const currentStore = parsed?.state?.currentStore;
@@ -192,9 +193,10 @@ class ApiClient {
         }
 
         // Transform error for consistent handling
+        // FastAPI uses 'detail' field for error messages, so check that too
         const apiError: ApiError = {
-          error: error.response?.data?.error || 'Unknown error',
-          message: error.response?.data?.message || error.message,
+          error: error.response?.data?.error || error.response?.data?.detail || 'Unknown error',
+          message: error.response?.data?.message || error.response?.data?.detail || error.message,
           statusCode: error.response?.status || 0,
           details: error.response?.data?.details,
         };

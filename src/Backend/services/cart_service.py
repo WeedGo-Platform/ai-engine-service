@@ -17,14 +17,34 @@ logger = logging.getLogger(__name__)
 
 class CartService:
     """Service for managing shopping carts"""
-    
-    def __init__(self, db_pool):
-        """Initialize cart service with database connection pool"""
+
+    def __init__(self, db_pool, promotion_service=None):
+        """Initialize cart service with database connection pool and optional promotion service"""
         self.db_pool = db_pool
+        self.promotion_service = promotion_service
         # Get tax rate from environment or use 13% HST for Ontario
         self.tax_rate = Decimal(os.getenv('TAX_RATE', '0.13'))
         self.delivery_fee = Decimal(os.getenv('DEFAULT_DELIVERY_FEE', '10.00'))
-    
+
+    def _extract_first_discount_code(self, discount_codes) -> Optional[str]:
+        """Safely extract the first discount code from various input formats"""
+        if not discount_codes:
+            return None
+
+        # Handle list type
+        if isinstance(discount_codes, list):
+            return discount_codes[0] if len(discount_codes) > 0 else None
+
+        # Handle string representation of list (e.g., "[]" or '["CODE"]')
+        if isinstance(discount_codes, str):
+            try:
+                codes_list = json.loads(discount_codes)
+                return codes_list[0] if len(codes_list) > 0 else None
+            except (json.JSONDecodeError, IndexError, TypeError):
+                return None
+
+        return None
+
     async def get_or_create_cart(self, session_id: str, 
                                 user_id: Optional[UUID] = None) -> Dict[str, Any]:
         """Get existing cart or create new one for session"""
@@ -73,26 +93,46 @@ class CartService:
             raise
     
     async def add_item(self, session_id: str, product: Dict[str, Any],
-                      quantity: int = 1) -> Dict[str, Any]:
+                      quantity: int = 1, store_id: UUID = None, tenant_id: UUID = None) -> Dict[str, Any]:
         """Add item to cart"""
         try:
             async with self.db_pool.acquire() as conn:
                 async with conn.transaction():
                     # Get or create cart
                     cart = await self.get_or_create_cart(session_id)
-                    
+
+                    # Update cart with store_id and tenant_id if provided
+                    if store_id and not cart.get('store_id'):
+                        await conn.execute(
+                            "UPDATE cart_sessions SET store_id = $1 WHERE id = $2",
+                            store_id, cart['id']
+                        )
+                        cart['store_id'] = store_id
+
+                    if tenant_id and not cart.get('tenant_id'):
+                        await conn.execute(
+                            "UPDATE cart_sessions SET tenant_id = $1 WHERE id = $2",
+                            tenant_id, cart['id']
+                        )
+                        cart['tenant_id'] = tenant_id
+
                     # Check inventory availability
                     if 'sku' in product:
                         inv_query = """
-                            SELECT quantity_available, retail_price
+                            SELECT quantity_available, retail_price, store_id
                             FROM ocs_inventory
                             WHERE sku = $1
                         """
-                        inventory = await conn.fetchrow(inv_query, product['sku'])
-                        
+                        # If store_id provided, filter by store
+                        if store_id:
+                            inv_query += " AND store_id = $2"
+                            inventory = await conn.fetchrow(inv_query, product['sku'], store_id)
+                        else:
+                            inventory = await conn.fetchrow(inv_query, product['sku'])
+
                         if inventory and inventory['quantity_available'] < quantity:
                             raise ValueError(f"Insufficient inventory for SKU {product['sku']}")
-                        
+
                         # Use retail price from inventory if available
                         if inventory:
                             product['price'] = float(inventory['retail_price'])
@@ -266,58 +306,170 @@ class CartService:
             logger.error(f"Error clearing cart: {str(e)}")
             raise
     
+    async def update_cart_context(self, session_id: str, store_id: UUID = None, tenant_id: UUID = None) -> bool:
+        """Update cart's store_id and tenant_id if they're not set"""
+        try:
+            async with self.db_pool.acquire() as conn:
+                cart = await self.get_or_create_cart(session_id)
+
+                logger.info(f"update_cart_context - Current cart: store_id={cart.get('store_id')}, tenant_id={cart.get('tenant_id')}")
+                logger.info(f"update_cart_context - Params: store_id={store_id}, tenant_id={tenant_id}")
+
+                updates = []
+                params = []
+                param_count = 1
+
+                if store_id and not cart.get('store_id'):
+                    updates.append(f"store_id = ${param_count}")
+                    params.append(store_id)
+                    param_count += 1
+                    logger.info(f"Will update store_id to {store_id}")
+
+                if tenant_id and not cart.get('tenant_id'):
+                    updates.append(f"tenant_id = ${param_count}")
+                    params.append(tenant_id)
+                    param_count += 1
+                    logger.info(f"Will update tenant_id to {tenant_id}")
+
+                if updates:
+                    query = f"""
+                        UPDATE cart_sessions
+                        SET {', '.join(updates)}, updated_at = CURRENT_TIMESTAMP
+                        WHERE id = ${param_count}
+                    """
+                    params.append(cart['id'])
+                    logger.info(f"Executing update query: {query} with params: {params}")
+                    await conn.execute(query, *params)
+                    return True
+
+                logger.info("No updates needed - cart already has required IDs or params not provided")
+                return False
+        except Exception as e:
+            logger.error(f"Error updating cart context: {str(e)}")
+            return False
+
     async def apply_discount(self, session_id: str, discount_code: str) -> Dict[str, Any]:
-        """Apply discount code to cart"""
+        """Apply discount code to cart using promotion service"""
         try:
             async with self.db_pool.acquire() as conn:
                 async with conn.transaction():
                     # Get cart
                     cart = await self.get_or_create_cart(session_id)
-                    
-                    # Validate discount code (simplified)
-                    discount_percent = Decimal('0.10')  # 10% discount
-                    if discount_code == 'SAVE20':
-                        discount_percent = Decimal('0.20')  # 20% discount
-                    elif discount_code == 'WELCOME':
-                        discount_percent = Decimal('0.15')  # 15% discount
-                    
-                    # Calculate discount
-                    discount_amount = cart['subtotal'] * discount_percent
-                    total_amount = cart['subtotal'] - discount_amount + cart['tax_amount'] + cart['delivery_fee']
-                    
+
+                    # Validate discount code using promotion service
+                    if not self.promotion_service:
+                        raise ValueError("Promotion service not available")
+
+                    # Validate discount code with store/tenant context
+                    validation = await self.promotion_service.validate_discount_code(
+                        discount_code,
+                        tenant_id=cart.get('tenant_id'),
+                        store_id=cart.get('store_id')
+                    )
+
+                    if not validation['valid']:
+                        # Return user-friendly error message
+                        error_msg = validation.get('error', 'This promo code is not valid')
+                        raise ValueError(error_msg)
+
+                    # Calculate discount based on promotion type
+                    discount_type = validation['discount_type']
+                    discount_value = Decimal(str(validation['discount_value']))
+
+                    if discount_type == 'percentage':
+                        discount_amount = cart['subtotal'] * (discount_value / 100)
+                    else:  # fixed amount
+                        discount_amount = discount_value
+
+                    # Ensure discount doesn't exceed subtotal
+                    discount_amount = min(discount_amount, cart['subtotal'])
+
+                    # Recalculate totals with discount
+                    # Tax is calculated on subtotal AFTER discount
+                    taxable_amount = cart['subtotal'] - discount_amount
+                    tax_amount = taxable_amount * self.tax_rate
+                    total_amount = taxable_amount + tax_amount + cart['delivery_fee']
+
                     # Update cart
                     update_query = """
                         UPDATE cart_sessions
-                        SET discount_code = $2,
+                        SET discount_codes = $2::jsonb,
                             discount_amount = $3,
-                            total_amount = $4,
+                            tax_amount = $4,
+                            total_amount = $5,
                             updated_at = CURRENT_TIMESTAMP
                         WHERE id = $1
                         RETURNING *
                     """
-                    
+
                     updated_cart = await conn.fetchrow(
                         update_query,
                         cart['id'],
-                        discount_code,
+                        json.dumps([discount_code]),  # Store as JSONB array
                         discount_amount,
+                        tax_amount,
                         total_amount
                     )
-                    
+
                     cart_dict = dict(updated_cart)
                     cart_dict['items'] = json.loads(cart_dict['items']) if isinstance(cart_dict['items'], str) else cart_dict['items']
-                    
+
                     return {
                         "success": True,
                         "cart": cart_dict,
-                        "discount_applied": float(discount_amount),
+                        "discount": float(discount_amount),
+                        "discount_applied": float(discount_amount),  # Legacy compatibility
                         "message": f"Discount code {discount_code} applied successfully"
                     }
-                    
+
         except Exception as e:
             logger.error(f"Error applying discount: {str(e)}")
             raise
-    
+
+    async def remove_discount(self, session_id: str) -> Dict[str, Any]:
+        """Remove discount code from cart and recalculate totals"""
+        try:
+            async with self.db_pool.acquire() as conn:
+                async with conn.transaction():
+                    # Get cart
+                    cart = await self.get_or_create_cart(session_id)
+
+                    logger.info(f"Removing discount from cart. Current discount: {cart.get('discount_amount')}, codes: {cart.get('discount_codes')}")
+
+                    # Recalculate totals without discount
+                    tax_amount = cart['subtotal'] * self.tax_rate
+                    total_amount = cart['subtotal'] + tax_amount + cart['delivery_fee']
+
+                    logger.info(f"Recalculated totals - subtotal: {cart['subtotal']}, tax: {tax_amount}, total: {total_amount}")
+
+                    # Update cart
+                    update_query = """
+                        UPDATE cart_sessions
+                        SET discount_codes = '[]'::jsonb,
+                            discount_amount = 0,
+                            tax_amount = $2,
+                            total_amount = $3,
+                            updated_at = CURRENT_TIMESTAMP
+                        WHERE id = $1
+                        RETURNING *
+                    """
+
+                    updated_cart = await conn.fetchrow(
+                        update_query,
+                        cart['id'],
+                        tax_amount,
+                        total_amount
+                    )
+
+                    cart_dict = dict(updated_cart)
+                    cart_dict['items'] = json.loads(cart_dict['items']) if isinstance(cart_dict['items'], str) else cart_dict['items']
+
+                    return cart_dict
+
+        except Exception as e:
+            logger.error(f"Error removing discount: {str(e)}")
+            raise
+
     async def update_delivery_address(self, session_id: str, 
                                     delivery_address: Dict[str, Any]) -> bool:
         """Update delivery address and recalculate delivery fee"""
@@ -376,11 +528,13 @@ class CartService:
                 'subtotal': float(cart['subtotal']),
                 'tax_amount': float(cart['tax_amount']),
                 'discount_amount': float(cart.get('discount_amount', 0)),
-                'discount_code': cart.get('discount_code'),
+                'discount_code': self._extract_first_discount_code(cart.get('discount_codes')),
                 'delivery_fee': float(cart['delivery_fee']),
                 'total_amount': float(cart['total_amount']),
                 'delivery_address': json.loads(cart['delivery_address']) if cart.get('delivery_address') and isinstance(cart['delivery_address'], str) else cart.get('delivery_address'),
                 'status': cart['status'],
+                'store_id': str(cart['store_id']) if cart.get('store_id') else None,
+                'tenant_id': str(cart['tenant_id']) if cart.get('tenant_id') else None,
                 'created_at': cart['created_at'].isoformat() if cart.get('created_at') else None,
                 'updated_at': cart['updated_at'].isoformat() if cart.get('updated_at') else None
             }
