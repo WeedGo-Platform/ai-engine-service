@@ -43,7 +43,7 @@ class OrderTrackingService {
       return;
     }
 
-    const wsUrl = process.env.EXPO_PUBLIC_WS_URL || 'ws://10.0.0.29:5024';
+    const wsUrl = process.env.EXPO_PUBLIC_WS_URL || 'ws://10.0.0.169:5024';
     const authToken = await AsyncStorage.getItem('auth_token');
 
     const url = `${wsUrl}/orders/track${authToken ? `?token=${authToken}` : ''}`;
@@ -219,7 +219,7 @@ class OrderTrackingService {
    */
   async getOrderStatus(orderId: string): Promise<OrderUpdate | null> {
     try {
-      const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.0.29:5024';
+      const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.0.169:5024';
       const authToken = await AsyncStorage.getItem('auth_token');
 
       const response = await fetch(`${apiUrl}/api/orders/${orderId}/status`, {
@@ -250,7 +250,7 @@ class OrderTrackingService {
    */
   async sendDeliveryInstructions(orderId: string, instructions: string): Promise<boolean> {
     try {
-      const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.0.29:5024';
+      const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.0.169:5024';
       const authToken = await AsyncStorage.getItem('auth_token');
 
       const response = await fetch(`${apiUrl}/api/orders/${orderId}/instructions`, {
@@ -274,7 +274,7 @@ class OrderTrackingService {
    */
   async rateDelivery(orderId: string, rating: number, feedback?: string): Promise<boolean> {
     try {
-      const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.0.29:5024';
+      const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.0.169:5024';
       const authToken = await AsyncStorage.getItem('auth_token');
 
       const response = await fetch(`${apiUrl}/api/orders/${orderId}/rate`, {

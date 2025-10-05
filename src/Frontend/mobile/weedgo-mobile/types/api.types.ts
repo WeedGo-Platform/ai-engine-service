@@ -15,7 +15,13 @@ export interface RegisterRequest {
   email?: string;
   first_name?: string;
   last_name?: string;
+  password?: string;
   date_of_birth?: string;
+  accept_terms?: boolean;
+  accept_privacy?: boolean;
+  accept_marketing?: boolean;
+  referral_code?: string;
+  enable_voice_auth?: boolean;
 }
 
 export interface RegisterResponse {
