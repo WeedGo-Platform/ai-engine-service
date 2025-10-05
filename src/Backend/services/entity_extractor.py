@@ -129,7 +129,7 @@ class EntityExtractor:
 
     async def _call_llm(self, prompt: str) -> str:
         """
-        Call LLM directly with prompt
+        Call LLM directly with prompt - BYPASS SmartAIEngineV5.generate() to prevent recursion
 
         Args:
             prompt: Formatted extraction prompt
@@ -138,38 +138,42 @@ class EntityExtractor:
             Raw LLM response text
         """
         try:
-            # Direct model call (adjust based on your model interface)
-            # This assumes model has a generate() or complete() method
-            if hasattr(self.model, 'generate'):
-                response = await self.model.generate(
-                    prompt=prompt,
-                    max_tokens=self.max_tokens,
-                    temperature=self.temperature
-                )
-            elif hasattr(self.model, 'complete'):
-                response = await self.model.complete(
-                    prompt=prompt,
-                    max_new_tokens=self.max_tokens,
-                    temperature=self.temperature
-                )
-            else:
-                # Fallback: assume callable
-                response = await self.model(
+            # CRITICAL: Use the RAW llama-cpp model, NOT SmartAIEngineV5.generate()
+            # SmartAIEngineV5.generate() triggers intent detection → template → tools → RECURSION!
+
+            # Log model type for debugging
+            model_type = type(self.model).__name__
+            logger.debug(f"Entity extraction using model type: {model_type}")
+
+            # Verify it's NOT SmartAIEngineV5 (which would cause recursion)
+            if 'SmartAIEngine' in model_type:
+                logger.error(f"FATAL: EntityExtractor received SmartAIEngineV5 wrapper instead of llama-cpp model!")
+                raise ValueError("EntityExtractor must receive raw llama-cpp Llama instance, not SmartAIEngineV5")
+
+            # Direct llama-cpp call (synchronous, but wrapped in executor)
+            import asyncio
+            loop = asyncio.get_event_loop()
+
+            # Run synchronous llama-cpp call in thread executor
+            response = await loop.run_in_executor(
+                None,
+                lambda: self.model(
                     prompt,
                     max_tokens=self.max_tokens,
-                    temperature=self.temperature
+                    temperature=self.temperature,
+                    stop=["</s>", "\n\n\n"],
+                    echo=False
                 )
+            )
 
-            # Extract text from response (adjust based on model output format)
-            if isinstance(response, dict):
-                return response.get('text', response.get('output', str(response)))
-            elif isinstance(response, str):
-                return response
+            # llama-cpp returns dict with 'choices'
+            if isinstance(response, dict) and 'choices' in response:
+                return response['choices'][0]['text']
             else:
                 return str(response)
 
         except Exception as e:
-            logger.error(f"LLM call failed: {str(e)}")
+            logger.error(f"LLM call failed: {str(e)}", exc_info=True)
             raise
 
     def _parse_and_validate(self, response: str) -> Dict[str, Any]:

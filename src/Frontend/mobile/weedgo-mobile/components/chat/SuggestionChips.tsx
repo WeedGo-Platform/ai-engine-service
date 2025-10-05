@@ -6,18 +6,15 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useChatStore } from '../../stores/chatStore';
 import { Colors } from '@/constants/Colors';
 
 const defaultSuggestions = [
+  'I want edibles',
+  'I want sativa pre-rolls',
   'Show me indica strains',
-  'What has high THC?',
   'Best for sleep',
-  'New arrivals',
-  'Edibles under $30',
-  'CBD products',
-  'Vape cartridges',
-  'Daily deals',
 ];
 
 export function SuggestionChips() {
@@ -25,54 +22,54 @@ export function SuggestionChips() {
   const suggestions = storeSuggestions.length > 0 ? storeSuggestions : defaultSuggestions;
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Suggestions:</Text>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
-        {suggestions.map((suggestion, index) => (
-          <TouchableOpacity
-            key={`${suggestion}-${index}`}
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={styles.scrollContent}
+      style={styles.container}
+    >
+      {suggestions.map((suggestion, index) => (
+        <TouchableOpacity
+          key={`${suggestion}-${index}`}
+          onPress={() => sendMessage(suggestion)}
+          activeOpacity={0.8}
+        >
+          <LinearGradient
+            colors={['#8B5CF6', '#7C3AED']}
             style={styles.chip}
-            onPress={() => sendMessage(suggestion)}
-            activeOpacity={0.7}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
           >
             <Text style={styles.chipText}>{suggestion}</Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-    </View>
+          </LinearGradient>
+        </TouchableOpacity>
+      ))}
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 12,
-  },
-  title: {
-    fontSize: 12,
-    color: '#9ca3af',
-    marginBottom: 8,
-    paddingHorizontal: 20,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
   },
   scrollContent: {
-    paddingHorizontal: 16,
+    gap: 8,
+    paddingRight: 12,
   },
   chip: {
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderRadius: 18,
-    paddingHorizontal: 14,
+    borderRadius: 16,
+    paddingHorizontal: 16,
     paddingVertical: 8,
-    marginHorizontal: 4,
+    minHeight: 36,
   },
   chipText: {
-    fontSize: 14,
-    color: Colors.light.text,
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    textShadowColor: 'rgba(0, 0, 0, 0.1)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+    lineHeight: 20,
   },
 });

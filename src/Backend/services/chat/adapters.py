@@ -63,13 +63,17 @@ class AgentPoolAdapter(IAgentPoolAdapter):
             # Check if session exists in agent pool
             if session_id not in self.agent_pool.sessions:
                 # Create session if it doesn't exist
+                # Note: store_id and language go in metadata, not as direct parameters
+                metadata = {
+                    "store_id": kwargs.get("store_id"),
+                    "language": kwargs.get("language", "en")
+                }
                 await self.agent_pool.create_session(
                     session_id=session_id,
                     agent_id=kwargs.get("agent_id", "dispensary"),
                     personality_id=kwargs.get("personality_id", "marcel"),
                     user_id=user_id,
-                    store_id=kwargs.get("store_id"),
-                    language=kwargs.get("language", "en")
+                    metadata=metadata
                 )
 
             # Use the agent pool's generate_message_with_products method
@@ -108,6 +112,23 @@ class AgentPoolAdapter(IAgentPoolAdapter):
         """
         try:
             logger.info(f"Switching agent for session {session_id} to {agent_id}/{personality_id}")
+
+            # CRITICAL FIX: Check if session exists in agent pool first
+            # The chat_service creates a session in its own memory, but the agent pool
+            # maintains a separate session store. We need to ensure the session exists
+            # in the agent pool before trying to update it.
+            if session_id not in self.agent_pool.sessions:
+                logger.warning(f"Session {session_id} not found in agent pool, creating it first")
+                # Create the session in agent pool with the target agent/personality
+                await self.agent_pool.create_session(
+                    session_id=session_id,
+                    agent_id=agent_id,
+                    personality_id=personality_id or "marcel",
+                    user_id=None,  # Will be set later if needed
+                    metadata={}
+                )
+                logger.info(f"Created agent pool session {session_id} with {agent_id}/{personality_id}")
+                return True
 
             # Use agent pool's update_session method
             success = await self.agent_pool.update_session(

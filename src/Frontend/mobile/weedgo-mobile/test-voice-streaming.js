@@ -7,7 +7,8 @@
 
 const WebSocket = require('ws');
 
-const WS_URL = 'ws://10.0.0.29:5024/api/voice/ws/stream';
+// Use environment variable or config file
+const WS_URL = process.env.EXPO_PUBLIC_VOICE_WS_URL || 'ws://10.0.0.169:5024/api/voice/ws/stream';
 
 console.log('🎤 Voice Streaming Test Script');
 console.log('================================');

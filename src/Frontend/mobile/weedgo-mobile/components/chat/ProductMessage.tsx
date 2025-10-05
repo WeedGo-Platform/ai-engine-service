@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useCartStore } from '../../stores/cartStore';
@@ -18,7 +19,10 @@ interface Product {
   id: string;
   name: string;
   price: number;
-  image: string;
+  image?: string;
+  image_url?: string;
+  photo_url?: string;
+  images?: string[];
   thc_content?: number;
   cbd_content?: number;
   category?: string;
@@ -30,6 +34,40 @@ interface ProductMessageProps {
   products: Product[];
   message?: string;
 }
+
+// Helper to get image URL from product with multiple field fallbacks
+const getProductImageUrl = (product: Product): string | null => {
+  return (
+    product.image ||
+    product.image_url ||
+    product.photo_url ||
+    (product.images && product.images.length > 0 ? product.images[0] : null)
+  );
+};
+
+// ProductImage component with error handling
+const ProductImage = ({ product }: { product: Product }) => {
+  const [imageError, setImageError] = useState(false);
+  const imageUrl = getProductImageUrl(product);
+
+  if (!imageUrl || imageError) {
+    // Placeholder when no image or error loading
+    return (
+      <View style={[styles.productImage, styles.imagePlaceholder]}>
+        <Ionicons name="leaf-outline" size={40} color="#ccc" />
+      </View>
+    );
+  }
+
+  return (
+    <Image
+      source={{ uri: imageUrl }}
+      style={styles.productImage}
+      onError={() => setImageError(true)}
+      resizeMode="cover"
+    />
+  );
+};
 
 export function ProductMessage({ products, message }: ProductMessageProps) {
   const router = useRouter();
@@ -72,10 +110,7 @@ export function ProductMessage({ products, message }: ProductMessageProps) {
             onPress={() => handleProductPress(product)}
             activeOpacity={0.9}
           >
-            <Image
-              source={{ uri: product.image }}
-              style={styles.productImage}
-            />
+            <ProductImage product={product} />
 
             <View style={styles.productInfo}>
               <Text style={styles.productName} numberOfLines={2}>
@@ -108,20 +143,33 @@ export function ProductMessage({ products, message }: ProductMessageProps) {
                 )}
               </View>
 
-              <TouchableOpacity
-                style={[
-                  styles.addButton,
-                  product.inventory_quantity !== undefined && product.inventory_quantity === 0 && styles.addButtonDisabled
-                ]}
-                onPress={(e) => {
-                  e.stopPropagation();
-                  handleAddToCart(product);
-                }}
-                disabled={product.inventory_quantity === 0}
-              >
-                <Ionicons name="add" size={20} color="#fff" />
-                <Text style={styles.addButtonText}>Add to Cart</Text>
-              </TouchableOpacity>
+              {product.inventory_quantity === 0 ? (
+                <TouchableOpacity
+                  style={styles.addButtonDisabled}
+                  disabled
+                >
+                  <Ionicons name="add" size={20} color="#fff" />
+                  <Text style={styles.addButtonText}>Add to Cart</Text>
+                </TouchableOpacity>
+              ) : (
+                <LinearGradient
+                  colors={['#8B5CF6', '#7C3AED']}
+                  style={styles.addButton}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                >
+                  <TouchableOpacity
+                    style={styles.addButtonInner}
+                    onPress={(e) => {
+                      e.stopPropagation();
+                      handleAddToCart(product);
+                    }}
+                  >
+                    <Ionicons name="add" size={20} color="#fff" />
+                    <Text style={styles.addButtonText}>Add to Cart</Text>
+                  </TouchableOpacity>
+                </LinearGradient>
+              )}
             </View>
           </TouchableOpacity>
         ))}
@@ -163,6 +211,11 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
     backgroundColor: '#f5f5f5',
+  },
+  imagePlaceholder: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0',
   },
   productInfo: {
     padding: 12,
@@ -214,8 +267,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   addButton: {
-    backgroundColor: Colors.light.primary,
     borderRadius: 8,
+  },
+  addButtonInner: {
     paddingVertical: 8,
     flexDirection: 'row',
     alignItems: 'center',
@@ -224,6 +278,12 @@ const styles = StyleSheet.create({
   },
   addButtonDisabled: {
     backgroundColor: '#ccc',
+    borderRadius: 8,
+    paddingVertical: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 4,
   },
   addButtonText: {
     color: '#fff',

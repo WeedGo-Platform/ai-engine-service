@@ -159,8 +159,19 @@ class PostgreSQLHistoryProvider(IHistoryProvider):
 
             if existing_conversation:
                 # Append to existing messages
+                # Database returns JSONB as dict/list, not string
                 messages = existing_conversation.get("messages", [])
                 context = existing_conversation.get("context", {})
+
+                # Ensure messages is a list (defensive check)
+                if not isinstance(messages, list):
+                    logger.warning(f"messages is not a list for session {session_id}, resetting to empty list")
+                    messages = []
+
+                # Ensure context is a dict (defensive check)
+                if not isinstance(context, dict):
+                    logger.warning(f"context is not a dict for session {session_id}, resetting to empty dict")
+                    context = {}
             else:
                 # New conversation
                 messages = []
@@ -311,11 +322,25 @@ class PostgreSQLContextManager(IContextManager):
 
             if conversation:
                 # Merge context updates
+                # Database returns JSONB as dict, not string
                 existing_context = conversation.get("context", {})
+
+                # Ensure existing_context is a dict (defensive check)
+                if not isinstance(existing_context, dict):
+                    logger.warning(f"existing_context is not a dict for session {session_id}, resetting to empty dict")
+                    existing_context = {}
+
+                # Merge the updates
                 existing_context.update(context_updates)
 
                 # Save back to database
                 messages = conversation.get("messages", [])
+
+                # Ensure messages is a list (defensive check)
+                if not isinstance(messages, list):
+                    logger.warning(f"messages is not a list for session {session_id}, resetting to empty list")
+                    messages = []
+
                 success = await self.db.save_conversation(
                     session_id=session_id,
                     messages=messages,

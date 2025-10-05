@@ -95,13 +95,31 @@ export function useVoiceTranscription(options: UseVoiceTranscriptionOptions = {}
   };
 
   const onSpeechError = (e: SpeechErrorEvent) => {
-    console.error('[Voice] Error:', e.error);
-    setState(prev => ({
-      ...prev,
-      error: e.error?.message || 'Speech recognition error',
-      isRecording: false,
-      isTranscribing: false
-    }));
+    const errorCode = e.error?.code;
+    const errorMessage = e.error?.message || 'Speech recognition error';
+
+    // Filter out benign errors that are expected behavior
+    const isNoSpeechDetected = errorCode === '1110' || errorMessage.includes('No speech detected');
+    const isCancelled = errorCode === '2' || errorMessage.includes('cancelled');
+
+    if (isNoSpeechDetected || isCancelled) {
+      // These are normal - user stopped speaking or cancelled
+      console.log('[Voice] Info:', errorMessage);
+      setState(prev => ({
+        ...prev,
+        isRecording: false,
+        isTranscribing: false
+      }));
+    } else {
+      // Actual errors worth reporting
+      console.error('[Voice] Error:', e.error);
+      setState(prev => ({
+        ...prev,
+        error: errorMessage,
+        isRecording: false,
+        isTranscribing: false
+      }));
+    }
     clearTimers();
   };
 
