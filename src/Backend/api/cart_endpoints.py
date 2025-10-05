@@ -29,6 +29,7 @@ class AddItemRequest(BaseModel):
     price: float = Field(gt=0)
     quantity: int = Field(default=1, gt=0)
     image_url: Optional[str] = None
+    store_id: Optional[str] = None  # Store ID for inventory filtering and promotion validation
 
 
 class UpdateQuantityRequest(BaseModel):
@@ -36,7 +37,17 @@ class UpdateQuantityRequest(BaseModel):
 
 
 class ApplyDiscountRequest(BaseModel):
-    discount_code: str
+    discount_code: Optional[str] = None
+    promo_code: Optional[str] = None  # Mobile app compatibility
+
+    def get_code(self) -> str:
+        """Get the code regardless of which field was used"""
+        return self.promo_code or self.discount_code or ""
+
+    def model_post_init(self, __context):
+        """Validate that at least one code is provided"""
+        if not self.discount_code and not self.promo_code:
+            raise ValueError("Either discount_code or promo_code must be provided")
 
 
 class DeliveryAddressRequest(BaseModel):
@@ -64,16 +75,17 @@ async def get_db_pool():
     return db_pool
 
 
-async def get_cart_service():
-    """Get cart service instance"""
-    pool = await get_db_pool()
-    return CartService(pool)
-
-
 async def get_promotion_service():
     """Get promotion service instance"""
     pool = await get_db_pool()
     return PromotionService(pool)
+
+
+async def get_cart_service():
+    """Get cart service instance"""
+    pool = await get_db_pool()
+    # Don't inject promotion_service here - we'll pass it at the endpoint level
+    return CartService(pool)
 
 
 async def get_recommendation_service():
@@ -117,16 +129,22 @@ async def get_cart(
 async def add_item_to_cart(
     request: AddItemRequest,
     session_id: str = Depends(get_session_id),
+    user_id: Optional[UUID] = Depends(get_user_id_from_header),
     service: CartService = Depends(get_cart_service)
 ):
     """Add item to cart"""
     try:
+        # Extract store_id from request if provided
+        store_id = UUID(request.store_id) if request.store_id else None
+
         result = await service.add_item(
             session_id=session_id,
             product=request.dict(),
-            quantity=request.quantity
+            quantity=request.quantity,
+            store_id=store_id,
+            tenant_id=user_id  # Use user_id as tenant_id
         )
-        
+
         return result
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -198,34 +216,85 @@ async def apply_discount(
     request: ApplyDiscountRequest,
     session_id: str = Depends(get_session_id),
     user_id: Optional[UUID] = Depends(get_user_id_from_header),
+    store_id: Optional[str] = Header(None, alias="X-Store-ID"),
+    tenant_id: Optional[str] = Header(None, alias="X-Tenant-ID"),
     cart_service: CartService = Depends(get_cart_service),
     promo_service: PromotionService = Depends(get_promotion_service)
 ):
     """Apply discount code to cart with promotion validation"""
     try:
-        # First validate the discount code
-        validation = await promo_service.validate_discount_code(
-            request.discount_code,
-            user_id
-        )
-        
-        if not validation['valid']:
-            raise ValueError(validation.get('error', 'Invalid discount code'))
-        
-        # Apply the discount to the cart
+        # Get the code from either field
+        code = request.get_code()
+        if not code:
+            raise ValueError("Please enter a promo code")
+
+        # Use tenant_id from header if user_id is not available (guest users)
+        effective_tenant_id = user_id or (UUID(tenant_id) if tenant_id else None)
+
+        # Debug logging
+        logger.info(f"Applying promo code: {code}, session_id: {session_id}, store_id: {store_id}, user_id: {user_id}, tenant_id: {tenant_id}, effective_tenant_id: {effective_tenant_id}")
+
+        # Inject promotion service into cart service for this request
+        cart_service.promotion_service = promo_service
+
+        # Update cart with store/tenant IDs if missing
+        if store_id or effective_tenant_id:
+            updated = await cart_service.update_cart_context(
+                session_id=session_id,
+                store_id=UUID(store_id) if store_id else None,
+                tenant_id=effective_tenant_id
+            )
+            logger.info(f"Cart context updated: {updated}")
+
+        # Apply the discount to the cart (cart service will handle validation)
         result = await cart_service.apply_discount(
             session_id=session_id,
-            discount_code=request.discount_code
+            discount_code=code
         )
-        
-        # Add promotion details to result
-        result['promotion_details'] = validation
-        
+
         return result
     except ValueError as e:
+        # Return user-friendly error message
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         logger.error(f"Error applying discount: {str(e)}")
+        raise HTTPException(status_code=500, detail="Unable to apply promo code. Please try again.")
+
+
+@router.post("/promo")
+async def apply_promo(
+    request: ApplyDiscountRequest,
+    session_id: str = Depends(get_session_id),
+    user_id: Optional[UUID] = Depends(get_user_id_from_header),
+    store_id: Optional[str] = Header(None, alias="X-Store-ID"),
+    tenant_id: Optional[str] = Header(None, alias="X-Tenant-ID"),
+    cart_service: CartService = Depends(get_cart_service),
+    promo_service: PromotionService = Depends(get_promotion_service)
+):
+    """Apply promo code to cart (alias for /discount endpoint for mobile app compatibility)"""
+    logger.info(f"/promo endpoint called - session_id: {session_id}, store_id: {store_id}, user_id: {user_id}, tenant_id: {tenant_id}")
+    # Delegate to the discount endpoint
+    return await apply_discount(request, session_id, user_id, store_id, tenant_id, cart_service, promo_service)
+
+
+@router.delete("/promo")
+async def remove_promo(
+    session_id: str = Depends(get_session_id),
+    cart_service: CartService = Depends(get_cart_service)
+):
+    """Remove promo code from cart"""
+    try:
+        logger.info(f"Removing promo code for session: {session_id}")
+        # Remove discount from cart
+        result = await cart_service.remove_discount(session_id)
+        logger.info(f"Promo code removed successfully. New total: {result.get('total_amount')}")
+        return {
+            "success": True,
+            "message": "Promo code removed successfully",
+            "cart": result
+        }
+    except Exception as e:
+        logger.error(f"Error removing promo code: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -240,7 +309,7 @@ async def calculate_cart_discounts(
     try:
         # Get current cart
         cart = await cart_service.get_cart_summary(session_id)
-        
+
         if not cart['items']:
             return {
                 "subtotal": 0,
@@ -248,14 +317,14 @@ async def calculate_cart_discounts(
                 "final_total": 0,
                 "applied_promotions": []
             }
-        
+
         # Calculate discounts using promotion service
         discount_details = await promo_service.calculate_cart_discounts(
             cart_items=cart['items'],
             tenant_id=user_id,
             discount_codes=cart.get('discount_codes', [])
         )
-        
+
         return discount_details
     except Exception as e:
         logger.error(f"Error calculating cart discounts: {str(e)}")
