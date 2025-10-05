@@ -57,33 +57,68 @@ class PromotionService:
             return dict(tier) if tier else None
     
     async def get_applicable_promotions(
-        self, 
+        self,
         product_ids: List[str] = None,
         categories: List[str] = None,
         tenant_id: UUID = None,
+        store_id: UUID = None,
         order_total: Decimal = Decimal('0')
     ) -> List[Dict[str, Any]]:
-        """Get all applicable promotions for given criteria"""
+        """
+        Get all applicable promotions for given criteria.
+        Enhanced to support store/tenant scoping, continuous promotions, and time windows.
+        """
         async with self.db_pool.acquire() as conn:
             current_time = datetime.now()  # Use naive datetime for PostgreSQL compatibility
             current_hour = current_time.hour
-            current_day = current_time.weekday() + 1  # Monday = 1
-            
+            current_day = current_time.weekday()  # 0=Monday
+            current_time_only = current_time.time()
+
             query = """
                 SELECT * FROM promotions
                 WHERE active = true
-                AND $1 BETWEEN start_date AND COALESCE(end_date, $1 + INTERVAL '1 day')
-                AND (min_purchase_amount IS NULL OR min_purchase_amount <= $2)
-                AND (
-                    applies_to = 'all' 
-                    OR ($3::text[] && product_ids)
-                    OR ($4::text[] && category_ids)
-                )
-                AND (day_of_week IS NULL OR $5 = ANY(day_of_week))
-                AND (hour_of_day IS NULL OR $6 = ANY(hour_of_day))
+                  -- Date range check
+                  AND start_date <= $1
+                  AND (
+                      -- Continuous promotions (no end date)
+                      (is_continuous = true AND end_date IS NULL)
+                      OR
+                      -- Time-limited promotions
+                      (is_continuous = false AND (end_date IS NULL OR end_date >= $1))
+                  )
+                  -- Minimum purchase check
+                  AND (min_purchase_amount IS NULL OR min_purchase_amount <= $2)
+                  -- Product/category applicability
+                  AND (
+                      applies_to = 'all'
+                      OR ($3::text[] && product_ids)
+                      OR ($4::text[] && category_ids)
+                  )
+                  -- Store/Tenant scoping
+                  AND (
+                      -- Global promotions
+                      (store_id IS NULL AND tenant_id IS NULL)
+                      OR
+                      -- Store-specific promotions
+                      (store_id = $7 AND tenant_id IS NULL)
+                      OR
+                      -- Tenant-specific promotions
+                      (tenant_id = $8 AND store_id IS NULL)
+                      OR
+                      -- Tenant+Store specific
+                      (store_id = $7 AND tenant_id = $8)
+                  )
+                  -- Day of week check
+                  AND (day_of_week IS NULL OR $5 = ANY(day_of_week))
+                  -- Time window check (new - uses time_start/time_end)
+                  AND (
+                      (time_start IS NULL AND time_end IS NULL)
+                      OR
+                      ($6 >= time_start AND $6 <= time_end)
+                  )
                 ORDER BY priority DESC, discount_value DESC
             """
-            
+
             promotions = await conn.fetch(
                 query,
                 current_time,
@@ -91,13 +126,20 @@ class PromotionService:
                 product_ids or [],
                 categories or [],
                 current_day,
-                current_hour
+                current_time_only,
+                store_id,
+                tenant_id
             )
-            
+
             return [dict(p) for p in promotions]
     
-    async def validate_discount_code(self, code: str, tenant_id: UUID = None) -> Dict[str, Any]:
-        """Validate a discount code"""
+    async def validate_discount_code(self, code: str, tenant_id: UUID = None, store_id: UUID = None) -> Dict[str, Any]:
+        """
+        Validate a discount code with store/tenant restrictions.
+        A promo code is valid if:
+        - It's active and not expired
+        - It's either global (no store/tenant), or matches the cart's store/tenant
+        """
         async with self.db_pool.acquire() as conn:
             # Check if code exists and is valid
             query = """
@@ -109,19 +151,32 @@ class PromotionService:
                 AND (dc.valid_until IS NULL OR dc.valid_until > CURRENT_TIMESTAMP)
                 AND (dc.tenant_id IS NULL OR dc.tenant_id = $2)
             """
-            
+
             result = await conn.fetchrow(query, code.upper(), tenant_id)
-            
+
             if not result:
-                # Check if it's a general promotion code
+                # Check if it's a general promotion code with store/tenant validation
                 query = """
                     SELECT * FROM promotions
                     WHERE code = $1
                     AND active = true
                     AND CURRENT_TIMESTAMP BETWEEN start_date AND COALESCE(end_date, CURRENT_TIMESTAMP + INTERVAL '1 day')
+                    AND (
+                        -- Global promotions (no store/tenant restrictions)
+                        (store_id IS NULL AND tenant_id IS NULL)
+                        OR
+                        -- Store-specific promotions
+                        (store_id = $2 AND tenant_id IS NULL)
+                        OR
+                        -- Tenant-specific promotions
+                        (tenant_id = $3 AND store_id IS NULL)
+                        OR
+                        -- Tenant+Store specific
+                        (store_id = $2 AND tenant_id = $3)
+                    )
                 """
-                result = await conn.fetchrow(query, code.upper())
-            
+                result = await conn.fetchrow(query, code.upper(), store_id, tenant_id)
+
             if result:
                 return {
                     'valid': True,
@@ -129,10 +184,12 @@ class PromotionService:
                     'discount_type': result['discount_type'],
                     'discount_value': float(result['discount_value']),
                     'promotion_name': result.get('name'),
-                    'promotion_id': str(result.get('id')) if result.get('id') else None
+                    'promotion_id': str(result.get('id')) if result.get('id') else None,
+                    'store_id': str(result.get('store_id')) if result.get('store_id') else None,
+                    'tenant_id': str(result.get('tenant_id')) if result.get('tenant_id') else None
                 }
-            
-            return {'valid': False, 'code': code.upper(), 'error': 'Invalid or expired code'}
+
+            return {'valid': False, 'code': code.upper(), 'error': 'This promo code is not valid or has expired'}
     
     async def calculate_product_price(
         self,
@@ -230,36 +287,116 @@ class PromotionService:
             bundles = await conn.fetch(query, active_only)
             return [dict(b) for b in bundles]
     
-    async def create_promotion(self, promotion_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Create a new promotion"""
+    async def create_promotion(
+        self,
+        promotion_data: Dict[str, Any],
+        created_by_user_id: UUID = None,
+        user_role: str = None
+    ) -> Dict[str, Any]:
+        """
+        Create a new promotion with enhanced fields and permission validation.
+
+        Args:
+            promotion_data: Promotion details
+            created_by_user_id: ID of user creating the promotion
+            user_role: Role of user (platform_admin, tenant_admin, store_manager)
+
+        Raises:
+            ValueError: If validation fails
+            PermissionError: If user lacks permission
+        """
+        # Validate continuous promotion
+        if promotion_data.get('is_continuous') and promotion_data.get('end_date'):
+            raise ValueError("Continuous promotions cannot have an end_date")
+
+        # Validate time windows
+        time_start = promotion_data.get('time_start')
+        time_end = promotion_data.get('time_end')
+        if time_start and time_end:
+            if time_start >= time_end:
+                raise ValueError("time_start must be before time_end")
+        elif (time_start and not time_end) or (time_end and not time_start):
+            raise ValueError("Both time_start and time_end must be provided together")
+
+        # Validate recurrence logic
+        recurrence_type = promotion_data.get('recurrence_type', 'none')
+        if recurrence_type == 'weekly' and not promotion_data.get('day_of_week'):
+            raise ValueError("Weekly recurrence requires day_of_week to be specified")
+
+        # Permission validation
+        if user_role == 'store_manager':
+            if not promotion_data.get('store_id'):
+                raise PermissionError("Store managers must specify a store_id")
+            if promotion_data.get('tenant_id'):
+                raise PermissionError("Store managers cannot create tenant-specific promotions")
+        elif user_role == 'tenant_admin':
+            if not promotion_data.get('tenant_id'):
+                raise PermissionError("Tenant admins must specify tenant_id")
+            # Tenant admins can optionally restrict to specific stores they own
+        # platform_admin has no restrictions
+
         async with self.db_pool.acquire() as conn:
-            # Parse dates and ensure they're timezone-aware
+            # Parse dates and ensure they're naive (PostgreSQL TIMESTAMP without timezone)
             start_date = promotion_data['start_date']
             if isinstance(start_date, str):
+                # Parse ISO format and remove timezone info for PostgreSQL
                 start_date = datetime.fromisoformat(start_date.replace('Z', '+00:00'))
-            elif start_date.tzinfo is None:
-                start_date = start_date.replace(tzinfo=timezone.utc)
-            
+                if start_date.tzinfo is not None:
+                    start_date = start_date.replace(tzinfo=None)
+            elif start_date.tzinfo is not None:
+                # Remove timezone info if datetime object is timezone-aware
+                start_date = start_date.replace(tzinfo=None)
+
             end_date = promotion_data.get('end_date')
             if end_date:
                 if isinstance(end_date, str):
+                    # Parse ISO format and remove timezone info for PostgreSQL
                     end_date = datetime.fromisoformat(end_date.replace('Z', '+00:00'))
-                elif end_date.tzinfo is None:
-                    end_date = end_date.replace(tzinfo=timezone.utc)
-            
+                    if end_date.tzinfo is not None:
+                        end_date = end_date.replace(tzinfo=None)
+                elif end_date.tzinfo is not None:
+                    # Remove timezone info if datetime object is timezone-aware
+                    end_date = end_date.replace(tzinfo=None)
+
+            # Parse time_start and time_end strings to time objects for PostgreSQL TIME columns
+            from datetime import time as time_type
+            time_start = promotion_data.get('time_start')
+            if time_start and isinstance(time_start, str):
+                # Parse "HH:MM" or "HH:MM:SS" format to time object
+                time_parts = time_start.split(':')
+                time_start = time_type(
+                    hour=int(time_parts[0]),
+                    minute=int(time_parts[1]),
+                    second=int(time_parts[2]) if len(time_parts) > 2 else 0
+                )
+
+            time_end = promotion_data.get('time_end')
+            if time_end and isinstance(time_end, str):
+                # Parse "HH:MM" or "HH:MM:SS" format to time object
+                time_parts = time_end.split(':')
+                time_end = time_type(
+                    hour=int(time_parts[0]),
+                    minute=int(time_parts[1]),
+                    second=int(time_parts[2]) if len(time_parts) > 2 else 0
+                )
+
             query = """
                 INSERT INTO promotions (
                     code, name, description, type, discount_type, discount_value,
                     min_purchase_amount, max_discount_amount, usage_limit_per_customer,
                     total_usage_limit, applies_to, category_ids, brand_ids, product_ids,
                     stackable, priority, start_date, end_date, active,
-                    day_of_week, hour_of_day, first_time_customer_only
+                    day_of_week, hour_of_day, first_time_customer_only,
+                    store_id, tenant_id, created_by_user_id,
+                    is_continuous, recurrence_type, time_start, time_end, timezone
                 ) VALUES (
                     $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14,
-                    $15, $16, $17, $18, $19, $20, $21, $22
+                    $15, $16, $17, $18, $19, $20, $21, $22,
+                    $23, $24, $25,
+                    $26, $27, $28, $29, $30
                 ) RETURNING *
             """
-            
+
             result = await conn.fetchrow(
                 query,
                 promotion_data.get('code'),
@@ -283,9 +420,19 @@ class PromotionService:
                 promotion_data.get('active', True),
                 promotion_data.get('day_of_week'),
                 promotion_data.get('hour_of_day'),
-                promotion_data.get('first_time_customer_only', False)
+                promotion_data.get('first_time_customer_only', False),
+                # New fields
+                promotion_data.get('store_id'),
+                promotion_data.get('tenant_id'),
+                created_by_user_id,
+                promotion_data.get('is_continuous', False),
+                promotion_data.get('recurrence_type', 'none'),
+                time_start,  # Use parsed time object
+                time_end,    # Use parsed time object
+                promotion_data.get('timezone', 'America/Toronto')
             )
-            
+
+            logger.info(f"Created promotion: {result['name']} (ID: {result['id']})")
             return dict(result)
     
     async def track_promotion_usage(
