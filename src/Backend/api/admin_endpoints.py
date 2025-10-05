@@ -8,6 +8,7 @@ import asyncio
 import json
 import logging
 import time
+import os
 from datetime import datetime, timedelta
 from typing import Dict, Any, Optional, List
 from pathlib import Path
@@ -15,6 +16,7 @@ from pathlib import Path
 from fastapi import APIRouter, HTTPException, Depends, WebSocket, WebSocketDisconnect, status, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
+import asyncpg
 
 # V5 imports
 from core.authentication import get_current_user
@@ -22,6 +24,61 @@ from core.config_loader import get_config
 from services.smart_ai_engine_v5 import SmartAIEngineV5
 
 logger = logging.getLogger(__name__)
+
+# Database helper function for system settings
+async def save_system_setting(category: str, key: str, value: Dict[str, Any], description: str = None):
+    """Save or update a system setting in the database"""
+    try:
+        conn = await asyncpg.connect(
+            host=os.getenv('DB_HOST', 'localhost'),
+            port=int(os.getenv('DB_PORT', 5434)),
+            user=os.getenv('DB_USER', 'weedgo'),
+            password=os.getenv('DB_PASSWORD', 'weedgo123'),
+            database=os.getenv('DB_NAME', 'ai_engine')
+        )
+
+        # Use INSERT ... ON CONFLICT to upsert
+        await conn.execute('''
+            INSERT INTO system_settings (category, key, value, description)
+            VALUES ($1, $2, $3, $4)
+            ON CONFLICT (category, key)
+            DO UPDATE SET
+                value = EXCLUDED.value,
+                description = EXCLUDED.description,
+                updated_at = CURRENT_TIMESTAMP
+        ''', category, key, json.dumps(value), description)
+
+        await conn.close()
+        logger.info(f"Saved system setting: {category}/{key}")
+        return True
+    except Exception as e:
+        logger.error(f"Failed to save system setting {category}/{key}: {e}")
+        return False
+
+async def get_system_setting(category: str, key: str) -> Optional[Dict[str, Any]]:
+    """Retrieve a system setting from the database"""
+    try:
+        conn = await asyncpg.connect(
+            host=os.getenv('DB_HOST', 'localhost'),
+            port=int(os.getenv('DB_PORT', 5434)),
+            user=os.getenv('DB_USER', 'weedgo'),
+            password=os.getenv('DB_PASSWORD', 'weedgo123'),
+            database=os.getenv('DB_NAME', 'ai_engine')
+        )
+
+        row = await conn.fetchrow('''
+            SELECT value FROM system_settings
+            WHERE category = $1 AND key = $2
+        ''', category, key)
+
+        await conn.close()
+
+        if row:
+            return json.loads(row['value'])
+        return None
+    except Exception as e:
+        logger.error(f"Failed to get system setting {category}/{key}: {e}")
+        return None
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 
@@ -748,7 +805,22 @@ async def load_model(
             success = v5_engine.load_model(model_key)
         if not success:
             raise HTTPException(status_code=500, detail=f"Failed to load model: {model}")
-        
+
+        # Persist model configuration to database for server startup
+        model_config = {
+            "model": model,
+            "agent": agent_id,
+            "personality": personality_id,
+            "apply_config": apply_config,
+            "loaded_at": datetime.utcnow().isoformat()
+        }
+        await save_system_setting(
+            category="ai_model",
+            key="active_model_config",
+            value=model_config,
+            description="Currently active AI model configuration"
+        )
+
         # The load_model function already sets current_agent and current_personality
         # and loads the agent personality, so we don't need to do it again
         

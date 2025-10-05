@@ -105,12 +105,20 @@ class DatabaseContextStore:
                 """, session_id)
                 
                 if row:
+                    # Parse JSONB fields if they come back as strings
+                    messages = row['messages']
+                    if isinstance(messages, str):
+                        messages = json.loads(messages)
+                    context = row['context']
+                    if isinstance(context, str):
+                        context = json.loads(context)
+
                     return {
                         'conversation_id': str(row['conversation_id']),
                         'session_id': row['session_id'],
                         'customer_id': row['customer_id'],
-                        'messages': row['messages'] or [],
-                        'context': row['context'] or {},
+                        'messages': messages or [],
+                        'context': context or {},
                         'created_at': row['created_at'].isoformat() if row['created_at'] else None,
                         'updated_at': row['updated_at'].isoformat() if row['updated_at'] else None
                     }
@@ -120,46 +128,80 @@ class DatabaseContextStore:
             logger.error(f"Failed to get conversation for session {session_id}: {e}")
             return None
     
-    async def save_conversation(self, 
+    async def save_conversation(self,
                                 session_id: str,
                                 messages: List[Dict],
                                 context: Dict,
                                 customer_id: Optional[str] = None) -> bool:
         """
         Save or update conversation in database
-        
+
         Args:
             session_id: Session identifier
             messages: List of message dictionaries
             context: Context dictionary
             customer_id: Optional customer identifier
-            
+
         Returns:
             True if successful, False otherwise
         """
         try:
+            # Validate parameter types to catch order/type errors early
+            if not isinstance(session_id, str):
+                logger.error(f"save_conversation: session_id must be str, got {type(session_id).__name__}: {session_id}")
+                raise TypeError(f"session_id must be str, got {type(session_id).__name__}")
+
+            if not isinstance(messages, list):
+                logger.error(f"save_conversation: messages must be list, got {type(messages).__name__}: {messages}")
+                raise TypeError(f"messages must be list, got {type(messages).__name__}")
+
+            if not isinstance(context, dict):
+                logger.error(f"save_conversation: context must be dict, got {type(context).__name__}: {context}")
+                raise TypeError(f"context must be dict, got {type(context).__name__}")
+
+            if customer_id is not None and not isinstance(customer_id, str):
+                logger.error(f"save_conversation: customer_id must be str or None, got {type(customer_id).__name__}: {customer_id}")
+                raise TypeError(f"customer_id must be str or None, got {type(customer_id).__name__}")
+
             async with self.acquire_connection() as conn:
                 # Check if conversation exists
                 existing = await self.get_conversation(session_id)
                 
                 if existing:
                     # Update existing conversation
+                    # Convert Python objects to JSON strings for JSONB columns
+                    messages_json = json.dumps(messages)
+                    context_json = json.dumps(context)
+
+                    # DEBUG: Log actual parameter values being passed to execute
+                    logger.debug(f"UPDATE params - $1 (messages) type: {type(messages_json).__name__}, $2 (context) type: {type(context_json).__name__}, $3 (customer_id) type: {type(customer_id).__name__ if customer_id else 'None'}, $4 (session_id) type: {type(session_id).__name__}")
+                    logger.debug(f"UPDATE params - messages: {str(messages)[:100]}, context: {str(context)[:100]}, customer_id: {customer_id}, session_id: {session_id}")
+
                     await conn.execute("""
                         UPDATE ai_conversations
-                        SET messages = $1,
-                            context = $2,
+                        SET messages = $1::jsonb,
+                            context = $2::jsonb,
                             customer_id = COALESCE($3, customer_id),
                             updated_at = CURRENT_TIMESTAMP
                         WHERE session_id = $4
-                    """, json.dumps(messages), json.dumps(context), customer_id, session_id)
+                    """, messages_json, context_json, customer_id, session_id)
                 else:
                     # Create new conversation
+                    # Convert Python objects to JSON strings for JSONB columns
+                    messages_json = json.dumps(messages)
+                    context_json = json.dumps(context)
+
+                    # DEBUG: Log actual parameter values being passed to execute
+                    new_uuid = uuid.uuid4()
+                    logger.debug(f"INSERT params - $1 (conversation_id) type: {type(new_uuid).__name__}, $2 (session_id) type: {type(session_id).__name__}, $3 (customer_id) type: {type(customer_id).__name__ if customer_id else 'None'}, $4 (messages) type: {type(messages_json).__name__}, $5 (context) type: {type(context_json).__name__}")
+                    logger.debug(f"INSERT params - conversation_id: {new_uuid}, session_id: {session_id}, customer_id: {customer_id}, messages: {str(messages)[:100]}, context: {str(context)[:100]}")
+
                     await conn.execute("""
-                        INSERT INTO ai_conversations 
+                        INSERT INTO ai_conversations
                         (conversation_id, session_id, customer_id, messages, context)
-                        VALUES ($1, $2, $3, $4, $5)
-                    """, uuid.uuid4(), session_id, customer_id, 
-                        json.dumps(messages), json.dumps(context))
+                        VALUES ($1, $2, $3, $4::jsonb, $5::jsonb)
+                    """, new_uuid, session_id, customer_id,
+                        messages_json, context_json)
                 
                 logger.debug(f"Saved conversation for session {session_id}")
                 return True

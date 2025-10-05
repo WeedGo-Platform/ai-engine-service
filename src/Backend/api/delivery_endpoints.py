@@ -20,7 +20,7 @@ from services.delivery.base import (
 )
 from database.connection import get_db
 from core.authentication import get_current_user
-from middleware.tenant_resolution import tenant_required
+from core.middleware.tenant_resolution import require_tenant
 
 logger = logging.getLogger(__name__)
 
@@ -89,7 +89,7 @@ async def create_delivery_from_order(
     scheduled_at: Optional[datetime] = Body(None),
     db=Depends(get_db),
     current_user=Depends(get_current_user),
-    tenant=Depends(tenant_required)
+    tenant=Depends(require_tenant)
 ):
     """Create a delivery from an order"""
     try:
@@ -132,7 +132,7 @@ async def create_delivery_from_order(
 async def get_active_deliveries(
     db=Depends(get_db),
     current_user=Depends(get_current_user),
-    tenant=Depends(tenant_required)
+    tenant=Depends(require_tenant)
 ):
     """Get all active deliveries for the store"""
     try:
@@ -215,7 +215,7 @@ async def assign_delivery(
     staff_id: UUID = Body(...),
     db=Depends(get_db),
     current_user=Depends(get_current_user),
-    tenant=Depends(tenant_required)
+    tenant=Depends(require_tenant)
 ):
     """Manually assign delivery to staff member"""
     try:
@@ -267,7 +267,7 @@ async def batch_assign_deliveries(
     staff_id: UUID = Body(...),
     db=Depends(get_db),
     current_user=Depends(get_current_user),
-    tenant=Depends(tenant_required)
+    tenant=Depends(require_tenant)
 ):
     """Assign multiple deliveries to a staff member"""
     try:
@@ -476,7 +476,7 @@ async def get_delivery_tracking(
 async def get_available_staff(
     db=Depends(get_db),
     current_user=Depends(get_current_user),
-    tenant=Depends(tenant_required)
+    tenant=Depends(require_tenant)
 ):
     """Get list of available staff members"""
     try:

@@ -238,20 +238,47 @@ async def lifespan(app: FastAPI):
             except:
                 continue
 
-        if smallest_model:
-            logger.info(f"Loading smallest model: {smallest_model} ({smallest_size / (1024**3):.2f} GB)")
-            # Load model with dispensary agent and zac personality
-            success = v5_engine.load_model(
-                model_name=smallest_model,
-                agent_id="dispensary",
-                personality_id="zac"
-            )
-            if success:
-                logger.info(f"✅ Successfully loaded {smallest_model} with dispensary/zac configuration")
-            else:
-                logger.warning(f"Failed to load default model configuration")
+        # Try to load persisted model configuration from database
+        from api.admin_endpoints import get_system_setting
+
+        persisted_config = await get_system_setting("ai_model", "active_model_config")
+        model_loaded = False
+
+        if persisted_config and persisted_config.get("model"):
+            # Load persisted model from database
+            logger.info(f"Found persisted model configuration: {persisted_config['model']}")
+            try:
+                success = v5_engine.load_model(
+                    model_name=persisted_config["model"],
+                    agent_id=persisted_config.get("agent"),
+                    personality_id=persisted_config.get("personality")
+                )
+                if success:
+                    logger.info(f"✅ Successfully loaded persisted model: {persisted_config['model']} with {persisted_config.get('agent')}/{persisted_config.get('personality')} configuration")
+                    model_loaded = True
+                else:
+                    logger.warning("Failed to load persisted model, falling back to auto-detect")
+            except Exception as e:
+                logger.warning(f"Error loading persisted model: {e}, falling back to auto-detect")
         else:
-            logger.warning("No models available to auto-load")
+            logger.info("No persisted model configuration found in database")
+
+        # Fall back to auto-detect smallest model if no persisted config or loading failed
+        if not model_loaded:
+            if smallest_model:
+                logger.info(f"Auto-detecting and loading smallest model: {smallest_model} ({smallest_size / (1024**3):.2f} GB)")
+                # Load model with dispensary agent and marcel personality (default)
+                success = v5_engine.load_model(
+                    model_name=smallest_model,
+                    agent_id="dispensary",
+                    personality_id="marcel"
+                )
+                if success:
+                    logger.info(f"✅ Successfully loaded {smallest_model} with dispensary/marcel configuration")
+                else:
+                    logger.warning(f"Failed to load default model configuration")
+            else:
+                logger.warning("No models available to auto-load")
         
         logger.info(f"V5 Engine ready with {len(v5_engine.available_models)} models available")
 
