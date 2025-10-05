@@ -35,8 +35,8 @@ export default function AuthLayout() {
       <Stack.Screen
         name="register"
         options={{
-          title: 'Create Account',
-          headerBackTitle: 'Back',
+          title: 'Register',
+          headerShown: false,
         }}
       />
     </Stack>
