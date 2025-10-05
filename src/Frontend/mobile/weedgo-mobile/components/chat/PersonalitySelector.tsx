@@ -74,8 +74,12 @@ export function PersonalitySelector() {
 
   return (
     <>
-      <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.iconButton}>
-        <Ionicons name="settings-outline" size={24} color="#fff" />
+      <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.personalityBadge}>
+        <Ionicons name="happy-outline" size={16} color="#fff" />
+        <Text style={styles.personalityText}>
+          {personality?.name || personality?.id || 'Select'}
+        </Text>
+        <Ionicons name="chevron-down" size={16} color="#fff" />
       </TouchableOpacity>
 
       <Modal
@@ -126,8 +130,20 @@ export function PersonalitySelector() {
 }
 
 const styles = StyleSheet.create({
-  iconButton: {
-    padding: 4,
+  personalityBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+  },
+  personalityText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#fff',
+    textTransform: 'capitalize',
   },
   modalOverlay: {
     flex: 1,

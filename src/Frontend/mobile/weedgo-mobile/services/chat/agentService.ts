@@ -3,7 +3,7 @@
  * Handles fetching agents and personalities from the API
  */
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.0.29:5024';
+import { API_URL } from '../../config/api';
 
 export interface Agent {
   id: string;
@@ -11,6 +11,7 @@ export interface Agent {
   has_prompts: boolean;
   has_config: boolean;
   path: string;
+  type?: string; // Optional, not always provided by backend
 }
 
 export interface Personality {

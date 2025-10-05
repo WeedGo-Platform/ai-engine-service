@@ -451,6 +451,43 @@ class AgentPoolManager:
         logger.info(f"Session {session_id}: Switched to {new_agent_id}/{personality_id}")
         return True
 
+    async def update_session(
+        self,
+        session_id: str,
+        agent_id: Optional[str] = None,
+        personality_id: Optional[str] = None
+    ) -> bool:
+        """
+        Update session agent/personality.
+
+        This method is used by the adapter layer to update session configuration.
+        If agent_id is provided, switches to that agent. Otherwise, only updates personality.
+
+        Args:
+            session_id: Session identifier
+            agent_id: New agent ID (optional, switches agent if provided)
+            personality_id: New personality ID (optional)
+
+        Returns:
+            bool: Success status
+        """
+        session = self.sessions.get(session_id)
+        if not session:
+            logger.warning(f"Session {session_id} not found for update")
+            return False
+
+        # If agent_id provided, do a full agent switch
+        if agent_id and agent_id != session.agent_id:
+            return await self.switch_agent(session_id, agent_id, personality_id)
+
+        # Otherwise just switch personality
+        if personality_id and personality_id != session.personality_id:
+            return await self.switch_personality(session_id, personality_id)
+
+        # Nothing to update
+        logger.debug(f"No changes needed for session {session_id}")
+        return True
+
     def get_session(self, session_id: str) -> Optional[SessionState]:
         """Get active session"""
         session = self.sessions.get(session_id)
@@ -669,19 +706,31 @@ class AgentPoolManager:
                 self.intent_config = json.load(f)
             logger.info("Loaded intent configuration for entity extraction")
 
-            # Initialize entity extractor
+            # Initialize entity extractor ONLY if model is actually loaded
             from services.entity_extractor import EntityExtractor
             # Get the actual model from SmartAIEngineV5 (which has current_model, not model)
-            actual_model = getattr(self.shared_model, 'current_model', None) or getattr(self.shared_model, 'model', self.shared_model)
-            self.entity_extractor = EntityExtractor(actual_model, self.intent_config)
-            logger.info(f"Initialized EntityExtractor with model: {type(actual_model).__name__ if actual_model else 'None'}")
+            actual_model = getattr(self.shared_model, 'current_model', None)
 
-            # Initialize parameter builder
+            # CRITICAL FIX: Only initialize if model is loaded, otherwise EntityExtractor gets SmartAIEngineV5 wrapper
+            if actual_model is None:
+                logger.warning("Model not loaded yet - EntityExtractor initialization deferred until model is loaded")
+                self.entity_extractor = None
+            else:
+                self.entity_extractor = EntityExtractor(actual_model, self.intent_config)
+                logger.info(f"Initialized EntityExtractor with llama-cpp model: {type(actual_model).__name__}")
+
+            # Initialize parameter builder ONLY if model is actually loaded
             from services.parameter_builder import ParameterBuilder
             # Get the actual model from SmartAIEngineV5 (which has current_model, not model)
-            actual_model = getattr(self.shared_model, 'current_model', None) or getattr(self.shared_model, 'model', self.shared_model)
-            self.parameter_builder = ParameterBuilder(actual_model, self.intent_config)
-            logger.info(f"Initialized ParameterBuilder with model: {type(actual_model).__name__ if actual_model else 'None'}")
+            actual_model = getattr(self.shared_model, 'current_model', None)
+
+            # CRITICAL FIX: Only initialize if model is loaded
+            if actual_model is None:
+                logger.warning("Model not loaded yet - ParameterBuilder initialization deferred until model is loaded")
+                self.parameter_builder = None
+            else:
+                self.parameter_builder = ParameterBuilder(actual_model, self.intent_config)
+                logger.info(f"Initialized ParameterBuilder with llama-cpp model: {type(actual_model).__name__}")
 
             # Initialize user preference service
             from services.user_preference_service import UserPreferenceService

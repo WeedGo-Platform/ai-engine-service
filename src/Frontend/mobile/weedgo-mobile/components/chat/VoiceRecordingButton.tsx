@@ -175,7 +175,7 @@ export function VoiceRecordingButton({
                 ? ['#FF6B6B', '#FF4757']
                 : disabled
                 ? ['#6C757D', '#495057']
-                : ['#4A90E2', '#357ABD']
+                : ['#8B5CF6', '#7C3AED']
             }
             style={[
               styles.button,

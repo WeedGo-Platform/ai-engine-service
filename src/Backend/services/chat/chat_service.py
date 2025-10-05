@@ -385,9 +385,17 @@ class ChatService(IChatProcessor, ISessionManager):
 
         # Extract products
         products = []
-        raw_products = response_data.get("products", [])
+        raw_products = response_data.get("products") or []
         for prod in raw_products:
             try:
+                # Handle multiple image field naming conventions
+                # API returns 'image', but model expects 'image_url'
+                image_url = (
+                    prod.get("image_url") or
+                    prod.get("image") or
+                    (prod.get("images")[0] if prod.get("images") and len(prod.get("images")) > 0 else None)
+                )
+
                 product_model = ProductModel(
                     id=prod.get("id", str(uuid.uuid4())),
                     name=prod.get("name", "Unknown"),
@@ -398,7 +406,7 @@ class ChatService(IChatProcessor, ISessionManager):
                     thc=prod.get("thc"),
                     cbd=prod.get("cbd"),
                     description=prod.get("description"),
-                    image_url=prod.get("image_url"),
+                    image_url=image_url,
                     in_stock=prod.get("in_stock", True),
                     quantity_available=prod.get("quantity_available", 0)
                 )
@@ -408,7 +416,7 @@ class ChatService(IChatProcessor, ISessionManager):
 
         # Extract quick actions
         quick_actions = []
-        raw_actions = response_data.get("quick_actions", [])
+        raw_actions = response_data.get("quick_actions") or []
         for action in raw_actions:
             try:
                 action_model = QuickActionModel(
