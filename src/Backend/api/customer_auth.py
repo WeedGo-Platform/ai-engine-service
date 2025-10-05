@@ -14,15 +14,15 @@ import uuid
 import json
 import asyncpg
 
-from core.authentication import JWTAuthentication
+from core.authentication import get_auth
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/v1/auth/customer", tags=["Customer Authentication"])
 security = HTTPBearer()
 
-# Initialize JWT authentication
-jwt_auth = JWTAuthentication()
+# Use singleton JWT authentication instance
+jwt_auth = get_auth()
 
 
 # Pydantic models for request/response
@@ -134,17 +134,25 @@ async def get_current_user_flexible(
             payload = jwt_auth.verify_token(credentials.credentials)
             if payload:
                 return payload
-        except Exception:
-            pass
+        except Exception as e:
+            # Log the actual error for debugging
+            logger.error(f"🔴 Token verification failed in get_current_user_flexible: {type(e).__name__}: {str(e)}")
+            logger.error(f"Token preview: {credentials.credentials[:50]}...")
+            # Re-raise the original exception with proper error detail instead of swallowing it
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail=f"Token verification failed: {str(e)}"
+            )
 
     # Fall back to X-User-Id header (for development/testing)
     user_id = request.headers.get("X-User-Id")
     if user_id:
+        logger.warning(f"⚠️ Using X-User-Id header for authentication: {user_id}")
         return {"user_id": user_id}
 
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Not authenticated"
+        detail="Not authenticated - no token or X-User-Id header provided"
     )
 
 
@@ -672,6 +680,7 @@ async def get_user_addresses(current_user: Dict = Depends(get_current_user_flexi
 @router.post("/addresses")
 async def create_user_address(
     address: AddressRequest,
+    request: Request,
     current_user: Dict = Depends(get_current_user_flexible)
 ):
     """
@@ -679,6 +688,12 @@ async def create_user_address(
 
     Requires authentication token in header
     """
+    # Debug logging
+    logger.info(f"📍 CREATE ADDRESS REQUEST RECEIVED")
+    logger.info(f"  Headers: {dict(request.headers)}")
+    logger.info(f"  Current user from auth: {current_user}")
+    logger.info(f"  Address data: {address.dict()}")
+
     conn = None
     try:
         conn = await get_db_connection()

@@ -44,8 +44,17 @@ class ApiClient {
 
         if (!isAuthEndpoint) {
           const token = await SecureStore.getItemAsync(TOKEN_KEY);
+          if (__DEV__) {
+            console.log(`🔑 Token retrieval for ${config.url}:`, {
+              hasToken: !!token,
+              tokenLength: token?.length || 0,
+              tokenPreview: token ? `${token.substring(0, 20)}...` : 'none'
+            });
+          }
           if (token) {
             config.headers.Authorization = `Bearer ${token}`;
+          } else if (__DEV__) {
+            console.warn(`⚠️ No token found in SecureStore for ${config.url}`);
           }
         }
 
@@ -144,6 +153,14 @@ class ApiClient {
 
         // Handle 401 - Token expired
         if (error.response?.status === 401 && !originalRequest._retry) {
+          if (__DEV__) {
+            console.log('🔴 401 Unauthorized detected:', {
+              url: originalRequest.url,
+              hasAuthHeader: !!originalRequest.headers?.Authorization,
+              authHeaderPreview: originalRequest.headers?.Authorization?.substring(0, 30) + '...'
+            });
+          }
+
           if (!this.isRefreshing) {
             this.isRefreshing = true;
             originalRequest._retry = true;
@@ -151,16 +168,34 @@ class ApiClient {
             try {
               const refreshToken = await SecureStore.getItemAsync(REFRESH_TOKEN_KEY);
               if (!refreshToken) {
-                // Silently handle missing refresh token - user just needs to login
+                if (__DEV__) {
+                  console.log('❌ No refresh token found in SecureStore');
+                }
+                // Check if this request had auth (meaning user WAS logged in)
+                const hadAuth = !!originalRequest.headers?.Authorization;
+
                 await this.clearTokens();
-                this.redirectToLogin();
+
+                // Only show "Session Expired" if user was actually authenticated
+                if (hadAuth) {
+                  this.redirectToLogin();
+                }
+
                 return Promise.reject(error);
+              }
+
+              if (__DEV__) {
+                console.log('🔄 Attempting to refresh token...');
               }
 
               const response = await this.refreshAccessToken(refreshToken);
               // Handle both field name formats from backend
               const accessToken = response.data.access_token || response.data.access;
               const newRefreshToken = response.data.refresh_token || response.data.refresh;
+
+              if (__DEV__) {
+                console.log('✅ Token refreshed successfully');
+              }
 
               // Save new tokens
               await SecureStore.setItemAsync(TOKEN_KEY, accessToken);
@@ -170,13 +205,24 @@ class ApiClient {
               this.onRefreshed(accessToken);
               this.refreshSubscribers = [];
 
+              if (__DEV__) {
+                console.log('🔄 Retrying original request with new token');
+              }
+
               // Retry original request
               originalRequest.headers.Authorization = `Bearer ${accessToken}`;
               return this.client(originalRequest);
             } catch (refreshError) {
-              // Refresh failed - clear tokens and redirect to login
+              if (__DEV__) {
+                console.error('❌ Token refresh failed:', refreshError);
+              }
+              // Refresh failed - clear tokens
               await this.clearTokens();
+
+              // Only show session expired if user was authenticated
+              // (refresh only happens if we had a refresh token)
               this.redirectToLogin();
+
               return Promise.reject(refreshError);
             } finally {
               this.isRefreshing = false;
@@ -228,12 +274,27 @@ class ApiClient {
     await SecureStore.deleteItemAsync(REFRESH_TOKEN_KEY);
   }
 
-  private redirectToLogin() {
-    // This will be handled by navigation/auth context
-    // Emit event or call navigation method
+  private async redirectToLogin() {
+    // Import authStore dynamically to avoid circular dependency
+    const { useAuthStore } = await import('@/stores/authStore');
+    const { logout } = useAuthStore.getState();
+
     if (__DEV__) {
-      console.log('Redirecting to login...');
+      console.log('🔴 Session expired - logging out user');
     }
+
+    // Call logout to clear all auth state
+    await logout();
+
+    // Show user-friendly message
+    const Toast = (await import('react-native-toast-message')).default;
+    Toast.show({
+      type: 'error',
+      text1: 'Session Expired',
+      text2: 'Please log in again to continue',
+      position: 'top',
+      visibilityTime: 4000,
+    });
   }
 
   // Public methods for making requests
@@ -259,14 +320,42 @@ class ApiClient {
 
   // Helper methods
   public async saveTokens(accessToken: string, refreshToken: string) {
-    await SecureStore.setItemAsync(TOKEN_KEY, accessToken);
-    await SecureStore.setItemAsync(REFRESH_TOKEN_KEY, refreshToken);
+    if (__DEV__) {
+      console.log('💾 Saving tokens to SecureStore:', {
+        accessTokenLength: accessToken?.length || 0,
+        refreshTokenLength: refreshToken?.length || 0,
+        accessTokenPreview: accessToken ? `${accessToken.substring(0, 20)}...` : 'none',
+      });
+    }
+    try {
+      await SecureStore.setItemAsync(TOKEN_KEY, accessToken);
+      await SecureStore.setItemAsync(REFRESH_TOKEN_KEY, refreshToken);
+      if (__DEV__) {
+        console.log('✅ Tokens saved successfully to SecureStore');
+      }
+    } catch (error) {
+      console.error('❌ Failed to save tokens to SecureStore:', error);
+      throw error;
+    }
   }
 
   public async getTokens() {
-    const accessToken = await SecureStore.getItemAsync(TOKEN_KEY);
-    const refreshToken = await SecureStore.getItemAsync(REFRESH_TOKEN_KEY);
-    return { accessToken, refreshToken };
+    try {
+      const accessToken = await SecureStore.getItemAsync(TOKEN_KEY);
+      const refreshToken = await SecureStore.getItemAsync(REFRESH_TOKEN_KEY);
+      if (__DEV__) {
+        console.log('📖 Retrieved tokens from SecureStore:', {
+          hasAccessToken: !!accessToken,
+          hasRefreshToken: !!refreshToken,
+          accessTokenLength: accessToken?.length || 0,
+          refreshTokenLength: refreshToken?.length || 0,
+        });
+      }
+      return { accessToken, refreshToken };
+    } catch (error) {
+      console.error('❌ Failed to retrieve tokens from SecureStore:', error);
+      return { accessToken: null, refreshToken: null };
+    }
   }
 
   public async logout() {
