@@ -35,8 +35,8 @@ class JWTAuthentication:
         # JWT configuration
         self.secret_key = os.environ.get('JWT_SECRET', config.get('jwt_secret', self._generate_secret()))
         self.algorithm = config.get('jwt_algorithm', 'HS256')
-        self.access_token_expire_minutes = config.get('access_token_expire', 30)
-        self.refresh_token_expire_days = config.get('refresh_token_expire', 7)
+        self.access_token_expire_minutes = config.get('access_token_expire', 480)  # 8 hours for mobile checkout
+        self.refresh_token_expire_days = config.get('refresh_token_expire', 30)  # 30 days
         
         # API Key configuration
         self.api_key_salt = os.environ.get('API_KEY_SALT', config.get('api_key_salt', self._generate_secret()))
@@ -262,22 +262,14 @@ class AuthMiddleware:
     ) -> Dict[str, Any]:
         """
         Verify authentication credentials
-        
+
         Returns:
             User information from token
-        
+
         Raises:
             HTTPException: If authentication fails
         """
-        # Skip auth if disabled (development only)
-        if not self.auth.enable_auth:
-            return {
-                'user_id': 'dev_user',
-                'role': 'admin',
-                'authenticated': False
-            }
-        
-        # Check for API key in header
+        # Check for API key in header (for service-to-service communication)
         api_key = request.headers.get('X-API-Key')
         if api_key:
             if self.auth.verify_api_key(api_key):
@@ -292,23 +284,25 @@ class AuthMiddleware:
                     status_code=status.HTTP_401_UNAUTHORIZED,
                     detail="Invalid API key"
                 )
-        
+
         # Check for Bearer token
         if not credentials or not credentials.credentials:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Authentication required"
+                detail="Authentication required. Please login to access this resource."
             )
-        
+
         # Verify JWT token
         token_data = self.auth.verify_token(credentials.credentials)
-        
+
         return {
             'user_id': token_data.get('user_id'),
             'role': token_data.get('role', 'user'),
             'authenticated': True,
             'auth_method': 'jwt',
-            'session_id': token_data.get('session_id')
+            'session_id': token_data.get('session_id'),
+            'tenant_id': token_data.get('tenant_id'),
+            'store_id': token_data.get('store_id')
         }
 
 
@@ -444,38 +438,32 @@ async def get_current_user(
 ) -> Dict[str, Any]:
     """
     FastAPI dependency to get current user from token
-    
+
     Usage:
         @app.get("/me")
         async def get_me(user: Dict = Depends(get_current_user)):
             return user
     """
     auth = get_auth()
-    
-    if not auth.enable_auth:
-        # Development mode - return mock user
-        return {
-            'user_id': 'dev_user',
-            'role': 'admin',
-            'authenticated': False
-        }
-    
-    # Auth is enabled - check credentials
-    if not credentials:
+
+    # Always require authentication - no development bypass
+    if not credentials or not credentials.credentials:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Authentication required",
+            detail="Authentication required. Please login to access this resource.",
             headers={"WWW-Authenticate": "Bearer"}
         )
-    
-    # Verify token
+
+    # Verify JWT token
     token_data = auth.verify_token(credentials.credentials)
-    
+
     return {
         'user_id': token_data.get('user_id'),
         'role': token_data.get('role', 'user'),
         'authenticated': True,
-        'session_id': token_data.get('session_id')
+        'session_id': token_data.get('session_id'),
+        'tenant_id': token_data.get('tenant_id'),
+        'store_id': token_data.get('store_id')
     }
 
 
