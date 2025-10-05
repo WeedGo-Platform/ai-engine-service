@@ -314,8 +314,8 @@ const useCartStore = create<CartStore>()(
 
           Toast.show({
             type: 'error',
-            text1: 'Invalid Code',
-            text2: 'The promo code you entered is not valid',
+            text1: 'Promo Code Error',
+            text2: error.message || 'The promo code you entered is not valid',
             position: 'bottom',
           });
         }

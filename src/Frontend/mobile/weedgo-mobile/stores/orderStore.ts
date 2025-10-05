@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { orderService } from '@/services/api/orders';
+import { ordersService as orderService } from '@/services/api/orders';
 import { useCartStore } from './cartStore';
 import Toast from 'react-native-toast-message';
 
