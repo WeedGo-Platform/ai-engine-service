@@ -32,6 +32,20 @@ interface CheckPhoneResponse {
   requiresPassword?: boolean;
 }
 
+interface RegisterData {
+  phone: string;
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  password?: string;
+  dateOfBirth?: string;
+  acceptTerms?: boolean;
+  acceptPrivacy?: boolean;
+  acceptMarketing?: boolean;
+  referralCode?: string;
+  enableVoiceAuth?: boolean;
+}
+
 interface AuthState {
   // State
   user: User | null;
@@ -50,7 +64,7 @@ interface AuthState {
   checkPhone: (phone: string) => Promise<CheckPhoneResponse>;
   login: (phone: string, password?: string) => Promise<AuthResponse>;
   verifyOTP: (phone: string, otp: string, sessionId: string) => Promise<void>;
-  register: (data: { phone: string; email?: string; firstName?: string; lastName?: string; dateOfBirth?: string }) => Promise<AuthResponse>;
+  register: (data: RegisterData) => Promise<AuthResponse>;
   resendOTP: (phone: string, sessionId: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshAccessToken: () => Promise<void>;
@@ -189,7 +203,22 @@ export const useAuthStore = create<AuthState>()(
       register: async (data) => {
         set({ isLoading: true, error: null });
         try {
-          const response = await authService.register(data);
+          // Transform RegisterData to RegisterRequest (camelCase to snake_case)
+          const registerRequest = {
+            phone: data.phone,
+            email: data.email,
+            first_name: data.firstName,
+            last_name: data.lastName,
+            password: data.password,
+            date_of_birth: data.dateOfBirth,
+            accept_terms: data.acceptTerms,
+            accept_privacy: data.acceptPrivacy,
+            accept_marketing: data.acceptMarketing,
+            referral_code: data.referralCode,
+            enable_voice_auth: data.enableVoiceAuth,
+          };
+
+          const response = await authService.register(registerRequest);
 
           // Save tokens and user data
           set({

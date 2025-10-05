@@ -11,7 +11,8 @@ const LOCAL_IP = '10.0.0.169';  // Update this with your current IP
 export const API_CONFIG = {
   // Use environment variable if available, otherwise use local IP
   BASE_URL: process.env.EXPO_PUBLIC_API_URL || `http://${LOCAL_IP}:5024`,
-  WS_URL: process.env.EXPO_PUBLIC_WS_URL || `ws://${LOCAL_IP}:5024`,
+  // Build WebSocket URL from API URL with unified chat path
+  WS_URL: (process.env.EXPO_PUBLIC_API_URL || `http://${LOCAL_IP}:5024`).replace('http://', 'ws://').replace('https://', 'wss://') + '/api/v1/chat/ws',
 
   // Specific endpoints
   VOICE_WS_URL: process.env.EXPO_PUBLIC_VOICE_WS_URL || `ws://${LOCAL_IP}:5024/api/voice/ws/stream`,
