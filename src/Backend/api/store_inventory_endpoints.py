@@ -174,6 +174,101 @@ async def verify_store_access(
 # Inventory Query Endpoints
 # =====================================================
 
+@router.get("/")
+async def get_inventory_by_category(
+    store_id: UUID = Depends(verify_store_access),
+    category: Optional[str] = Query(None),
+    sub_category: Optional[str] = Query(None),
+    sub_sub_category: Optional[str] = Query(None),
+    service: StoreInventoryService = Depends(get_store_inventory_service)
+) -> Dict[str, Any]:
+    """
+    Get inventory products filtered by category hierarchy
+    Used by pricing UI for category drill-down
+
+    Args:
+        store_id: Store UUID
+        category: Top-level category (e.g., "Flower")
+        sub_category: Sub-category (e.g., "Pre-Rolls")
+        sub_sub_category: Sub-sub-category (e.g., "Blended Pre-Rolls")
+
+    Returns:
+        List of products matching the category filters
+    """
+    try:
+        async with service.db_pool.acquire() as conn:
+            # Build query with category filters
+            query = """
+                SELECT
+                    i.id,
+                    i.sku,
+                    i.product_name,
+                    i.unit_cost,
+                    i.retail_price,
+                    i.override_price,
+                    i.retail_price_dynamic,
+                    i.quantity_available,
+                    pc.category,
+                    pc.sub_category,
+                    pc.sub_sub_category,
+                    pc.brand,
+                    pc.image_url,
+                    CASE
+                        WHEN i.unit_cost > 0
+                        THEN ((COALESCE(i.override_price, i.retail_price) - i.unit_cost) / i.unit_cost) * 100
+                        ELSE 0
+                    END as current_markup
+                FROM ocs_inventory i
+                INNER JOIN ocs_product_catalog pc ON LOWER(TRIM(i.sku)) = LOWER(TRIM(pc.ocs_variant_number))
+                WHERE i.store_id = $1
+            """
+
+            params = [store_id]
+            param_count = 1
+
+            if category:
+                param_count += 1
+                query += f" AND pc.category = ${param_count}"
+                params.append(category)
+
+            if sub_category:
+                param_count += 1
+                query += f" AND pc.sub_category = ${param_count}"
+                params.append(sub_category)
+
+            if sub_sub_category:
+                param_count += 1
+                query += f" AND pc.sub_sub_category = ${param_count}"
+                params.append(sub_sub_category)
+
+            query += " ORDER BY pc.category, pc.sub_category, pc.sub_sub_category, i.product_name"
+
+            results = await conn.fetch(query, *params)
+
+            # Convert to dict and convert Decimal fields to float for frontend
+            inventory = []
+            for row in results:
+                item = dict(row)
+                # Convert price fields from Decimal to float
+                if item.get('unit_cost'):
+                    item['unit_cost'] = float(item['unit_cost'])
+                if item.get('retail_price'):
+                    item['retail_price'] = float(item['retail_price'])
+                if item.get('override_price'):
+                    item['override_price'] = float(item['override_price'])
+                if item.get('retail_price_dynamic'):
+                    item['retail_price_dynamic'] = float(item['retail_price_dynamic'])
+                if item.get('current_markup'):
+                    item['current_markup'] = float(item['current_markup'])
+                inventory.append(item)
+
+            return {'inventory': inventory}
+
+    except Exception as e:
+        logger.error(f"Error getting inventory by category: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.get("/status/{sku}")
 async def get_inventory_status(
     sku: str,
@@ -694,21 +789,33 @@ async def get_pricing_categories(
     store_id: UUID = Depends(verify_store_access),
     service: StoreInventoryService = Depends(get_store_inventory_service)
 ):
-    """Get category hierarchy with pricing rules"""
+    """Get category hierarchy with pricing rules and product counts"""
     try:
         async with service.db_pool.acquire() as conn:
-            # Get all category combinations from product catalog
-            catalog_query = """
-                SELECT DISTINCT
-                    category,
-                    sub_category,
-                    sub_sub_category
-                FROM ocs_product_catalog
-                WHERE category IS NOT NULL
-                ORDER BY category, sub_category, sub_sub_category
+            # Get product counts and pricing stats by category
+            # Query FROM inventory (source of truth per store) JOIN catalog (for category lookup)
+            stats_query = """
+                SELECT
+                    pc.category,
+                    pc.sub_category,
+                    pc.sub_sub_category,
+                    COUNT(i.id) as product_count,
+                    AVG(
+                        CASE
+                            WHEN i.unit_cost > 0
+                            THEN ((COALESCE(i.override_price, i.retail_price) - i.unit_cost) / i.unit_cost) * 100
+                            ELSE 0
+                        END
+                    ) as avg_markup,
+                    COUNT(CASE WHEN i.override_price IS NOT NULL THEN 1 END) as override_count
+                FROM ocs_inventory i
+                INNER JOIN ocs_product_catalog pc ON LOWER(TRIM(i.sku)) = LOWER(TRIM(pc.ocs_variant_number))
+                WHERE i.store_id = $1 AND pc.category IS NOT NULL
+                GROUP BY pc.category, pc.sub_category, pc.sub_sub_category
+                ORDER BY pc.category, pc.sub_category, pc.sub_sub_category
             """
 
-            categories = await conn.fetch(catalog_query)
+            stats = await conn.fetch(stats_query, store_id)
 
             # Get pricing rules for this store
             pricing_query = """
@@ -733,35 +840,91 @@ async def get_pricing_categories(
                 )
                 pricing_map[key] = rule['markup_percentage']
 
-            # Build hierarchical structure with pricing
+            # Build hierarchical structure with stats
             hierarchy = {}
-            for cat in categories:
-                category = cat['category']
-                sub_category = cat['sub_category']
-                sub_sub_category = cat['sub_sub_category']
+            for stat in stats:
+                category = stat['category']
+                sub_category = stat['sub_category']
+                sub_sub_category = stat['sub_sub_category']
 
+                # Initialize category if not exists
                 if category not in hierarchy:
                     hierarchy[category] = {
                         'name': category,
+                        'product_count': 0,
+                        'avg_markup': 0,
+                        'override_count': 0,
                         'markup': pricing_map.get((category, '', ''), None),
                         'subcategories': {}
                     }
 
                 if sub_category:
+                    # Initialize subcategory if not exists
                     if sub_category not in hierarchy[category]['subcategories']:
                         hierarchy[category]['subcategories'][sub_category] = {
                             'name': sub_category,
+                            'product_count': 0,
+                            'avg_markup': 0,
+                            'override_count': 0,
                             'markup': pricing_map.get((category, sub_category, ''), None),
                             'subsubcategories': {}
                         }
 
                     if sub_sub_category:
+                        # Add sub-sub-category with stats
                         hierarchy[category]['subcategories'][sub_category]['subsubcategories'][sub_sub_category] = {
                             'name': sub_sub_category,
+                            'product_count': stat['product_count'],
+                            'avg_markup': float(stat['avg_markup']) if stat['avg_markup'] else 0,
+                            'override_count': stat['override_count'],
                             'markup': pricing_map.get((category, sub_category, sub_sub_category), None)
                         }
+                        # Aggregate to subcategory
+                        hierarchy[category]['subcategories'][sub_category]['product_count'] += stat['product_count']
+                        hierarchy[category]['subcategories'][sub_category]['override_count'] += stat['override_count']
+                    else:
+                        # Direct subcategory stats (no sub-sub-category)
+                        hierarchy[category]['subcategories'][sub_category]['product_count'] += stat['product_count']
+                        hierarchy[category]['subcategories'][sub_category]['override_count'] += stat['override_count']
+                        if stat['avg_markup']:
+                            hierarchy[category]['subcategories'][sub_category]['avg_markup'] = float(stat['avg_markup'])
 
-            return hierarchy
+                    # Aggregate to category
+                    hierarchy[category]['product_count'] += stat['product_count']
+                    hierarchy[category]['override_count'] += stat['override_count']
+                else:
+                    # Direct category stats (no subcategory)
+                    hierarchy[category]['product_count'] += stat['product_count']
+                    hierarchy[category]['override_count'] += stat['override_count']
+                    if stat['avg_markup']:
+                        hierarchy[category]['avg_markup'] = float(stat['avg_markup'])
+
+            # Calculate weighted average markups for categories and subcategories
+            for category, cat_data in hierarchy.items():
+                if cat_data['subcategories']:
+                    total_products = sum(sub.get('product_count', 0) for sub in cat_data['subcategories'].values())
+                    if total_products > 0:
+                        weighted_sum = sum(
+                            sub.get('product_count', 0) * sub.get('avg_markup', 0)
+                            for sub in cat_data['subcategories'].values()
+                        )
+                        cat_data['avg_markup'] = weighted_sum / total_products
+
+                    # Calculate weighted average for subcategories with sub-sub-categories
+                    for sub_key, sub_data in cat_data['subcategories'].items():
+                        if sub_data.get('subsubcategories'):
+                            total_sub_products = sum(
+                                subsub.get('product_count', 0)
+                                for subsub in sub_data['subsubcategories'].values()
+                            )
+                            if total_sub_products > 0:
+                                weighted_sub_sum = sum(
+                                    subsub.get('product_count', 0) * subsub.get('avg_markup', 0)
+                                    for subsub in sub_data['subsubcategories'].values()
+                                )
+                                sub_data['avg_markup'] = weighted_sub_sum / total_sub_products
+
+            return {'categories': hierarchy}
     except Exception as e:
         logger.error(f"Error getting pricing categories: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
