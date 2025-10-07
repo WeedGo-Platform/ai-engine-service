@@ -19,7 +19,6 @@ from services.otp_service import OTPService
 from services.inventory_service import InventoryService
 from services.store_inventory_service import StoreInventoryService
 from services.order_service import OrderService
-from services.smart_ai_engine_v5 import SmartAIEngineV5
 from services.cart_service import CartService
 from services.user_context_service import UserContextService
 from models.api_models import (
@@ -557,14 +556,48 @@ async def get_recommendations(
             except:
                 pass
 
-        # Get recommendations using AI engine
-        ai_engine = SmartAIEngineV5()
-        recommendations = await ai_engine.get_personalized_recommendations(
-            store_id=UUID(store_id),
-            user_context=user_context,
-            cart_items=cart_items,
-            limit=6
-        )
+        # Get recommendations based on popular products and user context
+        # Query for popular products from inventory
+        query = """
+            SELECT DISTINCT
+                i.id::text as product_id,
+                COALESCE(i.product_name, pc.product_name) as name,
+                COALESCE(i.override_price, i.retail_price) as price,
+                pc.category,
+                pc.sub_category,
+                pc.brand,
+                pc.thc_range,
+                pc.cbd_range,
+                pc.plant_type,
+                pc.image_url,
+                i.quantity_available
+            FROM ocs_inventory i
+            INNER JOIN ocs_product_catalog pc
+                ON LOWER(TRIM(i.sku)) = LOWER(TRIM(pc.ocs_variant_number))
+            WHERE i.store_id = $1
+                AND i.is_available = true
+                AND i.quantity_available > 0
+            ORDER BY i.quantity_available DESC, RANDOM()
+            LIMIT $2
+        """
+
+        rows = await db.fetch(query, UUID(store_id), 6)
+
+        recommendations = []
+        for row in rows:
+            recommendations.append({
+                'product_id': row['product_id'],
+                'name': row['name'],
+                'price': float(row['price']) if row['price'] else 0.0,
+                'category': row['category'],
+                'sub_category': row['sub_category'],
+                'brand': row['brand'],
+                'thc_range': row['thc_range'],
+                'cbd_range': row['cbd_range'],
+                'plant_type': row['plant_type'],
+                'image_url': row['image_url'],
+                'reason': 'Popular in store'
+            })
 
         return {
             "status": "success",
