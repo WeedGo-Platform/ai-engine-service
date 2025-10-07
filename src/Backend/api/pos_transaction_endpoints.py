@@ -160,11 +160,26 @@ async def create_pos_transaction(transaction: POSTransactionCreate):
                 transaction.receipt_number,  # 14
                 json.dumps(pos_metadata)  # 15
             )
-            
-            result = transaction_data.copy()
-            result['id'] = row['id']
-            result['timestamp'] = row['timestamp'].isoformat()
-            
+
+            # Build result from transaction data
+            result = {
+                'id': row['id'],
+                'store_id': transaction.store_id,
+                'cashier_id': transaction.cashier_id,
+                'customer_id': transaction.customer_id,
+                'items': order_items,
+                'subtotal': transaction.subtotal,
+                'discounts': transaction.discounts,
+                'tax': transaction.tax,
+                'total': transaction.total,
+                'payment_method': transaction.payment_method,
+                'payment_details': transaction.payment_details.dict() if transaction.payment_details else {},
+                'status': transaction.status,
+                'receipt_number': transaction.receipt_number,
+                'notes': transaction.notes,
+                'timestamp': row['timestamp'].isoformat()
+            }
+
             # Update customer loyalty points if applicable
             if user_id:
                 try:
@@ -328,9 +343,9 @@ async def resume_pos_transaction(transaction_id: str):
             if not row:
                 raise HTTPException(status_code=404, detail="Parked transaction not found")
 
-            # Mark as resumed
+            # Mark as pending (resumed)
             await conn.execute(
-                "UPDATE orders SET order_status = 'resumed' WHERE id = $1::uuid",
+                "UPDATE orders SET order_status = 'pending', updated_at = NOW() WHERE id = $1::uuid",
                 transaction_id
             )
 
