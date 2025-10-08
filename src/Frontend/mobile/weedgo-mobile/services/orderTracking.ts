@@ -91,9 +91,29 @@ class OrderTrackingService {
 
   private handleMessage(data: any) {
     switch (data.type) {
+      case 'connected':
+        // Welcome message from server - connection established
+        console.log('[OrderTracking] Connected to server');
+        break;
+
+      case 'subscribed':
+        // Subscription confirmation
+        console.log(`[OrderTracking] Subscribed to order ${data.order_id}`);
+        break;
+
+      case 'unsubscribed':
+        // Unsubscription confirmation
+        console.log(`[OrderTracking] Unsubscribed from order ${data.order_id}`);
+        break;
+
+      case 'pong':
+        // Ping response - connection is alive
+        break;
+
       case 'order_update':
         this.notifyListeners(data.order_id, {
           orderId: data.order_id,
+          orderNumber: data.order_number,
           status: data.status,
           timestamp: new Date(data.timestamp),
           message: data.message,
