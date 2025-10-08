@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout Mockup V2 - Compact Modern</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+      color: #ffffff;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    .phone-frame {
+      max-width: 390px;
+      margin: 20px auto;
+      background: #0f0f0f;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+      border: 8px solid #1a1a1a;
+    }
+
+    .status-bar {
+      height: 44px;
+      background: #000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      font-size: 14px;
+    }
+
+    .header {
+      background: rgba(39, 174, 96, 0.05);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(39, 174, 96, 0.2);
+      padding: 12px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .back-btn {
+      width: 36px;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .header-title {
+      font-size: 24px;
+      font-weight: 700;
+      flex: 1;
+    }
+
+    .progress-dots {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+    }
+
+    .dot.active {
+      background: #27AE60;
+      width: 24px;
+      border-radius: 3px;
+    }
+
+    .content {
+      padding: 16px;
+      padding-bottom: 200px;
+      overflow-y: auto;
+      max-height: calc(100vh - 200px);
+    }
+
+    /* Compact sections */
+    .section {
+      background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.03) 100%);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .section-header {
+      font-size: 14px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-badge {
+      background: rgba(39, 174, 96, 0.2);
+      color: #27AE60;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    /* Toggle - Pill style */
+    .pill-toggle {
+      display: inline-flex;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 100px;
+      padding: 4px;
+      gap: 4px;
+      width: 100%;
+    }
+
+    .pill-option {
+      flex: 1;
+      padding: 12px 16px;
+      text-align: center;
+      border-radius: 100px;
+      font-weight: 600;
+      font-size: 15px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .pill-option.active {
+      background: linear-gradient(135deg, #27AE60, #219653);
+      box-shadow: 0 4px 16px rgba(39, 174, 96, 0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+      transform: scale(1.02);
+    }
+
+    /* Inline info */
+    .inline-info {
+      background: rgba(39, 174, 96, 0.08);
+      border-left: 3px solid #27AE60;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-top: 12px;
+      font-size: 13px;
+      color: #6ee7b7;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Pickup details - compact */
+    .location-card {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .location-name {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .location-address {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .select-button {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .select-button:active {
+      transform: scale(0.98);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    /* Payment - Featured style */
+    .payment-featured {
+      background: linear-gradient(135deg, rgba(39, 174, 96, 0.1), rgba(39, 174, 96, 0.05));
+      border: 2px solid rgba(39, 174, 96, 0.3);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .payment-featured:hover {
+      background: linear-gradient(135deg, rgba(39, 174, 96, 0.15), rgba(39, 174, 96, 0.08));
+      border-color: rgba(39, 174, 96, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(39, 174, 96, 0.2);
+    }
+
+    .payment-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .payment-text {
+      font-size: 16px;
+      font-weight: 600;
+      color: #27AE60;
+    }
+
+    /* Input field */
+    .input-field {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 12px;
+      color: #fff;
+      font-family: inherit;
+      width: 100%;
+      font-size: 14px;
+    }
+
+    .input-field::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Order summary - Minimalist */
+    .summary-compact {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 15px;
+    }
+
+    .summary-line.highlight {
+      background: rgba(39, 174, 96, 0.1);
+      margin: 0 -16px;
+      padding: 10px 16px;
+      border-radius: 8px;
+    }
+
+    .summary-line.total {
+      padding-top: 10px;
+      border-top: 1px solid rgba(39, 174, 96, 0.3);
+      margin-top: 4px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .label-text {
+      color: rgba(255, 255, 255, 0.6);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .value-text {
+      font-weight: 600;
+    }
+
+    .value-text.discount {
+      color: #6ee7b7;
+    }
+
+    .value-text.total {
+      color: #27AE60;
+      font-size: 22px;
+    }
+
+    .code-pill {
+      background: rgba(39, 174, 96, 0.25);
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #6ee7b7;
+    }
+
+    /* Checkbox - Modern */
+    .checkbox-modern {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .check-box {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, #27AE60, #219653);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .check-text {
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    /* Bottom summary bar */
+    .bottom-summary {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: 390px;
+      width: 100%;
+      background: linear-gradient(180deg, rgba(15, 15, 15, 0.8) 0%, rgba(15, 15, 15, 0.98) 100%);
+      backdrop-filter: blur(30px);
+      border-top: 1px solid rgba(39, 174, 96, 0.2);
+      padding: 12px 16px 16px;
+      box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .summary-preview {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding: 8px 0;
+    }
+
+    .summary-preview-label {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .summary-preview-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: #27AE60;
+    }
+
+    .checkout-button {
+      background: linear-gradient(135deg, #27AE60 0%, #219653 100%);
+      border: none;
+      border-radius: 14px;
+      padding: 16px;
+      width: 100%;
+      font-size: 17px;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(39, 174, 96, 0.4);
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .checkout-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .checkout-button:hover::before {
+      left: 100%;
+    }
+
+    .checkout-button:active {
+      transform: scale(0.98);
+    }
+
+    .button-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="status-bar">
+      <span>9:03</span>
+      <span>🔋 85%</span>
+    </div>
+
+    <div class="header">
+      <div class="header-top">
+        <div class="back-btn">←</div>
+        <div class="header-title">Checkout</div>
+      </div>
+      <div class="progress-dots">
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- Delivery Method -->
+      <div class="section">
+        <div class="section-header">
+          <span>🚚</span>
+          <span>Fulfillment</span>
+        </div>
+
+        <div class="pill-toggle">
+          <div class="pill-option">
+            <span>🚗</span>
+            <span>Delivery</span>
+          </div>
+          <div class="pill-option active">
+            <span>🏪</span>
+            <span>Pickup</span>
+          </div>
+        </div>
+
+        <div class="inline-info">
+          <span>💰</span>
+          <span>Save on delivery fees</span>
+        </div>
+      </div>
+
+      <!-- Pickup Details -->
+      <div class="section">
+        <div class="section-header">
+          <span>📍</span>
+          <span>Pickup Location</span>
+        </div>
+
+        <div class="location-card">
+          <div class="location-name">Pot Palace Cannabis Rogers Road</div>
+          <div class="location-address">553 Rogers Rd, Toronto</div>
+        </div>
+
+        <div class="select-button">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span>🕐</span>
+            <span style="font-size: 14px;">Pickup Time</span>
+          </div>
+          <span style="font-size: 13px; color: rgba(255,255,255,0.5);">Select</span>
+        </div>
+      </div>
+
+      <!-- Payment -->
+      <div class="section">
+        <div class="section-header">
+          <span>💳</span>
+          <span>Payment</span>
+        </div>
+
+        <div class="payment-featured">
+          <div class="payment-icon">💳</div>
+          <div class="payment-text">Add Payment Method</div>
+          <div style="font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 6px;">
+            🔒 Secure & Encrypted
+          </div>
+        </div>
+      </div>
+
+      <!-- Special Instructions -->
+      <div class="section">
+        <div class="section-header">
+          <span>📝</span>
+          <span>Instructions</span>
+          <span class="section-badge">Optional</span>
+        </div>
+
+        <input
+          type="text"
+          class="input-field"
+          placeholder="Add preparation instructions..."
+        />
+      </div>
+
+      <!-- Order Summary -->
+      <div class="section">
+        <div class="section-header">
+          <span>📊</span>
+          <span>Summary</span>
+        </div>
+
+        <div class="summary-compact">
+          <div class="summary-line">
+            <span class="label-text">Subtotal</span>
+            <span class="value-text">$139.08</span>
+          </div>
+
+          <div class="summary-line highlight">
+            <span class="label-text">
+              <span>Discount</span>
+              <span class="code-pill">SAT10</span>
+            </span>
+            <span class="value-text discount">-$13.91</span>
+          </div>
+
+          <div class="summary-line">
+            <span class="label-text">Tax (HST)</span>
+            <span class="value-text">$16.27</span>
+          </div>
+
+          <div class="summary-line total">
+            <span class="label-text" style="color: #fff; font-weight: 700;">Total</span>
+            <span class="value-text total">$162.30</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Age Verification -->
+      <div class="section">
+        <div class="checkbox-modern">
+          <div class="check-box">✓</div>
+          <div class="check-text">I confirm that I am 19 years of age or older</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-summary">
+      <div class="summary-preview">
+        <span class="summary-preview-label">Order Total</span>
+        <span class="summary-preview-value">$162.30</span>
+      </div>
+
+      <button class="checkout-button">
+        <div class="button-content">
+          <span>Place Order</span>
+          <span style="font-size: 22px;">→</span>
+        </div>
+      </button>
+    </div>
+  </div>
+</body>
+</html>

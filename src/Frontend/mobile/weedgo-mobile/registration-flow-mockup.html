@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeedGo Registration Flow - Design Mockup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1A1A2E 0%, #16213E 50%, #0F3460 100%);
+            color: #F8F9FA;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 3em;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #00FF88, #FFD93D, #FF6B9D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #CED6E0;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+
+        .section {
+            background: rgba(30, 30, 50, 0.85);
+            border: 1px solid rgba(116, 185, 255, 0.15);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 255, 136, 0.1);
+        }
+
+        .section h2 {
+            color: #00FF88;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 2px solid rgba(0, 255, 136, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            color: #FFD93D;
+            margin: 20px 0 15px 0;
+            font-size: 1.4em;
+        }
+
+        .gap-table, .field-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .gap-table th, .field-table th {
+            background: linear-gradient(90deg, #00FF88, #00CC6A);
+            color: #1A1A2E;
+            padding: 12px;
+            text-align: left;
+            font-weight: 700;
+        }
+
+        .gap-table td, .field-table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(116, 185, 255, 0.1);
+        }
+
+        .gap-table tr:nth-child(even), .field-table tr:nth-child(even) {
+            background: rgba(116, 185, 255, 0.05);
+        }
+
+        .status {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .status.missing {
+            background: rgba(255, 85, 85, 0.2);
+            color: #FF5555;
+            border: 1px solid #FF5555;
+        }
+
+        .status.implemented {
+            background: rgba(80, 250, 123, 0.2);
+            color: #50FA7B;
+            border: 1px solid #50FA7B;
+        }
+
+        .status.required {
+            background: rgba(255, 107, 157, 0.2);
+            color: #FF6B9D;
+            border: 1px solid #FF6B9D;
+        }
+
+        .status.optional {
+            background: rgba(116, 185, 255, 0.2);
+            color: #74B9FF;
+            border: 1px solid #74B9FF;
+        }
+
+        .screens-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .phone-mockup {
+            background: #1A1A2E;
+            border-radius: 40px;
+            padding: 15px;
+            box-shadow: 0 20px 60px rgba(0, 255, 136, 0.3);
+            border: 3px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .phone-screen {
+            background: linear-gradient(135deg, #1A1A2E 0%, #16213E 50%, #0F3460 100%);
+            border-radius: 30px;
+            padding: 20px;
+            min-height: 700px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .screen-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #00FF88, #00D084);
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.4);
+        }
+
+        .screen-title {
+            font-size: 1.8em;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .screen-subtitle {
+            color: #CED6E0;
+            font-size: 0.95em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.9em;
+            color: #CED6E0;
+        }
+
+        .required-mark {
+            color: #FF5555;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: rgba(30, 30, 50, 0.85);
+            border: 1px solid rgba(116, 185, 255, 0.15);
+            border-radius: 20px;
+            padding: 16px;
+            gap: 10px;
+        }
+
+        .input-wrapper input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #F8F9FA;
+            font-size: 1em;
+            outline: none;
+        }
+
+        .input-wrapper input::placeholder {
+            color: #A4B0BE;
+        }
+
+        .input-icon {
+            color: #A4B0BE;
+            font-size: 1.2em;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid rgba(116, 185, 255, 0.3);
+            border-radius: 6px;
+            background: rgba(30, 30, 50, 0.5);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .checkbox.checked {
+            background: linear-gradient(135deg, #00FF88, #00D084);
+            border-color: #00FF88;
+            position: relative;
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #1A1A2E;
+            font-weight: bold;
+        }
+
+        .checkbox-label {
+            font-size: 0.9em;
+            color: #CED6E0;
+            line-height: 1.4;
+        }
+
+        .checkbox-label a {
+            color: #00FF88;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 18px;
+            border-radius: 28px;
+            border: none;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 12px;
+            box-shadow: 0 6px 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #00FF88, #00D084);
+            color: #1A1A2E;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(90deg, rgba(255, 107, 157, 0.1), rgba(255, 121, 198, 0.1));
+            color: #FF79C6;
+            border: 1px solid rgba(255, 121, 198, 0.3);
+        }
+
+        .voice-btn {
+            background: linear-gradient(135deg, #9D50BB, #BD93F9);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            gap: 15px;
+            color: #A4B0BE;
+            font-size: 0.9em;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(116, 185, 255, 0.15);
+        }
+
+        .stepper {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding: 0 20px;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            background: rgba(30, 30, 50, 0.5);
+            border: 2px solid rgba(116, 185, 255, 0.3);
+        }
+
+        .step.active .step-circle {
+            background: linear-gradient(135deg, #00FF88, #00D084);
+            border-color: #00FF88;
+            color: #1A1A2E;
+        }
+
+        .step.completed .step-circle {
+            background: linear-gradient(135deg, #60A5FA, #2563EB);
+            border-color: #60A5FA;
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.75em;
+            color: #A4B0BE;
+        }
+
+        .step.active .step-label {
+            color: #00FF88;
+        }
+
+        .step-line {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: rgba(116, 185, 255, 0.15);
+            z-index: -1;
+        }
+
+        .help-text {
+            font-size: 0.85em;
+            color: #A4B0BE;
+            margin-top: 6px;
+            padding-left: 4px;
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(116, 185, 255, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #8BE9FD;
+            overflow-x: auto;
+        }
+
+        .highlight {
+            color: #FFD93D;
+            font-weight: 600;
+        }
+
+        ul.features {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul.features li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        ul.features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #00FF88;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .warning-box {
+            background: rgba(255, 107, 157, 0.1);
+            border: 1px solid rgba(255, 107, 157, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .warning-box h4 {
+            color: #FF6B9D;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>WeedGo Registration Flow</h1>
+        <p class="subtitle">Comprehensive Design Mockup & Implementation Plan</p>
+
+        <!-- Section 1: Backend API Analysis -->
+        <div class="section">
+            <h2>📡 Backend API Analysis</h2>
+
+            <h3>Primary Registration Endpoint</h3>
+            <div class="code-block">
+POST /api/registration/register-with-voice
+Content-Type: multipart/form-data
+            </div>
+
+            <h3>Required Fields</h3>
+            <table class="field-table">
+                <thead>
+                    <tr>
+                        <th>Field Name</th>
+                        <th>Type</th>
+                        <th>Required</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>email</strong></td>
+                        <td>String</td>
+                        <td><span class="status required">Required</span></td>
+                        <td>User email address</td>
+                    </tr>
+                    <tr>
+                        <td><strong>password</strong></td>
+                        <td>String</td>
+                        <td><span class="status required">Required</span></td>
+                        <td>User password (8+ chars, uppercase, lowercase, number)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>first_name</strong></td>
+                        <td>String</td>
+                        <td><span class="status required">Required</span></td>
+                        <td>User first name</td>
+                    </tr>
+                    <tr>
+                        <td><strong>last_name</strong></td>
+                        <td>String</td>
+                        <td><span class="status required">Required</span></td>
+                        <td>User last name</td>
+                    </tr>
+                    <tr>
+                        <td><strong>phone_number</strong></td>
+                        <td>String</td>
+                        <td><span class="status required">Required</span></td>
+                        <td>User phone number (E.164 format)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>tenant_id</strong></td>
+                        <td>String</td>
+                        <td><span class="status required">Required</span></td>
+                        <td>Tenant/Store ID</td>
+                    </tr>
+                    <tr>
+                        <td><strong>date_of_birth</strong></td>
+                        <td>String (ISO)</td>
+                        <td><span class="status required">Required</span></td>
+                        <td>Date of birth (for age verification)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>accept_terms</strong></td>
+                        <td>Boolean</td>
+                        <td><span class="status required">Required</span></td>
+                        <td>Accept terms and conditions</td>
+                    </tr>
+                    <tr>
+                        <td><strong>accept_privacy</strong></td>
+                        <td>Boolean</td>
+                        <td><span class="status required">Required</span></td>
+                        <td>Accept privacy policy</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Optional Fields</h3>
+            <table class="field-table">
+                <thead>
+                    <tr>
+                        <th>Field Name</th>
+                        <th>Type</th>
+                        <th>Default</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>accept_marketing</strong></td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>Accept marketing communications</td>
+                    </tr>
+                    <tr>
+                        <td><strong>referral_code</strong></td>
+                        <td>String</td>
+                        <td>null</td>
+                        <td>Referral code (if applicable)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>enable_voice_auth</strong></td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>Enable voice authentication</td>
+                    </tr>
+                    <tr>
+                        <td><strong>voice_audio</strong></td>
+                        <td>File (UploadFile)</td>
+                        <td>null</td>
+                        <td>Voice sample for authentication</td>
+                    </tr>
+                    <tr>
+                        <td><strong>device_id</strong></td>
+                        <td>String</td>
+                        <td>null</td>
+                        <td>Device identifier</td>
+                    </tr>
+                    <tr>
+                        <td><strong>role</strong></td>
+                        <td>String</td>
+                        <td>"Customer"</td>
+                        <td>User role</td>
+                    </tr>
+                    <tr>
+                        <td><strong>registration_source</strong></td>
+                        <td>String</td>
+                        <td>"web"</td>
+                        <td>Registration source (mobile/web/kiosk)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section 2: Gap Analysis -->
+        <div class="section">
+            <h2>📊 Current Implementation vs Requirements</h2>
+
+            <table class="gap-table">
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Backend Requirement</th>
+                        <th>Current Frontend</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>First Name</td>
+                        <td>Required</td>
+                        <td>Implemented ✓</td>
+                        <td><span class="status implemented">Complete</span></td>
+                    </tr>
+                    <tr>
+                        <td>Last Name</td>
+                        <td>Required</td>
+                        <td>Implemented ✓</td>
+                        <td><span class="status implemented">Complete</span></td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>Required</td>
+                        <td>Optional (not validated)</td>
+                        <td><span class="status missing">Needs Fix</span></td>
+                    </tr>
+                    <tr>
+                        <td>Phone</td>
+                        <td>Required</td>
+                        <td>Passed as param ✓</td>
+                        <td><span class="status implemented">Complete</span></td>
+                    </tr>
+                    <tr>
+                        <td>Password</td>
+                        <td>Required</td>
+                        <td>Missing</td>
+                        <td><span class="status missing">Missing</span></td>
+                    </tr>
+                    <tr>
+                        <td>Date of Birth</td>
+                        <td>Required (age verification)</td>
+                        <td>Missing</td>
+                        <td><span class="status missing">Missing</span></td>
+                    </tr>
+                    <tr>
+                        <td>Tenant ID</td>
+                        <td>Required</td>
+                        <td>Not captured</td>
+                        <td><span class="status missing">Missing</span></td>
+                    </tr>
+                    <tr>
+                        <td>Accept Terms</td>
+                        <td>Required</td>
+                        <td>Missing</td>
+                        <td><span class="status missing">Missing</span></td>
+                    </tr>
+                    <tr>
+                        <td>Accept Privacy</td>
+                        <td>Required</td>
+                        <td>Missing</td>
+                        <td><span class="status missing">Missing</span></td>
+                    </tr>
+                    <tr>
+                        <td>Accept Marketing</td>
+                        <td>Optional</td>
+                        <td>Missing</td>
+                        <td><span class="status missing">Missing</span></td>
+                    </tr>
+                    <tr>
+                        <td>Referral Code</td>
+                        <td>Optional</td>
+                        <td>Missing</td>
+                        <td><span class="status missing">Missing</span></td>
+                    </tr>
+                    <tr>
+                        <td>Voice Authentication</td>
+                        <td>Optional</td>
+                        <td>Missing</td>
+                        <td><span class="status missing">Missing</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box">
+                <h4>⚠️ Critical Issues</h4>
+                <ul class="features">
+                    <li><strong>No password field</strong> - Users cannot set credentials</li>
+                    <li><strong>No age verification</strong> - Legal compliance issue for cannabis</li>
+                    <li><strong>No legal agreements</strong> - Terms & Privacy must be accepted</li>
+                    <li><strong>Theme mismatch</strong> - Doesn't follow glassmorphism/gradient design from login</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Section 3: Redesigned Flow -->
+        <div class="section">
+            <h2>🎨 Redesigned Registration Flow</h2>
+            <p style="margin-bottom: 30px;">Multi-step registration with modern glassmorphism design matching the login screen theme.</p>
+
+            <h3>Flow Structure</h3>
+            <ul class="features">
+                <li><strong>Step 1:</strong> Personal Information (Name, Email, Phone)</li>
+                <li><strong>Step 2:</strong> Security & Age Verification (Password, Date of Birth)</li>
+                <li><strong>Step 3:</strong> Legal & Preferences (Terms, Privacy, Marketing, Referral)</li>
+                <li><strong>Step 4:</strong> Optional Voice Authentication Setup</li>
+            </ul>
+        </div>
+
+        <!-- Screen Mockups -->
+        <div class="section">
+            <h2>📱 Screen Mockups</h2>
+
+            <div class="screens-grid">
+                <!-- Step 1 -->
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div class="stepper">
+                            <div class="step active">
+                                <div class="step-circle">1</div>
+                                <div class="step-label">Info</div>
+                                <div class="step-line"></div>
+                            </div>
+                            <div class="step">
+                                <div class="step-circle">2</div>
+                                <div class="step-label">Security</div>
+                                <div class="step-line"></div>
+                            </div>
+                            <div class="step">
+                                <div class="step-circle">3</div>
+                                <div class="step-label">Legal</div>
+                                <div class="step-line"></div>
+                            </div>
+                            <div class="step">
+                                <div class="step-circle">4</div>
+                                <div class="step-label">Voice</div>
+                            </div>
+                        </div>
+
+                        <div class="screen-header">
+                            <div class="logo-circle">🌿</div>
+                            <div class="screen-title">Create Account</div>
+                            <div class="screen-subtitle">Step 1: Personal Information</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">First Name <span class="required-mark">*</span></label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">👤</span>
+                                <input type="text" placeholder="Enter your first name" value="John" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Last Name <span class="required-mark">*</span></label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">👤</span>
+                                <input type="text" placeholder="Enter your last name" value="Doe" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Email <span class="required-mark">*</span></label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">📧</span>
+                                <input type="email" placeholder="your@email.com" value="john.doe@example.com" />
+                            </div>
+                            <div class="help-text">For order confirmations & account recovery</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Phone Number <span class="required-mark">*</span></label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">📱</span>
+                                <input type="tel" value="+1 (555) 123-4567" disabled style="opacity: 0.6;" />
+                                <span style="color: #50FA7B;">✓</span>
+                            </div>
+                            <div class="help-text">Verified via SMS</div>
+                        </div>
+
+                        <button class="btn btn-primary">Continue to Security →</button>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div class="stepper">
+                            <div class="step completed">
+                                <div class="step-circle">✓</div>
+                                <div class="step-label">Info</div>
+                                <div class="step-line"></div>
+                            </div>
+                            <div class="step active">
+                                <div class="step-circle">2</div>
+                                <div class="step-label">Security</div>
+                                <div class="step-line"></div>
+                            </div>
+                            <div class="step">
+                                <div class="step-circle">3</div>
+                                <div class="step-label">Legal</div>
+                                <div class="step-line"></div>
+                            </div>
+                            <div class="step">
+                                <div class="step-circle">4</div>
+                                <div class="step-label">Voice</div>
+                            </div>
+                        </div>
+
+                        <div class="screen-header">
+                            <div class="logo-circle">🔐</div>
+                            <div class="screen-title">Security Setup</div>
+                            <div class="screen-subtitle">Step 2: Password & Age Verification</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Create Password <span class="required-mark">*</span></label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">🔒</span>
+                                <input type="password" placeholder="Min. 8 characters" value="••••••••" />
+                                <span class="input-icon">👁️</span>
+                            </div>
+                            <div class="help-text">Must contain uppercase, lowercase, and number</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Confirm Password <span class="required-mark">*</span></label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">🔒</span>
+                                <input type="password" placeholder="Re-enter password" value="••••••••" />
+                                <span style="color: #50FA7B;">✓</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Date of Birth <span class="required-mark">*</span></label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">🎂</span>
+                                <input type="date" value="1995-06-15" />
+                            </div>
+                            <div class="help-text">You must be 19+ to purchase cannabis</div>
+                        </div>
+
+                        <button class="btn btn-primary">Continue to Legal →</button>
+                        <button class="btn btn-secondary">← Back</button>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div class="stepper">
+                            <div class="step completed">
+                                <div class="step-circle">✓</div>
+                                <div class="step-label">Info</div>
+                                <div class="step-line"></div>
+                            </div>
+                            <div class="step completed">
+                                <div class="step-circle">✓</div>
+                                <div class="step-label">Security</div>
+                                <div class="step-line"></div>
+                            </div>
+                            <div class="step active">
+                                <div class="step-circle">3</div>
+                                <div class="step-label">Legal</div>
+                                <div class="step-line"></div>
+                            </div>
+                            <div class="step">
+                                <div class="step-circle">4</div>
+                                <div class="step-label">Voice</div>
+                            </div>
+                        </div>
+
+                        <div class="screen-header">
+                            <div class="logo-circle">📋</div>
+                            <div class="screen-title">Legal & Preferences</div>
+                            <div class="screen-subtitle">Step 3: Terms & Marketing</div>
+                        </div>
+
+                        <div class="checkbox-group">
+                            <div class="checkbox checked"></div>
+                            <div class="checkbox-label">
+                                I accept the <a href="#">Terms of Service</a> <span class="required-mark">*</span>
+                            </div>
+                        </div>
+
+                        <div class="checkbox-group">
+                            <div class="checkbox checked"></div>
+                            <div class="checkbox-label">
+                                I accept the <a href="#">Privacy Policy</a> <span class="required-mark">*</span>
+                            </div>
+                        </div>
+
+                        <div class="checkbox-group">
+                            <div class="checkbox"></div>
+                            <div class="checkbox-label">
+                                I want to receive marketing communications and exclusive offers
+                            </div>
+                        </div>
+
+                        <div class="divider">Optional</div>
+
+                        <div class="form-group">
+                            <label class="form-label">Referral Code (Optional)</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">🎁</span>
+                                <input type="text" placeholder="Enter referral code" />
+                            </div>
+                            <div class="help-text">Get bonus rewards with a referral code</div>
+                        </div>
+
+                        <button class="btn btn-primary">Continue to Voice Setup →</button>
+                        <button class="btn btn-secondary">← Back</button>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div class="stepper">
+                            <div class="step completed">
+                                <div class="step-circle">✓</div>
+                                <div class="step-label">Info</div>
+                                <div class="step-line"></div>
+                            </div>
+                            <div class="step completed">
+                                <div class="step-circle">✓</div>
+                                <div class="step-label">Security</div>
+                                <div class="step-line"></div>
+                            </div>
+                            <div class="step completed">
+                                <div class="step-circle">✓</div>
+                                <div class="step-label">Legal</div>
+                                <div class="step-line"></div>
+                            </div>
+                            <div class="step active">
+                                <div class="step-circle">4</div>
+                                <div class="step-label">Voice</div>
+                            </div>
+                        </div>
+
+                        <div class="screen-header">
+                            <div class="logo-circle">🎙️</div>
+                            <div class="screen-title">Voice Authentication</div>
+                            <div class="screen-subtitle">Step 4: Optional Quick Login (Optional)</div>
+                        </div>
+
+                        <p style="text-align: center; margin-bottom: 30px; color: #CED6E0; font-size: 0.95em;">
+                            Enable voice authentication for faster login and age verification
+                        </p>
+
+                        <div style="background: rgba(116, 185, 255, 0.1); border: 1px solid rgba(116, 185, 255, 0.2); border-radius: 16px; padding: 20px; margin-bottom: 20px;">
+                            <div style="text-align: center; margin-bottom: 15px;">
+                                <div style="width: 120px; height: 120px; margin: 0 auto; border-radius: 60px; background: linear-gradient(135deg, #9D50BB, #BD93F9); display: flex; align-items: center; justify-content: center; font-size: 60px; box-shadow: 0 10px 30px rgba(189, 147, 249, 0.4);">
+                                    🎤
+                                </div>
+                            </div>
+                            <p style="text-align: center; color: #CED6E0; font-size: 0.9em; margin-bottom: 15px;">
+                                Tap to record your voice sample
+                            </p>
+                            <p style="text-align: center; color: #A4B0BE; font-size: 0.85em;">
+                                Say: "My voice is my password"
+                            </p>
+                        </div>
+
+                        <button class="btn voice-btn">
+                            <span style="font-size: 1.3em;">🎙️</span>
+                            <span>Setup Voice Login</span>
+                        </button>
+
+                        <div class="divider">or</div>
+
+                        <button class="btn btn-secondary">Skip for Now</button>
+
+                        <p style="text-align: center; margin-top: 20px; color: #A4B0BE; font-size: 0.85em;">
+                            You can enable voice authentication later in Settings
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Technical Implementation -->
+        <div class="section">
+            <h2>🔧 Implementation Checklist</h2>
+
+            <h3>Frontend Components to Update</h3>
+            <ul class="features">
+                <li>Create multi-step registration wizard component</li>
+                <li>Add password input with strength indicator</li>
+                <li>Add date picker for date of birth</li>
+                <li>Add checkbox components for legal agreements</li>
+                <li>Implement step progress indicator</li>
+                <li>Add referral code input field</li>
+                <li>Integrate voice recording component</li>
+                <li>Apply glassmorphism theme from login screen</li>
+                <li>Add form validation for all fields</li>
+                <li>Handle age verification (19+ check)</li>
+            </ul>
+
+            <h3>State Management Updates</h3>
+            <ul class="features">
+                <li>Update authStore.register() to include all required fields</li>
+                <li>Add step navigation state</li>
+                <li>Handle multi-part form data for voice upload</li>
+                <li>Add tenant_id from tenant store</li>
+                <li>Add device_id from device info</li>
+            </ul>
+
+            <h3>API Integration Changes</h3>
+            <div class="code-block">
+// Updated registration payload structure
+const registrationData = {
+  email: string,
+  password: string,
+  first_name: string,
+  last_name: string,
+  phone_number: string,
+  tenant_id: string,
+  date_of_birth: string, // ISO format: "1995-06-15"
+  accept_terms: boolean,
+  accept_privacy: boolean,
+  accept_marketing: boolean,
+  referral_code?: string,
+  enable_voice_auth: boolean,
+  voice_audio?: File,
+  device_id: string,
+  role: "Customer",
+  registration_source: "mobile"
+}
+            </div>
+
+            <h3>Validation Rules</h3>
+            <ul class="features">
+                <li><strong>Email:</strong> Valid email format, required</li>
+                <li><strong>Password:</strong> Min 8 chars, uppercase, lowercase, number</li>
+                <li><strong>Date of Birth:</strong> Age must be 19+ (cannabis legal age)</li>
+                <li><strong>Terms & Privacy:</strong> Must be checked to proceed</li>
+                <li><strong>Phone:</strong> Already verified in previous step</li>
+            </ul>
+        </div>
+
+        <!-- Section 5: Design System -->
+        <div class="section">
+            <h2>🎨 Design System Reference</h2>
+
+            <h3>Colors (from Colors.ts)</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0;">
+                <div style="background: linear-gradient(135deg, #00FF88, #00D084); padding: 20px; border-radius: 12px; text-align: center; color: #1A1A2E; font-weight: bold;">Primary Green</div>
+                <div style="background: linear-gradient(135deg, #FF6B9D, #FF79C6); padding: 20px; border-radius: 12px; text-align: center; color: white; font-weight: bold;">Secondary Pink</div>
+                <div style="background: linear-gradient(135deg, #FFD93D, #FFE66D); padding: 20px; border-radius: 12px; text-align: center; color: #1A1A2E; font-weight: bold;">Accent Yellow</div>
+                <div style="background: linear-gradient(135deg, #9D50BB, #BD93F9); padding: 20px; border-radius: 12px; text-align: center; color: white; font-weight: bold;">Purple (Voice)</div>
+            </div>
+
+            <h3>Glassmorphism</h3>
+            <ul class="features">
+                <li>Background: rgba(30, 30, 50, 0.85)</li>
+                <li>Border: 1px solid rgba(116, 185, 255, 0.15)</li>
+                <li>Border Radius: 20px</li>
+                <li>Backdrop blur (if supported)</li>
+            </ul>
+
+            <h3>Shadows</h3>
+            <ul class="features">
+                <li>Box shadow with colorful glow (matching gradient colors)</li>
+                <li>Primary buttons: 0 6px 20px rgba(0, 255, 136, 0.3)</li>
+                <li>Voice button: 0 10px 30px rgba(189, 147, 249, 0.4)</li>
+            </ul>
+        </div>
+
+        <!-- Footer -->
+        <div class="section">
+            <h2>✅ Next Steps</h2>
+            <ol style="padding-left: 20px;">
+                <li style="margin-bottom: 15px;"><strong>Review this mockup</strong> - Get approval on the design and field structure</li>
+                <li style="margin-bottom: 15px;"><strong>Phase 1:</strong> Implement Steps 1-3 (core registration without voice)</li>
+                <li style="margin-bottom: 15px;"><strong>Phase 2:</strong> Add voice authentication setup (Step 4)</li>
+                <li style="margin-bottom: 15px;"><strong>Phase 3:</strong> Testing and refinements</li>
+            </ol>
+
+            <p style="margin-top: 30px; padding: 20px; background: rgba(0, 255, 136, 0.1); border: 1px solid rgba(0, 255, 136, 0.3); border-radius: 12px; color: #00FF88;">
+                <strong>📌 Note:</strong> This design follows the glassmorphism theme from the login screen and includes all backend-required fields. The multi-step approach prevents overwhelming users while ensuring legal compliance for cannabis sales.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
