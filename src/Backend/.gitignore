@@ -2,3 +2,24 @@
 # Deprecated server files (DO NOT USE)
 agi/api/_deprecated_*.py
 agi/api/server.py
+
+# Model files (too large for GitHub, should be downloaded or stored externally)
+models/
+*.bin
+*.onnx
+*.pt
+*.pth
+*.pkl
+*.h5
+*.pb
+
+# Large data files
+*.safetensors
+*.msgpack
+*.gguf
+
+# Backup files (should never be in git!)
+*_backup_*.tar.gz
+*_backup_*.zip
+*.backup
+backend_backup_*
