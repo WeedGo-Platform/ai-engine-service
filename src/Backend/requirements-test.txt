@@ -1,0 +1,43 @@
+# Testing Dependencies for WeedGo Backend
+
+# Core testing framework
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+pytest-xdist==3.5.0  # Parallel test execution
+pytest-timeout==2.2.0
+
+# Test data generation
+faker==20.1.0
+factory-boy==3.3.0
+
+# HTTP testing
+httpx==0.25.2
+aiohttp==3.9.1
+
+# Database testing
+asyncpg==0.29.0
+pytest-postgresql==5.0.0
+
+# Load testing
+locust==2.19.1
+
+# Reporting
+pytest-html==4.1.1
+pytest-json-report==1.5.0
+
+# Code quality
+coverage==7.3.4
+pytest-flake8==1.1.1
+pytest-mypy==0.10.3
+
+# Mocking
+pytest-mock==3.12.0
+responses==0.24.1
+
+# Time manipulation
+freezegun==1.4.0
+
+# Debugging
+pytest-sugar==0.9.7  # Better test output
+pytest-instafail==0.5.0  # Show failures instantly

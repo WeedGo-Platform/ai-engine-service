@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeedGo Chat UI - Design v3</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            background: linear-gradient(180deg, #8B5CF6 0%, #7C3AED 50%, #6D28D9 100%);
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .status-bar {
+            height: 44px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            color: white;
+            font-size: 14px;
+            position: relative;
+            z-index: 101;
+        }
+
+        .status-time {
+            font-weight: 600;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .notch {
+            width: 200px;
+            height: 30px;
+            background: black;
+            border-radius: 0 0 20px 20px;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 102;
+        }
+
+        .chat-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            background: transparent;
+        }
+
+        /* REDESIGNED HEADER - Clean, minimal, all info visible */
+        .chat-header {
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .agent-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .agent-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #A78BFA, #C4B5FD);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .agent-details {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .agent-name {
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .agent-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: #10B981;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(0.95); }
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .control-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .control-btn.active {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .header-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .personality-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .personality-badge:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .personality-icon {
+            font-size: 14px;
+        }
+
+        .personality-name {
+            color: white;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .token-display {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+        }
+
+        .token-icon {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .token-count {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Messages Container */
+        .messages-container {
+            flex: 1;
+            background: white;
+            border-radius: 24px 24px 0 0;
+            overflow-y: auto;
+            padding: 20px 16px;
+        }
+
+        .message {
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message.user {
+            align-items: flex-end;
+        }
+
+        .message.assistant {
+            align-items: flex-start;
+        }
+
+        .message-bubble {
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            word-wrap: break-word;
+        }
+
+        .message.user .message-bubble {
+            background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.assistant .message-bubble {
+            background: #F3F4F6;
+            color: #1F2937;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: #9CA3AF;
+            margin-top: 4px;
+            padding: 0 4px;
+        }
+
+        .message-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+            flex-wrap: wrap;
+        }
+
+        .meta-badge {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 10px;
+            color: #6B7280;
+        }
+
+        .meta-badge .material-symbols-outlined {
+            font-size: 12px;
+        }
+
+        .voice-badge {
+            color: #EC4899;
+        }
+
+        .time-badge {
+            color: #9CA3AF;
+        }
+
+        .token-badge {
+            color: #F59E0B;
+        }
+
+        /* Quick Action Pills */
+        .quick-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+            max-width: 85%;
+        }
+
+        .action-pill {
+            padding: 8px 14px;
+            background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .action-pill:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+        }
+
+        .action-pill .material-symbols-outlined {
+            font-size: 16px;
+        }
+
+        /* AI Thinking Indicator */
+        .thinking-indicator {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(124, 58, 237, 0.1));
+            border-radius: 18px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            max-width: 70%;
+        }
+
+        .thinking-text {
+            color: #7C3AED;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .thinking-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .thinking-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #7C3AED;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+
+        .thinking-dot:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .thinking-dot:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% {
+                transform: translateY(0);
+                opacity: 0.5;
+            }
+            40% {
+                transform: translateY(-8px);
+                opacity: 1;
+            }
+        }
+
+        /* Input Area */
+        .input-container {
+            padding: 12px 16px 20px;
+            background: white;
+            border-top: 1px solid #E5E7EB;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            background: #F9FAFB;
+            border: 1px solid #E5E7EB;
+            border-radius: 24px;
+            padding: 8px 12px;
+        }
+
+        .message-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 15px;
+            outline: none;
+            resize: none;
+            max-height: 100px;
+            padding: 4px;
+        }
+
+        .input-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .voice-btn {
+            background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+            color: white;
+        }
+
+        .voice-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+            color: white;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+        }
+
+        .send-btn:disabled {
+            background: #E5E7EB;
+            cursor: not-allowed;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+        }
+
+        /* Product Card */
+        .product-card {
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 8px;
+            max-width: 280px;
+        }
+
+        .product-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .product-emoji {
+            font-size: 20px;
+        }
+
+        .product-info {
+            flex: 1;
+        }
+
+        .product-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 4px;
+        }
+
+        .product-details {
+            font-size: 12px;
+            color: #6B7280;
+            margin-bottom: 6px;
+        }
+
+        .product-stock {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            color: #10B981;
+            font-weight: 500;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .product-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+            color: white;
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-details {
+            background: #F3F4F6;
+            color: #6B7280;
+        }
+
+        .btn-details:hover {
+            background: #E5E7EB;
+        }
+
+        .product-btn .material-symbols-outlined {
+            font-size: 16px;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background: white;
+            border-top: 1px solid #E5E7EB;
+            padding: 8px 0 20px;
+            position: relative;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            padding: 8px 16px;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .nav-item.active {
+            color: #8B5CF6;
+        }
+
+        .nav-item:not(.active) {
+            color: #9CA3AF;
+        }
+
+        .nav-item .material-symbols-outlined {
+            font-size: 24px;
+        }
+
+        .nav-item-label {
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .nav-badge {
+            position: absolute;
+            top: 4px;
+            right: 12px;
+            background: #EF4444;
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 5px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="notch"></div>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-time">3:35</div>
+            <div class="status-icons">
+                <span class="material-symbols-outlined" style="font-size: 16px;">signal_cellular_alt</span>
+                <span class="material-symbols-outlined" style="font-size: 16px;">wifi</span>
+                <span class="material-symbols-outlined" style="font-size: 16px;">battery_full</span>
+            </div>
+        </div>
+
+        <div class="chat-container">
+            <!-- REDESIGNED HEADER -->
+            <div class="chat-header">
+                <div class="header-top">
+                    <div class="agent-info">
+                        <div class="agent-avatar">M</div>
+                        <div class="agent-details">
+                            <div class="agent-name">Dispensary</div>
+                            <div class="agent-status">
+                                <span class="status-dot"></span>
+                                <span>Online</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="header-controls">
+                        <button class="control-btn active" title="Speaker On">
+                            <span class="material-symbols-outlined">volume_up</span>
+                        </button>
+                        <button class="control-btn" title="Settings">
+                            <span class="material-symbols-outlined">settings</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="header-bottom">
+                    <div class="personality-badge">
+                        <span class="material-symbols-outlined personality-icon">face</span>
+                        <span class="personality-name">marcel</span>
+                        <span class="material-symbols-outlined" style="font-size: 14px;">expand_more</span>
+                    </div>
+                    <div class="token-display">
+                        <span class="material-symbols-outlined token-icon">bolt</span>
+                        <span class="token-count">1,247</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages Container -->
+            <div class="messages-container">
+                <!-- Assistant Message -->
+                <div class="message assistant">
+                    <div class="message-bubble">
+                        Yo! Welcome! I'm Marcel, your budtender at WeedGo! 🔥 Ready to find something amazing today?
+                    </div>
+                    <div class="message-time">10:24</div>
+                </div>
+
+                <!-- User Message -->
+                <div class="message user">
+                    <div class="message-bubble">
+                        Show me something good for sleep
+                    </div>
+                    <div class="message-time">10:24</div>
+                    <div class="message-meta">
+                        <div class="meta-badge voice-badge">
+                            <span class="material-symbols-outlined">mic</span>
+                            <span>Voice</span>
+                        </div>
+                        <div class="meta-badge time-badge">
+                            <span class="material-symbols-outlined">schedule</span>
+                            <span>2.1s</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Thinking -->
+                <div class="message assistant">
+                    <div class="thinking-indicator">
+                        <span class="thinking-text">Finding that fire...</span>
+                        <div class="thinking-dots">
+                            <div class="thinking-dot"></div>
+                            <div class="thinking-dot"></div>
+                            <div class="thinking-dot"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Assistant Message with Product -->
+                <div class="message assistant">
+                    <div class="message-bubble">
+                        Perfect! Here are our top indica strains for a solid night's sleep. These bad boys will have you out like a light 💤
+                    </div>
+
+                    <!-- Product Card -->
+                    <div class="product-card">
+                        <div class="product-header">
+                            <span class="product-emoji">💡</span>
+                            <div class="product-info">
+                                <div class="product-name">Northern Lights</div>
+                                <div class="product-details">Classic Indica • 20% THC • 3.5g/3.5g</div>
+                                <div class="product-stock">
+                                    <span class="material-symbols-outlined" style="font-size: 12px;">check_circle</span>
+                                    <span>In Stock</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-actions">
+                            <button class="product-btn btn-add">
+                                <span class="material-symbols-outlined">shopping_cart</span>
+                                <span>Add to Cart</span>
+                            </button>
+                            <button class="product-btn btn-details">
+                                <span class="material-symbols-outlined">info</span>
+                                <span>Details</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="message-meta">
+                        <div class="meta-badge time-badge">
+                            <span class="material-symbols-outlined">schedule</span>
+                            <span>3.2s</span>
+                        </div>
+                        <div class="meta-badge token-badge">
+                            <span class="material-symbols-outlined">bolt</span>
+                            <span>127 tokens</span>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="quick-actions">
+                        <button class="action-pill">
+                            <span>Show more sleep options</span>
+                            <span class="material-symbols-outlined">arrow_forward</span>
+                        </button>
+                        <button class="action-pill">
+                            <span>Compare strains</span>
+                            <span class="material-symbols-outlined">arrow_forward</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- User Message -->
+                <div class="message user">
+                    <div class="message-bubble">
+                        What's the difference between this and Granddaddy Purple?
+                    </div>
+                    <div class="message-time">10:25</div>
+                </div>
+
+                <!-- Assistant Response -->
+                <div class="message assistant">
+                    <div class="message-bubble">
+                        Great question! Both are legendary indicas, but here's the breakdown...
+                    </div>
+                    <div class="message-time">10:25</div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <textarea class="message-input" placeholder="Type or speak..." rows="1"></textarea>
+                    <button class="input-btn voice-btn">
+                        <span class="material-symbols-outlined">mic</span>
+                    </button>
+                    <button class="input-btn send-btn">
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;">forum</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bottom Navigation -->
+            <div class="bottom-nav">
+                <div class="nav-item">
+                    <span class="material-symbols-outlined">home</span>
+                    <span class="nav-item-label">Home</span>
+                </div>
+                <div class="nav-item">
+                    <span class="material-symbols-outlined">search</span>
+                    <span class="nav-item-label">Search</span>
+                </div>
+                <div class="nav-item">
+                    <span class="material-symbols-outlined">shopping_cart</span>
+                    <span class="nav-item-label">Cart</span>
+                    <div class="nav-badge">1</div>
+                </div>
+                <div class="nav-item active">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;">forum</span>
+                    <span class="nav-item-label">Chat</span>
+                </div>
+                <div class="nav-item">
+                    <span class="material-symbols-outlined">person</span>
+                    <span class="nav-item-label">Profile</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-resize textarea
+        const textarea = document.querySelector('.message-input');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+        });
+    </script>
+</body>
+</html>
