@@ -4,13 +4,14 @@ export type OrderStatus =
   | 'pending'
   | 'confirmed'
   | 'preparing'
-  | 'ready_for_pickup'
+  | 'ready'  // Backend uses 'ready' not 'ready_for_pickup'
   | 'out_for_delivery'
   | 'delivered'
   | 'cancelled';
 
 export interface OrderUpdate {
   orderId: string;
+  orderNumber?: string;
   status: OrderStatus;
   timestamp: Date;
   message?: string;
@@ -232,6 +233,7 @@ class OrderTrackingService {
         const data = await response.json();
         return {
           orderId: data.order_id,
+          orderNumber: data.order_number,
           status: data.status,
           timestamp: new Date(data.updated_at),
           message: data.status_message,

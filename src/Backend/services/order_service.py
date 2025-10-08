@@ -22,65 +22,100 @@ class OrderService:
         self.db = db_connection
     
     async def create_order(self, cart_session_id: UUID, user_id: Optional[UUID] = None,
-                          payment_method: str = "cash", delivery_address: Dict[str, Any] = None,
-                          special_instructions: str = None) -> Dict[str, Any]:
-        """Create a new order from cart session"""
+                          store_id: Optional[UUID] = None, payment_method: str = "cash",
+                          delivery_type: str = "delivery", delivery_address: Dict[str, Any] = None,
+                          pickup_time: Optional[str] = None, tip_amount: float = 0,
+                          special_instructions: str = None, promo_code: Optional[str] = None,
+                          calculated_pricing: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """
+        Create a new order from cart session
+
+        Args:
+            cart_session_id: Cart session UUID
+            user_id: User UUID (optional for guest)
+            store_id: Store UUID
+            payment_method: Payment method type (validated from user's profile)
+            delivery_type: 'delivery' or 'pickup'
+            delivery_address: Delivery address dict (required for delivery)
+            pickup_time: Pickup time string (required for pickup)
+            tip_amount: Tip amount
+            special_instructions: Order notes
+            promo_code: Promo code applied
+            calculated_pricing: SERVER-CALCULATED pricing (from OrderPricingService)
+        """
         try:
             async with self.db.transaction():
                 # Get cart session
+                # Query by session_id (VARCHAR) not id (UUID primary key)
                 cart_query = """
-                    SELECT 
-                        id, items, subtotal, tax_amount, discount_amount,
-                        delivery_fee, total_amount, user_profile_id
+                    SELECT
+                        id, items, user_profile_id, store_id
                     FROM cart_sessions
-                    WHERE id = $1 AND status = 'active'
+                    WHERE session_id = $1 AND status = 'active'
                 """
-                
-                cart = await self.db.fetchrow(cart_query, cart_session_id)
+
+                cart = await self.db.fetchrow(cart_query, str(cart_session_id))
                 if not cart:
                     raise ValueError("Cart session not found or not active")
-                
+
+                # Use server-calculated pricing (CRITICAL SECURITY)
+                if calculated_pricing:
+                    # Server-side recalculated prices (trusted)
+                    items_with_prices = calculated_pricing['items']
+                    subtotal = Decimal(str(calculated_pricing['subtotal']))
+                    tax_amount = Decimal(str(calculated_pricing['tax']))
+                    discount_amount = Decimal(str(calculated_pricing['discount']))
+                    delivery_fee = Decimal(str(calculated_pricing['delivery_fee']))
+                    total_amount = Decimal(str(calculated_pricing['total']))
+                else:
+                    # Fallback to cart values (legacy support)
+                    items_with_prices = cart['items']
+                    subtotal = Decimal(str(cart.get('subtotal', 0)))
+                    tax_amount = Decimal(str(cart.get('tax_amount', 0)))
+                    discount_amount = Decimal(str(cart.get('discount_amount', 0)))
+                    delivery_fee = Decimal(str(cart.get('delivery_fee', 0)))
+                    total_amount = Decimal(str(cart.get('total_amount', 0)))
+
+                # Add tip to total
+                tip_amount_decimal = Decimal(str(tip_amount))
+                total_amount_with_tip = total_amount + tip_amount_decimal
+
                 # Generate order number
                 order_number = f"ORD-{datetime.now().strftime('%Y%m%d')}-{str(uuid4())[:8].upper()}"
-                
+
+                # Use store_id from parameter or cart
+                final_store_id = store_id or cart.get('store_id')
+
                 # Create order
                 order_query = """
                     INSERT INTO orders (
-                        order_number, cart_session_id, user_id, user_profile_id,
-                        items, subtotal, tax_amount, discount_amount, delivery_fee,
-                        total_amount, payment_method, delivery_address, 
-                        special_instructions, payment_status, delivery_status
-                    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, 'pending', 'pending')
+                        order_number, cart_session_id, user_id, user_profile_id, store_id,
+                        items, subtotal, tax_amount, discount_amount, delivery_fee, tip_amount,
+                        total_amount, payment_method, delivery_type, delivery_address, pickup_time,
+                        special_instructions, promo_code, payment_status, delivery_status
+                    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, 'pending', 'pending')
                     RETURNING id, order_number, total_amount, created_at
                 """
-                
+
+                # Use cart['id'] (UUID primary key) for foreign key constraint, not cart_session_id parameter
                 order = await self.db.fetchrow(
                     order_query,
-                    order_number, cart_session_id, user_id, cart['user_profile_id'],
-                    cart['items'], cart['subtotal'], cart['tax_amount'],
-                    cart['discount_amount'], cart['delivery_fee'], cart['total_amount'],
-                    payment_method, json.dumps(delivery_address) if delivery_address else None,
-                    special_instructions
+                    order_number, cart['id'], user_id, cart['user_profile_id'], final_store_id,
+                    json.dumps(items_with_prices), subtotal, tax_amount,
+                    discount_amount, delivery_fee, tip_amount_decimal, total_amount_with_tip,
+                    payment_method, delivery_type, json.dumps(delivery_address) if delivery_address else None,
+                    pickup_time, special_instructions, promo_code
                 )
                 
-                # Update cart session status
+                # Update cart session status using the cart's actual UUID primary key
                 await self.db.execute(
                     "UPDATE cart_sessions SET status = 'converted' WHERE id = $1",
-                    cart_session_id
+                    cart['id']
                 )
-                
-                # Deduct inventory for each item
-                items = json.loads(cart['items']) if isinstance(cart['items'], str) else cart['items']
-                for item in items:
-                    if 'sku' in item:
-                        inv_query = """
-                            UPDATE ocs_inventory
-                            SET quantity_available = quantity_available - $2,
-                                quantity_reserved = quantity_reserved + $2
-                            WHERE sku = $1 AND quantity_available >= $2
-                        """
-                        await self.db.execute(inv_query, item['sku'], item.get('quantity', 1))
-                
+
+                # NOTE: Inventory reservation is handled by InventoryValidator BEFORE order creation
+                # This follows DRY principle and prevents double-reservation
+
                 # Create order status history entry
                 history_query = """
                     INSERT INTO order_status_history (order_id, status, notes)
@@ -89,13 +124,41 @@ class OrderService:
                 await self.db.execute(history_query, order['id'])
                 
                 logger.info(f"Created order {order_number}")
-                
+
+                # Create delivery for delivery-type orders
+                delivery_id = None
+                if delivery_type == 'delivery' and delivery_address:
+                    try:
+                        from services.delivery.delivery_service import DeliveryService
+
+                        delivery_service = DeliveryService(self.db)
+                        delivery = await delivery_service.create_delivery_from_order(
+                            order_id=order['id'],
+                            store_id=final_store_id,
+                            customer_data={
+                                'user_id': str(user_id) if user_id else None,
+                                'name': delivery_address.get('recipient_name', 'Customer'),
+                                'phone': delivery_address.get('phone', ''),
+                                'email': delivery_address.get('email', '')
+                            },
+                            delivery_address=delivery_address,
+                            delivery_fee=delivery_fee
+                        )
+                        delivery_id = str(delivery.id)
+                        logger.info(f"Created delivery {delivery_id} for order {order_number}")
+                    except Exception as delivery_error:
+                        logger.error(f"Failed to create delivery for order {order_number}: {str(delivery_error)}")
+                        # Don't fail the order creation if delivery creation fails
+                        # The delivery can be created later
+
                 return {
                     "success": True,
-                    "order_id": str(order['id']),
+                    "id": str(order['id']),  # Frontend expects 'id'
+                    "order_id": str(order['id']),  # Keep for backward compatibility
                     "order_number": order['order_number'],
                     "total_amount": float(order['total_amount']),
-                    "created_at": order['created_at'].isoformat()
+                    "created_at": order['created_at'].isoformat(),
+                    "delivery_id": delivery_id  # Include delivery_id for tracking
                 }
                 
         except Exception as e:
@@ -220,7 +283,35 @@ class OrderService:
                         VALUES ($1, $2, $3)
                     """
                     await self.db.execute(history_query, order_id, status, notes)
-                    
+
+                    # Broadcast status update to mobile clients via WebSocket
+                    if delivery_status:
+                        try:
+                            from api.order_websocket import broadcast_order_status_update
+
+                            # Create status message
+                            status_messages = {
+                                'confirmed': 'Your order has been confirmed',
+                                'preparing': 'Your order is being prepared',
+                                'ready': 'Your order is ready for pickup/delivery',
+                                'out_for_delivery': 'Your order is on its way',
+                                'delivered': 'Your order has been delivered',
+                                'cancelled': 'Your order has been cancelled'
+                            }
+
+                            message = status_messages.get(delivery_status, f'Order status: {delivery_status}')
+
+                            # Broadcast to all clients watching this order
+                            await broadcast_order_status_update(
+                                order_id=str(order_id),
+                                status=delivery_status,
+                                message=message
+                            )
+                            logger.info(f"Broadcasted status update for order {order_id}: {delivery_status}")
+                        except Exception as ws_error:
+                            # Don't fail the status update if WebSocket broadcast fails
+                            logger.error(f"Failed to broadcast order status update: {ws_error}")
+
                     # If order is completed, release reserved inventory
                     if delivery_status == 'delivered':
                         order_query = "SELECT items FROM orders WHERE id = $1"
