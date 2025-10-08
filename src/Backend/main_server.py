@@ -511,6 +511,14 @@ try:
 except Exception as e:
     logger.warning(f"Failed to load user endpoints: {e}")
 
+# User Payment Methods
+try:
+    from api.user_payment_endpoints import router as user_payment_router
+    app.include_router(user_payment_router)
+    logger.info("User payment methods endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load user payment methods endpoints: {e}")
+
 app.include_router(store_hours_router)  # Store hours management endpoints (must be before store_router)
 app.include_router(store_router)   # Store management endpoints (includes inventory stats)
 app.include_router(store_inventory_router)  # Store inventory endpoints
@@ -630,6 +638,14 @@ except Exception as e:
             "orders": [],
             "data": []
         }
+
+# Import and include order tracking WebSocket
+try:
+    from api.order_websocket import router as order_ws_router
+    app.include_router(order_ws_router)
+    logger.info("Order tracking WebSocket endpoints loaded")
+except Exception as e:
+    logger.warning(f"Failed to load order tracking WebSocket: {e}")
 
 # Import and include translation endpoints
 try:
@@ -1441,13 +1457,14 @@ def main():
         logger.warning(".env file not found, using defaults")
     
     logger.info(f"Starting V5 AI Engine API Server on {host}:{port}")
-    
+
     uvicorn.run(
-        "api_server:app",
+        app,  # Pass the app instance directly instead of module string
         host=host,
         port=port,
         reload=os.environ.get('DEBUG', 'false').lower() == 'true',
-        log_level="info"
+        log_level="info",
+        access_log=True  # Enable access logging
     )
 
 

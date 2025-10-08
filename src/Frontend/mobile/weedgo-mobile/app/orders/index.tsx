@@ -30,8 +30,10 @@ export default function OrdersScreen() {
 
   const loadOrders = async () => {
     try {
-      const data = await ordersService.getOrders();
-      setOrders(data.data || []);
+      const response = await ordersService.getOrders();
+      // Backend returns {data: {count, orders, data}}
+      // We need to access response.data.orders
+      setOrders(response.data?.orders || []);
     } catch (error) {
       console.error('Failed to load orders:', error);
     } finally {
@@ -172,8 +174,8 @@ export default function OrdersScreen() {
                   >
                     <View style={styles.orderHeader}>
                       <View>
-                        <Text style={styles.orderNumber}>Order #{order.orderNumber || order.id}</Text>
-                        <Text style={styles.orderDate}>{formatDate(order.createdAt || order.created_at)}</Text>
+                        <Text style={styles.orderNumber}>Order #{order.order_number}</Text>
+                        <Text style={styles.orderDate}>{formatDate(order.created_at)}</Text>
                       </View>
                       <LinearGradient
                         colors={getStatusGradient(order.status)}
@@ -195,7 +197,7 @@ export default function OrdersScreen() {
                       <View style={styles.detailRow}>
                         <Ionicons name="location-outline" size={16} color={theme.textSecondary} />
                         <Text style={styles.detailText} numberOfLines={1}>
-                          {order.deliveryAddress?.street || 'Pickup'}
+                          {order.delivery_address?.street || order.delivery_address?.address_line1 || 'Pickup'}
                         </Text>
                       </View>
                     </View>
@@ -203,7 +205,7 @@ export default function OrdersScreen() {
                     <View style={styles.orderFooter}>
                       <View>
                         <Text style={styles.totalLabel}>Total</Text>
-                        <Text style={styles.totalAmount}>${order.total || '0.00'}</Text>
+                        <Text style={styles.totalAmount}>${order.total?.toFixed(2) || '0.00'}</Text>
                       </View>
                       {order.status?.toLowerCase() === 'processing' || order.status?.toLowerCase() === 'confirmed' ? (
                         <TouchableOpacity
@@ -224,7 +226,13 @@ export default function OrdersScreen() {
                           </LinearGradient>
                         </TouchableOpacity>
                       ) : (
-                        <TouchableOpacity style={styles.viewButton}>
+                        <TouchableOpacity
+                          style={styles.viewButton}
+                          onPress={(e) => {
+                            e.stopPropagation();
+                            router.push(`/orders/track/${order.id}`);
+                          }}
+                        >
                           <Text style={styles.viewButtonText}>View Details</Text>
                           <Ionicons name="chevron-forward" size={16} color={theme.primary} />
                         </TouchableOpacity>

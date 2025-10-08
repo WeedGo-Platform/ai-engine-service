@@ -39,7 +39,7 @@ const statusSteps: StatusStep[] = [
     description: 'Your order is being prepared',
   },
   {
-    status: 'ready_for_pickup',
+    status: 'ready',
     label: 'Ready',
     icon: 'bag-check',
     description: 'Ready for pickup/delivery',
@@ -280,7 +280,7 @@ export default function OrderTrackingScreen() {
     <>
       <Stack.Screen
         options={{
-          title: `Order #${id?.slice(-6).toUpperCase()}`,
+          title: currentStatus?.orderNumber ? `Order #${currentStatus.orderNumber}` : `Order #${id?.slice(-6).toUpperCase()}`,
           headerShown: true,
         }}
       />
