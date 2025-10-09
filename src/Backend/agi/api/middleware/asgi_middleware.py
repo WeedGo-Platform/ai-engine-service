@@ -66,15 +66,19 @@ class ASGIErrorHandlerMiddleware:
         # Audit log
         try:
             audit_logger = await get_audit_logger()
+            from agi.security.audit_logger import AuditEvent
             await audit_logger.log_event(
-                event_type=AuditEventType.ERROR,
-                details={
-                    "error": str(error),
-                    "path": scope.get("path", ""),
-                    "method": scope.get("method", ""),
-                    "status_code": status_code
-                },
-                severity=AuditSeverity.HIGH if status_code >= 500 else AuditSeverity.MEDIUM
+                AuditEvent(
+                    event_type=AuditEventType.SYSTEM_ERROR,
+                    severity=AuditSeverity.ERROR if status_code >= 500 else AuditSeverity.WARNING,
+                    error_message=str(error),
+                    metadata={
+                        "error": str(error),
+                        "path": scope.get("path", ""),
+                        "method": scope.get("method", ""),
+                        "status_code": status_code
+                    }
+                )
             )
         except:
             logger.error("Failed to log audit event", exc_info=True)
@@ -86,19 +90,55 @@ class ASGIErrorHandlerMiddleware:
             "timestamp": datetime.now(timezone.utc).isoformat()
         }).encode("utf-8")
 
+        # Get CORS headers
+        headers = self._get_cors_headers(scope)
+        headers.extend([
+            [b"content-type", b"application/json"],
+            [b"content-length", str(len(response_body)).encode()]
+        ])
+
         await send({
             "type": "http.response.start",
             "status": status_code,
-            "headers": [
-                [b"content-type", b"application/json"],
-                [b"content-length", str(len(response_body)).encode()]
-            ],
+            "headers": headers,
         })
 
         await send({
             "type": "http.response.body",
             "body": response_body,
         })
+
+    def _get_cors_headers(self, scope: Scope) -> list:
+        """Get CORS headers for error responses"""
+        headers_dict = dict(scope.get("headers", []))
+        origin = headers_dict.get(b"origin", b"").decode()
+
+        # List of allowed origins (matching main_server.py CORS config)
+        allowed_origins = [
+            "http://localhost:3000",
+            "http://localhost:3001",
+            "http://localhost:3002",
+            "http://localhost:3003",
+            "http://localhost:3004",
+            "http://localhost:3005",
+            "http://localhost:3006",
+            "http://localhost:3007",
+            "http://localhost:5024",
+            "http://localhost:5173",
+            "http://localhost:5174"
+        ]
+
+        cors_headers = []
+        if origin in allowed_origins:
+            cors_headers = [
+                [b"access-control-allow-origin", origin.encode()],
+                [b"access-control-allow-credentials", b"true"],
+                [b"access-control-allow-methods", b"GET, POST, PUT, DELETE, OPTIONS, PATCH"],
+                [b"access-control-allow-headers", b"*"],
+                [b"access-control-expose-headers", b"*"],
+            ]
+
+        return cors_headers
 
 
 class ASGIValidationMiddleware:
@@ -200,19 +240,55 @@ class ASGIValidationMiddleware:
             "timestamp": datetime.now(timezone.utc).isoformat()
         }).encode("utf-8")
 
+        # Get CORS headers
+        headers = self._get_cors_headers(scope)
+        headers.extend([
+            [b"content-type", b"application/json"],
+            [b"content-length", str(len(response_body)).encode()]
+        ])
+
         await send({
             "type": "http.response.start",
             "status": status_code,
-            "headers": [
-                [b"content-type", b"application/json"],
-                [b"content-length", str(len(response_body)).encode()]
-            ],
+            "headers": headers,
         })
 
         await send({
             "type": "http.response.body",
             "body": response_body,
         })
+
+    def _get_cors_headers(self, scope: Scope) -> list:
+        """Get CORS headers for error responses"""
+        headers_dict = dict(scope.get("headers", []))
+        origin = headers_dict.get(b"origin", b"").decode()
+
+        # List of allowed origins (matching main_server.py CORS config)
+        allowed_origins = [
+            "http://localhost:3000",
+            "http://localhost:3001",
+            "http://localhost:3002",
+            "http://localhost:3003",
+            "http://localhost:3004",
+            "http://localhost:3005",
+            "http://localhost:3006",
+            "http://localhost:3007",
+            "http://localhost:5024",
+            "http://localhost:5173",
+            "http://localhost:5174"
+        ]
+
+        cors_headers = []
+        if origin in allowed_origins:
+            cors_headers = [
+                [b"access-control-allow-origin", origin.encode()],
+                [b"access-control-allow-credentials", b"true"],
+                [b"access-control-allow-methods", b"GET, POST, PUT, DELETE, OPTIONS, PATCH"],
+                [b"access-control-allow-headers", b"*"],
+                [b"access-control-expose-headers", b"*"],
+            ]
+
+        return cors_headers
 
 
 class ASGILoggingMiddleware:

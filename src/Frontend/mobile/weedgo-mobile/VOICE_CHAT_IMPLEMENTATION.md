@@ -116,7 +116,7 @@ node test-voice-streaming.js
 ```javascript
 // Default configuration
 const DEFAULT_CONFIG = {
-  wsUrl: 'ws://10.0.0.169:5024/api/voice/ws/stream',
+  wsUrl: 'ws://10.0.0.29:5024/api/voice/ws/stream',
   silenceThresholdMs: 3000,  // 3 seconds
   chunkSizeMs: 100,           // 100ms chunks
 };

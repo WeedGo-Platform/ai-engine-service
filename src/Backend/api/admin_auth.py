@@ -291,7 +291,10 @@ async def admin_login(
     # Get client info for audit
     client_ip = request.client.host if request.client else "unknown"
     user_agent = request.headers.get("user-agent", "unknown")
-    
+
+    # DEBUG: Log login attempt details
+    logger.info(f"Login attempt - Email: {credentials.email}, Password length: {len(credentials.password)}")
+
     # Check rate limiting
     if not await check_login_attempts(credentials.email, db_pool):
         raise HTTPException(
@@ -315,16 +318,19 @@ async def admin_login(
             )
             
             # Track failed login attempt (no user ID available)
-            login_tracker = get_login_tracking_service(db_pool)
-            await login_tracker.track_login(
-                user_id=None,  # No user found
-                tenant_id=None,
-                ip_address=client_ip,
-                user_agent=user_agent,
-                login_successful=False,
-                login_method='password',
-                metadata={'error': 'user_not_found', 'email': credentials.email}
-            )
+            try:
+                login_tracker = get_login_tracking_service(db_pool)
+                await login_tracker.track_login(
+                    user_id=None,  # No user found
+                    tenant_id=None,
+                    ip_address=client_ip,
+                    user_agent=user_agent,
+                    login_successful=False,
+                    login_method='password',
+                    metadata={'error': 'user_not_found', 'email': credentials.email}
+                )
+            except Exception as e:
+                logger.warning(f"Failed to track login attempt: {e}")
             
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -339,19 +345,22 @@ async def admin_login(
             )
             
             # Track failed login with IP geolocation
-            login_tracker = get_login_tracking_service(db_pool)
-            # Get tenant ID if available
-            tenant_id = user.get('tenant_id')
-            
-            await login_tracker.track_login(
-                user_id=user['id'],
-                tenant_id=tenant_id,
-                ip_address=client_ip,
-                user_agent=user_agent,
-                login_successful=False,
-                login_method='password',
-                metadata={'error': 'invalid_password'}
-            )
+            try:
+                login_tracker = get_login_tracking_service(db_pool)
+                # Get tenant ID if available
+                tenant_id = user.get('tenant_id')
+
+                await login_tracker.track_login(
+                    user_id=user['id'],
+                    tenant_id=tenant_id,
+                    ip_address=client_ip,
+                    user_agent=user_agent,
+                    login_successful=False,
+                    login_method='password',
+                    metadata={'error': 'invalid_password'}
+                )
+            except Exception as e:
+                logger.warning(f"Failed to track login attempt: {e}")
             
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -454,21 +463,24 @@ async def admin_login(
         )
         
         # Track login with IP geolocation (location data stored in user_login_logs)
-        login_tracker = get_login_tracking_service(db_pool)
-        tenant_id = tenants[0]['id'] if tenants else None
-        await login_tracker.track_login(
-            user_id=user['id'],
-            tenant_id=tenant_id,
-            ip_address=client_ip,
-            user_agent=user_agent,
-            login_successful=True,
-            login_method='password',
-            session_id=refresh_token_hash,
-            metadata={
-                'remember_me': credentials.remember_me,
-                'role': user['role']
-            }
-        )
+        try:
+            login_tracker = get_login_tracking_service(db_pool)
+            tenant_id = tenants[0]['id'] if tenants else None
+            await login_tracker.track_login(
+                user_id=user['id'],
+                tenant_id=tenant_id,
+                ip_address=client_ip,
+                user_agent=user_agent,
+                login_successful=True,
+                login_method='password',
+                session_id=refresh_token_hash,
+                metadata={
+                    'remember_me': credentials.remember_me,
+                    'role': user['role']
+                }
+            )
+        except Exception as e:
+            logger.warning(f"Failed to track login attempt: {e}")
 
         # Get permissions
         permissions = await get_user_permissions(user['id'], db_pool)

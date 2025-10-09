@@ -730,7 +730,9 @@ except Exception as e:
 # Import and include delivery endpoints
 try:
     from api.delivery_endpoints import router as delivery_router
+    from api.customer_delivery_endpoints import router as customer_delivery_router
     app.include_router(delivery_router)
+    app.include_router(customer_delivery_router)  # Customer-facing delivery endpoints
     logger.info("Delivery endpoints loaded successfully")
 except Exception as e:
     logger.warning(f"Failed to load delivery endpoints: {e}")

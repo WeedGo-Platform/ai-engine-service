@@ -1,0 +1,24 @@
+# Custom PostgreSQL 17 with PostGIS for ARM64 (Apple Silicon)
+FROM postgres:17-alpine
+
+# Install PostGIS and dependencies
+RUN apk add --no-cache postgis
+
+# Create symlink so PostgreSQL can find PostGIS extensions
+# PostGIS from apk is in /usr/share/postgresql17, but PostgreSQL expects /usr/local/share/postgresql
+RUN mv /usr/local/share/postgresql /usr/local/share/postgresql.bak 2>/dev/null || true && \
+    ln -sf /usr/share/postgresql17 /usr/local/share/postgresql
+
+# Create symlinks for PostGIS shared libraries
+# PostGIS libraries are in /usr/lib/postgresql17, but PostgreSQL expects them in $libdir
+RUN for lib in /usr/lib/postgresql17/*.so; do \
+        if [ -f "$lib" ]; then \
+            ln -sf "$lib" /usr/local/lib/postgresql/$(basename "$lib"); \
+        fi; \
+    done
+
+# Copy initialization script to enable PostGIS
+COPY ./docker-init/init-postgis.sh /docker-entrypoint-initdb.d/
+
+# Ensure script is executable
+RUN chmod +x /docker-entrypoint-initdb.d/init-postgis.sh
