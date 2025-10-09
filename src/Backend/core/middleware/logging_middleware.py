@@ -312,20 +312,29 @@ def setup_logging_with_correlation_id():
         handler.addFilter(correlation_filter)
         handler.setFormatter(logging.Formatter(log_format))
 
-    # Add Elasticsearch handler
-    try:
-        es_handler = ElasticsearchHandler(
-            es_hosts=['http://localhost:9200'],
-            es_index_name="ai-engine-logs",
-            es_additional_fields={
-                'service': 'ai-engine',
-                'environment': 'development'
-            }
-        )
-        es_handler.addFilter(correlation_filter)
-        root_logger.addHandler(es_handler)
-        logger.info("Elasticsearch logging handler configured successfully")
-    except Exception as e:
-        logger.warning(f"Failed to configure Elasticsearch logging handler: {e}")
+    # Elasticsearch handler disabled - uncomment to enable
+    # import os
+    # if os.getenv('ENABLE_ELASTICSEARCH_LOGGING', 'false').lower() == 'true':
+    #     try:
+    #         test_es = Elasticsearch(['http://localhost:9200'], request_timeout=2)
+    #         if test_es.ping():
+    #             es_handler = ElasticsearchHandler(
+    #                 es_hosts=['http://localhost:9200'],
+    #                 es_index_name="ai-engine-logs",
+    #                 es_additional_fields={
+    #                     'service': 'ai-engine',
+    #                     'environment': 'development'
+    #                 }
+    #             )
+    #             es_handler.addFilter(correlation_filter)
+    #             root_logger.addHandler(es_handler)
+    #             logger.info("Elasticsearch logging handler configured successfully")
+    #         else:
+    #             logger.info("Elasticsearch is not available - skipping ES logging handler")
+    #     except Exception as e:
+    #         logger.info(f"Elasticsearch is not available - skipping ES logging handler: {e}")
+    # else:
+    #     logger.info("Elasticsearch logging disabled")
+    logger.info("Elasticsearch logging disabled")
 
     logger.info("Logging configured with correlation ID support")

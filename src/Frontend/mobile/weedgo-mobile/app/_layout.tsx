@@ -11,6 +11,9 @@ import Toast from 'react-native-toast-message';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { FloatingChatBubble } from '@/components/FloatingChatBubble';
 import { BlurView } from 'expo-blur';
+// TODO: Re-enable after native rebuild (npx expo prebuild --clean && npx expo run:ios)
+// import { OfflineModeIndicator } from '@/components/OfflineModeIndicator';
+// import { SessionTimeoutWarning } from '@/components/SessionTimeoutWarning';
 
 function RootLayoutContent() {
   const [isReady, setIsReady] = useState(false);
@@ -84,6 +87,9 @@ function RootLayoutContent() {
         <Stack.Screen name="product" options={{ headerShown: false }} />
       </Stack>
       {/* Chat disabled for now: {isAuthenticated && <FloatingChatBubble />} */}
+      {/* TODO: Re-enable after running: npx expo prebuild --clean && npx expo run:ios */}
+      {/* <OfflineModeIndicator /> */}
+      {/* {isAuthenticated && <SessionTimeoutWarning />} */}
       <Toast />
     </GestureHandlerRootView>
   );

@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { profileService } from '@/services/api/profile';
+import { addressService, DeliveryAddress as AddressServiceType } from '@/services/api/addresses';
 import { DeliveryAddress, PaymentMethod } from './orderStore';
 import Toast from 'react-native-toast-message';
 
@@ -195,11 +196,10 @@ export const useProfileStore = create<ProfileStore>()(
       // Load addresses
       loadAddresses: async () => {
         try {
-          const response = await profileService.getAddresses();
-          const addresses = response.data.addresses;
+          const addresses = await addressService.getAddresses();
 
           const defaultAddr = addresses.find((a: DeliveryAddress) =>
-            a.id === get().profile?.default_address_id
+            a.is_default || a.id === get().profile?.default_address_id
           );
 
           set({
@@ -215,8 +215,7 @@ export const useProfileStore = create<ProfileStore>()(
       addAddress: async (address: Omit<DeliveryAddress, 'id'>) => {
         try {
           set({ loading: true, error: null });
-          const response = await profileService.addAddress(address);
-          const newAddress = response.data;
+          const newAddress = await addressService.addAddress(address);
 
           set((state) => ({
             addresses: [...state.addresses, newAddress],
@@ -231,7 +230,7 @@ export const useProfileStore = create<ProfileStore>()(
 
           return newAddress;
         } catch (error: any) {
-          const message = error.response?.data?.message || 'Failed to add address';
+          const message = error.response?.data?.message || error.message || 'Failed to add address';
           set({ error: message });
 
           Toast.show({
@@ -250,15 +249,14 @@ export const useProfileStore = create<ProfileStore>()(
       updateAddress: async (addressId: string, data: Partial<DeliveryAddress>) => {
         try {
           set({ loading: true, error: null });
-          const response = await profileService.updateAddress(addressId, data);
-          const updatedAddress = response.data;
+          const updatedAddress = await addressService.updateAddress(addressId, data);
 
           set((state) => ({
             addresses: state.addresses.map(a =>
-              a.id === addressId ? updatedAddress : a
+              a.id === addressId ? { ...a, ...updatedAddress } : a
             ),
             defaultAddress: state.defaultAddress?.id === addressId
-              ? updatedAddress
+              ? { ...state.defaultAddress, ...updatedAddress }
               : state.defaultAddress
           }));
 
@@ -268,7 +266,7 @@ export const useProfileStore = create<ProfileStore>()(
             text2: 'Your address has been updated successfully',
           });
         } catch (error: any) {
-          const message = error.response?.data?.message || 'Failed to update address';
+          const message = error.response?.data?.message || error.message || 'Failed to update address';
           set({ error: message });
 
           Toast.show({
@@ -287,12 +285,12 @@ export const useProfileStore = create<ProfileStore>()(
       deleteAddress: async (addressId: string) => {
         try {
           set({ loading: true, error: null });
-          await profileService.deleteAddress(addressId);
+          await addressService.deleteAddress(addressId);
 
           set((state) => {
             const addresses = state.addresses.filter(a => a.id !== addressId);
             const defaultAddress = state.defaultAddress?.id === addressId
-              ? addresses[0] || null
+              ? addresses.find(a => a.is_default) || addresses[0] || null
               : state.defaultAddress;
 
             return { addresses, defaultAddress };
@@ -304,7 +302,7 @@ export const useProfileStore = create<ProfileStore>()(
             text2: 'The address has been removed',
           });
         } catch (error: any) {
-          const message = error.response?.data?.message || 'Failed to delete address';
+          const message = error.response?.data?.message || error.message || 'Failed to delete address';
           set({ error: message });
 
           Toast.show({
@@ -325,10 +323,15 @@ export const useProfileStore = create<ProfileStore>()(
           const address = get().addresses.find(a => a.id === addressId);
           if (!address) return;
 
-          await profileService.setDefaultAddress(addressId);
+          await addressService.setDefaultAddress(addressId);
 
           set((state) => ({
-            defaultAddress: address,
+            // Update is_default flag on all addresses
+            addresses: state.addresses.map(a => ({
+              ...a,
+              is_default: a.id === addressId
+            })),
+            defaultAddress: { ...address, is_default: true },
             profile: state.profile ? {
               ...state.profile,
               default_address_id: addressId
@@ -341,7 +344,7 @@ export const useProfileStore = create<ProfileStore>()(
             text2: 'Your default delivery address has been updated',
           });
         } catch (error: any) {
-          const message = error.response?.data?.message || 'Failed to set default address';
+          const message = error.response?.data?.message || error.message || 'Failed to set default address';
           Toast.show({
             type: 'error',
             text1: 'Update Failed',

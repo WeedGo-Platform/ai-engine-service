@@ -10,11 +10,14 @@ import {
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { DeliveryAddress } from '@/stores/orderStore';
 import { useProfileStore } from '@/stores/profileStore';
 import Toast from 'react-native-toast-message';
+import { AddressAutocompleteInput } from './AddressAutocompleteInput';
+import { AddressSuggestion } from '@/services/mapboxAutocomplete';
 
 interface AddressSectionProps {
   selectedAddress: DeliveryAddress | null;
@@ -27,12 +30,13 @@ export function AddressSection({
   onSelectAddress,
   estimatedTime,
 }: AddressSectionProps) {
-  const { addresses, addAddress, validateAddress } = useProfileStore();
+  const { addresses, addAddress, updateAddress, deleteAddress, setDefaultAddress, validateAddress } = useProfileStore();
   const [showModal, setShowModal] = useState(false);
   const [addingNew, setAddingNew] = useState(false);
+  const [editingAddress, setEditingAddress] = useState<DeliveryAddress | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Form state for new address
+  // Form state for new/edit address
   const [newAddress, setNewAddress] = useState<Partial<DeliveryAddress>>({
     street: '',
     unit: '',
@@ -63,12 +67,85 @@ export function AddressSection({
       onSelectAddress(savedAddress);
       setShowModal(false);
       setAddingNew(false);
+      setEditingAddress(null);
       resetForm();
     } catch (error) {
       // Error handled in store
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleUpdateAddress = async () => {
+    if (!editingAddress?.id || !validateAddress(newAddress)) {
+      Toast.show({
+        type: 'error',
+        text1: 'Invalid Address',
+        text2: 'Please fill in all required fields',
+      });
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await updateAddress(editingAddress.id, newAddress);
+
+      // Update selected address if it was the one being edited
+      if (selectedAddress?.id === editingAddress.id) {
+        onSelectAddress({ ...editingAddress, ...newAddress } as DeliveryAddress);
+      }
+
+      setShowModal(false);
+      setAddingNew(false);
+      setEditingAddress(null);
+      resetForm();
+    } catch (error) {
+      // Error handled in store
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteAddress = async (addressId: string) => {
+    try {
+      setLoading(true);
+      await deleteAddress(addressId);
+
+      // If deleted address was selected, clear selection
+      if (selectedAddress?.id === addressId) {
+        const remainingAddresses = addresses.filter(a => a.id !== addressId);
+        if (remainingAddresses.length > 0) {
+          onSelectAddress(remainingAddresses[0]);
+        }
+      }
+    } catch (error) {
+      // Error handled in store
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSetDefault = async (addressId: string) => {
+    try {
+      await setDefaultAddress(addressId);
+    } catch (error) {
+      // Error handled in store
+    }
+  };
+
+  const handleEditAddress = (address: DeliveryAddress) => {
+    setEditingAddress(address);
+    setNewAddress({
+      street: address.street,
+      unit: address.unit,
+      city: address.city,
+      province: address.province,
+      postal_code: address.postal_code,
+      instructions: address.instructions,
+      label: address.label,
+    });
+    setAddingNew(true);
+    setShowModal(true);
   };
 
   const resetForm = () => {
@@ -148,12 +225,13 @@ export function AddressSection({
         >
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>
-              {addingNew ? 'Add New Address' : 'Select Address'}
+              {editingAddress ? 'Edit Address' : addingNew ? 'Add New Address' : 'Select Address'}
             </Text>
             <TouchableOpacity
               onPress={() => {
                 setShowModal(false);
                 setAddingNew(false);
+                setEditingAddress(null);
                 resetForm();
               }}
             >
@@ -166,31 +244,81 @@ export function AddressSection({
               <>
                 {/* Existing Addresses */}
                 {addresses.map((address) => (
-                  <TouchableOpacity
-                    key={address.id}
-                    style={[
-                      styles.addressOption,
-                      selectedAddress?.id === address.id && styles.addressOptionSelected,
-                    ]}
-                    onPress={() => {
-                      onSelectAddress(address);
-                      setShowModal(false);
-                    }}
-                  >
-                    <View style={styles.addressOptionContent}>
-                      <Text style={styles.addressOptionText}>
-                        {formatAddress(address)}
-                      </Text>
-                      {address.instructions && (
-                        <Text style={styles.addressOptionInstructions}>
-                          {address.instructions}
-                        </Text>
+                  <View key={address.id} style={styles.addressOptionContainer}>
+                    <TouchableOpacity
+                      style={[
+                        styles.addressOption,
+                        selectedAddress?.id === address.id && styles.addressOptionSelected,
+                      ]}
+                      onPress={() => {
+                        onSelectAddress(address);
+                        setShowModal(false);
+                      }}
+                    >
+                      <View style={styles.addressOptionContent}>
+                        <View style={styles.addressHeader}>
+                          <Text style={styles.addressOptionText}>
+                            {formatAddress(address)}
+                          </Text>
+                          {address.is_default && (
+                            <View style={styles.defaultBadge}>
+                              <Text style={styles.defaultBadgeText}>DEFAULT</Text>
+                            </View>
+                          )}
+                        </View>
+                        {address.instructions && (
+                          <Text style={styles.addressOptionInstructions}>
+                            Note: {address.instructions}
+                          </Text>
+                        )}
+                      </View>
+                      {selectedAddress?.id === address.id && (
+                        <Ionicons name="checkmark-circle" size={24} color="#27AE60" />
                       )}
+                    </TouchableOpacity>
+
+                    {/* Address Actions */}
+                    <View style={styles.addressActions}>
+                      {!address.is_default && (
+                        <TouchableOpacity
+                          style={styles.actionButton}
+                          onPress={() => handleSetDefault(address.id!)}
+                        >
+                          <Ionicons name="star-outline" size={18} color="#666" />
+                          <Text style={styles.actionButtonText}>Set Default</Text>
+                        </TouchableOpacity>
+                      )}
+
+                      <TouchableOpacity
+                        style={styles.actionButton}
+                        onPress={() => handleEditAddress(address)}
+                      >
+                        <Ionicons name="pencil-outline" size={18} color="#27AE60" />
+                        <Text style={[styles.actionButtonText, { color: '#27AE60' }]}>Edit</Text>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity
+                        style={styles.actionButton}
+                        onPress={() => {
+                          Alert.alert(
+                            'Delete Address',
+                            'Are you sure you want to delete this address?',
+                            [
+                              { text: 'Cancel', style: 'cancel' },
+                              {
+                                text: 'Delete',
+                                style: 'destructive',
+                                onPress: () => handleDeleteAddress(address.id!),
+                              },
+                            ]
+                          );
+                        }}
+                      >
+                        <Ionicons name="trash-outline" size={18} color="#FF6B6B" />
+                        <Text style={[styles.actionButtonText, { color: '#FF6B6B' }]}>Delete</Text>
+                      </TouchableOpacity>
                     </View>
-                    {selectedAddress?.id === address.id && (
-                      <Ionicons name="checkmark-circle" size={24} color="#27AE60" />
-                    )}
-                  </TouchableOpacity>
+                  </View>
                 ))}
 
                 {/* Add New Address Button */}
@@ -205,42 +333,58 @@ export function AddressSection({
             ) : (
               /* New Address Form */
               <View style={styles.form}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Street Address *"
-                  value={newAddress.street}
-                  onChangeText={(text) => setNewAddress({ ...newAddress, street: text })}
-                  autoCapitalize="words"
+                <Text style={styles.formLabel}>Street Address *</Text>
+                <AddressAutocompleteInput
+                  value={newAddress.street || ''}
+                  onAddressSelect={(address, suggestion) => {
+                    setNewAddress({
+                      ...newAddress,
+                      street: address.street || '',
+                      city: address.city || '',
+                      province: address.province || 'ON',
+                      postal_code: address.postal_code || '',
+                    });
+                  }}
+                  placeholder="Search for your address..."
+                  autoFocus={true}
                 />
 
+                <Text style={styles.formLabel}>Unit/Apartment (Optional)</Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="Unit/Apt (Optional)"
+                  placeholder="Unit/Apt"
                   value={newAddress.unit}
                   onChangeText={(text) => setNewAddress({ ...newAddress, unit: text })}
                 />
 
                 <View style={styles.row}>
-                  <TextInput
-                    style={[styles.input, styles.inputHalf]}
-                    placeholder="City *"
-                    value={newAddress.city}
-                    onChangeText={(text) => setNewAddress({ ...newAddress, city: text })}
-                    autoCapitalize="words"
-                  />
+                  <View style={styles.inputHalf}>
+                    <Text style={styles.formLabel}>City *</Text>
+                    <TextInput
+                      style={styles.input}
+                      placeholder="City"
+                      value={newAddress.city}
+                      onChangeText={(text) => setNewAddress({ ...newAddress, city: text })}
+                      autoCapitalize="words"
+                    />
+                  </View>
 
-                  <View style={[styles.inputHalf, styles.pickerContainer]}>
-                    <Text style={styles.pickerLabel}>Province</Text>
-                    <Text style={styles.pickerValue}>{newAddress.province}</Text>
+                  <View style={styles.inputHalf}>
+                    <Text style={styles.formLabel}>Province</Text>
+                    <View style={styles.pickerContainer}>
+                      <Text style={styles.pickerValue}>{newAddress.province}</Text>
+                    </View>
                   </View>
                 </View>
 
+                <Text style={styles.formLabel}>Postal Code *</Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="Postal Code (e.g., M5V 3A8) *"
+                  placeholder="e.g., M5V 3A8"
                   value={newAddress.postal_code}
                   onChangeText={(text) => setNewAddress({ ...newAddress, postal_code: text.toUpperCase() })}
                   autoCapitalize="characters"
+                  maxLength={7}
                 />
 
                 <TextInput
@@ -257,6 +401,7 @@ export function AddressSection({
                     style={[styles.formButton, styles.cancelButton]}
                     onPress={() => {
                       setAddingNew(false);
+                      setEditingAddress(null);
                       resetForm();
                     }}
                   >
@@ -265,13 +410,15 @@ export function AddressSection({
 
                   <TouchableOpacity
                     style={[styles.formButton, styles.saveButton]}
-                    onPress={handleAddAddress}
+                    onPress={editingAddress ? handleUpdateAddress : handleAddAddress}
                     disabled={loading}
                   >
                     {loading ? (
                       <ActivityIndicator size="small" color="#FFF" />
                     ) : (
-                      <Text style={styles.saveButtonText}>Save Address</Text>
+                      <Text style={styles.saveButtonText}>
+                        {editingAddress ? 'Update Address' : 'Save Address'}
+                      </Text>
                     )}
                   </TouchableOpacity>
                 </View>
@@ -321,46 +468,66 @@ function QuickAddressForm({ onSave }: { onSave: (address: DeliveryAddress) => vo
   return (
     <View style={styles.quickForm}>
       <Text style={styles.sectionTitle}>Delivery Address</Text>
-      <Text style={styles.quickFormHint}>Enter your delivery address to continue</Text>
+      <Text style={styles.quickFormHint}>Search for your delivery address to continue</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Street Address *"
-        value={address.street}
-        onChangeText={(text) => setAddress({ ...address, street: text })}
-        autoCapitalize="words"
+      <Text style={styles.formLabel}>Street Address *</Text>
+      <AddressAutocompleteInput
+        value={address.street || ''}
+        onAddressSelect={(selectedAddress, suggestion) => {
+          setAddress({
+            ...address,
+            street: selectedAddress.street || '',
+            city: selectedAddress.city || '',
+            province: selectedAddress.province || 'ON',
+            postal_code: selectedAddress.postal_code || '',
+          });
+        }}
+        placeholder="Search for your address..."
+        autoFocus={true}
       />
 
       <View style={styles.row}>
-        <TextInput
-          style={[styles.input, styles.inputHalf]}
-          placeholder="Unit/Apt"
-          value={address.unit}
-          onChangeText={(text) => setAddress({ ...address, unit: text })}
-        />
+        <View style={styles.inputHalf}>
+          <Text style={styles.formLabel}>Unit/Apartment</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Unit/Apt"
+            value={address.unit}
+            onChangeText={(text) => setAddress({ ...address, unit: text })}
+          />
+        </View>
 
-        <TextInput
-          style={[styles.input, styles.inputHalf]}
-          placeholder="City *"
-          value={address.city}
-          onChangeText={(text) => setAddress({ ...address, city: text })}
-          autoCapitalize="words"
-        />
+        <View style={styles.inputHalf}>
+          <Text style={styles.formLabel}>City *</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="City"
+            value={address.city}
+            onChangeText={(text) => setAddress({ ...address, city: text })}
+            autoCapitalize="words"
+          />
+        </View>
       </View>
 
       <View style={styles.row}>
-        <View style={[styles.inputHalf, styles.pickerContainer]}>
-          <Text style={styles.pickerLabel}>Province</Text>
-          <Text style={styles.pickerValue}>{address.province}</Text>
+        <View style={styles.inputHalf}>
+          <Text style={styles.formLabel}>Province</Text>
+          <View style={styles.pickerContainer}>
+            <Text style={styles.pickerValue}>{address.province}</Text>
+          </View>
         </View>
 
-        <TextInput
-          style={[styles.input, styles.inputHalf]}
-          placeholder="Postal Code *"
-          value={address.postal_code}
-          onChangeText={(text) => setAddress({ ...address, postal_code: text.toUpperCase() })}
-          autoCapitalize="characters"
-        />
+        <View style={styles.inputHalf}>
+          <Text style={styles.formLabel}>Postal Code *</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="M5V 3A8"
+            value={address.postal_code}
+            onChangeText={(text) => setAddress({ ...address, postal_code: text.toUpperCase() })}
+            autoCapitalize="characters"
+            maxLength={7}
+          />
+        </View>
       </View>
 
       <TouchableOpacity
@@ -458,13 +625,15 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
+  addressOptionContainer: {
+    marginBottom: 12,
+  },
   addressOption: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 16,
     backgroundColor: '#F8F9FA',
     borderRadius: 8,
-    marginBottom: 8,
   },
   addressOptionSelected: {
     backgroundColor: '#F0FFF4',
@@ -474,15 +643,55 @@ const styles = StyleSheet.create({
   addressOptionContent: {
     flex: 1,
   },
+  addressHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 4,
+  },
   addressOptionText: {
+    flex: 1,
     fontSize: 14,
     color: '#333',
     lineHeight: 20,
   },
+  defaultBadge: {
+    backgroundColor: '#27AE60',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  defaultBadgeText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: '#FFF',
+    letterSpacing: 0.5,
+  },
   addressOptionInstructions: {
     fontSize: 12,
     color: '#666',
-    marginTop: 4,
+    fontStyle: 'italic',
+  },
+  addressActions: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 8,
+    marginTop: 8,
+    paddingHorizontal: 4,
+  },
+  actionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    backgroundColor: '#F8F9FA',
+    borderRadius: 6,
+  },
+  actionButtonText: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: '#666',
   },
   newAddressButton: {
     flexDirection: 'row',
@@ -500,7 +709,13 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   form: {
-    gap: 12,
+    gap: 16,
+  },
+  formLabel: {
+    fontSize: 13,
+    fontWeight: '500',
+    color: '#666',
+    marginBottom: 6,
   },
   input: {
     backgroundColor: '#F8F9FA',
@@ -525,15 +740,12 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     justifyContent: 'center',
-  },
-  pickerLabel: {
-    fontSize: 10,
-    color: '#666',
-    marginBottom: 2,
+    minHeight: 48,
   },
   pickerValue: {
     fontSize: 14,
     color: '#333',
+    fontWeight: '500',
   },
   formButtons: {
     flexDirection: 'row',

@@ -6,7 +6,7 @@
 
 import { addressCache, CachedAddress } from './addressCache';
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.0.169:5024';
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.0.29:5024';
 
 export interface AddressSuggestion {
   id: string;

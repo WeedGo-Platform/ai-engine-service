@@ -34,6 +34,9 @@ from core.function_schemas import get_function_registry
 from api.voice_endpoints import router as voice_router
 from api.voice_websocket import router as voice_ws_router
 
+# Import geocoding endpoints (public, no auth required)
+from api.geocoding_endpoints import router as geocoding_router
+
 # Import unified chat system
 from api.chat_integration import initialize_unified_chat_system, register_unified_chat_routes
 
@@ -451,6 +454,7 @@ app.include_router(admin_auth_router)  # Admin authentication endpoints
 app.include_router(context_auth_router)  # Context switching authentication
 app.include_router(voice_router)
 app.include_router(voice_ws_router)  # WebSocket endpoints for continuous voice listening
+app.include_router(geocoding_router)  # Address autocomplete and geocoding (public, no auth)
 
 # Register unified chat routes (database-backed with Redis caching)
 try:
