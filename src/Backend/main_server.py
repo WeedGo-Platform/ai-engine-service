@@ -304,7 +304,6 @@ app = FastAPI(
     description="""## 🚀 WeedGo AI Platform API Documentation
 
 ### Available Services:
-- **🤖 AGI**: Advanced AI chat, learning, and automation
 - **🛍️ Commerce**: Products, orders, cart, and inventory
 - **👥 Customer**: Authentication, profiles, and preferences
 - **🏪 Store**: Store management, hours, and settings
@@ -320,9 +319,6 @@ app = FastAPI(
 """,
     version="5.0.0",
     openapi_tags=[
-        {"name": "🤖 AGI - Chat", "description": "AI chat and conversation endpoints"},
-        {"name": "🧠 AGI - Dashboard", "description": "AI system monitoring and management"},
-        {"name": "🔐 AGI - Authentication", "description": "AGI authentication and API keys"},
         {"name": "🛍️ Products", "description": "Product catalog and search"},
         {"name": "🛒 Cart", "description": "Shopping cart management"},
         {"name": "📦 Orders", "description": "Order processing and history"},
@@ -387,19 +383,7 @@ app.add_middleware(
     max_age=3600,
 )
 
-# Add ASGI-based middleware for AGI streaming support
-try:
-    from agi.api.middleware.asgi_middleware import (
-        ASGILoggingMiddleware,
-        ASGIValidationMiddleware,
-        ASGIErrorHandlerMiddleware
-    )
-    app.add_middleware(ASGILoggingMiddleware)
-    app.add_middleware(ASGIValidationMiddleware)
-    app.add_middleware(ASGIErrorHandlerMiddleware)
-    logger.info("ASGI middleware for streaming support loaded successfully")
-except Exception as e:
-    logger.warning(f"Failed to load ASGI middleware: {e}")
+# ASGI middleware removed - AGI functionality has been removed from the system
 
 # Add security headers middleware with relaxed CSP for Swagger UI
 @app.middleware("http")
@@ -501,17 +485,7 @@ from api.analytics_endpoints import router as analytics_router
 app.include_router(admin_router)
 app.include_router(analytics_router)
 
-# Import and include AGI endpoints
-try:
-    # Import the AGI dashboard routes (this is the file we have fixed)
-    from agi.api.dashboard_routes import router as agi_dashboard_router
-
-    # Mount AGI dashboard router at /api/agi prefix
-    app.include_router(agi_dashboard_router, prefix="/api/agi", tags=["🧠 AGI - Dashboard"])
-
-    logger.info("AGI Dashboard endpoints loaded successfully - all 26 endpoints available")
-except Exception as e:
-    logger.warning(f"Failed to load AGI endpoints: {e}")
+# AGI endpoints removed - AGI functionality has been removed from the system
 
 # Agent Pool endpoints for multi-agent support
 try:
