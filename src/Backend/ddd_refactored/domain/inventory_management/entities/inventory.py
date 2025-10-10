@@ -59,26 +59,33 @@ class Inventory(AggregateRoot):
     """
     Inventory Aggregate Root - Stock management for products
     As defined in DDD_ARCHITECTURE_REFACTORING.md Section 2.4
+
+    Database Schema Mapping Notes:
+    - quantity_on_hand → 'quantity' in DB (total physical stock)
+    - quantity_available → calculated: quantity - reserved (not persisted separately)
+    - quantity_reserved → 'quantity_reserved' in DB
+    - min_stock_level → low stock threshold (may consolidate with reorder_point in DB)
+    - reorder_point → 'reorder_point' in DB (when to trigger purchase order)
     """
     # Identifiers
     store_id: UUID = field(default_factory=uuid4)
     sku: str = ""  # Product SKU
 
     # Stock Levels
-    quantity_on_hand: int = 0
-    quantity_available: int = 0
+    quantity_on_hand: int = 0  # DB column: 'quantity'
+    quantity_available: int = 0  # Calculated: quantity - reserved
     quantity_reserved: int = 0
 
     # Pricing
-    unit_cost: Decimal = Decimal("0")
-    retail_price: Decimal = Decimal("0")  # Generated or override
+    unit_cost: Decimal = Decimal("0")  # DB column: 'cost_price'
+    retail_price: Decimal = Decimal("0")  # DB column: 'retail_price'
     retail_price_dynamic: Optional[Decimal] = None  # Dynamic pricing
     override_price: Optional[Decimal] = None  # Manual price override
 
     # Stock Management
-    reorder_point: int = 0
+    reorder_point: int = 0  # DB column: 'reorder_point' (primary threshold)
     reorder_quantity: int = 0
-    min_stock_level: int = 0
+    min_stock_level: int = 0  # For status checks (may use reorder_point if DB simplified)
     max_stock_level: int = 100
 
     # Product Information
