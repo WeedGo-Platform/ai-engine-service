@@ -14,6 +14,11 @@ from pathlib import Path
 from collections import OrderedDict
 import psutil
 
+# Import intent detection and tools
+from services.intent_detector import LLMIntentDetector
+from services.tools.product_search_tool import ProductSearchTool
+from services.tool_manager import ToolManager
+
 logger = logging.getLogger(__name__)
 
 
@@ -56,6 +61,15 @@ class AgentConfig:
     intent_patterns: Dict[str, Any] = field(default_factory=dict)
     tools: List[str] = field(default_factory=list)
 
+    # Intent detection and prompt templates
+    intent_detector: Optional[Any] = None
+    prompt_templates: Dict[str, Any] = field(default_factory=dict)
+    intent_config: Dict[str, Any] = field(default_factory=dict)
+
+    # Tools
+    tool_manager: Optional[Any] = None
+    product_search_tool: Optional[Any] = None
+
     def add_personality(self, personality: PersonalityConfig):
         """Add a personality to this agent"""
         self.personalities[personality.personality_id] = personality
@@ -78,11 +92,6 @@ class SessionState:
     def update_activity(self):
         """Update last activity timestamp"""
         self.last_activity = datetime.now(timezone.utc)
-
-    def store_product_list(self, products: List[Dict[str, Any]]):
-        """Store product list in metadata for later selection"""
-        self.metadata['last_product_list'] = products
-        self.metadata['last_product_list_timestamp'] = datetime.now(timezone.utc).isoformat()
 
 
 class AgentPoolManager:
@@ -112,23 +121,13 @@ class AgentPoolManager:
         # Shared model reference (will be set by SmartAIEngine)
         self.shared_model = None
 
-        # Context manager reference (will be set by main_server)
-        self.context_manager = None
-
-        # Entity extraction and parameter building services (lazy loaded)
-        self.entity_extractor = None
-        self.parameter_builder = None
-        self.user_preference_service = None
-        self.intent_config = None
-
         # Performance metrics
         self.metrics = {
             "total_requests": 0,
             "personality_switches": 0,
             "cache_hits": 0,
             "cache_misses": 0,
-            "active_sessions": 0,
-            "context_loads": 0
+            "active_sessions": 0
         }
 
         # Load configurations
@@ -172,20 +171,28 @@ class AgentPoolManager:
         """Load agent configuration from directory"""
         config_file = agent_dir / "config.json"
         if not config_file.exists():
+            logger.warning(f"❌ config.json not found for agent {agent_dir.name}")
             return None
 
         try:
+            logger.info(f"📁 Loading config.json for agent {agent_dir.name}")
             with open(config_file, 'r') as f:
                 data = json.load(f)
+            logger.info(f"  ✅ config.json loaded successfully")
 
             # Load intent patterns if available
             intent_file = agent_dir / "intent.json"
             intent_patterns = {}
             if intent_file.exists():
+                logger.info(f"📁 Loading intent.json for agent {agent_dir.name}")
                 with open(intent_file, 'r') as f:
                     intent_patterns = json.load(f)
+                logger.info(f"  ✅ intent.json loaded: {len(intent_patterns.get('intents', {}))} intents defined")
+                logger.info(f"     Available intents: {list(intent_patterns.get('intents', {}).keys())}")
+            else:
+                logger.warning(f"  ❌ intent.json not found at {intent_file}")
 
-            return AgentConfig(
+            agent_config = AgentConfig(
                 agent_id=agent_dir.name,
                 name=data.get("agent_name", agent_dir.name),
                 description=data.get("description", ""),
@@ -194,6 +201,43 @@ class AgentPoolManager:
                 tools=data.get("enrolled_tools", []),
                 default_personality=data.get("default_personality", "")
             )
+
+            # Initialize intent detection system
+            try:
+                agent_config.intent_detector = LLMIntentDetector(cache_size=1000)
+                success = agent_config.intent_detector.load_intents(agent_dir.name)
+                if success:
+                    logger.info(f"  ✅ Intent detector initialized successfully for {agent_dir.name}")
+                else:
+                    logger.warning(f"  ⚠️ Intent detector initialized but intent.json may not have loaded properly")
+            except Exception as e:
+                logger.error(f"  ❌ Failed to initialize intent detector: {e}")
+                agent_config.intent_detector = None
+
+            # Load prompt templates
+            prompts_file = agent_dir / "prompts.json"
+            if prompts_file.exists():
+                try:
+                    logger.info(f"📁 Loading prompts.json for agent {agent_dir.name}")
+                    with open(prompts_file, 'r') as f:
+                        prompts_data = json.load(f)
+                        agent_config.prompt_templates = prompts_data.get('prompts', {})
+                        logger.info(f"  ✅ prompts.json loaded: {len(agent_config.prompt_templates)} templates")
+                        logger.info(f"     Available templates: {list(agent_config.prompt_templates.keys())}")
+                except Exception as e:
+                    logger.error(f"  ❌ Failed to load prompt templates: {e}")
+            else:
+                logger.warning(f"  ❌ prompts.json not found at {prompts_file}")
+
+            # Initialize tools for dispensary agent
+            if agent_dir.name == "dispensary":
+                try:
+                    agent_config.product_search_tool = ProductSearchTool()
+                    logger.info(f"  - Initialized ProductSearchTool")
+                except Exception as e:
+                    logger.warning(f"  - Failed to initialize ProductSearchTool: {e}")
+
+            return agent_config
         except Exception as e:
             logger.error(f"Failed to load agent config: {e}")
             return None
@@ -337,49 +381,19 @@ class AgentPoolManager:
             # Remove oldest inactive session
             await self._cleanup_old_sessions()
 
-        # Load conversation history from database if context_manager is available
-        context_history = []
-        if self.context_manager:
-            try:
-                db_history = await self.context_manager.get_history(session_id, limit=50)
-
-                if db_history:
-                    logger.info(f"Loaded {len(db_history)} messages from database for session {session_id}")
-
-                    # Convert database format to session format
-                    # Group user/assistant messages into exchanges
-                    for i in range(0, len(db_history), 2):
-                        user_msg = db_history[i] if i < len(db_history) else None
-                        assistant_msg = db_history[i + 1] if i + 1 < len(db_history) else None
-
-                        if user_msg and user_msg.get('role') == 'user':
-                            exchange = {
-                                "user": user_msg.get('content', ''),
-                                "assistant": assistant_msg.get('content', '') if assistant_msg and assistant_msg.get('role') == 'assistant' else '',
-                                "timestamp": user_msg.get('timestamp', datetime.now(timezone.utc).isoformat())
-                            }
-                            context_history.append(exchange)
-
-                    self.metrics["context_loads"] += 1
-            except Exception as e:
-                logger.error(f"Failed to load history from database for session {session_id}: {e}")
-                # Continue with empty history if load fails
-                context_history = []
-
-        # Create session with loaded history
+        # Create session
         session = SessionState(
             session_id=session_id,
             agent_id=agent_id,
             personality_id=personality_id,
             user_id=user_id,
-            context_history=context_history,
             metadata=metadata or {}
         )
 
         self.sessions[session_id] = session
         self.metrics["active_sessions"] = len(self.sessions)
 
-        logger.info(f"Created session {session_id}: {agent_id}/{personality_id} with {len(context_history)} historical exchanges")
+        logger.info(f"Created session {session_id}: {agent_id}/{personality_id}")
         return session
 
     async def switch_personality(
@@ -451,43 +465,6 @@ class AgentPoolManager:
         logger.info(f"Session {session_id}: Switched to {new_agent_id}/{personality_id}")
         return True
 
-    async def update_session(
-        self,
-        session_id: str,
-        agent_id: Optional[str] = None,
-        personality_id: Optional[str] = None
-    ) -> bool:
-        """
-        Update session agent/personality.
-
-        This method is used by the adapter layer to update session configuration.
-        If agent_id is provided, switches to that agent. Otherwise, only updates personality.
-
-        Args:
-            session_id: Session identifier
-            agent_id: New agent ID (optional, switches agent if provided)
-            personality_id: New personality ID (optional)
-
-        Returns:
-            bool: Success status
-        """
-        session = self.sessions.get(session_id)
-        if not session:
-            logger.warning(f"Session {session_id} not found for update")
-            return False
-
-        # If agent_id provided, do a full agent switch
-        if agent_id and agent_id != session.agent_id:
-            return await self.switch_agent(session_id, agent_id, personality_id)
-
-        # Otherwise just switch personality
-        if personality_id and personality_id != session.personality_id:
-            return await self.switch_personality(session_id, personality_id)
-
-        # Nothing to update
-        logger.debug(f"No changes needed for session {session_id}")
-        return True
-
     def get_session(self, session_id: str) -> Optional[SessionState]:
         """Get active session"""
         session = self.sessions.get(session_id)
@@ -495,27 +472,13 @@ class AgentPoolManager:
             session.update_activity()
         return session
 
-    def store_product_list_for_session(self, session_id: str, products: List[Dict[str, Any]]):
-        """Store product list in session metadata for later selection
-
-        Args:
-            session_id: Session ID
-            products: List of product dictionaries to store
-        """
-        session = self.get_session(session_id)
-        if session:
-            session.store_product_list(products)
-            logger.info(f"Stored {len(products)} products in session {session_id} metadata")
-        else:
-            logger.warning(f"Cannot store product list: session {session_id} not found")
-
     async def process_message(
         self,
         session_id: str,
         message: str,
         **kwargs
     ) -> Dict[str, Any]:
-        """Process a message for a session using the shared model"""
+        """Process a message for a session using intent-based routing"""
 
         session = self.get_session(session_id)
         if not session:
@@ -526,71 +489,145 @@ class AgentPoolManager:
         if not personality:
             raise ValueError("Personality configuration not found")
 
-        # Prepare context with personality
-        context = personality.get_context()
-        context["history"] = session.context_history[-10:]  # Last 10 messages
+        # Get the agent configuration
+        agent_config = self.agents.get(session.agent_id)
+        if not agent_config:
+            raise ValueError(f"Agent configuration not found: {session.agent_id}")
 
-        # Format conversation history for context injection
-        contextual_prompt = message
-        if session.context_history:
-            # Take last 3 exchanges for context (6 messages = 3 exchanges) to avoid exceeding token limit
-            # Model has 4096 token limit, need to leave room for response
-            recent_history = session.context_history[-3:]
-            history_lines = []
+        # Step 1: Detect intent
+        intent_result = None
+        detected_intent = "general"
 
-            # Estimate token count (rough: 1 token ≈ 4 chars)
-            estimated_tokens = len(message) // 4
+        if hasattr(agent_config, 'intent_detector') and agent_config.intent_detector:
+            try:
+                intent_result = agent_config.intent_detector.detect(message, language="auto")
+                detected_intent = intent_result.get("intent", "general")
+                logger.info(f"Intent detected: {detected_intent} (confidence: {intent_result.get('confidence', 0):.2f})")
+            except Exception as e:
+                logger.warning(f"Intent detection failed: {e}")
 
-            for exchange in recent_history:
-                if exchange.get("user"):
-                    user_msg = exchange['user'][:200]  # Limit to 200 chars to prevent token overflow
-                    history_lines.append(f"User: {user_msg}")
-                    estimated_tokens += len(user_msg) // 4
-                if exchange.get("assistant"):
-                    assistant_msg = exchange['assistant'][:200]  # Limit to 200 chars
-                    history_lines.append(f"Assistant: {assistant_msg}")
-                    estimated_tokens += len(assistant_msg) // 4
+        # Step 2: Execute tools for product_search intent
+        tool_results = None
+        logger.debug(f"Checking for product_search: detected_intent={detected_intent}, has_tool={hasattr(agent_config, 'product_search_tool')}, tool={agent_config.product_search_tool if hasattr(agent_config, 'product_search_tool') else 'None'}")
 
-                # Stop adding history if approaching token limit
-                if estimated_tokens > 1500:  # Keep well under 4096 limit
-                    logger.warning(f"Truncating context to avoid token limit (estimated: {estimated_tokens})")
-                    break
+        if detected_intent == "product_search" and hasattr(agent_config, 'product_search_tool') and agent_config.product_search_tool:
+            logger.info(f"Executing ProductSearchTool for query: {message}")
+            try:
+                tool_results = agent_config.product_search_tool.search_products(
+                    query=message,
+                    limit=5
+                )
+                logger.info(f"Product search returned {len(tool_results.get('products', []))} products")
+            except Exception as e:
+                logger.error(f"Product search failed: {e}")
+        elif detected_intent == "product_search":
+            logger.warning(f"Product search intent detected but tool not available. Agent: {session.agent_id}")
 
-            if history_lines:
-                history_text = "\n".join(history_lines)
-                # Prepend conversation history to current message
-                contextual_prompt = f"Previous conversation:\n{history_text}\n\nCurrent message:\n{message}"
-                logger.info(f"Session {session_id}: Injected {len(history_lines)//2} exchanges (~{estimated_tokens} tokens)")
+        # Step 3: Select appropriate prompt template
+        prompt_template = None
+        max_tokens = 500
 
-        # Use shared model for inference
-        if self.shared_model:
-            # Let v5 engine handle intent detection and tool execution
-            # Pass message with conversation history context for better continuity
-            # The v5 engine will handle prompt templates via intent detection
-            result = await self.shared_model.generate(
-                prompt=contextual_prompt,  # Context-aware prompt with history
-                session_id=session_id,
-                max_tokens=kwargs.get('max_tokens', 500),
-                temperature=personality.style.get('temperature', 0.7) if personality.style else 0.7,
-                use_tools=True,  # Enable tools for product search, etc.
-                use_context=True  # Enable context for user history
+        if hasattr(agent_config, 'prompt_templates') and agent_config.prompt_templates:
+            # Map intent to prompt template key
+            template_key = detected_intent
+            if detected_intent == "general":
+                template_key = "general_chat"
+
+            prompt_template = agent_config.prompt_templates.get(template_key)
+            if prompt_template:
+                logger.info(f"Using prompt template: {template_key}")
+
+        # Step 4: Build prompt with template or fallback
+        if prompt_template:
+            # Use intent-specific template
+            template_str = prompt_template.get('template', '')
+
+            # Replace variables in template
+            prompt_with_context = template_str.replace(
+                "{personality_name}", personality.name
+            ).replace(
+                "{message}", message
             )
+
+            # Add tool results for product search
+            if tool_results and tool_results.get('products'):
+                products_info = "\n\nAvailable products based on your search:\n"
+                for i, product in enumerate(tool_results['products'][:5], 1):
+                    products_info += f"{i}. **{product.get('name', 'Unknown')}** "
+                    if product.get('brand'):
+                        products_info += f"by {product['brand']} "
+                    if product.get('strain_type'):
+                        products_info += f"({product['strain_type']})\n"
+                    else:
+                        products_info += "\n"
+                    if product.get('thc_content'):
+                        products_info += f"   THC: {product['thc_content']}%"
+                    if product.get('cbd_content'):
+                        products_info += f", CBD: {product['cbd_content']}%"
+                    if product.get('price'):
+                        products_info += f"   Price: ${product['price']}"
+                    if product.get('size'):
+                        products_info += f" ({product['size']})"
+                    products_info += "\n"
+                    if product.get('short_description'):
+                        products_info += f"   {product['short_description'][:100]}\n"
+                prompt_with_context += products_info
+
+            # Get max tokens from template constraints
+            constraints = prompt_template.get('constraints', {})
+            max_tokens = constraints.get('max_words', 100) * 2
+        else:
+            # Fallback to personality system prompt
+            system_prompt = personality.system_prompt or "You are a helpful assistant."
+            prompt_with_context = f"{system_prompt}\n\nUser: {message}\nAssistant:"
+
+        # Step 5: Generate response using shared model
+        if self.shared_model:
+            result = self.shared_model.generate(
+                prompt=prompt_with_context,
+                session_id=session_id,
+                max_tokens=kwargs.get('max_tokens', max_tokens),
+                temperature=personality.style.get('temperature', 0.7) if personality.style else 0.7,
+                use_tools=kwargs.get('use_tools', False),
+                use_context=False  # We're managing context ourselves
+            )
+
+            logger.info(f"📝 Raw result from shared_model.generate: type={type(result)}, keys={result.keys() if isinstance(result, dict) else 'N/A'}")
 
             # Ensure result is a dict
             if isinstance(result, str):
-                response = {"text": result}
+                response = {
+                    "text": result,
+                    "intent": detected_intent,
+                    "confidence": intent_result.get("confidence", 0) if intent_result else 0
+                }
             else:
                 response = result
+                # Ensure there's a text field in the response
+                if "text" not in response:
+                    response["text"] = response.get("response", response.get("message", ""))
+                response["intent"] = detected_intent
+                response["confidence"] = intent_result.get("confidence", 0) if intent_result else 0
+
+            # Add product data if available for frontend display
+            if tool_results and tool_results.get('products') and detected_intent == "product_search":
+                response["products"] = tool_results['products'][:5]  # Limit to 5 products for display
+                response["products_found"] = len(tool_results['products'])
+                logger.info(f"✅ Added {response['products_found']} products to response for display")
+            elif detected_intent == "product_search":
+                logger.warning(f"⚠️ Product search intent but no products found. tool_results: {bool(tool_results)}, has products: {tool_results.get('products') if tool_results else None}")
         else:
             response = {
                 "text": "Model not loaded",
-                "error": "No shared model available"
+                "error": "No shared model available",
+                "intent": detected_intent
             }
 
-        # Update session history
+        # Update session history with intent info
         session.context_history.append({
             "user": message,
             "assistant": response.get("text", ""),
+            "intent": detected_intent,
             "timestamp": datetime.now(timezone.utc).isoformat()
         })
 
@@ -622,7 +659,7 @@ class AgentPoolManager:
         user_id: Optional[str] = None,
         **kwargs
     ) -> Dict[str, Any]:
-        """Generate a message response with product information for chat_endpoints"""
+        """Generate a message response with full product data"""
         # Update user_id if provided
         if user_id and session_id in self.sessions:
             self.sessions[session_id].user_id = user_id
@@ -630,16 +667,8 @@ class AgentPoolManager:
         # Process the message
         result = await self.process_message(session_id, message, **kwargs)
 
-        # Extract products from result
-        products = result.get("products", None)
-        products_found = len(products) if products else None
-
-        # Return response with products structure expected by chat_endpoints
-        return {
-            "text": result.get("text", ""),
-            "products": products,
-            "products_found": products_found
-        }
+        # Return the full response object including products
+        return result
 
     async def _cleanup_old_sessions(self, max_age_minutes: int = 30):
         """Clean up inactive sessions"""
@@ -697,139 +726,16 @@ class AgentPoolManager:
             )
         }
 
-    def _initialize_extraction_services(self):
-        """Initialize entity extraction, parameter building, and user preference services"""
-        try:
-            # Load intent configuration
-            intent_path = Path(__file__).parent.parent / "prompts" / "agents" / "dispensary" / "intent.json"
-            with open(intent_path, 'r') as f:
-                self.intent_config = json.load(f)
-            logger.info("Loaded intent configuration for entity extraction")
-
-            # Initialize entity extractor ONLY if model is actually loaded
-            from services.entity_extractor import EntityExtractor
-            # Get the actual model from SmartAIEngineV5 (which has current_model, not model)
-            actual_model = getattr(self.shared_model, 'current_model', None)
-
-            # CRITICAL FIX: Only initialize if model is loaded, otherwise EntityExtractor gets SmartAIEngineV5 wrapper
-            if actual_model is None:
-                logger.warning("Model not loaded yet - EntityExtractor initialization deferred until model is loaded")
-                self.entity_extractor = None
-            else:
-                self.entity_extractor = EntityExtractor(actual_model, self.intent_config)
-                logger.info(f"Initialized EntityExtractor with llama-cpp model: {type(actual_model).__name__}")
-
-            # Initialize parameter builder ONLY if model is actually loaded
-            from services.parameter_builder import ParameterBuilder
-            # Get the actual model from SmartAIEngineV5 (which has current_model, not model)
-            actual_model = getattr(self.shared_model, 'current_model', None)
-
-            # CRITICAL FIX: Only initialize if model is loaded
-            if actual_model is None:
-                logger.warning("Model not loaded yet - ParameterBuilder initialization deferred until model is loaded")
-                self.parameter_builder = None
-            else:
-                self.parameter_builder = ParameterBuilder(actual_model, self.intent_config)
-                logger.info(f"Initialized ParameterBuilder with llama-cpp model: {type(actual_model).__name__}")
-
-            # Initialize user preference service
-            from services.user_preference_service import UserPreferenceService
-            self.user_preference_service = UserPreferenceService()
-            logger.info("Initialized UserPreferenceService")
-
-        except Exception as e:
-            logger.error(f"Failed to initialize extraction services: {str(e)}", exc_info=True)
-            # Don't fail hard - services will just not be available
-            self.entity_extractor = None
-            self.parameter_builder = None
-            self.user_preference_service = None
-
     def set_shared_model(self, model):
-        """Set the shared model reference and initialize entity extraction services"""
+        """Set the shared model reference and propagate to intent detectors"""
         self.shared_model = model
         logger.info("Shared model reference set")
 
-        # Initialize entity extraction and parameter building services
-        self._initialize_extraction_services()
-
-        # Update the parameter builder with the actual model if it exists
-        if hasattr(self, 'parameter_builder') and self.parameter_builder:
-            # Get the actual model from SmartAIEngineV5 (which has current_model, not model)
-            actual_model = getattr(model, 'current_model', None) or getattr(model, 'model', None)
-            if actual_model:
-                self.parameter_builder.model = actual_model
-                logger.info("Updated ParameterBuilder with actual model reference")
-            else:
-                logger.warning("No model found in shared model reference - ParameterBuilder may fail")
-
-    def set_context_manager(self, context_manager):
-        """Set the context manager reference"""
-        self.context_manager = context_manager
-        logger.info("Context manager reference set in agent pool")
-
-    async def extract_and_build_search_params(
-        self,
-        message: str,
-        session_id: Optional[str] = None,
-        user_id: Optional[str] = None
-    ) -> Dict[str, Any]:
-        """
-        Extract entities from message and build search parameters with context
-
-        This is the main entry point for the new LLM-based product search flow.
-        Returns either search parameters or quick actions for disambiguation.
-
-        Args:
-            message: User's natural language query
-            session_id: Optional session ID for conversation context
-            user_id: Optional user ID for personalization
-
-        Returns:
-            Dictionary with either:
-            - {"type": "search", "params": {...}} for direct search
-            - {"type": "quick_actions", "data": {...}} for disambiguation
-            - {"type": "error", "message": "..."} on failure
-        """
-        try:
-            if not self.entity_extractor or not self.parameter_builder:
-                logger.warning("Entity extraction services not initialized, falling back to error")
-                return {
-                    "type": "error",
-                    "message": "Entity extraction services not available"
-                }
-
-            # Step 1: Extract entities from natural language
-            logger.info(f"Extracting entities from: {message[:100]}...")
-            entities = await self.entity_extractor.extract_entities(
-                message=message,
-                session_id=session_id,
-                user_id=user_id
-            )
-
-            # Step 2: Get user preferences if user_id provided
-            user_preferences = None
-            if user_id and self.user_preference_service:
-                try:
-                    user_preferences = await self.user_preference_service.get_user_preferences(user_id)
-                except Exception as e:
-                    logger.warning(f"Failed to get user preferences: {str(e)}")
-                    user_preferences = None
-
-            # Step 3: Build search parameters or generate quick actions
-            result = await self.parameter_builder.build_parameters(
-                entities=entities,
-                user_preferences=user_preferences
-            )
-
-            logger.info(f"Parameter building result: {result.get('type')}")
-            return result
-
-        except Exception as e:
-            logger.error(f"Failed to extract and build search params: {str(e)}", exc_info=True)
-            return {
-                "type": "error",
-                "message": f"Failed to process search query: {str(e)}"
-            }
+        # Propagate v5_engine reference to all intent detectors
+        for agent_id, agent_config in self.agents.items():
+            if hasattr(agent_config, 'intent_detector') and agent_config.intent_detector:
+                agent_config.intent_detector.v5_engine = model
+                logger.info(f"  ✅ Updated intent detector for agent {agent_id} with v5_engine reference")
 
 
 # Singleton instance

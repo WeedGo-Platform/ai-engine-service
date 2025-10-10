@@ -56,7 +56,6 @@ class ProvinceTerritory(BaseModel):
     name: str
     type: str
     tax_rate: float
-    cannabis_tax_rate: float
     min_age: int
     regulatory_body: Optional[str]
     delivery_allowed: bool
@@ -332,7 +331,6 @@ async def get_provinces():
                     name,
                     type,
                     tax_rate,
-                    cannabis_tax_rate,
                     min_age,
                     regulatory_body,
                     delivery_allowed,
@@ -348,7 +346,6 @@ async def get_provinces():
                     name=row['name'],
                     type=row['type'],
                     tax_rate=float(row['tax_rate']),
-                    cannabis_tax_rate=float(row['cannabis_tax_rate']) if row['cannabis_tax_rate'] else 0,
                     min_age=row['min_age'],
                     regulatory_body=row['regulatory_body'],
                     delivery_allowed=row['delivery_allowed'],
