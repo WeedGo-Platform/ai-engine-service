@@ -5,7 +5,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Toaster } from 'react-hot-toast';
 import {
   Home, Package, ShoppingCart, Users, FileText, Leaf, Menu, X, LogOut, Settings,
-  Building2, Store, Tag, Sparkles, Upload, ChevronRight, PanelLeftClose, PanelLeft, Database, Truck, AppWindow, MessageSquare, Brain
+  Building2, Store, Tag, Sparkles, Upload, ChevronRight, PanelLeftClose, PanelLeft, Database, Truck, AppWindow, MessageSquare
 } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { StoreProvider, useStoreContext } from './contexts/StoreContext';
@@ -122,7 +122,6 @@ function Layout() {
         { name: 'Communications', href: '/dashboard/communications', icon: MessageSquare, permission: 'store' },
         { name: 'Deliveries', href: '/dashboard/deliveries', icon: Truck, permission: 'store' },
         { name: 'AI Configuration', href: '/dashboard/ai', icon: Settings, permission: 'all' },
-        { name: 'AGI Management', href: '/dashboard/agi', icon: Brain, permission: 'all' },
         { name: 'Provincial Catalog', href: '/dashboard/provincial-catalog', icon: Upload, permission: 'super_admin' },
         { name: 'Database', href: '/dashboard/database', icon: Database, permission: 'super_admin' },
       ];
@@ -419,19 +418,6 @@ const router = createBrowserRouter([
       { path: 'communications', element: <Communications /> },
       { path: 'deliveries', element: <DeliveryManagement /> },
       { path: 'ai', element: <AIManagement /> },
-      {
-        path: 'agi',
-        element: (() => {
-          const AGIDashboard = React.lazy(() => import('./pages/agi/AGIDashboard'));
-          return (
-            <React.Suspense fallback={<div className="flex items-center justify-center h-screen">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-            </div>}>
-              <AGIDashboard />
-            </React.Suspense>
-          );
-        })()
-      },
       { path: 'voice-test', element: <VoiceAPITest /> },
       {
         path: 'provincial-catalog',
