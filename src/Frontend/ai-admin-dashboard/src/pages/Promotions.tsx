@@ -71,6 +71,7 @@ export default function Promotions() {
   const { data: promotions, isLoading } = useQuery({
     queryKey: ['promotions', userRole, currentStore?.id],
     queryFn: async () => {
+      if (!currentStore?.id) return [];
       const params = new URLSearchParams();
       if (userRole === 'store_manager' && currentStore?.id) {
         params.append('store_id', currentStore.id);
@@ -78,7 +79,8 @@ export default function Promotions() {
       const url = `${API_BASE_URL}/api/promotions/list${params.toString() ? `?${params.toString()}` : ''}`;
       const response = await axios.get(url);
       return response.data.promotions;
-    }
+    },
+    enabled: !!currentStore?.id
   });
 
   // Fetch price tiers
@@ -186,13 +188,30 @@ export default function Promotions() {
     return <span className="px-2 py-1 text-xs rounded-full bg-primary-100 text-primary-600">Active</span>;
   };
 
+  // Show "No Store Selected" UI if no store is selected
+  if (!currentStore) {
+    return (
+      <div className="h-full flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="mb-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-full">
+              <Tag className="w-8 h-8 text-primary-600" />
+            </div>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">No Store Selected</h3>
+          <p className="text-gray-500">Please select a store to manage promotions and pricing</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Promotions & Pricing</h1>
-          <p className="text-gray-600">Manage discounts, promotions, and price tiers</p>
+          <p className="text-sm text-gray-500 mt-1">Managing promotions and pricing for {currentStore.name}</p>
         </div>
         <button
           onClick={() => {

@@ -147,10 +147,10 @@ async def get_dashboard_analytics(
         if tenant_id:
             # Join with stores table to filter by tenant
             inventory_query = f"""
-                SELECT 
+                SELECT
                     COUNT(*) as total_products,
-                    COUNT(*) FILTER (WHERE si.quantity_on_hand <= si.min_stock_level AND si.quantity_on_hand > 0) as low_stock,
-                    COUNT(*) FILTER (WHERE si.quantity_on_hand = 0) as out_of_stock
+                    COUNT(*) FILTER (WHERE si.quantity <= si.reorder_point AND si.quantity > 0) as low_stock,
+                    COUNT(*) FILTER (WHERE si.quantity = 0) as out_of_stock
                 FROM ocs_inventory si
                 JOIN stores s ON si.store_id = s.id
                 WHERE s.tenant_id = ${inventory_param_index}
@@ -163,10 +163,10 @@ async def get_dashboard_analytics(
                 inventory_params.append(store_id)
         elif store_id:
             inventory_query = f"""
-                SELECT 
+                SELECT
                     COUNT(*) as total_products,
-                    COUNT(*) FILTER (WHERE quantity_on_hand <= min_stock_level AND quantity_on_hand > 0) as low_stock,
-                    COUNT(*) FILTER (WHERE quantity_on_hand = 0) as out_of_stock
+                    COUNT(*) FILTER (WHERE quantity <= reorder_point AND quantity > 0) as low_stock,
+                    COUNT(*) FILTER (WHERE quantity = 0) as out_of_stock
                 FROM ocs_inventory
                 WHERE store_id = $1
             """
@@ -174,10 +174,10 @@ async def get_dashboard_analytics(
         else:
             # Super admin - all inventory
             inventory_query = """
-                SELECT 
+                SELECT
                     COUNT(*) as total_products,
-                    COUNT(*) FILTER (WHERE quantity_on_hand <= min_stock_level AND quantity_on_hand > 0) as low_stock,
-                    COUNT(*) FILTER (WHERE quantity_on_hand = 0) as out_of_stock
+                    COUNT(*) FILTER (WHERE quantity <= reorder_point AND quantity > 0) as low_stock,
+                    COUNT(*) FILTER (WHERE quantity = 0) as out_of_stock
                 FROM ocs_inventory
             """
         

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../services/api';
@@ -7,73 +7,31 @@ import { PurchaseOrder, Supplier, Product } from '../types';
 import { FileText, Plus, Eye, Clock, CheckCircle, XCircle, TruckIcon, FileSpreadsheet, Package, Info } from 'lucide-react';
 import ASNImportModal from '../components/ASNImportModal';
 import CreatePurchaseOrderModal from '../components/CreatePurchaseOrderModal';
-import StoreSelectionModal from '../components/StoreSelectionModal';
 import { useStoreContext } from '../contexts/StoreContext';
-import { useAuth } from '../contexts/AuthContext';
 
 const PurchaseOrders: React.FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { currentStore, selectStore, stores } = useStoreContext();
-  const { user, isSuperAdmin, isTenantAdminOnly, isStoreManager } = useAuth();
+  const { currentStore } = useStoreContext();
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showASNImportModal, setShowASNImportModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<PurchaseOrder | null>(null);
   const [selectedItem, setSelectedItem] = useState<any | null>(null);
-  const [showStoreSelectionModal, setShowStoreSelectionModal] = useState(false);
-  const [selectedStoreForOrders, setSelectedStoreForOrders] = useState<{id: string, name: string} | null>(null);
-
-
-  // Determine if we need to show store selection modal
-  useEffect(() => {
-    if (isSuperAdmin() || isTenantAdminOnly()) {
-      // For admins, check if we have a current store selected
-      if (currentStore) {
-        setSelectedStoreForOrders({ id: currentStore.id, name: currentStore.name });
-      } else if (!selectedStoreForOrders) {
-        // Only show modal if no store is selected
-        setShowStoreSelectionModal(true);
-      }
-    } else if (isStoreManager()) {
-      // For store managers, use the current store from context (which should be auto-selected)
-      if (currentStore) {
-        setSelectedStoreForOrders({ id: currentStore.id, name: currentStore.name });
-      } else if (user?.stores && user.stores.length > 0) {
-        // Fallback to user's first store if context hasn't loaded yet
-        const userStore = user.stores[0];
-        setSelectedStoreForOrders({ id: userStore.id, name: userStore.name });
-      }
-    }
-  }, [currentStore, user, isSuperAdmin, isTenantAdminOnly, isStoreManager]);
-
-  const handleStoreSelect = async (tenantId: string, storeId: string, storeName: string, tenantName?: string) => {
-    try {
-      // Update the store context with the selected store
-      await selectStore(storeId, storeName);
-      setSelectedStoreForOrders({ id: storeId, name: storeName });
-      setShowStoreSelectionModal(false);
-    } catch (error) {
-      console.error('Failed to select store:', error);
-      // Still set the local state even if context update fails
-      setSelectedStoreForOrders({ id: storeId, name: storeName });
-      setShowStoreSelectionModal(false);
-    }
-  };
 
   const { data: orders, isLoading, error } = useQuery({
-    queryKey: ['purchase-orders', selectedStatus, selectedStoreForOrders?.id],
+    queryKey: ['purchase-orders', selectedStatus, currentStore?.id],
     queryFn: async () => {
-      if (!selectedStoreForOrders) return { purchase_orders: [] };
+      if (!currentStore?.id) return { purchase_orders: [] };
 
-      const params: any = { store_id: selectedStoreForOrders.id };
+      const params: any = { store_id: currentStore.id };
       if (selectedStatus !== 'all') params.status = selectedStatus;
 
       const response = await fetch(getApiEndpoint(`/inventory/purchase-orders`), {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'X-Store-ID': selectedStoreForOrders.id,
+          'X-Store-ID': currentStore.id,
         },
       });
 
@@ -83,7 +41,7 @@ const PurchaseOrders: React.FC = () => {
 
       return response.json();
     },
-    enabled: !!selectedStoreForOrders,
+    enabled: !!currentStore?.id,
   });
 
   const { data: suppliers } = useQuery({
@@ -189,7 +147,7 @@ const PurchaseOrders: React.FC = () => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'X-Store-ID': selectedStoreForOrders?.id || '',
+          'X-Store-ID': currentStore?.id || '',
         },
       });
       
@@ -211,7 +169,7 @@ const PurchaseOrders: React.FC = () => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'X-Store-ID': selectedStoreForOrders?.id || '',
+          'X-Store-ID': currentStore?.id || '',
         },
       });
       
@@ -246,11 +204,19 @@ const PurchaseOrders: React.FC = () => {
     );
   }
 
-  // Show loading state while determining store
-  if (!selectedStoreForOrders && !showStoreSelectionModal) {
+  // Show "No Store Selected" UI if no store is selected
+  if (!currentStore) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+      <div className="h-full flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="mb-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-full">
+              <FileText className="w-8 h-8 text-primary-600" />
+            </div>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">No Store Selected</h3>
+          <p className="text-gray-500">Please select a store to manage purchase orders</p>
+        </div>
       </div>
     );
   }
@@ -258,7 +224,10 @@ const PurchaseOrders: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Purchase Orders</h1>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Purchase Orders</h1>
+          <p className="text-sm text-gray-500 mt-1">Managing purchase orders for {currentStore.name}</p>
+        </div>
         <div className="flex gap-4">
           <button
             onClick={() => setShowASNImportModal(true)}
@@ -697,16 +666,6 @@ const PurchaseOrders: React.FC = () => {
         onClose={() => setShowCreateModal(false)}
         suppliers={suppliers?.suppliers || []}
         products={products?.products || []}
-      />
-
-      <StoreSelectionModal
-        isOpen={showStoreSelectionModal}
-        onSelect={handleStoreSelect}
-        onClose={() => {
-          // Close modal and navigate to dashboard
-          setShowStoreSelectionModal(false);
-          navigate('/dashboard');
-        }}
       />
     </div>
   );

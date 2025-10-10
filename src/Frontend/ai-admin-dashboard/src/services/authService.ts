@@ -268,11 +268,11 @@ class AuthService {
     const storage = getAuthStorage();
     const token = storage.getItem(getStorageKey('access_token'));
     const expiry = storage.getItem(getStorageKey('token_expiry'));
-    
+
     if (!token || !expiry) {
       return false;
     }
-    
+
     // Check if token is expired
     const expiryTime = parseInt(expiry, 10);
     if (Date.now() > expiryTime) {
@@ -282,8 +282,19 @@ class AuthService {
       storage.removeItem(getStorageKey('token_expiry'));
       return false;
     }
-    
+
     return true;
+  }
+
+  /**
+   * Change password for the current user
+   */
+  async changePassword(currentPassword: string, newPassword: string): Promise<{ message: string }> {
+    const response = await api.post('/api/v1/auth/admin/change-password', {
+      current_password: currentPassword,
+      new_password: newPassword
+    });
+    return response.data;
   }
 }
 

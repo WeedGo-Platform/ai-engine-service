@@ -820,3 +820,121 @@ async def create_admin_user(
         "user_id": str(user_id),
         "email": email
     }
+
+
+# =====================================================
+# Password Change Endpoint
+# =====================================================
+
+class ChangePasswordRequest(BaseModel):
+    """Password change request model"""
+    current_password: str = Field(..., min_length=6, max_length=100, description="Current password")
+    new_password: str = Field(..., min_length=8, max_length=100, description="New password (min 8 characters)")
+
+    @validator('new_password')
+    def validate_password_strength(cls, v):
+        """Validate password strength"""
+        if len(v) < 8:
+            raise ValueError('Password must be at least 8 characters long')
+        if not any(c.isupper() for c in v):
+            raise ValueError('Password must contain at least one uppercase letter')
+        if not any(c.islower() for c in v):
+            raise ValueError('Password must contain at least one lowercase letter')
+        if not any(c.isdigit() for c in v):
+            raise ValueError('Password must contain at least one number')
+        return v
+
+
+@router.post("/change-password")
+async def change_password(
+    request: Request,
+    password_request: ChangePasswordRequest,
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db_pool: asyncpg.Pool = Depends(get_db_pool)
+):
+    """
+    Change password for the currently authenticated user
+
+    Features:
+    - Validates current password
+    - Enforces password strength requirements
+    - Invalidates all existing sessions except current one
+    - Logs password change for audit
+    """
+    token = credentials.credentials
+    payload = decode_token(token)
+    user_id = UUID(payload['user_id'])
+
+    client_ip = request.client.host if request.client else "unknown"
+    user_agent = request.headers.get("user-agent", "unknown")
+
+    async with db_pool.acquire() as conn:
+        # Get current user with password
+        user = await conn.fetchrow("""
+            SELECT id, email, password_hash, first_name, last_name
+            FROM users
+            WHERE id = $1
+        """, user_id)
+
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found"
+            )
+
+        # Verify current password
+        if not verify_password(password_request.current_password, user['password_hash']):
+            # Log failed password change attempt
+            await conn.execute("""
+                INSERT INTO audit_log (
+                    user_id, action, resource_type, details, ip_address, timestamp
+                ) VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP)
+            """, user_id, 'password_change_failed', 'authentication',
+                json.dumps({"reason": "invalid_current_password"}), client_ip)
+
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Current password is incorrect"
+            )
+
+        # Check if new password is same as current
+        if verify_password(password_request.new_password, user['password_hash']):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="New password must be different from current password"
+            )
+
+        # Hash new password
+        new_password_hash = hash_password(password_request.new_password)
+
+        # Update password
+        await conn.execute("""
+            UPDATE users
+            SET password_hash = $1, updated_at = CURRENT_TIMESTAMP
+            WHERE id = $2
+        """, new_password_hash, user_id)
+
+        # Invalidate all sessions except current one (optional - you can invalidate all if preferred)
+        # For now, let's invalidate all sessions to force re-login everywhere
+        await conn.execute("""
+            DELETE FROM user_sessions
+            WHERE user_id = $1
+        """, user_id)
+
+        # Log successful password change
+        await conn.execute("""
+            INSERT INTO audit_log (
+                user_id, action, resource_type, details, ip_address, timestamp
+            ) VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP)
+        """, user_id, 'password_changed', 'authentication',
+            json.dumps({
+                "user_agent": user_agent,
+                "sessions_invalidated": True
+            }), client_ip)
+
+        logger.info(f"Password changed successfully for user {user['email']} ({user_id})")
+
+    return {
+        "message": "Password changed successfully. Please log in again with your new password.",
+        "sessions_invalidated": True
+    }
