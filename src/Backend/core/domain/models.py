@@ -130,12 +130,9 @@ class GeoLocation:
 class TaxInfo:
     """Tax information value object"""
     rate: Decimal
-    cannabis_tax_rate: Optional[Decimal] = None
-    
+
     @property
     def total_rate(self) -> Decimal:
-        if self.cannabis_tax_rate:
-            return self.rate + self.cannabis_tax_rate
         return self.rate
 
 
@@ -151,7 +148,6 @@ class ProvinceTerritory:
     name: str = ""
     type: ProvinceType = ProvinceType.PROVINCE
     tax_rate: Decimal = Decimal("13.00")
-    cannabis_tax_rate: Optional[Decimal] = None
     min_age: int = 19
     regulatory_body: Optional[str] = None
     license_prefix: Optional[str] = None

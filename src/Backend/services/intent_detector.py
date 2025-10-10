@@ -153,16 +153,17 @@ class LLMIntentDetector(IntentDetectorInterface):
     def _detect_with_llm(self, message: str, language: str) -> Dict[str, Any]:
         """
         Perform actual LLM-based intent detection
-        
+
         Args:
             message: User input
             language: Language code
-            
+
         Returns:
             Detection result
         """
         if not self.v5_engine or not self.v5_engine.current_model:
             # Fallback to pattern-based detection
+            logger.warning(f"⚠️ Intent detector falling back - v5_engine: {self.v5_engine is not None}, current_model: {self.v5_engine.current_model if self.v5_engine else None}")
             return self._fallback_detection(message, language)
         
         # Prevent recursion - if we're already detecting intent, return fallback

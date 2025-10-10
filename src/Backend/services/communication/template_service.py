@@ -110,7 +110,7 @@ class TemplateService:
                         <p>Use code: <strong>{{promo_code}}</strong></p>
                         <a href="{{shop_url}}" style="display: inline-block; padding: 12px 30px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;">Shop Now</a>
                     </div>
-                    <p><small>Valid until {{expiry_date}}. Terms and conditions apply.</small></p>
+                    <p><small>Terms and conditions apply.</small></p>
                 """,
                 "variables": {
                     "customer_name": {"type": "string", "required": True},
@@ -119,7 +119,6 @@ class TemplateService:
                     "discount_percentage": {"type": "number", "required": True},
                     "promo_code": {"type": "string", "required": True},
                     "shop_url": {"type": "string", "required": True},
-                    "expiry_date": {"type": "string", "required": True}
                 }
             },
             "birthday_greeting": {
@@ -584,7 +583,6 @@ class TemplateService:
         sample_data.setdefault("tracking_url", "https://weedgo.ai/track/12345")
         sample_data.setdefault("promo_code", "SAVE20")
         sample_data.setdefault("discount_percentage", 20)
-        sample_data.setdefault("expiry_date", "December 31, 2024")
 
         return sample_data
 

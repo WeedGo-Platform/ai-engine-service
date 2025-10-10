@@ -28,6 +28,24 @@ import { getApiUrl } from '../config/app.config';
 
 type RecordingState = 'idle' | 'recording' | 'processing' | 'error' | 'requesting';
 
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  image?: string;
+  image_url?: string;
+  thc_content?: number;
+  cbd_content?: number;
+  category?: string;
+  sub_category?: string;
+  strain_type?: string;
+  inventory_count?: number;
+  brand?: string;
+  size?: string;
+  stock_status?: string;
+  short_description?: string;
+}
+
 interface Message {
   id: string;
   role: 'user' | 'assistant' | 'system';
@@ -39,8 +57,8 @@ interface Message {
   completionTokens?: number;
   isVoice?: boolean;
   transcription?: string;
-  products?: any[];
-  quick_actions?: any[];
+  products?: Product[];
+  products_found?: number;
 }
 
 interface ChatWidgetProps {
@@ -63,7 +81,7 @@ const busyActivities = [
 ];
 
 const ChatWidget: React.FC<ChatWidgetProps> = ({
-  wsUrl = 'ws://localhost:5024/api/v1/chat/ws',
+  wsUrl = 'ws://localhost:5024/chat/ws',
   defaultOpen = false,
   initialPosition = 'bottom-right',
   // theme = 'auto', // Reserved for future dark mode implementation
@@ -156,10 +174,9 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
     const fetchAgents = async () => {
       setLoadingAgents(true);
       try {
-        const token = localStorage.getItem('weedgo_auth_access_token');
         const response = await fetch(getApiUrl('/api/admin/agents'), {
           headers: {
-            'Authorization': `Bearer ${token}`,
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
             'Content-Type': 'application/json'
           }
         });
@@ -187,10 +204,9 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
   const fetchPersonalities = async (agentId: string) => {
     setLoadingPersonalities(true);
     try {
-      const token = localStorage.getItem('weedgo_auth_access_token');
       const response = await fetch(getApiUrl(`/api/admin/agents/${agentId}/personalities`), {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json'
         }
       });
@@ -522,7 +538,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
       if (isOpen && user?.user_id && messages.length === 0) {
         try {
           console.log('Loading chat history for user:', user.user_id);
-          const response = await fetch(`http://localhost:5024/api/v1/chat/history/${user.user_id}?limit=20`);
+          const response = await fetch(`http://localhost:5024/chat/history/${user.user_id}?limit=20`);
 
           if (response.ok) {
             const history = await response.json();
@@ -672,26 +688,12 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
 
       case 'response':
       case 'message':
-        // Log what we received
-        console.log('[ChatWidget] Received message:', {
-          type: data.type,
-          hasProducts: !!data.products,
-          productCount: data.products?.length || 0,
-          hasQuickActions: !!data.quick_actions,
-          messageKeys: Object.keys(data)
-        });
-
         // Ensure we set the role to 'assistant' for responses
-        handleIncomingMessage({
-          ...data,
-          role: 'assistant',
-          products: data.products,
-          quick_actions: data.quick_actions
-        });
+        handleIncomingMessage({ ...data, role: 'assistant' });
         break;
 
       case 'error':
-        handleError(data.message || data.error || 'An unknown error occurred');
+        handleError(data.message);
         break;
 
       case 'session_updated':
@@ -733,7 +735,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
         promptTokens: data.prompt_tokens,
         completionTokens: data.completion_tokens,
         products: data.products,
-        quick_actions: data.quick_actions
+        products_found: data.products_found
       };
 
       setMessages(prev => {
@@ -1296,94 +1298,89 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
                             <p className="whitespace-pre-wrap text-sm leading-relaxed">
                               {message.content}
                             </p>
-
-                            {/* Product Cards */}
+                            {/* Product Cards Display */}
                             {message.products && message.products.length > 0 && (
-                              <div className="mt-3 space-y-2">
-                                <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
-                                  {message.products.length} Products Found
+                              <div className="mt-4">
+                                <div className="text-xs text-gray-600 dark:text-gray-400 mb-2">
+                                  Found {message.products_found || message.products.length} products:
                                 </div>
-                                <div className="grid grid-cols-1 gap-2 max-h-96 overflow-y-auto">
-                                  {message.products.map((product: any, idx: number) => (
-                                    <div key={idx} className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:shadow-md transition-shadow">
-                                      <div className="flex gap-3">
-                                        {product.image && (
-                                          <img
-                                            src={product.image}
-                                            alt={product.name}
-                                            className="w-16 h-16 object-cover rounded-lg flex-shrink-0"
-                                            onError={(e) => {
-                                              (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><rect fill="%23ddd" width="64" height="64"/></svg>';
-                                            }}
-                                          />
+                                <div className="overflow-x-auto">
+                                  <div className="flex gap-3" style={{ minWidth: 'max-content' }}>
+                                    {message.products.map((product) => (
+                                      <div
+                                        key={product.id}
+                                        className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                                        style={{ width: '200px', flexShrink: 0 }}
+                                      >
+                                        <img
+                                          src={product.image_url || product.image || 'https://via.placeholder.com/200x150'}
+                                          alt={product.name}
+                                          className="w-full h-32 object-cover rounded-lg mb-2"
+                                          onError={(e) => {
+                                            (e.target as HTMLImageElement).src = 'https://via.placeholder.com/200x150';
+                                          }}
+                                        />
+                                        <h4 className="font-semibold text-xs text-gray-900 dark:text-gray-100 mb-1 line-clamp-2">
+                                          {product.name}
+                                        </h4>
+                                        {product.brand && (
+                                          <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                                            {product.brand}
+                                          </p>
                                         )}
-                                        <div className="flex-1 min-w-0">
-                                          <div className="text-xs font-semibold text-gray-900 dark:text-gray-100 truncate">
-                                            {idx + 1}. {product.name}
-                                          </div>
-                                          {product.brand && (
-                                            <div className="text-xs text-gray-600 dark:text-gray-400">
-                                              {product.brand}
-                                            </div>
-                                          )}
-                                          <div className="flex items-center gap-2 mt-1 text-xs">
-                                            {product.thcContent?.display && (
-                                              <span className="px-1.5 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 rounded">
-                                                THC: {product.thcContent.display}
-                                              </span>
-                                            )}
-                                            {product.cbdContent?.display && (
-                                              <span className="px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded">
-                                                CBD: {product.cbdContent.display}
-                                              </span>
-                                            )}
-                                          </div>
-                                          <div className="flex items-center justify-between mt-1">
-                                            <span className="text-sm font-bold text-gray-900 dark:text-gray-100">
-                                              ${product.price?.toFixed(2)}
+                                        {product.short_description && (
+                                          <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 line-clamp-2">
+                                            {product.short_description}
+                                          </p>
+                                        )}
+                                        <div className="flex flex-wrap gap-1 mb-2">
+                                          {product.category && (
+                                            <span className="px-2 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded text-xs">
+                                              {product.category}
                                             </span>
-                                            {product.plantType && (
-                                              <span className="text-xs text-gray-500 dark:text-gray-400 capitalize">
-                                                {product.plantType}
-                                              </span>
+                                          )}
+                                          {product.strain_type && (
+                                            <span className="px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded text-xs">
+                                              {product.strain_type}
+                                            </span>
+                                          )}
+                                        </div>
+                                        {(product.thc_content !== undefined || product.cbd_content !== undefined) && (
+                                          <div className="text-xs text-gray-600 dark:text-gray-400 mb-2">
+                                            {product.thc_content !== undefined && (
+                                              <span className="mr-2">THC: {product.thc_content}%</span>
+                                            )}
+                                            {product.cbd_content !== undefined && (
+                                              <span>CBD: {product.cbd_content}%</span>
                                             )}
                                           </div>
+                                        )}
+                                        <div className="flex items-center justify-between">
+                                          <span className="text-sm font-bold text-blue-600 dark:text-blue-400">
+                                            ${product.price?.toFixed(2) || 'N/A'}
+                                          </span>
+                                          {product.size && (
+                                            <span className="text-xs text-gray-500 dark:text-gray-400">
+                                              {product.size}
+                                            </span>
+                                          )}
                                         </div>
+                                        {product.stock_status && (
+                                          <div className="mt-2">
+                                            <span className={`text-xs ${
+                                              product.stock_status === 'In Stock'
+                                                ? 'text-green-600 dark:text-green-400'
+                                                : product.stock_status === 'Low Stock'
+                                                ? 'text-yellow-600 dark:text-yellow-400'
+                                                : 'text-red-600 dark:text-red-400'
+                                            }`}>
+                                              {product.stock_status}
+                                            </span>
+                                          </div>
+                                        )}
                                       </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-
-                            {/* Quick Actions */}
-                            {message.quick_actions && message.quick_actions.length > 0 && (
-                              <div className="mt-3">
-                                <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
-                                  What would you like to see?
-                                </div>
-                                <div className="flex flex-wrap gap-2">
-                                  {message.quick_actions.map((action: any, idx: number) => (
-                                    <button
-                                      key={idx}
-                                      onClick={() => {
-                                        // Send the action value as a new message
-                                        const messageToSend = action.value || action.label;
-                                        setInputMessage(messageToSend);
-                                        // Automatically send the message
-                                        setTimeout(() => {
-                                          const form = document.querySelector('form');
-                                          if (form) {
-                                            form.dispatchEvent(new Event('submit', { bubbles: true }));
-                                          }
-                                        }, 50);
-                                      }}
-                                      className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 rounded-full hover:from-blue-100 hover:to-indigo-100 dark:hover:from-blue-900/30 dark:hover:to-indigo-900/30 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-200 shadow-sm hover:shadow-md"
-                                    >
-                                      {action.icon && <span className="text-base">{action.icon}</span>}
-                                      <span>{action.label}</span>
-                                    </button>
-                                  ))}
+                                    ))}
+                                  </div>
                                 </div>
                               </div>
                             )}

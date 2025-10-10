@@ -2,7 +2,7 @@
 POS (Point of Sale) API Endpoints
 """
 
-from fastapi import APIRouter, HTTPException, Depends, Query, Body, Request
+from fastapi import APIRouter, HTTPException, Depends, Query, Body, Request, Header
 from typing import List, Dict, Optional, Any
 from uuid import UUID
 from datetime import datetime, date
@@ -95,64 +95,84 @@ class TransactionCreate(BaseModel):
 @router.get("/customers/search")
 async def search_customers(
     q: str = Query(..., description="Search query for name, email, or phone"),
+    x_store_id: Optional[str] = Header(None, alias="X-Store-ID"),
     request: Request = None
 ):
-    """Search customers for POS"""
-    try:
-        # Get store ID from header if provided
-        store_id = request.headers.get("X-Store-ID") if request else None
+    """
+    Search customers for POS
 
+    Filtering logic:
+    - If X-Store-ID header present: Filter by that store's tenant
+    - If no header and super admin: Return all customers
+    - If no header and tenant admin: Error (must select store)
+    """
+    try:
         pool = await get_db_pool()
         async with pool.acquire() as conn:
-            # Build query with optional store filtering
-            if store_id:
+            search_pattern = f'%{q}%'
+
+            # If store context provided, filter by that store's tenant
+            if x_store_id:
+                # Get tenant_id for this store
+                store_row = await conn.fetchrow("""
+                    SELECT tenant_id FROM stores WHERE id = $1::uuid
+                """, x_store_id)
+
+                if not store_row:
+                    return {"customers": []}
+
+                tenant_id = store_row['tenant_id']
+
+                # Query customers for this tenant
                 query = """
                     SELECT
-                        p.id::text as id,
-                        COALESCE(p.first_name || ' ' || p.last_name, p.email) as name,
-                        p.email,
-                        p.phone,
+                        u.id::text as id,
+                        COALESCE(u.first_name || ' ' || u.last_name, u.email) as name,
+                        u.email,
+                        u.phone,
                         COALESCE(p.loyalty_points, 0) as loyalty_points,
-                        COALESCE(p.date_of_birth::text, '') as birth_date,
-                        p.is_verified,
-                        p.primary_store_id::text as primary_store_id
-                    FROM profiles p
-                    WHERE p.is_verified = true
-                    AND p.primary_store_id = $2::uuid
+                        COALESCE(u.date_of_birth::text, '') as birth_date,
+                        u.active as is_verified,
+                        $3::text as primary_store_id
+                    FROM users u
+                    LEFT JOIN profiles p ON u.profile_id = p.id
+                    WHERE u.role = 'customer'
+                    AND u.active = true
+                    AND u.tenant_id = $2::uuid
                     AND (
-                        LOWER(p.first_name || ' ' || p.last_name) LIKE LOWER($1)
-                        OR LOWER(p.email) LIKE LOWER($1)
-                        OR p.phone LIKE $1
+                        LOWER(u.first_name || ' ' || u.last_name) LIKE LOWER($1)
+                        OR LOWER(u.email) LIKE LOWER($1)
+                        OR u.phone LIKE $1
                     )
-                    ORDER BY p.created_at DESC
+                    ORDER BY u.created_at DESC
                     LIMIT 10
                 """
-                search_pattern = f'%{q}%'
-                rows = await conn.fetch(query, search_pattern, store_id)
+                rows = await conn.fetch(query, search_pattern, tenant_id, x_store_id)
             else:
-                # No store filter - return all matching customers
+                # No store context - return all customers (super admin view)
                 query = """
                     SELECT
-                        id::text as id,
-                        COALESCE(first_name || ' ' || last_name, email) as name,
-                        email,
-                        phone,
-                        COALESCE(loyalty_points, 0) as loyalty_points,
-                        COALESCE(date_of_birth::text, '') as birth_date,
-                        is_verified
-                    FROM profiles
-                    WHERE is_verified = true
+                        u.id::text as id,
+                        COALESCE(u.first_name || ' ' || u.last_name, u.email) as name,
+                        u.email,
+                        u.phone,
+                        COALESCE(p.loyalty_points, 0) as loyalty_points,
+                        COALESCE(u.date_of_birth::text, '') as birth_date,
+                        u.active as is_verified
+                    FROM users u
+                    LEFT JOIN profiles p ON u.profile_id = p.id
+                    WHERE u.role = 'customer'
+                    AND u.active = true
                     AND (
-                        LOWER(first_name || ' ' || last_name) LIKE LOWER($1)
-                        OR LOWER(email) LIKE LOWER($1)
-                        OR phone LIKE $1
+                        LOWER(u.first_name || ' ' || u.last_name) LIKE LOWER($1)
+                        OR LOWER(u.email) LIKE LOWER($1)
+                        OR u.phone LIKE $1
                     )
-                    ORDER BY created_at DESC
+                    ORDER BY u.created_at DESC
                     LIMIT 10
                 """
-                search_pattern = f'%{q}%'
                 rows = await conn.fetch(query, search_pattern)
-            
+
             customers = []
             for row in rows:
                 customer = dict(row)
@@ -166,7 +186,7 @@ async def search_customers(
                     except:
                         pass
                 customers.append(customer)
-            
+
             return {"customers": customers}
     except Exception as e:
         logger.error(f"Error searching customers: {str(e)}")
