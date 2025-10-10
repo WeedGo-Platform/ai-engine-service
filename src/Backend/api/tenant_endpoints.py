@@ -1,5 +1,36 @@
 """
-Tenant Management API Endpoints
+Tenant Management API Endpoints (V1 - Legacy)
+
+⚠️ MIGRATION NOTICE:
+This is the V1 Tenant Management API. A new V2 API is available with improved DDD architecture.
+
+**V2 Features:**
+- Full Domain-Driven Design implementation
+- Subscription tier management with store limits
+- Multi-store context support
+- License tracking and compliance
+- Operating hours and sales channel configuration
+- Geographic delivery radius calculations
+- Domain events for audit trails
+
+**Migration Path:**
+1. V1 endpoints remain functional for backward compatibility
+2. New features will only be added to V2
+3. V2 API available at `/api/v2/tenants/*`
+4. Recommended to migrate to V2 for new integrations
+
+**V2 Endpoints:**
+- POST /api/v2/tenants - Create tenant
+- GET /api/v2/tenants/{id} - Get tenant
+- GET /api/v2/tenants - List tenants
+- POST /api/v2/tenants/{id}/upgrade - Upgrade subscription
+- POST /api/v2/tenants/{id}/suspend - Suspend tenant
+- POST /api/v2/tenants/stores - Create store
+- PUT /api/v2/tenants/stores/{id}/license - Update license
+- PUT /api/v2/tenants/stores/{id}/channels - Update sales channels
+- GET /api/v2/tenants/context/{user_id} - Get store context
+
+For details, see: /docs (search for "Tenant Management V2")
 """
 
 from fastapi import APIRouter, HTTPException, Depends, Query, status, Body

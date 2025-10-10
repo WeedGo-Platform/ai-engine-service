@@ -1,5 +1,30 @@
 """
-Order Management API Endpoints
+Order Management API Endpoints (V1 - Production)
+
+⚠️ MIGRATION NOTICE:
+This is the V1 order API, currently in production use.
+A new V2 API using DDD architecture is available at /api/v2/orders/*
+
+V2 advantages:
+- Domain-Driven Design with Order aggregate
+- Rich business rule validation
+- Order status lifecycle management with domain events
+- Better separation of concerns
+- Event sourcing ready
+
+V2 endpoints:
+- POST /api/v2/orders/ - Create order (DDD-powered)
+- GET /api/v2/orders/{id} - Get order details
+- POST /api/v2/orders/{id}/items - Add items to order
+- POST /api/v2/orders/{id}/status - Update order status
+- POST /api/v2/orders/{id}/delivery-address - Set delivery address
+- GET /api/v2/orders/ - List orders
+
+Migration path:
+1. V1 remains fully functional (production traffic)
+2. V2 provides clean DDD architecture for new features
+3. Gradual migration of functionality to V2
+4. V1 will be maintained alongside V2 indefinitely
 """
 
 from fastapi import APIRouter, HTTPException, Query, Header

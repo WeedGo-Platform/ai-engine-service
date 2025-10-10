@@ -155,27 +155,25 @@ class ProductRepository:
                     cat.drying_method,
                     cat.trimming_method,
                     cat.extraction_process,
-                    inv.quantity_available as inventory_count,
-                    inv.is_available,
+                    inv.available_quantity as inventory_count,
                     CASE
-                        WHEN inv.quantity_available > 20 THEN 'In Stock'
-                        WHEN inv.quantity_available > 0 THEN 'Low Stock'
+                        WHEN inv.available_quantity > 20 THEN 'In Stock'
+                        WHEN inv.available_quantity > 0 THEN 'Low Stock'
                         ELSE 'Out of Stock'
                     END as stock_status,
-                    inv.sku,
+                    inv.ocs_sku as sku,
                     cat.ocs_variant_number,
                     cat.gtin
                 FROM ocs_inventory inv
                 LEFT JOIN ocs_product_catalog cat
-                    ON LOWER(TRIM(inv.sku)) = LOWER(TRIM(cat.ocs_variant_number))
-                WHERE inv.quantity_available > 0
-                AND inv.is_available = true
+                    ON LOWER(TRIM(inv.ocs_sku)) = LOWER(TRIM(cat.ocs_variant_number))
+                WHERE inv.available_quantity > 0
             """
 
             if where_clauses:
                 base_query += " AND " + " AND ".join(where_clauses)
 
-            base_query += " ORDER BY quantity_available DESC, price ASC"
+            base_query += " ORDER BY available_quantity DESC, price ASC"
             base_query += f" LIMIT {limit}"
 
             # Execute query
@@ -221,8 +219,7 @@ class ProductRepository:
             cursor.execute("""
                 SELECT COUNT(DISTINCT inv.id) as count
                 FROM ocs_inventory inv
-                WHERE inv.quantity_available > 0
-                AND inv.is_available = true
+                WHERE inv.available_quantity > 0
             """)
             result = cursor.fetchone()
             return result['count'] if result else 0
@@ -266,20 +263,19 @@ class ProductRepository:
                     COALESCE(inv.retail_price, cat.unit_price) as price,
                     cat.image_url,
                     cat.size,
-                    inv.quantity_available as inventory_count,
+                    inv.available_quantity as inventory_count,
                     CASE
-                        WHEN inv.quantity_available > 20 THEN 'In Stock'
-                        WHEN inv.quantity_available > 0 THEN 'Low Stock'
+                        WHEN inv.available_quantity > 20 THEN 'In Stock'
+                        WHEN inv.available_quantity > 0 THEN 'Low Stock'
                         ELSE 'Out of Stock'
                     END as stock_status
                 FROM ocs_inventory inv
                 LEFT JOIN ocs_product_catalog cat
-                    ON LOWER(TRIM(inv.sku)) = LOWER(TRIM(cat.ocs_variant_number))
-                WHERE inv.quantity_available > 10
-                AND inv.is_available = true
+                    ON LOWER(TRIM(inv.ocs_sku)) = LOWER(TRIM(cat.ocs_variant_number))
+                WHERE inv.available_quantity > 10
                 AND cat.product_name IS NOT NULL
                 ORDER BY
-                    inv.quantity_available DESC,
+                    inv.available_quantity DESC,
                     COALESCE(inv.retail_price, cat.unit_price) ASC
                 LIMIT %s
             """
