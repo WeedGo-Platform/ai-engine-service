@@ -49,7 +49,7 @@ class ProductService {
     if (params.price_max !== undefined) apiParams.price_max = params.price_max;
 
     const response = await apiClient.get<ProductSearchResponse>(
-      '/api/search/products',
+      '/api/v2/products/search',
       { params: apiParams }
     );
 
@@ -124,7 +124,7 @@ class ProductService {
    */
   async getProductDetails(productId: string): Promise<Product> {
     const response = await apiClient.get<Product>(
-      `/api/products/${productId}/details`
+      `/api/v2/products/${productId}`
     );
     return response.data;
   }
@@ -162,7 +162,7 @@ class ProductService {
     if (params.size) apiParams.size = params.size;
 
     const response = await apiClient.get<any>(
-      '/api/products/search',
+      '/api/v2/products/search',
       { params: apiParams }
     );
 
@@ -293,7 +293,7 @@ class ProductService {
    */
   async getRecommendations(productId: string, limit: number = 5): Promise<Product[]> {
     const response = await apiClient.get<{ products: Product[] }>(
-      `/api/products/${productId}/recommendations`,
+      `/api/v2/products/${productId}/recommendations`,
       { params: { limit } }
     );
     return response.data.products;
@@ -307,7 +307,7 @@ class ProductService {
     params: { limit?: number; offset?: number } = {}
   ): Promise<{ reviews: any[]; total: number }> {
     const response = await apiClient.get<{ reviews: any[]; total: number }>(
-      `/api/products/${productId}/reviews`,
+      `/api/v2/customer-engagement/reviews/product/${productId}`,
       { params }
     );
     return response.data;

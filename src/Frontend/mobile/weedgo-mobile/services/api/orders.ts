@@ -4,7 +4,7 @@ import { Order, CreateOrderData } from '@/stores/orderStore';
 export const ordersService = {
   // Create a new order
   createOrder: (data: CreateOrderData): Promise<ApiResponse<Order>> => {
-    return apiClient.post('/orders', data);
+    return apiClient.post('/api/v2/orders', data);
   },
 
   // Get user's orders
@@ -13,17 +13,17 @@ export const ordersService = {
     limit?: number;
     offset?: number;
   }): Promise<ApiResponse<{ orders: Order[]; total: number }>> => {
-    return apiClient.get('/orders', { params });
+    return apiClient.get('/api/v2/orders', { params });
   },
 
   // Get specific order
   getOrder: (orderId: string): Promise<ApiResponse<Order>> => {
-    return apiClient.get(`/orders/${orderId}`);
+    return apiClient.get(`/api/v2/orders/${orderId}`);
   },
 
   // Cancel an order
   cancelOrder: (orderId: string, data: { reason?: string }): Promise<ApiResponse<void>> => {
-    return apiClient.post(`/orders/${orderId}/cancel`, data);
+    return apiClient.post(`/api/v2/orders/${orderId}/cancel`, data);
   },
 
   // Track order status
@@ -37,7 +37,7 @@ export const ordersService = {
       photo?: string;
     };
   }>> => {
-    return apiClient.get(`/orders/${orderId}/track`);
+    return apiClient.get(`/api/v2/delivery/track/${orderId}`);
   },
 
   // Rate an order
@@ -46,12 +46,12 @@ export const ordersService = {
     comment?: string;
     driver_rating?: number;
   }): Promise<ApiResponse<void>> => {
-    return apiClient.post(`/orders/${orderId}/rate`, data);
+    return apiClient.post(`/api/v2/customer-engagement/reviews`, data);
   },
 
   // Get product for reorder
   getProductForReorder: (productId: string): Promise<ApiResponse<any>> => {
-    return apiClient.get(`/products/${productId}`);
+    return apiClient.get(`/api/v2/products/${productId}`);
   },
 
   // Validate order before submission
@@ -59,7 +59,7 @@ export const ordersService = {
     valid: boolean;
     issues: string[];
   }>> => {
-    return apiClient.post('/orders/validate', data);
+    return apiClient.post('/api/v2/orders/validate', data);
   },
 
   // Apply promo code to order
@@ -69,7 +69,7 @@ export const ordersService = {
     discount_percentage?: number;
     message?: string;
   }>> => {
-    return apiClient.post('/orders/promo', { code, subtotal });
+    return apiClient.post('/api/v2/pricing-promotions/validate', { code, subtotal });
   },
 
   // Get order receipt
@@ -77,7 +77,7 @@ export const ordersService = {
     receipt_url: string;
     receipt_html?: string;
   }>> => {
-    return apiClient.get(`/orders/${orderId}/receipt`);
+    return apiClient.get(`/api/v2/orders/${orderId}/receipt`);
   },
 
   // Report issue with order
@@ -89,6 +89,6 @@ export const ordersService = {
     ticket_id: string;
     status: string;
   }>> => {
-    return apiClient.post(`/orders/${orderId}/report-issue`, data);
+    return apiClient.post(`/api/v2/orders/${orderId}/issues`, data);
   },
 };

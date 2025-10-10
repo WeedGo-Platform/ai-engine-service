@@ -27,10 +27,10 @@ class CartService {
    * Create a new cart session
    */
   async createSession(): Promise<string> {
-    // The /api/cart endpoint manages sessions automatically
+    // The /api/v2/orders/cart endpoint manages sessions automatically
     // Get the session ID from the cart response
     try {
-      const response = await apiClient.get<Cart>('/api/cart/');
+      const response = await apiClient.get<Cart>('/api/v2/orders/cart');
       this.sessionId = response.data.session_id || response.data.id;
       if (this.sessionId) {
         await SecureStore.setItemAsync(CART_SESSION_KEY, this.sessionId);
@@ -61,7 +61,7 @@ class CartService {
    * Get current cart
    */
   async getCart(): Promise<Cart> {
-    const response = await apiClient.get<Cart>('/api/cart/');
+    const response = await apiClient.get<Cart>('/api/v2/orders/cart');
 
     // Save the session ID from the response if available
     const sessionId = response.data?.session_id;
@@ -107,7 +107,7 @@ class CartService {
 
     try {
       const response = await apiClient.post<any>(
-        '/api/cart/items',
+        '/api/v2/orders/cart/items',
         requestData
       );
 
@@ -130,7 +130,7 @@ class CartService {
    */
   async updateItem(itemId: string, quantity: number): Promise<CartItem> {
     const response = await apiClient.put<CartItem>(
-      `/api/cart/items/${itemId}`,
+      `/api/v2/orders/cart/items/${itemId}`,
       { quantity } as UpdateCartItemRequest
     );
 
@@ -141,14 +141,14 @@ class CartService {
    * Remove item from cart
    */
   async removeItem(itemId: string): Promise<void> {
-    await apiClient.delete(`/api/cart/items/${itemId}`);
+    await apiClient.delete(`/api/v2/orders/cart/items/${itemId}`);
   }
 
   /**
    * Clear entire cart
    */
   async clearCart(): Promise<void> {
-    await apiClient.delete('/api/cart/');
+    await apiClient.delete('/api/v2/orders/cart');
 
     // Clear stored session
     this.sessionId = null;
@@ -160,7 +160,7 @@ class CartService {
    */
   async applyPromoCode(promoCode: string): Promise<{ success: boolean; discount: number }> {
     const response = await apiClient.post<{ success: boolean; discount: number }>(
-      '/api/cart/promo',
+      '/api/v2/pricing-promotions/apply',
       { promo_code: promoCode } as ApplyPromoRequest
     );
 
@@ -171,7 +171,7 @@ class CartService {
    * Remove promo code
    */
   async removePromoCode(): Promise<void> {
-    await apiClient.delete('/api/cart/promo');
+    await apiClient.delete('/api/v2/pricing-promotions/remove');
   }
 
   /**
@@ -179,7 +179,7 @@ class CartService {
    */
   async validateCart(): Promise<{ valid: boolean; issues: string[] }> {
     const response = await apiClient.post<{ valid: boolean; issues: string[] }>(
-      '/api/cart/validate'
+      '/api/v2/orders/cart/validate'
     );
 
     return response.data;
@@ -226,7 +226,7 @@ class CartService {
    */
   async mergeCart(): Promise<Cart> {
     const response = await apiClient.post<Cart>(
-      '/api/cart/merge'
+      '/api/v2/orders/cart/merge'
     );
 
     return response.data;
@@ -237,7 +237,7 @@ class CartService {
    */
   async calculateDeliveryFee(addressId: string): Promise<{ fee: number; estimated_time: string }> {
     const response = await apiClient.post<{ fee: number; estimated_time: string }>(
-      '/api/cart/delivery-fee',
+      '/api/v2/delivery/calculate-fee',
       { address_id: addressId }
     );
 
@@ -249,7 +249,7 @@ class CartService {
    */
   async setDeliveryMethod(method: 'delivery' | 'pickup'): Promise<Cart> {
     const response = await apiClient.post<Cart>(
-      '/api/cart/delivery-method',
+      '/api/v2/orders/cart/delivery-method',
       { method }
     );
 
