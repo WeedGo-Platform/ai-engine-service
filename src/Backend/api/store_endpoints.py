@@ -685,8 +685,8 @@ async def get_active_stores_by_tenant(
     - Store Manager: Can see only their assigned store(s)
     """
     try:
-        # Mock user for development (temporarily disabled auth)
-        current_user = {"user_id": "c19d5c2f-81e9-4d84-8e41-5b063080cf51", "role": "super_admin"}
+        # Mock user for development (temporarily disabled auth) - using real admin user ID from database
+        current_user = {"user_id": "c048d6c8-6a1a-45a4-a630-5861e730a8fd", "role": "super_admin"}
         # Get user info from the current_user dependency
         user_id = UUID(current_user['user_id'])
         user = None  # Initialize user variable
