@@ -10,9 +10,11 @@ from uuid import UUID, uuid4
 from enum import Enum
 import hashlib
 import secrets
+import bcrypt
 
 from ....shared.domain_base import AggregateRoot, BusinessRuleViolation, DomainEvent
 from ..value_objects.permission import Permission, PermissionSet
+from ..value_objects.password_policy import PasswordPolicy, DEFAULT_PASSWORD_POLICY
 
 
 class UserStatus(str, Enum):
@@ -84,8 +86,16 @@ class UserSuspended(DomainEvent):
 
 
 class PasswordChanged(DomainEvent):
-    def __init__(self, user_id: UUID):
+    def __init__(self, user_id: UUID, invalidate_sessions: bool = True):
         super().__init__(user_id)
+        self.invalidate_sessions = invalidate_sessions
+
+    def to_dict(self) -> Dict[str, Any]:
+        data = super().to_dict()
+        data.update({
+            'invalidate_sessions': self.invalidate_sessions
+        })
+        return data
 
 
 class LoginAttempt(DomainEvent):
@@ -194,24 +204,91 @@ class User(AggregateRoot):
 
         return user
 
-    def set_password(self, password: str):
-        """Set user password (hashed)"""
-        if len(password) < 8:
-            raise BusinessRuleViolation("Password must be at least 8 characters")
+    def set_password(self, password: str, policy: PasswordPolicy = DEFAULT_PASSWORD_POLICY):
+        """
+        Set user password (hashed with bcrypt)
 
-        # Simple password hashing (in production, use bcrypt or similar)
-        self.password_hash = hashlib.sha256(password.encode()).hexdigest()
+        Args:
+            password: Plain text password
+            policy: Password policy to validate against
+
+        Raises:
+            BusinessRuleViolation: If password doesn't meet policy requirements
+        """
+        # Validate password against policy
+        policy.assert_valid(password)
+
+        # Hash password using bcrypt
+        salt = bcrypt.gensalt()
+        self.password_hash = bcrypt.hashpw(password.encode('utf-8'), salt).decode('utf-8')
         self.mark_as_modified()
 
-        self.add_domain_event(PasswordChanged(user_id=self.id))
+        # Don't invalidate sessions on initial password set
+        self.add_domain_event(PasswordChanged(user_id=self.id, invalidate_sessions=False))
 
     def verify_password(self, password: str) -> bool:
-        """Verify user password"""
+        """
+        Verify user password against stored hash
+
+        Args:
+            password: Plain text password to verify
+
+        Returns:
+            True if password matches, False otherwise
+        """
         if not self.password_hash:
             return False
 
-        password_hash = hashlib.sha256(password.encode()).hexdigest()
-        return self.password_hash == password_hash
+        try:
+            # Check if it's a bcrypt hash
+            if self.password_hash.startswith('$2'):
+                return bcrypt.checkpw(
+                    password.encode('utf-8'),
+                    self.password_hash.encode('utf-8')
+                )
+            else:
+                # Legacy SHA256 hash support (for migration)
+                password_hash = hashlib.sha256(password.encode()).hexdigest()
+                return self.password_hash == password_hash
+        except Exception:
+            return False
+
+    def change_password(
+        self,
+        current_password: str,
+        new_password: str,
+        policy: PasswordPolicy = DEFAULT_PASSWORD_POLICY
+    ):
+        """
+        Change user password with validation
+
+        Args:
+            current_password: Current password for verification
+            new_password: New password to set
+            policy: Password policy to validate new password against
+
+        Raises:
+            BusinessRuleViolation: If current password is invalid or new password doesn't meet requirements
+        """
+        # Verify current password
+        if not self.verify_password(current_password):
+            raise BusinessRuleViolation("Current password is incorrect")
+
+        # Check that new password is different from current
+        if current_password == new_password:
+            raise BusinessRuleViolation("New password must be different from current password")
+
+        # Validate new password against policy
+        policy.assert_valid(new_password)
+
+        # Hash new password using bcrypt
+        salt = bcrypt.gensalt()
+        self.password_hash = bcrypt.hashpw(new_password.encode('utf-8'), salt).decode('utf-8')
+        self.updated_at = datetime.utcnow()
+        self.mark_as_modified()
+
+        # Emit event to invalidate sessions
+        self.add_domain_event(PasswordChanged(user_id=self.id, invalidate_sessions=True))
 
     def activate(self):
         """Activate user account"""

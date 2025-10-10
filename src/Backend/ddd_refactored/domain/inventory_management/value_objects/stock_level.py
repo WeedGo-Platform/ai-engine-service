@@ -26,13 +26,18 @@ class StockLevel(ValueObject):
     """
     StockLevel Value Object - Inventory stock levels and thresholds
     Immutable value object for stock management
+
+    Note on database mapping:
+    - quantity_on_hand → maps to 'quantity' column in database
+    - min_stock_level → for low stock alerts (distinct from reorder_point)
+    - reorder_point → threshold for triggering purchase orders
     """
-    quantity_on_hand: int
+    quantity_on_hand: int  # DB column: 'quantity'
     quantity_available: int
     quantity_reserved: int
-    reorder_point: int
+    reorder_point: int  # DB column: 'reorder_point' (primary threshold)
     reorder_quantity: int
-    min_stock_level: int
+    min_stock_level: int  # For low stock status (may map to reorder_point if DB simplified)
     max_stock_level: int
 
     def __post_init__(self):

@@ -22,7 +22,7 @@ class AccessoryCategory(Entity):
     slug: str = ""  # URL-friendly identifier
 
     # Hierarchy
-    parent_id: Optional[UUID] = None  # For hierarchical categories
+    parent_category_id: Optional[UUID] = None  # For hierarchical categories
     level: int = 0  # 0 for root, 1 for child, etc.
     path: str = ""  # Full path like "accessories/vaporizers/portable"
 
@@ -88,7 +88,7 @@ class AccessoryCategory(Entity):
     def create_child(
         cls,
         name: str,
-        parent_id: UUID,
+        parent_category_id: UUID,
         parent_path: str,
         parent_level: int,
         description: Optional[str] = None,
@@ -97,12 +97,12 @@ class AccessoryCategory(Entity):
         """Factory method to create child category"""
         if not name:
             raise BusinessRuleViolation("Category name is required")
-        if not parent_id:
+        if not parent_category_id:
             raise BusinessRuleViolation("Parent category is required for child categories")
 
         category = cls(
             name=name,
-            parent_id=parent_id,
+            parent_category_id=parent_category_id,
             description=description,
             sort_order=sort_order,
             level=parent_level + 1
@@ -134,7 +134,7 @@ class AccessoryCategory(Entity):
             self.name = name
             self.slug = self.generate_slug(name)
             # Update path if name changed
-            if self.parent_id:
+            if self.parent_category_id:
                 path_parts = self.path.split('/')
                 path_parts[-1] = self.slug
                 self.path = '/'.join(path_parts)
@@ -291,7 +291,7 @@ class AccessoryCategory(Entity):
 
     def is_root(self) -> bool:
         """Check if this is a root category"""
-        return self.parent_id is None
+        return self.parent_category_id is None
 
     def is_leaf(self) -> bool:
         """Check if this is a leaf category (no children)"""
@@ -341,10 +341,10 @@ class AccessoryCategory(Entity):
             errors.append("Minimum age cannot be negative")
 
         # Validate hierarchy
-        if self.level > 0 and not self.parent_id:
+        if self.level > 0 and not self.parent_category_id:
             errors.append("Child categories must have a parent")
 
-        if self.level == 0 and self.parent_id:
+        if self.level == 0 and self.parent_category_id:
             errors.append("Root categories cannot have a parent")
 
         return errors
@@ -359,7 +359,7 @@ class AccessoryCategory(Entity):
             'icon': self.icon,
             'color': self.color,
             'level': self.level,
-            'parent_id': str(self.parent_id) if self.parent_id else None,
+            'parent_category_id': str(self.parent_category_id) if self.parent_category_id else None,
             'product_count': self.product_count,
             'featured': self.is_featured,
             'active': self.is_active
