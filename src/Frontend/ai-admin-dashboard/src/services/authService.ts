@@ -208,7 +208,7 @@ class AuthService {
     role: string;
     tenant_id?: string;
   }): Promise<any> {
-    const response = await api.post('/api/v1/auth/admin/create-admin', data);
+    const response = await api.post('/api/v2/identity-access/users', data);
     return response.data;
   }
 
@@ -290,7 +290,7 @@ class AuthService {
    * Change password for the current user
    */
   async changePassword(currentPassword: string, newPassword: string): Promise<{ message: string }> {
-    const response = await api.post('/api/v1/auth/admin/change-password', {
+    const response = await api.post('/api/v2/identity-access/users/change-password', {
       current_password: currentPassword,
       new_password: newPassword
     });

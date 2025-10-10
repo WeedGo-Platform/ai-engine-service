@@ -8,7 +8,7 @@ class CommunicationService {
    */
   async getTenantCommunicationSettings(tenantId: string): Promise<CommunicationSettings> {
     const token = localStorage.getItem('token');
-    const response = await fetch(`${API_URL}/api/v1/tenants/${tenantId}/communication-settings`, {
+    const response = await fetch(`${API_URL}/api/v2/tenants/${tenantId}/communication-settings`, {
       headers: {
         'Authorization': `Bearer ${token}`,
       },
@@ -30,7 +30,7 @@ class CommunicationService {
     settings: CommunicationSettings
   ): Promise<void> {
     const token = localStorage.getItem('token');
-    const response = await fetch(`${API_URL}/api/v1/tenants/${tenantId}/communication-settings`, {
+    const response = await fetch(`${API_URL}/api/v2/tenants/${tenantId}/communication-settings`, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -53,7 +53,7 @@ class CommunicationService {
   ): Promise<{ valid: boolean; message: string }> {
     const token = localStorage.getItem('token');
     const response = await fetch(
-      `${API_URL}/api/v1/tenants/${tenantId}/communication-settings/validate`,
+      `${API_URL}/api/v2/tenants/${tenantId}/communication-settings/validate`,
       {
         method: 'POST',
         headers: {
