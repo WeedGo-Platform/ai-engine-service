@@ -12,6 +12,7 @@ import { StoreProvider, useStoreContext } from './contexts/StoreContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import StoreSelectionModal from './components/StoreSelectionModal';
 import ChatWidget from './components/ChatWidget';
+import ChangePasswordModal from './components/ChangePasswordModal';
 
 // Import pages
 import Login from './pages/Login';
@@ -61,6 +62,7 @@ function Layout() {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
   const [showStoreModal, setShowStoreModal] = React.useState(false);
+  const [showPasswordModal, setShowPasswordModal] = React.useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout, isAuthenticated, loading, isSuperAdmin, isTenantAdmin, isStoreManager } = useAuth();
@@ -322,7 +324,11 @@ function Layout() {
             </div>
 
             <div className="flex items-center space-x-2">
-              <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-lg transition-all">
+              <button
+                onClick={() => setShowPasswordModal(true)}
+                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-lg transition-all"
+                title="Change Password"
+              >
                 <Settings className="h-5 w-5" />
               </button>
               <button
@@ -361,6 +367,15 @@ function Layout() {
 
       {/* Chat Widget with Voice Support */}
       <ChatWidget />
+
+      {/* Password Change Modal */}
+      <ChangePasswordModal
+        isOpen={showPasswordModal}
+        onClose={() => setShowPasswordModal(false)}
+        onSuccess={async () => {
+          // Already handled in modal - user will be logged out
+        }}
+      />
     </div>
   );
 }

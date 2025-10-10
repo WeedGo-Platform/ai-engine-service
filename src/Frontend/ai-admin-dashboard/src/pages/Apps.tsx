@@ -305,17 +305,12 @@ export default function Apps() {
         )}
       </div>
 
-      {/* Store Selection Modal - Make it persistent for admin users without store */}
+      {/* Store Selection Modal */}
       {showStoreSelectionModal && (
         <StoreSelectionModal
           isOpen={showStoreSelectionModal}
           onSelect={handleStoreSelect}
-          onClose={() => {
-            // Only allow closing if a store is selected or user is not admin
-            if (currentStore || (!isSuperAdmin() && !isTenantAdminOnly())) {
-              setShowStoreSelectionModal(false);
-            }
-          }}
+          onClose={() => setShowStoreSelectionModal(false)}
         />
       )}
     </div>

@@ -626,7 +626,7 @@ async def get_categories():
     
     try:
         cursor.execute("""
-            SELECT id, name, slug, parent_id, description, 
+            SELECT id, name, slug, parent_category_id, description,
                    icon, sort_order, is_active
             FROM accessory_categories
             WHERE is_active = true
@@ -663,8 +663,8 @@ async def create_category(category: AccessoryCategory):
     
     try:
         cursor.execute("""
-            INSERT INTO accessory_categories 
-            (name, slug, parent_id, description, icon, sort_order, is_active)
+            INSERT INTO accessory_categories
+            (name, slug, parent_category_id, description, icon, sort_order, is_active)
             VALUES (%s, %s, %s, %s, %s, %s, %s)
             RETURNING id
         """, (

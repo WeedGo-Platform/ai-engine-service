@@ -10,6 +10,7 @@ import BarcodeIntakeModal from '../components/accessories/BarcodeIntakeModal';
 import { getApiEndpoint } from '../config/app.config';
 import QuickIntakeModal from '../components/accessories/QuickIntakeModal';
 import InventoryAdjustModal from '../components/accessories/InventoryAdjustModal';
+import { useStoreContext } from '../contexts/StoreContext';
 
 interface Accessory {
   id: number;
@@ -39,6 +40,7 @@ interface Category {
 }
 
 const Accessories: React.FC = () => {
+  const { currentStore } = useStoreContext();
   const [accessories, setAccessories] = useState<Accessory[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -46,12 +48,12 @@ const Accessories: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showLowStockOnly, setShowLowStockOnly] = useState(false);
   const [selectedAccessory, setSelectedAccessory] = useState<Accessory | null>(null);
-  
+
   // Modals
   const [showBarcodeIntake, setShowBarcodeIntake] = useState(false);
   const [showQuickIntake, setShowQuickIntake] = useState(false);
   const [showAdjustModal, setShowAdjustModal] = useState(false);
-  
+
   // Stats
   const [inventoryStats, setInventoryStats] = useState({
     total_items: 0,
@@ -60,14 +62,21 @@ const Accessories: React.FC = () => {
     low_stock_count: 0
   });
 
-  const storeId = 'store_001'; // TODO: Get from context
+  const storeId = currentStore?.id;
 
   // Fetch accessories inventory
   const fetchAccessories = useCallback(async () => {
+    // Don't fetch if no store is selected
+    if (!storeId) {
+      setLoading(false);
+      setAccessories([]);
+      return;
+    }
+
     try {
       setLoading(true);
       const params: any = { store_id: storeId };
-      
+
       if (selectedCategory) {
         params.category_id = selectedCategory;
       }
@@ -79,20 +88,20 @@ const Accessories: React.FC = () => {
         getApiEndpoint(`/accessories/inventory/${storeId}`),
         { params }
       );
-      
+
       setAccessories(response.data.inventory || []);
-      
+
       // Calculate stats
       const stats = {
         total_items: response.data.inventory.length,
         total_units: response.data.inventory.reduce((sum: number, item: Accessory) => sum + item.quantity, 0),
-        total_value: response.data.inventory.reduce((sum: number, item: Accessory) => 
+        total_value: response.data.inventory.reduce((sum: number, item: Accessory) =>
           sum + (item.quantity * item.retail_price), 0),
-        low_stock_count: response.data.inventory.filter((item: Accessory) => 
+        low_stock_count: response.data.inventory.filter((item: Accessory) =>
           item.quantity <= item.min_stock).length
       };
       setInventoryStats(stats);
-      
+
     } catch (error) {
       console.error('Error fetching accessories:', error);
     } finally {
@@ -171,13 +180,30 @@ const Accessories: React.FC = () => {
     a.click();
   };
 
+  // Show message if no store is selected
+  if (!currentStore) {
+    return (
+      <div className="h-full flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="mb-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-full">
+              <Package className="w-8 h-8 text-primary-600" />
+            </div>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">No Store Selected</h3>
+          <p className="text-gray-500">Please select a store to manage accessories inventory</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Accessories & Paraphernalia</h1>
-          <p className="text-gray-500">Manage non-cannabis inventory</p>
+          <p className="text-gray-500">Manage non-cannabis inventory for {currentStore.name}</p>
         </div>
         <div className="flex gap-4">
           <button

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../services/api';
-import { useAuth } from '../contexts/AuthContext';
+import { useStoreContext } from '../contexts/StoreContext';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -101,7 +101,7 @@ const statusColors: Record<string, string> = {
 
 export default function DeliveryManagement() {
   const queryClient = useQueryClient();
-  const { currentStore } = useAuth();
+  const { currentStore } = useStoreContext();
   const [activeTab, setActiveTab] = useState('active');
   const [selectedDelivery, setSelectedDelivery] = useState<Delivery | null>(null);
   const [selectedStaff, setSelectedStaff] = useState<StaffMember | null>(null);
@@ -121,8 +121,9 @@ export default function DeliveryManagement() {
 
   // Fetch deliveries
   const { data: deliveries = [], isLoading: loadingDeliveries } = useQuery({
-    queryKey: ['deliveries', 'active'],
+    queryKey: ['deliveries', 'active', currentStore?.id],
     queryFn: async () => {
+      if (!currentStore?.id) return [];
       const response = await api.get('/api/v1/delivery/active');
       return response.data.deliveries;
     },
@@ -131,8 +132,9 @@ export default function DeliveryManagement() {
 
   // Fetch staff
   const { data: staff = [], isLoading: loadingStaff } = useQuery({
-    queryKey: ['staff', 'available'],
+    queryKey: ['staff', 'available', currentStore?.id],
     queryFn: async () => {
+      if (!currentStore?.id) return [];
       const response = await api.get('/api/v1/delivery/staff/available');
       return response.data.staff;
     },
@@ -252,11 +254,28 @@ export default function DeliveryManagement() {
     );
   };
 
+  // Early return if no store is selected
+  if (!currentStore) {
+    return (
+      <div className="h-full flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="mb-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-full">
+              <Truck className="w-8 h-8 text-primary-600" />
+            </div>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">No Store Selected</h3>
+          <p className="text-gray-500">Please select a store to manage deliveries</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-semibold text-gray-900">Delivery Management</h1>
-        <p className="text-sm text-gray-600 mt-1">Manage deliveries, track drivers, and monitor real-time status</p>
+        <p className="text-sm text-gray-500 mt-1">Managing deliveries for {currentStore.name}</p>
       </div>
 
       {/* Tabs */}

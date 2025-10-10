@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { 
-  TrendingUp, ShoppingBag, Users, Package2, 
+import {
+  TrendingUp, ShoppingBag, Users, Package2,
   Star, RefreshCw, BarChart3, Zap, Target,
   ArrowUpRight, ArrowDownRight
 } from 'lucide-react';
 import axios from 'axios';
+import { useStoreContext } from '../contexts/StoreContext';
 
 const API_BASE_URL = 'http://localhost:5024';
 
@@ -30,6 +31,7 @@ interface TopPerformer {
 }
 
 export default function Recommendations() {
+  const { currentStore } = useStoreContext();
   const [selectedProduct, setSelectedProduct] = useState<string>('');
   const [activeTab, setActiveTab] = useState<'overview' | 'performance' | 'test'>('overview');
 
@@ -115,13 +117,30 @@ export default function Recommendations() {
     return `$${value.toFixed(2)}`;
   };
 
+  // Show "No Store Selected" UI if no store is selected
+  if (!currentStore) {
+    return (
+      <div className="h-full flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="mb-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-full">
+              <TrendingUp className="w-8 h-8 text-primary-600" />
+            </div>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">No Store Selected</h3>
+          <p className="text-gray-500">Please select a store to manage product recommendations</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Product Recommendations</h1>
-          <p className="text-gray-600">AI-powered product recommendations and analytics</p>
+          <p className="text-sm text-gray-500 mt-1">Managing product recommendations for {currentStore.name}</p>
         </div>
         <button
           onClick={() => {

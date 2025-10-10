@@ -6,7 +6,6 @@ import { api } from '../services/api';
 import BroadcastWizard from '../components/BroadcastWizard';
 import TemplateManager from '../components/TemplateManager';
 import CommunicationsAnalytics from '../components/CommunicationsAnalytics';
-import StoreSelectionModal from '../components/StoreSelectionModal';
 import { usePersistentTab, usePersistentState } from '../hooks/usePersistentState';
 import toast from 'react-hot-toast';
 import {
@@ -145,7 +144,7 @@ interface AnalyticsData {
 
 const Communications: React.FC = () => {
   const { user, isSuperAdmin, isTenantAdminOnly, isStoreManager } = useAuth();
-  const { currentStore, selectStore } = useStoreContext();
+  const { currentStore } = useStoreContext();
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = usePersistentTab<'overview' | 'campaigns' | 'templates' | 'segments' | 'analytics'>('communications', 'overview');
@@ -159,42 +158,15 @@ const Communications: React.FC = () => {
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
   const [analyticsLoading, setAnalyticsLoading] = useState(false);
   const [selectedDateRange, setSelectedDateRange] = usePersistentState('communications_date_range', '7d');
-  const [showStoreSelectionModal, setShowStoreSelectionModal] = useState(false);
-  const [selectedStoreForPage, setSelectedStoreForPage] = useState<{id: string, name: string} | null>(null);
 
   useEffect(() => {
-    // Check if admin users need to select a store
-    if (isSuperAdmin() || isTenantAdminOnly()) {
-      if (currentStore) {
-        setSelectedStoreForPage({ id: currentStore.id, name: currentStore.name });
-      } else if (!selectedStoreForPage) {
-        setShowStoreSelectionModal(true);
-      }
-    } else if (isStoreManager() && currentStore) {
-      setSelectedStoreForPage({ id: currentStore.id, name: currentStore.name });
-    }
-  }, [currentStore, user, isSuperAdmin, isTenantAdminOnly, isStoreManager]);
-
-  useEffect(() => {
-    if (selectedStoreForPage?.id) {
+    if (currentStore?.id) {
       fetchData();
     }
-  }, [selectedStoreForPage, refreshKey]);
-
-  const handleStoreSelect = async (tenantId: string, storeId: string, storeName: string, tenantName?: string) => {
-    try {
-      // Update the store context with the selected store
-      await selectStore(storeId, storeName);
-      setSelectedStoreForPage({ id: storeId, name: storeName });
-      setShowStoreSelectionModal(false);
-    } catch (error) {
-      console.error('Failed to select store:', error);
-      toast.error('Failed to select store');
-    }
-  };
+  }, [currentStore, refreshKey]);
 
   const fetchData = async () => {
-    if (!selectedStoreForPage?.id) return;
+    if (!currentStore?.id) return;
 
     setLoading(true);
     try {
@@ -202,11 +174,11 @@ const Communications: React.FC = () => {
       const headers = {
         'Content-Type': 'application/json',
         ...(token && { 'Authorization': `Bearer ${token}` }),
-        'X-Store-ID': selectedStoreForPage.id
+        'X-Store-ID': currentStore.id
       };
 
       // Fetch broadcasts
-      const broadcastsRes = await fetch(`http://localhost:5024/api/v1/communications/broadcasts?store_id=${selectedStoreForPage.id}&limit=10`, {
+      const broadcastsRes = await fetch(`http://localhost:5024/api/v1/communications/broadcasts?store_id=${currentStore.id}&limit=10`, {
         headers
       });
       if (broadcastsRes.ok) {
@@ -215,7 +187,7 @@ const Communications: React.FC = () => {
       }
 
       // Fetch analytics
-      const analyticsRes = await fetch(`http://localhost:5024/api/v1/communications/analytics/overview?store_id=${selectedStoreForPage.id}`, {
+      const analyticsRes = await fetch(`http://localhost:5024/api/v1/communications/analytics/overview?store_id=${currentStore.id}`, {
         headers
       });
       if (analyticsRes.ok) {
@@ -240,7 +212,7 @@ const Communications: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
           ...(token && { 'Authorization': `Bearer ${token}` }),
-          'X-Store-ID': selectedStoreForPage?.id || ''
+          'X-Store-ID': currentStore?.id || ''
         }
       });
       if (response.ok) {
@@ -261,7 +233,7 @@ const Communications: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
           ...(token && { 'Authorization': `Bearer ${token}` }),
-          'X-Store-ID': selectedStoreForPage?.id || ''
+          'X-Store-ID': currentStore?.id || ''
         }
       });
       if (response.ok) {
@@ -282,7 +254,7 @@ const Communications: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
           ...(token && { 'Authorization': `Bearer ${token}` }),
-          'X-Store-ID': selectedStoreForPage?.id || ''
+          'X-Store-ID': currentStore?.id || ''
         }
       });
       if (response.ok) {
@@ -305,7 +277,7 @@ const Communications: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
           ...(token && { 'Authorization': `Bearer ${token}` }),
-          'X-Store-ID': selectedStoreForPage?.id || ''
+          'X-Store-ID': currentStore?.id || ''
         }
       });
       if (response.ok) {
@@ -366,16 +338,16 @@ const Communications: React.FC = () => {
   };
 
   const fetchAnalytics = async () => {
-    if (!selectedStoreForPage?.id) return;
+    if (!currentStore?.id) return;
 
     setAnalyticsLoading(true);
     try {
       const token = localStorage.getItem('weedgo_auth_access_token');
-      const response = await fetch(`http://localhost:5024/api/v1/communications/analytics/detailed?store_id=${selectedStoreForPage.id}&date_range=${selectedDateRange}`, {
+      const response = await fetch(`http://localhost:5024/api/v1/communications/analytics/detailed?store_id=${currentStore.id}&date_range=${selectedDateRange}`, {
         headers: {
           'Content-Type': 'application/json',
           ...(token && { 'Authorization': `Bearer ${token}` }),
-          'X-Store-ID': selectedStoreForPage.id
+          'X-Store-ID': currentStore.id
         }
       });
       if (response.ok) {
@@ -466,10 +438,10 @@ const Communications: React.FC = () => {
   };
 
   useEffect(() => {
-    if (activeTab === 'analytics' && selectedStoreForPage?.id) {
+    if (activeTab === 'analytics' && currentStore?.id) {
       fetchAnalytics();
     }
-  }, [activeTab, selectedStoreForPage, selectedDateRange]);
+  }, [activeTab, currentStore, selectedDateRange]);
 
   const renderAnalytics = () => {
     if (analyticsLoading) {
@@ -827,36 +799,20 @@ const Communications: React.FC = () => {
     </div>
   );
 
-  // Show store selection modal immediately for admin users without store
-  if ((isSuperAdmin() || isTenantAdminOnly()) && !selectedStoreForPage) {
+  // Show "No Store Selected" UI if no store is selected
+  if (!currentStore) {
     return (
-      <>
-        <div className="p-6 space-y-6">
-          <div className="flex justify-center items-center h-64">
-            <div className="text-center">
-              <div className="mb-4">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full">
-                  <Send className="w-8 h-8 text-purple-600" />
-                </div>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Store Selection Required</h3>
-              <p className="text-gray-500 mb-4">Please select a store to access Communications</p>
+      <div className="h-full flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="mb-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-full">
+              <Send className="w-8 h-8 text-primary-600" />
             </div>
           </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">No Store Selected</h3>
+          <p className="text-gray-500">Please select a store to manage communications</p>
         </div>
-
-        {/* Store Selection Modal */}
-        <StoreSelectionModal
-          isOpen={showStoreSelectionModal}
-          onSelect={handleStoreSelect}
-          onClose={() => {
-            // Don't allow closing without selecting a store
-            if (selectedStoreForPage) {
-              setShowStoreSelectionModal(false);
-            }
-          }}
-        />
-      </>
+      </div>
     );
   }
 
@@ -874,8 +830,8 @@ const Communications: React.FC = () => {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Communications</h1>
-          <p className="text-sm text-gray-600 mt-1">
-            Manage broadcast campaigns and customer communications
+          <p className="text-sm text-gray-500 mt-1">
+            Managing communications for {currentStore.name}
           </p>
         </div>
         <div className="flex items-center space-x-3">
@@ -955,7 +911,7 @@ const Communications: React.FC = () => {
         onSelect={handleStoreSelect}
         onClose={() => {
           // Only allow closing if a store is selected or user is not admin
-          if (selectedStoreForPage || (!isSuperAdmin() && !isTenantAdminOnly())) {
+          if (currentStore || (!isSuperAdmin() && !isTenantAdminOnly())) {
             setShowStoreSelectionModal(false);
           }
         }}

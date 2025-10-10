@@ -3,8 +3,10 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../services/api';
 import { Customer } from '../types';
 import { Users, Mail, Phone, Calendar, ShoppingBag, Star, Search, UserPlus, X, MapPin, CreditCard, Clock, Package } from 'lucide-react';
+import { useStoreContext } from '../contexts/StoreContext';
 
 const Customers: React.FC = () => {
+  const { currentStore } = useStoreContext();
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState<string>('all');
@@ -13,15 +15,19 @@ const Customers: React.FC = () => {
   const [editedCustomer, setEditedCustomer] = useState<any>(null);
 
   const { data: customers, isLoading, error } = useQuery({
-    queryKey: ['customers', searchTerm, selectedType],
+    queryKey: ['customers', searchTerm, selectedType, currentStore?.id],
     queryFn: async () => {
-      const params: any = {};
+      if (!currentStore?.id) {
+        return [];
+      }
+      const params: any = { store_id: currentStore.id };
       if (searchTerm) params.search = searchTerm;
       if (selectedType !== 'all') params.customer_type = selectedType;
       const response = await api.customers.getAll(params);
       // The API returns {customers: [...]}
       return response.data?.customers || [];
     },
+    enabled: !!currentStore?.id,
   });
 
   const updateMutation = useMutation({
@@ -82,6 +88,23 @@ const Customers: React.FC = () => {
     return type === 'medical' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800';
   };
 
+  // Show "No Store Selected" UI if no store is selected
+  if (!currentStore) {
+    return (
+      <div className="h-full flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="mb-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-full">
+              <Users className="w-8 h-8 text-primary-600" />
+            </div>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">No Store Selected</h3>
+          <p className="text-gray-500">Please select a store to manage customers</p>
+        </div>
+      </div>
+    );
+  }
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -101,7 +124,10 @@ const Customers: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Customer Management</h1>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Customer Management</h1>
+          <p className="text-sm text-gray-500 mt-1">Managing customers for {currentStore.name}</p>
+        </div>
         <button className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 flex items-center gap-2">
           <UserPlus className="h-5 w-5" />
           Add Customer

@@ -4,20 +4,27 @@ import { api } from '../services/api';
 import { Order, Customer, Product } from '../types';
 import { ShoppingCart, Clock, CheckCircle, XCircle, Package, Truck, CreditCard, Eye } from 'lucide-react';
 import { usePersistentState } from '../hooks/usePersistentState';
+import { useStoreContext } from '../contexts/StoreContext';
 
 const Orders: React.FC = () => {
+  const { currentStore } = useStoreContext();
   const queryClient = useQueryClient();
   const [selectedStatus, setSelectedStatus] = usePersistentState<string>('orders_status_filter', 'all');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   const { data: orders, isLoading, error } = useQuery({
-    queryKey: ['orders', selectedStatus],
+    queryKey: ['orders', selectedStatus, currentStore?.id],
     queryFn: async () => {
-      const params: any = {};
+      // Don't fetch if no store is selected
+      if (!currentStore?.id) {
+        return { data: [] };
+      }
+      const params: any = { store_id: currentStore.id };
       if (selectedStatus !== 'all') params.status = selectedStatus;
       const response = await api.orders.getAll(params);
       return response.data;
     },
+    enabled: !!currentStore?.id,
   });
 
   const updateMutation = useMutation({
@@ -96,6 +103,23 @@ const Orders: React.FC = () => {
     updateMutation.mutate(updateData);
   };
 
+  // Show "No Store Selected" UI if no store is selected
+  if (!currentStore) {
+    return (
+      <div className="h-full flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="mb-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-accent-100 rounded-full">
+              <ShoppingCart className="w-8 h-8 text-accent-600" />
+            </div>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">No Store Selected</h3>
+          <p className="text-gray-500">Please select a store to manage orders</p>
+        </div>
+      </div>
+    );
+  }
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -115,7 +139,10 @@ const Orders: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Order Management</h1>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Order Management</h1>
+          <p className="text-sm text-gray-500 mt-1">Managing orders for {currentStore.name}</p>
+        </div>
       </div>
 
       <div className="bg-white rounded-lg  p-6">
