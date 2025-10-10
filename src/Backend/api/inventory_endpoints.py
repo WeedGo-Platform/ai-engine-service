@@ -1,5 +1,24 @@
 """
-Inventory Management API Endpoints
+Inventory Management API Endpoints (V1 - Production)
+
+⚠️ MIGRATION NOTICE:
+This is the V1 inventory API, currently in production use.
+A new V2 API using DDD architecture is available at /api/v2/inventory/*
+
+V2 advantages:
+- Domain-Driven Design with Inventory aggregate
+- Rich business rule validation
+- Stock level management with automatic status calculation
+- Reserve/release operations for order fulfillment
+- Better separation of concerns
+- Event sourcing ready
+- Pricing and margin calculations
+
+Migration path:
+- V1 endpoints remain stable and backward compatible
+- V2 provides enhanced features and better architecture
+- Gradually migrate applications to V2 endpoints
+- V1 will be deprecated after 6 months notice
 """
 
 from fastapi import APIRouter, HTTPException, Depends, Query, Header

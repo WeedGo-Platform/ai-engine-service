@@ -1,5 +1,46 @@
 """
-Promotion and Pricing API Endpoints
+Promotion and Pricing API Endpoints (V1 - Legacy)
+
+⚠️ MIGRATION NOTICE:
+This is the V1 Promotion & Pricing API. A new V2 API is available with improved DDD architecture.
+
+**V2 Features:**
+- Full Domain-Driven Design implementation
+- Advanced pricing strategies (cost-plus, competitive, dynamic, tiered)
+- Bulk/volume discounts with multi-tier configuration
+- Time-based pricing schedules (happy hour, weekend specials)
+- Promotional campaigns with BOGO support
+- Discount code generation and tracking
+- Customer segmentation and targeting
+- Promotion stacking controls
+- Usage limits and analytics
+- Domain events for audit trails
+
+**Migration Path:**
+1. V1 endpoints remain functional for backward compatibility
+2. New features will only be added to V2
+3. V2 API available at `/api/v2/pricing-promotions/*`
+4. Recommended to migrate to V2 for new integrations
+
+**V2 Endpoints:**
+
+Pricing Rules:
+- POST /api/v2/pricing-promotions/pricing-rules - Create pricing rule
+- GET /api/v2/pricing-promotions/pricing-rules/{id} - Get pricing rule
+- POST /api/v2/pricing-promotions/pricing-rules/{id}/products - Add product price
+- PUT /api/v2/pricing-promotions/pricing-rules/{id}/products/{sku} - Update product price
+- POST /api/v2/pricing-promotions/pricing-rules/{id}/products/{sku}/bulk-discount - Add bulk discount
+- POST /api/v2/pricing-promotions/pricing-rules/{id}/products/{sku}/schedule - Add price schedule
+
+Promotions:
+- POST /api/v2/pricing-promotions/promotions - Create promotion
+- GET /api/v2/pricing-promotions/promotions/{id} - Get promotion
+- POST /api/v2/pricing-promotions/promotions/{id}/status - Update promotion status
+- POST /api/v2/pricing-promotions/promotions/{id}/discount-codes - Generate discount code
+- POST /api/v2/pricing-promotions/promotions/{id}/apply-code - Apply discount code
+- POST /api/v2/pricing-promotions/promotions/{id}/calculate - Calculate discount
+
+For details, see: /docs (search for "Pricing & Promotions V2")
 """
 
 from fastapi import APIRouter, HTTPException, Depends, Query

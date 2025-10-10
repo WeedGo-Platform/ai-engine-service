@@ -235,7 +235,7 @@ class DatabaseConnectionManager(IDatabaseConnectionManager):
     def return_connection(self, connection_name: str, conn: Any) -> None:
         """
         Return a connection to the pool
-        
+
         Args:
             connection_name: Name of the connection pool
             conn: Connection to return
@@ -246,6 +246,16 @@ class DatabaseConnectionManager(IDatabaseConnectionManager):
                 pool.putconn(conn)
             except Exception as e:
                 logger.error(f"Failed to return connection to pool '{connection_name}': {e}")
+
+    def release_connection(self, conn: Any, connection_name: str = "default") -> None:
+        """
+        Release a connection back to the pool (convenience method)
+
+        Args:
+            conn: Connection to release
+            connection_name: Name of the connection pool (defaults to "default")
+        """
+        self.return_connection(connection_name, conn)
     
     def __del__(self):
         """Cleanup on deletion"""

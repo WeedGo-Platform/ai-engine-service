@@ -207,8 +207,15 @@ async def lifespan(app: FastAPI):
         # Bridge context_manager to agent_pool for conversation memory
         logger.info("Bridging context manager to agent pool...")
         if v5_engine.agent_pool:
-            v5_engine.agent_pool.set_context_manager(context_manager)
-            logger.info("✅ Context manager successfully bridged to agent pool")
+            try:
+                # Try to set context manager if method exists
+                if hasattr(v5_engine.agent_pool, 'set_context_manager'):
+                    v5_engine.agent_pool.set_context_manager(context_manager)
+                    logger.info("✅ Context manager successfully bridged to agent pool")
+                else:
+                    logger.warning("⚠️ Agent pool does not have set_context_manager method, skipping bridge")
+            except Exception as e:
+                logger.warning(f"⚠️ Failed to bridge context manager: {e}, continuing...")
 
             # Initialize unified chat system with database-backed storage
             logger.info("Initializing unified chat system...")
@@ -348,7 +355,15 @@ app = FastAPI(
         {"name": "⚙️ Admin", "description": "System administration"},
         {"name": "🖥️ Kiosk", "description": "Self-service kiosk interface"},
         {"name": "📍 Inventory", "description": "Inventory and stock management"},
-        {"name": "🔧 Hardware", "description": "Hardware detection and management"}
+        {"name": "🔧 Hardware", "description": "Hardware detection and management"},
+        {"name": "🚚 Delivery Management V2", "description": "DDD-powered delivery and driver management"},
+        {"name": "📢 Communication V2", "description": "DDD-powered broadcast and messaging management"},
+        {"name": "⭐ Customer Engagement V2", "description": "DDD-powered product reviews and ratings"},
+        {"name": "💬 AI & Conversation V2", "description": "DDD-powered customer support chat (basic chat only)"},
+        {"name": "🌐 Localization V2", "description": "DDD-powered multi-language translation management"},
+        {"name": "🏷️ Metadata Management V2", "description": "DDD-powered dynamic schema and custom field management"},
+        {"name": "📋 Purchase Order Management V2", "description": "DDD-powered supplier ordering and receiving management"},
+        {"name": "👤 Identity & Access Management V2", "description": "DDD-powered user authentication and authorization"}
     ],
     swagger_ui_parameters={
         "syntaxHighlight": True,  # Enable syntax highlighting
@@ -511,6 +526,118 @@ app.include_router(payment_provider_router)  # Payment provider management endpo
 app.include_router(client_payment_router)  # Client payment endpoints
 app.include_router(store_payment_router)  # Store payment terminal and device endpoints
 app.include_router(payment_session_router)  # Payment session endpoints for Clover integration
+
+# V2 Payment endpoints (DDD-powered)
+try:
+    from api.v2.payments import router as payment_v2_router
+    app.include_router(payment_v2_router, prefix="/api")
+    logger.info("✅ Payment V2 (DDD) endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load Payment V2 endpoints: {e}")
+
+# V2 Order endpoints (DDD-powered)
+try:
+    from api.v2.orders import router as order_v2_router
+    app.include_router(order_v2_router, prefix="/api")
+    logger.info("✅ Order V2 (DDD) endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load Order V2 endpoints: {e}")
+
+# V2 Inventory endpoints (DDD-powered)
+try:
+    from api.v2.inventory import router as inventory_v2_router
+    app.include_router(inventory_v2_router, prefix="/api")
+    logger.info("✅ Inventory V2 (DDD) endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load Inventory V2 endpoints: {e}")
+
+# V2 Product Catalog endpoints (DDD-powered)
+try:
+    from api.v2.products import router as products_v2_router
+    app.include_router(products_v2_router, prefix="/api")
+    logger.info("✅ Product Catalog V2 (DDD) endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load Product Catalog V2 endpoints: {e}")
+
+# V2 Tenant Management endpoints (DDD-powered)
+try:
+    from api.v2.tenants import router as tenants_v2_router
+    app.include_router(tenants_v2_router, prefix="/api")
+    logger.info("✅ Tenant Management V2 (DDD) endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load Tenant Management V2 endpoints: {e}")
+
+# V2 Pricing & Promotions endpoints (DDD-powered)
+try:
+    from api.v2.pricing_promotions import router as pricing_promotions_v2_router
+    app.include_router(pricing_promotions_v2_router, prefix="/api")
+    logger.info("✅ Pricing & Promotions V2 (DDD) endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load Pricing & Promotions V2 endpoints: {e}")
+
+# V2 Delivery Management endpoints (DDD-powered)
+try:
+    from api.v2.delivery import router as delivery_v2_router
+    app.include_router(delivery_v2_router, prefix="/api")
+    logger.info("✅ Delivery Management V2 (DDD) endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load Delivery Management V2 endpoints: {e}")
+
+# V2 Communication endpoints (DDD-powered)
+try:
+    from api.v2.communication import router as communication_v2_router
+    app.include_router(communication_v2_router, prefix="/api")
+    logger.info("✅ Communication V2 (DDD) endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load Communication V2 endpoints: {e}")
+
+# V2 Customer Engagement endpoints (DDD-powered)
+try:
+    from api.v2.customer_engagement import router as customer_engagement_v2_router
+    app.include_router(customer_engagement_v2_router, prefix="/api")
+    logger.info("✅ Customer Engagement V2 (DDD) endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load Customer Engagement V2 endpoints: {e}")
+
+# V2 AI & Conversation endpoints (DDD-powered - Basic Chat Only)
+try:
+    from api.v2.ai_conversation import router as ai_conversation_v2_router
+    app.include_router(ai_conversation_v2_router, prefix="/api")
+    logger.info("✅ AI & Conversation V2 (DDD) endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load AI & Conversation V2 endpoints: {e}")
+
+# V2 Localization endpoints (DDD-powered)
+try:
+    from api.v2.localization import router as localization_v2_router
+    app.include_router(localization_v2_router, prefix="/api")
+    logger.info("✅ Localization V2 (DDD) endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load Localization V2 endpoints: {e}")
+
+# V2 Metadata Management endpoints (DDD-powered)
+try:
+    from api.v2.metadata import router as metadata_v2_router
+    app.include_router(metadata_v2_router, prefix="/api")
+    logger.info("✅ Metadata Management V2 (DDD) endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load Metadata Management V2 endpoints: {e}")
+
+# V2 Purchase Order Management endpoints (DDD-powered)
+try:
+    from api.v2.purchase_orders import router as purchase_orders_v2_router
+    app.include_router(purchase_orders_v2_router, prefix="/api")
+    logger.info("✅ Purchase Order Management V2 (DDD) endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load Purchase Order Management V2 endpoints: {e}")
+
+# V2 Identity & Access Management endpoints (DDD-powered)
+try:
+    from api.v2.identity_access import router as identity_access_v2_router
+    app.include_router(identity_access_v2_router, prefix="/api")
+    logger.info("✅ Identity & Access Management V2 (DDD) endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load Identity & Access Management V2 endpoints: {e}")
 
 # Kiosk endpoints
 if KIOSK_ENABLED and kiosk_router:

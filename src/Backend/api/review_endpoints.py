@@ -1,6 +1,30 @@
 """
 Review and Rating System API Endpoints
-Handles product reviews, ratings, and voting functionality
+
+⚠️ COMPATIBILITY NOTICE:
+V2 Customer Engagement API is now available with DDD architecture!
+
+**New V2 Endpoints (Recommended):**
+- /api/v2/customer-engagement/reviews - Full DDD-powered review lifecycle
+- /api/v2/customer-engagement/products/{sku}/reviews - Product reviews with advanced filtering
+- /api/v2/customer-engagement/products/{sku}/reviews/stats - Review statistics
+
+**Key V2 Improvements:**
+✅ Domain-Driven Design with comprehensive business rules
+✅ Review moderation workflow (pending → approved/rejected/flagged → published)
+✅ Detailed rating breakdown (overall, quality, value, potency, flavor)
+✅ Helpful vote tracking with duplicate prevention
+✅ Store responses to customer reviews
+✅ Reviewer badges and reputation system (Top/Frequent/Regular Reviewer)
+✅ Review editing within 7-day window
+✅ Cannabis-specific ratings (potency, flavor)
+✅ Photo and video attachments
+✅ Flag reasons for content moderation
+✅ Domain events for complete audit trails
+
+**Migration Path:**
+- V1 endpoints remain functional for backward compatibility
+- New integrations should use V2 endpoints
 """
 
 from fastapi import APIRouter, HTTPException, Depends, Query, File, UploadFile, Form, Header

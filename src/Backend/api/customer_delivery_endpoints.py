@@ -1,6 +1,28 @@
 """
 Customer-facing Delivery API endpoints
 Provides public REST API for delivery zone lookup, fee calculation, and availability checks
+
+⚠️ COMPATIBILITY NOTICE:
+------------------------------------------------------------
+V2 Delivery Management API is now available with DDD architecture!
+
+**New V2 Endpoints (Recommended):**
+- /api/v2/delivery/deliveries - Full DDD-powered delivery lifecycle
+- /api/v2/delivery/drivers - Driver management and availability
+
+**Key V2 Improvements:**
+✅ Domain-Driven Design with proper business rule enforcement
+✅ Delivery zones with boundary validation (ray-casting algorithm)
+✅ Geographic calculations using Haversine formula
+✅ Comprehensive delivery state machine
+✅ Better separation of concerns
+
+**Migration Path:**
+- V1 endpoints remain functional for backward compatibility
+- Consider migrating to V2 for new features and better maintainability
+
+See /docs for complete V2 API documentation
+------------------------------------------------------------
 """
 
 from fastapi import APIRouter, Depends, HTTPException, Query

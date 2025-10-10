@@ -1,5 +1,19 @@
 """
-OCS Product Catalog API Endpoints
+OCS Product Catalog API Endpoints (V1 - Production)
+
+⚠️ MIGRATION NOTICE:
+This is the V1 OCS product catalog API, currently in production use.
+A new V2 API using DDD architecture is available at /api/v2/products/*
+
+V2 advantages:
+- Domain-Driven Design with OcsProduct aggregate
+- Rich cannabis-specific business logic
+- Terpene profiles with effect mapping
+- Automatic potency level calculations
+- Price per gram calculations
+- Better validation and error handling
+- Event sourcing ready
+
 Provides access to Ontario Cannabis Store product catalog data
 """
 

@@ -1,9 +1,34 @@
 """
-Payment API Endpoints
+Payment API Endpoints (V1 - Legacy)
 Secure payment processing with PCI compliance considerations
+
+⚠️ MIGRATION NOTICE:
+This is the V1 payment API, maintained for backward compatibility.
+New development should use V2 endpoints at /api/v2/payments/*
+
+V2 advantages:
+- Domain-Driven Design architecture
+- Better business rule validation
+- Event sourcing and domain events
+- Cleaner separation of concerns
+- Improved testability
+
+Migration path:
+1. V1 endpoints remain functional (no breaking changes)
+2. New features are added to V2 only
+3. V1 endpoints can optionally proxy to V2 for shared logic
+4. Eventually V1 will be deprecated (with plenty of notice)
+
+V2 endpoints:
+- POST /api/v2/payments/process - Process payment (DDD-powered)
+- POST /api/v2/payments/{id}/refund - Refund payment
+- GET /api/v2/payments/{id} - Get transaction
+- GET /api/v2/payments/ - List transactions
+- GET /api/v2/payments/health - Health check
 """
 
 from fastapi import APIRouter, HTTPException, Depends, Header, Request, BackgroundTasks
+import httpx
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from typing import Dict, List, Optional, Any
 from decimal import Decimal
@@ -21,7 +46,7 @@ from enum import Enum
 from services.payment_service import PaymentService
 
 logger = logging.getLogger(__name__)
-router = APIRouter(prefix="/api/payments", tags=["payments"])
+router = APIRouter(prefix="/api/payments", tags=["💰 Payments V1 (Legacy)"])
 security = HTTPBearer()
 
 # Database connection pool
@@ -29,6 +54,65 @@ db_pool = None
 
 # Rate limiting cache (in production, use Redis)
 rate_limit_cache = {}
+
+# V1 to V2 proxy configuration
+USE_V2_PROXY = os.getenv("PAYMENT_USE_V2_PROXY", "false").lower() == "true"
+V2_BASE_URL = os.getenv("V2_BASE_URL", "http://localhost:5024")
+
+
+async def proxy_to_v2(
+    endpoint: str,
+    method: str = "POST",
+    data: Optional[Dict[str, Any]] = None,
+    params: Optional[Dict[str, Any]] = None,
+    headers: Optional[Dict[str, str]] = None
+) -> Dict[str, Any]:
+    """
+    Helper function to proxy V1 requests to V2 DDD-powered endpoints
+
+    This allows gradual migration where V1 endpoints can delegate to V2
+    for shared business logic while maintaining backward compatibility.
+
+    Example usage:
+        # In a V1 endpoint
+        if USE_V2_PROXY:
+            return await proxy_to_v2(
+                endpoint="/api/v2/payments/process",
+                method="POST",
+                data=request.dict()
+            )
+        # Otherwise, use legacy implementation
+    """
+    try:
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            url = f"{V2_BASE_URL}{endpoint}"
+
+            if method == "POST":
+                response = await client.post(url, json=data, headers=headers)
+            elif method == "GET":
+                response = await client.get(url, params=params, headers=headers)
+            elif method == "PUT":
+                response = await client.put(url, json=data, headers=headers)
+            elif method == "DELETE":
+                response = await client.delete(url, headers=headers)
+            else:
+                raise ValueError(f"Unsupported HTTP method: {method}")
+
+            response.raise_for_status()
+            return response.json()
+
+    except httpx.HTTPStatusError as e:
+        logger.error(f"V2 proxy error: {e.response.status_code} - {e.response.text}")
+        raise HTTPException(
+            status_code=e.response.status_code,
+            detail=f"V2 endpoint error: {e.response.text}"
+        )
+    except Exception as e:
+        logger.error(f"V2 proxy connection error: {str(e)}")
+        raise HTTPException(
+            status_code=503,
+            detail="Failed to connect to V2 payment service"
+        )
 
 
 class PaymentProvider(str, Enum):

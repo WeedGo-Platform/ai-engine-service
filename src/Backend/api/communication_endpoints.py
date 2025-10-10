@@ -1,6 +1,34 @@
 """
 Communication API Endpoints
 Handles broadcast messaging, templates, and customer communication preferences
+
+⚠️ COMPATIBILITY NOTICE:
+------------------------------------------------------------
+V2 Communication API is now available with DDD architecture!
+
+**New V2 Endpoints (Recommended):**
+- /api/v2/communication/broadcasts - Full DDD-powered broadcast lifecycle
+- /api/v2/communication/templates - Reusable message templates
+
+**Key V2 Improvements:**
+✅ Domain-Driven Design with comprehensive business rules
+✅ Broadcast state machine (draft → scheduled → sending → completed)
+✅ Multiple message types (SMS, email, push, in-app, WhatsApp)
+✅ Audience segmentation with advanced filtering
+✅ Template variables with automatic extraction
+✅ Delivery scheduling with rate limiting and time windows
+✅ Real-time tracking (sent, delivered, read, failed)
+✅ Retry logic with configurable limits
+✅ Domain events for complete audit trails
+✅ Better separation of concerns and maintainability
+
+**Migration Path:**
+- V1 endpoints remain functional for backward compatibility
+- New integrations should use V2 endpoints
+- Gradual migration recommended for existing systems
+
+See /docs for complete V2 API documentation
+------------------------------------------------------------
 """
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Body, BackgroundTasks

@@ -1,6 +1,32 @@
 """
 Delivery API endpoints for managing deliveries
 Provides REST API for delivery operations
+
+⚠️ COMPATIBILITY NOTICE:
+------------------------------------------------------------
+V2 Delivery Management API is now available with DDD architecture!
+
+**New V2 Endpoints (Recommended):**
+- /api/v2/delivery/deliveries - Full DDD-powered delivery lifecycle
+- /api/v2/delivery/drivers - Driver management with availability tracking
+
+**Key V2 Improvements:**
+✅ Domain-Driven Design architecture with rich business rules
+✅ Strict state machine enforcement (pending → assigned → in_transit → delivered)
+✅ Real-time location tracking with Haversine distance calculation
+✅ Delivery zones with geographic boundary validation
+✅ Time window scheduling with guaranteed delivery support
+✅ Proof of delivery (signature and photos)
+✅ Comprehensive domain events for audit trails
+✅ Better separation of concerns and maintainability
+
+**Migration Path:**
+- V1 endpoints remain functional for backward compatibility
+- New integrations should use V2 endpoints
+- Gradual migration recommended for existing systems
+
+See /docs for complete V2 API documentation
+------------------------------------------------------------
 """
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Body, WebSocket, WebSocketDisconnect
