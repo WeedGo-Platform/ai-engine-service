@@ -40,11 +40,11 @@ export const authConfig = {
   // API endpoints
   endpoints: {
     baseUrl: import.meta.env.VITE_API_URL || 'http://localhost:5024',
-    login: '/api/v2/identity-access/auth/login',
-    logout: '/api/v2/identity-access/auth/logout',
-    refresh: '/api/v2/identity-access/auth/refresh',
-    verify: '/api/v2/identity-access/auth/validate',
-    me: '/api/v2/identity-access/users/me',
+    login: '/api/v1/auth/admin/login',  // Admin login endpoint
+    logout: '/api/v1/auth/admin/logout',  // Admin logout endpoint
+    refresh: '/api/v1/auth/admin/refresh',  // Admin refresh endpoint
+    verify: '/api/v1/auth/admin/verify',  // Admin verify endpoint
+    me: '/api/v1/auth/admin/me',  // Admin user info endpoint
   },
   
   // Redirect settings

@@ -8,7 +8,7 @@ All endpoints use domain-driven design with aggregates, value objects, and domai
 
 from fastapi import APIRouter, HTTPException, Query, Depends, status
 from typing import List, Optional
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from uuid import UUID, uuid4
 
 from api.v2.dto_mappers import (
@@ -44,6 +44,31 @@ from api.v2.dto_mappers import (
     map_account_security_to_dto,
 )
 
+from pydantic import BaseModel, Field
+from typing import Dict, Any
+
+# Additional response model for login that includes tokens
+class FrontendUserDTO(BaseModel):
+    """User format expected by frontend"""
+    user_id: str
+    email: str
+    role: str
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    tenant_id: Optional[str] = None
+    store_role: Optional[str] = None
+    tenants: List[Dict[str, Any]] = Field(default_factory=list)
+    stores: List[Dict[str, Any]] = Field(default_factory=list)
+
+class LoginResponseDTO(BaseModel):
+    """Login response with user data and tokens"""
+    user: FrontendUserDTO
+    access_token: str
+    refresh_token: str
+    token_type: str = "Bearer"
+    expires_in: int = 3600  # Default 1 hour
+    permissions: List[str]
+
 from ddd_refactored.domain.identity_access.entities.user import (
     User,
     UserStatus,
@@ -63,7 +88,7 @@ async def get_current_user():
 
 
 router = APIRouter(
-    prefix="/api/v2/identity",
+    prefix="/v2/identity-access",
     tags=["👤 Identity & Access Management V2"]
 )
 
@@ -138,10 +163,10 @@ async def register_user(
         raise HTTPException(status_code=422, detail=str(e))
 
 
-@router.post("/auth/login", response_model=UserDTO)
+@router.post("/auth/login", response_model=LoginResponseDTO)
 async def login(
     request: LoginRequest,
-    tenant_id: str = Query(..., description="Tenant ID"),
+    tenant_id: Optional[str] = Query(None, description="Tenant ID"),  # Made optional for testing
 ):
     """
     Authenticate user and start session.
@@ -169,8 +194,140 @@ async def login(
         # if not user:
         #     raise HTTPException(status_code=401, detail="Invalid email or password")
 
-        # For now, create mock user
-        raise HTTPException(status_code=404, detail="User not found - database integration pending")
+        # For now, return mock admin user for testing
+        # Accept any email/password for testing
+
+        # Create a complete mock UserDTO with all required fields
+        user_id = str(uuid4())
+        now = datetime.utcnow()
+
+        # Create nested DTOs
+        verification_status = VerificationStatusDTO(
+            email_verified=True,
+            email_verified_at=now.isoformat(),
+            phone_verified=False,
+            phone_verified_at=None,
+            age_verified=True,
+            age_verified_at=now.isoformat(),
+            is_fully_verified=False
+        )
+
+        security_info = AccountSecurityDTO(
+            two_factor_enabled=False,
+            failed_login_attempts=0,
+            last_failed_login=None,
+            account_locked_until=None,
+            is_account_locked=False,
+            last_login_at=now.isoformat(),
+            last_login_ip=request.ip_address or "127.0.0.1",
+            login_count=1
+        )
+
+        # Create complete UserDTO with all required fields
+        user_dto = UserDTO(
+            id=user_id,
+            email=request.email,
+            phone=None,
+            username=request.email.split('@')[0],
+            user_type="admin",
+            status="active",
+            auth_provider="email",
+            provider_user_id=None,
+
+            # Personal Information
+            first_name="Admin",
+            last_name="User",
+            full_name="Admin User",
+            display_name="Admin",
+            date_of_birth=None,
+            age=None,
+            gender=None,
+
+            # Nested DTOs
+            verification=verification_status,
+            security=security_info,
+
+            # Permissions
+            permissions=["system:*"],
+            roles=["admin", "super_admin"],
+
+            # Activity
+            last_activity_at=now.isoformat(),
+
+            # Preferences
+            language="en",
+            timezone="America/Toronto",
+            currency="CAD",
+            notifications_enabled=True,
+            marketing_emails_enabled=False,
+
+            # Metadata
+            metadata={"login_method": "password"},
+            tags=["admin", "verified"],
+
+            # Flags
+            can_make_purchase=True,
+            is_active=True,
+
+            # Timestamps
+            created_at=(now.isoformat() if now else datetime.utcnow().isoformat()),
+            updated_at=(now.isoformat() if now else datetime.utcnow().isoformat()),
+
+            # Domain Events
+            events=["UserLoggedIn"]
+        )
+
+        # Create simplified frontend user format
+        frontend_user = FrontendUserDTO(
+            user_id=user_id,
+            email=request.email,
+            role="super_admin",  # Primary role for frontend
+            first_name="Admin",
+            last_name="User",
+            tenant_id="ce2d57bc-b3ba-4801-b229-889a9fe9626d",
+            store_role=None,
+            tenants=[
+                {
+                    "id": "ce2d57bc-b3ba-4801-b229-889a9fe9626d",
+                    "name": "Demo Tenant",
+                    "code": "DEMO",
+                    "role": "owner"
+                }
+            ],
+            stores=[]
+        )
+
+        # Generate real JWT tokens using the authentication system
+        from core.authentication import get_auth
+        auth = get_auth()
+
+        # Debug: Log the JWT secret being used
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.info(f"Login endpoint JWT secret (first 10 chars): {auth.secret_key[:10] if auth.secret_key else 'None'}")
+
+        # Create token payload with admin role
+        token_data = {
+            'user_id': user_id,
+            'email': request.email,
+            'role': 'admin',  # Admin role for admin dashboard access
+            'tenant_id': "ce2d57bc-b3ba-4801-b229-889a9fe9626d",
+            'session_id': f"session_{user_id}"
+        }
+
+        # Generate real JWT tokens
+        access_token = auth.create_access_token(token_data)
+        refresh_token = auth.create_refresh_token(token_data)
+
+        # Return LoginResponseDTO with real JWT tokens
+        return LoginResponseDTO(
+            user=frontend_user,
+            access_token=access_token,
+            refresh_token=refresh_token,
+            token_type="Bearer",
+            expires_in=auth.access_token_expire_minutes * 60,  # Convert to seconds
+            permissions=["system:*"]
+        )
 
         # Check if account is locked
         # if user.is_account_locked():
@@ -232,9 +389,15 @@ async def logout(
 # User Profile Management
 # ============================================================================
 
-@router.get("/users/me", response_model=UserDTO)
+# Create a new response model for getCurrentUser endpoint
+class CurrentUserResponseDTO(BaseModel):
+    """Response for getCurrentUser endpoint"""
+    user: FrontendUserDTO
+    permissions: List[str]
+
+@router.get("/users/me", response_model=CurrentUserResponseDTO)
 async def get_current_user_profile(
-    tenant_id: str = Query(..., description="Tenant ID"),
+    tenant_id: Optional[str] = Query(None, description="Tenant ID"),  # Made optional for now
     current_user: dict = Depends(get_current_user),
 ):
     """
@@ -242,18 +405,41 @@ async def get_current_user_profile(
 
     **Returns:**
     - Complete user details
-    - Verification status
-    - Security settings
-    - Preferences
+    - Permissions
     """
     # TODO: Load from database
     # user = await user_repository.find_by_id(UUID(current_user["id"]))
     # if not user:
     #     raise HTTPException(status_code=404, detail="User not found")
 
-    # return map_user_to_dto(user)
+    # For now, return mock user for testing
+    user_id = current_user.get("id", "user-123")
 
-    raise HTTPException(status_code=404, detail="User not found - database integration pending")
+    # Create simplified frontend user format
+    frontend_user = FrontendUserDTO(
+        user_id=user_id,
+        email="admin@weedgo.ca",
+        role="super_admin",
+        first_name="Admin",
+        last_name="User",
+        tenant_id="ce2d57bc-b3ba-4801-b229-889a9fe9626d",
+        store_role=None,
+        tenants=[
+            {
+                "id": "ce2d57bc-b3ba-4801-b229-889a9fe9626d",
+                "name": "Demo Tenant",
+                "code": "DEMO",
+                "role": "owner"
+            }
+        ],
+        stores=[]
+    )
+
+    # Return response with user and permissions
+    return CurrentUserResponseDTO(
+        user=frontend_user,
+        permissions=["system:*"]
+    )
 
 
 @router.put("/users/me/profile", response_model=UserDTO)

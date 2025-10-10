@@ -152,6 +152,7 @@ class AuthService {
    * Login admin user
    */
   async login(email: string, password: string, rememberMe: boolean = false): Promise<LoginResponse> {
+    // Admin login doesn't require tenant_id
     const response = await authApi.post<LoginResponse>(authConfig.endpoints.login, {
       email,
       password,
@@ -185,6 +186,7 @@ class AuthService {
    * Get current user information
    */
   async getCurrentUser(): Promise<CurrentUserResponse> {
+    // Admin endpoints don't need tenant_id
     const response = await api.get<CurrentUserResponse>(authConfig.endpoints.me);
     return response.data;
   }
