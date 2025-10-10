@@ -30,7 +30,7 @@ class ChatAPI {
    * Create a new chat session
    */
   async createSession(agent = 'dispensary', personality = 'friendly'): Promise<ChatSession> {
-    const response = await apiClient.post('/chat/session', {
+    const response = await apiClient.post('/api/v2/ai-conversation/sessions', {
       agent,
       personality,
     });
@@ -41,7 +41,7 @@ class ChatAPI {
    * Get session details
    */
   async getSession(sessionId: string): Promise<ChatSession> {
-    const response = await apiClient.get(`/chat/session/${sessionId}`);
+    const response = await apiClient.get(`/api/v2/ai-conversation/sessions/${sessionId}`);
     return response.data as ChatSession;
   }
 
@@ -49,7 +49,7 @@ class ChatAPI {
    * Send a message to the chat
    */
   async sendMessage(sessionId: string, message: string, userId?: string): Promise<any> {
-    const response = await apiClient.post('/chat/message', {
+    const response = await apiClient.post('/api/v2/ai-conversation/messages', {
       session_id: sessionId,
       message,
       user_id: userId,
@@ -61,14 +61,14 @@ class ChatAPI {
    * End a chat session
    */
   async endSession(sessionId: string): Promise<void> {
-    await apiClient.delete(`/chat/session/${sessionId}`);
+    await apiClient.delete(`/api/v2/ai-conversation/sessions/${sessionId}`);
   }
 
   /**
    * Get chat history for a user
    */
   async getChatHistory(userId: string, limit = 20): Promise<ChatHistoryItem[]> {
-    const response = await apiClient.get(`/chat/history/${userId}`, {
+    const response = await apiClient.get(`/api/v2/ai-conversation/history/${userId}`, {
       params: { limit },
     });
     return response.data.history || [];
@@ -78,7 +78,7 @@ class ChatAPI {
    * Get active sessions
    */
   async getActiveSessions(): Promise<any> {
-    const response = await apiClient.get('/chat/sessions');
+    const response = await apiClient.get('/api/v2/ai-conversation/sessions');
     return response.data as ChatSession;
   }
 }

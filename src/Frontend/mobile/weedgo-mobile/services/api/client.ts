@@ -253,7 +253,7 @@ class ApiClient {
   }
 
   private async refreshAccessToken(refreshToken: string) {
-    return axios.post(`${API_URL}/api/v1/auth/refresh`, null, {
+    return axios.post(`${API_URL}/api/v2/identity-access/auth/refresh`, null, {
       headers: {
         Authorization: `Bearer ${refreshToken}`,
         'X-Tenant-ID': TENANT_ID,

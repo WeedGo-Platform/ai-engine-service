@@ -48,12 +48,12 @@ interface DeliveryDriver {
 export const deliveryService = {
   // Calculate delivery fee
   calculateFee: (data: DeliveryFeeRequest): Promise<ApiResponse<DeliveryFeeResponse>> => {
-    return apiClient.post('/delivery/calculate-fee', data);
+    return apiClient.post('/api/v2/delivery/calculate-fee', data);
   },
 
   // Get delivery zones
   getDeliveryZones: (storeId: string): Promise<ApiResponse<DeliveryZone[]>> => {
-    return apiClient.get(`/delivery/zones/${storeId}`);
+    return apiClient.get(`/api/v2/delivery/zones/store/${storeId}`);
   },
 
   // Check if address is in delivery zone
@@ -65,7 +65,7 @@ export const deliveryService = {
     zone?: string;
     message?: string;
   }>> => {
-    return apiClient.post('/delivery/check-availability', data);
+    return apiClient.post('/api/v2/delivery/zones/check', data);
   },
 
   // Get estimated delivery time
@@ -78,7 +78,7 @@ export const deliveryService = {
     rush_hour: boolean;
     weather_delay: boolean;
   }>> => {
-    return apiClient.post('/delivery/estimated-time', data);
+    return apiClient.post('/api/v2/delivery/estimate', data);
   },
 
   // Track delivery
@@ -96,12 +96,12 @@ export const deliveryService = {
       message: string;
     }>;
   }>> => {
-    return apiClient.get(`/delivery/track/${orderId}`);
+    return apiClient.get(`/api/v2/delivery/track/${orderId}`);
   },
 
   // Get delivery instructions templates
   getInstructionTemplates: (): Promise<ApiResponse<string[]>> => {
-    return apiClient.get('/delivery/instruction-templates');
+    return apiClient.get('/api/v2/delivery/instructions/templates');
   },
 
   // Report delivery issue
@@ -113,7 +113,8 @@ export const deliveryService = {
     ticket_id: string;
     status: string;
   }>> => {
-    return apiClient.post(`/delivery/report-issue/${orderId}`, data);
+    // Note: Need delivery_id, using orderId as placeholder
+    return apiClient.post(`/api/v2/delivery/${orderId}/issues`, data);
   },
 
   // Rate delivery experience
@@ -127,7 +128,7 @@ export const deliveryService = {
       order_condition: boolean;
     };
   }): Promise<ApiResponse<void>> => {
-    return apiClient.post(`/delivery/rate/${orderId}`, data);
+    return apiClient.post(`/api/v2/customer-engagement/reviews`, { ...data, order_id: orderId });
   },
 
   // Get delivery history
@@ -145,7 +146,7 @@ export const deliveryService = {
     }>;
     total: number;
   }>> => {
-    return apiClient.get('/delivery/history', { params });
+    return apiClient.get('/api/v2/delivery/history', { params });
   },
 
   // Schedule delivery
@@ -157,11 +158,11 @@ export const deliveryService = {
     confirmation_id: string;
     scheduled_time: string;
   }>> => {
-    return apiClient.post('/delivery/schedule', data);
+    return apiClient.post('/api/v2/delivery/schedule', data);
   },
 
   // Cancel scheduled delivery
   cancelScheduledDelivery: (confirmationId: string): Promise<ApiResponse<void>> => {
-    return apiClient.delete(`/delivery/schedule/${confirmationId}`);
+    return apiClient.delete(`/api/v2/delivery/schedule/${confirmationId}`);
   },
 };

@@ -11,7 +11,7 @@ class StoreService {
       console.warn('No tenant ID configured');
       return [];
     }
-    const response = await apiClient.get<Store[]>(`/api/stores/tenant/${tenantId}`);
+    const response = await apiClient.get<Store[]>(`/api/v2/tenants/${tenantId}/stores`);
     return response.data;
   }
 
@@ -19,7 +19,7 @@ class StoreService {
    * Get specific store details
    */
   async getStoreDetails(storeId: string): Promise<Store> {
-    const response = await apiClient.get<Store>(`/api/stores/${storeId}`);
+    const response = await apiClient.get<Store>(`/api/v2/tenants/stores/${storeId}`);
     return response.data;
   }
 
@@ -27,7 +27,7 @@ class StoreService {
    * Get store hours
    */
   async getStoreHours(storeId: string): Promise<StoreHours> {
-    const response = await apiClient.get<StoreHours>(`/api/stores/${storeId}/hours`);
+    const response = await apiClient.get<StoreHours>(`/api/v2/tenants/stores/${storeId}/hours`);
     return response.data;
   }
 
@@ -48,7 +48,7 @@ class StoreService {
       next_open_time: string;
       delivery_available: boolean;
       pickup_available: boolean;
-    }>(`/api/stores/${storeId}/availability`, { params });
+    }>(`/api/v2/tenants/stores/${storeId}/availability`, { params });
 
     return response.data;
   }
@@ -63,7 +63,7 @@ class StoreService {
         params.latitude = latitude;
         params.longitude = longitude;
       }
-      const response = await apiClient.get<Store[]>('/api/stores/nearby', { params });
+      const response = await apiClient.get<Store[]>('/api/v2/tenants/stores/nearby', { params });
       return response.data;
     } catch (error) {
       console.error('Failed to get nearby stores:', error);
@@ -72,7 +72,7 @@ class StoreService {
   }
 
   async getNearestStore(lat: number, lng: number): Promise<Store> {
-    const response = await apiClient.get<Store>('/api/stores/nearest', {
+    const response = await apiClient.get<Store>('/api/v2/tenants/stores/nearest', {
       params: { lat, lng },
     });
     return response.data;
@@ -82,7 +82,7 @@ class StoreService {
    * Get stores by postal code
    */
   async getStoresByPostalCode(postalCode: string): Promise<Store[]> {
-    const response = await apiClient.get<Store[]>('/api/stores/by-postal', {
+    const response = await apiClient.get<Store[]>('/api/v2/tenants/stores/by-postal-code', {
       params: { postal_code: postalCode },
     });
     return response.data;
@@ -105,8 +105,8 @@ class StoreService {
       fee: number;
       minimum_order: number;
       estimated_time: string;
-    }>(`/api/stores/${storeId}/delivery-check`, {
-      params: { postal_code: postalCode },
+    }>(`/api/v2/delivery/zones/check`, {
+      params: { store_id: storeId, postal_code: postalCode },
     });
 
     return response.data;
@@ -116,7 +116,7 @@ class StoreService {
    * Get store delivery zones
    */
   async getDeliveryZones(storeId: string): Promise<any[]> {
-    const response = await apiClient.get<any[]>(`/api/stores/${storeId}/delivery-zones`);
+    const response = await apiClient.get<any[]>(`/api/v2/delivery/zones/store/${storeId}`);
     return response.data;
   }
 
@@ -124,7 +124,7 @@ class StoreService {
    * Get store promotions
    */
   async getStorePromotions(storeId: string): Promise<any[]> {
-    const response = await apiClient.get<any[]>(`/api/stores/${storeId}/promotions`);
+    const response = await apiClient.get<any[]>(`/api/v2/pricing-promotions/store/${storeId}`);
     return response.data;
   }
 
@@ -139,7 +139,7 @@ class StoreService {
       reviews: any[];
       total: number;
       rating: number;
-    }>(`/api/stores/${storeId}/reviews`, { params });
+    }>(`/api/v2/customer-engagement/reviews/store/${storeId}`, { params });
 
     return response.data;
   }
@@ -155,7 +155,7 @@ class StoreService {
       order_id?: string;
     }
   ): Promise<void> {
-    await apiClient.post(`/api/stores/${storeId}/reviews`, data);
+    await apiClient.post(`/api/v2/customer-engagement/reviews`, { ...data, store_id: storeId });
   }
 }
 

@@ -20,7 +20,7 @@ class AuthService {
    */
   async checkPhone(phone: string): Promise<CheckPhoneResponse> {
     const response = await apiClient.post<CheckPhoneResponse>(
-      '/api/v1/auth/customer/check-phone',
+      '/api/v2/identity-access/auth/check-phone',
       { phone } as CheckPhoneRequest
     );
     return response.data;
@@ -31,7 +31,7 @@ class AuthService {
    */
   async register(data: RegisterRequest): Promise<RegisterResponse> {
     const response = await apiClient.post<RegisterResponse>(
-      '/api/v1/auth/customer/register',
+      '/api/v2/identity-access/users',
       data
     );
     return response.data;
@@ -42,7 +42,7 @@ class AuthService {
    */
   async login(data: { email: string; password: string }): Promise<LoginResponse> {
     const response = await apiClient.post<LoginResponse>(
-      '/api/v1/auth/customer/login',
+      '/api/v2/identity-access/auth/login',
       data
     );
     return response.data;
@@ -53,7 +53,7 @@ class AuthService {
    */
   async verifyOTP(data: VerifyOTPRequest): Promise<VerifyOTPResponse> {
     const response = await apiClient.post<VerifyOTPResponse>(
-      '/api/v1/auth/otp/verify',
+      '/api/v2/identity-access/auth/verify-otp',
       data
     );
 
@@ -73,7 +73,7 @@ class AuthService {
    */
   async resendOTP(phone: string, sessionId: string): Promise<{ success: boolean }> {
     const response = await apiClient.post<{ success: boolean }>(
-      '/api/v1/auth/otp/resend',
+      '/api/v2/identity-access/auth/resend-otp',
       { phone, session_id: sessionId }
     );
     return response.data;
@@ -91,7 +91,7 @@ class AuthService {
     }
 
     const response = await apiClient.post<RefreshTokenResponse>(
-      '/api/v1/auth/refresh',
+      '/api/v2/identity-access/auth/refresh',
       null,
       {
         headers: {
@@ -115,16 +115,11 @@ class AuthService {
    * Logout the user
    */
   async logout(): Promise<void> {
-    // Note: Logout endpoint not yet implemented in backend
-    // For now, just clear local tokens
-    // TODO: Uncomment when backend implements /api/v1/auth/logout
-    /*
     try {
-      await apiClient.post('/api/v1/auth/logout');
+      await apiClient.post('/api/v2/identity-access/auth/logout');
     } catch (error) {
       console.error('Logout API call failed:', error);
     }
-    */
 
     // Clear local tokens
     await apiClient.logout();
@@ -142,7 +137,7 @@ class AuthService {
    */
   async validateToken(): Promise<boolean> {
     try {
-      const response = await apiClient.get('/api/v1/auth/validate');
+      const response = await apiClient.get('/api/v2/identity-access/auth/validate');
       return response.data.valid === true;
     } catch (error) {
       return false;
@@ -174,7 +169,7 @@ class AuthService {
       success: boolean;
       message: string;
       session_id: string;
-    }>('/api/v1/auth/password-reset/request', data);
+    }>('/api/v2/identity-access/auth/password-reset', data);
     return response.data;
   }
 
@@ -191,7 +186,7 @@ class AuthService {
     const response = await apiClient.post<{
       success: boolean;
       message: string;
-    }>('/api/v1/auth/password-reset/verify', data);
+    }>('/api/v2/identity-access/auth/verify-reset', data);
     return response.data;
   }
 
@@ -208,7 +203,7 @@ class AuthService {
     const response = await apiClient.post<{
       success: boolean;
       message: string;
-    }>('/api/v1/auth/password-reset/reset', data);
+    }>('/api/v2/identity-access/auth/reset-password', data);
     return response.data;
   }
 }
