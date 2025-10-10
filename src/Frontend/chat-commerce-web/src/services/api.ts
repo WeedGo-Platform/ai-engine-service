@@ -72,12 +72,12 @@ export const chatApi = {
       message,
       session_id: sessionId
     };
-    
+
     // Only include agent_id if it's provided and not empty
     if (agentId && agentId.trim()) {
       payload.agent_id = agentId;
     }
-    
+
     // Include user_id if provided or get from localStorage
     if (userId) {
       payload.user_id = userId;
@@ -95,8 +95,8 @@ export const chatApi = {
         }
       }
     }
-    
-    const response = await api.post('/api/v1/chat/message', payload);
+
+    const response = await api.post('/api/v2/ai-conversation/messages', payload);
     return response.data;
   }
 };
@@ -106,25 +106,25 @@ export const voiceApi = {
   // Get available voices
   getVoices: async () => {
     try {
-      const response = await api.get('/api/v1/auth/voice/voices');
+      const response = await api.get('/api/v2/ai-conversation/voice/voices');
       return response.data.voices || response.data || [];
     } catch (error) {
       console.error('Failed to get voices:', error);
       return [];
     }
   },
-  
+
   // Change selected voice
   changeVoice: async (voiceId: string) => {
     try {
-      const response = await api.post('/api/v1/auth/voice/voice', { voice_id: voiceId });
+      const response = await api.post('/api/v2/ai-conversation/voice', { voice_id: voiceId });
       return response.data;
     } catch (error) {
       console.error('Failed to change voice:', error);
       throw error;
     }
   },
-  
+
   // Synthesize speech using backend Piper TTS
   synthesize: async (text: string, voice?: string) => {
     try {
@@ -135,14 +135,14 @@ export const voiceApi = {
       }
       formData.append('speed', '1.0');
       formData.append('format', 'wav');
-      
-      const response = await api.post('/api/v1/auth/voice/synthesize', formData, {
+
+      const response = await api.post('/api/v2/ai-conversation/voice/synthesize', formData, {
         responseType: 'blob',
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      
+
       return response.data;
     } catch (error) {
       console.error('Failed to synthesize speech:', error);
@@ -156,7 +156,7 @@ export const authApi = {
   // Login with email and password
   login: async (data: { email: string; password: string }) => {
     try {
-      const response = await api.post('/api/v1/auth/customer/login', data);
+      const response = await api.post('/api/v2/identity-access/auth/customer/login', data);
       // Store token on successful login
       if (response.data.access_token) {
         localStorage.setItem('access_token', response.data.access_token);
@@ -168,18 +168,18 @@ export const authApi = {
       throw error;
     }
   },
-  
+
   // Register new user
-  register: async (data: { 
-    email: string; 
-    password: string; 
-    first_name: string; 
-    last_name: string; 
-    date_of_birth: string; 
-    phone: string 
+  register: async (data: {
+    email: string;
+    password: string;
+    first_name: string;
+    last_name: string;
+    date_of_birth: string;
+    phone: string
   }) => {
     try {
-      const response = await api.post('/api/v1/auth/customer/register', data);
+      const response = await api.post('/api/v2/identity-access/auth/customer/register', data);
       // Store token on successful registration
       if (response.data.access_token) {
         localStorage.setItem('access_token', response.data.access_token);
@@ -191,11 +191,11 @@ export const authApi = {
       throw error;
     }
   },
-  
+
   // Logout user
   logout: async () => {
     try {
-      await api.post('/api/v1/auth/customer/logout');
+      await api.post('/api/v2/identity-access/auth/customer/logout');
       // Clear local storage
       localStorage.removeItem('access_token');
       localStorage.removeItem('user');
@@ -208,44 +208,44 @@ export const authApi = {
       throw error;
     }
   },
-  
+
   // Verify token
   verifyToken: async () => {
     try {
-      const response = await api.get('/api/v1/auth/customer/verify');
+      const response = await api.get('/api/v2/identity-access/auth/customer/validate');
       return response.data;
     } catch (error) {
       console.error('Token verification failed:', error);
       throw error;
     }
   },
-  
+
   // Get current user info
   getCurrentUser: async () => {
     try {
-      const response = await api.get('/api/v1/auth/customer/me');
+      const response = await api.get('/api/v2/identity-access/users/me');
       return response.data;
     } catch (error) {
       console.error('Failed to get user info:', error);
       throw error;
     }
   },
-  
+
   // Send OTP for login
   sendOTP: async (email: string) => {
     try {
-      const response = await api.post('/api/v1/auth/otp/send', { email });
+      const response = await api.post('/api/v2/identity-access/auth/otp/send', { email });
       return response.data;
     } catch (error) {
       console.error('Send OTP failed:', error);
       throw error;
     }
   },
-  
+
   // Verify OTP and login
   verifyOTP: async (email: string, otp: string) => {
     try {
-      const response = await api.post('/api/v1/auth/otp/verify', { email, otp });
+      const response = await api.post('/api/v2/identity-access/auth/otp/verify', { email, otp });
       // Store token on successful OTP verification
       if (response.data.access_token) {
         localStorage.setItem('access_token', response.data.access_token);
