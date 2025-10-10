@@ -40,8 +40,11 @@ class SecureConfigLoader:
                 if Path(env_path).exists():
                     load_dotenv(env_path)
                     break
-        
+
         self.config = {}
+        # Generate consistent secrets once at initialization
+        self._jwt_secret = None
+        self._api_key_salt = None
         self._load_configuration()
         self._validate_required()
     
@@ -73,34 +76,44 @@ class SecureConfigLoader:
             if isinstance(value, dict):
                 result[key] = self._override_with_env(value)
             else:
-                # Check for environment variable
-                env_key = self._get_env_key(key)
-                env_value = os.environ.get(env_key)
-                
-                if env_value is not None:
-                    # Type conversion based on original value
-                    if isinstance(value, bool):
-                        result[key] = env_value.lower() in ('true', '1', 'yes')
-                    elif isinstance(value, int):
-                        try:
-                            result[key] = int(env_value)
-                        except ValueError:
-                            result[key] = value
-                    elif isinstance(value, float):
-                        try:
-                            result[key] = float(env_value)
-                        except ValueError:
-                            result[key] = value
-                    else:
-                        result[key] = env_value
-                else:
-                    # Check if it's a placeholder like ${VAR_NAME}
+                # Skip environment variable override for certain keys that conflict with system variables
+                # Specifically avoid overriding "path" keys with system PATH variable
+                if key.lower() in ['path', 'home', 'user', 'shell', 'term']:
+                    # Only check for placeholders, not environment variables
                     if isinstance(value, str) and value.startswith('${') and value.endswith('}'):
                         var_name = value[2:-1]
-                        result[key] = os.environ.get(var_name, '')
+                        result[key] = os.environ.get(var_name, value)
                     else:
                         result[key] = value
-        
+                else:
+                    # Check for environment variable
+                    env_key = self._get_env_key(key)
+                    env_value = os.environ.get(env_key)
+
+                    if env_value is not None:
+                        # Type conversion based on original value
+                        if isinstance(value, bool):
+                            result[key] = env_value.lower() in ('true', '1', 'yes')
+                        elif isinstance(value, int):
+                            try:
+                                result[key] = int(env_value)
+                            except ValueError:
+                                result[key] = value
+                        elif isinstance(value, float):
+                            try:
+                                result[key] = float(env_value)
+                            except ValueError:
+                                result[key] = value
+                        else:
+                            result[key] = env_value
+                    else:
+                        # Check if it's a placeholder like ${VAR_NAME}
+                        if isinstance(value, str) and value.startswith('${') and value.endswith('}'):
+                            var_name = value[2:-1]
+                            result[key] = os.environ.get(var_name, value)
+                        else:
+                            result[key] = value
+
         return result
     
     def _get_env_key(self, key: str) -> str:
@@ -175,11 +188,17 @@ class SecureConfigLoader:
     
     def get_security_config(self) -> Dict[str, Any]:
         """Get security configuration"""
+        # Use consistent secrets - generate once on first access, then reuse
+        if self._jwt_secret is None:
+            self._jwt_secret = os.environ.get('JWT_SECRET') or self._generate_secret()
+        if self._api_key_salt is None:
+            self._api_key_salt = os.environ.get('API_KEY_SALT') or self._generate_secret()
+
         return {
-            'jwt_secret': os.environ.get('JWT_SECRET', self._generate_secret()),
+            'jwt_secret': self._jwt_secret,
             'jwt_algorithm': os.environ.get('JWT_ALGORITHM', 'HS256'),
             'jwt_expiry_hours': int(os.environ.get('JWT_EXPIRY_HOURS', 24)),
-            'api_key_salt': os.environ.get('API_KEY_SALT', self._generate_secret()),
+            'api_key_salt': self._api_key_salt,
             'enable_auth': os.environ.get('ENABLE_AUTH', 'false').lower() == 'true',
             'enable_rate_limit': os.environ.get('RATE_LIMIT_ENABLED', 'true').lower() == 'true',
             'rate_limit_per_minute': int(os.environ.get('RATE_LIMIT_PER_MINUTE', 60)),

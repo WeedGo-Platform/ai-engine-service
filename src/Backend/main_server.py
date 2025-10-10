@@ -216,19 +216,20 @@ async def lifespan(app: FastAPI):
                     logger.warning("⚠️ Agent pool does not have set_context_manager method, skipping bridge")
             except Exception as e:
                 logger.warning(f"⚠️ Failed to bridge context manager: {e}, continuing...")
-
-            # Initialize unified chat system with database-backed storage
-            logger.info("Initializing unified chat system...")
-            try:
-                from api.chat_integration import initialize_unified_chat_system
-                chat_service = await initialize_unified_chat_system()
-                app.state.chat_service = chat_service
-                logger.info("✅ Unified chat system initialized with database storage and cleanup")
-            except Exception as e:
-                logger.error(f"❌ Failed to initialize unified chat system: {e}", exc_info=True)
-                logger.warning("Continuing without unified chat system")
         else:
-            logger.warning("⚠️ Agent pool not initialized, context manager not bridged")
+            logger.warning("⚠️ v5_engine.agent_pool not initialized, context manager not bridged")
+
+        # Initialize unified chat system with database-backed storage
+        # This should happen regardless of v5_engine.agent_pool as it uses get_agent_pool()
+        logger.info("Initializing unified chat system...")
+        try:
+            from api.chat_integration import initialize_unified_chat_system
+            chat_service = await initialize_unified_chat_system()
+            app.state.chat_service = chat_service
+            logger.info("✅ Unified chat system initialized with database storage and cleanup")
+        except Exception as e:
+            logger.error(f"❌ Failed to initialize unified chat system: {e}", exc_info=True)
+            logger.warning("Continuing without unified chat system")
 
         # Auto-load smallest model with dispensary agent and zac personality on startup
         logger.info("Auto-loading default model configuration...")
@@ -491,6 +492,8 @@ try:
     logger.info("✅ Unified chat routes registered successfully")
 except Exception as e:
     logger.error(f"❌ Failed to register unified chat routes: {e}", exc_info=True)
+
+# Legacy chat routes removed - clients must use /api/v1/chat/* endpoints
 
 app.include_router(tenant_router)  # Tenant management endpoints
 

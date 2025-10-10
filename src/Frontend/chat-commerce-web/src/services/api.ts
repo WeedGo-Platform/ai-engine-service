@@ -96,7 +96,7 @@ export const chatApi = {
       }
     }
 
-    const response = await api.post('/api/v2/ai-conversation/messages', payload);
+    const response = await api.post('/api/v1/chat/message', payload);
     return response.data;
   }
 };
@@ -106,7 +106,7 @@ export const voiceApi = {
   // Get available voices
   getVoices: async () => {
     try {
-      const response = await api.get('/api/v2/ai-conversation/voice/voices');
+      const response = await api.get('/api/voice/voices');
       return response.data.voices || response.data || [];
     } catch (error) {
       console.error('Failed to get voices:', error);
@@ -117,7 +117,7 @@ export const voiceApi = {
   // Change selected voice
   changeVoice: async (voiceId: string) => {
     try {
-      const response = await api.post('/api/v2/ai-conversation/voice', { voice_id: voiceId });
+      const response = await api.post('/api/voice/change', { voice_id: voiceId });
       return response.data;
     } catch (error) {
       console.error('Failed to change voice:', error);
@@ -136,7 +136,7 @@ export const voiceApi = {
       formData.append('speed', '1.0');
       formData.append('format', 'wav');
 
-      const response = await api.post('/api/v2/ai-conversation/voice/synthesize', formData, {
+      const response = await api.post('/api/voice/synthesize', formData, {
         responseType: 'blob',
         headers: {
           'Content-Type': 'multipart/form-data',

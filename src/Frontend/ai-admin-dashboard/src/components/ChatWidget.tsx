@@ -81,7 +81,7 @@ const busyActivities = [
 ];
 
 const ChatWidget: React.FC<ChatWidgetProps> = ({
-  wsUrl = 'ws://localhost:5024/chat/ws',
+  wsUrl = 'ws://localhost:5024/api/v1/chat/ws',
   defaultOpen = false,
   initialPosition = 'bottom-right',
   // theme = 'auto', // Reserved for future dark mode implementation
@@ -538,7 +538,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
       if (isOpen && user?.user_id && messages.length === 0) {
         try {
           console.log('Loading chat history for user:', user.user_id);
-          const response = await fetch(`http://localhost:5024/chat/history/${user.user_id}?limit=20`);
+          const response = await fetch(`http://localhost:5024/api/v1/chat/history/${user.user_id}?limit=20`);
 
           if (response.ok) {
             const history = await response.json();

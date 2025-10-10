@@ -86,7 +86,17 @@ const Login: React.FC = () => {
       } else if (err.message === 'Network Error') {
         setError('Unable to connect to server. Please check your connection.');
       } else {
-        setError(err.response?.data?.detail || 'An error occurred during login');
+        // Handle FastAPI validation errors which may be arrays
+        const detail = err.response?.data?.detail;
+        if (Array.isArray(detail)) {
+          // Extract validation error messages
+          const messages = detail.map((d: any) => d.msg || d.message || JSON.stringify(d)).join(', ');
+          setError(messages || 'Validation error occurred');
+        } else if (typeof detail === 'string') {
+          setError(detail);
+        } else {
+          setError('An error occurred during login');
+        }
       }
     } finally {
       setLoading(false);
