@@ -689,28 +689,16 @@ async def get_statistics(
     - Total discount amount given
     - Average discount percentage
     """
-    # TODO: Calculate statistics from repository
+    from ..dependencies import get_promotion_repository
 
-    return {
-        "pricing_rules": {
-            "total": 0,
-            "active": 0,
-            "inactive": 0
-        },
-        "promotions": {
-            "total": 0,
-            "active": 0,
-            "scheduled": 0,
-            "expired": 0,
-            "cancelled": 0
-        },
-        "discount_codes": {
-            "total": 0,
-            "active": 0,
-            "total_uses": 0
-        },
-        "totals": {
-            "total_discount_amount": 0.0,
-            "average_discount_percentage": 0.0
-        }
-    }
+    repository = await get_promotion_repository()
+
+    # Convert store_id to UUID if provided
+    store_uuid = UUID(store_id) if store_id else None
+
+    # Get statistics from repository
+    stats = await repository.get_statistics(
+        store_id=store_uuid
+    )
+
+    return stats
