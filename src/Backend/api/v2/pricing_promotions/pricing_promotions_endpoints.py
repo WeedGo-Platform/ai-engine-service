@@ -570,6 +570,31 @@ async def update_promotion_status(
         )
 
 
+@router.delete("/promotions/{promotion_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_promotion(
+    promotion_id: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    Delete a promotion
+
+    This will permanently remove the promotion from the system.
+    This action cannot be undone.
+    """
+    from ..dependencies import get_promotion_repository
+
+    repository = await get_promotion_repository()
+    success = await repository.delete(UUID(promotion_id))
+
+    if not success:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Promotion {promotion_id} not found"
+        )
+
+    return None
+
+
 @router.post("/promotions/{promotion_id}/discount-codes", response_model=PromotionDTO, status_code=status.HTTP_201_CREATED)
 async def generate_discount_code(
     promotion_id: str,
