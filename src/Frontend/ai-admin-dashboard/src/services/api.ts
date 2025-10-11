@@ -68,7 +68,7 @@ export const api = {
     getLowStock: () => axiosInstance.get('/api/v2/inventory/low-stock'),
     getValueReport: () => axiosInstance.get('/api/v2/inventory/value-report'),
     search: (params?: any) => axiosInstance.get('/api/v2/inventory/search', { params }),
-    getSuppliers: () => axiosInstance.get('/api/v2/purchase-orders/suppliers'),
+    getSuppliers: () => axiosInstance.get('/api/suppliers'), // V1 - preserved until V2 implementation
     checkExists: (sku: string, batchLot?: string) =>
       axiosInstance.get('/api/v2/inventory/check', { params: { sku, batch_lot: batchLot } }),
   },
@@ -107,13 +107,13 @@ export const api = {
       axiosInstance.patch(`/api/v2/identity-access/customers/${id}/loyalty`, { points }),
   },
 
-  // Suppliers
+  // Suppliers (V1 - preserved until V2 implementation)
   suppliers: {
-    getAll: (params?: any) => axiosInstance.get('/api/v2/purchase-orders/suppliers', { params }),
-    getById: (id: string) => axiosInstance.get(`/api/v2/purchase-orders/suppliers/${id}`),
-    create: (data: any) => axiosInstance.post('/api/v2/purchase-orders/suppliers', data),
-    update: (id: string, data: any) => axiosInstance.put(`/api/v2/purchase-orders/suppliers/${id}`, data),
-    delete: (id: string) => axiosInstance.delete(`/api/v2/purchase-orders/suppliers/${id}`),
+    getAll: (params?: any) => axiosInstance.get('/api/suppliers', { params }),
+    getById: (id: string) => axiosInstance.get(`/api/suppliers/${id}`),
+    create: (data: any) => axiosInstance.post('/api/suppliers', data),
+    update: (id: string, data: any) => axiosInstance.put(`/api/suppliers/${id}`, data),
+    delete: (id: string) => axiosInstance.delete(`/api/suppliers/${id}`),
   },
 
   // Purchase Orders
