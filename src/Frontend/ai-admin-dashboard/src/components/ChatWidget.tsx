@@ -109,7 +109,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
   const [totalTokens, setTotalTokens] = useState(0);
 
   // Agent and Personality State
-  const [selectedAgent, setSelectedAgent] = useState('assistant');
+  const [selectedAgent, setSelectedAgent] = useState('dispensary');
   const [selectedPersonality, setSelectedPersonality] = useState('');
   const [availableAgents, setAvailableAgents] = useState<any[]>([]);
   const [availablePersonalities, setAvailablePersonalities] = useState<any[]>([]);
@@ -184,10 +184,10 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
           const data = await response.json();
           setAvailableAgents(data.agents || []);
 
-          // If we have agents and assistant is available, fetch its personalities
-          const assistantAgent = data.agents?.find((a: any) => a.id === 'assistant');
-          if (assistantAgent) {
-            fetchPersonalities('assistant');
+          // If we have agents and dispensary is available, fetch its personalities
+          const dispensaryAgent = data.agents?.find((a: any) => a.id === 'dispensary');
+          if (dispensaryAgent) {
+            fetchPersonalities('dispensary');
           }
         }
       } catch (error) {
@@ -703,13 +703,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
           personality: data.personality,
           message: data.message
         });
-        // Optionally show a system message to confirm the change
-        setMessages(prev => [...prev, {
-          id: Date.now().toString(),
-          role: 'system',
-          content: data.message || `Agent changed to ${data.agent} with personality ${data.personality}`,
-          timestamp: new Date()
-        }]);
+        // System messages removed from chat UI - only logged to console for debugging
         break;
 
       default:
