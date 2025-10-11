@@ -67,21 +67,57 @@ export default function Promotions() {
   const { currentStore } = useStoreContext();
   const [userRole] = useState<'platform_admin' | 'tenant_admin' | 'store_manager'>('platform_admin');
 
-  // Fetch all promotions with role-based filtering
-  const { data: promotions, isLoading } = useQuery({
-    queryKey: ['promotions', userRole, currentStore?.id],
+  // Fetch all promotions with role-based filtering (V2 DDD endpoint)
+  const { data: promotionsData, isLoading } = useQuery({
+    queryKey: ['promotions-v2', userRole, currentStore?.id],
     queryFn: async () => {
-      if (!currentStore?.id) return [];
+      if (!currentStore?.id) return { promotions: [], total: 0, active_count: 0, scheduled_count: 0 };
       const params = new URLSearchParams();
       if (userRole === 'store_manager' && currentStore?.id) {
         params.append('store_id', currentStore.id);
       }
-      const url = `${API_BASE_URL}/api/promotions/list${params.toString() ? `?${params.toString()}` : ''}`;
+      params.append('page', '1');
+      params.append('page_size', '100');
+      const url = `${API_BASE_URL}/api/v2/pricing-promotions/promotions${params.toString() ? `?${params.toString()}` : ''}`;
       const response = await axios.get(url);
-      return response.data.promotions;
+      // Map V2 fields to V1 field names for UI compatibility
+      const mappedPromotions = (response.data.promotions || []).map((promo: any) => ({
+        id: promo.id,
+        name: promo.promotion_name,
+        code: promo.discount_codes?.[0]?.code || null,
+        description: promo.description,
+        type: promo.discount_type,
+        discount_type: promo.discount_type,
+        discount_value: promo.discount_value,
+        min_purchase_amount: promo.conditions?.min_purchase_amount,
+        max_discount_amount: promo.conditions?.max_discount_amount,
+        usage_limit_per_customer: promo.conditions?.usage_limit_per_customer,
+        total_usage_limit: promo.conditions?.total_usage_limit,
+        times_used: promo.total_uses || 0,
+        applies_to: promo.applicable_to,
+        category_ids: promo.category ? [promo.category] : [],
+        brand_ids: promo.brand ? [promo.brand] : [],
+        product_ids: promo.specific_skus || [],
+        stackable: promo.can_stack,
+        priority: promo.priority,
+        start_date: promo.start_date,
+        end_date: promo.end_date,
+        active: promo.status === 'active',
+        first_time_customer_only: promo.customer_segment === 'new_customers',
+        store_id: promo.store_id,
+        tenant_id: promo.tenant_id
+      }));
+      return {
+        promotions: mappedPromotions,
+        total: response.data.total,
+        active_count: response.data.active_count,
+        scheduled_count: response.data.scheduled_count
+      };
     },
     enabled: !!currentStore?.id
   });
+
+  const promotions = promotionsData?.promotions || [];
 
   // Fetch analytics from V2 DDD endpoint
   const { data: analytics } = useQuery({
@@ -92,18 +128,40 @@ export default function Promotions() {
     }
   });
 
-  // Create promotion mutation
+  // Create promotion mutation (V2 DDD endpoint)
   const createPromotion = useMutation({
     mutationFn: async (data: Partial<Promotion> & { user_role?: string }) => {
       const { user_role, ...promotionData } = data;
-      const params = new URLSearchParams();
-      if (user_role) params.append('user_role', user_role);
-      const url = `${API_BASE_URL}/api/promotions/create${params.toString() ? `?${params.toString()}` : ''}`;
-      const response = await axios.post(url, promotionData);
+      // Map V1 field names to V2 DDD structure
+      const v2Data = {
+        store_id: promotionData.store_id || currentStore?.id,
+        tenant_id: promotionData.tenant_id,
+        promotion_name: promotionData.name,
+        description: promotionData.description,
+        discount_type: promotionData.discount_type || 'percentage',
+        discount_value: promotionData.discount_value || 0,
+        applicable_to: promotionData.applies_to || 'all_products',
+        specific_skus: promotionData.product_ids || [],
+        category: promotionData.category_ids?.[0] || null,
+        brand: promotionData.brand_ids?.[0] || null,
+        customer_segment: promotionData.first_time_customer_only ? 'new_customers' : 'all',
+        can_stack: promotionData.stackable !== undefined ? promotionData.stackable : false,
+        priority: promotionData.priority || 0,
+        start_date: promotionData.start_date,
+        end_date: promotionData.end_date,
+        conditions: {
+          min_purchase_amount: promotionData.min_purchase_amount,
+          max_discount_amount: promotionData.max_discount_amount,
+          usage_limit_per_customer: promotionData.usage_limit_per_customer,
+          total_usage_limit: promotionData.total_usage_limit
+        }
+      };
+      const response = await axios.post(`${API_BASE_URL}/api/v2/pricing-promotions/promotions`, v2Data);
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['promotions'] });
+      queryClient.invalidateQueries({ queryKey: ['promotions-v2'] });
+      queryClient.invalidateQueries({ queryKey: ['promotion-analytics-v2'] });
       toast.success('Promotion created successfully!');
       setShowModal(false);
     },
@@ -112,18 +170,40 @@ export default function Promotions() {
     }
   });
 
-  // Update promotion mutation
+  // Update promotion mutation (V2 DDD endpoint)
   const updatePromotion = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: Partial<Promotion> & { user_role?: string } }) => {
       const { user_role, ...promotionData } = data;
-      const params = new URLSearchParams();
-      if (user_role) params.append('user_role', user_role);
-      const url = `${API_BASE_URL}/api/promotions/${id}${params.toString() ? `?${params.toString()}` : ''}`;
-      const response = await axios.put(url, promotionData);
+      // Map V1 field names to V2 DDD structure
+      const v2Data = {
+        store_id: promotionData.store_id || currentStore?.id,
+        tenant_id: promotionData.tenant_id,
+        promotion_name: promotionData.name,
+        description: promotionData.description,
+        discount_type: promotionData.discount_type || 'percentage',
+        discount_value: promotionData.discount_value || 0,
+        applicable_to: promotionData.applies_to || 'all_products',
+        specific_skus: promotionData.product_ids || [],
+        category: promotionData.category_ids?.[0] || null,
+        brand: promotionData.brand_ids?.[0] || null,
+        customer_segment: promotionData.first_time_customer_only ? 'new_customers' : 'all',
+        can_stack: promotionData.stackable !== undefined ? promotionData.stackable : false,
+        priority: promotionData.priority || 0,
+        start_date: promotionData.start_date,
+        end_date: promotionData.end_date,
+        conditions: {
+          min_purchase_amount: promotionData.min_purchase_amount,
+          max_discount_amount: promotionData.max_discount_amount,
+          usage_limit_per_customer: promotionData.usage_limit_per_customer,
+          total_usage_limit: promotionData.total_usage_limit
+        }
+      };
+      const response = await axios.put(`${API_BASE_URL}/api/v2/pricing-promotions/promotions/${id}`, v2Data);
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['promotions'] });
+      queryClient.invalidateQueries({ queryKey: ['promotions-v2'] });
+      queryClient.invalidateQueries({ queryKey: ['promotion-analytics-v2'] });
       toast.success('Promotion updated successfully!');
       setShowModal(false);
     },
@@ -132,13 +212,14 @@ export default function Promotions() {
     }
   });
 
-  // Delete promotion mutation
+  // Delete promotion mutation (V2 DDD endpoint)
   const deletePromotion = useMutation({
     mutationFn: async (id: string) => {
-      await axios.delete(`${API_BASE_URL}/api/promotions/${id}`);
+      await axios.delete(`${API_BASE_URL}/api/v2/pricing-promotions/promotions/${id}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['promotions'] });
+      queryClient.invalidateQueries({ queryKey: ['promotions-v2'] });
+      queryClient.invalidateQueries({ queryKey: ['promotion-analytics-v2'] });
       toast.success('Promotion deleted successfully!');
       setShowDeleteDialog(false);
       setPromotionToDelete(null);
