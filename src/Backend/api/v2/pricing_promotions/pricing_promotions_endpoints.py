@@ -420,9 +420,12 @@ async def create_promotion(
         promotion.can_stack = request.can_stack
         promotion.priority = request.priority
 
-        # TODO: Save to repository
+        # Save to repository
+        from ..dependencies import get_promotion_repository
+        repository = await get_promotion_repository()
+        saved_promotion = await repository.save(promotion)
 
-        return map_promotion_to_dto(promotion)
+        return map_promotion_to_dto(saved_promotion)
 
     except ValueError as e:
         raise HTTPException(
@@ -437,11 +440,18 @@ async def get_promotion(
     current_user: dict = Depends(get_current_user)
 ):
     """Get a promotion by ID"""
-    # TODO: Load from repository
-    raise HTTPException(
-        status_code=status.HTTP_404_NOT_FOUND,
-        detail=f"Promotion {promotion_id} not found"
-    )
+    from ..dependencies import get_promotion_repository
+
+    repository = await get_promotion_repository()
+    promotion = await repository.get_by_id(UUID(promotion_id))
+
+    if not promotion:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Promotion {promotion_id} not found"
+        )
+
+    return map_promotion_to_dto(promotion)
 
 
 @router.get("/promotions", response_model=PromotionListDTO)
@@ -455,12 +465,42 @@ async def list_promotions(
     current_user: dict = Depends(get_current_user)
 ):
     """List all promotions with optional filters"""
-    # TODO: Load from repository with filters
+    from ..dependencies import get_promotion_repository
 
-    # Placeholder response
+    repository = await get_promotion_repository()
+
+    # Convert filters
+    store_uuid = UUID(store_id) if store_id else None
+    status_filter = PromotionStatus(status.upper()) if status else None
+
+    # Calculate skip
+    skip = (page - 1) * page_size
+
+    # Get promotions from repository
+    if is_active_now:
+        # Get currently active promotions
+        promotions = await repository.get_active_promotions(
+            store_id=store_uuid or UUID(current_user.get("store_id", "00000000-0000-0000-0000-000000000000")),
+            current_time=datetime.utcnow()
+        )
+        # Apply pagination manually for active promotions
+        total = len(promotions)
+        promotions = promotions[skip:skip + page_size]
+    else:
+        # Get all promotions with filters
+        promotions = await repository.list_all(
+            store_id=store_uuid,
+            status=status_filter,
+            skip=skip,
+            limit=page_size
+        )
+        # For total count, we'd need a separate count query
+        # For now, assume the list size as total (limitation)
+        total = len(promotions) + skip
+
     return map_promotion_list_to_dto(
-        promotions=[],
-        total=0,
+        promotions=promotions,
+        total=total,
         page=page,
         page_size=page_size
     )
@@ -489,32 +529,39 @@ async def update_promotion_status(
     - any → cancelled
     """
     try:
-        # TODO: Load promotion from repository
+        from ..dependencies import get_promotion_repository
+
+        repository = await get_promotion_repository()
+        promotion = await repository.get_by_id(UUID(promotion_id))
+
+        if not promotion:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Promotion {promotion_id} not found"
+            )
 
         action = request.action.lower()
 
         # Map actions to domain methods
-        # if action == "schedule":
-        #     promotion.schedule()
-        # elif action == "activate":
-        #     promotion.activate()
-        # elif action == "pause":
-        #     promotion.pause()
-        # elif action == "resume":
-        #     promotion.resume()
-        # elif action == "expire":
-        #     promotion.expire()
-        # elif action == "cancel":
-        #     promotion.cancel()
-        # else:
-        #     raise ValueError(f"Invalid action: {action}")
+        if action == "schedule":
+            promotion.schedule()
+        elif action == "activate":
+            promotion.activate()
+        elif action == "pause":
+            promotion.pause()
+        elif action == "resume":
+            promotion.resume()
+        elif action == "expire":
+            promotion.expire()
+        elif action == "cancel":
+            promotion.cancel()
+        else:
+            raise ValueError(f"Invalid action: {action}")
 
-        # TODO: Save to repository
+        # Save updated promotion
+        updated_promotion = await repository.save(promotion)
 
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Promotion {promotion_id} not found"
-        )
+        return map_promotion_to_dto(updated_promotion)
 
     except ValueError as e:
         raise HTTPException(
