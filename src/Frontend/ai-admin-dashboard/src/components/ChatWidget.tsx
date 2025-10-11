@@ -109,8 +109,8 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
   const [totalTokens, setTotalTokens] = useState(0);
 
   // Agent and Personality State
-  const [selectedAgent, setSelectedAgent] = useState('dispensary');
-  const [selectedPersonality, setSelectedPersonality] = useState('marcel'); // Default to marcel for dispensary agent
+  const [selectedAgent, setSelectedAgent] = useState('assistant'); // Default to assistant agent for admin dashboard
+  const [selectedPersonality, setSelectedPersonality] = useState('rhomida'); // Default to rhomida for assistant agent
   const [availableAgents, setAvailableAgents] = useState<any[]>([]);
   const [availablePersonalities, setAvailablePersonalities] = useState<any[]>([]);
   const [loadingAgents, setLoadingAgents] = useState(false);
@@ -184,10 +184,10 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
           const data = await response.json();
           setAvailableAgents(data.agents || []);
 
-          // If we have agents and dispensary is available, fetch its personalities
-          const dispensaryAgent = data.agents?.find((a: any) => a.id === 'dispensary');
-          if (dispensaryAgent) {
-            fetchPersonalities('dispensary');
+          // If we have agents and assistant is available, fetch its personalities
+          const assistantAgent = data.agents?.find((a: any) => a.id === 'assistant');
+          if (assistantAgent) {
+            fetchPersonalities('assistant');
           }
         }
       } catch (error) {
