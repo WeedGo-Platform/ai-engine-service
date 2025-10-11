@@ -3,7 +3,7 @@ import { appConfig, getApiEndpoint } from '../config/app.config';
 
 // Create axios instance with default config
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: getApiEndpoint(''),
+  baseURL: appConfig.api.baseUrl, // Use base URL directly without /api prefix
   timeout: appConfig.api.timeout,
   headers: {
     'Content-Type': 'application/json',
