@@ -506,6 +506,81 @@ async def list_promotions(
     )
 
 
+@router.put("/promotions/{promotion_id}", response_model=PromotionDTO)
+async def update_promotion(
+    promotion_id: str,
+    request: CreatePromotionRequest,  # Reuse the create request model
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    Update a promotion's details
+
+    This endpoint allows updating all editable fields of a promotion.
+    The promotion's status is not changed by this endpoint - use the status endpoint instead.
+    """
+    try:
+        from ..dependencies import get_promotion_repository
+
+        repository = await get_promotion_repository()
+        promotion = await repository.get_by_id(UUID(promotion_id))
+
+        if not promotion:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Promotion {promotion_id} not found"
+            )
+
+        # Update fields
+        promotion.promotion_name = request.promotion_name
+        if request.description:
+            promotion.description = request.description
+
+        promotion.discount_type = DiscountType(request.discount_type)
+        promotion.discount_value = Decimal(str(request.discount_value))
+
+        # Update BOGO fields
+        if request.bogo_buy_quantity and request.bogo_get_quantity:
+            promotion.bogo_buy_quantity = request.bogo_buy_quantity
+            promotion.bogo_get_quantity = request.bogo_get_quantity
+
+        # Update applicability
+        promotion.applicable_to = ApplicableProducts(request.applicable_to)
+        if request.specific_skus:
+            promotion.specific_skus = set(request.specific_skus)
+        else:
+            promotion.specific_skus = set()
+
+        if request.category:
+            promotion.category = request.category
+        else:
+            promotion.category = None
+
+        if request.brand:
+            promotion.brand = request.brand
+        else:
+            promotion.brand = None
+
+        # Update customer targeting
+        promotion.customer_segment = CustomerSegment(request.customer_segment)
+        promotion.can_stack = request.can_stack
+        promotion.priority = request.priority
+
+        # Update dates
+        promotion.start_date = request.start_date
+        promotion.end_date = request.end_date
+
+        # Save updated promotion
+        updated_promotion = await repository.save(promotion)
+
+        return map_promotion_to_dto(updated_promotion)
+
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+
+
 @router.post("/promotions/{promotion_id}/status", response_model=PromotionDTO)
 async def update_promotion_status(
     promotion_id: str,
