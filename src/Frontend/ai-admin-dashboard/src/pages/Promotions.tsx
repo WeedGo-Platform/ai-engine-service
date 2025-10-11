@@ -59,7 +59,7 @@ export default function Promotions() {
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState<'create' | 'edit' | 'view'>('create');
   const [selectedPromotion, setSelectedPromotion] = useState<Promotion | null>(null);
-  const [activeTab, setActiveTab] = useState<'promotions' | 'tiers' | 'analytics' | 'pricing'>('promotions');
+  const [activeTab, setActiveTab] = useState<'promotions' | 'analytics' | 'pricing'>('promotions');
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [promotionToDelete, setPromotionToDelete] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -83,20 +83,11 @@ export default function Promotions() {
     enabled: !!currentStore?.id
   });
 
-  // Fetch price tiers
-  const { data: tiers } = useQuery({
-    queryKey: ['price-tiers'],
-    queryFn: async () => {
-      const response = await axios.get(`${API_BASE_URL}/api/promotions/tiers`);
-      return response.data.tiers;
-    }
-  });
-
-  // Fetch analytics
+  // Fetch analytics from V2 DDD endpoint
   const { data: analytics } = useQuery({
-    queryKey: ['promotion-analytics'],
+    queryKey: ['promotion-analytics-v2'],
     queryFn: async () => {
-      const response = await axios.get(`${API_BASE_URL}/api/promotions/analytics`);
+      const response = await axios.get(`${API_BASE_URL}/api/v2/pricing-promotions/stats`);
       return response.data;
     }
   });
@@ -256,16 +247,6 @@ export default function Promotions() {
             Active Promotions
           </button>
           <button
-            onClick={() => setActiveTab('tiers')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
-              activeTab === 'tiers'
-                ? 'border-primary-500 text-primary-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
-            }`}
-          >
-            Price Tiers
-          </button>
-          <button
             onClick={() => setActiveTab('analytics')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'analytics'
@@ -419,53 +400,6 @@ export default function Promotions() {
               </table>
             </div>
           )}
-        </div>
-      )}
-
-      {activeTab === 'tiers' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {tiers?.map((tier: any) => (
-            <div key={tier.id} className="bg-white rounded-lg  p-6">
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900">{tier.name}</h3>
-                  <p className="text-sm text-gray-500">{tier.customer_type}</p>
-                </div>
-                {tier.active && (
-                  <CheckCircle className="h-5 w-5 text-primary-500" />
-                )}
-              </div>
-              
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Discount</span>
-                  <span className="text-sm font-medium">{tier.discount_percentage}%</span>
-                </div>
-                {tier.min_order_value && (
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Min Order</span>
-                    <span className="text-sm font-medium">${tier.min_order_value}</span>
-                  </div>
-                )}
-                {tier.min_monthly_spend && (
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Monthly Spend</span>
-                    <span className="text-sm font-medium">${tier.min_monthly_spend}</span>
-                  </div>
-                )}
-                <div className="flex justify-between">
-                  <span className="text-sm text-gray-600">Priority</span>
-                  <span className="text-sm font-medium">{tier.priority}</span>
-                </div>
-              </div>
-
-              <div className="mt-4 pt-4 border-t">
-                <button className="w-full px-4 py-2 text-sm text-primary-600 hover:bg-primary-50 rounded-lg">
-                  Assign to Customers
-                </button>
-              </div>
-            </div>
-          ))}
         </div>
       )}
 
