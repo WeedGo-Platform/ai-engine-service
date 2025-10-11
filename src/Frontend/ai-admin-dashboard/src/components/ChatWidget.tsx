@@ -110,7 +110,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
 
   // Agent and Personality State
   const [selectedAgent, setSelectedAgent] = useState('dispensary');
-  const [selectedPersonality, setSelectedPersonality] = useState('');
+  const [selectedPersonality, setSelectedPersonality] = useState('marcel'); // Default to marcel for dispensary agent
   const [availableAgents, setAvailableAgents] = useState<any[]>([]);
   const [availablePersonalities, setAvailablePersonalities] = useState<any[]>([]);
   const [loadingAgents, setLoadingAgents] = useState(false);
@@ -214,9 +214,12 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
         const data = await response.json();
         setAvailablePersonalities(data.personalities || []);
 
-        // Always select the first available personality
+        // Select first personality only if current one is not in the new list
         if (data.personalities?.length > 0) {
-          setSelectedPersonality(data.personalities[0].id);
+          const currentIsValid = data.personalities.some((p: any) => p.id === selectedPersonality);
+          if (!currentIsValid) {
+            setSelectedPersonality(data.personalities[0].id);
+          }
         }
       }
     } catch (error) {
