@@ -583,7 +583,7 @@ class AgentPoolManager:
 
         # Step 5: Generate response using shared model
         if self.shared_model:
-            result = self.shared_model.generate(
+            result = await self.shared_model.generate(
                 prompt=prompt_with_context,
                 session_id=session_id,
                 max_tokens=kwargs.get('max_tokens', max_tokens),
