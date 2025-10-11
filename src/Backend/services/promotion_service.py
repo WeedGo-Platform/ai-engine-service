@@ -1,6 +1,21 @@
 """
 Promotion and Pricing Service
 Handles all pricing calculations, promotions, discounts, and recommendations
+
+╔════════════════════════════════════════════════════════════════╗
+║ LEGACY CODE - STILL IN USE BY CART ENDPOINTS                  ║
+╠════════════════════════════════════════════════════════════════╣
+║ Status: V1 Legacy Service                                      ║
+║ Used By: cart_endpoints.py (discount code validation)          ║
+║ Migration: Frontend migrated to V2 (DDD) as of 2025-01        ║
+║                                                                ║
+║ This service provides discount validation for shopping carts.  ║
+║ The promotion management UI now uses V2 DDD endpoints at:      ║
+║ /api/v2/pricing-promotions/*                                   ║
+║                                                                ║
+║ TODO: Migrate cart discount validation to V2 repository        ║
+║       After migration, this file can be safely deleted.        ║
+╚════════════════════════════════════════════════════════════════╝
 """
 
 from typing import List, Dict, Optional, Any, Tuple

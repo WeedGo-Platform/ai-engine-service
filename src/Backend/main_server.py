@@ -687,7 +687,8 @@ except Exception as e:
 from api.cart_endpoints import router as cart_router
 from api.wishlist_endpoints import router as wishlist_router
 from api.customer_endpoints import router as customer_router
-from api.promotion_endpoints import router as promotion_router
+# V1 promotion_endpoints removed - frontend migrated to V2 (see /api/v2/pricing-promotions)
+# Note: promotion_service.py is still used by cart_endpoints for discount code validation
 from api.database_management import router as database_router
 
 # Include POS router first (before customer router to handle /customers/search route)
@@ -708,7 +709,7 @@ except Exception as e:
 
 app.include_router(cart_router)
 app.include_router(customer_router)
-app.include_router(promotion_router)
+# promotion_router removed - frontend migrated to V2
 app.include_router(wishlist_router)
 app.include_router(database_router)
 
