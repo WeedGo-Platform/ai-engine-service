@@ -182,6 +182,37 @@ async def get_payment_service(
     return PaymentService(repository)
 
 
+# Database Pool Management (for promotions)
+_db_pool: Optional[asyncpg.Pool] = None
+
+async def get_db_pool() -> asyncpg.Pool:
+    """Get or create database connection pool"""
+    global _db_pool
+    if _db_pool is None:
+        _db_pool = await asyncpg.create_pool(
+            host=os.getenv("DB_HOST", "localhost"),
+            port=int(os.getenv("DB_PORT", "5434")),
+            user=os.getenv("DB_USER", "weedgo"),
+            password=os.getenv("DB_PASSWORD", "your_password_here"),
+            database=os.getenv("DB_NAME", "ai_engine"),
+            min_size=1,
+            max_size=10
+        )
+    return _db_pool
+
+
+# Promotion Repository Dependencies
+from ddd_refactored.domain.pricing_promotions.repositories import (
+    IPromotionRepository,
+    AsyncPGPromotionRepository
+)
+
+async def get_promotion_repository() -> IPromotionRepository:
+    """Get promotion repository instance"""
+    pool = await get_db_pool()
+    return AsyncPGPromotionRepository(pool)
+
+
 # Authentication dependencies
 async def get_current_user(
     authorization: Optional[str] = Header(None)
@@ -205,6 +236,6 @@ async def get_current_user(
     return {
         "id": "authenticated-user-id",
         "tenant_id": "tenant-id",
-        "store_id": "store-id",
+        "store-id": "store-id",
         "role": "admin"
     }
