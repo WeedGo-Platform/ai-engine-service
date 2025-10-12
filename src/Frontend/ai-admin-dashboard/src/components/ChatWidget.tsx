@@ -715,9 +715,13 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
   };
 
   const handleIncomingMessage = async (data: any) => {
+    // Always clear busy and typing state when receiving a message
     setIsTyping(false);
     setIsBusy(false);
     stopActivityRotation();
+
+    // Clear message start time
+    messageStartTimeRef.current = null;
 
     if (data.role === 'assistant') {
       // Use response_time from backend only
