@@ -918,7 +918,7 @@ async def chat_v5(
                 prompt=prompt_with_context,
                 prompt_type=prompt_type,  # Pass the detected prompt type
                 session_id=request.session_id,
-                max_tokens=500,
+                max_tokens=150,  # Limit to 150 tokens for concise responses
                 use_tools=tools_enabled,  # Use configuration setting
                 use_context=False
             )
@@ -946,7 +946,7 @@ async def chat_v5(
                 result = await v5_engine.generate(
                     prompt=formatted_prompt,
                     session_id=request.session_id,
-                    max_tokens=500,
+                    max_tokens=150,  # Limit to 150 tokens for concise responses
                     use_tools=tools_enabled,  # Use configuration setting
                     use_context=False
                 )

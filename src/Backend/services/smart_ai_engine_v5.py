@@ -1765,8 +1765,39 @@ class SmartAIEngineV5:
                     )
 
                     # Route to cloud provider
-                    # Convert to OpenAI message format
-                    messages = [{"role": "user", "content": final_prompt}]
+                    # Convert to OpenAI message format with system prompt if available
+                    messages = []
+
+                    # Build comprehensive system message
+                    system_content_parts = []
+
+                    # 1. Add system prompt from agent configuration if available
+                    if self.agent_prompts and 'system_prompt' in self.agent_prompts:
+                        system_prompt_config = self.agent_prompts['system_prompt']
+                        system_prompt_text = system_prompt_config.get('template', '') if isinstance(system_prompt_config, dict) else system_prompt_config
+                        if system_prompt_text:
+                            system_content_parts.append(system_prompt_text)
+                            logger.info(f"Added agent system prompt ({len(system_prompt_text)} chars)")
+
+                    # 2. Add template context if a specific prompt type was used
+                    if used_template and used_template in self.agent_prompts:
+                        template_config = self.agent_prompts[used_template]
+                        template_text = template_config.get('template', '') if isinstance(template_config, dict) else template_config
+                        if template_text and used_template != 'system_prompt':
+                            # Add template as reference/guidance, not as the response
+                            system_content_parts.append(f"\nWhen responding to this type of query ({used_template}), use this information as reference:\n{template_text}")
+                            logger.info(f"Added template guidance for '{used_template}' ({len(template_text)} chars)")
+
+                    # Combine system content
+                    if system_content_parts:
+                        messages.append({"role": "system", "content": "\n\n".join(system_content_parts)})
+
+                    # Add user message (use original prompt, not template-applied)
+                    # For cloud inference, we want the actual user question, not the template
+                    user_message = original_user_message if 'original_user_message' in locals() else prompt
+                    messages.append({"role": "user", "content": user_message})
+                    logger.info(f"Cloud inference: System message {len(messages[0]['content'] if messages and messages[0]['role'] == 'system' else 0)} chars, User message: {len(user_message)} chars")
+
                     result = await self.llm_router.complete(messages, context)
 
                     # Convert router response to V5 format
