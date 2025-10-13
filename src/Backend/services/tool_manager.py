@@ -97,6 +97,47 @@ class ToolManager(IToolManager):
                 "category": "search"
             }
         )
+
+        # Register signup flow tools
+        self.register_tool(
+            "validate_crsa_signup",
+            self._create_validate_crsa_signup_tool,
+            {
+                "description": "Validate CRSA license and determine verification tier",
+                "category": "signup",
+                "requires_params": ["license_number", "email"]
+            }
+        )
+
+        self.register_tool(
+            "send_verification_code",
+            self._create_send_verification_code_tool,
+            {
+                "description": "Send verification code via email (and SMS for manual review)",
+                "category": "signup",
+                "requires_params": ["email", "verification_tier", "store_name", "store_info"]
+            }
+        )
+
+        self.register_tool(
+            "verify_signup_code",
+            self._create_verify_signup_code_tool,
+            {
+                "description": "Verify code provided by user during signup",
+                "category": "signup",
+                "requires_params": ["verification_id", "code", "email"]
+            }
+        )
+
+        self.register_tool(
+            "create_tenant_signup",
+            self._create_create_tenant_signup_tool,
+            {
+                "description": "Create tenant account after successful verification",
+                "category": "signup",
+                "requires_params": ["verification_id", "email", "contact_name", "contact_role"]
+            }
+        )
     
     def register_tool(self, tool_name: str, tool_function: Callable, 
                      config: Optional[Dict] = None) -> bool:
@@ -156,6 +197,15 @@ class ToolManager(IToolManager):
 
             if tool_name == "smart_product_search" and tool_name not in self.tool_instances:
                 instance = self._create_smart_product_search_tool()
+                if instance:
+                    self.tool_instances[tool_name] = instance
+
+            # Initialize signup tools on first use
+            signup_tools = ["validate_crsa_signup", "send_verification_code",
+                          "verify_signup_code", "create_tenant_signup"]
+            if tool_name in signup_tools and tool_name not in self.tool_instances:
+                factory_method = self.tools[tool_name]
+                instance = factory_method()
                 if instance:
                     self.tool_instances[tool_name] = instance
 
@@ -432,7 +482,71 @@ class ToolManager(IToolManager):
         except Exception as e:
             logger.error(f"Failed to create smart product search tool: {e}")
             return None
-    
+
+    def _create_validate_crsa_signup_tool(self):
+        """
+        Create CRSA validation tool instance for signup flow
+
+        Returns:
+            ValidateCRSASignupTool instance or None
+        """
+        try:
+            from services.tools.validate_crsa_signup_tool import ValidateCRSASignupTool
+            tool = ValidateCRSASignupTool()
+            logger.info("CRSA validation signup tool created")
+            return tool
+        except Exception as e:
+            logger.error(f"Failed to create CRSA validation tool: {e}")
+            return None
+
+    def _create_send_verification_code_tool(self):
+        """
+        Create verification code sending tool instance
+
+        Returns:
+            SendVerificationCodeTool instance or None
+        """
+        try:
+            from services.tools.send_verification_code_tool import SendVerificationCodeTool
+            tool = SendVerificationCodeTool()
+            logger.info("Send verification code tool created")
+            return tool
+        except Exception as e:
+            logger.error(f"Failed to create send verification code tool: {e}")
+            return None
+
+    def _create_verify_signup_code_tool(self):
+        """
+        Create code verification tool instance
+
+        Returns:
+            VerifySignupCodeTool instance or None
+        """
+        try:
+            from services.tools.verify_signup_code_tool import VerifySignupCodeTool
+            tool = VerifySignupCodeTool()
+            logger.info("Verify signup code tool created")
+            return tool
+        except Exception as e:
+            logger.error(f"Failed to create verify signup code tool: {e}")
+            return None
+
+    def _create_create_tenant_signup_tool(self):
+        """
+        Create tenant signup tool instance
+
+        Returns:
+            CreateTenantSignupTool instance or None
+        """
+        try:
+            from services.tools.create_tenant_signup_tool import CreateTenantSignupTool
+            tool = CreateTenantSignupTool()
+            logger.info("Create tenant signup tool created")
+            return tool
+        except Exception as e:
+            logger.error(f"Failed to create tenant signup tool: {e}")
+            return None
+
     def _initialize_database_tool(self):
         """Initialize database tool if not already done"""
         if "database_search" not in self.tool_instances:
@@ -492,6 +606,21 @@ class ToolManager(IToolManager):
                 session_id=kwargs.get("session_id"),
                 user_id=kwargs.get("user_id")
             )
+
+        # Handle signup tools (all implement ITool interface with execute() method)
+        elif tool_name in ["validate_crsa_signup", "send_verification_code",
+                          "verify_signup_code", "create_tenant_signup"]:
+            # Call the execute method with all kwargs
+            result = await instance.execute(**kwargs)
+
+            # Convert ToolResult to dict if needed
+            if hasattr(result, 'success'):
+                return {
+                    'success': result.success,
+                    'data': result.data if result.success else None,
+                    'error': result.error if not result.success else None
+                }
+            return result
 
         raise ValueError(f"Unknown tool execution pattern for '{tool_name}'")
     

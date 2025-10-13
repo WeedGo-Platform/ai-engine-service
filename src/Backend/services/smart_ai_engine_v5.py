@@ -271,6 +271,10 @@ class SmartAIEngineV5:
             if self.system_config and self.system_config.get('system', {}).get('tools', {}).get('enabled'):
                 self.tool_manager = ToolManager(agent_pool=self.agent_pool)
 
+                # Set tool manager reference in agent pool and enroll agent-specific tools
+                if self.agent_pool:
+                    self.agent_pool.set_tool_manager(self.tool_manager)
+
                 # Load agent-specific tools if configured
                 if self.current_agent:
                     self._load_agent_tools(self.current_agent)
