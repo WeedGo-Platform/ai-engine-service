@@ -35,19 +35,24 @@ class StoreRepository(IStoreRepository):
                         license_number, license_expiry, tax_rate, delivery_radius_km,
                         delivery_enabled, pickup_enabled, kiosk_enabled, pos_enabled,
                         ecommerce_enabled, status, settings, pos_integration,
-                        seo_config, latitude, longitude, created_at, updated_at
+                        seo_config, latitude, longitude, delivery_zone, delivery_zone_stats,
+                        created_at, updated_at
                     ) VALUES (
                         $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
                         $11, $12, $13, $14, $15, $16, $17, $18, $19, $20,
-                        $21, $22, $23, $24, $25, $26, $27
+                        $21, $22, $23, $24, $25, $26, $27, $28, $29
                     )
                     RETURNING *
                 """
-                
+
                 address_json = store.address.to_dict() if store.address else None
                 latitude = float(store.location.latitude) if store.location else None
                 longitude = float(store.location.longitude) if store.location else None
-                
+
+                # Handle delivery zone fields
+                delivery_zone = getattr(store, 'delivery_zone', None)
+                delivery_zone_stats = getattr(store, 'delivery_zone_stats', None)
+
                 row = await conn.fetchrow(
                     query,
                     store.id,
@@ -75,6 +80,8 @@ class StoreRepository(IStoreRepository):
                     json.dumps(store.seo_config),
                     latitude,
                     longitude,
+                    json.dumps(delivery_zone) if delivery_zone else None,
+                    json.dumps(delivery_zone_stats) if delivery_zone_stats else None,
                     store.created_at,
                     store.updated_at
                 )
@@ -135,15 +142,20 @@ class StoreRepository(IStoreRepository):
                         delivery_enabled = $12, pickup_enabled = $13, kiosk_enabled = $14,
                         pos_enabled = $15, ecommerce_enabled = $16, status = $17,
                         settings = $18, pos_integration = $19, seo_config = $20,
-                        latitude = $21, longitude = $22, updated_at = $23
+                        latitude = $21, longitude = $22, delivery_zone = $23, delivery_zone_stats = $24,
+                        updated_at = $25
                     WHERE id = $1
                     RETURNING *
                 """
-                
+
                 address_json = store.address.to_dict() if store.address else None
                 latitude = float(store.location.latitude) if store.location else None
                 longitude = float(store.location.longitude) if store.location else None
-                
+
+                # Handle delivery zone fields
+                delivery_zone = getattr(store, 'delivery_zone', None)
+                delivery_zone_stats = getattr(store, 'delivery_zone_stats', None)
+
                 row = await conn.fetchrow(
                     query,
                     store.id,
@@ -168,6 +180,8 @@ class StoreRepository(IStoreRepository):
                     json.dumps(store.seo_config),
                     latitude,
                     longitude,
+                    json.dumps(delivery_zone) if delivery_zone else None,
+                    json.dumps(delivery_zone_stats) if delivery_zone_stats else None,
                     store.updated_at
                 )
                 
@@ -266,15 +280,23 @@ class StoreRepository(IStoreRepository):
         if row['address']:
             address_data = json.loads(row['address']) if isinstance(row['address'], str) else row['address']
             address = Address.from_dict(address_data)
-        
+
         location = None
         if row['latitude'] is not None and row['longitude'] is not None:
             location = GeoLocation(
                 latitude=Decimal(str(row['latitude'])),
                 longitude=Decimal(str(row['longitude']))
             )
-        
-        return Store(
+
+        # Parse delivery zone fields if they exist
+        delivery_zone = None
+        delivery_zone_stats = None
+        if 'delivery_zone' in row and row['delivery_zone']:
+            delivery_zone = json.loads(row['delivery_zone']) if isinstance(row['delivery_zone'], str) else row['delivery_zone']
+        if 'delivery_zone_stats' in row and row['delivery_zone_stats']:
+            delivery_zone_stats = json.loads(row['delivery_zone_stats']) if isinstance(row['delivery_zone_stats'], str) else row['delivery_zone_stats']
+
+        store = Store(
             id=row['id'],
             tenant_id=row['tenant_id'],
             province_territory_id=row['province_territory_id'],
@@ -302,3 +324,11 @@ class StoreRepository(IStoreRepository):
             created_at=row['created_at'],
             updated_at=row['updated_at']
         )
+
+        # Add delivery zone fields as attributes (Store model may not have these fields defined)
+        if delivery_zone:
+            store.delivery_zone = delivery_zone
+        if delivery_zone_stats:
+            store.delivery_zone_stats = delivery_zone_stats
+
+        return store

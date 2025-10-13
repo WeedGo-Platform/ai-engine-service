@@ -230,7 +230,7 @@ Most references are **legitimate** (e.g., `ddd_refactored/domain/ai_conversation
 ```
 ✓ src/Backend/services/agent_pool_manager.py - Likely OK (AI agent, not AGI)
 ✓ src/Backend/services/communication/template_service.py - Check comments
-✓ src/Backend/main_server.py - Check for removed imports
+✓ src/Backend/api_server.py - Check for removed imports
 ✓ src/Backend/api_server.py - Check for removed imports
 ? Multiple DDD domain files - Comments about "not AGI", should be OK
 ```

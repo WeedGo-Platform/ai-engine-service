@@ -539,15 +539,59 @@ class AgentPoolManager:
 
         # Step 4: Build prompt with template or fallback
         if prompt_template:
+            # Load system prompt if available
+            system_prompt = ""
+            if hasattr(agent_config, 'prompt_templates') and 'system_prompt' in agent_config.prompt_templates:
+                system_template = agent_config.prompt_templates['system_prompt']
+                system_prompt = system_template.get('template', '')
+
             # Use intent-specific template
             template_str = prompt_template.get('template', '')
 
             # Replace variables in template
-            prompt_with_context = template_str.replace(
+            template_with_vars = template_str.replace(
                 "{personality_name}", personality.name
             ).replace(
                 "{message}", message
             )
+
+            # Build the complete prompt
+            # Structure: [System Prompt] + [Template Context] + User: {message} + Assistant:
+            prompt_parts = []
+
+            if system_prompt:
+                prompt_parts.append(system_prompt)
+
+            # If template doesn't contain the user message (no {message} placeholder), add it conversationally
+            if "{message}" not in template_str:
+                # Template is guidance/context, append user message
+                prompt_parts.append(template_with_vars)
+                prompt_parts.append(f"\nUser: {message}\nAssistant:")
+            else:
+                # Template already has message integrated
+                prompt_parts.append(template_with_vars)
+                prompt_parts.append("\nAssistant:")
+
+            prompt_with_context = "\n\n".join(prompt_parts)
+
+            # Add multilingual support - detect language and instruct to respond in same language
+            detected_language = intent_result.get("language", "en") if intent_result else "en"
+            language_map = {
+                "es": "Spanish (Español)",
+                "fr": "French (Français)",
+                "zh": "Chinese (中文)",
+                "ja": "Japanese (日本語)",
+                "ko": "Korean (한국어)",
+                "de": "German (Deutsch)",
+                "pt": "Portuguese (Português)",
+                "it": "Italian (Italiano)",
+                "ru": "Russian (Русский)",
+                "ar": "Arabic (العربية)"
+            }
+            if detected_language != "en" and detected_language in language_map:
+                language_instruction = f"\n\n[IMPORTANT: Respond in {language_map[detected_language]}. The user is speaking {language_map[detected_language]}, so reply in {language_map[detected_language]}.]"
+                prompt_with_context += language_instruction
+                logger.info(f"🌐 Multilingual: Detected {language_map[detected_language]}, instructing model to respond in same language")
 
             # Add tool results for product search
             if tool_results and tool_results.get('products'):
@@ -582,9 +626,12 @@ class AgentPoolManager:
             prompt_with_context = f"{system_prompt}\n\nUser: {message}\nAssistant:"
 
         # Step 5: Generate response using shared model
+        # Pass the pre-built prompt directly and skip V5's intent detection
         if self.shared_model:
+            # Tell V5 to use our prompt directly by setting prompt_type
             result = await self.shared_model.generate(
                 prompt=prompt_with_context,
+                prompt_type="direct",  # Skip V5's intent detection
                 session_id=session_id,
                 max_tokens=kwargs.get('max_tokens', max_tokens),
                 temperature=personality.style.get('temperature', 0.7) if personality.style else 0.7,

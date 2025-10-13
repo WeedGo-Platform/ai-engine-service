@@ -29,6 +29,8 @@ import tenantService, { Store, Tenant, CreateStoreRequest } from '../services/te
 import { getApiEndpoint } from '../config/app.config';
 import { useAuth } from '../contexts/AuthContext';
 import { useStoreContext } from '../contexts/StoreContext';
+import AddressAutocomplete, { AddressComponents } from '../components/AddressAutocomplete';
+import DeliveryZoneMapEditor, { DeliveryZoneGeoJSON, ZoneStatistics } from '../components/DeliveryZoneMapEditor';
 
 // Province interface
 interface Province {
@@ -574,6 +576,21 @@ const StoreFormModal: React.FC<{
     timezone: store?.timezone || 'America/Toronto',
   });
 
+  // State for coordinates from address autocomplete
+  const [coordinates, setCoordinates] = useState<{
+    latitude: number | null;
+    longitude: number | null;
+  }>({
+    latitude: store?.location?.latitude || null,
+    longitude: store?.location?.longitude || null,
+  });
+
+  // State for delivery zone (GeoJSON polygon)
+  const [deliveryZone, setDeliveryZone] = useState<DeliveryZoneGeoJSON | null>(
+    (store as any)?.delivery_zone || null
+  );
+  const [zoneStats, setZoneStats] = useState<ZoneStatistics | null>(null);
+
   // Fetch provinces from API
   useEffect(() => {
     const fetchProvinces = async () => {
@@ -605,14 +622,25 @@ const StoreFormModal: React.FC<{
       alert('Please select a valid province');
       return;
     }
-    
+
     // Ensure all required fields are present
     if (!formData.name || !formData.address?.street || !formData.address?.city || !formData.address?.postal_code) {
       alert('Please fill in all required fields');
       return;
     }
-    
-    onSave(formData);
+
+    // Include coordinates and delivery zone in submission if available
+    const submitData = {
+      ...formData,
+      location: coordinates.latitude && coordinates.longitude ? {
+        latitude: coordinates.latitude,
+        longitude: coordinates.longitude
+      } : undefined,
+      delivery_zone: deliveryZone,
+      delivery_zone_stats: zoneStats
+    };
+
+    onSave(submitData);
   };
 
   return (
@@ -695,16 +723,32 @@ const StoreFormModal: React.FC<{
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Street Address *
             </label>
-            <input
-              type="text"
+            <AddressAutocomplete
+              value={formData.address?.street || ''}
+              onChange={(addressComponents: AddressComponents) => {
+                // Update all address fields at once from autocomplete
+                setFormData({
+                  ...formData,
+                  address: {
+                    street: addressComponents.street,
+                    city: addressComponents.city,
+                    province: addressComponents.province,
+                    postal_code: addressComponents.postal_code,
+                    country: 'Canada'
+                  },
+                  // Also update province_code to match
+                  province_code: addressComponents.province
+                });
+              }}
+              onCoordinatesChange={(coords) => {
+                setCoordinates(coords);
+              }}
+              placeholder="Start typing an address (e.g., 123 Main St, Toronto)"
               required
-              value={formData.address?.street}
-              onChange={(e) => setFormData({
-                ...formData,
-                address: { ...formData.address!, street: e.target.value }
-              })}
-              className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
             />
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              💡 Start typing to see address suggestions - city and postal code will auto-fill
+            </p>
           </div>
 
           <div className="grid grid-cols-3 gap-6">
@@ -715,13 +759,14 @@ const StoreFormModal: React.FC<{
               <input
                 type="text"
                 required
+                readOnly
                 value={formData.address?.city}
-                onChange={(e) => setFormData({
-                  ...formData,
-                  address: { ...formData.address!, city: e.target.value }
-                })}
-                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white cursor-not-allowed"
+                placeholder="Auto-filled from address"
               />
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                Auto-filled
+              </p>
             </div>
 
             <div>
@@ -731,13 +776,14 @@ const StoreFormModal: React.FC<{
               <input
                 type="text"
                 required
+                readOnly
                 value={formData.address?.postal_code}
-                onChange={(e) => setFormData({
-                  ...formData,
-                  address: { ...formData.address!, postal_code: e.target.value }
-                })}
-                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white cursor-not-allowed"
+                placeholder="Auto-filled from address"
               />
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                Auto-filled
+              </p>
             </div>
 
             <div>
@@ -860,11 +906,54 @@ const StoreFormModal: React.FC<{
             </div>
           </div>
 
-          <div className="flex justify-end gap-4 mt-6">
+          {/* Delivery Zone Configuration - Only show if coordinates are available */}
+          {coordinates.latitude && coordinates.longitude && (
+            <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Delivery Zone (Optional)
+                </label>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                  🗺️ Draw a custom delivery zone polygon on the map. The zone must contain the store location.
+                  This provides more precise delivery boundaries than a simple radius.
+                </p>
+              </div>
+              <DeliveryZoneMapEditor
+                storeCoordinates={{
+                  latitude: coordinates.latitude,
+                  longitude: coordinates.longitude
+                }}
+                initialZone={deliveryZone}
+                onChange={(zone) => setDeliveryZone(zone)}
+                onStatsChange={(stats) => setZoneStats(stats)}
+                className="h-72"
+              />
+              {zoneStats && (
+                <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                  <p className="text-sm text-blue-800 dark:text-blue-200 font-medium mb-1">
+                    Zone Statistics:
+                  </p>
+                  <div className="grid grid-cols-3 gap-4 text-xs text-blue-700 dark:text-blue-300">
+                    <div>
+                      <span className="font-semibold">Area:</span> {zoneStats.area_km2.toFixed(2)} km²
+                    </div>
+                    <div>
+                      <span className="font-semibold">Perimeter:</span> {zoneStats.perimeter_km.toFixed(2)} km
+                    </div>
+                    <div>
+                      <span className="font-semibold">Approx. Radius:</span> {zoneStats.approximate_radius_km.toFixed(2)} km
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          <div className="flex justify-end gap-4 mt-8 pt-4 border-t border-gray-200 dark:border-gray-700 sticky bottom-0 bg-white dark:bg-gray-800">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600"
+              className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600"
             >
               Cancel
             </button>

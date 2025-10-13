@@ -12,8 +12,8 @@ from decimal import Decimal
 from core.domain.models import (
     Tenant, Store, TenantUser, StoreUser,
     TenantSubscription, AIPersonality, StoreAIAgent,
-    ProvinceTerritory, StoreCompliance,
-    TenantStatus, StoreStatus, SubscriptionTier
+    ProvinceTerritory, StoreCompliance, OntarioCRSA,
+    TenantStatus, StoreStatus, SubscriptionTier, CRSAVerificationStatus
 )
 
 
@@ -255,4 +255,121 @@ class IProvinceRepository(ABC):
     @abstractmethod
     async def list_all(self) -> List[ProvinceTerritory]:
         """List all provinces/territories"""
+        pass
+
+
+class IOntarioCRSARepository(ABC):
+    """Interface for Ontario CRSA repository"""
+
+    @abstractmethod
+    async def get_by_id(self, crsa_id: UUID) -> Optional[OntarioCRSA]:
+        """Get CRSA record by ID"""
+        pass
+
+    @abstractmethod
+    async def get_by_license(self, license_number: str) -> Optional[OntarioCRSA]:
+        """Get CRSA record by license number"""
+        pass
+
+    @abstractmethod
+    async def search_stores(
+        self,
+        query: str,
+        limit: int = 10,
+        authorized_only: bool = True
+    ) -> List[OntarioCRSA]:
+        """
+        Search CRSA stores by name or address using fuzzy matching
+
+        Args:
+            query: Search term (store name or address)
+            limit: Maximum number of results
+            authorized_only: Only return authorized stores
+
+        Returns:
+            List of matching CRSA records
+        """
+        pass
+
+    @abstractmethod
+    async def list_authorized(
+        self,
+        limit: int = 100,
+        offset: int = 0
+    ) -> List[OntarioCRSA]:
+        """List all authorized stores"""
+        pass
+
+    @abstractmethod
+    async def list_available_for_signup(
+        self,
+        limit: int = 100,
+        offset: int = 0
+    ) -> List[OntarioCRSA]:
+        """List authorized stores not yet linked to a tenant"""
+        pass
+
+    @abstractmethod
+    async def get_statistics(self) -> Dict[str, Any]:
+        """
+        Get CRSA database statistics
+
+        Returns:
+            Dictionary with counts and statistics
+        """
+        pass
+
+    @abstractmethod
+    async def mark_linked(self, license_number: str, tenant_id: UUID) -> OntarioCRSA:
+        """
+        Link a CRSA record to a tenant
+
+        Args:
+            license_number: License number to link
+            tenant_id: Tenant ID to link to
+
+        Returns:
+            Updated CRSA record
+        """
+        pass
+
+    @abstractmethod
+    async def mark_unlinked(self, license_number: str) -> OntarioCRSA:
+        """
+        Unlink a CRSA record from tenant
+
+        Args:
+            license_number: License number to unlink
+
+        Returns:
+            Updated CRSA record
+        """
+        pass
+
+    @abstractmethod
+    async def verify_license(
+        self,
+        license_number: str,
+        verified_by_user_id: UUID
+    ) -> OntarioCRSA:
+        """
+        Mark a license as verified
+
+        Args:
+            license_number: License number to verify
+            verified_by_user_id: User ID performing verification
+
+        Returns:
+            Updated CRSA record
+        """
+        pass
+
+    @abstractmethod
+    async def list_by_municipality(
+        self,
+        municipality: str,
+        limit: int = 100,
+        offset: int = 0
+    ) -> List[OntarioCRSA]:
+        """List stores in a specific municipality"""
         pass

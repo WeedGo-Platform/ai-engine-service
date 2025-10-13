@@ -47,6 +47,7 @@ from api.auth_context import router as context_auth_router
 
 # Import tenant and store endpoints
 from api.tenant_endpoints import router as tenant_router
+from api.ontario_crsa_endpoints import router as crsa_router
 from api.store_endpoints import router as store_router
 from api.store_hours_endpoints import router as store_hours_router
 from api.store_inventory_endpoints import router as store_inventory_router
@@ -203,48 +204,66 @@ async def lifespan(app: FastAPI):
         # Initialize unified chat system with database-backed storage
         logger.info("Initializing unified chat system...")
         try:
-            if v5_engine.agent_pool:
-                v5_engine.agent_pool.set_context_manager(context_manager)
-                logger.info("✅ Context manager bridged to agent pool")
-
-                chat_service = await initialize_unified_chat_system()
-                app.state.chat_service = chat_service
-                logger.info("✅ Unified chat system initialized with database storage and cleanup")
-            else:
-                logger.warning("⚠️ Agent pool not initialized, skipping unified chat system")
+            # Note: set_context_manager() doesn't exist on AgentPoolManager
+            # The chat service initializes its own context management
+            chat_service = await initialize_unified_chat_system()
+            app.state.chat_service = chat_service
+            logger.info("✅ Unified chat system initialized with database storage and cleanup")
         except Exception as e:
             logger.error(f"❌ Failed to initialize unified chat system: {e}", exc_info=True)
             logger.warning("Continuing without unified chat system")
 
-        # Auto-load smallest model with dispensary agent and zac personality on startup
-        logger.info("Auto-loading default model configuration...")
+        # Auto-load model configuration from database or fall back to smallest model
+        logger.info("Auto-loading model configuration...")
 
-        # Find the smallest model
-        smallest_model = None
-        smallest_size = float('inf')
-        for model_name, model_path in v5_engine.available_models.items():
+        # Check for persisted model configuration in database
+        persisted_config = await get_system_setting("ai_model", "active_model_config")
+
+        if persisted_config:
+            logger.info(f"Found persisted model configuration: {persisted_config.get('model')}")
             try:
-                size_bytes = os.path.getsize(model_path)
-                if size_bytes > 0 and size_bytes < smallest_size:
-                    smallest_size = size_bytes
-                    smallest_model = model_name
-            except:
-                continue
+                success = v5_engine.load_model(
+                    model_name=persisted_config.get("model"),
+                    agent_id=persisted_config.get("agent"),
+                    personality_id=persisted_config.get("personality")
+                )
+                if success:
+                    logger.info(f"✅ Successfully loaded persisted model: {persisted_config.get('model')} with {persisted_config.get('agent')}/{persisted_config.get('personality')}")
+                else:
+                    logger.warning("Failed to load persisted model, falling back to smallest model")
+                    persisted_config = None
+            except Exception as e:
+                logger.error(f"Error loading persisted model: {e}, falling back to smallest model")
+                persisted_config = None
 
-        if smallest_model:
-            logger.info(f"Loading smallest model: {smallest_model} ({smallest_size / (1024**3):.2f} GB)")
-            # Load model with dispensary agent and marcel personality
-            success = v5_engine.load_model(
-                model_name=smallest_model,
-                agent_id="dispensary",
-                personality_id="marcel"
-            )
-            if success:
-                logger.info(f"✅ Successfully loaded {smallest_model} with dispensary/marcel configuration")
+        if not persisted_config:
+            # Fallback: Find and load smallest model
+            logger.info("No persisted model found, loading smallest available model")
+            smallest_model = None
+            smallest_size = float('inf')
+            for model_name, model_path in v5_engine.available_models.items():
+                try:
+                    size_bytes = os.path.getsize(model_path)
+                    if size_bytes > 0 and size_bytes < smallest_size:
+                        smallest_size = size_bytes
+                        smallest_model = model_name
+                except:
+                    continue
+
+            if smallest_model:
+                logger.info(f"Loading smallest model: {smallest_model} ({smallest_size / (1024**3):.2f} GB)")
+                # Load model with dispensary agent and marcel personality
+                success = v5_engine.load_model(
+                    model_name=smallest_model,
+                    agent_id="dispensary",
+                    personality_id="marcel"
+                )
+                if success:
+                    logger.info(f"✅ Successfully loaded {smallest_model} with dispensary/marcel configuration")
+                else:
+                    logger.warning(f"Failed to load default model configuration")
             else:
-                logger.warning(f"Failed to load default model configuration")
-        else:
-            logger.warning("No models available to auto-load")
+                logger.warning("No models available to auto-load")
         
         logger.info(f"V5 Engine ready with {len(v5_engine.available_models)} models available")
 
@@ -448,6 +467,7 @@ except Exception as e:
     logger.error(f"❌ Failed to register unified chat routes: {e}", exc_info=True)
 
 app.include_router(tenant_router)  # Tenant management endpoints
+app.include_router(crsa_router)  # Ontario CRSA validation and search endpoints
 
 # File upload endpoints
 try:
@@ -492,7 +512,7 @@ except Exception as e:
     logger.error(f"Failed to load device management endpoints: {e}")
 
 # Import and include admin endpoints (unified admin + model management)
-from api.admin_endpoints import router as admin_router
+from api.admin_endpoints import router as admin_router, get_system_setting
 from api.analytics_endpoints import router as analytics_router
 app.include_router(admin_router)
 app.include_router(analytics_router)
