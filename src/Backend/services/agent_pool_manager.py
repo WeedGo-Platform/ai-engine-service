@@ -121,6 +121,9 @@ class AgentPoolManager:
         # Shared model reference (will be set by SmartAIEngine)
         self.shared_model = None
 
+        # Tool manager reference (will be set by SmartAIEngine)
+        self.tool_manager = None
+
         # Performance metrics
         self.metrics = {
             "total_requests": 0,
@@ -849,6 +852,23 @@ class AgentPoolManager:
             if hasattr(agent_config, 'intent_detector') and agent_config.intent_detector:
                 agent_config.intent_detector.v5_engine = model
                 logger.info(f"  ✅ Updated intent detector for agent {agent_id} with v5_engine reference")
+
+    def set_tool_manager(self, tool_manager):
+        """Set the tool manager reference and enroll agent tools"""
+        self.tool_manager = tool_manager
+        logger.info("Tool manager reference set")
+
+        # Enroll tools for each agent
+        for agent_id, agent_config in self.agents.items():
+            if agent_config.tools:
+                enrolled = self.tool_manager.enroll_agent_tools(agent_id, agent_config.tools)
+                if enrolled:
+                    logger.info(f"  ✅ Enrolled {len(agent_config.tools)} tools for agent {agent_id}: {agent_config.tools}")
+                    agent_config.tool_manager = tool_manager
+                else:
+                    logger.warning(f"  ⚠️ Failed to enroll tools for agent {agent_id}")
+            else:
+                logger.info(f"  ℹ️ No tools configured for agent {agent_id}")
 
 
 # Singleton instance
