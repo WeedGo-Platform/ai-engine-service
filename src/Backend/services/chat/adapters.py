@@ -130,12 +130,17 @@ class AgentPoolAdapter(IAgentPoolAdapter):
                 logger.info(f"Created agent pool session {session_id} with {agent_id}/{personality_id}")
                 return True
 
-            # Use agent pool's update_session method
-            success = await self.agent_pool.update_session(
+            # Use agent pool's switch_agent method (correct method name)
+            success = await self.agent_pool.switch_agent(
                 session_id=session_id,
-                agent_id=agent_id,
+                new_agent_id=agent_id,  # Parameter name is new_agent_id, not agent_id
                 personality_id=personality_id
             )
+
+            if success:
+                logger.info(f"Successfully switched session {session_id} to {agent_id}/{personality_id}")
+            else:
+                logger.error(f"Failed to switch session {session_id} to {agent_id}/{personality_id}")
 
             return success
 

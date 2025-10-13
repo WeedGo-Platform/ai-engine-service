@@ -1236,7 +1236,7 @@ async def search_products(
 @app.get("/api/admin/stats")
 async def get_stats():
     """Get V5 engine statistics (testing mode - no auth required)"""
-    
+
     return {
         "version": "5.0.0",
         "uptime": "N/A",
@@ -1244,6 +1244,108 @@ async def get_stats():
         "active_sessions": 0,
         "tools_available": len(v5_engine.tool_manager.tools) if v5_engine and v5_engine.tool_manager else 0
     }
+
+# LLM Router endpoints for hot-swap control
+@app.get("/api/admin/router/stats")
+async def get_router_stats(req: Request):
+    """Get LLM Router statistics"""
+    try:
+        v5_engine = getattr(req.app.state, 'v5_engine', None)
+        if not v5_engine:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="V5 engine not initialized"
+            )
+
+        stats = v5_engine.get_router_stats()
+        return stats
+
+    except Exception as e:
+        logger.error(f"Failed to get router stats: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve router statistics"
+        )
+
+@app.post("/api/admin/router/enable")
+async def enable_cloud_inference(req: Request):
+    """Enable cloud inference (hot-swap to cloud providers)"""
+    try:
+        v5_engine = getattr(req.app.state, 'v5_engine', None)
+        if not v5_engine:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="V5 engine not initialized"
+            )
+
+        success = v5_engine.enable_cloud_inference()
+        return {
+            "success": success,
+            "message": "Cloud inference enabled" if success else "Failed to enable cloud inference",
+            "active": v5_engine.use_cloud_inference,
+            "providers": v5_engine.llm_router.list_providers() if v5_engine.llm_router else []
+        }
+
+    except Exception as e:
+        logger.error(f"Failed to enable cloud inference: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
+@app.post("/api/admin/router/disable")
+async def disable_cloud_inference(req: Request):
+    """Disable cloud inference (hot-swap back to local)"""
+    try:
+        v5_engine = getattr(req.app.state, 'v5_engine', None)
+        if not v5_engine:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="V5 engine not initialized"
+            )
+
+        success = v5_engine.disable_cloud_inference()
+        return {
+            "success": success,
+            "message": "Cloud inference disabled" if success else "Failed to disable cloud inference",
+            "active": v5_engine.use_cloud_inference,
+            "local_model": v5_engine.current_model_name
+        }
+
+    except Exception as e:
+        logger.error(f"Failed to disable cloud inference: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
+@app.post("/api/admin/router/toggle")
+async def toggle_cloud_inference(req: Request):
+    """Toggle between cloud and local inference"""
+    try:
+        v5_engine = getattr(req.app.state, 'v5_engine', None)
+        if not v5_engine:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="V5 engine not initialized"
+            )
+
+        success = v5_engine.toggle_cloud_inference()
+        return {
+            "success": success,
+            "message": f"Switched to {'cloud' if v5_engine.use_cloud_inference else 'local'} inference",
+            "active": v5_engine.use_cloud_inference,
+            "backend": "cloud" if v5_engine.use_cloud_inference else "local",
+            "providers": v5_engine.llm_router.list_providers() if v5_engine.llm_router and v5_engine.use_cloud_inference else None,
+            "local_model": v5_engine.current_model_name if not v5_engine.use_cloud_inference else None
+        }
+
+    except Exception as e:
+        logger.error(f"Failed to toggle inference: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
 
 
 # Error handlers

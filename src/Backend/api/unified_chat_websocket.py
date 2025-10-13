@@ -334,6 +334,8 @@ async def handle_websocket_connection(
 
                     if success:
                         session_data = await chat_service.get_session(active_session_id)
+
+                        # Send session update notification
                         await manager.send_message(
                             active_session_id,
                             {
@@ -341,6 +343,25 @@ async def handle_websocket_connection(
                                 "message": f"Session updated successfully",
                                 "agent": session_data["agent_id"],
                                 "personality": session_data["personality_id"],
+                                "timestamp": datetime.utcnow().isoformat()
+                            }
+                        )
+
+                        # Send visible system message in chat
+                        agent_name = session_data["agent_id"].replace("_", " ").title()
+                        personality_name = session_data["personality_id"].replace("_", " ").title()
+                        system_message = f"🔄 Switched to {personality_name} ({agent_name} Agent)"
+
+                        await manager.send_message(
+                            active_session_id,
+                            {
+                                "type": WebSocketMessageType.MESSAGE.value,
+                                "id": f"system_{datetime.utcnow().timestamp()}",
+                                "role": "system",
+                                "content": system_message,
+                                "products": [],
+                                "quick_actions": [],
+                                "metadata": {},
                                 "timestamp": datetime.utcnow().isoformat()
                             }
                         )
