@@ -29,6 +29,7 @@ class SendVerificationCodeTool(ITool):
             verification_tier (str): "auto_approved" or "manual_review" (required)
             store_name (str): Store name for personalized message (required)
             store_info (dict): Full store info from CRSA validation (required)
+            session_id (str): Session ID for state persistence (optional)
 
         Returns:
             ToolResult with verification_id and send status
@@ -40,6 +41,7 @@ class SendVerificationCodeTool(ITool):
             verification_tier = kwargs.get('verification_tier')
             store_name = kwargs.get('store_name')
             store_info = kwargs.get('store_info')
+            session_id = kwargs.get('session_id')
 
             # Validate inputs
             if not email:
@@ -127,6 +129,21 @@ class SendVerificationCodeTool(ITool):
                     f"Verification code sent to {email} "
                     f"(methods: {', '.join(methods_used)}, tier: {verification_tier})"
                 )
+
+                # Store verification ID in signup state if session_id provided
+                if session_id:
+                    try:
+                        from services.signup_state_manager import get_signup_state_manager
+                        state_manager = get_signup_state_manager()
+                        state_manager.store_verification_id(
+                            session_id=session_id,
+                            verification_id=verification_id,
+                            methods=methods_used
+                        )
+                        logger.info(f"Stored verification ID in state for session {session_id}")
+                    except Exception as e:
+                        logger.warning(f"Failed to store verification state: {e}")
+                        # Don't fail the tool if state storage fails
 
                 return ToolResult(
                     success=True,

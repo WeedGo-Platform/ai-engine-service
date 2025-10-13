@@ -111,6 +111,7 @@ class CreateTenantSignupTool(ITool):
             phone (str): Phone number (optional)
             contact_name (str): Contact person name (required)
             contact_role (str): Contact person role (required)
+            session_id (str): Session ID for state persistence (optional)
 
         Returns:
             ToolResult with tenant_id and password setup information
@@ -122,6 +123,7 @@ class CreateTenantSignupTool(ITool):
             phone = kwargs.get('phone')
             contact_name = kwargs.get('contact_name')
             contact_role = kwargs.get('contact_role')
+            session_id = kwargs.get('session_id')
 
             # Validate inputs
             if not verification_id:
@@ -275,6 +277,22 @@ class CreateTenantSignupTool(ITool):
                     "Your account is pending review. Our team will verify your information "
                     "within 24 hours. You'll receive an email once approved."
                 )
+
+            # Store tenant creation in signup state if session_id provided
+            if session_id:
+                try:
+                    from services.signup_state_manager import get_signup_state_manager
+                    state_manager = get_signup_state_manager()
+                    state_manager.store_tenant_creation(
+                        session_id=session_id,
+                        tenant_id=str(tenant.id),
+                        tenant_code=tenant.code,
+                        account_status=account_status
+                    )
+                    logger.info(f"Stored tenant creation in state for session {session_id}")
+                except Exception as e:
+                    logger.warning(f"Failed to store tenant creation state: {e}")
+                    # Don't fail the tool if state storage fails
 
             return ToolResult(
                 success=True,

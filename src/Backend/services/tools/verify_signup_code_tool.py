@@ -26,6 +26,7 @@ class VerifySignupCodeTool(ITool):
             verification_id (str): Verification ID from send_verification_code (required)
             code (str): 6-digit code provided by user (required)
             email (str): Email address for double-check (required)
+            session_id (str): Session ID for state persistence (optional)
 
         Returns:
             ToolResult with verification status and store information if successful
@@ -35,6 +36,7 @@ class VerifySignupCodeTool(ITool):
             verification_id = kwargs.get('verification_id')
             code = kwargs.get('code')
             email = kwargs.get('email')
+            session_id = kwargs.get('session_id')
 
             # Validate inputs
             if not verification_id:
@@ -92,6 +94,21 @@ class VerifySignupCodeTool(ITool):
                 )
 
             logger.info(f"Code verified successfully for {email}")
+
+            # Store code verification in signup state if session_id provided
+            if session_id:
+                try:
+                    from services.signup_state_manager import get_signup_state_manager, SignupStep
+                    state_manager = get_signup_state_manager()
+                    state_manager.update_signup_state(
+                        session_id=session_id,
+                        step=SignupStep.CREATING_TENANT,
+                        data={'code_verified': True}
+                    )
+                    logger.info(f"Stored code verification in state for session {session_id}")
+                except Exception as e:
+                    logger.warning(f"Failed to store code verification state: {e}")
+                    # Don't fail the tool if state storage fails
 
             return ToolResult(
                 success=True,

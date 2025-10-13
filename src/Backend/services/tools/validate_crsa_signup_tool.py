@@ -133,6 +133,7 @@ class ValidateCRSASignupTool(ITool):
             license_number (str): CRSA license number (required)
             email (str): Business email to verify (required)
             phone (str): Business phone for SMS verification (optional)
+            session_id (str): Session ID for state persistence (optional)
 
         Returns:
             ToolResult with validation result and store information
@@ -142,6 +143,7 @@ class ValidateCRSASignupTool(ITool):
             license_number = kwargs.get('license_number')
             email = kwargs.get('email')
             phone = kwargs.get('phone')
+            session_id = kwargs.get('session_id')
 
             # Validate inputs
             if not license_number:
@@ -223,6 +225,22 @@ class ValidateCRSASignupTool(ITool):
                 f"CRSA validation successful for {license_number}. "
                 f"Domain match: {domain_match}, Tier: {verification_tier}"
             )
+
+            # Store validation results in signup state if session_id provided
+            if session_id:
+                try:
+                    from services.signup_state_manager import get_signup_state_manager
+                    state_manager = get_signup_state_manager()
+                    state_manager.store_crsa_validation(
+                        session_id=session_id,
+                        store_info=store_info,
+                        verification_tier=verification_tier,
+                        domain_match=domain_match
+                    )
+                    logger.info(f"Stored CRSA validation in state for session {session_id}")
+                except Exception as e:
+                    logger.warning(f"Failed to store validation state: {e}")
+                    # Don't fail the tool if state storage fails
 
             return ToolResult(
                 success=True,
