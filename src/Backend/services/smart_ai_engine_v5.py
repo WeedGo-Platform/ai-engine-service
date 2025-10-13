@@ -69,7 +69,7 @@ class SmartAIEngineV5:
         self.personality_folder = None
         self.use_prompts = False
         self.current_personality = None
-        
+
         # New modular architecture support
         self.current_agent = None
         self.current_personality_type = None
@@ -91,6 +91,11 @@ class SmartAIEngineV5:
         self.intent_detector = None
         self._detecting_intent = False  # Flag to prevent recursion during intent detection
         self._initialize_intent_detector()
+
+        # Initialize LLM Router for cloud inference (hot-swappable backend)
+        self.llm_router = None
+        self.use_cloud_inference = False  # Flag to switch between local and cloud
+        self._initialize_llm_router()
 
         logger.info(f"SmartAIEngineV5 initialized with {len(self.available_models)} models")
         self._log_system_resources()
@@ -145,6 +150,45 @@ class SmartAIEngineV5:
         except Exception as e:
             logger.error(f"Failed to initialize intent detector: {e}")
             self.intent_detector = None
+
+    def _initialize_llm_router(self):
+        """Initialize LLM Router for cloud inference hot-swap"""
+        try:
+            from services.llm_gateway import (
+                LLMRouter,
+                RequestContext,
+                TaskType,
+                GroqProvider,
+                OpenRouterProvider,
+                LLM7GPT4Mini
+            )
+
+            # Create router
+            self.llm_router = LLMRouter()
+
+            # Register cloud providers (automatically skip if no API key)
+            self.llm_router.register_provider(GroqProvider())           # Ultra-fast
+            self.llm_router.register_provider(OpenRouterProvider())     # Reasoning
+            self.llm_router.register_provider(LLM7GPT4Mini())          # Fallback (no auth)
+
+            provider_count = len(self.llm_router.list_providers())
+            logger.info(f"✅ LLM Router initialized with {provider_count} cloud providers")
+            logger.info(f"   Providers: {', '.join(self.llm_router.list_providers())}")
+
+            # Check config for default inference backend
+            if self.system_config:
+                self.use_cloud_inference = self.system_config.get('inference', {}).get('use_cloud', False)
+                if self.use_cloud_inference:
+                    logger.info("🌐 Cloud inference ENABLED by default (hot-swap active)")
+                else:
+                    logger.info("💻 Local inference default (cloud available for hot-swap)")
+
+        except ImportError as e:
+            logger.warning(f"LLM Router not available: {e}")
+            self.llm_router = None
+        except Exception as e:
+            logger.error(f"Failed to initialize LLM Router: {e}")
+            self.llm_router = None
     
     def detect_intent(self, message: str, language: str = "auto") -> Dict[str, Any]:
         """Detect intent using the configured detector"""
@@ -1690,20 +1734,100 @@ class SmartAIEngineV5:
                     "error": "Model not loaded"
                 }
 
-            logger.info(f"Starting model inference with {self.current_model_name}")
+            logger.info(f"Starting model inference with {self.current_model_name or 'cloud provider'}")
 
-            # Optimize sampling parameters for faster generation
-            response = self.current_model(
-                final_prompt,
-                max_tokens=final_max_tokens,
-                temperature=actual_temperature,
-                top_p=actual_top_p,
-                top_k=top_k,
-                echo=False,
-                stop=stop_sequences[:8],  # Allow more stop sequences for better control
-                stream=False,
-                repeat_penalty=self.get_config_repeat_penalty()  # Use config value
-            )
+            # HOT-SWAP: Choose between local and cloud inference
+            if self.use_cloud_inference and self.llm_router:
+                # Cloud inference via LLM Router
+                logger.info("🌐 Using cloud inference (LLM Router)")
+
+                try:
+                    # Import types for cloud routing
+                    from services.llm_gateway import RequestContext, TaskType
+
+                    # Map detected intent to task type
+                    task_type = TaskType.CHAT  # default
+                    if 'intent_result' in locals() and isinstance(intent_result, dict):
+                        intent = intent_result.get('intent', 'general')
+                        if intent in ['product_search', 'product_recommendation']:
+                            task_type = TaskType.REASONING
+                        elif intent in ['dosage', 'medical_advice']:
+                            task_type = TaskType.REASONING
+                        else:
+                            task_type = TaskType.CHAT
+
+                    # Create routing context
+                    context = RequestContext(
+                        task_type=task_type,
+                        estimated_tokens=final_max_tokens,
+                        requires_speed=(response_style == 'conversational')
+                    )
+
+                    # Route to cloud provider
+                    # Convert to OpenAI message format
+                    messages = [{"role": "user", "content": final_prompt}]
+                    result = await self.llm_router.complete(messages, context)
+
+                    # Convert router response to V5 format
+                    response = {
+                        "choices": [{
+                            "text": result.content,
+                            "finish_reason": result.finish_reason
+                        }],
+                        "usage": {
+                            "prompt_tokens": result.tokens_input,
+                            "completion_tokens": result.tokens_output,
+                            "total_tokens": result.tokens_input + result.tokens_output
+                        },
+                        "model": result.model,
+                        "provider": result.provider,
+                        "cloud_inference": True
+                    }
+
+                    logger.info(f"✅ Cloud inference complete: {result.provider} ({result.latency:.2f}s)")
+
+                except Exception as e:
+                    logger.error(f"Cloud inference failed: {e}, falling back to local")
+                    # Fallback to local if cloud fails
+                    if not self.current_model:
+                        raise Exception("No local model loaded and cloud inference failed")
+
+                    response = self.current_model(
+                        final_prompt,
+                        max_tokens=final_max_tokens,
+                        temperature=actual_temperature,
+                        top_p=actual_top_p,
+                        top_k=top_k,
+                        echo=False,
+                        stop=stop_sequences[:8],
+                        stream=False,
+                        repeat_penalty=self.get_config_repeat_penalty()
+                    )
+
+            else:
+                # Local inference via llama-cpp
+                logger.info("💻 Using local inference (llama-cpp)")
+
+                if not self.current_model:
+                    logger.error("No model loaded! Cannot generate response.")
+                    return {
+                        "text": "I apologize, but the AI model is not currently loaded. Please try again later.",
+                        "model": "none",
+                        "error": "Model not loaded"
+                    }
+
+                # Optimize sampling parameters for faster generation
+                response = self.current_model(
+                    final_prompt,
+                    max_tokens=final_max_tokens,
+                    temperature=actual_temperature,
+                    top_p=actual_top_p,
+                    top_k=top_k,
+                    echo=False,
+                    stop=stop_sequences[:8],  # Allow more stop sequences for better control
+                    stream=False,
+                    repeat_penalty=self.get_config_repeat_penalty()  # Use config value
+                )
 
             inference_time = time.time() - inference_start
             timing_breakdown['model_inference'] = inference_time
@@ -2532,6 +2656,46 @@ Please provide a personalized response based on the user's history and preferenc
             logger.error(f"Error in stream_response: {e}")
             yield f"Error: {str(e)}"
     
+    def enable_cloud_inference(self):
+        """Enable cloud inference (hot-swap to cloud providers)"""
+        if not self.llm_router:
+            logger.warning("LLM Router not initialized, cannot enable cloud inference")
+            return False
+
+        self.use_cloud_inference = True
+        provider_count = len(self.llm_router.list_providers())
+        logger.info(f"🌐 Cloud inference ENABLED (hot-swap active, {provider_count} providers)")
+        return True
+
+    def disable_cloud_inference(self):
+        """Disable cloud inference (hot-swap back to local)"""
+        self.use_cloud_inference = False
+        logger.info("💻 Cloud inference DISABLED (using local model)")
+        return True
+
+    def toggle_cloud_inference(self):
+        """Toggle between cloud and local inference"""
+        if self.use_cloud_inference:
+            return self.disable_cloud_inference()
+        else:
+            return self.enable_cloud_inference()
+
+    def get_router_stats(self) -> Dict[str, Any]:
+        """Get LLM Router statistics"""
+        if not self.llm_router:
+            return {
+                "enabled": False,
+                "error": "LLM Router not initialized"
+            }
+
+        stats = self.llm_router.get_stats()
+        return {
+            "enabled": True,
+            "active": self.use_cloud_inference,
+            "providers": self.llm_router.list_providers(),
+            "stats": stats
+        }
+
     def cleanup(self):
         """Cleanup resources on shutdown"""
         try:
