@@ -514,8 +514,11 @@ except Exception as e:
 # Import and include admin endpoints (unified admin + model management)
 from api.admin_endpoints import router as admin_router, get_system_setting
 from api.analytics_endpoints import router as analytics_router
+from api.admin_tenant_review_endpoints import router as admin_review_router
 app.include_router(admin_router)
 app.include_router(analytics_router)
+app.include_router(admin_review_router)  # Admin tenant review endpoints
+logger.info("Admin tenant review endpoints loaded successfully")
 
 # AGI endpoints removed - AGI functionality has been removed from the system
 
