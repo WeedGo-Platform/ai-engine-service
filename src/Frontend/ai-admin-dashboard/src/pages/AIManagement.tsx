@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Bot, Loader2, AlertCircle, CheckCircle, Cpu, Settings, Database, FileCode, ChevronDown, ChevronRight, Eye, Edit } from 'lucide-react';
+import { Bot, Loader2, AlertCircle, CheckCircle, Cpu, Settings, Database, FileCode, ChevronDown, ChevronRight, Eye, Edit, Network, Zap, RefreshCw, Cloud, Monitor } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import toast from 'react-hot-toast';
 import JsonEditor from '../components/JsonEditor';
@@ -19,7 +19,7 @@ const AIManagement: React.FC = () => {
   const [isLoadingModel, setIsLoadingModel] = useState(false);
   const [modelLoadStatus, setModelLoadStatus] = useState<string>('');
   const [modelError, setModelError] = useState<string>('');
-  const [activeTab, setActiveTab] = useState<'models' | 'configuration'>('models');
+  const [activeTab, setActiveTab] = useState<'models' | 'configuration' | 'inference'>('models');
   const [configuration, setConfiguration] = useState<any>(null);
   const [isLoadingConfig, setIsLoadingConfig] = useState(false);
   const [expandedSections, setExpandedSections] = useState<{ [key: string]: boolean }>({});
@@ -30,6 +30,11 @@ const AIManagement: React.FC = () => {
   const [personalities, setPersonalities] = useState<any[]>([]);
   const [isLoadingAgents, setIsLoadingAgents] = useState(false);
   const [isLoadingPersonalities, setIsLoadingPersonalities] = useState(false);
+
+  // Router/Inference state
+  const [routerStats, setRouterStats] = useState<any>(null);
+  const [isLoadingRouter, setIsLoadingRouter] = useState(false);
+  const [isTogglingRouter, setIsTogglingRouter] = useState(false);
 
   // Fetch available models
   const fetchModels = async () => {
@@ -219,6 +224,48 @@ const AIManagement: React.FC = () => {
     setIsLoadingPersonalities(false);
   };
 
+  // Fetch router stats
+  const fetchRouterStats = async () => {
+    setIsLoadingRouter(true);
+    try {
+      const response = await fetch('http://localhost:5024/api/admin/router/stats', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const data = await response.json();
+      setRouterStats(data);
+    } catch (error) {
+      console.error('Error fetching router stats:', error);
+      toast.error('Failed to fetch router stats');
+    }
+    setIsLoadingRouter(false);
+  };
+
+  // Toggle router (local <-> cloud)
+  const toggleRouter = async () => {
+    setIsTogglingRouter(true);
+    try {
+      const response = await fetch('http://localhost:5024/api/admin/router/toggle', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const data = await response.json();
+      if (data.success) {
+        toast.success(data.message || 'Inference mode toggled successfully');
+        fetchRouterStats(); // Refresh stats
+      } else {
+        toast.error(data.error || 'Failed to toggle inference mode');
+      }
+    } catch (error) {
+      console.error('Error toggling router:', error);
+      toast.error('Failed to toggle inference mode');
+    }
+    setIsTogglingRouter(false);
+  };
+
   useEffect(() => {
     fetchModels();
     fetchModelStatus();
@@ -239,6 +286,8 @@ const AIManagement: React.FC = () => {
       } else {
         fetchConfiguration();
       }
+    } else if (activeTab === 'inference') {
+      fetchRouterStats();
     }
   }, [activeTab]);
 
@@ -295,6 +344,16 @@ const AIManagement: React.FC = () => {
               }`}
             >
               Configuration
+            </button>
+            <button
+              onClick={() => setActiveTab('inference')}
+              className={`pb-3 px-1 font-medium transition-colors ${
+                activeTab === 'inference'
+                  ? 'text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 dark:border-indigo-400'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+              }`}
+            >
+              Inference
             </button>
           </div>
 
@@ -710,6 +769,193 @@ const AIManagement: React.FC = () => {
                         </div>
                       </div>
                     )}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'inference' && (
+              <div>
+                {isLoadingRouter ? (
+                  <div className="flex items-center justify-center py-12">
+                    <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
+                  </div>
+                ) : !routerStats ? (
+                  <p className="text-gray-500 dark:text-gray-400 text-center py-12">
+                    No router information available
+                  </p>
+                ) : (
+                  <div className="space-y-6">
+                    {/* Current Mode & Toggle */}
+                    <div className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-lg p-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                            Inference Mode
+                          </h3>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            {routerStats.active
+                              ? '☁️ Cloud inference (3 providers available)'
+                              : '💻 Local inference (llama-cpp)'
+                            }
+                          </p>
+                        </div>
+                        <button
+                          onClick={toggleRouter}
+                          disabled={isTogglingRouter || !routerStats.enabled}
+                          className={`px-6 py-3 rounded-lg font-medium transition-all ${
+                            routerStats.active
+                              ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+                              : 'bg-gray-600 text-white hover:bg-gray-700'
+                          } disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2`}
+                        >
+                          {isTogglingRouter ? (
+                            <>
+                              <Loader2 className="h-5 w-5 animate-spin" />
+                              Switching...
+                            </>
+                          ) : (
+                            <>
+                              <RefreshCw className="h-5 w-5" />
+                              {routerStats.active ? 'Switch to Local' : 'Switch to Cloud'}
+                            </>
+                          )}
+                        </button>
+                      </div>
+
+                      {/* Performance Info */}
+                      <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div className="bg-white dark:bg-gray-800 rounded-lg p-3">
+                          <p className="text-xs text-gray-500 dark:text-gray-400">Latency</p>
+                          <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                            {routerStats.active ? '0.5-2.5s' : '~5s'}
+                          </p>
+                        </div>
+                        <div className="bg-white dark:bg-gray-800 rounded-lg p-3">
+                          <p className="text-xs text-gray-500 dark:text-gray-400">Model Size</p>
+                          <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                            {routerStats.active ? '70B params' : '0.5-7B'}
+                          </p>
+                        </div>
+                        <div className="bg-white dark:bg-gray-800 rounded-lg p-3">
+                          <p className="text-xs text-gray-500 dark:text-gray-400">Cost/Month</p>
+                          <p className="text-lg font-semibold text-green-600 dark:text-green-400">$0</p>
+                        </div>
+                        <div className="bg-white dark:bg-gray-800 rounded-lg p-3">
+                          <p className="text-xs text-gray-500 dark:text-gray-400">Daily Limit</p>
+                          <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                            {routerStats.active ? '16K+' : 'Unlimited'}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Providers Status */}
+                    {routerStats.enabled && routerStats.providers && routerStats.providers.length > 0 && (
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                          Cloud Providers
+                        </h3>
+                        <div className="grid gap-4 md:grid-cols-3">
+                          {routerStats.providers.map((provider: string, index: number) => {
+                            const providerStats = routerStats.stats?.providers?.[provider];
+                            const isGroq = provider.includes('Groq');
+                            const isOpenRouter = provider.includes('OpenRouter');
+                            const isLLM7 = provider.includes('LLM7');
+
+                            return (
+                              <div
+                                key={provider}
+                                className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-indigo-500 dark:hover:border-indigo-400 transition-colors"
+                              >
+                                <div className="flex items-center justify-between mb-3">
+                                  <div className="flex items-center gap-2">
+                                    {isGroq && <Zap className="h-5 w-5 text-yellow-500" />}
+                                    {isOpenRouter && <Network className="h-5 w-5 text-blue-500" />}
+                                    {isLLM7 && <Cloud className="h-5 w-5 text-purple-500" />}
+                                    <h4 className="font-medium text-gray-900 dark:text-white">
+                                      {provider.split(' (')[0]}
+                                    </h4>
+                                  </div>
+                                  <span className="px-2 py-1 text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full">
+                                    Active
+                                  </span>
+                                </div>
+                                <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                  {provider.split('(')[1]?.replace(')', '')}
+                                </p>
+                                {providerStats && (
+                                  <div className="grid grid-cols-2 gap-2 text-xs">
+                                    <div>
+                                      <p className="text-gray-500 dark:text-gray-400">Requests</p>
+                                      <p className="font-medium text-gray-900 dark:text-white">
+                                        {providerStats.total_requests || 0}
+                                      </p>
+                                    </div>
+                                    <div>
+                                      <p className="text-gray-500 dark:text-gray-400">Success</p>
+                                      <p className="font-medium text-gray-900 dark:text-white">
+                                        {((providerStats.success_rate || 0) * 100).toFixed(0)}%
+                                      </p>
+                                    </div>
+                                  </div>
+                                )}
+                                <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                                  {isGroq && '⚡ Ultra-fast (0.5s)'}
+                                  {isOpenRouter && '🧠 Reasoning (2s)'}
+                                  {isLLM7 && '🌐 Fallback (2.5s)'}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Overall Stats */}
+                    {routerStats.stats && (
+                      <div className="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                          Router Statistics
+                        </h3>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                          <div>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">Total Requests</p>
+                            <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                              {routerStats.stats.total_requests || 0}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">Total Cost</p>
+                            <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+                              ${(routerStats.stats.total_cost || 0).toFixed(6)}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">Status</p>
+                            <p className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
+                              {routerStats.active ? 'Cloud' : 'Local'}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Refresh Button */}
+                    <div className="flex justify-center">
+                      <button
+                        onClick={fetchRouterStats}
+                        disabled={isLoadingRouter}
+                        className="px-6 py-2 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center gap-2 transition-colors"
+                      >
+                        {isLoadingRouter ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <RefreshCw className="h-4 w-4" />
+                        )}
+                        Refresh Stats
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
