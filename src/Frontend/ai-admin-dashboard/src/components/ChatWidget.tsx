@@ -108,9 +108,15 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
   const [isBusy, setIsBusy] = useState(false);
   const [totalTokens, setTotalTokens] = useState(0);
 
-  // Agent and Personality State
-  const [selectedAgent, setSelectedAgent] = useState('assistant'); // Default to assistant agent for admin dashboard
-  const [selectedPersonality, setSelectedPersonality] = useState('rhomida'); // Default to rhomida for assistant agent
+  // Agent and Personality State - restore from localStorage
+  const [selectedAgent, setSelectedAgent] = useState(() => {
+    const saved = localStorage.getItem('chatWidgetAgent');
+    return saved || 'assistant'; // Default to assistant agent for admin dashboard
+  });
+  const [selectedPersonality, setSelectedPersonality] = useState(() => {
+    const saved = localStorage.getItem('chatWidgetPersonality');
+    return saved || 'rhomida'; // Default to rhomida for assistant agent
+  });
   const [availableAgents, setAvailableAgents] = useState<any[]>([]);
   const [availablePersonalities, setAvailablePersonalities] = useState<any[]>([]);
   const [loadingAgents, setLoadingAgents] = useState(false);
@@ -1175,7 +1181,9 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
                           const newAgent = e.target.value;
                           console.log('[ChatWidget] Agent changed to:', newAgent);
                           setSelectedAgent(newAgent);
+                          localStorage.setItem('chatWidgetAgent', newAgent); // Save to localStorage
                           setSelectedPersonality(''); // Clear personality while loading
+                          localStorage.setItem('chatWidgetPersonality', ''); // Clear personality in localStorage
 
                           // Fetch personalities for the new agent
                           await fetchPersonalities(newAgent);
@@ -1215,6 +1223,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
                           const newPersonality = e.target.value;
                           console.log('[ChatWidget] Personality changed to:', newPersonality);
                           setSelectedPersonality(newPersonality);
+                          localStorage.setItem('chatWidgetPersonality', newPersonality); // Save to localStorage
                           // Update session if connected
                           console.log('[ChatWidget] Sending personality update to backend:', {
                             agent: selectedAgent,

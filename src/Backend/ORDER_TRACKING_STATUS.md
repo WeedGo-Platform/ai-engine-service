@@ -17,7 +17,7 @@
    - **Behavior**: When order status changes, broadcasts to all connected mobile clients
    - **Error Handling**: Non-blocking (WebSocket failures don't prevent status updates)
 
-### 3. **Registered WebSocket Router** (`main_server.py`)
+### 3. **Registered WebSocket Router** (`api_server.py`)
    - **Location**: Lines 642-648
    - **Status**: ✅ Registered and loaded
    - **Confirmation**: Server logs show "Order tracking WebSocket endpoints loaded"
@@ -212,7 +212,7 @@ Mobile App                    Backend Server              Admin Dashboard
 **Integration Points**:
 1. `order_service.update_order_status()` - Calls broadcast after DB update
 2. `order_websocket.broadcast_order_status_update()` - Exported function
-3. `main_server.py` - Registers WebSocket router
+3. `api_server.py` - Registers WebSocket router
 
 **Error Handling**:
 - WebSocket broadcast failures are caught and logged

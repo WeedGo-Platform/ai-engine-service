@@ -211,7 +211,7 @@ async def list_transactions(
 
 ### Step 3: Register Endpoint in Server (5 min)
 
-Edit `main_server.py` or `api_server.py`:
+Edit `api_server.py` or `api_server.py`:
 ```python
 # Add at top
 from api.v2.payments import payment_endpoints as payments_v2
@@ -228,7 +228,7 @@ app.include_router(
 
 #### 4.1 Start the Server
 ```bash
-python main_server.py
+python api_server.py
 ```
 
 #### 4.2 Check OpenAPI Docs

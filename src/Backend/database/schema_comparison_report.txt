@@ -1,0 +1,736 @@
+================================================================================
+DATABASE SCHEMA COMPARISON REPORT
+================================================================================
+Generated: 2025-10-12 22:05:46
+Legacy DB: localhost:5433
+Current DB: localhost:5434
+================================================================================
+
+SUMMARY:
+  Missing Tables:      6
+  Tables w/ Missing Columns: 102
+  Missing Views:       1
+  Missing Triggers:    39
+  Missing Functions:   89
+  Missing Indexes:     312
+  Missing Constraints: 155
+
+MISSING TABLES:
+  • agi_audit_aggregates (9 columns)
+  • agi_audit_alerts (11 columns)
+  • agi_audit_logs (17 columns)
+  • agi_rate_limit_buckets (4 columns)
+  • agi_rate_limit_rules (11 columns)
+  • agi_rate_limit_violations (9 columns)
+
+TABLES WITH MISSING COLUMNS:
+  • age_verification_logs: session_id, verified, timestamp, age_info
+  • ai_conversations: personality_id, tenant_id, messages, updated_at, customer_id, context, agent_id, created_at, conversation_id
+  • ai_personalities: voice_config, avatar_url, tenant_id, updated_at, name, is_default, traits
+  • ai_training_data: feedback_score, customer_message, model_confidence, search_results, correction, inferred_params, customer_action, response_time_ms
+  • api_keys: active, tenant_id, updated_at, name, allowed_stores, description, last_used
+  • audit_log: tenant_id, success, store_id, resource_id
+  • auth_tokens: metadata, is_used, used_at
+  • batch_tracking: is_active, purchase_order_id, gtin_barcode, batch_lot, unit_cost, each_gtin, location_id, sku, case_gtin, packaged_on_date
+  • broadcast_audit_logs: user_role, new_values, details, user_agent, old_values, action_category
+  • broadcast_messages: priority, is_active, preview_text, push_title, template_variables, channel_type, content, updated_at, sender_phone, sender_name, push_image_url, push_action_url, push_badge_count, template_id, sender_email
+  • broadcast_recipients: sms_retry_count, email_retry_count, email_clicked_at, sms_error, email_error, email_opened_at, push_status, email_unsubscribed_at, push_retry_count, customer_id, sms_delivered_at, sms_replied_at, push_delivered_at, sms_status, phone_number, updated_at, channels, email_status, email, email_sent_at, push_error, push_opened_at, sms_sent_at, push_sent_at, email_bounced_at, email_delivered_at, push_token
+  • broadcast_segments: criteria, broadcast_id, recipient_count, last_calculated_at
+  • broadcasts: max_retries, successful_sends, cancelled_at, tenant_id, completed_at, updated_at, send_immediately, started_at, retry_failed, name, description, failed_sends, tags, respect_quiet_hours
+  • bundle_deals: active, bundle_type, min_quantity, discount_percentage, require_all_items, max_quantity, start_date, allow_substitutions, updated_at, optional_products, name, end_date, description, required_products
+  • cart_sessions: status, discount_codes, tenant_id, user_profile_id, ai_personality_id, tax_calculation, delivery_fee
+  • chat_interactions: session_id, response_time, ai_response, customer_id, metadata, user_message
+  • communication_analytics: sms_sent, email_open_rate, email_cost, push_cost, email_clicked, email_delivered, sms_delivered, sms_cost, calculated_at, push_open_rate, total_cost, push_failed, push_delivered, push_sent, broadcast_id, email_click_rate, email_opened, sms_failed, sms_replied, push_opened, email_sent, email_unsubscribed, email_bounced, avg_delivery_time_seconds
+  • communication_logs: retry_count, content, provider_response, created_at, delivered_at
+  • communication_preferences: channel_push, transactional, quiet_hours_end, email_unsubscribe_token, last_sms_at, max_push_per_day, preferred_language, last_email_at, alerts, max_emails_per_day, quiet_hours_start, promotional, customer_id, last_push_at, quiet_hours_enabled, sms_unsubscribe_token, channel_sms, channel_email, timezone, max_sms_per_day, frequency
+  • conversation_states: session_id, intent_history, previous_stage, engagement_score, total_duration_seconds, updated_at, stage_start_time, resistance_level, current_stage, created_at, stage_history, message_count
+  • conversion_metrics: cart_removals, converted, conversion_score, engagement_score, stage_transitions, abandonment_stage, total_session_duration_seconds, products_viewed, conversion_events, cart_additions, abandonment_reason
+  • customer_pricing_rules: active, volume_discounts, tenant_id, negotiated_products, custom_markup_percentage, updated_at, early_payment_discount, price_tier_id, payment_terms, category_discounts
+  • customer_reviews: status, is_recommended, sku
+  • deliveries: id_verified, batch_id, feedback, issues_reported, metadata, scheduled_at, signature_captured_at, delivery_notes, age_verified, delivery_longitude, customer_name, completed_at, customer_id, assigned_at, customer_email, id_verification_type, delivery_fee, accepted_at, photo_proof_urls, batch_sequence, cancelled_at, rating, delivery_latitude, arrived_at, customer_phone, signature_data, departed_at, id_verification_data, distance_km, tip_amount
+  • delivery_batches: optimized_route, total_distance_km, estimated_duration_minutes
+  • delivery_geofences: delivery_id, exited_at, center_latitude, dwell_time_seconds, center_longitude, auto_complete_on_enter, notify_on_enter, radius_meters, entered_at, notify_on_exit
+  • delivery_tracking: altitude_meters, activity_type, provider, is_mock_location, metadata, recorded_at, received_at
+  • delivery_zones: free_delivery_minimum, base_delivery_fee, delivery_time_minutes, radius_km, tenant_id, available_days, updated_at, polygon_coordinates, delivery_hours
+  • discount_codes: minimum_purchase, promotion_id, tenant_id, customer_id, used_at, order_id, used, description
+  • discount_usage: used_at
+  • dynamic_pricing_rules: priority, trigger_type, active, action_value, action_type, updated_at, category_ids, name, product_ids, description
+  • holidays: holiday_type, fixed_day, updated_at, floating_rule, date_type, typical_business_impact, is_bank_holiday, fixed_month, calculation_rule
+  • inventory_locations: code, updated_at, name, type, zone
+  • location_access_log: latitude, accuracy, store_id, longitude, user_agent, metadata
+  • location_assignments_log: inventory_id, quantity, notes, location_id
+  • message_templates: preview_text, is_global, is_approved, tenant_id, channel_type, content, last_used_at, usage_count, name, approved_at, description, category, tags
+  • model_deployments: status, is_active, stopped_at, traffic_percentage, deployment_name, started_at, endpoint
+  • model_metrics: notes, evaluation_date, model_name, training_samples, accuracy_score, f1_score, precision_score, recall_score
+  • model_versions: is_active, description, config
+  • ocs_inventory: quantity_reserved, image_url, vendor, subcategory, case_gtin, is_available, thc_content, brand, each_gtin, batch_lot, retail_price, min_stock_level, cbd_content, last_restock_date, plant_type, quantity_available, sku, quantity_on_hand, supplier, container_id, max_stock_level, override_price, gtin_barcode, retail_price_dynamic, unit_cost, strain_type, product_name, shipment_id, packaged_on_date, category
+  • ocs_inventory_logs: inventory_id, reason, performed_by, change_quantity, previous_quantity, order_id, metadata, new_quantity
+  • ocs_inventory_movements: inventory_id, reference_id, reason, performed_by, reference_type
+  • ocs_inventory_reservations: status, inventory_id, updated_at, order_id, cart_session_id
+  • ocs_inventory_snapshots: inventory_id, last_movement_id, reserved_quantity, quantity_on_hand, available_quantity
+  • ocs_inventory_transactions: quantity, batch_lot, unit_cost, running_balance, sku, created_by
+  • ocs_product_catalog: minimum_cbd_content_percent, slug, temperature_display, fulfilment_method, ontario_grown, rechargeable_battery, ocs_item_number, thc_content_per_unit, cbd_content_per_volume, minimum_thc_content_percent, terpenes, colour, temperature_control, maximum_cbd_content_percent, number_of_items_in_retail_pack, rating_count, sub_sub_category, replacement_parts_available, drying_method, gtin, grow_method, maximum_thc_content_percent, heating_element_type, sub_category, inventory_status, physical_dimension_depth, craft, growing_method, product_short_description, physical_dimension_volume, unit_price, ocs_variant_number, extraction_process, physical_dimension_height, delivery_tier, carrier_oil, plant_type, updated_at, rating, eaches_per_inner_pack, eaches_per_master_case, product_long_description, food_allergens, grow_medium, cbd_content_per_unit, battery_type, storage_criteria, size, removable_battery, supplier_name, compatibility, physical_dimension_weight, dried_flower_cannabis_equivalency, street_name, trimming_method, pack_size, physical_dimension_width, thc_content_per_volume, strain_type, unit_of_measure, grow_region, net_weight, stock_status
+  • order_status_history: status, changed_at, notes
+  • otp_codes: identifier, identifier_type, purpose, code, verified, user_agent, ip_address
+  • otp_rate_limits: blocked_until, identifier, identifier_type, last_request_at, first_request_at, created_at
+  • parameter_accuracy: is_correct, parameter_type, inferred_value, confidence_score, correct_value
+  • payment_audit_log: entity_type, tenant_id, entity_id, details
+  • payment_credentials: encryption_metadata, encrypted_data, tenant_id, provider, updated_at, description, revoked_at, updated_by
+  • payment_disputes: provider_id, amount, reason_code, reason, updated_at, provider_response, type, evidence_due_date, evidence_submitted, currency, merchant_response, dispute_id
+  • payment_fee_splits: platform_percentage_fee, provider_fee, platform_fee_collected_at, tenant_net_amount, tenant_id, gross_amount, platform_fee, platform_fixed_fee, tenant_settled, platform_fee_collected, tenant_settled_at
+  • payment_idempotency_keys: status, tenant_id, response
+  • payment_methods: is_active, display_name, tenant_id, payment_token, last_used_at, type, card_last_four
+  • payment_metrics: net_amount, metrics_by_type, success_rate, avg_transaction_time_ms, date, total_refunds
+  • payment_provider_health_metrics: error_type, is_successful, endpoint, checked_at, method, tenant_provider_id, status_code
+  • payment_providers: name, fee_structure, supported_card_types, capabilities, is_default, webhook_url, settlement_schedule
+  • payment_refunds: notes, initiated_by, refund_transaction_id, amount, reason, completed_at
+  • payment_settlements: settlement_id, refund_count, reconciled_at, chargeback_count, bank_account_last_four, gross_amount, adjustment_amount, settlement_report_url, refund_amount, currency, chargeback_amount, deposit_date
+  • payment_subscriptions: next_billing_date, provider_id, interval, trial_end_date, cancelled_at, subscription_id, tenant_id, interval_count, billing_cycles_completed, failed_payment_count
+  • payment_transactions: net_amount, idempotency_key, provider_fee, tenant_id, fraud_status, risk_factors, type, tenant_provider_id, processed_at, tenant_net_amount, authentication_status, transaction_reference, user_agent, ip_address, risk_score, device_fingerprint, failed_at, tax_amount, platform_fee, authentication_data
+  • payment_webhook_routes: tenant_id, provider, updated_at, webhook_url_path, tenant_provider_id
+  • payment_webhooks: signature_verified, processing_error, webhook_id, processed, received_at
+  • price_history: changed_at, product_id
+  • price_tiers: priority, active, customer_type, updated_at, name, min_monthly_volume, min_order_value, description
+  • pricing_rules: sub_category, sub_sub_category, updated_at
+  • product_ratings: verified_purchase_count, total_reviews, rating_distribution, recommended_percentage, sku, created_at
+  • product_recommendations: based_on, active, conversion_rate, recommended_product_id, revenue_impact, updated_at, product_id, click_through_rate
+  • profiles: total_spent, phone, customer_type, last_interaction, first_name, last_name, preferred_effects, medical_conditions, order_count, experience_level, purchase_history, preferred_categories, price_range, language, address, preferred_payment_method, needs, interaction_count, payment_methods, city, is_verified, postal_code, tags, marketing_consent, timezone, last_order_date, notes, state, sms_consent, date_of_birth, country
+  • promotion_usage: tenant_id, customer_id
+  • promotions: recurrence_type, active, discount_value, tenant_id, total_usage_limit, time_end, discount_type, max_discount_amount, created_by_user_id, brand_ids, is_continuous, customer_tier_ids, priority, stackable, applies_to, hour_of_day, usage_limit_per_customer, time_start, timezone, day_of_week, min_purchase_amount, category_ids, product_ids, first_time_customer_only, exclude_product_ids
+  • provinces_territories: pickup_allowed, license_prefix, min_age, delivery_allowed, type, settings, regulatory_body
+  • provincial_suppliers: address, phone, contact_person, tenant_id, provinces_territories_id, is_provincial_supplier, payment_terms, email
+  • purchase_order_items: uom_conversion, uom, packaged_on_date, shipped_qty, brand, gtin_barcode, exists_in_inventory, updated_at, uom_conversion_qty, batch_lot, each_gtin, line_total, sku, vendor, case_gtin, item_name
+  • purchase_orders: expected_date, tenant_id, vendor, ocs_order_number, shipment_id, received_date, container_id
+  • push_subscriptions: is_sandbox, notification_count, app_version, device_token, updated_at, failed_count, last_active_at, device_name, customer_id, device_model, os_version
+  • recommendation_metrics: customer_id, session_id, event_type, event_value
+  • review_attributes: attribute_value, rating
+  • review_media: caption
+  • role_permissions: granted, resource_type
+  • shelf_locations: is_active, location_type, notes, shelf, bin, location_code, zone, max_volume_m3, max_weight_kg, is_available, aisle, temperature_range
+  • skip_words: active
+  • staff_delivery_status: available_from, current_longitude, current_status, deliveries_today, deliveries_completed, updated_at, current_deliveries, current_latitude, max_deliveries, last_location_update, average_delivery_time_minutes, available_until
+  • store_settings: category
+  • supported_languages: coverage_percentage, is_rtl, name, code
+  • tax_rates: effective_to, provincial_tax_rate, tenant_id, federal_tax_rate, cannabis_excise_duty, environmental_fee, recycling_fee, updated_at, excise_calculation_method
+  • token_blacklist: user_id, created_at, token_id
+  • training_examples: added_by, feedback_score, entities, dataset_name, query, dataset_id, expected_intent, updated_at, expected_response_qualities, context, expected_response, expected_products
+  • training_sessions: status, session_id, examples_trained, accuracy_before, error_message, accuracy_after, dataset_id, completed_at, started_at, improvements
+  • translation_batch_items: status, error_message, processing_time_ms, completed_at, context
+  • translation_batches: target_language, namespace, batch_key, started_at, completed_items, total_items, metadata
+  • translation_overrides: is_active, reason, updated_at, override_text, translation_id, created_by
+  • translations: is_cached, target_language, model_version, source_text, namespace, last_used_at, confidence_score, translated_text, source_language, is_verified, usage_count
+  • unsubscribe_list: resubscribe_allowed_after, phone_number, additional_comments, channel_type, unsubscribe_source, customer_id, is_permanent, created_at, broadcast_id
+  • user_addresses: validation_data, phone_number, is_validated, address_type, province_state, unit_number
+  • user_login_logs: region, session_id, latitude, timezone, country, city, longitude, created_at, postal_code, isp, device_fingerprint
+  • user_sessions: last_activity
+  • voice_auth_logs: user_agent, timestamp, age_info, success
+  • voice_profiles: metadata, age_verification, voice_embedding
+  • wishlist: priority, product_id, customer_id, store_id
+
+MISSING VIEWS:
+  • recent_login_activity
+
+MISSING TRIGGERS:
+  • update_ai_personalities_updated_at on ai_personalities
+  • update_api_keys_updated_at on api_keys
+  • update_broadcast_messages_updated_at on broadcast_messages
+  • update_broadcast_recipients_updated_at on broadcast_recipients
+  • update_broadcasts_updated_at on broadcasts
+  • update_bundle_deals_updated_at on bundle_deals
+  • update_communication_preferences_updated_at on communication_preferences
+  • update_conversation_states_updated_at on conversation_states
+  • update_customer_pricing_rules_updated_at on customer_pricing_rules
+  • trigger_update_product_rating on customer_reviews
+  • trigger_update_product_rating on customer_reviews
+  • trigger_update_product_rating on customer_reviews
+  • trigger_validate_verified_purchase on customer_reviews
+  • trigger_validate_verified_purchase on customer_reviews
+  • update_dynamic_pricing_rules_updated_at on dynamic_pricing_rules
+  • update_message_templates_updated_at on message_templates
+  • update_ocs_inventory_timestamp_trigger on ocs_inventory
+  • trigger_update_ocs_product_catalog_updated_at on ocs_product_catalog
+  • update_payment_credentials_updated_at on payment_credentials
+  • update_payment_disputes_updated_at on payment_disputes
+  • update_payment_methods_updated_at on payment_methods
+  • update_payment_providers_updated_at on payment_providers
+  • update_payment_subscriptions_updated_at on payment_subscriptions
+  • update_payment_webhook_routes_updated_at on payment_webhook_routes
+  • update_price_tiers_updated_at on price_tiers
+  • update_pricing_rules_updated_at on pricing_rules
+  • update_product_recommendations_updated_at on product_recommendations
+  • update_provincial_suppliers_updated_at on provincial_suppliers
+  • update_purchase_orders_timestamp_trigger on purchase_orders
+  • update_push_subscriptions_updated_at on push_subscriptions
+  • trigger_update_review_vote_counts on review_votes
+  • trigger_update_review_vote_counts on review_votes
+  • trigger_update_review_vote_counts on review_votes
+  • update_shelf_locations_updated_at on shelf_locations
+  • update_staff_delivery_status_updated_at on staff_delivery_status
+  • update_system_settings_updated_at on system_settings
+  • update_overrides_updated_at on translation_overrides
+  • update_translations_updated_at on translations
+  • trigger_update_user_last_login on user_login_logs
+
+MISSING FUNCTIONS:
+  • apply_discount_code
+  • calculate_checkout_taxes
+  • calculate_distance
+  • calculate_final_price
+  • calculate_holiday_date
+  • calculate_platform_fee
+  • check_geofence_entry
+  • check_idempotency_key
+  • check_inventory_exists
+  • check_otp_rate_limit
+  • cleanup_expired_idempotency_keys
+  • cleanup_expired_otp_codes
+  • cleanup_expired_tokens
+  • cleanup_old_audit_logs
+  • create_auth_token
+  • expire_checkout_sessions
+  • generate_product_slug
+  • get_staff_active_deliveries
+  • get_store_ai_config
+  • get_store_hours
+  • get_tenant_primary_provider
+  • get_user_context
+  • get_user_login_stats
+  • get_wishlist_stats
+  • gin_extract_query_trgm
+  • gin_extract_value_trgm
+  • gin_trgm_consistent
+  • gin_trgm_triconsistent
+  • gtrgm_compress
+  • gtrgm_consistent
+  • gtrgm_decompress
+  • gtrgm_distance
+  • gtrgm_in
+  • gtrgm_options
+  • gtrgm_out
+  • gtrgm_penalty
+  • gtrgm_picksplit
+  • gtrgm_same
+  • gtrgm_union
+  • is_promotion_active_now
+  • is_store_open
+  • log_delivery_event
+  • process_asn_to_purchase_order
+  • process_purchase_order_receipt
+  • receive_purchase_order
+  • refresh_review_summary
+  • set_limit
+  • show_limit
+  • show_trgm
+  • similarity
+  • similarity_dist
+  • similarity_op
+  • strict_word_similarity
+  • strict_word_similarity_commutator_op
+  • strict_word_similarity_dist_commutator_op
+  • strict_word_similarity_dist_op
+  • strict_word_similarity_op
+  • unaccent
+  • unaccent_init
+  • unaccent_lexize
+  • update_checkout_session_timestamp
+  • update_inventory_movements_updated_at
+  • update_inventory_timestamp
+  • update_pricing_rules_updated_at
+  • update_product_catalog_updated_at
+  • update_product_rating
+  • update_review_vote_counts
+  • update_system_settings_updated_at
+  • update_translation_usage
+  • update_user_last_login
+  • update_user_payment_methods_updated_at
+  • user_has_permission
+  • uuid_generate_v1
+  • uuid_generate_v1mc
+  • uuid_generate_v3
+  • uuid_generate_v4
+  • uuid_generate_v5
+  • uuid_nil
+  • uuid_ns_dns
+  • uuid_ns_oid
+  • uuid_ns_url
+  • uuid_ns_x500
+  • validate_auth_token
+  • validate_verified_purchase
+  • word_similarity
+  • word_similarity_commutator_op
+  • word_similarity_dist_commutator_op
+  • word_similarity_dist_op
+  • word_similarity_op
+
+MISSING INDEXES:
+  • idx_age_verification_logs_timestamp on age_verification_logs
+  • agi_audit_aggregates_period_start_period_end_event_type_sev_key on agi_audit_aggregates
+  • idx_audit_aggregates_period on agi_audit_aggregates
+  • idx_audit_alerts_triggered on agi_audit_alerts
+  • idx_audit_logs_event_type on agi_audit_logs
+  • idx_audit_logs_resource on agi_audit_logs
+  • idx_audit_logs_severity on agi_audit_logs
+  • idx_audit_logs_timestamp on agi_audit_logs
+  • idx_audit_logs_user_id on agi_audit_logs
+  • idx_rate_limit_buckets_last_update on agi_rate_limit_buckets
+  • idx_rate_limit_rules_scope on agi_rate_limit_rules
+  • idx_rate_limit_violations_identifier on agi_rate_limit_violations
+  • idx_rate_limit_violations_rule on agi_rate_limit_violations
+  • idx_ai_conversations_context_gin on ai_conversations
+  • idx_ai_conversations_created_at on ai_conversations
+  • idx_ai_conversations_customer_id on ai_conversations
+  • idx_ai_conversations_messages_gin on ai_conversations
+  • idx_ai_conversations_session_customer on ai_conversations
+  • idx_ai_conversations_session_id on ai_conversations
+  • idx_ai_personalities_tenant on ai_personalities
+  • idx_training_action on ai_training_data
+  • idx_training_created on ai_training_data
+  • idx_training_score on ai_training_data
+  • idx_api_keys_key_hash on api_keys
+  • idx_api_keys_user_id on api_keys
+  • idx_audit_log_timestamp on audit_log
+  • idx_audit_log_user_id on audit_log
+  • idx_auth_tokens_expires_at on auth_tokens
+  • idx_auth_tokens_token_hash on auth_tokens
+  • idx_auth_tokens_token_type on auth_tokens
+  • idx_auth_tokens_type_user on auth_tokens
+  • idx_auth_tokens_user_id on auth_tokens
+  • batch_tracking_batch_lot_key on batch_tracking
+  • idx_batch_lot on batch_tracking
+  • idx_batch_sku on batch_tracking
+  • idx_batch_tracking_case_gtin on batch_tracking
+  • idx_batch_tracking_each_gtin on batch_tracking
+  • idx_batch_tracking_gtin_barcode on batch_tracking
+  • idx_batch_tracking_location on batch_tracking
+  • idx_broadcast_audit_logs_action on broadcast_audit_logs
+  • idx_broadcast_audit_logs_broadcast_id on broadcast_audit_logs
+  • idx_broadcast_audit_logs_created_at on broadcast_audit_logs
+  • idx_broadcast_audit_logs_performed_by on broadcast_audit_logs
+  • broadcast_messages_broadcast_id_channel_type_key on broadcast_messages
+  • idx_broadcast_messages_broadcast_id on broadcast_messages
+  • idx_broadcast_messages_channel_type on broadcast_messages
+  • idx_broadcast_messages_template_id on broadcast_messages
+  • idx_broadcast_recipients_broadcast_id on broadcast_recipients
+  • idx_broadcast_recipients_customer_id on broadcast_recipients
+  • idx_broadcast_recipients_email_status on broadcast_recipients
+  • idx_broadcast_recipients_push_status on broadcast_recipients
+  • idx_broadcast_recipients_sms_status on broadcast_recipients
+  • idx_broadcast_segments_broadcast_id on broadcast_segments
+  • idx_broadcasts_created_by on broadcasts
+  • idx_broadcasts_scheduled_at on broadcasts
+  • idx_broadcasts_store_id on broadcasts
+  • idx_broadcasts_tenant_id on broadcasts
+  • idx_cart_sessions_status on cart_sessions
+  • idx_chat_interactions_created_at on chat_interactions
+  • idx_chat_interactions_customer_id on chat_interactions
+  • idx_chat_interactions_intent on chat_interactions
+  • idx_chat_interactions_metadata_gin on chat_interactions
+  • idx_chat_interactions_session_customer on chat_interactions
+  • idx_chat_interactions_session_id on chat_interactions
+  • communication_analytics_broadcast_id_key on communication_analytics
+  • idx_communication_analytics_broadcast_id on communication_analytics
+  • idx_communication_logs_created_at on communication_logs
+  • idx_communication_logs_recipient on communication_logs
+  • idx_communication_logs_status on communication_logs
+  • idx_communication_logs_user_id on communication_logs
+  • communication_preferences_customer_id_key on communication_preferences
+  • communication_preferences_email_unsubscribe_token_key on communication_preferences
+  • communication_preferences_sms_unsubscribe_token_key on communication_preferences
+  • idx_communication_preferences_customer_id on communication_preferences
+  • idx_communication_preferences_email_token on communication_preferences
+  • idx_communication_preferences_sms_token on communication_preferences
+  • conversation_states_session_id_key on conversation_states
+  • idx_conversation_states_current_stage on conversation_states
+  • idx_conversation_states_session_id on conversation_states
+  • idx_conversation_states_user_id on conversation_states
+  • idx_conversion_metrics_converted on conversion_metrics
+  • idx_conversion_metrics_created_at on conversion_metrics
+  • idx_conversion_metrics_session_id on conversion_metrics
+  • idx_conversion_metrics_user_id on conversion_metrics
+  • idx_reviews_helpful on customer_reviews
+  • idx_reviews_order on customer_reviews
+  • idx_reviews_status_created on customer_reviews
+  • idx_reviews_user on customer_reviews
+  • idx_reviews_variant_rating on customer_reviews
+  • idx_deliveries_batch_id on deliveries
+  • idx_deliveries_created_at on deliveries
+  • idx_deliveries_customer_id on deliveries
+  • idx_deliveries_order_id on deliveries
+  • idx_deliveries_scheduled_at on deliveries
+  • idx_deliveries_store_id on deliveries
+  • idx_delivery_events_created_at on delivery_events
+  • idx_delivery_events_delivery_id on delivery_events
+  • idx_delivery_events_event_type on delivery_events
+  • idx_delivery_geofences_delivery_id on delivery_geofences
+  • idx_delivery_geofences_location on delivery_geofences
+  • idx_delivery_tracking_delivery_id on delivery_tracking
+  • idx_delivery_tracking_recorded_at on delivery_tracking
+  • idx_delivery_zones_tenant on delivery_zones
+  • idx_discount_codes_unused on discount_codes
+  • idx_discount_codes_validity on discount_codes
+  • idx_discount_usage_discount on discount_usage
+  • idx_dynamic_pricing_active on dynamic_pricing_rules
+  • idx_holidays_lookup on holidays
+  • idx_holidays_type on holidays
+  • idx_inventory_locations_store_id on inventory_locations
+  • inventory_locations_code_key on inventory_locations
+  • idx_location_access_log_access_type on location_access_log
+  • idx_location_access_log_created_at on location_access_log
+  • idx_location_access_log_store_id on location_access_log
+  • idx_location_access_log_user_id on location_access_log
+  • idx_location_assignments_inventory_id on location_assignments_log
+  • idx_message_templates_category on message_templates
+  • idx_message_templates_channel_type on message_templates
+  • idx_message_templates_is_active on message_templates
+  • idx_message_templates_store_id on message_templates
+  • idx_message_templates_tenant_id on message_templates
+  • model_deployments_deployment_name_key on model_deployments
+  • idx_ocs_inventory_available on ocs_inventory
+  • idx_ocs_inventory_batch_lot on ocs_inventory
+  • idx_ocs_inventory_case_gtin on ocs_inventory
+  • idx_ocs_inventory_each_gtin on ocs_inventory
+  • idx_ocs_inventory_gtin_barcode on ocs_inventory
+  • idx_ocs_inventory_quantity on ocs_inventory
+  • idx_ocs_inventory_sku_lower on ocs_inventory
+  • idx_ocs_inventory_store on ocs_inventory
+  • idx_ocs_inventory_supplier on ocs_inventory
+  • ocs_inventory_store_id_sku_key on ocs_inventory
+  • ocs_inventory_store_sku_unique on ocs_inventory
+  • idx_inventory_logs_created_at on ocs_inventory_logs
+  • idx_inventory_logs_inventory_id on ocs_inventory_logs
+  • idx_inventory_movements_created_at on ocs_inventory_movements
+  • idx_inventory_movements_inventory_id on ocs_inventory_movements
+  • idx_inventory_reservations_inventory_id on ocs_inventory_reservations
+  • idx_inventory_reservations_status on ocs_inventory_reservations
+  • idx_inventory_snapshots_date on ocs_inventory_snapshots
+  • idx_inventory_snapshots_inventory_id on ocs_inventory_snapshots
+  • idx_transactions_date on ocs_inventory_transactions
+  • idx_transactions_sku on ocs_inventory_transactions
+  • idx_ocs_product_catalog_variant_lower on ocs_product_catalog
+  • idx_product_catalog_ocs on ocs_product_catalog
+  • idx_product_catalog_ocs_brand on ocs_product_catalog
+  • idx_product_catalog_ocs_category on ocs_product_catalog
+  • idx_product_catalog_ocs_rating on ocs_product_catalog
+  • idx_product_catalog_ocs_rating_count on ocs_product_catalog
+  • idx_product_catalog_ocs_slug on ocs_product_catalog
+  • idx_product_catalog_ocs_strain_type on ocs_product_catalog
+  • idx_products_brand on ocs_product_catalog
+  • idx_products_category on ocs_product_catalog
+  • idx_products_name on ocs_product_catalog
+  • idx_products_plant_type on ocs_product_catalog
+  • idx_products_price on ocs_product_catalog
+  • idx_products_subcategory on ocs_product_catalog
+  • uk_product_catalog_ocs_variant on ocs_product_catalog
+  • idx_order_status_history_order_id on order_status_history
+  • idx_otp_codes_code on otp_codes
+  • idx_otp_codes_expires_at on otp_codes
+  • idx_otp_codes_identifier on otp_codes
+  • idx_otp_codes_user_id on otp_codes
+  • idx_otp_rate_limits_blocked_until on otp_rate_limits
+  • idx_otp_rate_limits_identifier on otp_rate_limits
+  • idx_param_correct on parameter_accuracy
+  • idx_param_type on parameter_accuracy
+  • idx_payment_audit_action on payment_audit_log
+  • idx_payment_audit_created on payment_audit_log
+  • idx_payment_audit_entity on payment_audit_log
+  • idx_payment_audit_tenant on payment_audit_log
+  • idx_payment_credentials_active on payment_credentials
+  • idx_payment_credentials_expires on payment_credentials
+  • idx_payment_credentials_tenant on payment_credentials
+  • idx_payment_credentials_type on payment_credentials
+  • idx_disputes_status on payment_disputes
+  • idx_disputes_transaction on payment_disputes
+  • idx_fee_splits_settlement on payment_fee_splits
+  • idx_fee_splits_tenant on payment_fee_splits
+  • payment_fee_splits_transaction_id_key on payment_fee_splits
+  • idx_idempotency_expires on payment_idempotency_keys
+  • idx_idempotency_status on payment_idempotency_keys
+  • idx_idempotency_tenant on payment_idempotency_keys
+  • payment_methods_tenant_id_payment_token_provider_id_key on payment_methods
+  • idx_metrics_date on payment_metrics
+  • payment_metrics_date_provider_id_key on payment_metrics
+  • idx_health_metrics_provider on payment_provider_health_metrics
+  • idx_health_metrics_success on payment_provider_health_metrics
+  • payment_providers_name_key on payment_providers
+  • idx_settlements_date on payment_settlements
+  • idx_settlements_provider on payment_settlements
+  • idx_subscriptions_next_billing on payment_subscriptions
+  • idx_subscriptions_status on payment_subscriptions
+  • idx_subscriptions_tenant on payment_subscriptions
+  • idx_payment_transactions_idempotency on payment_transactions
+  • idx_payment_transactions_tenant_provider on payment_transactions
+  • idx_transactions_created on payment_transactions
+  • idx_transactions_order on payment_transactions
+  • idx_transactions_provider_ref on payment_transactions
+  • idx_transactions_status on payment_transactions
+  • idx_transactions_tenant on payment_transactions
+  • payment_transactions_transaction_reference_key on payment_transactions
+  • idx_webhook_routes_path on payment_webhook_routes
+  • idx_webhook_routes_tenant on payment_webhook_routes
+  • payment_webhook_routes_webhook_url_path_key on payment_webhook_routes
+  • idx_webhooks_processed on payment_webhooks
+  • idx_webhooks_provider on payment_webhooks
+  • idx_price_history_product on price_history
+  • price_tiers_name_key on price_tiers
+  • idx_pricing_rules_category on pricing_rules
+  • idx_pricing_rules_subcategory on pricing_rules
+  • idx_pricing_rules_subsubcategory on pricing_rules
+  • unique_store_category_rule on pricing_rules
+  • idx_product_ratings_avg_rating on product_ratings
+  • idx_recommendations_product on product_recommendations
+  • idx_recommendations_type on product_recommendations
+  • product_recommendations_product_id_recommended_product_id_r_key on product_recommendations
+  • idx_profiles_customer_type on profiles
+  • idx_profiles_last_order_date on profiles
+  • idx_profiles_loyalty_points on profiles
+  • idx_profiles_payment_methods_gin on profiles
+  • idx_profiles_preferences_gin on profiles
+  • idx_profiles_purchase_history_gin on profiles
+  • unique_user_profile on profiles
+  • idx_promotions_active on promotions
+  • idx_promotions_active_dates on promotions
+  • idx_promotions_code on promotions
+  • idx_promotions_continuous on promotions
+  • idx_promotions_recurring on promotions
+  • idx_promotions_store on promotions
+  • idx_promotions_tenant on promotions
+  • idx_promotions_type on promotions
+  • promotions_code_key on promotions
+  • idx_provincial_suppliers_province_territory on provincial_suppliers
+  • idx_suppliers_active on provincial_suppliers
+  • idx_suppliers_name on provincial_suppliers
+  • unique_province_territory_supplier on provincial_suppliers
+  • idx_po_items_po_id on purchase_order_items
+  • idx_po_items_sku on purchase_order_items
+  • idx_poi_case_gtin on purchase_order_items
+  • idx_poi_gtin_barcode on purchase_order_items
+  • idx_poi_sku_batch on purchase_order_items
+  • idx_po_container_id on purchase_orders
+  • idx_po_shipment_id on purchase_orders
+  • idx_po_status on purchase_orders
+  • idx_po_supplier on purchase_orders
+  • idx_po_vendor on purchase_orders
+  • idx_push_subscriptions_customer_id on push_subscriptions
+  • idx_push_subscriptions_device_type on push_subscriptions
+  • idx_push_subscriptions_is_active on push_subscriptions
+  • push_subscriptions_device_token_key on push_subscriptions
+  • idx_attributes_review on review_attributes
+  • pk_review_attributes on review_attributes
+  • idx_media_order on review_media
+  • idx_media_review on review_media
+  • idx_review_summary_rating on review_summary_view
+  • idx_review_summary_sku on review_summary_view
+  • idx_votes_review on review_votes
+  • idx_votes_user on review_votes
+  • unique_user_review_vote on review_votes
+  • role_permissions_role_resource_type_action_key on role_permissions
+  • idx_shelf_locations_active on shelf_locations
+  • idx_shelf_locations_code on shelf_locations
+  • idx_shelf_locations_store on shelf_locations
+  • idx_shelf_locations_type on shelf_locations
+  • unique_location_per_store on shelf_locations
+  • idx_staff_delivery_status_user_id on staff_delivery_status
+  • idx_store_settings_category on store_settings
+  • idx_store_settings_store on store_settings
+  • store_settings_store_id_category_key_key on store_settings
+  • system_settings_category_key_key on system_settings
+  • idx_tax_rates_effective on tax_rates
+  • idx_tax_rates_tenant on tax_rates
+  • tenants_name_key on tenants
+  • idx_token_blacklist_expires_at on token_blacklist
+  • idx_token_blacklist_token_id on token_blacklist
+  • token_blacklist_token_id_key on token_blacklist
+  • training_sessions_session_id_key on training_sessions
+  • idx_batch_items_batch on translation_batch_items
+  • idx_batch_items_status on translation_batch_items
+  • translation_batches_batch_key_key on translation_batches
+  • idx_overrides_active on translation_overrides
+  • idx_overrides_translation on translation_overrides
+  • idx_translations_created on translations
+  • idx_translations_lookup on translations
+  • idx_translations_usage on translations
+  • idx_translations_verified on translations
+  • translations_source_text_source_language_target_language_co_key on translations
+  • idx_unsubscribe_list_channel_type on unsubscribe_list
+  • idx_unsubscribe_list_customer_id on unsubscribe_list
+  • idx_unsubscribe_list_phone on unsubscribe_list
+  • idx_user_addresses_user on user_addresses
+  • unique_default_billing_per_user on user_addresses
+  • unique_default_delivery_per_user on user_addresses
+  • idx_user_login_logs_ip_address on user_login_logs
+  • idx_user_login_logs_session_id on user_login_logs
+  • idx_user_login_logs_tenant_id on user_login_logs
+  • idx_user_login_logs_timestamp on user_login_logs
+  • idx_user_login_logs_user_id on user_login_logs
+  • idx_user_sessions_expires_at on user_sessions
+  • idx_user_sessions_session_token on user_sessions
+  • idx_user_sessions_user_id on user_sessions
+  • user_sessions_session_token_key on user_sessions
+  • idx_users_role_customer on users
+  • idx_voice_auth_logs_timestamp on voice_auth_logs
+  • idx_voice_auth_logs_user_id on voice_auth_logs
+  • idx_voice_profiles_user_id on voice_profiles
+  • idx_wishlist_added_at on wishlist
+  • idx_wishlist_customer on wishlist
+  • idx_wishlist_priority on wishlist
+  • idx_wishlist_store on wishlist
+  • unique_wishlist_item on wishlist
+
+MISSING CONSTRAINTS:
+  • accessories_catalog_barcode_key on accessories_catalog
+  • accessory_categories_slug_key on accessory_categories
+  • agi_audit_aggregates_period_start_period_end_event_type_sev_key on agi_audit_aggregates
+  • ai_conversations_personality_id_fkey on ai_conversations
+  • ai_personalities_tenant_id_fkey on ai_personalities
+  • api_keys_tenant_id_fkey on api_keys
+  • audit_log_store_id_fkey on audit_log
+  • audit_log_tenant_id_fkey on audit_log
+  • auth_tokens_token_type_check on auth_tokens
+  • batch_tracking_batch_lot_key on batch_tracking
+  • batch_tracking_location_id_fkey on batch_tracking
+  • batch_tracking_purchase_order_id_fkey on batch_tracking
+  • broadcast_audit_logs_action_category_check on broadcast_audit_logs
+  • broadcast_messages_broadcast_id_channel_type_key on broadcast_messages
+  • broadcast_messages_channel_type_check on broadcast_messages
+  • broadcast_messages_priority_check on broadcast_messages
+  • broadcast_messages_template_id_fkey on broadcast_messages
+  • broadcast_segments_broadcast_id_fkey on broadcast_segments
+  • broadcasts_status_check on broadcasts
+  • broadcasts_tenant_id_fkey on broadcasts
+  • cart_sessions_ai_personality_id_fkey on cart_sessions
+  • cart_sessions_tenant_id_fkey on cart_sessions
+  • communication_analytics_broadcast_id_fkey on communication_analytics
+  • communication_analytics_broadcast_id_key on communication_analytics
+  • communication_preferences_customer_id_key on communication_preferences
+  • communication_preferences_email_unsubscribe_token_key on communication_preferences
+  • communication_preferences_frequency_check on communication_preferences
+  • communication_preferences_sms_unsubscribe_token_key on communication_preferences
+  • conversation_states_session_id_key on conversation_states
+  • customer_pricing_rules_price_tier_id_fkey on customer_pricing_rules
+  • customer_pricing_rules_tenant_id_fkey on customer_pricing_rules
+  • customer_reviews_helpful_count_check on customer_reviews
+  • customer_reviews_not_helpful_count_check on customer_reviews
+  • customer_reviews_status_check on customer_reviews
+  • fk_reviews_orders on customer_reviews
+  • fk_reviews_product_ratings on customer_reviews
+  • fk_reviews_users on customer_reviews
+  • deliveries_customer_id_fkey on deliveries
+  • deliveries_delivery_address_check on deliveries
+  • deliveries_rating_check on deliveries
+  • delivery_geofences_delivery_id_fkey on delivery_geofences
+  • delivery_tracking_battery_level_check on delivery_tracking
+  • delivery_tracking_heading_check on delivery_tracking
+  • delivery_zones_tenant_id_fkey on delivery_zones
+  • delivery_zones_zone_type_check on delivery_zones
+  • discount_codes_discount_type_check on discount_codes
+  • discount_codes_promotion_id_fkey on discount_codes
+  • discount_codes_tenant_id_fkey on discount_codes
+  • holiday_date_check on holidays
+  • holidays_date_type_check on holidays
+  • holidays_fixed_day_check on holidays
+  • holidays_fixed_month_check on holidays
+  • holidays_holiday_type_check on holidays
+  • holidays_typical_business_impact_check on holidays
+  • inventory_locations_code_key on inventory_locations
+  • location_assignments_log_inventory_id_fkey on location_assignments_log
+  • location_assignments_log_location_id_fkey on location_assignments_log
+  • message_templates_category_check on message_templates
+  • message_templates_channel_type_check on message_templates
+  • message_templates_tenant_id_fkey on message_templates
+  • model_deployments_deployment_name_key on model_deployments
+  • ocs_inventory_quantity_available_check on ocs_inventory
+  • ocs_inventory_quantity_on_hand_check on ocs_inventory
+  • ocs_inventory_quantity_reserved_check on ocs_inventory
+  • ocs_inventory_store_id_sku_key on ocs_inventory
+  • ocs_inventory_store_sku_unique on ocs_inventory
+  • ocs_inventory_logs_inventory_id_fkey on ocs_inventory_logs
+  • ocs_inventory_movements_inventory_id_fkey on ocs_inventory_movements
+  • ocs_inventory_reservations_inventory_id_fkey on ocs_inventory_reservations
+  • ocs_inventory_snapshots_inventory_id_fkey on ocs_inventory_snapshots
+  • inventory_transactions_store_id_fkey on ocs_inventory_transactions
+  • inventory_transactions_transaction_type_check on ocs_inventory_transactions
+  • product_catalog_ocs_rating_check on ocs_product_catalog
+  • product_catalog_ocs_rating_count_check on ocs_product_catalog
+  • uk_product_catalog_ocs_variant on ocs_product_catalog
+  • payment_audit_log_tenant_id_fkey on payment_audit_log
+  • payment_credentials_tenant_id_fkey on payment_credentials
+  • payment_credentials_updated_by_fkey on payment_credentials
+  • payment_disputes_provider_id_fkey on payment_disputes
+  • payment_fee_splits_tenant_id_fkey on payment_fee_splits
+  • payment_fee_splits_transaction_id_key on payment_fee_splits
+  • payment_idempotency_keys_status_check on payment_idempotency_keys
+  • payment_idempotency_keys_tenant_id_fkey on payment_idempotency_keys
+  • payment_methods_tenant_id_fkey on payment_methods
+  • payment_methods_tenant_id_payment_token_provider_id_key on payment_methods
+  • payment_metrics_date_provider_id_key on payment_metrics
+  • payment_providers_name_key on payment_providers
+  • payment_refunds_initiated_by_fkey on payment_refunds
+  • payment_refunds_refund_transaction_id_fkey on payment_refunds
+  • payment_subscriptions_provider_id_fkey on payment_subscriptions
+  • payment_subscriptions_tenant_id_fkey on payment_subscriptions
+  • payment_transactions_tenant_id_fkey on payment_transactions
+  • payment_transactions_transaction_reference_key on payment_transactions
+  • payment_webhook_routes_tenant_id_fkey on payment_webhook_routes
+  • payment_webhook_routes_webhook_url_path_key on payment_webhook_routes
+  • price_tiers_name_key on price_tiers
+  • unique_store_category_rule on pricing_rules
+  • product_ratings_average_rating_check on product_ratings
+  • product_ratings_recommended_percentage_check on product_ratings
+  • product_ratings_total_reviews_check on product_ratings
+  • product_ratings_verified_purchase_count_check on product_ratings
+  • product_recommendations_product_id_recommended_product_id_r_key on product_recommendations
+  • unique_user_profile on profiles
+  • promotion_usage_tenant_id_fkey on promotion_usage
+  • check_continuous_end_date on promotions
+  • check_recurrence_logic on promotions
+  • check_time_window_complete on promotions
+  • check_time_window_valid on promotions
+  • promotions_code_key on promotions
+  • promotions_created_by_user_id_fkey on promotions
+  • promotions_tenant_id_fkey on promotions
+  • provinces_territories_type_check on provinces_territories
+  • fk_provincial_supplier_province_territory on provincial_suppliers
+  • suppliers_tenant_id_fkey on provincial_suppliers
+  • purchase_order_items_quantity_ordered_check on purchase_order_items
+  • purchase_order_items_quantity_received_check on purchase_order_items
+  • purchase_order_items_unit_cost_check on purchase_order_items
+  • purchase_orders_status_check on purchase_orders
+  • purchase_orders_tenant_id_fkey on purchase_orders
+  • push_subscriptions_device_token_key on push_subscriptions
+  • push_subscriptions_device_type_check on push_subscriptions
+  • chk_attribute_name on review_attributes
+  • fk_attributes_reviews on review_attributes
+  • review_attributes_rating_check on review_attributes
+  • fk_media_reviews on review_media
+  • review_media_media_type_check on review_media
+  • fk_votes_reviews on review_votes
+  • fk_votes_users on review_votes
+  • unique_user_review_vote on review_votes
+  • role_permissions_role_resource_type_action_key on role_permissions
+  • unique_location_per_store on shelf_locations
+  • store_settings_store_id_category_key_key on store_settings
+  • system_settings_category_key_key on system_settings
+  • tax_rates_tenant_id_fkey on tax_rates
+  • tenants_name_key on tenants
+  • tenants_status_check on tenants
+  • tenants_subscription_tier_check on tenants
+  • token_blacklist_token_id_key on token_blacklist
+  • token_blacklist_user_id_fkey on token_blacklist
+  • training_sessions_session_id_key on training_sessions
+  • translation_batches_batch_key_key on translation_batches
+  • translation_overrides_translation_id_fkey on translation_overrides
+  • translations_source_text_source_language_target_language_co_key on translations
+  • unsubscribe_list_broadcast_id_fkey on unsubscribe_list
+  • unsubscribe_list_channel_type_check on unsubscribe_list
+  • unsubscribe_list_unsubscribe_source_check on unsubscribe_list
+  • user_addresses_address_type_check on user_addresses
+  • user_login_logs_tenant_id_fkey on user_login_logs
+  • user_sessions_session_token_key on user_sessions
+  • users_store_id_fkey on users
+  • users_tenant_id_fkey on users
+  • users_tenant_required on users
+  • fk_voice_auth_logs_user_id on voice_auth_logs
+  • fk_voice_profiles_user_id on voice_profiles
+  • unique_wishlist_item on wishlist
+
+================================================================================

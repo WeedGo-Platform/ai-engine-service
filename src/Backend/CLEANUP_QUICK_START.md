@@ -135,7 +135,7 @@ cd src/Frontend/weedgo-commerce && npm test
 ### 3. Start Servers
 ```bash
 # Backend
-python main_server.py
+python api_server.py
 
 # Frontend
 npm run dev

@@ -2,7 +2,7 @@
 Chat Integration Module - Wires unified chat service into existing servers.
 
 This module provides convenience functions to integrate the new unified
-chat service into both main_server.py and api_server.py without breaking changes.
+chat service into both api_server.py and api_server.py without breaking changes.
 """
 
 import logging
@@ -26,7 +26,7 @@ async def initialize_unified_chat_system():
     is initialized.
 
     Example:
-        # In main_server.py or api_server.py startup
+        # In api_server.py or api_server.py startup
         agent_pool = get_agent_pool()
         await initialize_unified_chat_system()
     """

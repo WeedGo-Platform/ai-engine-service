@@ -58,7 +58,9 @@ class StoreService:
         pos_integration: Optional[Dict[str, Any]] = None,
         seo_config: Optional[Dict[str, Any]] = None,
         latitude: Optional[float] = None,
-        longitude: Optional[float] = None
+        longitude: Optional[float] = None,
+        delivery_zone: Optional[Dict[str, Any]] = None,
+        delivery_zone_stats: Optional[Dict[str, Any]] = None
     ) -> Store:
         """Create a new store"""
         try:
@@ -131,7 +133,13 @@ class StoreService:
                 created_at=datetime.utcnow(),
                 updated_at=datetime.utcnow()
             )
-            
+
+            # Add delivery zone fields if provided
+            if delivery_zone:
+                store.delivery_zone = delivery_zone
+            if delivery_zone_stats:
+                store.delivery_zone_stats = delivery_zone_stats
+
             # Save store
             saved_store = await self.store_repo.create(store)
             
@@ -171,7 +179,9 @@ class StoreService:
         pos_integration: Optional[Dict[str, Any]] = None,
         seo_config: Optional[Dict[str, Any]] = None,
         latitude: Optional[float] = None,
-        longitude: Optional[float] = None
+        longitude: Optional[float] = None,
+        delivery_zone: Optional[Dict[str, Any]] = None,
+        delivery_zone_stats: Optional[Dict[str, Any]] = None
     ) -> Store:
         """Update store information"""
         try:
@@ -225,7 +235,11 @@ class StoreService:
                     latitude=Decimal(str(latitude)),
                     longitude=Decimal(str(longitude))
                 )
-            
+            if delivery_zone is not None:
+                store.delivery_zone = delivery_zone
+            if delivery_zone_stats is not None:
+                store.delivery_zone_stats = delivery_zone_stats
+
             return await self.store_repo.update(store)
             
         except Exception as e:

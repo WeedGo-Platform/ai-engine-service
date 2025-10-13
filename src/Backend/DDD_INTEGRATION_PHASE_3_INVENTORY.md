@@ -77,7 +77,7 @@ Created 15 comprehensive endpoints following DDD patterns:
 
 ---
 
-### 3. Main Server Registration (`main_server.py`)
+### 3. Main Server Registration (`api_server.py`)
 
 Registered Inventory V2 router in main server:
 
@@ -358,7 +358,7 @@ async def adjust_stock(
 
 ### Modified:
 1. `api/v2/dto_mappers.py` (added lines 650-1006, 356 lines)
-2. `main_server.py` (added lines 531-537, 7 lines)
+2. `api_server.py` (added lines 531-537, 7 lines)
 3. `api/inventory_endpoints.py` (updated docstring, 21 lines)
 
 **Total Lines Added:** ~1,121 lines of production code + documentation

@@ -267,7 +267,7 @@ This meant orders were marked as "out_for_delivery" even though no delivery reco
 lsof -ti:5024 | xargs kill -9
 
 # Restart
-PORT=5024 python3 main_server.py
+PORT=5024 python3 api_server.py
 ```
 
 **Mobile Changes**: No rebuild needed if using hot reload

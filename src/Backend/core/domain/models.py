@@ -80,6 +80,14 @@ class BillingCycle(str, Enum):
     ANNUAL = "annual"
 
 
+class CRSAVerificationStatus(str, Enum):
+    """CRSA verification status"""
+    UNVERIFIED = "unverified"
+    VERIFIED = "verified"
+    FLAGGED = "flagged"
+    REJECTED = "rejected"
+
+
 # =====================================================
 # VALUE OBJECTS
 # =====================================================
@@ -385,9 +393,78 @@ class StoreCompliance:
     def is_compliant(self) -> bool:
         """Check if store is compliant"""
         return self.status == ComplianceStatus.COMPLIANT
-    
+
     def needs_inspection(self) -> bool:
         """Check if inspection is due"""
         if not self.next_inspection:
             return True
         return self.next_inspection <= date.today()
+
+
+@dataclass
+class OntarioCRSA:
+    """
+    Ontario Cannabis Retail Store Authorization entity
+    Tracks AGCO-licensed cannabis retail stores for tenant validation
+    """
+    id: UUID = field(default_factory=uuid4)
+
+    # AGCO Data Fields
+    license_number: str = ""
+    municipality: Optional[str] = None
+    first_nation: Optional[str] = None
+    store_name: str = ""
+    address: str = ""
+    store_application_status: str = ""
+    website: Optional[str] = None
+
+    # Enrichment Fields
+    linked_tenant_id: Optional[UUID] = None
+    verification_status: CRSAVerificationStatus = CRSAVerificationStatus.UNVERIFIED
+    verification_date: Optional[datetime] = None
+    verified_by: Optional[UUID] = None
+    notes: Optional[str] = None
+    admin_notes: Optional[str] = None
+
+    # Sync Tracking
+    data_source: str = "agco_csv"
+    first_seen_at: datetime = field(default_factory=datetime.utcnow)
+    last_synced_at: datetime = field(default_factory=datetime.utcnow)
+    is_active: bool = True
+
+    # Audit Fields
+    created_at: datetime = field(default_factory=datetime.utcnow)
+    updated_at: datetime = field(default_factory=datetime.utcnow)
+
+    def is_authorized(self) -> bool:
+        """Check if store is authorized to open"""
+        return self.store_application_status == "Authorized to Open" and self.is_active
+
+    def is_available_for_signup(self) -> bool:
+        """Check if store is available for tenant signup"""
+        return self.is_authorized() and self.linked_tenant_id is None
+
+    def is_verified(self) -> bool:
+        """Check if store has been verified"""
+        return self.verification_status == CRSAVerificationStatus.VERIFIED
+
+    def link_to_tenant(self, tenant_id: UUID) -> None:
+        """Link this CRSA record to a tenant"""
+        self.linked_tenant_id = tenant_id
+        self.updated_at = datetime.utcnow()
+
+    def unlink_from_tenant(self) -> None:
+        """Unlink this CRSA record from tenant"""
+        self.linked_tenant_id = None
+        self.updated_at = datetime.utcnow()
+
+    def mark_verified(self, verified_by_user_id: UUID) -> None:
+        """Mark the CRSA record as verified"""
+        self.verification_status = CRSAVerificationStatus.VERIFIED
+        self.verification_date = datetime.utcnow()
+        self.verified_by = verified_by_user_id
+        self.updated_at = datetime.utcnow()
+
+    def get_location_name(self) -> str:
+        """Get the location name (municipality or first nation)"""
+        return self.municipality or self.first_nation or "Unknown"

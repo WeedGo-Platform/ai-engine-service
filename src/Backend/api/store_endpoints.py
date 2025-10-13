@@ -60,6 +60,18 @@ class StoreHoursModel(BaseModel):
     sunday: Dict[str, str] = {"open": "11:00", "close": "20:00"}
 
 
+class DeliveryZoneGeoJSON(BaseModel):
+    """GeoJSON Polygon for delivery zone"""
+    type: str = Field("Polygon", pattern="^Polygon$")
+    coordinates: List[List[List[float]]]  # [[[lng, lat], [lng, lat], ...]]
+
+class DeliveryZoneStats(BaseModel):
+    """Delivery zone statistics"""
+    area_km2: float = Field(..., description="Area in square kilometers")
+    perimeter_km: float = Field(..., description="Perimeter in kilometers")
+    approximate_radius_km: float = Field(..., description="Approximate radius in kilometers")
+    point_count: int = Field(..., description="Number of points in polygon")
+
 class CreateStoreRequest(BaseModel):
     tenant_id: UUID
     province_code: str = Field(..., min_length=2, max_length=2, pattern="^[A-Z]{2}$")
@@ -83,6 +95,8 @@ class CreateStoreRequest(BaseModel):
     seo_config: Optional[Dict[str, Any]] = Field(default_factory=dict)
     latitude: Optional[float] = Field(None, ge=-90, le=90)
     longitude: Optional[float] = Field(None, ge=-180, le=180)
+    delivery_zone: Optional[DeliveryZoneGeoJSON] = Field(None, description="Custom delivery zone polygon")
+    delivery_zone_stats: Optional[DeliveryZoneStats] = Field(None, description="Delivery zone statistics")
 
 
 class UpdateStoreRequest(BaseModel):
@@ -105,6 +119,8 @@ class UpdateStoreRequest(BaseModel):
     seo_config: Optional[Dict[str, Any]] = None
     latitude: Optional[float] = Field(None, ge=-90, le=90)
     longitude: Optional[float] = Field(None, ge=-180, le=180)
+    delivery_zone: Optional[DeliveryZoneGeoJSON] = Field(None, description="Custom delivery zone polygon")
+    delivery_zone_stats: Optional[DeliveryZoneStats] = Field(None, description="Delivery zone statistics")
 
 
 class SuspendStoreRequest(BaseModel):
@@ -136,6 +152,8 @@ class StoreResponse(BaseModel):
     pos_integration: Dict[str, Any] = {}
     seo_config: Dict[str, Any] = {}
     location: Optional[Dict[str, float]] = None
+    delivery_zone: Optional[Dict[str, Any]] = None
+    delivery_zone_stats: Optional[Dict[str, Any]] = None
     created_at: datetime
     updated_at: datetime
 
@@ -196,6 +214,8 @@ async def list_all_stores(
                 pos_integration=store.pos_integration or {},
                 seo_config=store.seo_config or {},
                 location=store.location.to_dict() if store.location else None,
+                delivery_zone=getattr(store, 'delivery_zone', None),
+                delivery_zone_stats=getattr(store, 'delivery_zone_stats', None),
                 created_at=store.created_at,
                 updated_at=store.updated_at
             )
@@ -260,7 +280,9 @@ async def create_store(
             pos_integration=request.pos_integration,
             seo_config=request.seo_config,
             latitude=request.latitude,
-            longitude=request.longitude
+            longitude=request.longitude,
+            delivery_zone=request.delivery_zone.dict() if request.delivery_zone else None,
+            delivery_zone_stats=request.delivery_zone_stats.dict() if request.delivery_zone_stats else None
         )
         
         return StoreResponse(
@@ -288,10 +310,12 @@ async def create_store(
             pos_integration=store.pos_integration,
             seo_config=store.seo_config,
             location=store.location.to_dict() if store.location else None,
+            delivery_zone=getattr(store, 'delivery_zone', None),
+            delivery_zone_stats=getattr(store, 'delivery_zone_stats', None),
             created_at=store.created_at,
             updated_at=store.updated_at
         )
-        
+
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     except Exception as e:
@@ -375,10 +399,12 @@ async def get_store(
             pos_integration=store.pos_integration,
             seo_config=store.seo_config,
             location=store.location.to_dict() if store.location else None,
+            delivery_zone=getattr(store, 'delivery_zone', None),
+            delivery_zone_stats=getattr(store, 'delivery_zone_stats', None),
             created_at=store.created_at,
             updated_at=store.updated_at
         )
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -418,7 +444,8 @@ async def get_store_by_code(
                 delivery_radius_km, delivery_enabled, pickup_enabled,
                 kiosk_enabled, pos_enabled, ecommerce_enabled,
                 status, settings, pos_integration, seo_config,
-                location, created_at, updated_at
+                latitude, longitude, delivery_zone, delivery_zone_stats,
+                created_at, updated_at
             FROM stores
             WHERE store_code = $1
         """
@@ -431,6 +458,14 @@ async def get_store_by_code(
 
         # Parse the result
         store_data = dict(result)
+
+        # Construct location dict from lat/lng
+        location = None
+        if store_data.get('latitude') is not None and store_data.get('longitude') is not None:
+            location = {
+                'latitude': float(store_data['latitude']),
+                'longitude': float(store_data['longitude'])
+            }
 
         return StoreResponse(
             id=store_data['id'],
@@ -456,7 +491,9 @@ async def get_store_by_code(
             settings=store_data['settings'],
             pos_integration=store_data['pos_integration'],
             seo_config=store_data['seo_config'],
-            location=store_data['location'],
+            location=location,
+            delivery_zone=store_data.get('delivery_zone'),
+            delivery_zone_stats=store_data.get('delivery_zone_stats'),
             created_at=store_data['created_at'],
             updated_at=store_data['updated_at']
         )
@@ -496,7 +533,9 @@ async def update_store(
             pos_integration=request.pos_integration,
             seo_config=request.seo_config,
             latitude=request.latitude,
-            longitude=request.longitude
+            longitude=request.longitude,
+            delivery_zone=request.delivery_zone.dict() if request.delivery_zone else None,
+            delivery_zone_stats=request.delivery_zone_stats.dict() if request.delivery_zone_stats else None
         )
         
         return StoreResponse(
@@ -524,10 +563,12 @@ async def update_store(
             pos_integration=store.pos_integration,
             seo_config=store.seo_config,
             location=store.location.to_dict() if store.location else None,
+            delivery_zone=getattr(store, 'delivery_zone', None),
+            delivery_zone_stats=getattr(store, 'delivery_zone_stats', None),
             created_at=store.created_at,
             updated_at=store.updated_at
         )
-        
+
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     except Exception as e:
@@ -570,10 +611,12 @@ async def suspend_store(
             pos_integration=store.pos_integration,
             seo_config=store.seo_config,
             location=store.location.to_dict() if store.location else None,
+            delivery_zone=getattr(store, 'delivery_zone', None),
+            delivery_zone_stats=getattr(store, 'delivery_zone_stats', None),
             created_at=store.created_at,
             updated_at=store.updated_at
         )
-        
+
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     except Exception as e:
@@ -615,10 +658,12 @@ async def reactivate_store(
             pos_integration=store.pos_integration,
             seo_config=store.seo_config,
             location=store.location.to_dict() if store.location else None,
+            delivery_zone=getattr(store, 'delivery_zone', None),
+            delivery_zone_stats=getattr(store, 'delivery_zone_stats', None),
             created_at=store.created_at,
             updated_at=store.updated_at
         )
-        
+
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     except Exception as e:
@@ -660,10 +705,12 @@ async def close_store(
             pos_integration=store.pos_integration,
             seo_config=store.seo_config,
             location=store.location.to_dict() if store.location else None,
+            delivery_zone=getattr(store, 'delivery_zone', None),
+            delivery_zone_stats=getattr(store, 'delivery_zone_stats', None),
             created_at=store.created_at,
             updated_at=store.updated_at
         )
-        
+
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     except Exception as e:
@@ -829,6 +876,8 @@ async def get_active_stores_by_tenant(
                 pos_integration=store.pos_integration or {},
                 seo_config=store.seo_config or {},
                 location=store.location.to_dict() if store.location else None,
+                delivery_zone=getattr(store, 'delivery_zone', None),
+                delivery_zone_stats=getattr(store, 'delivery_zone_stats', None),
                 created_at=store.created_at,
                 updated_at=store.updated_at
             )
@@ -918,6 +967,8 @@ async def list_stores_by_tenant(
                 pos_integration=store.pos_integration or {},
                 seo_config=store.seo_config or {},
                 location=store.location.to_dict() if store.location else None,
+                delivery_zone=getattr(store, 'delivery_zone', None),
+                delivery_zone_stats=getattr(store, 'delivery_zone_stats', None),
                 created_at=store.created_at,
                 updated_at=store.updated_at
             )

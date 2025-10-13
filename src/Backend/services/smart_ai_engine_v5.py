@@ -1481,7 +1481,8 @@ class SmartAIEngineV5:
             # Apply prompt template if specified
             final_prompt = prompt
             used_template = None
-            
+            intent_result = None  # Initialize to avoid UnboundLocalError
+
             # Add debug prompt listing if asked
             if "list prompts" in prompt.lower() or "show prompts" in prompt.lower():
                 if self.use_prompts:

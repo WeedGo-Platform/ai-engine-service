@@ -411,7 +411,7 @@ async def process_payment_v1(request: PaymentRequest):
     return await v2_payments.process_payment(v2_command)
 ```
 
-### API Versioning in main_server.py
+### API Versioning in api_server.py
 
 ```python
 from api.v2 import payments, orders, inventory
