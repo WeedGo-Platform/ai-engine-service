@@ -31,6 +31,7 @@ import PurchaseOrders from './pages/PurchaseOrders';
 import TenantManagement from './pages/TenantManagement';
 import TenantSettings from './pages/TenantSettings';
 import TenantPaymentSettings from './pages/TenantPaymentSettings';
+import TenantReview from './pages/TenantReview';
 import StoreManagement from './pages/StoreManagement';
 import StoreSettings from './pages/StoreSettings';
 import StoreHoursManagement from './pages/StoreHoursManagement';
@@ -419,6 +420,7 @@ const router = createBrowserRouter([
         path: 'tenants',
         element: <TenantManagement />
       },
+      { path: 'tenants/review', element: <TenantReview /> },
       { path: 'tenants/:tenantCode/settings', element: <TenantSettings /> },
       { path: 'tenants/:tenantCode/payment-settings', element: <TenantPaymentSettings /> },
       { path: 'tenants/:tenantCode/stores', element: <StoreManagement /> },
