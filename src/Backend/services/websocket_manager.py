@@ -13,6 +13,19 @@ from enum import Enum
 
 logger = logging.getLogger(__name__)
 
+# Import Prometheus metrics (optional, gracefully handle if not available)
+try:
+    from services.metrics.prometheus_metrics import (
+        track_websocket_connection,
+        track_websocket_disconnection,
+        track_websocket_message_sent,
+        track_websocket_message_received
+    )
+    METRICS_ENABLED = True
+except ImportError:
+    logger.warning("Prometheus metrics not available for WebSocket")
+    METRICS_ENABLED = False
+
 
 class NotificationType(str, Enum):
     """Types of WebSocket notifications"""
@@ -68,6 +81,10 @@ class ConnectionManager:
             "last_activity": datetime.utcnow().isoformat()
         }
 
+        # Track metrics
+        if METRICS_ENABLED:
+            track_websocket_connection('user')
+
         logger.info(f"User WebSocket connected: {identifier}")
 
         # Send connection confirmation
@@ -97,6 +114,10 @@ class ConnectionManager:
             "connected_at": datetime.utcnow().isoformat(),
             "last_activity": datetime.utcnow().isoformat()
         }
+
+        # Track metrics
+        if METRICS_ENABLED:
+            track_websocket_connection('admin')
 
         logger.info(f"Admin WebSocket connected: {admin_email}")
 
@@ -133,6 +154,10 @@ class ConnectionManager:
         metadata = self.connection_metadata.pop(websocket, {})
         conn_type = metadata.get('type', 'unknown')
 
+        # Track metrics
+        if METRICS_ENABLED:
+            track_websocket_disconnection(conn_type, reason='normal')
+
         logger.info(f"WebSocket disconnected: {conn_type} - {identifier or metadata.get('email', 'unknown')}")
 
     async def send_to_websocket(self, websocket: WebSocket, data: dict):
@@ -150,8 +175,15 @@ class ConnectionManager:
             if websocket in self.connection_metadata:
                 self.connection_metadata[websocket]["last_activity"] = datetime.utcnow().isoformat()
 
+            # Track metrics
+            if METRICS_ENABLED and 'type' in data:
+                track_websocket_message_sent(data['type'])
+
         except Exception as e:
             logger.error(f"Error sending to websocket: {e}")
+            if METRICS_ENABLED:
+                from services.metrics.prometheus_metrics import websocket_message_send_errors_total
+                websocket_message_send_errors_total.labels(error_type=type(e).__name__).inc()
             self.disconnect(websocket)
 
     async def send_to_user(self, identifier: str, data: dict):
