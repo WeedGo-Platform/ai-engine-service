@@ -108,6 +108,11 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
   const [isBusy, setIsBusy] = useState(false);
   const [totalTokens, setTotalTokens] = useState(0);
 
+  // Typing animation state
+  const [typingMessageId, setTypingMessageId] = useState<string | null>(null);
+  const [animatedText, setAnimatedText] = useState<string>('');
+  const typingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
   // Agent and Personality State - restore from localStorage
   const [selectedAgent, setSelectedAgent] = useState(() => {
     const saved = localStorage.getItem('chatWidgetAgent');
@@ -603,6 +608,10 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
       if (activityInterval.current) {
         clearInterval(activityInterval.current);
       }
+      if (typingIntervalRef.current) {
+        clearInterval(typingIntervalRef.current);
+        typingIntervalRef.current = null;
+      }
     };
   }, [isOpen]);
 
@@ -732,10 +741,13 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
     if (data.role === 'assistant') {
       // Use response_time from backend only
       const responseTime = data.response_time;
+      const fullContent = data.content || data.message;
+      const messageId = Date.now().toString();
+
       const newMessage: Message = {
-        id: Date.now().toString(),
+        id: messageId,
         role: 'assistant',
-        content: data.content || data.message,
+        content: fullContent,
         timestamp: new Date(),
         responseTime,
         tokenCount: data.token_count,
@@ -745,8 +757,9 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
         products_found: data.products_found
       };
 
+      // Add message with empty content initially for typing animation
       setMessages(prev => {
-        const updated = [...prev, newMessage];
+        const updated = [...prev, { ...newMessage, content: '' }];
         // Limit messages if needed
         if (maxMessages && updated.length > maxMessages) {
           return updated.slice(-maxMessages);
@@ -754,43 +767,78 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
         return updated;
       });
 
-      messageStartTimeRef.current = null;
+      // Start typing animation
+      setTypingMessageId(messageId);
+      setAnimatedText('');
 
-      // Handle Text-to-Speech if enabled
-      if (isSpeakerEnabled && (data.content || data.message)) {
-        try {
-          const audioBlob = await voiceApi.synthesize(data.content || data.message);
-          const audioUrl = URL.createObjectURL(audioBlob);
-
-          // Stop any currently playing audio
-          if (currentAudioRef.current) {
-            currentAudioRef.current.pause();
-            currentAudioRef.current = null;
-          }
-
-          // Create and play new audio
-          const audio = new Audio(audioUrl);
-          currentAudioRef.current = audio;
-
-          setIsSpeaking(true);
-          audio.onended = () => {
-            setIsSpeaking(false);
-            URL.revokeObjectURL(audioUrl);
-            currentAudioRef.current = null;
-          };
-
-          audio.onerror = () => {
-            setIsSpeaking(false);
-            URL.revokeObjectURL(audioUrl);
-            currentAudioRef.current = null;
-          };
-
-          await audio.play();
-        } catch (error) {
-          console.error('TTS Error:', error);
-          setIsSpeaking(false);
-        }
+      // Clear any existing typing interval
+      if (typingIntervalRef.current) {
+        clearInterval(typingIntervalRef.current);
       }
+
+      // Typing animation: reveal text character by character
+      let charIndex = 0;
+      const typingSpeed = 15; // milliseconds per character (adjustable for speed)
+
+      typingIntervalRef.current = setInterval(() => {
+        if (charIndex < fullContent.length) {
+          const nextChar = fullContent[charIndex];
+          setAnimatedText(prev => prev + nextChar);
+          charIndex++;
+        } else {
+          // Animation complete
+          if (typingIntervalRef.current) {
+            clearInterval(typingIntervalRef.current);
+            typingIntervalRef.current = null;
+          }
+          setTypingMessageId(null);
+
+          // Update message with full content
+          setMessages(prev => prev.map(msg =>
+            msg.id === messageId ? { ...msg, content: fullContent } : msg
+          ));
+
+          // Handle Text-to-Speech if enabled (after typing animation completes)
+          if (isSpeakerEnabled && fullContent) {
+            (async () => {
+              try {
+                const audioBlob = await voiceApi.synthesize(fullContent);
+                const audioUrl = URL.createObjectURL(audioBlob);
+
+                // Stop any currently playing audio
+                if (currentAudioRef.current) {
+                  currentAudioRef.current.pause();
+                  currentAudioRef.current = null;
+                }
+
+                // Create and play new audio
+                const audio = new Audio(audioUrl);
+                currentAudioRef.current = audio;
+
+                setIsSpeaking(true);
+                audio.onended = () => {
+                  setIsSpeaking(false);
+                  URL.revokeObjectURL(audioUrl);
+                  currentAudioRef.current = null;
+                };
+
+                audio.onerror = () => {
+                  setIsSpeaking(false);
+                  URL.revokeObjectURL(audioUrl);
+                  currentAudioRef.current = null;
+                };
+
+                await audio.play();
+              } catch (error) {
+                console.error('TTS Error:', error);
+                setIsSpeaking(false);
+              }
+            })();
+          }
+        }
+      }, typingSpeed);
+
+      messageStartTimeRef.current = null;
 
       if (data.token_count) {
         setTotalTokens(prev => prev + data.token_count);
@@ -955,6 +1003,13 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
       recognition.stop();
     } else {
       console.log('Starting recording');
+
+      // Auto-enable speaker/TTS when user starts speaking (UX improvement)
+      if (!isSpeakerEnabled) {
+        console.log('Auto-enabling TTS for voice interaction');
+        setIsSpeakerEnabled(true);
+        localStorage.setItem('chatWidgetTTSEnabled', 'true');
+      }
 
       // Stop any currently playing audio when starting to record
       if (currentAudioRef.current) {
@@ -1306,7 +1361,10 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
                           )}
                           <div className="flex-1">
                             <p className="whitespace-pre-wrap text-sm leading-relaxed">
-                              {message.content}
+                              {message.id === typingMessageId ? animatedText : message.content}
+                              {message.id === typingMessageId && (
+                                <span className="inline-block w-1.5 h-4 bg-blue-500 animate-pulse ml-0.5" />
+                              )}
                             </p>
                             {/* Product Cards Display */}
                             {message.products && message.products.length > 0 && (
@@ -1427,21 +1485,21 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
                   </div>
                 ))}
 
-                {/* Typing Indicator */}
-                {isTyping && (
+                {/* Enhanced Typing/Busy Indicator */}
+                {(isTyping || isBusy) && (
                   <div className="flex justify-start">
-                    <div className="bg-white dark:bg-gray-700 rounded-2xl px-4 py-3 shadow-md max-w-[85%]">
+                    <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-700 dark:to-gray-600 rounded-2xl px-5 py-4 shadow-lg max-w-[85%] border-2 border-blue-200 dark:border-blue-500/30">
                       <div className="flex items-center space-x-3">
-                        <Bot className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                        <div className="flex items-center gap-2">
-                          <span className="text-lg">{currentActivity.icon}</span>
-                          <span className="text-sm text-gray-600 dark:text-gray-400">
+                        <Bot className="h-5 w-5 text-blue-600 dark:text-blue-400 animate-pulse" />
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl animate-bounce">{currentActivity.icon}</span>
+                          <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
                             {currentActivity.text}
                           </span>
-                          <div className="flex space-x-1">
-                            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                          <div className="flex space-x-1.5">
+                            <div className="w-2.5 h-2.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                            <div className="w-2.5 h-2.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                            <div className="w-2.5 h-2.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                           </div>
                         </div>
                       </div>
