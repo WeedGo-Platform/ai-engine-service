@@ -125,6 +125,17 @@ class SendVerificationCodeTool(ITool):
                     else:
                         logger.warning(f"SMS send failed but continuing with email only: {sms_error}")
 
+                # Send WebSocket notification
+                try:
+                    from services.websocket_manager import get_connection_manager
+                    ws_manager = get_connection_manager()
+                    await ws_manager.send_verification_code(email, code, verification_id)
+                    methods_used.append("websocket")
+                    logger.info(f"Sent verification code to {email} via WebSocket")
+                except Exception as e:
+                    logger.warning(f"Failed to send WebSocket notification: {e}")
+                    # Don't fail the tool if WebSocket fails
+
                 logger.info(
                     f"Verification code sent to {email} "
                     f"(methods: {', '.join(methods_used)}, tier: {verification_tier})"
