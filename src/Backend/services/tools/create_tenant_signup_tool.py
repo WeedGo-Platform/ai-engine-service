@@ -260,6 +260,22 @@ class CreateTenantSignupTool(ITool):
             # Mark verification as complete
             verification_service.mark_verified(verification_id)
 
+            # Send WebSocket notification to admins if manual review is needed
+            if verification_tier == "manual_review":
+                try:
+                    from services.websocket_manager import get_connection_manager
+                    ws_manager = get_connection_manager()
+                    await ws_manager.notify_admin_new_review(
+                        tenant_id=str(tenant.id),
+                        store_name=store_info['store_name'],
+                        license_number=store_info['license_number'],
+                        email=email
+                    )
+                    logger.info(f"Sent admin notification for new review: {tenant.id}")
+                except Exception as e:
+                    logger.warning(f"Failed to send admin WebSocket notification: {e}")
+                    # Don't fail the tool if WebSocket fails
+
             logger.info(
                 f"Created tenant {tenant.id} for {store_info['store_name']} "
                 f"(tier: {verification_tier}, email: {email})"

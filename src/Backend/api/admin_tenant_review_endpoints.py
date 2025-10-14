@@ -485,6 +485,18 @@ async def approve_pending_account(
                 logger.error(f"Failed to send approval email: {email_error}")
                 # Don't fail approval if email fails
 
+        # Send WebSocket notification to other admins
+        try:
+            from services.websocket_manager import get_connection_manager
+            ws_manager = get_connection_manager()
+            await ws_manager.notify_admin_review_update(
+                tenant_id=tenant_id,
+                action="approved",
+                admin_email=user['email']
+            )
+        except Exception as e:
+            logger.warning(f"Failed to send admin WebSocket notification: {e}")
+
         logger.info(
             f"Admin {user['email']} approved tenant {tenant_id} ({tenant.name}). "
             f"Email sent: {request.send_welcome_email}"
@@ -560,6 +572,18 @@ async def reject_pending_account(
             notification_service = get_notification_service()
             # TODO: Implement rejection email template
             logger.info(f"Would send rejection email to {tenant.contact_email}")
+
+        # Send WebSocket notification to other admins
+        try:
+            from services.websocket_manager import get_connection_manager
+            ws_manager = get_connection_manager()
+            await ws_manager.notify_admin_review_update(
+                tenant_id=tenant_id,
+                action="rejected",
+                admin_email=user['email']
+            )
+        except Exception as e:
+            logger.warning(f"Failed to send admin WebSocket notification: {e}")
 
         logger.warning(
             f"Admin {user['email']} rejected tenant {tenant_id} ({tenant.name}). "
