@@ -401,6 +401,76 @@ class LLMRouter:
 
         return health_status
 
+    def get_provider_models(self, provider_name: str) -> List[Dict]:
+        """
+        Get available models for a specific provider
+
+        Args:
+            provider_name: Name of the provider
+
+        Returns:
+            List of available models with metadata
+
+        Raises:
+            ValueError: If provider not found
+        """
+        provider = self.get_provider(provider_name)
+        if not provider:
+            raise ValueError(f"Provider '{provider_name}' not found")
+
+        if not hasattr(provider, 'get_available_models'):
+            logger.warning(f"Provider '{provider_name}' does not support model listing")
+            return [{"name": provider.config.model_name, "default": True}]
+
+        return provider.get_available_models()
+
+    def get_current_models_config(self) -> Dict[str, str]:
+        """
+        Get current model configuration for all providers
+
+        Returns:
+            Dictionary mapping provider name to current model name
+        """
+        config = {}
+        for name, provider in self.providers.items():
+            config[name] = provider.config.model_name
+        return config
+
+    def update_provider_model(self, provider_name: str, model_name: str) -> bool:
+        """
+        Update the model for a specific provider
+
+        Args:
+            provider_name: Name of the provider
+            model_name: Name of the model to switch to
+
+        Returns:
+            True if successful, False otherwise
+
+        Raises:
+            ValueError: If provider not found or model not supported
+        """
+        provider = self.get_provider(provider_name)
+        if not provider:
+            raise ValueError(f"Provider '{provider_name}' not found")
+
+        if not hasattr(provider, 'set_model'):
+            raise ValueError(f"Provider '{provider_name}' does not support model updates")
+
+        # Validate model is available
+        available_models = provider.get_available_models()
+        model_names = [m["name"] for m in available_models]
+        if model_name not in model_names:
+            raise ValueError(
+                f"Model '{model_name}' not available for provider '{provider_name}'. "
+                f"Available models: {', '.join(model_names)}"
+            )
+
+        # Update the model
+        provider.set_model(model_name)
+        logger.info(f"Updated provider '{provider_name}' to model '{model_name}'")
+        return True
+
     def __repr__(self):
         return (
             f"LLMRouter("

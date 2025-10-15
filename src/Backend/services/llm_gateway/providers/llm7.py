@@ -11,6 +11,7 @@ LLM7.io provides free anonymous access to 30+ LLM models:
 Docs: https://api.llm7.io/v1
 """
 
+import os
 import httpx
 import logging
 from typing import Dict, List, Optional, Union, AsyncGenerator
@@ -48,33 +49,38 @@ class LLM7Provider(BaseProvider):
         Initialize LLM7 provider
 
         Args:
-            model_name: Model to use (default: gpt-4o-mini)
-                       Popular options: gpt-4o-mini, gpt-4o, claude-3.5-sonnet
+            model_name: Model to use (gpt-4o-mini, gpt-4o, claude-3-5-sonnet, etc.)
         """
+        # Get model from environment or use provided default
+        model_name = os.getenv("LLM7_MODEL", model_name)
+        
         config = ProviderConfig(
-            name=f"LLM7.io ({model_name})",
-            enabled=True,  # Always enabled (no auth needed)
-            cost_per_1m_input_tokens=0.0,  # Free
+            name=f"LLM7 ({model_name})",
+            enabled=True,  # No API key required - anonymous access
+            cost_per_1m_input_tokens=0.0,  # Free tier
             cost_per_1m_output_tokens=0.0,
-            avg_latency_seconds=2.5,  # Varies by model
-            supports_reasoning=True,  # Has GPT-4 and Claude
+            avg_latency_seconds=2.5,
+            supports_reasoning=model_name.startswith("claude") or model_name.startswith("gpt-4"),
             supports_streaming=True,
-            supports_tools=True,  # OpenAI-compatible
+            supports_tools=False,
             is_free=True,
-            requests_per_minute=40,
-            requests_per_day=None,  # No daily limit
-            api_key=None,  # No key needed!
-            base_url="https://api.llm7.io/v1",
+            requests_per_minute=40,  # Conservative estimate
+            requests_per_day=57600,  # 40 req/min * 60 * 24
+            api_key=None,  # No auth required
+            base_url="https://llm7.io/v1",
             model_name=model_name,
-            health_check_url="https://api.llm7.io/v1/models"
+            health_check_url="https://llm7.io/v1/models"
         )
 
         super().__init__(config)
 
         self.base_url = config.base_url
-        self.model = model_name
+        self.model = config.model_name
 
         logger.info(f"LLM7 provider initialized with model: {model_name} (NO AUTH REQUIRED)")
+        
+        if os.getenv("LLM7_MODEL"):
+            logger.info(f"LLM7 provider using custom model from env: {model_name}")
 
     async def complete(
         self,
@@ -227,6 +233,52 @@ class LLM7Provider(BaseProvider):
         except Exception as e:
             logger.warning(f"LLM7 health check failed: {e}")
             return False
+
+    def get_available_models(self) -> List[Dict]:
+        """
+        Get list of available LLM7 models
+
+        Returns:
+            List of supported models with metadata
+        """
+        return [
+            {
+                "name": "gpt-4o-mini",
+                "default": True,
+                "description": "GPT-4o Mini - Fast, efficient (default)"
+            },
+            {
+                "name": "gpt-4o",
+                "default": False,
+                "description": "GPT-4o - Most capable OpenAI model"
+            },
+            {
+                "name": "claude-3-5-sonnet-20241022",
+                "default": False,
+                "description": "Claude 3.5 Sonnet - Anthropic's best"
+            },
+            {
+                "name": "claude-3-5-haiku-20241022",
+                "default": False,
+                "description": "Claude 3.5 Haiku - Fast Anthropic model"
+            },
+            {
+                "name": "gemini-2.0-flash-exp",
+                "default": False,
+                "description": "Gemini 2.0 Flash - Google's latest"
+            }
+        ]
+
+    def set_model(self, model_name: str) -> None:
+        """
+        Change the LLM7 model
+
+        Args:
+            model_name: Name of the model to use
+        """
+        self.model = model_name
+        self.config.model_name = model_name
+        logger.info(f"LLM7 provider switched to model: {model_name}")
 
     def __repr__(self):
         status = "✓" if self.is_healthy else "✗"

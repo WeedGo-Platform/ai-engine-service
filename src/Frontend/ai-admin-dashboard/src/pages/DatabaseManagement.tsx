@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Database, Server, Table, Trash2, Edit, Eye, Plus,
@@ -62,6 +62,17 @@ export default function DatabaseManagement() {
   const [customQuery, setCustomQuery] = useState('');
   const [queryResult, setQueryResult] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState<'data' | 'schema' | 'query'>('data');
+
+  // Debounced search effect
+  useEffect(() => {
+    if (!selectedTable || !searchTerm) return;
+    
+    const timer = setTimeout(() => {
+      fetchTableData(selectedTable, 1);
+    }, 500); // 500ms debounce
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]); // Re-run when searchTerm changes
 
   // Get auth token
   const getAuthToken = () => {
@@ -703,8 +714,24 @@ export default function DatabaseManagement() {
                               }
                             }}
                             placeholder="Search table..."
-                            className="w-full sm:w-auto pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm"
+                            className="w-full sm:w-auto pl-10 pr-20 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm"
                           />
+                          {searchTerm && (
+                            <button
+                              onClick={() => setSearchTerm('')}
+                              className="absolute right-10 top-1/2 transform -translate-y-1/2 p-1 hover:bg-gray-100 rounded-full transition-colors"
+                              title="Clear search"
+                            >
+                              <X className="h-3 w-3 text-gray-400" />
+                            </button>
+                          )}
+                          <button
+                            onClick={() => fetchTableData(selectedTable, 1)}
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 px-2 py-1 text-primary-600 hover:bg-primary-50 rounded transition-colors"
+                            title="Search"
+                          >
+                            <Search className="h-4 w-4" />
+                          </button>
                         </div>
                         <span className="text-xs sm:text-sm text-gray-600">
                           {totalRows.toLocaleString()} total rows

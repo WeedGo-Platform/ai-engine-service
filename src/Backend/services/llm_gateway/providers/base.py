@@ -242,6 +242,36 @@ class BaseProvider(ABC):
             "consecutive_failures": self.health.consecutive_failures
         }
 
+    def get_available_models(self) -> List[Dict]:
+        """
+        Get list of available models for this provider
+
+        Returns:
+            List of dicts with model info: [{"name": str, "default": bool, "description": str}, ...]
+        
+        Note: Override this in provider implementations to return actual supported models
+        """
+        return [
+            {
+                "name": self.config.model_name,
+                "default": True,
+                "description": "Default model"
+            }
+        ]
+
+    def set_model(self, model_name: str) -> None:
+        """
+        Change the model used by this provider
+
+        Args:
+            model_name: Name of the model to switch to
+
+        Note: Override this in provider implementations for custom behavior
+        """
+        self.model = model_name
+        self.config.model_name = model_name
+        logger.info(f"{self.name}: Switched to model '{model_name}'")
+
     def __repr__(self):
         status = "✓" if self.is_healthy else "✗"
         return (

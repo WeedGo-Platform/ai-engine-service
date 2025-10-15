@@ -36,6 +36,11 @@ const AIManagement: React.FC = () => {
   const [isLoadingRouter, setIsLoadingRouter] = useState(false);
   const [isTogglingRouter, setIsTogglingRouter] = useState(false);
 
+  // Model selection state
+  const [providerModels, setProviderModels] = useState<{[key: string]: string}>({});
+  const [availableModels, setAvailableModels] = useState<{[key: string]: any[]}>({});
+  const [isUpdatingModel, setIsUpdatingModel] = useState(false);
+
   // Fetch available models
   const fetchModels = async () => {
     setIsLoading(true);
@@ -266,6 +271,71 @@ const AIManagement: React.FC = () => {
     setIsTogglingRouter(false);
   };
 
+  // Fetch current model configuration
+  const fetchModelConfig = async () => {
+    try {
+      const response = await fetch('http://localhost:5024/api/admin/router/models/config', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const data = await response.json();
+      if (data.success) {
+        setProviderModels(data.models);
+        // Fetch available models for each provider
+        Object.keys(data.models).forEach(provider => {
+          fetchAvailableModels(provider);
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching model config:', error);
+    }
+  };
+
+  // Fetch available models for a provider
+  const fetchAvailableModels = async (provider: string) => {
+    try {
+      const response = await fetch(`http://localhost:5024/api/admin/router/providers/${encodeURIComponent(provider)}/models`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const data = await response.json();
+      if (data.success) {
+        setAvailableModels(prev => ({ ...prev, [provider]: data.models }));
+      }
+    } catch (error) {
+      console.error('Error fetching available models:', error);
+    }
+  };
+
+  // Update provider model
+  const updateProviderModel = async (provider: string, model: string) => {
+    setIsUpdatingModel(true);
+    try {
+      const response = await fetch(`http://localhost:5024/api/admin/router/providers/${encodeURIComponent(provider)}/model`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ model_name: model })
+      });
+      const data = await response.json();
+      if (data.success) {
+        toast.success(`Updated ${provider} model to ${model}`);
+        fetchModelConfig();
+        fetchRouterStats();
+      } else {
+        toast.error(data.error || 'Failed to update model');
+      }
+    } catch (error) {
+      console.error('Error updating model:', error);
+      toast.error('Failed to update model');
+    }
+    setIsUpdatingModel(false);
+  };
+
   useEffect(() => {
     fetchModels();
     fetchModelStatus();
@@ -288,6 +358,7 @@ const AIManagement: React.FC = () => {
       }
     } else if (activeTab === 'inference') {
       fetchRouterStats();
+      fetchModelConfig();
     }
   }, [activeTab]);
 
@@ -799,6 +870,21 @@ const AIManagement: React.FC = () => {
                               : '💻 Local inference (llama-cpp)'
                             }
                           </p>
+                          {routerStats.active && routerStats.providers && routerStats.providers.length > 0 && (
+                            <div className="mt-2 flex items-center gap-2">
+                              <span className="text-xs text-gray-500 dark:text-gray-400">Primary:</span>
+                              <span className="px-2 py-1 text-xs font-medium bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 rounded-full">
+                                {routerStats.providers[0].split(' (')[0]}
+                              </span>
+                              {providerModels[routerStats.providers[0]] && (
+                                <span className="text-xs text-gray-600 dark:text-gray-400">
+                                  → <code className="px-1.5 py-0.5 bg-white dark:bg-gray-800 rounded text-xs font-mono">
+                                    {providerModels[routerStats.providers[0]]}
+                                  </code>
+                                </span>
+                              )}
+                            </div>
+                          )}
                         </div>
                         <button
                           onClick={toggleRouter}
@@ -850,6 +936,95 @@ const AIManagement: React.FC = () => {
                       </div>
                     </div>
 
+                    {/* Model Configuration Section */}
+                    {routerStats.enabled && routerStats.active && (
+                      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center gap-2">
+                            <Cpu className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                              Model Configuration
+                            </h3>
+                          </div>
+                          <button
+                            onClick={fetchModelConfig}
+                            className="text-sm text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 flex items-center gap-1"
+                          >
+                            <RefreshCw className="h-4 w-4" />
+                            Refresh
+                          </button>
+                        </div>
+                        
+                        {Object.keys(providerModels).length === 0 ? (
+                          <div className="text-center py-8">
+                            <Loader2 className="h-8 w-8 animate-spin text-indigo-600 mx-auto mb-2" />
+                            <p className="text-sm text-gray-500 dark:text-gray-400">Loading model configuration...</p>
+                          </div>
+                        ) : (
+                          <>
+                            <div className="space-y-3">
+                              {Object.entries(providerModels).map(([provider, currentModel], idx) => {
+                            const isGroq = provider.includes('Groq');
+                            const isOpenRouter = provider.includes('OpenRouter');
+                            const isLLM7 = provider.includes('LLM7');
+                            const isPrimary = routerStats.providers && routerStats.providers[0] === provider;
+                            
+                            return (
+                              <div key={provider} className={`flex items-center justify-between p-3 rounded-lg ${
+                                isPrimary 
+                                  ? 'bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-300 dark:border-indigo-700' 
+                                  : 'bg-gray-50 dark:bg-gray-900/50'
+                              }`}>
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-2 mb-1">
+                                    <span className="font-medium text-gray-900 dark:text-white">{provider.split(' (')[0]}</span>
+                                    {isGroq && <Zap className="h-4 w-4 text-yellow-500" />}
+                                    {isOpenRouter && <Network className="h-4 w-4 text-blue-500" />}
+                                    {isLLM7 && <Cloud className="h-4 w-4 text-purple-500" />}
+                                    {isPrimary && (
+                                      <span className="px-2 py-0.5 text-xs bg-indigo-600 text-white rounded-full font-medium">
+                                        PRIMARY
+                                      </span>
+                                    )}
+                                  </div>
+                                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                                    Current: <code className="px-1 py-0.5 bg-gray-200 dark:bg-gray-800 rounded text-xs">{currentModel}</code>
+                                  </p>
+                                </div>
+                                
+                                <select
+                                  value={currentModel}
+                                  onChange={(e) => updateProviderModel(provider, e.target.value)}
+                                  disabled={isUpdatingModel}
+                                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white disabled:opacity-50"
+                                >
+                                  {availableModels[provider]?.map((model) => (
+                                    <option key={model.name} value={model.name}>
+                                      {model.name} {model.default && '(default)'}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        
+                        <div className="mt-4 flex items-start gap-2 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                          <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+                          <div className="text-sm text-blue-800 dark:text-blue-300">
+                            <p className="font-medium mb-1">Model Selection Tips:</p>
+                            <ul className="list-disc list-inside space-y-1">
+                              <li>Changes take effect immediately</li>
+                              <li>Different models have different strengths (speed, reasoning, cost)</li>
+                              <li>Free tier models have rate limits - monitor your usage</li>
+                            </ul>
+                          </div>
+                        </div>
+                          </>
+                        )}
+                      </div>
+                    )}
+
                     {/* Providers Status */}
                     {routerStats.enabled && routerStats.providers && routerStats.providers.length > 0 && (
                       <div>
@@ -863,10 +1038,16 @@ const AIManagement: React.FC = () => {
                             const isOpenRouter = provider.includes('OpenRouter');
                             const isLLM7 = provider.includes('LLM7');
 
+                            const isPrimary = index === 0; // First provider is primary
+                            
                             return (
                               <div
                                 key={provider}
-                                className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-indigo-500 dark:hover:border-indigo-400 transition-colors"
+                                className={`border rounded-lg p-4 hover:border-indigo-500 dark:hover:border-indigo-400 transition-colors ${
+                                  isPrimary 
+                                    ? 'border-indigo-500 dark:border-indigo-400 bg-indigo-50/50 dark:bg-indigo-900/10' 
+                                    : 'border-gray-200 dark:border-gray-700'
+                                }`}
                               >
                                 <div className="flex items-center justify-between mb-3">
                                   <div className="flex items-center gap-2">
@@ -877,13 +1058,23 @@ const AIManagement: React.FC = () => {
                                       {provider.split(' (')[0]}
                                     </h4>
                                   </div>
-                                  <span className="px-2 py-1 text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full">
-                                    Active
-                                  </span>
+                                  <div className="flex items-center gap-2">
+                                    {isPrimary && (
+                                      <span className="px-2 py-1 text-xs bg-indigo-600 text-white rounded-full font-medium">
+                                        PRIMARY
+                                      </span>
+                                    )}
+                                    <span className="px-2 py-1 text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full">
+                                      Active
+                                    </span>
+                                  </div>
                                 </div>
-                                <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                                  {provider.split('(')[1]?.replace(')', '')}
-                                </p>
+                                <div className="mb-2">
+                                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Current Model:</p>
+                                  <code className="text-xs bg-gray-100 dark:bg-gray-900 px-2 py-1 rounded text-gray-900 dark:text-white font-mono">
+                                    {providerModels[provider] || provider.split('(')[1]?.replace(')', '')}
+                                  </code>
+                                </div>
                                 {providerStats && (
                                   <div className="grid grid-cols-2 gap-2 text-xs">
                                     <div>

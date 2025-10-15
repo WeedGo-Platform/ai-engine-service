@@ -93,9 +93,6 @@ const SalesChatWidget: React.FC<SalesChatWidgetProps> = ({
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Track if we're in a voice conversation (auto-enabled via mic)
-  const isVoiceConversationRef = useRef<boolean>(false);
-
   // Typing Animation State
   const [typingMessages, setTypingMessages] = useState<Map<string, string>>(new Map());
   const typingAnimationsRef = useRef<Map<string, boolean>>(new Map());
@@ -486,16 +483,8 @@ const SalesChatWidget: React.FC<SalesChatWidgetProps> = ({
               setIsSpeaking(false);
               URL.revokeObjectURL(audioUrl);
               currentAudioRef.current = null;
-
-              // Only auto-disable if NOT in a voice conversation
-              // (Voice conversations should keep speaker enabled)
-              if (!isVoiceConversationRef.current) {
-                setIsSpeakerEnabled(false);
-                localStorage.setItem('salesChatWidgetTTSEnabled', 'false');
-                console.log('🔇 Auto-disabled speaker after playback (not voice conversation)');
-              } else {
-                console.log('🔊 Keeping speaker enabled (voice conversation mode)');
-              }
+              // Keep speaker enabled - let user control it manually
+              console.log('🔊 Audio playback completed, speaker remains enabled');
             };
 
             audio.onerror = () => {
@@ -552,12 +541,6 @@ const SalesChatWidget: React.FC<SalesChatWidgetProps> = ({
   const sendMessage = (content?: string) => {
     const messageToSend = content || inputMessage.trim();
     if (!messageToSend || !ws.current || !isConnected || isBusy) return;
-
-    // If user types a message (not voice), exit voice conversation mode
-    if (!content) {
-      isVoiceConversationRef.current = false;
-      console.log('📝 User switched to typing - exited voice conversation mode');
-    }
 
     const userMessage: Message = {
       id: generateMessageId(),
@@ -645,15 +628,11 @@ const SalesChatWidget: React.FC<SalesChatWidgetProps> = ({
     } else {
       console.log('Starting recording');
 
-      // Auto-enable speaker when user starts voice input and mark as voice conversation
+      // Auto-enable speaker when user starts voice input for better UX
       if (!isSpeakerEnabled) {
         setIsSpeakerEnabled(true);
         localStorage.setItem('salesChatWidgetTTSEnabled', 'true');
-        isVoiceConversationRef.current = true;
-        console.log('🔊 Auto-enabled speaker for voice conversation');
-      } else {
-        // Already enabled, but mark as voice conversation
-        isVoiceConversationRef.current = true;
+        console.log('🔊 Auto-enabled speaker for voice input');
       }
 
       if (currentAudioRef.current) {
@@ -682,16 +661,13 @@ const SalesChatWidget: React.FC<SalesChatWidgetProps> = ({
     setIsSpeakerEnabled(newState);
 
     if (!newState) {
-      // User manually disabled speaker - exit voice conversation mode
-      isVoiceConversationRef.current = false;
-
+      // Stop any currently playing audio
       if (currentAudioRef.current) {
         currentAudioRef.current.pause();
         currentAudioRef.current = null;
         setIsSpeaking(false);
       }
-
-      console.log('🔇 Speaker manually disabled - exiting voice conversation mode');
+      console.log('🔇 Speaker manually disabled');
     } else {
       console.log('🔊 Speaker manually enabled');
     }
@@ -725,24 +701,39 @@ const SalesChatWidget: React.FC<SalesChatWidgetProps> = ({
       {/* Chat Window */}
       {isOpen && (
         <div
-          className="fixed bottom-6 right-6 w-96 bg-white rounded-2xl shadow-2xl transition-all duration-300 flex flex-col z-50"
+          className="fixed bottom-6 right-6 w-[520px] bg-white rounded-2xl shadow-2xl transition-all duration-300 flex flex-col z-50"
           style={{
-            height: isMinimized ? '64px' : '600px'
+            height: isMinimized ? '64px' : '650px'
           }}
         >
           {/* Header */}
-          <div className="bg-gradient-to-r from-green-600 to-emerald-600 px-4 py-3 rounded-t-2xl flex items-center justify-between">
+          <div className="bg-gradient-to-r from-green-600 to-emerald-600 px-5 py-4 rounded-t-2xl flex items-center justify-between">
             <div className="flex items-center space-x-3">
+              {/* Human-like avatar with initial */}
               <div className="relative">
-                <Bot className="h-6 w-6 text-white" />
-                <span className={`absolute -bottom-1 -right-1 h-2.5 w-2.5 rounded-full ${
-                  isConnected ? 'bg-green-400' : 'bg-red-400'
-                } ${isConnected ? 'animate-pulse' : ''}`} />
+                <div className="h-10 w-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white font-semibold text-lg border-2 border-white/30">
+                  C
+                </div>
+                <span className={`absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-green-600 ${
+                  isConnected ? 'bg-green-300' : 'bg-gray-400'
+                }`} />
               </div>
               <div>
-                <h3 className="font-semibold text-white text-sm">Carlos</h3>
-                <p className="text-xs text-green-100">
-                  {isBusy ? 'Thinking...' : isConnected ? 'Sales Assistant' : 'Connecting...'}
+                <h3 className="font-semibold text-white text-base">Carlos</h3>
+                <p className="text-xs text-green-50 flex items-center gap-1.5">
+                  {isBusy ? (
+                    <>
+                      <span className="inline-block w-1.5 h-1.5 bg-green-200 rounded-full animate-pulse" />
+                      <span>typing...</span>
+                    </>
+                  ) : isConnected ? (
+                    <>
+                      <span className="inline-block w-1.5 h-1.5 bg-green-300 rounded-full" />
+                      <span>Online</span>
+                    </>
+                  ) : (
+                    'Connecting...'
+                  )}
                 </p>
               </div>
             </div>
@@ -777,35 +768,31 @@ const SalesChatWidget: React.FC<SalesChatWidgetProps> = ({
                   <div key={message.id}>
                     <div className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                       <div
-                        className={`max-w-[85%] rounded-2xl px-4 py-2.5 ${
+                        className={`max-w-[90%] rounded-2xl px-4 py-3 ${
                           message.role === 'user'
                             ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
                             : message.role === 'assistant'
-                            ? 'bg-white text-gray-900 shadow-md'
+                            ? 'bg-white text-gray-800 shadow-md border border-gray-100'
                             : 'bg-yellow-100 text-yellow-800'
                         }`}
                       >
-                        <div className="flex items-start gap-2">
-                          {message.role === 'assistant' && (
-                            <Bot className="h-4 w-4 mt-0.5 flex-shrink-0 opacity-70" />
+                        <div className="flex flex-col gap-1">
+                          {/* Remove bot icon for human feel - just show content */}
+                          {message.role === 'user' && message.isVoice && (
+                            <div className="flex items-center gap-1.5 mb-1 opacity-70">
+                              <Volume2 className="h-3 w-3" />
+                              <span className="text-xs">Voice message</span>
+                            </div>
                           )}
-                          {message.role === 'user' && (
-                            <>
-                              {message.isVoice && (
-                                <Volume2 className="h-4 w-4 mt-0.5 flex-shrink-0 opacity-70" />
-                              )}
-                              <User className="h-4 w-4 mt-0.5 flex-shrink-0 opacity-70" />
-                            </>
-                          )}
-                          <div className="flex-1">
-                            <p className="whitespace-pre-wrap text-sm leading-relaxed">
+                          <div>
+                            <p className="whitespace-pre-wrap text-[15px] leading-relaxed">
                               {message.role === 'assistant' && typingMessages.has(message.id)
                                 ? typingMessages.get(message.id)
                                 : message.content}
                             </p>
                             {/* Show cursor during typing animation */}
                             {message.role === 'assistant' && typingMessages.has(message.id) && (
-                              <span className="inline-block w-1 h-4 ml-0.5 bg-gray-900 dark:bg-white animate-pulse" />
+                              <span className="inline-block w-0.5 h-4 ml-1 bg-green-600 animate-pulse" />
                             )}
                           </div>
                         </div>
@@ -841,25 +828,17 @@ const SalesChatWidget: React.FC<SalesChatWidgetProps> = ({
                   </div>
                 ))}
 
-                {/* Typing Indicator with Writing Animation */}
+                {/* Typing Indicator - Human-like */}
                 {isTyping && (
                   <div className="flex justify-start">
-                    <div className="bg-white rounded-2xl px-4 py-3 shadow-md max-w-[85%]">
-                      <div className="flex items-center space-x-3">
-                        <Bot className="h-4 w-4 text-gray-500" />
-                        <div className="flex items-center gap-2">
-                          {/* Animated writing icon */}
-                          <div className="relative">
-                            <PenLine className="h-5 w-5 text-green-600 animate-pulse" />
-                            <div className="absolute -bottom-1 -right-1 w-2 h-2 bg-green-500 rounded-full animate-ping" />
-                          </div>
-                          <span className="text-lg">{currentActivity.icon}</span>
-                          <span className="text-sm text-gray-600 font-medium">{currentActivity.text}</span>
-                          <div className="flex space-x-1">
-                            <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                            <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                            <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-                          </div>
+                    <div className="bg-white rounded-2xl px-4 py-3 shadow-md border border-gray-100 max-w-[90%]">
+                      <div className="flex items-center gap-3">
+                        <span className="text-base">{currentActivity.icon}</span>
+                        <span className="text-sm text-gray-600">{currentActivity.text}</span>
+                        <div className="flex space-x-1">
+                          <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                          <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                          <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                         </div>
                       </div>
                     </div>
@@ -885,7 +864,7 @@ const SalesChatWidget: React.FC<SalesChatWidgetProps> = ({
               )}
 
               {/* Input Area */}
-              <div className="border-t border-gray-200 p-4 bg-white">
+              <div className="border-t border-gray-200 p-4 bg-white rounded-b-2xl">
                 <div className="flex items-end space-x-2">
                   <div className="flex-1 relative">
                     <textarea
@@ -904,12 +883,12 @@ const SalesChatWidget: React.FC<SalesChatWidgetProps> = ({
                       }
                       disabled={!isConnected || isBusy || isRecording}
                       rows={1}
-                      className="w-full px-4 py-2.5 pr-12 border border-gray-300 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed text-sm transition-colors"
-                      style={{ maxHeight: '120px' }}
+                      className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed text-[15px] transition-colors"
+                      style={{ maxHeight: '150px', minHeight: '44px' }}
                       onInput={(e) => {
                         const target = e.target as HTMLTextAreaElement;
                         target.style.height = 'auto';
-                        target.style.height = Math.min(target.scrollHeight, 120) + 'px';
+                        target.style.height = Math.min(target.scrollHeight, 150) + 'px';
                       }}
                     />
                   </div>

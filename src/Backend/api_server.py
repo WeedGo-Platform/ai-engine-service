@@ -1376,6 +1376,157 @@ async def toggle_cloud_inference(req: Request):
             detail=str(e)
         )
 
+# Model Management endpoints
+@app.get("/api/admin/router/models/config")
+async def get_models_config(req: Request):
+    """Get current model configuration for all providers"""
+    try:
+        v5_engine = getattr(req.app.state, 'v5_engine', None)
+        if not v5_engine or not v5_engine.llm_router:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="LLM Router not initialized"
+            )
+
+        models_config = v5_engine.llm_router.get_current_models_config()
+        return {
+            "success": True,
+            "models": models_config
+        }
+
+    except Exception as e:
+        logger.error(f"Failed to get models config: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
+@app.get("/api/admin/router/providers/{provider_name}/models")
+async def get_provider_models(provider_name: str, req: Request):
+    """Get available models for a specific provider"""
+    try:
+        v5_engine = getattr(req.app.state, 'v5_engine', None)
+        if not v5_engine or not v5_engine.llm_router:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="LLM Router not initialized"
+            )
+
+        models = v5_engine.llm_router.get_provider_models(provider_name)
+        return {
+            "success": True,
+            "provider": provider_name,
+            "models": models
+        }
+
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e)
+        )
+    except Exception as e:
+        logger.error(f"Failed to get provider models: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
+@app.post("/api/admin/router/providers/{provider_name}/model")
+async def update_provider_model(provider_name: str, req: Request):
+    """Update the model for a specific provider"""
+    try:
+        v5_engine = getattr(req.app.state, 'v5_engine', None)
+        if not v5_engine or not v5_engine.llm_router:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="LLM Router not initialized"
+            )
+
+        # Parse request body
+        body = await req.json()
+        model_name = body.get("model_name")
+        
+        if not model_name:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="model_name is required"
+            )
+
+        # Update the model
+        success = v5_engine.llm_router.update_provider_model(provider_name, model_name)
+        
+        return {
+            "success": success,
+            "message": f"Updated {provider_name} to model {model_name}",
+            "provider": provider_name,
+            "model": model_name
+        }
+
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+    except Exception as e:
+        logger.error(f"Failed to update provider model: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
+@app.post("/api/admin/router/models/config")
+async def update_models_config(req: Request):
+    """Update models for multiple providers at once"""
+    try:
+        v5_engine = getattr(req.app.state, 'v5_engine', None)
+        if not v5_engine or not v5_engine.llm_router:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="LLM Router not initialized"
+            )
+
+        # Parse request body
+        body = await req.json()
+        models_config = body.get("models", {})
+        
+        if not models_config:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="models configuration is required"
+            )
+
+        # Update each provider
+        results = {}
+        errors = {}
+        
+        for provider_name, model_name in models_config.items():
+            try:
+                v5_engine.llm_router.update_provider_model(provider_name, model_name)
+                results[provider_name] = model_name
+            except Exception as e:
+                errors[provider_name] = str(e)
+
+        if errors:
+            return {
+                "success": False,
+                "message": "Some providers failed to update",
+                "results": results,
+                "errors": errors
+            }
+
+        return {
+            "success": True,
+            "message": "All providers updated successfully",
+            "models": results
+        }
+
+    except Exception as e:
+        logger.error(f"Failed to update models config: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
 
 # Error handlers
 @app.exception_handler(HTTPException)
