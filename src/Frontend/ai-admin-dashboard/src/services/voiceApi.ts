@@ -43,11 +43,14 @@ export const voiceApi = {
    */
   synthesize: async (text: string, voice?: string): Promise<Blob> => {
     try {
+      // Use Ryan (male voice) for Carlos by default
+      const selectedVoice = voice || 'ryan';
+
+      console.log('[voiceApi] Synthesizing with voice:', selectedVoice, 'text length:', text.length);
+
       const formData = new FormData();
       formData.append('text', text);
-      if (voice) {
-        formData.append('voice', voice);
-      }
+      formData.append('voice', selectedVoice);
       formData.append('speed', '1.0');
       formData.append('format', 'wav');
 
@@ -56,70 +59,72 @@ export const voiceApi = {
         body: formData
       });
 
+      console.log('[voiceApi] Response status:', response.status, response.statusText);
+
       if (!response.ok) {
-        // Fallback to browser's speech synthesis if API fails
-        return voiceApi.synthesizeLocal(text);
+        const errorText = await response.text();
+        console.error('[voiceApi] API error:', errorText);
+        throw new Error(`TTS API failed: ${response.status} ${response.statusText}`);
       }
 
-      return await response.blob();
+      const blob = await response.blob();
+      console.log('[voiceApi] Received blob:', blob.size, 'bytes, type:', blob.type);
+
+      return blob;
     } catch (error) {
-      console.error('Failed to synthesize speech:', error);
-      // Fallback to browser's speech synthesis
-      return voiceApi.synthesizeLocal(text);
+      console.error('[voiceApi] Synthesis failed:', error);
+      // Use browser TTS as last resort
+      console.warn('[voiceApi] Falling back to browser TTS');
+      return voiceApi.synthesizeBrowserTTS(text);
     }
   },
 
   /**
-   * Fallback: Use browser's built-in speech synthesis
+   * Fallback: Use browser's built-in speech synthesis (actual speaking, not blob)
    */
-  synthesizeLocal: async (text: string): Promise<Blob> => {
-    return new Promise((resolve, reject) => {
-      if (!('speechSynthesis' in window)) {
-        reject(new Error('Speech synthesis not supported'));
-        return;
-      }
+  synthesizeBrowserTTS: async (text: string): Promise<Blob> => {
+    console.log('[voiceApi] Using browser TTS as fallback');
 
+    // Just speak directly with browser TTS, return empty blob
+    if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.rate = 1.0;
       utterance.pitch = 1.0;
       utterance.volume = 1.0;
 
-      // Create a dummy blob for compatibility
-      const audioContext = new AudioContext();
-      const oscillator = audioContext.createOscillator();
-      const destination = audioContext.createMediaStreamDestination();
-      oscillator.connect(destination);
-
-      const mediaRecorder = new MediaRecorder(destination.stream);
-      const chunks: Blob[] = [];
-
-      mediaRecorder.ondataavailable = (e) => {
-        if (e.data.size > 0) {
-          chunks.push(e.data);
-        }
-      };
-
-      mediaRecorder.onstop = () => {
-        const blob = new Blob(chunks, { type: 'audio/webm' });
-        resolve(blob);
-      };
-
-      utterance.onstart = () => {
-        oscillator.start();
-        mediaRecorder.start();
-      };
-
-      utterance.onend = () => {
-        oscillator.stop();
-        mediaRecorder.stop();
-      };
-
-      utterance.onerror = (error) => {
-        reject(error);
-      };
+      // Try to find a male voice
+      const voices = window.speechSynthesis.getVoices();
+      const maleVoice = voices.find(v =>
+        v.name.includes('Male') ||
+        v.name.includes('Daniel') ||
+        v.name.includes('Fred')
+      );
+      if (maleVoice) {
+        utterance.voice = maleVoice;
+      }
 
       window.speechSynthesis.speak(utterance);
-    });
+    }
+
+    // Return a small silent audio blob for compatibility
+    // (actual speech happens via speechSynthesis.speak above)
+    const silentWav = new Uint8Array([
+      0x52, 0x49, 0x46, 0x46, // "RIFF"
+      0x26, 0x00, 0x00, 0x00, // File size
+      0x57, 0x41, 0x56, 0x45, // "WAVE"
+      0x66, 0x6D, 0x74, 0x20, // "fmt "
+      0x10, 0x00, 0x00, 0x00, // Format chunk size
+      0x01, 0x00, // PCM
+      0x01, 0x00, // Mono
+      0x44, 0xAC, 0x00, 0x00, // Sample rate (44100)
+      0x88, 0x58, 0x01, 0x00, // Byte rate
+      0x02, 0x00, // Block align
+      0x10, 0x00, // Bits per sample
+      0x64, 0x61, 0x74, 0x61, // "data"
+      0x00, 0x00, 0x00, 0x00  // Data size
+    ]);
+
+    return new Blob([silentWav], { type: 'audio/wav' });
   },
 
   /**

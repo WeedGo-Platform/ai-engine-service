@@ -50,6 +50,9 @@ class OpenRouterProvider(BaseProvider):
         """
         # Get API key from environment if not provided
         api_key = api_key or os.getenv("OPENROUTER_API_KEY")
+        
+        # Get model from environment or use default
+        model_name = os.getenv("OPENROUTER_MODEL", "deepseek/deepseek-r1-distill-llama-70b:free")
 
         config = ProviderConfig(
             name="OpenRouter (DeepSeek R1)",
@@ -65,7 +68,7 @@ class OpenRouterProvider(BaseProvider):
             requests_per_day=200,
             api_key=api_key,
             base_url="https://openrouter.ai/api/v1",
-            model_name="deepseek/deepseek-r1-distill-llama-70b:free",
+            model_name=model_name,
             health_check_url="https://openrouter.ai/api/v1/models"
         )
 
@@ -80,6 +83,9 @@ class OpenRouterProvider(BaseProvider):
                 "OpenRouter API key not set. "
                 "Set OPENROUTER_API_KEY environment variable to enable."
             )
+        
+        if os.getenv("OPENROUTER_MODEL"):
+            logger.info(f"OpenRouter provider initialized with custom model from env: {model_name}")
 
     async def complete(
         self,
@@ -231,6 +237,47 @@ class OpenRouterProvider(BaseProvider):
         except Exception as e:
             logger.warning(f"OpenRouter health check failed: {e}")
             return False
+
+    def get_available_models(self) -> List[Dict]:
+        """
+        Get list of available OpenRouter free tier models
+
+        Returns:
+            List of supported free tier models
+        """
+        return [
+            {
+                "name": "deepseek/deepseek-r1-distill-llama-70b:free",
+                "default": True,
+                "description": "DeepSeek R1 70B - Reasoning focused (default)"
+            },
+            {
+                "name": "meta-llama/llama-3.2-3b-instruct:free",
+                "default": False,
+                "description": "Llama 3.2 3B - Fast and efficient"
+            },
+            {
+                "name": "google/gemma-2-9b-it:free",
+                "default": False,
+                "description": "Gemma 2 9B - Instruction tuned"
+            },
+            {
+                "name": "microsoft/phi-3-mini-128k-instruct:free",
+                "default": False,
+                "description": "Phi-3 Mini - Large context window"
+            }
+        ]
+
+    def set_model(self, model_name: str) -> None:
+        """
+        Change the OpenRouter model
+
+        Args:
+            model_name: Name of the OpenRouter model to use
+        """
+        self.model = model_name
+        self.config.model_name = model_name
+        logger.info(f"OpenRouter provider switched to model: {model_name}")
 
     def __repr__(self):
         status = "✓" if self.is_healthy else "✗"

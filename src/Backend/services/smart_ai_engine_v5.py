@@ -1800,7 +1800,10 @@ class SmartAIEngineV5:
                     # For cloud inference, we want the actual user question, not the template
                     user_message = original_user_message if 'original_user_message' in locals() else prompt
                     messages.append({"role": "user", "content": user_message})
-                    logger.info(f"Cloud inference: System message {len(messages[0]['content'] if messages and messages[0]['role'] == 'system' else 0)} chars, User message: {len(user_message)} chars")
+                    
+                    # Log message sizes safely
+                    system_msg_len = len(messages[0]['content']) if messages and messages[0]['role'] == 'system' else 0
+                    logger.info(f"Cloud inference: System message {system_msg_len} chars, User message: {len(user_message)} chars")
 
                     result = await self.llm_router.complete(messages, context)
 

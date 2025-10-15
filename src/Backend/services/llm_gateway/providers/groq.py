@@ -53,6 +53,9 @@ class GroqProvider(BaseProvider):
         """
         # Get API key from environment if not provided
         api_key = api_key or os.getenv("GROQ_API_KEY")
+        
+        # Get model from environment or use default
+        model_name = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
 
         config = ProviderConfig(
             name="Groq (Llama 3.3 70B)",
@@ -69,7 +72,7 @@ class GroqProvider(BaseProvider):
             tokens_per_month=None,  # No monthly token limit, just rate limits
             api_key=api_key,
             base_url="https://api.groq.com/openai/v1",
-            model_name="llama-3.3-70b-versatile",
+            model_name=model_name,
             health_check_url="https://api.groq.com/openai/v1/models"
         )
 
@@ -84,6 +87,9 @@ class GroqProvider(BaseProvider):
                 "Groq API key not set. "
                 "Set GROQ_API_KEY environment variable to enable."
             )
+        
+        if os.getenv("GROQ_MODEL"):
+            logger.info(f"Groq provider initialized with custom model from env: {model_name}")
 
     async def complete(
         self,
@@ -245,6 +251,52 @@ class GroqProvider(BaseProvider):
         except Exception as e:
             logger.warning(f"Groq health check failed: {e}")
             return False
+
+    def get_available_models(self) -> List[Dict]:
+        """
+        Get list of available Groq models
+
+        Returns:
+            List of supported models with metadata
+        """
+        return [
+            {
+                "name": "llama-3.3-70b-versatile",
+                "default": True,
+                "description": "Llama 3.3 70B - Ultra-fast, versatile (default)"
+            },
+            {
+                "name": "llama-3.1-70b-versatile",
+                "default": False,
+                "description": "Llama 3.1 70B - Versatile, high quality"
+            },
+            {
+                "name": "llama-3.1-8b-instant",
+                "default": False,
+                "description": "Llama 3.1 8B - Instant, efficient"
+            },
+            {
+                "name": "mixtral-8x7b-32768",
+                "default": False,
+                "description": "Mixtral 8x7B - Large context window"
+            },
+            {
+                "name": "gemma2-9b-it",
+                "default": False,
+                "description": "Gemma 2 9B - Instruction tuned"
+            }
+        ]
+
+    def set_model(self, model_name: str) -> None:
+        """
+        Change the Groq model
+
+        Args:
+            model_name: Name of the Groq model to use
+        """
+        self.model = model_name
+        self.config.model_name = model_name
+        logger.info(f"Groq provider switched to model: {model_name}")
 
     def __repr__(self):
         status = "✓" if self.is_healthy else "✗"
