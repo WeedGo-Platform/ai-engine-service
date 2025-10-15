@@ -429,9 +429,13 @@ class ChatService(IChatProcessor, ISessionManager):
                 logger.warning(f"Failed to structure quick action: {str(e)}")
 
         # Create metadata
+        # IMPORTANT: V5 engine returns "tokens" but we need "tokens_used" for metadata
+        # Check both for backwards compatibility
+        tokens_used = response_data.get("tokens_used") or response_data.get("tokens") or 0
+
         metadata = ResponseMetadata(
             model=response_data.get("model", "unknown"),
-            tokens_used=response_data.get("tokens_used", 0),
+            tokens_used=tokens_used,
             prompt_tokens=response_data.get("prompt_tokens", 0),
             completion_tokens=response_data.get("completion_tokens", 0),
             response_time=response_time,
