@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { 
   Leaf, Lock, Mail, Eye, EyeOff, AlertCircle, 
   Loader2, Shield, CheckCircle 
@@ -10,6 +11,7 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { login } = useAuth();
+  const { t } = useTranslation(['auth', 'common']);
   
   const [formData, setFormData] = useState({
     email: '',
@@ -27,22 +29,22 @@ const Login: React.FC = () => {
   
   const validateForm = (): boolean => {
     if (!formData.email) {
-      setError('Email is required');
+      setError(t('common:errors.required'));
       return false;
     }
     
     if (!formData.email.includes('@')) {
-      setError('Please enter a valid email address');
+      setError(t('common:errors.invalidEmail'));
       return false;
     }
     
     if (!formData.password) {
-      setError('Password is required');
+      setError(t('common:errors.required'));
       return false;
     }
     
     if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters');
+      setError(t('auth:errors.loginFailed'));
       return false;
     }
     
@@ -117,35 +119,35 @@ const Login: React.FC = () => {
   };
   
   return (
-    <div className="min-h-screen bg-white flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-white dark:bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8 transition-colors duration-200">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         {/* Logo and Title */}
         <div className="flex justify-center">
-          <div className="bg-primary-600 p-4 rounded-xl">
+          <div className="bg-primary-600 dark:bg-primary-500 p-4 rounded-xl">
             <Leaf className="h-10 w-10 text-white" />
           </div>
         </div>
         
-        <h2 className="mt-6 text-center text-2xl font-semibold text-gray-900">
-          Admin Dashboard
+        <h2 className="mt-6 text-center text-2xl font-semibold text-gray-900 dark:text-white">
+          {t('auth:login.title')}
         </h2>
 
-        <p className="mt-2 text-center text-sm text-gray-500">
-          Sign in to manage your retail platform
+        <p className="mt-2 text-center text-sm text-gray-500 dark:text-gray-400">
+          {t('auth:login.subtitle')}
         </p>
       </div>
       
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 border border-gray-200 sm:rounded-xl sm:px-10">
+        <div className="bg-white dark:bg-gray-800 py-8 px-4 border border-gray-200 dark:border-gray-700 sm:rounded-xl sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                {t('auth:login.email')}
               </label>
               <div className="mt-1 relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
+                  <Mail className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                 </div>
                 <input
                   id="email"
@@ -155,20 +157,20 @@ const Login: React.FC = () => {
                   required
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="appearance-none block w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all sm:text-sm"
-                  placeholder="admin@example.com"
+                  className="appearance-none block w-full pl-10 pr-3 py-2.5 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all sm:text-sm"
+                  placeholder={t('common:placeholders.enterEmail')}
                 />
               </div>
             </div>
             
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                {t('auth:login.password')}
               </label>
               <div className="mt-1 relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
+                  <Lock className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                 </div>
                 <input
                   id="password"
@@ -178,8 +180,8 @@ const Login: React.FC = () => {
                   required
                   value={formData.password}
                   onChange={handleInputChange}
-                  className="appearance-none block w-full pl-10 pr-10 py-2.5 border border-gray-200 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all sm:text-sm"
-                  placeholder="Enter your password"
+                  className="appearance-none block w-full pl-10 pr-10 py-2.5 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all sm:text-sm"
+                  placeholder={t('common:placeholders.enterPassword')}
                 />
                 <button
                   type="button"
@@ -187,9 +189,9 @@ const Login: React.FC = () => {
                   className="absolute inset-y-0 right-0 pr-3 flex items-center"
                 >
                   {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                    <EyeOff className="h-5 w-5 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300" />
                   ) : (
-                    <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                    <Eye className="h-5 w-5 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300" />
                   )}
                 </button>
               </div>
@@ -204,29 +206,29 @@ const Login: React.FC = () => {
                   type="checkbox"
                   checked={formData.rememberMe}
                   onChange={handleInputChange}
-                  className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-200 rounded"
+                  className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-200 dark:border-gray-600 rounded dark:bg-gray-700"
                 />
-                <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-600">
-                  Remember me
+                <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-600 dark:text-gray-300">
+                  {t('auth:login.rememberMe')}
                 </label>
               </div>
               
               <div className="text-sm">
-                <a href="#" className="font-medium text-primary-600 hover:text-primary-700 text-sm">
-                  Forgot password?
+                <a href="#" className="font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 text-sm">
+                  {t('auth:login.forgotPassword')}
                 </a>
               </div>
             </div>
             
             {/* Error Message */}
             {error && (
-              <div className="rounded-lg bg-danger-50 border border-danger-200 p-6">
+              <div className="rounded-lg bg-danger-50 dark:bg-danger-900/20 border border-danger-200 dark:border-danger-800 p-6">
                 <div className="flex">
                   <div className="flex-shrink-0">
                     <AlertCircle className="h-5 w-5 text-red-400" />
                   </div>
                   <div className="ml-3">
-                    <p className="text-sm text-danger-700">
+                    <p className="text-sm text-danger-700 dark:text-danger-400">
                       {error}
                     </p>
                   </div>
@@ -236,13 +238,13 @@ const Login: React.FC = () => {
             
             {/* Success Message */}
             {success && (
-              <div className="rounded-lg bg-success-50 border border-success-200 p-6">
+              <div className="rounded-lg bg-success-50 dark:bg-success-900/20 border border-success-200 dark:border-success-800 p-6">
                 <div className="flex">
                   <div className="flex-shrink-0">
                     <CheckCircle className="h-5 w-5 text-green-400" />
                   </div>
                   <div className="ml-3">
-                    <p className="text-sm text-success-700">
+                    <p className="text-sm text-success-700 dark:text-success-400">
                       {success}
                     </p>
                   </div>
@@ -255,17 +257,17 @@ const Login: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg text-sm font-medium text-white bg-primary-600 dark:bg-primary-500 hover:bg-primary-700 dark:hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
                 {loading ? (
                   <>
                     <Loader2 className="animate-spin h-5 w-5 mr-2" />
-                    Signing in...
+                    {t('auth:login.signingIn')}
                   </>
                 ) : (
                   <>
                     <Shield className="h-5 w-5 mr-2" />
-                    Sign in
+                    {t('auth:login.signIn')}
                   </>
                 )}
               </button>
@@ -274,10 +276,10 @@ const Login: React.FC = () => {
           
           {/* Signup Link */}
           <div className="mt-6 text-center">
-            <p className="text-sm text-gray-500">
-              Don't have an account?{' '}
-              <Link to="/signup" className="font-medium text-primary-600 hover:text-primary-700">
-                Sign up for WeedGo
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              {t('auth:login.noAccount')}{' '}
+              <Link to="/signup" className="font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300">
+                {t('auth:login.signUp')}
               </Link>
             </p>
           </div>
@@ -286,18 +288,17 @@ const Login: React.FC = () => {
           <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200" />
+                <div className="w-full border-t border-gray-200 dark:border-gray-700" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-400 text-xs uppercase tracking-wider">
-                  Secure admin access
+                <span className="px-2 bg-white dark:bg-gray-800 text-gray-400 dark:text-gray-500 text-xs uppercase tracking-wider">
+                  {t('auth:login.securityNotice')}
                 </span>
               </div>
             </div>
             
-            <div className="mt-4 text-center text-xs text-gray-400">
-              This is a protected area. All login attempts are monitored and logged.
-              Unauthorized access attempts will be reported.
+            <div className="mt-4 text-center text-xs text-gray-400 dark:text-gray-500">
+              {t('auth:login.securityWarning')}
             </div>
             
             <div className="mt-6 text-center">

@@ -357,35 +357,74 @@ class TranslationService:
         context: Optional[str] = None
     ) -> str:
         """
-        Perform AI translation using the model
-        This integrates with your existing SmartAIEngine
+        Perform AI translation using the LLM Router
         """
         try:
             # Import here to avoid circular dependency
-            from services.smart_ai_engine_v5 import SmartAIEngineV5
+            from services.llm_router import LLMRouter
             
-            # Get or create AI engine instance
-            engine = SmartAIEngineV5()
+            # Get or create LLM Router instance
+            router = LLMRouter()
+            
+            # Language code to full name mapping
+            lang_names = {
+                'en': 'English', 'es': 'Spanish', 'fr': 'French', 'de': 'German',
+                'zh': 'Chinese', 'ja': 'Japanese', 'ko': 'Korean', 'ar': 'Arabic',
+                'pt': 'Portuguese', 'ru': 'Russian', 'it': 'Italian', 'nl': 'Dutch',
+                'pl': 'Polish', 'tr': 'Turkish', 'vi': 'Vietnamese', 'th': 'Thai',
+                'hi': 'Hindi', 'bn': 'Bengali', 'ta': 'Tamil', 'te': 'Telugu',
+                'mr': 'Marathi', 'ur': 'Urdu', 'fa': 'Persian', 'he': 'Hebrew',
+                'id': 'Indonesian', 'ms': 'Malay', 'tl': 'Tagalog', 'sv': 'Swedish',
+                'no': 'Norwegian', 'da': 'Danish', 'fi': 'Finnish', 'cs': 'Czech',
+                'sk': 'Slovak', 'hu': 'Hungarian', 'ro': 'Romanian', 'el': 'Greek',
+                'uk': 'Ukrainian', 'bg': 'Bulgarian', 'sr': 'Serbian', 'hr': 'Croatian'
+            }
+            
+            source_lang_name = lang_names.get(source_language, source_language)
+            target_lang_name = lang_names.get(target_language, target_language)
             
             # Prepare translation prompt
-            prompt = f"""Translate the following text from {source_language} to {target_language}.
-{f'Context: {context}' if context else ''}
-Provide only the translated text without any explanation.
+            system_prompt = f"""You are a professional translator. Translate text from {source_lang_name} to {target_lang_name}.
+Rules:
+- Provide ONLY the translated text, no explanations
+- Keep brand names (like "WeedGo", "Carlos") untranslated
+- Preserve emojis and formatting (newlines, punctuation)
+- Maintain the same tone and style
+- If context is provided, use it for better translation accuracy"""
 
-Text to translate: {text}"""
+            user_prompt = f"""{f'Context: {context}' if context else ''}
+Translate to {target_lang_name}:
+
+{text}"""
             
-            # Get translation from AI model
-            response = await engine.process_request({
-                'message': prompt,
-                'conversation_id': f'translation_{target_language}',
-                'user_id': 'system_translation'
-            })
+            # Create request context for LLM Router
+            from services.llm_gateway.types import RequestContext, TaskType
             
-            if response and 'response' in response:
-                return response['response'].strip()
+            request_context = RequestContext(
+                task_type=TaskType.TRANSLATION,
+                estimated_tokens=len(text.split()) * 2,  # Rough estimate
+                user_id="translation_service"
+            )
+            
+            # Get translation from LLM Router
+            response = await router.complete(
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt}
+                ],
+                context=request_context
+            )
+            
+            if response and response.content:
+                translated = response.content.strip()
+                
+                # Validate translation is not empty and different from original
+                if translated and len(translated) > 0:
+                    logger.info(f"✅ Translated {len(text)} chars from {source_language} to {target_language}")
+                    return translated
             
             # Fallback if AI fails
-            logger.error("AI translation failed, returning original text")
+            logger.error("AI translation failed or returned empty, returning original text")
             return text
             
         except Exception as e:

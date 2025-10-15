@@ -151,6 +151,30 @@ auth: Optional[JWTAuthentication] = None
 db: Optional[SecureDatabaseConnection] = None
 
 
+# Get system setting
+async def get_system_setting(category: str, key: str):
+    """Get system setting from database"""
+    # Implementation depends on your database structure
+    return None
+
+
+async def warmup_translation_cache_on_startup():
+    """Warm up translation cache after server starts"""
+    try:
+        await asyncio.sleep(5)  # Wait 5 seconds for server to fully start
+        logger.info("🔥 Starting translation cache warmup...")
+        
+        from api.translation_warmup import warmup_translations_task
+        result = await warmup_translations_task(
+            languages=['es', 'fr', 'zh', 'ar', 'de', 'ja'],
+            namespaces=['common', 'auth', 'dashboard']
+        )
+        
+        logger.info(f"✅ Cache warmup complete: {result['translations_cached']} translations cached in {result['duration_seconds']:.2f}s")
+    except Exception as e:
+        logger.warning(f"Cache warmup failed (non-critical): {e}")
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan manager"""
@@ -279,6 +303,9 @@ async def lifespan(app: FastAPI):
             logger.warning("ToolManager not available in v5_engine")
         
         logger.info("V5 AI Engine started successfully")
+        
+        # Schedule translation cache warmup (non-blocking)
+        asyncio.create_task(warmup_translation_cache_on_startup())
         
         yield
         
@@ -613,6 +640,14 @@ try:
     logger.info("Translation endpoints loaded successfully")
 except Exception as e:
     logger.warning(f"Failed to load translation endpoints: {e}")
+
+# Import and include translation warmup endpoints
+try:
+    from api.translation_warmup import router as translation_warmup_router
+    app.include_router(translation_warmup_router, prefix="/api/translate")
+    logger.info("Translation warmup endpoints loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load translation warmup endpoints: {e}")
 
 # Import and include search endpoints
 try:

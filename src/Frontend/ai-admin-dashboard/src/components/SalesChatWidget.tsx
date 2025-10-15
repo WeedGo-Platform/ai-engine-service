@@ -43,6 +43,70 @@ const busyActivities = [
   { icon: '🚀', text: 'Finalizing details' }
 ];
 
+// Simple markdown renderer for bold text
+const renderMarkdown = (text: string): string => {
+  // Convert **text** to <strong>text</strong>
+  let rendered = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  // Convert newlines to <br/>
+  rendered = rendered.replace(/\n/g, '<br/>');
+  return rendered;
+};
+
+// Strip markdown for TTS - remove formatting but keep the text
+const stripMarkdown = (text: string): string => {
+  // Remove **bold** markers (keep the text inside)
+  let cleaned = text.replace(/\*\*(.+?)\*\*/g, '$1');
+  // Remove *italic* markers
+  cleaned = cleaned.replace(/\*(.+?)\*/g, '$1');
+  // Remove __bold__ markers
+  cleaned = cleaned.replace(/__(.+?)__/g, '$1');
+  // Remove _italic_ markers
+  cleaned = cleaned.replace(/_(.+?)_/g, '$1');
+  // Remove # headings
+  cleaned = cleaned.replace(/^#{1,6}\s+/gm, '');
+  // Remove [links](url) - keep just the link text
+  cleaned = cleaned.replace(/\[(.+?)\]\(.+?\)/g, '$1');
+  // Remove backticks for code
+  cleaned = cleaned.replace(/`(.+?)`/g, '$1');
+  return cleaned;
+};
+
+// Greeting translations for common languages
+const GREETING_TRANSLATIONS: Record<string, string> = {
+  en: "Hi! I'm Carlos, your WeedGo sales assistant. 👋\n\nI'm here to help you discover how WeedGo can transform your cannabis retail business. Whether you're curious about pricing, features, or just getting started - I'm here to answer any questions.\n\nWhat would you like to know about WeedGo?",
+  
+  es: "¡Hola! Soy Carlos, tu asistente de ventas de WeedGo. 👋\n\nEstoy aquí para ayudarte a descubrir cómo WeedGo puede transformar tu negocio de cannabis. Ya sea que tengas curiosidad sobre precios, características o estés comenzando - estoy aquí para responder cualquier pregunta.\n\n¿Qué te gustaría saber sobre WeedGo?",
+  
+  fr: "Bonjour ! Je suis Carlos, votre assistant commercial WeedGo. 👋\n\nJe suis là pour vous aider à découvrir comment WeedGo peut transformer votre entreprise de cannabis. Que vous soyez curieux des prix, des fonctionnalités ou que vous débutiez - je suis là pour répondre à toutes vos questions.\n\nQu'aimeriez-vous savoir sur WeedGo ?",
+  
+  de: "Hallo! Ich bin Carlos, Ihr WeedGo-Verkaufsassistent. 👋\n\nIch bin hier, um Ihnen zu helfen, herauszufinden, wie WeedGo Ihr Cannabis-Einzelhandelsgeschäft transformieren kann. Egal, ob Sie neugierig auf Preise, Funktionen oder den Einstieg sind - ich bin hier, um alle Fragen zu beantworten.\n\nWas möchten Sie über WeedGo erfahren?",
+  
+  zh: "你好！我是Carlos，您的WeedGo销售助手。👋\n\n我在这里帮助您了解WeedGo如何改变您的大麻零售业务。无论您对价格、功能感到好奇，还是刚刚开始 - 我都在这里回答任何问题。\n\n您想了解WeedGo的什么？",
+  
+  ja: "こんにちは！私はCarlosです、あなたのWeedGo販売アシスタントです。👋\n\nWeedGoがあなたの大麻小売ビジネスをどのように変革できるかをお手伝いします。価格、機能、または始め方について興味がある場合 - どんな質問にもお答えします。\n\nWeedGoについて何を知りたいですか？",
+  
+  ko: "안녕하세요! 저는 Carlos입니다, WeedGo 영업 어시스턴트입니다. 👋\n\nWeedGo가 귀하의 대마초 소매 비즈니스를 어떻게 변화시킬 수 있는지 알아보는 것을 도와드립니다. 가격, 기능 또는 시작하는 방법에 대해 궁금하신 경우 - 모든 질문에 답변해 드립니다.\n\nWeedGo에 대해 무엇을 알고 싶으신가요?",
+  
+  pt: "Olá! Sou Carlos, seu assistente de vendas WeedGo. 👋\n\nEstou aqui para ajudá-lo a descobrir como o WeedGo pode transformar seu negócio de varejo de cannabis. Seja curioso sobre preços, recursos ou apenas começando - estou aqui para responder a qualquer pergunta.\n\nO que você gostaria de saber sobre o WeedGo?",
+  
+  ru: "Привет! Я Carlos, ваш торговый помощник WeedGo. 👋\n\nЯ здесь, чтобы помочь вам узнать, как WeedGo может трансформировать ваш розничный бизнес каннабиса. Будь то цены, функции или только начало - я здесь, чтобы ответить на любые вопросы.\n\nЧто бы вы хотели узнать о WeedGo?",
+  
+  ar: "مرحبًا! أنا Carlos، مساعد مبيعات WeedGo الخاص بك. 👋\n\nأنا هنا لمساعدتك في اكتشاف كيف يمكن لـ WeedGo تحويل أعمال تجارة التجزئة الخاصة بك. سواء كنت فضوليًا بشأن الأسعار أو الميزات أو البدء فقط - أنا هنا للإجابة على أي أسئلة.\n\nماذا تريد أن تعرف عن WeedGo؟",
+  
+  it: "Ciao! Sono Carlos, il tuo assistente alle vendite WeedGo. 👋\n\nSono qui per aiutarti a scoprire come WeedGo può trasformare la tua attività al dettaglio di cannabis. Che tu sia curioso di prezzi, funzionalità o appena iniziato - sono qui per rispondere a qualsiasi domanda.\n\nCosa vorresti sapere su WeedGo?",
+  
+  nl: "Hallo! Ik ben Carlos, uw WeedGo-verkoopassistent. 👋\n\nIk ben hier om u te helpen ontdekken hoe WeedGo uw cannabisdetailhandel kan transformeren. Of u nu nieuwsgierig bent naar prijzen, functies of net begint - ik ben hier om elke vraag te beantwoorden.\n\nWat wilt u weten over WeedGo?",
+  
+  pl: "Cześć! Jestem Carlos, Twój asystent sprzedaży WeedGo. 👋\n\nJestem tutaj, aby pomóc Ci odkryć, jak WeedGo może przekształcić Twój biznes detaliczny z konopią. Czy jesteś ciekawy cen, funkcji czy dopiero zaczynasz - jestem tutaj, aby odpowiedzieć na wszystkie pytania.\n\nCo chciałbyś wiedzieć o WeedGo?",
+  
+  tr: "Merhaba! Ben Carlos, WeedGo satış asistanınızım. 👋\n\nWeedGo'nun esrar perakende işinizi nasıl dönüştürebileceğini keşfetmenize yardımcı olmak için buradayım. Fiyatlar, özellikler veya sadece başlama konusunda meraklıysanız - herhangi bir soruya cevap vermek için buradayım.\n\nWeedGo hakkında ne öğrenmek istersiniz?",
+  
+  vi: "Xin chào! Tôi là Carlos, trợ lý bán hàng WeedGo của bạn. 👋\n\nTôi ở đây để giúp bạn khám phá cách WeedGo có thể biến đổi doanh nghiệp bán lẻ cần sa của bạn. Cho dù bạn tò mò về giá cả, tính năng hay chỉ mới bắt đầu - tôi ở đây để trả lời bất kỳ câu hỏi nào.\n\nBạn muốn biết gì về WeedGo?"
+};
+
+// Default greeting message (English fallback)
+const DEFAULT_GREETING = GREETING_TRANSLATIONS.en;
+
 const SalesChatWidget: React.FC<SalesChatWidgetProps> = ({
   wsUrl = 'ws://localhost:5024/api/v1/chat/ws',
   enableVoice = true
@@ -63,6 +127,9 @@ const SalesChatWidget: React.FC<SalesChatWidgetProps> = ({
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [currentActivity, setCurrentActivity] = useState(busyActivities[0]);
   const [isBusy, setIsBusy] = useState(false);
+
+  // Translation State
+  const [greetingMessage, setGreetingMessage] = useState<string>(DEFAULT_GREETING);
 
   const messageStartTimeRef = useRef<number | null>(null);
   const messageIdCounter = useRef<number>(0);
@@ -252,6 +319,31 @@ const SalesChatWidget: React.FC<SalesChatWidgetProps> = ({
     }
   }, [enableVoice]);
 
+  // Detect browser language and set greeting
+  useEffect(() => {
+    const detectLanguageAndSetGreeting = () => {
+      try {
+        // Get browser language
+        const browserLang = navigator.language || navigator.languages?.[0] || 'en';
+        
+        // Extract language code (e.g., 'en-US' -> 'en', 'zh-CN' -> 'zh')
+        const langCode = browserLang.split('-')[0].toLowerCase();
+
+        // Use pre-translated greeting if available, otherwise English
+        const greeting = GREETING_TRANSLATIONS[langCode] || GREETING_TRANSLATIONS.en;
+        setGreetingMessage(greeting);
+        
+        console.log(`[SalesChatWidget] Using ${langCode} greeting`);
+      } catch (error) {
+        // Fallback to English on any error
+        console.error('[SalesChatWidget] Error detecting language:', error);
+        setGreetingMessage(DEFAULT_GREETING);
+      }
+    };
+
+    detectLanguageAndSetGreeting();
+  }, []); // Run once on mount
+
   // Auto-scroll to bottom
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -337,11 +429,11 @@ const SalesChatWidget: React.FC<SalesChatWidgetProps> = ({
     switch (data.type) {
       case 'connection':
         setSessionId(data.session_id);
-        // Carlos's greeting from prompts.json
+        // Carlos's greeting - using translated version based on browser language
         setMessages([{
           id: generateMessageId(),
           role: 'assistant',
-          content: "Hi! I'm Carlos, your WeedGo sales assistant. 👋\n\nI'm here to help you discover how WeedGo can transform your cannabis retail business. Whether you're curious about pricing, features, or just getting started - I'm here to answer any questions.\n\nWhat would you like to know about WeedGo?",
+          content: greetingMessage,
           timestamp: new Date()
         }]);
         break;
@@ -365,7 +457,7 @@ const SalesChatWidget: React.FC<SalesChatWidgetProps> = ({
         break;
 
       case 'error':
-        handleError(data.message);
+        handleError(data.message || data.error || data.detail || 'An unknown error occurred');
         break;
 
       case 'session_updated':
@@ -431,11 +523,17 @@ const SalesChatWidget: React.FC<SalesChatWidgetProps> = ({
     // Debug: Log the full data to see what backend sends
     console.log('[DEBUG] Incoming message data:', JSON.stringify(data, null, 2));
 
-    if (data.role === 'assistant') {
+    const fullContent = data.content || data.message;
+    if (!fullContent) {
+      console.warn('[DEBUG] Message has no content:', data);
+      return;
+    }
+
+    // Handle both assistant and system messages
+    if (data.role === 'assistant' || data.role === 'system') {
       const responseTime = data.response_time;
       // Backend sends 'token_count' not 'tokens', also check metadata
       const tokens = data.token_count || data.tokens || data.metadata?.tokens_used || 0;
-      const fullContent = data.content || data.message;
 
       console.log('[DEBUG] Extracted tokens:', tokens, 'from:', {
         token_count: data.token_count,
@@ -444,8 +542,8 @@ const SalesChatWidget: React.FC<SalesChatWidgetProps> = ({
       });
 
       const newMessage: Message = {
-        id: generateMessageId(),
-        role: 'assistant',
+        id: data.id || generateMessageId(),
+        role: data.role === 'system' ? 'system' : 'assistant',
         content: fullContent,
         timestamp: new Date(),
         responseTime,
@@ -455,71 +553,81 @@ const SalesChatWidget: React.FC<SalesChatWidgetProps> = ({
       setMessages(prev => [...prev, newMessage]);
       messageStartTimeRef.current = null;
 
-      // Start typing animation (don't await - let it run in background)
-      animateTyping(newMessage.id, fullContent);
+      // Only do typing animation and TTS for assistant messages, not system messages
+      if (data.role === 'assistant') {
+        // Start typing animation (don't await - let it run in background)
+        animateTyping(newMessage.id, fullContent);
 
-      // Handle TTS if enabled (start IMMEDIATELY, concurrent with typing)
-      if (isSpeakerEnabled && fullContent) {
-        // Run TTS synthesis and playback concurrently with typing animation
-        (async () => {
-          try {
-            console.log('[TTS] Synthesizing speech for:', fullContent.substring(0, 50) + '...');
-            const audioBlob = await voiceApi.synthesize(fullContent);
-            console.log('[TTS] Audio blob received:', audioBlob.size, 'bytes, type:', audioBlob.type);
+        // Handle TTS if enabled (start IMMEDIATELY, concurrent with typing)
+        if (isSpeakerEnabled && fullContent) {
+          // Run TTS synthesis and playback concurrently with typing animation
+          (async () => {
+            try {
+              // Strip markdown before TTS to avoid reading "asterisk asterisk"
+              const cleanContent = stripMarkdown(fullContent);
+              console.log('[TTS] Synthesizing speech for:', cleanContent.substring(0, 50) + '...');
+              const audioBlob = await voiceApi.synthesize(cleanContent);
+              console.log('[TTS] Audio blob received:', audioBlob.size, 'bytes, type:', audioBlob.type);
 
-            const audioUrl = URL.createObjectURL(audioBlob);
-            console.log('[TTS] Audio URL created:', audioUrl);
+              const audioUrl = URL.createObjectURL(audioBlob);
+              console.log('[TTS] Audio URL created:', audioUrl);
 
-            if (currentAudioRef.current) {
-              currentAudioRef.current.pause();
-              currentAudioRef.current = null;
+              if (currentAudioRef.current) {
+                currentAudioRef.current.pause();
+                currentAudioRef.current = null;
+              }
+
+              const audio = new Audio(audioUrl);
+              currentAudioRef.current = audio;
+
+              setIsSpeaking(true);
+              audio.onended = () => {
+                setIsSpeaking(false);
+                URL.revokeObjectURL(audioUrl);
+                currentAudioRef.current = null;
+                // Keep speaker enabled - let user control it manually
+                console.log('🔊 Audio playback completed, speaker remains enabled');
+              };
+
+              audio.onerror = () => {
+                setIsSpeaking(false);
+                URL.revokeObjectURL(audioUrl);
+                currentAudioRef.current = null;
+              };
+
+              // Play audio immediately (concurrent with typing animation)
+              console.log('[TTS] Starting audio playback (concurrent with typing)...');
+              await audio.play();
+              console.log('[TTS] Audio playing successfully');
+            } catch (error: any) {
+              console.error('[TTS] Error:', error);
+              console.error('[TTS] Error details:', {
+                message: error.message,
+                name: error.name,
+                stack: error.stack
+              });
+              setIsSpeaking(false);
             }
-
-            const audio = new Audio(audioUrl);
-            currentAudioRef.current = audio;
-
-            setIsSpeaking(true);
-            audio.onended = () => {
-              setIsSpeaking(false);
-              URL.revokeObjectURL(audioUrl);
-              currentAudioRef.current = null;
-              // Keep speaker enabled - let user control it manually
-              console.log('🔊 Audio playback completed, speaker remains enabled');
-            };
-
-            audio.onerror = () => {
-              setIsSpeaking(false);
-              URL.revokeObjectURL(audioUrl);
-              currentAudioRef.current = null;
-            };
-
-            // Play audio immediately (concurrent with typing animation)
-            console.log('[TTS] Starting audio playback (concurrent with typing)...');
-            await audio.play();
-            console.log('[TTS] Audio playing successfully');
-          } catch (error) {
-            console.error('[TTS] Error:', error);
-            console.error('[TTS] Error details:', {
-              message: error.message,
-              name: error.name,
-              stack: error.stack
-            });
-            setIsSpeaking(false);
-          }
-        })();
+          })();
+        }
       }
+    } else {
+      console.warn('[DEBUG] Unhandled message role:', data.role);
     }
   };
 
-  const handleError = (message: string) => {
+  const handleError = (message: string | undefined) => {
     setIsTyping(false);
     setIsBusy(false);
     stopActivityRotation();
 
+    const errorMessage = message || 'An unknown error occurred';
+    console.error('[SalesChatWidget] Error:', errorMessage);
+    
     setMessages(prev => [...prev, {
       id: generateMessageId(),
       role: 'system',
-      content: `Error: ${message}`,
+      content: `Error: ${errorMessage}`,
       timestamp: new Date()
     }]);
   };
@@ -785,11 +893,22 @@ const SalesChatWidget: React.FC<SalesChatWidgetProps> = ({
                             </div>
                           )}
                           <div>
-                            <p className="whitespace-pre-wrap text-[15px] leading-relaxed">
-                              {message.role === 'assistant' && typingMessages.has(message.id)
-                                ? typingMessages.get(message.id)
-                                : message.content}
-                            </p>
+                            {message.role === 'assistant' ? (
+                              <div 
+                                className="text-[15px] leading-relaxed"
+                                dangerouslySetInnerHTML={{
+                                  __html: renderMarkdown(
+                                    typingMessages.has(message.id)
+                                      ? typingMessages.get(message.id)!
+                                      : message.content
+                                  )
+                                }}
+                              />
+                            ) : (
+                              <p className="whitespace-pre-wrap text-[15px] leading-relaxed">
+                                {message.content}
+                              </p>
+                            )}
                             {/* Show cursor during typing animation */}
                             {message.role === 'assistant' && typingMessages.has(message.id) && (
                               <span className="inline-block w-0.5 h-4 ml-1 bg-green-600 animate-pulse" />

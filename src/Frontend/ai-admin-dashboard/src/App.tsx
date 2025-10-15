@@ -5,14 +5,17 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Toaster } from 'react-hot-toast';
 import {
   Home, Package, ShoppingCart, Users, FileText, Leaf, Menu, X, LogOut, Settings,
-  Building2, Store, Tag, Sparkles, Upload, ChevronRight, PanelLeftClose, PanelLeft, Database, Truck, AppWindow, MessageSquare, ScrollText
+  Building2, Store, Tag, Sparkles, Upload, ChevronRight, PanelLeftClose, PanelLeft, Database, Truck, AppWindow, MessageSquare, ScrollText, Moon, Sun
 } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { StoreProvider, useStoreContext } from './contexts/StoreContext';
+import { useTheme } from './hooks/useTheme';
 import ProtectedRoute from './components/ProtectedRoute';
 import StoreSelectionModal from './components/StoreSelectionModal';
 import ChatWidget from './components/ChatWidget';
 import ChangePasswordModal from './components/ChangePasswordModal';
+import LanguageSelector from './components/LanguageSelector';
+import './i18n/config'; // Initialize i18n
 
 // Import pages
 import Login from './pages/Login';
@@ -68,6 +71,7 @@ function Layout() {
   const navigate = useNavigate();
   const { user, logout, isAuthenticated, loading, isSuperAdmin, isTenantAdmin, isStoreManager } = useAuth();
   const { currentStore, selectStore } = useStoreContext();
+  const { isDark, toggleTheme } = useTheme();
   const [selectedTenant, setSelectedTenant] = React.useState<{id: string, name: string} | null>(null);
 
   // Set tenant for tenant admins automatically
@@ -153,7 +157,7 @@ function Layout() {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 dark:bg-gray-900 overflow-hidden transition-colors duration-200">
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
         <div
@@ -163,30 +167,30 @@ function Layout() {
       )}
 
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-50 ${sidebarCollapsed ? 'w-20' : 'w-64'} bg-white border-r border-gray-200 transform ${
+      <div className={`fixed inset-y-0 left-0 z-50 ${sidebarCollapsed ? 'w-20' : 'w-64'} bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transform ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       } transition-all duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0`}>
         <div className="flex h-full flex-col">
           {/* Logo */}
-          <div className="flex h-16 items-center justify-between px-4 border-b border-gray-200">
+          <div className="flex h-16 items-center justify-between px-4 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center">
-              <div className="h-8 w-8 bg-primary-600 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="h-8 w-8 bg-primary-600 dark:bg-primary-500 rounded-lg flex items-center justify-center flex-shrink-0">
                 <Leaf className="h-5 w-5 text-white" />
               </div>
               {!sidebarCollapsed && (
-                <span className="ml-3 text-xl font-semibold text-gray-900 transition-opacity duration-300">Pot Palace</span>
+                <span className="ml-3 text-xl font-semibold text-gray-900 dark:text-white transition-opacity duration-300">Pot Palace</span>
               )}
             </div>
             <div className="flex items-center">
               <button
                 onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-                className="hidden lg:block text-gray-400 hover:text-gray-600 p-1.5 hover:bg-gray-50 rounded-lg transition-all"
+                className="hidden lg:block text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 p-1.5 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-all"
               >
                 {sidebarCollapsed ? <PanelLeft className="h-5 w-5" /> : <PanelLeftClose className="h-5 w-5" />}
               </button>
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="lg:hidden text-gray-500 hover:text-gray-700 ml-2"
+                className="lg:hidden text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 ml-2"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -206,13 +210,13 @@ function Layout() {
                   title={sidebarCollapsed ? item.name : undefined}
                   className={`group flex items-center ${sidebarCollapsed ? 'justify-center px-2' : 'px-3'} py-2.5 text-sm font-medium rounded-lg transition-all ${
                     isActive
-                      ? 'bg-primary-50 text-primary-700'
-                      : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+                      ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-400'
+                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
                   }`}
                 >
                   <item.icon
                     className={`${sidebarCollapsed ? '' : 'mr-3'} h-5 w-5 flex-shrink-0 ${
-                      isActive ? 'text-primary-600' : 'text-gray-400 group-hover:text-gray-500'
+                      isActive ? 'text-primary-600 dark:text-primary-400' : 'text-gray-400 dark:text-gray-500 group-hover:text-gray-500 dark:group-hover:text-gray-400'
                     }`}
                     aria-hidden="true"
                   />
@@ -225,7 +229,7 @@ function Layout() {
           </nav>
 
           {/* User section */}
-          <div className="flex flex-shrink-0 border-t border-gray-200 p-4">
+          <div className="flex flex-shrink-0 border-t border-gray-200 dark:border-gray-700 p-4">
             <div className={`flex items-center ${sidebarCollapsed ? 'justify-center' : ''} w-full`}>
               <div>
                 <img
@@ -237,11 +241,11 @@ function Layout() {
               </div>
               {!sidebarCollapsed && (
                 <div className="ml-3 flex-1 transition-opacity duration-300">
-                  <p className="text-sm font-medium text-gray-900">
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">
                     {user?.first_name && user?.last_name ? `${user.first_name} ${user.last_name}` : 'Not Logged In'}
                   </p>
-                  <p className="text-xs text-gray-500">{user?.email || 'No user session'}</p>
-                  <p className="text-xs font-medium text-primary-600 capitalize">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{user?.email || 'No user session'}</p>
+                  <p className="text-xs font-medium text-primary-600 dark:text-primary-400 capitalize">
                     {(() => {
                       if (!user) return 'No Active Session';
                       if (isSuperAdmin()) return 'Super Admin';
@@ -258,33 +262,33 @@ function Layout() {
       </div>
 
       {/* Main content */}
-      <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col bg-gray-50 dark:bg-gray-900">
         {/* Top bar */}
-        <header className="bg-white border-b border-gray-200">
+        <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
           <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden text-gray-500 hover:text-gray-700"
+              className="lg:hidden text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
             >
               <Menu className="h-6 w-6" />
             </button>
             
             <div className="flex-1 flex items-center">
-              <h2 className="text-lg font-medium text-gray-900">Admin Dashboard</h2>
+              <h2 className="text-lg font-medium text-gray-900 dark:text-white">Admin Dashboard</h2>
 
               {/* Store Selection and Breadcrumb */}
               {(isSuperAdmin() || isTenantAdmin()) && (
                 <div className="ml-8 flex items-center">
                   <button
                     onClick={() => setShowStoreModal(true)}
-                    className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-lg transition-all"
+                    className="p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-all"
                     title="Select Store"
                   >
                     <Store className="h-5 w-5" />
                   </button>
 
                   {currentStore && (
-                    <div className="ml-2 flex items-center text-sm text-gray-600">
+                    <div className="ml-2 flex items-center text-sm text-gray-600 dark:text-gray-300">
                       {/* Show tenant only for super admins */}
                       {isSuperAdmin() && selectedTenant && (
                         <>
@@ -295,7 +299,7 @@ function Layout() {
                       <span className="font-medium">{currentStore.name}</span>
                       <button
                         onClick={() => setShowStoreModal(true)}
-                        className="ml-2 text-accent-600 hover:text-accent-700 text-xs font-medium"
+                        className="ml-2 text-accent-600 dark:text-accent-400 hover:text-accent-700 dark:hover:text-accent-300 text-xs font-medium"
                       >
                         Change
                       </button>
@@ -307,11 +311,11 @@ function Layout() {
               {/* Fixed store display for store managers and staff */}
               {isStoreManager() && !isTenantAdmin() && !isSuperAdmin() && (
                 <div className="ml-8 flex items-center">
-                  <div className="p-2 text-gray-400">
+                  <div className="p-2 text-gray-400 dark:text-gray-500">
                     <Store className="h-5 w-5" />
                   </div>
                   {currentStore ? (
-                    <div className="ml-2 flex items-center text-sm text-gray-600">
+                    <div className="ml-2 flex items-center text-sm text-gray-600 dark:text-gray-300">
                       <span className="font-medium">{currentStore.name}</span>
                     </div>
                   ) : (
@@ -324,9 +328,17 @@ function Layout() {
             </div>
 
             <div className="flex items-center space-x-2">
+              <LanguageSelector />
+              <button
+                onClick={toggleTheme}
+                className="p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-all"
+                title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              >
+                {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              </button>
               <button
                 onClick={() => setShowPasswordModal(true)}
-                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-lg transition-all"
+                className="p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-all"
                 title="Change Password"
               >
                 <Settings className="h-5 w-5" />
@@ -336,7 +348,7 @@ function Layout() {
                   await logout();
                   navigate('/login');
                 }}
-                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-lg transition-all"
+                className="p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-all"
                 title="Logout"
               >
                 <LogOut className="h-5 w-5" />
@@ -346,7 +358,7 @@ function Layout() {
         </header>
 
         {/* Page content */}
-        <main className={`flex-1 overflow-y-auto ${location.pathname === '/dashboard/apps' ? '' : 'p-6 sm:p-6 lg:p-8'}`}>
+        <main className={`flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900 ${location.pathname === '/dashboard/apps' ? '' : 'p-6 sm:p-6 lg:p-8'}`}>
           <Outlet />
         </main>
       </div>

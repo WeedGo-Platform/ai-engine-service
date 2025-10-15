@@ -1,5 +1,6 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { api } from '../services/api';
 import { getApiEndpoint } from '../config/app.config';
 import { 
@@ -39,6 +40,7 @@ ChartJS.register(
 );
 
 const Dashboard: React.FC = () => {
+  const { t } = useTranslation(['dashboard', 'common']);
   const { user, isSuperAdmin, isTenantAdmin } = useAuth();
   const { currentStore, stores, inventoryStats } = useStoreContext();
 
@@ -181,40 +183,40 @@ const Dashboard: React.FC = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            {currentStore ? `${currentStore.name} Dashboard` : 'System Dashboard'}
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            {currentStore ? `${currentStore.name} ${t('dashboard:title')}` : t('dashboard:systemDashboard')}
           </h1>
-          <p className="text-sm text-gray-500 mt-1">
-            {isSuperAdmin() ? 'System-wide overview' : 
-             isTenantAdmin() ? 'Tenant overview' : 
-             'Store performance metrics'}
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            {isSuperAdmin() ? t('dashboard:systemOverview') : 
+             isTenantAdmin() ? t('dashboard:tenantOverview') : 
+             t('dashboard:storeMetrics')}
           </p>
         </div>
         <div className="flex items-center gap-6">
           {isSuperAdmin() && (
-            <div className="bg-purple-50 px-4 py-2 rounded-lg">
+            <div className="bg-purple-50 dark:bg-purple-900/20 px-4 py-2 rounded-lg">
               <div className="flex items-center gap-2">
-                <Building2 className="h-5 w-5 text-purple-600" />
-                <span className="text-sm font-medium text-purple-900">
-                  {stores.length} Active Stores
+                <Building2 className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                <span className="text-sm font-medium text-purple-900 dark:text-purple-300">
+                  {stores.length} {t('dashboard:activeStores')}
                 </span>
               </div>
             </div>
           )}
           <div className="text-right">
-            <p className="text-sm text-gray-500">Today</p>
-            <p className="text-lg font-semibold">{new Date().toLocaleDateString()}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{t('common:today')}</p>
+            <p className="text-lg font-semibold text-gray-900 dark:text-white">{new Date().toLocaleDateString()}</p>
           </div>
         </div>
       </div>
 
       {/* No Store Selected Warning */}
       {!currentStore && !isSuperAdmin() && (
-        <div className="bg-warning-50 border border-yellow-200 rounded-lg p-6">
+        <div className="bg-warning-50 dark:bg-warning-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6">
           <div className="flex items-center">
-            <AlertTriangle className="h-5 w-5 text-warning-600 mr-2" />
-            <p className="text-sm text-warning-800">
-              Please select a store from the dropdown above to view detailed metrics.
+            <AlertTriangle className="h-5 w-5 text-warning-600 dark:text-warning-400 mr-2" />
+            <p className="text-sm text-warning-800 dark:text-warning-300">
+              {t('dashboard:selectStoreMessage')}
             </p>
           </div>
         </div>
@@ -222,60 +224,60 @@ const Dashboard: React.FC = () => {
 
       {/* Metrics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg  p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Revenue</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('dashboard:totalRevenue')}</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 ${stats?.revenue?.total?.toLocaleString() || '0'}
               </p>
               <div className="flex items-center mt-2">
                 {(stats?.revenue?.trend || 0) > 0 ? (
                   <>
-                    <TrendingUp className="h-4 w-4 text-primary-500 mr-1" />
-                    <span className="text-sm text-primary-600">
+                    <TrendingUp className="h-4 w-4 text-primary-500 dark:text-primary-400 mr-1" />
+                    <span className="text-sm text-primary-600 dark:text-primary-400">
                       +{stats?.revenue?.trend || 0}%
                     </span>
                   </>
                 ) : (
                   <>
                     <TrendingDown className="h-4 w-4 text-red-500 mr-1" />
-                    <span className="text-sm text-danger-600">
+                    <span className="text-sm text-danger-600 dark:text-danger-400">
                       {stats?.revenue?.trend || 0}%
                     </span>
                   </>
                 )}
-                <span className="text-sm text-gray-500 ml-2">vs last week</span>
+                <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">{t('dashboard:vsLastWeek')}</span>
               </div>
             </div>
-            <DollarSign className="h-8 w-8 text-primary-600" />
+            <DollarSign className="h-8 w-8 text-primary-600 dark:text-primary-400" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg  p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Orders</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('dashboard:totalOrders')}</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {stats?.orders?.total || 0}
               </p>
               <div className="flex items-center mt-2">
                 {(stats?.orders?.trend || 0) > 0 ? (
                   <>
-                    <TrendingUp className="h-4 w-4 text-primary-500 mr-1" />
-                    <span className="text-sm text-primary-600">
+                    <TrendingUp className="h-4 w-4 text-primary-500 dark:text-primary-400 mr-1" />
+                    <span className="text-sm text-primary-600 dark:text-primary-400">
                       +{stats?.orders?.trend || 0}%
                     </span>
                   </>
                 ) : (
                   <>
                     <TrendingDown className="h-4 w-4 text-red-500 mr-1" />
-                    <span className="text-sm text-danger-600">
+                    <span className="text-sm text-danger-600 dark:text-danger-400">
                       {stats?.orders?.trend || 0}%
                     </span>
                   </>
                 )}
-                <span className="text-sm text-gray-500 ml-2">vs last week</span>
+                <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">{t('dashboard:vsLastWeek')}</span>
               </div>
             </div>
             <ShoppingCart className="h-8 w-8 text-accent-600" />
