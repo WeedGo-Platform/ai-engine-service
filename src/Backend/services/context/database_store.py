@@ -238,10 +238,11 @@ class DatabaseContextStore:
                 await conn.execute("""
                     INSERT INTO chat_interactions 
                     (session_id, customer_id, user_message, ai_response, 
-                     intent, response_time, metadata)
-                    VALUES ($1, $2, $3, $4, $5, $6, $7)
+                     intent, response_time, metadata, sender_type, message_type, message_text)
+                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
                 """, session_id, customer_id, user_message, ai_response,
-                    intent, response_time, json.dumps(metadata) if metadata else None)
+                    intent, response_time, json.dumps(metadata) if metadata else None,
+                    'user', 'text', user_message)
                 
                 logger.debug(f"Added interaction for session {session_id}")
                 return True

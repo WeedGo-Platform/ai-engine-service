@@ -429,8 +429,8 @@ async def create_transaction(transaction: TransactionCreate):
             query = """
                 INSERT INTO purchase_orders (
                     store_id, 
-                    order_data, status, total_amount
-                ) VALUES ($1, $2, $3, $4)
+                    order_date, order_data, status, total_amount
+                ) VALUES ($1, CURRENT_DATE, $2, $3, $4)
                 RETURNING id::text as id, created_at as timestamp
             """
             

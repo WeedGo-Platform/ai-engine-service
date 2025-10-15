@@ -503,9 +503,9 @@ class StoreInventoryService:
                     # Create purchase order with store_id
                     po_query = """
                         INSERT INTO purchase_orders
-                        (po_number, store_id, supplier_id, expected_date, status, 
+                        (po_number, store_id, supplier_id, order_date, expected_date, status, 
                          total_amount, notes)
-                        VALUES ($1, $2, $3, $4, 'pending', $5, $6)
+                        VALUES ($1, $2, $3, CURRENT_DATE, $4, 'pending', $5, $6)
                         RETURNING id
                     """
                     

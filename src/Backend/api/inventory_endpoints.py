@@ -86,6 +86,7 @@ class CreatePurchaseOrderRequest(BaseModel):
     ocs_order_number: Optional[str] = None  # Extracted from filename
     tenant_id: Optional[UUID] = None  # From store/context
     created_by: Optional[UUID] = None  # User ID from context
+    shipment_date: Optional[date] = None # From ASN Excel
 
 
 class ReceivePurchaseOrderItem(BaseModel):
@@ -197,10 +198,9 @@ async def create_purchase_order(
             vendor=request.vendor,
             ocs_order_number=request.ocs_order_number,
             tenant_id=request.tenant_id,
-            created_by=request.created_by
-        )
-        
-        return {
+            created_by=request.created_by,
+            shipment_date=request.shipment_date
+        )        return {
             "success": True,
             "purchase_order_id": str(po_id),
             "message": f"Purchase order created with {len(request.items)} items"

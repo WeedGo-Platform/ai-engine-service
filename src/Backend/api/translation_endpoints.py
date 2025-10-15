@@ -422,3 +422,79 @@ async def health_check():
             "status": "unhealthy",
             "error": str(e)
         }
+
+
+@router.post("/warm-cache")
+async def warm_translation_cache(
+    background_tasks: BackgroundTasks,
+    languages: Optional[List[str]] = Query(default=['es', 'fr', 'zh', 'ar', 'de', 'ja'])
+):
+    """
+    Pre-warm translation cache for common languages
+    This endpoint translates common UI strings into specified languages
+    and stores them in cache for faster subsequent requests
+    """
+    try:
+        pool = await get_db_pool()
+        redis_cli = await get_redis_client()
+        translation_service = TranslationService(pool, redis_cli)
+        
+        # Common translations to pre-warm
+        common_translations = [
+            # Sales chat greeting
+            {
+                "text": "Hi! I'm Carlos, your WeedGo sales assistant. 👋\n\nI'm here to help you discover how WeedGo can transform your cannabis retail business. Whether you're curious about pricing, features, or just getting started - I'm here to answer any questions.\n\nWhat would you like to know about WeedGo?",
+                "context": "sales_chat_greeting",
+                "namespace": "sales_widget"
+            },
+            # Common UI strings
+            {"text": "Send", "context": "button", "namespace": "common"},
+            {"text": "Cancel", "context": "button", "namespace": "common"},
+            {"text": "Save", "context": "button", "namespace": "common"},
+            {"text": "Delete", "context": "button", "namespace": "common"},
+            {"text": "Search", "context": "button", "namespace": "common"},
+            {"text": "Loading...", "context": "status", "namespace": "common"},
+            {"text": "Email address", "context": "label", "namespace": "auth"},
+            {"text": "Password", "context": "label", "namespace": "auth"},
+            {"text": "Sign in", "context": "button", "namespace": "auth"},
+        ]
+        
+        # Background task to warm cache
+        async def warm_cache_task():
+            warmed_count = 0
+            failed_count = 0
+            
+            for lang_code in languages:
+                if lang_code == 'en':
+                    continue  # Skip English (source language)
+                    
+                for item in common_translations:
+                    try:
+                        await translation_service.translate_single({
+                            "text": item["text"],
+                            "target_language": lang_code,
+                            "source_language": "en",
+                            "context": item.get("context"),
+                            "namespace": item.get("namespace"),
+                            "use_cache": True
+                        })
+                        warmed_count += 1
+                    except Exception as e:
+                        logger.error(f"Failed to warm cache for {lang_code}: {e}")
+                        failed_count += 1
+            
+            logger.info(f"Cache warming complete: {warmed_count} translations cached, {failed_count} failed")
+        
+        # Start background task
+        background_tasks.add_task(warm_cache_task)
+        
+        return {
+            "success": True,
+            "message": "Cache warming started in background",
+            "languages": languages,
+            "items_to_translate": len(common_translations) * len([l for l in languages if l != 'en'])
+        }
+        
+    except Exception as e:
+        logger.error(f"Cache warming error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))

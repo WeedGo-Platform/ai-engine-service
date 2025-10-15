@@ -128,7 +128,8 @@ class InventoryService:
                                    vendor: Optional[str] = None,
                                    ocs_order_number: Optional[str] = None,
                                    tenant_id: Optional[UUID] = None,
-                                   created_by: Optional[UUID] = None) -> UUID:
+                                   created_by: Optional[UUID] = None,
+                                   shipment_date: Optional[date] = None) -> UUID:
         """Create a new purchase order"""
         try:
             async with self.db.transaction():
@@ -164,16 +165,16 @@ class InventoryService:
                 # Create purchase order
                 po_query = """
                     INSERT INTO purchase_orders
-                    (po_number, supplier_id, expected_date, status, total_amount, notes, store_id,
-                     shipment_id, container_id, vendor, created_by)
-                    VALUES ($1, $2, $3, 'pending', $4, $5, $6, $7, $8, $9, $10)
+                    (po_number, supplier_id, order_date, expected_date, status, total_amount, notes, store_id,
+                     shipment_id, container_id, vendor, created_by, shipment_date)
+                    VALUES ($1, $2, CURRENT_DATE, $3, 'pending', $4, $5, $6, $7, $8, $9, $10, $11)
                     RETURNING id
                 """
 
                 po_id = await self.db.fetchval(
                     po_query,
                     po_number, supplier_id, expected_date, total_amount, notes, store_id,
-                    shipment_id, container_id, vendor, created_by
+                    shipment_id, container_id, vendor, created_by, expected_date
                 )
                 
                 # Add items to purchase order
