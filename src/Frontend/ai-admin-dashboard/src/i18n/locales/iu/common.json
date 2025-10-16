@@ -1,0 +1,201 @@
+{
+  "buttons": {
+    "send": "Titirarlugu",
+    "close": "Matulugu",
+    "cancel": "Naammaginagu",
+    "save": "Havaklugu",
+    "delete": "Piilugu",
+    "edit": "Allanngutiitilugu",
+    "create": "Hanaklugu",
+    "update": "Nutaarlugu",
+    "confirm": "Ilihimavara",
+    "back": "Utirpaarma",
+    "next": "Kinguliurlu",
+    "submit": "Tunnilugu",
+    "search": "Ujarkaklugu",
+    "filter": "Angirutitilugu",
+    "export": "Alianngutiitilugu",
+    "import": "Itirijuklugu",
+    "refresh": "Nutaarlugu",
+    "settings": "Angirutit",
+    "logout": "Aniarlugu",
+    "change": "Allattiarlugu"
+  },
+  "labels": {
+    "email": "Qaritauyakkut",
+    "password": "Immikut qaujimayauyut",
+    "username": "Atiqaqaqtut",
+    "name": "Atiq",
+    "phone": "Uqautik",
+    "address": "Nuna",
+    "city": "Iqaluit",
+    "province": "Nunaq",
+    "postalCode": "Qaritauyakkut namba",
+    "country": "Nunaat",
+    "status": "Ilagiit",
+    "actions": "Ihuarutit",
+    "description": "Uqaqtitsiyut",
+    "notes": "Titirat",
+    "date": "Ullut",
+    "time": "Tikipkaq",
+    "total": "Tamaita",
+    "subtotal": "Ikittut",
+    "tax": "Akittunut tuniyauyut",
+    "quantity": "Qanurliit",
+    "price": "Akittunut",
+    "language": "Inuktitut"
+  },
+  "placeholders": {
+    "enterEmail": "Qaritauyakkut ittilugu",
+    "enterPassword": "Immikut qaujimayauyut ittilugu",
+    "search": "Ujarkaklugu...",
+    "selectOption": "Angirutitilugu",
+    "typeMessage": "Uqaqtitsiyut titirarlugu...",
+    "enterName": "Atiq ittilugu",
+    "enterPhone": "Uqautik namba ittilugu"
+  },
+  "messages": {
+    "loading": "Ittijuqtuq...",
+    "saving": "Havaklugu...",
+    "success": "Qaujimayauyuq!",
+    "error": "Ayuqpaksaq ihimavara",
+    "noData": "Ajurnarituq",
+    "confirm": "Qaujimayauyut?",
+    "unsavedChanges": "Havaksaunngittuq"
+  },
+  "errors": {
+    "required": "Una piqaiyuq",
+    "invalidEmail": "Qaritauyakkut nakuuyuq",
+    "invalidPhone": "Uqautik namba nakuuyuq",
+    "networkError": "Ayuqpaksaq. Uqaqtitsiarniarlu.",
+    "serverError": "Ayuqpaksaq uani. Kingulliqmi uqaqtitsiarniarlu.",
+    "unauthorized": "Piqaiyunngituq",
+    "notFound": "Ajurnarituq",
+    "sessionExpired": "Ulluqtuq. Uqaqtitsiarniarlu.",
+    "validation": {
+      "selectStore": "Angirutitilugu niuviqarvik",
+      "selectSupplier": "Angirutitilugu tuniyauyut",
+      "addAtLeastOneItem": "Ittilugu atausiq",
+      "fillRequiredFields": "Ittilugu tamaita piqaiyut",
+      "enterLicenseNumber": "Ittilugu namba",
+      "fillAllRequiredFields": "Ittilugu tamaita piqaiyut: {{fields}}",
+      "invalidJson": "Havaksaunngituq JSON: {{message}}",
+      "invalidCode": "Nakuuyuq",
+      "invalidVerificationCode": "Nakuuyuq qaujimayauyut"
+    },
+    "operations": {
+      "saveFailed": "Havaksaunngituq",
+      "validationFailed": "Qaujimayaunngituq",
+      "fetchFailed": "Ajurnarituq {{resource}}",
+      "createFailed": "Hanaksaunngituq {{resource}}",
+      "updateFailed": "Nutaaksaunngituq {{resource}}",
+      "deleteFailed": "Piisaunngituq {{resource}}",
+      "searchFailed": "Ujarkaksaunngituq {{resource}}",
+      "loadFailed": "Ittijuqsaunngituq {{resource}}. Nutaarlugu.",
+      "sendFailed": "Titirasaunngituq {{resource}}",
+      "generateFailed": "Hanaksaunngituq {{resource}}",
+      "verifyFailed": "Qaujimayaunngituq {{resource}}",
+      "processFailed": "Ihuarusaunngituq {{action}}. Uqaqtitsiarniarlu.",
+      "testConnectionFailed": "Iqqanaittumik qaujimayaunngituq. Tukihugu."
+    }
+  },
+  "common": {
+    "yes": "Ii",
+    "no": "Aakka",
+    "or": "uvvalu",
+    "and": "aamma",
+    "today": "Ullumi",
+    "yesterday": "Ippaq",
+    "week": "Sapaat",
+    "month": "Tatqiq",
+    "year": "Ukiuq",
+    "all": "Tamaita",
+    "none": "Ajurnarituq",
+    "active": "Inuuhuktuq",
+    "inactive": "Inuuhuktunngituq",
+    "pending": "Utaqtuq",
+    "completed": "Naammahiktuq",
+    "failed": "Ajurnarituq",
+    "notSpecified": "Uqaqtitsiyanngituq",
+    "unknown": "Qaujimayaunngituq",
+    "na": "Ajurnarituq"
+  },
+  "toasts": {
+    "password": {
+      "changeSuccess": "Immikut qaujimayauyut allattiarlugu qaujimayauyuq! Uqaqtitsiarniarlu.",
+      "changeFailed": "Allattiasaunngituq. Uqaqtitsiarniarlu."
+    },
+    "broadcast": {
+      "createSuccess": "Uqaqtitsiyut hanaksauyuq!",
+      "createFailed": "Hanaksaunngituq"
+    },
+    "template": {
+      "fetchFailed": "Ajurnarituq",
+      "createSuccess": "Hanaksauyuq",
+      "createFailed": "Hanaksaunngituq",
+      "updateSuccess": "Nutaaksauyuq",
+      "updateFailed": "Nutaaksaunngituq",
+      "deleteSuccess": "Piisauyuq",
+      "deleteFailed": "Piisaunngituq"
+    },
+    "model": {
+      "fetchFailed": "Ajurnarituq",
+      "loadFailed": "Ittijuqsaunngituq",
+      "unloadSuccess": "Piisauyuq",
+      "unloadFailed": "Piisaunngituq",
+      "updateFailed": "Nutaaksaunngituq"
+    },
+    "config": {
+      "fetchFailed": "Ajurnarituq",
+      "updateSuccess": "Nutaaksauyuq",
+      "updateFailed": "Havaksaunngituq"
+    },
+    "agent": {
+      "fetchFailed": "Ajurnarituq"
+    },
+    "personality": {
+      "fetchFailed": "Ajurnarituq"
+    },
+    "router": {
+      "statsFetchFailed": "Ajurnarituq qanurliit",
+      "toggleFailed": "Allattiasaunngituq"
+    }
+  },
+  "confirmations": {
+    "deleteUser": "Qaujimayauyut piilugu {{email}}?",
+    "deleteUserPermanent": "Qaujimayauyut piilugu? Utiqsaunngituq.",
+    "deleteTerminal": "Qaujimayauyut piilugu?",
+    "passwordResetMethod": "Angirutitilugu OK qaritauyakkut\nAngirutitilugu Naammaginagu immikut nutaaq"
+  },
+  "modals": {
+    "changePassword": {
+      "title": "Allattiarlugu Immikut",
+      "currentPassword": "Manna Immikut",
+      "newPassword": "Nutaaq Immikut",
+      "confirmPassword": "Qaujimayauyut Nutaaq",
+      "placeholders": {
+        "currentPassword": "Ittilugu manna immikut",
+        "newPassword": "Ittilugu nutaaq immikut",
+        "confirmPassword": "Qaujimayauyut nutaaq"
+      },
+      "requirements": {
+        "title": "Immikut piqaiyuq:",
+        "minLength": "Pingahunik 8",
+        "uppercase": "Atausiq angiyuq",
+        "lowercase": "Atausiq mikiyuq",
+        "number": "Atausiq namba"
+      },
+      "validation": {
+        "currentRequired": "Manna immikut piqaiyuq",
+        "newRequired": "Nutaaq immikut piqaiyuq",
+        "notMeetRequirements": "Immikut piqaiyunngituq",
+        "confirmRequired": "Qaujimayauyut nutaaq immikut",
+        "notMatch": "Immikut naammagittuq",
+        "mustBeDifferent": "Nutaaq immikut allannguyuq manna",
+        "incorrectCurrent": "Manna immikut nakuuyuq"
+      },
+      "securityNotice": "Allattiarlugu immikut, aniarlugu aamma uqaqtitsiarniarlu nutaaq.",
+      "changing": "Allattiarlugu..."
+    }
+  }
+}
