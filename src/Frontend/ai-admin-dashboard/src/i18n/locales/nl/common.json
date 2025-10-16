@@ -1,0 +1,201 @@
+{
+  "buttons": {
+    "send": "Verzenden",
+    "close": "Sluiten",
+    "cancel": "Annuleren",
+    "save": "Opslaan",
+    "delete": "Verwijderen",
+    "edit": "Bewerken",
+    "create": "Aanmaken",
+    "update": "Bijwerken",
+    "confirm": "Bevestigen",
+    "back": "Terug",
+    "next": "Volgende",
+    "submit": "Versturen",
+    "search": "Zoeken",
+    "filter": "Filteren",
+    "export": "Exporteren",
+    "import": "Importeren",
+    "refresh": "Vernieuwen",
+    "settings": "Instellingen",
+    "logout": "Uitloggen",
+    "change": "Wijzigen"
+  },
+  "labels": {
+    "email": "E-mailadres",
+    "password": "Wachtwoord",
+    "username": "Gebruikersnaam",
+    "name": "Naam",
+    "phone": "Telefoon",
+    "address": "Adres",
+    "city": "Stad",
+    "province": "Provincie",
+    "postalCode": "Postcode",
+    "country": "Land",
+    "status": "Status",
+    "actions": "Acties",
+    "description": "Beschrijving",
+    "notes": "Notities",
+    "date": "Datum",
+    "time": "Tijd",
+    "total": "Totaal",
+    "subtotal": "Subtotaal",
+    "tax": "Belasting",
+    "quantity": "Hoeveelheid",
+    "price": "Prijs",
+    "language": "Taal"
+  },
+  "placeholders": {
+    "enterEmail": "Voer uw e-mailadres in",
+    "enterPassword": "Voer uw wachtwoord in",
+    "search": "Zoeken...",
+    "selectOption": "Selecteer een optie",
+    "typeMessage": "Typ uw bericht...",
+    "enterName": "Voer naam in",
+    "enterPhone": "Voer telefoonnummer in"
+  },
+  "messages": {
+    "loading": "Laden...",
+    "saving": "Opslaan...",
+    "success": "Gelukt!",
+    "error": "Er is een fout opgetreden",
+    "noData": "Geen gegevens beschikbaar",
+    "confirm": "Weet u het zeker?",
+    "unsavedChanges": "U heeft niet-opgeslagen wijzigingen"
+  },
+  "errors": {
+    "required": "Dit veld is verplicht",
+    "invalidEmail": "Ongeldig e-mailadres",
+    "invalidPhone": "Ongeldig telefoonnummer",
+    "networkError": "Netwerkfout. Probeer het opnieuw.",
+    "serverError": "Serverfout. Probeer het later opnieuw.",
+    "unauthorized": "Ongeautoriseerde toegang",
+    "notFound": "Niet gevonden",
+    "sessionExpired": "Uw sessie is verlopen. Log opnieuw in.",
+    "validation": {
+      "selectStore": "Selecteer een winkel",
+      "selectSupplier": "Selecteer een leverancier",
+      "addAtLeastOneItem": "Voeg minimaal één item toe",
+      "fillRequiredFields": "Vul alle verplichte velden in voor elk item",
+      "enterLicenseNumber": "Voer een licentienummer in",
+      "fillAllRequiredFields": "Vul alle verplichte velden in: {{fields}}",
+      "invalidJson": "Kan ongeldige JSON niet opslaan: {{message}}",
+      "invalidCode": "Ongeldige code",
+      "invalidVerificationCode": "Ongeldige verificatiecode"
+    },
+    "operations": {
+      "saveFailed": "Opslaan van instellingen mislukt",
+      "validationFailed": "Validatie mislukt",
+      "fetchFailed": "Ophalen van {{resource}} mislukt",
+      "createFailed": "Aanmaken van {{resource}} mislukt",
+      "updateFailed": "Bijwerken van {{resource}} mislukt",
+      "deleteFailed": "Verwijderen van {{resource}} mislukt",
+      "searchFailed": "Zoeken naar {{resource}} mislukt",
+      "loadFailed": "Laden van {{resource}} mislukt. Vernieuw de pagina.",
+      "sendFailed": "Verzenden van {{resource}} mislukt",
+      "generateFailed": "Genereren van {{resource}} mislukt",
+      "verifyFailed": "Verifiëren van {{resource}} mislukt",
+      "processFailed": "Verwerken van {{action}} mislukt. Probeer het opnieuw.",
+      "testConnectionFailed": "Verbindingstest mislukt. Controleer uw netwerk."
+    }
+  },
+  "common": {
+    "yes": "Ja",
+    "no": "Nee",
+    "or": "of",
+    "and": "en",
+    "today": "Vandaag",
+    "yesterday": "Gisteren",
+    "week": "Week",
+    "month": "Maand",
+    "year": "Jaar",
+    "all": "Alle",
+    "none": "Geen",
+    "active": "Actief",
+    "inactive": "Inactief",
+    "pending": "In afwachting",
+    "completed": "Voltooid",
+    "failed": "Mislukt",
+    "notSpecified": "Niet gespecificeerd",
+    "unknown": "Onbekend",
+    "na": "N.v.t."
+  },
+  "toasts": {
+    "password": {
+      "changeSuccess": "Wachtwoord succesvol gewijzigd! Log opnieuw in.",
+      "changeFailed": "Wijzigen van wachtwoord mislukt. Probeer het opnieuw."
+    },
+    "broadcast": {
+      "createSuccess": "Uitzending succesvol aangemaakt!",
+      "createFailed": "Aanmaken van uitzending mislukt"
+    },
+    "template": {
+      "fetchFailed": "Ophalen van sjablonen mislukt",
+      "createSuccess": "Sjabloon succesvol aangemaakt",
+      "createFailed": "Aanmaken van sjabloon mislukt",
+      "updateSuccess": "Sjabloon succesvol bijgewerkt",
+      "updateFailed": "Bijwerken van sjabloon mislukt",
+      "deleteSuccess": "Sjabloon succesvol verwijderd",
+      "deleteFailed": "Verwijderen van sjabloon mislukt"
+    },
+    "model": {
+      "fetchFailed": "Ophalen van modellen mislukt",
+      "loadFailed": "Laden van model mislukt",
+      "unloadSuccess": "Model succesvol uitgeladen",
+      "unloadFailed": "Uitladen van model mislukt",
+      "updateFailed": "Bijwerken van model mislukt"
+    },
+    "config": {
+      "fetchFailed": "Ophalen van configuratie mislukt",
+      "updateSuccess": "Configuratie succesvol bijgewerkt",
+      "updateFailed": "Opslaan van configuratie mislukt"
+    },
+    "agent": {
+      "fetchFailed": "Ophalen van agents mislukt"
+    },
+    "personality": {
+      "fetchFailed": "Ophalen van persoonlijkheden mislukt"
+    },
+    "router": {
+      "statsFetchFailed": "Ophalen van routerstatistieken mislukt",
+      "toggleFailed": "Schakelen van inferentiemodus mislukt"
+    }
+  },
+  "confirmations": {
+    "deleteUser": "Weet u zeker dat u gebruiker {{email}} wilt verwijderen?",
+    "deleteUserPermanent": "Weet u zeker dat u deze gebruiker wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
+    "deleteTerminal": "Weet u zeker dat u deze terminal wilt verwijderen?",
+    "passwordResetMethod": "Klik op OK om een wachtwoordherstellink via e-mail te verzenden\nKlik op Annuleren om een tijdelijk wachtwoord te genereren en weer te geven"
+  },
+  "modals": {
+    "changePassword": {
+      "title": "Wachtwoord wijzigen",
+      "currentPassword": "Huidig wachtwoord",
+      "newPassword": "Nieuw wachtwoord",
+      "confirmPassword": "Bevestig nieuw wachtwoord",
+      "placeholders": {
+        "currentPassword": "Voer huidig wachtwoord in",
+        "newPassword": "Voer nieuw wachtwoord in",
+        "confirmPassword": "Bevestig nieuw wachtwoord"
+      },
+      "requirements": {
+        "title": "Wachtwoord moet bevatten:",
+        "minLength": "Minimaal 8 tekens",
+        "uppercase": "Eén hoofdletter",
+        "lowercase": "Eén kleine letter",
+        "number": "Eén cijfer"
+      },
+      "validation": {
+        "currentRequired": "Huidig wachtwoord is verplicht",
+        "newRequired": "Nieuw wachtwoord is verplicht",
+        "notMeetRequirements": "Wachtwoord voldoet niet aan de vereisten",
+        "confirmRequired": "Bevestig uw nieuwe wachtwoord",
+        "notMatch": "Wachtwoorden komen niet overeen",
+        "mustBeDifferent": "Nieuw wachtwoord moet verschillen van huidig wachtwoord",
+        "incorrectCurrent": "Huidig wachtwoord is onjuist"
+      },
+      "securityNotice": "Na het wijzigen van uw wachtwoord wordt u uitgelogd en moet u opnieuw inloggen met uw nieuwe inloggegevens.",
+      "changing": "Wijzigen..."
+    }
+  }
+}
