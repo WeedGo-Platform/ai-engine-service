@@ -1,0 +1,201 @@
+{
+  "buttons": {
+    "send": "ارسال",
+    "close": "بستن",
+    "cancel": "لغو",
+    "save": "ذخیره",
+    "delete": "حذف",
+    "edit": "ویرایش",
+    "create": "ایجاد",
+    "update": "به‌روزرسانی",
+    "confirm": "تأیید",
+    "back": "بازگشت",
+    "next": "بعدی",
+    "submit": "ارسال",
+    "search": "جستجو",
+    "filter": "فیلتر",
+    "export": "خروجی",
+    "import": "ورودی",
+    "refresh": "بارگذاری مجدد",
+    "settings": "تنظیمات",
+    "logout": "خروج",
+    "change": "تغییر"
+  },
+  "labels": {
+    "email": "آدرس ایمیل",
+    "password": "رمز عبور",
+    "username": "نام کاربری",
+    "name": "نام",
+    "phone": "تلفن",
+    "address": "آدرس",
+    "city": "شهر",
+    "province": "استان",
+    "postalCode": "کد پستی",
+    "country": "کشور",
+    "status": "وضعیت",
+    "actions": "عملیات",
+    "description": "توضیحات",
+    "notes": "یادداشت‌ها",
+    "date": "تاریخ",
+    "time": "زمان",
+    "total": "مجموع",
+    "subtotal": "جمع جزء",
+    "tax": "مالیات",
+    "quantity": "تعداد",
+    "price": "قیمت",
+    "language": "زبان"
+  },
+  "placeholders": {
+    "enterEmail": "ایمیل خود را وارد کنید",
+    "enterPassword": "رمز عبور خود را وارد کنید",
+    "search": "جستجو...",
+    "selectOption": "یک گزینه انتخاب کنید",
+    "typeMessage": "پیام خود را تایپ کنید...",
+    "enterName": "نام را وارد کنید",
+    "enterPhone": "شماره تلفن را وارد کنید"
+  },
+  "messages": {
+    "loading": "در حال بارگذاری...",
+    "saving": "در حال ذخیره...",
+    "success": "موفق!",
+    "error": "خطایی رخ داد",
+    "noData": "داده‌ای در دسترس نیست",
+    "confirm": "آیا مطمئن هستید؟",
+    "unsavedChanges": "شما تغییرات ذخیره نشده دارید"
+  },
+  "errors": {
+    "required": "این فیلد الزامی است",
+    "invalidEmail": "آدرس ایمیل نامعتبر است",
+    "invalidPhone": "شماره تلفن نامعتبر است",
+    "networkError": "خطای شبکه. لطفاً دوباره تلاش کنید.",
+    "serverError": "خطای سرور. لطفاً بعداً دوباره تلاش کنید.",
+    "unauthorized": "دسترسی غیرمجاز",
+    "notFound": "یافت نشد",
+    "sessionExpired": "نشست شما منقضی شده است. لطفاً دوباره وارد شوید.",
+    "validation": {
+      "selectStore": "لطفاً یک فروشگاه انتخاب کنید",
+      "selectSupplier": "لطفاً یک تأمین‌کننده انتخاب کنید",
+      "addAtLeastOneItem": "لطفاً حداقل یک مورد اضافه کنید",
+      "fillRequiredFields": "لطفاً تمام فیلدهای الزامی را برای هر مورد پر کنید",
+      "enterLicenseNumber": "لطفاً یک شماره مجوز وارد کنید",
+      "fillAllRequiredFields": "لطفاً تمام فیلدهای الزامی را پر کنید: {{fields}}",
+      "invalidJson": "نمی‌توان JSON نامعتبر را ذخیره کرد: {{message}}",
+      "invalidCode": "کد نامعتبر",
+      "invalidVerificationCode": "کد تأیید نامعتبر"
+    },
+    "operations": {
+      "saveFailed": "ذخیره تنظیمات ناموفق بود",
+      "validationFailed": "اعتبارسنجی ناموفق بود",
+      "fetchFailed": "دریافت {{resource}} ناموفق بود",
+      "createFailed": "ایجاد {{resource}} ناموفق بود",
+      "updateFailed": "به‌روزرسانی {{resource}} ناموفق بود",
+      "deleteFailed": "حذف {{resource}} ناموفق بود",
+      "searchFailed": "جستجوی {{resource}} ناموفق بود",
+      "loadFailed": "بارگذاری {{resource}} ناموفق بود. لطفاً صفحه را بارگذاری مجدد کنید.",
+      "sendFailed": "ارسال {{resource}} ناموفق بود",
+      "generateFailed": "تولید {{resource}} ناموفق بود",
+      "verifyFailed": "تأیید {{resource}} ناموفق بود",
+      "processFailed": "پردازش {{action}} ناموفق بود. لطفاً دوباره تلاش کنید.",
+      "testConnectionFailed": "تست اتصال ناموفق بود. لطفاً شبکه خود را بررسی کنید."
+    }
+  },
+  "common": {
+    "yes": "بله",
+    "no": "خیر",
+    "or": "یا",
+    "and": "و",
+    "today": "امروز",
+    "yesterday": "دیروز",
+    "week": "هفته",
+    "month": "ماه",
+    "year": "سال",
+    "all": "همه",
+    "none": "هیچ‌کدام",
+    "active": "فعال",
+    "inactive": "غیرفعال",
+    "pending": "در انتظار",
+    "completed": "تکمیل شده",
+    "failed": "ناموفق",
+    "notSpecified": "مشخص نشده",
+    "unknown": "نامعلوم",
+    "na": "موردی ندارد"
+  },
+  "toasts": {
+    "password": {
+      "changeSuccess": "رمز عبور با موفقیت تغییر کرد! لطفاً دوباره وارد شوید.",
+      "changeFailed": "تغییر رمز عبور ناموفق بود. لطفاً دوباره تلاش کنید."
+    },
+    "broadcast": {
+      "createSuccess": "پخش با موفقیت ایجاد شد!",
+      "createFailed": "ایجاد پخش ناموفق بود"
+    },
+    "template": {
+      "fetchFailed": "دریافت قالب‌ها ناموفق بود",
+      "createSuccess": "قالب با موفقیت ایجاد شد",
+      "createFailed": "ایجاد قالب ناموفق بود",
+      "updateSuccess": "قالب با موفقیت به‌روزرسانی شد",
+      "updateFailed": "به‌روزرسانی قالب ناموفق بود",
+      "deleteSuccess": "قالب با موفقیت حذف شد",
+      "deleteFailed": "حذف قالب ناموفق بود"
+    },
+    "model": {
+      "fetchFailed": "دریافت مدل‌ها ناموفق بود",
+      "loadFailed": "بارگذاری مدل ناموفق بود",
+      "unloadSuccess": "مدل با موفقیت تخلیه شد",
+      "unloadFailed": "تخلیه مدل ناموفق بود",
+      "updateFailed": "به‌روزرسانی مدل ناموفق بود"
+    },
+    "config": {
+      "fetchFailed": "دریافت پیکربندی ناموفق بود",
+      "updateSuccess": "پیکربندی با موفقیت به‌روزرسانی شد",
+      "updateFailed": "ذخیره پیکربندی ناموفق بود"
+    },
+    "agent": {
+      "fetchFailed": "دریافت عامل‌ها ناموفق بود"
+    },
+    "personality": {
+      "fetchFailed": "دریافت شخصیت‌ها ناموفق بود"
+    },
+    "router": {
+      "statsFetchFailed": "دریافت آمار مسیریاب ناموفق بود",
+      "toggleFailed": "تغییر حالت استنتاج ناموفق بود"
+    }
+  },
+  "confirmations": {
+    "deleteUser": "آیا مطمئن هستید که می‌خواهید کاربر {{email}} را حذف کنید؟",
+    "deleteUserPermanent": "آیا مطمئن هستید که می‌خواهید این کاربر را حذف کنید؟ این عمل قابل بازگشت نیست.",
+    "deleteTerminal": "آیا مطمئن هستید که می‌خواهید این ترمینال را حذف کنید؟",
+    "passwordResetMethod": "برای ارسال لینک بازنشانی رمز عبور از طریق ایمیل، OK را کلیک کنید\nبرای تولید و نمایش یک رمز عبور موقت، Cancel را کلیک کنید"
+  },
+  "modals": {
+    "changePassword": {
+      "title": "تغییر رمز عبور",
+      "currentPassword": "رمز عبور فعلی",
+      "newPassword": "رمز عبور جدید",
+      "confirmPassword": "تأیید رمز عبور جدید",
+      "placeholders": {
+        "currentPassword": "رمز عبور فعلی را وارد کنید",
+        "newPassword": "رمز عبور جدید را وارد کنید",
+        "confirmPassword": "رمز عبور جدید را تأیید کنید"
+      },
+      "requirements": {
+        "title": "رمز عبور باید شامل موارد زیر باشد:",
+        "minLength": "حداقل ۸ کاراکتر",
+        "uppercase": "یک حرف بزرگ",
+        "lowercase": "یک حرف کوچک",
+        "number": "یک عدد"
+      },
+      "validation": {
+        "currentRequired": "رمز عبور فعلی الزامی است",
+        "newRequired": "رمز عبور جدید الزامی است",
+        "notMeetRequirements": "رمز عبور الزامات را برآورده نمی‌کند",
+        "confirmRequired": "لطفاً رمز عبور جدید خود را تأیید کنید",
+        "notMatch": "رمزهای عبور مطابقت ندارند",
+        "mustBeDifferent": "رمز عبور جدید باید با رمز عبور فعلی متفاوت باشد",
+        "incorrectCurrent": "رمز عبور فعلی نادرست است"
+      },
+      "securityNotice": "پس از تغییر رمز عبور، از سیستم خارج می‌شوید و باید با اطلاعات جدید خود دوباره وارد شوید.",
+      "changing": "در حال تغییر..."
+    }
+  }
+}
