@@ -1,0 +1,201 @@
+{
+  "buttons": {
+    "send": "Trimite",
+    "close": "Închide",
+    "cancel": "Anulează",
+    "save": "Salvează",
+    "delete": "Șterge",
+    "edit": "Editează",
+    "create": "Creează",
+    "update": "Actualizează",
+    "confirm": "Confirmă",
+    "back": "Înapoi",
+    "next": "Următorul",
+    "submit": "Trimite",
+    "search": "Caută",
+    "filter": "Filtrează",
+    "export": "Exportă",
+    "import": "Importă",
+    "refresh": "Reîmprospătează",
+    "settings": "Setări",
+    "logout": "Deconectare",
+    "change": "Schimbă"
+  },
+  "labels": {
+    "email": "Adresa de email",
+    "password": "Parolă",
+    "username": "Nume utilizator",
+    "name": "Nume",
+    "phone": "Telefon",
+    "address": "Adresă",
+    "city": "Oraș",
+    "province": "Provincie",
+    "postalCode": "Cod poștal",
+    "country": "Țară",
+    "status": "Status",
+    "actions": "Acțiuni",
+    "description": "Descriere",
+    "notes": "Notițe",
+    "date": "Dată",
+    "time": "Oră",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "tax": "Taxă",
+    "quantity": "Cantitate",
+    "price": "Preț",
+    "language": "Limba"
+  },
+  "placeholders": {
+    "enterEmail": "Introduceți adresa de email",
+    "enterPassword": "Introduceți parola",
+    "search": "Caută...",
+    "selectOption": "Selectați o opțiune",
+    "typeMessage": "Tastați mesajul...",
+    "enterName": "Introduceți numele",
+    "enterPhone": "Introduceți numărul de telefon"
+  },
+  "messages": {
+    "loading": "Se încarcă...",
+    "saving": "Se salvează...",
+    "success": "Succes!",
+    "error": "A apărut o eroare",
+    "noData": "Nu există date disponibile",
+    "confirm": "Sunteți sigur?",
+    "unsavedChanges": "Aveți modificări nesalvate"
+  },
+  "errors": {
+    "required": "Acest câmp este obligatoriu",
+    "invalidEmail": "Adresă de email invalidă",
+    "invalidPhone": "Număr de telefon invalid",
+    "networkError": "Eroare de rețea. Vă rugăm să încercați din nou.",
+    "serverError": "Eroare de server. Vă rugăm să încercați mai târziu.",
+    "unauthorized": "Acces neautorizat",
+    "notFound": "Nu a fost găsit",
+    "sessionExpired": "Sesiunea dvs. a expirat. Vă rugăm să vă autentificați din nou.",
+    "validation": {
+      "selectStore": "Vă rugăm să selectați un magazin",
+      "selectSupplier": "Vă rugăm să selectați un furnizor",
+      "addAtLeastOneItem": "Vă rugăm să adăugați cel puțin un articol",
+      "fillRequiredFields": "Vă rugăm să completați toate câmpurile obligatorii pentru fiecare articol",
+      "enterLicenseNumber": "Vă rugăm să introduceți un număr de licență",
+      "fillAllRequiredFields": "Vă rugăm să completați toate câmpurile obligatorii: {{fields}}",
+      "invalidJson": "Nu se poate salva JSON invalid: {{message}}",
+      "invalidCode": "Cod invalid",
+      "invalidVerificationCode": "Cod de verificare invalid"
+    },
+    "operations": {
+      "saveFailed": "Salvarea setărilor a eșuat",
+      "validationFailed": "Validarea a eșuat",
+      "fetchFailed": "Obținerea {{resource}} a eșuat",
+      "createFailed": "Crearea {{resource}} a eșuat",
+      "updateFailed": "Actualizarea {{resource}} a eșuat",
+      "deleteFailed": "Ștergerea {{resource}} a eșuat",
+      "searchFailed": "Căutarea {{resource}} a eșuat",
+      "loadFailed": "Încărcarea {{resource}} a eșuat. Vă rugăm să reîmprospătați pagina.",
+      "sendFailed": "Trimiterea {{resource}} a eșuat",
+      "generateFailed": "Generarea {{resource}} a eșuat",
+      "verifyFailed": "Verificarea {{resource}} a eșuat",
+      "processFailed": "Procesarea {{action}} a eșuat. Vă rugăm să încercați din nou.",
+      "testConnectionFailed": "Testul conexiunii a eșuat. Vă rugăm să verificați rețeaua."
+    }
+  },
+  "common": {
+    "yes": "Da",
+    "no": "Nu",
+    "or": "sau",
+    "and": "și",
+    "today": "Astăzi",
+    "yesterday": "Ieri",
+    "week": "Săptămână",
+    "month": "Lună",
+    "year": "An",
+    "all": "Toate",
+    "none": "Niciunul",
+    "active": "Activ",
+    "inactive": "Inactiv",
+    "pending": "În așteptare",
+    "completed": "Finalizat",
+    "failed": "Eșuat",
+    "notSpecified": "Nespecificat",
+    "unknown": "Necunoscut",
+    "na": "N/A"
+  },
+  "toasts": {
+    "password": {
+      "changeSuccess": "Parola a fost schimbată cu succes! Vă rugăm să vă autentificați din nou.",
+      "changeFailed": "Schimbarea parolei a eșuat. Vă rugăm să încercați din nou."
+    },
+    "broadcast": {
+      "createSuccess": "Difuzarea a fost creată cu succes!",
+      "createFailed": "Crearea difuzării a eșuat"
+    },
+    "template": {
+      "fetchFailed": "Obținerea șabloanelor a eșuat",
+      "createSuccess": "Șablonul a fost creat cu succes",
+      "createFailed": "Crearea șablonului a eșuat",
+      "updateSuccess": "Șablonul a fost actualizat cu succes",
+      "updateFailed": "Actualizarea șablonului a eșuat",
+      "deleteSuccess": "Șablonul a fost șters cu succes",
+      "deleteFailed": "Ștergerea șablonului a eșuat"
+    },
+    "model": {
+      "fetchFailed": "Obținerea modelelor a eșuat",
+      "loadFailed": "Încărcarea modelului a eșuat",
+      "unloadSuccess": "Modelul a fost descărcat cu succes",
+      "unloadFailed": "Descărcarea modelului a eșuat",
+      "updateFailed": "Actualizarea modelului a eșuat"
+    },
+    "config": {
+      "fetchFailed": "Obținerea configurației a eșuat",
+      "updateSuccess": "Configurația a fost actualizată cu succes",
+      "updateFailed": "Salvarea configurației a eșuat"
+    },
+    "agent": {
+      "fetchFailed": "Obținerea agenților a eșuat"
+    },
+    "personality": {
+      "fetchFailed": "Obținerea personalităților a eșuat"
+    },
+    "router": {
+      "statsFetchFailed": "Obținerea statisticilor routerului a eșuat",
+      "toggleFailed": "Comutarea modului de inferență a eșuat"
+    }
+  },
+  "confirmations": {
+    "deleteUser": "Sunteți sigur că doriți să ștergeți utilizatorul {{email}}?",
+    "deleteUserPermanent": "Sunteți sigur că doriți să ștergeți acest utilizator? Această acțiune nu poate fi anulată.",
+    "deleteTerminal": "Sunteți sigur că doriți să ștergeți acest terminal?",
+    "passwordResetMethod": "Faceți clic pe OK pentru a trimite un link de resetare a parolei prin email\nFaceți clic pe Anulare pentru a genera și afișa o parolă temporară"
+  },
+  "modals": {
+    "changePassword": {
+      "title": "Schimbă parola",
+      "currentPassword": "Parola curentă",
+      "newPassword": "Parola nouă",
+      "confirmPassword": "Confirmă parola nouă",
+      "placeholders": {
+        "currentPassword": "Introduceți parola curentă",
+        "newPassword": "Introduceți parola nouă",
+        "confirmPassword": "Confirmați parola nouă"
+      },
+      "requirements": {
+        "title": "Parola trebuie să conțină:",
+        "minLength": "Cel puțin 8 caractere",
+        "uppercase": "O literă majusculă",
+        "lowercase": "O literă minusculă",
+        "number": "Un număr"
+      },
+      "validation": {
+        "currentRequired": "Parola curentă este obligatorie",
+        "newRequired": "Parola nouă este obligatorie",
+        "notMeetRequirements": "Parola nu îndeplinește cerințele",
+        "confirmRequired": "Vă rugăm să confirmați noua parolă",
+        "notMatch": "Parolele nu se potrivesc",
+        "mustBeDifferent": "Parola nouă trebuie să fie diferită de parola curentă",
+        "incorrectCurrent": "Parola curentă este incorectă"
+      },
+      "securityNotice": "După schimbarea parolei, veți fi deconectat și va trebui să vă autentificați din nou cu noile acreditări.",
+      "changing": "Se schimbă..."
+    }
+  }
+}
