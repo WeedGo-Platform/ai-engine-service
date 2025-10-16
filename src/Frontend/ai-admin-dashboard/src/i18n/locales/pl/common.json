@@ -1,0 +1,201 @@
+{
+  "buttons": {
+    "send": "Wyślij",
+    "close": "Zamknij",
+    "cancel": "Anuluj",
+    "save": "Zapisz",
+    "delete": "Usuń",
+    "edit": "Edytuj",
+    "create": "Utwórz",
+    "update": "Aktualizuj",
+    "confirm": "Potwierdź",
+    "back": "Wstecz",
+    "next": "Dalej",
+    "submit": "Wyślij",
+    "search": "Szukaj",
+    "filter": "Filtruj",
+    "export": "Eksportuj",
+    "import": "Importuj",
+    "refresh": "Odśwież",
+    "settings": "Ustawienia",
+    "logout": "Wyloguj",
+    "change": "Zmień"
+  },
+  "labels": {
+    "email": "Adres e-mail",
+    "password": "Hasło",
+    "username": "Nazwa użytkownika",
+    "name": "Nazwa",
+    "phone": "Telefon",
+    "address": "Adres",
+    "city": "Miasto",
+    "province": "Prowincja",
+    "postalCode": "Kod pocztowy",
+    "country": "Kraj",
+    "status": "Status",
+    "actions": "Działania",
+    "description": "Opis",
+    "notes": "Notatki",
+    "date": "Data",
+    "time": "Czas",
+    "total": "Razem",
+    "subtotal": "Suma częściowa",
+    "tax": "Podatek",
+    "quantity": "Ilość",
+    "price": "Cena",
+    "language": "Język"
+  },
+  "placeholders": {
+    "enterEmail": "Wprowadź swój e-mail",
+    "enterPassword": "Wprowadź swoje hasło",
+    "search": "Szukaj...",
+    "selectOption": "Wybierz opcję",
+    "typeMessage": "Wpisz swoją wiadomość...",
+    "enterName": "Wprowadź nazwę",
+    "enterPhone": "Wprowadź numer telefonu"
+  },
+  "messages": {
+    "loading": "Ładowanie...",
+    "saving": "Zapisywanie...",
+    "success": "Sukces!",
+    "error": "Wystąpił błąd",
+    "noData": "Brak dostępnych danych",
+    "confirm": "Czy jesteś pewien?",
+    "unsavedChanges": "Masz niezapisane zmiany"
+  },
+  "errors": {
+    "required": "To pole jest wymagane",
+    "invalidEmail": "Nieprawidłowy adres e-mail",
+    "invalidPhone": "Nieprawidłowy numer telefonu",
+    "networkError": "Błąd sieci. Spróbuj ponownie.",
+    "serverError": "Błąd serwera. Spróbuj ponownie później.",
+    "unauthorized": "Nieautoryzowany dostęp",
+    "notFound": "Nie znaleziono",
+    "sessionExpired": "Twoja sesja wygasła. Zaloguj się ponownie.",
+    "validation": {
+      "selectStore": "Wybierz sklep",
+      "selectSupplier": "Wybierz dostawcę",
+      "addAtLeastOneItem": "Dodaj przynajmniej jeden element",
+      "fillRequiredFields": "Wypełnij wszystkie wymagane pola dla każdego elementu",
+      "enterLicenseNumber": "Wprowadź numer licencji",
+      "fillAllRequiredFields": "Wypełnij wszystkie wymagane pola: {{fields}}",
+      "invalidJson": "Nie można zapisać nieprawidłowego JSON: {{message}}",
+      "invalidCode": "Nieprawidłowy kod",
+      "invalidVerificationCode": "Nieprawidłowy kod weryfikacyjny"
+    },
+    "operations": {
+      "saveFailed": "Nie udało się zapisać ustawień",
+      "validationFailed": "Walidacja nie powiodła się",
+      "fetchFailed": "Nie udało się pobrać {{resource}}",
+      "createFailed": "Nie udało się utworzyć {{resource}}",
+      "updateFailed": "Nie udało się zaktualizować {{resource}}",
+      "deleteFailed": "Nie udało się usunąć {{resource}}",
+      "searchFailed": "Nie udało się wyszukać {{resource}}",
+      "loadFailed": "Nie udało się załadować {{resource}}. Odśwież stronę.",
+      "sendFailed": "Nie udało się wysłać {{resource}}",
+      "generateFailed": "Nie udało się wygenerować {{resource}}",
+      "verifyFailed": "Nie udało się zweryfikować {{resource}}",
+      "processFailed": "Nie udało się przetworzyć {{action}}. Spróbuj ponownie.",
+      "testConnectionFailed": "Test połączenia nie powiódł się. Sprawdź swoje połączenie sieciowe."
+    }
+  },
+  "common": {
+    "yes": "Tak",
+    "no": "Nie",
+    "or": "lub",
+    "and": "i",
+    "today": "Dzisiaj",
+    "yesterday": "Wczoraj",
+    "week": "Tydzień",
+    "month": "Miesiąc",
+    "year": "Rok",
+    "all": "Wszystkie",
+    "none": "Brak",
+    "active": "Aktywny",
+    "inactive": "Nieaktywny",
+    "pending": "Oczekujące",
+    "completed": "Zakończone",
+    "failed": "Niepowodzenie",
+    "notSpecified": "Nie określono",
+    "unknown": "Nieznany",
+    "na": "Nie dotyczy"
+  },
+  "toasts": {
+    "password": {
+      "changeSuccess": "Hasło zostało zmienione pomyślnie! Zaloguj się ponownie.",
+      "changeFailed": "Nie udało się zmienić hasła. Spróbuj ponownie."
+    },
+    "broadcast": {
+      "createSuccess": "Transmisja utworzona pomyślnie!",
+      "createFailed": "Nie udało się utworzyć transmisji"
+    },
+    "template": {
+      "fetchFailed": "Nie udało się pobrać szablonów",
+      "createSuccess": "Szablon utworzony pomyślnie",
+      "createFailed": "Nie udało się utworzyć szablonu",
+      "updateSuccess": "Szablon zaktualizowany pomyślnie",
+      "updateFailed": "Nie udało się zaktualizować szablonu",
+      "deleteSuccess": "Szablon usunięty pomyślnie",
+      "deleteFailed": "Nie udało się usunąć szablonu"
+    },
+    "model": {
+      "fetchFailed": "Nie udało się pobrać modeli",
+      "loadFailed": "Nie udało się załadować modelu",
+      "unloadSuccess": "Model wyładowany pomyślnie",
+      "unloadFailed": "Nie udało się wyładować modelu",
+      "updateFailed": "Nie udało się zaktualizować modelu"
+    },
+    "config": {
+      "fetchFailed": "Nie udało się pobrać konfiguracji",
+      "updateSuccess": "Konfiguracja zaktualizowana pomyślnie",
+      "updateFailed": "Nie udało się zapisać konfiguracji"
+    },
+    "agent": {
+      "fetchFailed": "Nie udało się pobrać agentów"
+    },
+    "personality": {
+      "fetchFailed": "Nie udało się pobrać osobowości"
+    },
+    "router": {
+      "statsFetchFailed": "Nie udało się pobrać statystyk routera",
+      "toggleFailed": "Nie udało się przełączyć trybu wnioskowania"
+    }
+  },
+  "confirmations": {
+    "deleteUser": "Czy na pewno chcesz usunąć użytkownika {{email}}?",
+    "deleteUserPermanent": "Czy na pewno chcesz usunąć tego użytkownika? Ta operacja nie może być cofnięta.",
+    "deleteTerminal": "Czy na pewno chcesz usunąć ten terminal?",
+    "passwordResetMethod": "Kliknij OK, aby wysłać link resetujący hasło przez e-mail\nKliknij Anuluj, aby wygenerować i wyświetlić tymczasowe hasło"
+  },
+  "modals": {
+    "changePassword": {
+      "title": "Zmień hasło",
+      "currentPassword": "Aktualne hasło",
+      "newPassword": "Nowe hasło",
+      "confirmPassword": "Potwierdź nowe hasło",
+      "placeholders": {
+        "currentPassword": "Wprowadź aktualne hasło",
+        "newPassword": "Wprowadź nowe hasło",
+        "confirmPassword": "Potwierdź nowe hasło"
+      },
+      "requirements": {
+        "title": "Hasło musi zawierać:",
+        "minLength": "Co najmniej 8 znaków",
+        "uppercase": "Jedną wielką literę",
+        "lowercase": "Jedną małą literę",
+        "number": "Jedną cyfrę"
+      },
+      "validation": {
+        "currentRequired": "Aktualne hasło jest wymagane",
+        "newRequired": "Nowe hasło jest wymagane",
+        "notMeetRequirements": "Hasło nie spełnia wymagań",
+        "confirmRequired": "Potwierdź swoje nowe hasło",
+        "notMatch": "Hasła nie pasują do siebie",
+        "mustBeDifferent": "Nowe hasło musi różnić się od aktualnego hasła",
+        "incorrectCurrent": "Aktualne hasło jest nieprawidłowe"
+      },
+      "securityNotice": "Po zmianie hasła zostaniesz wylogowany i będziesz musiał zalogować się ponownie przy użyciu nowych danych logowania.",
+      "changing": "Zmiana..."
+    }
+  }
+}
