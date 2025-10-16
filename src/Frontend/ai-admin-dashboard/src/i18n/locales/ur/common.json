@@ -1,0 +1,201 @@
+{
+  "buttons": {
+    "send": "بھیجیں",
+    "close": "بند کریں",
+    "cancel": "منسوخ کریں",
+    "save": "محفوظ کریں",
+    "delete": "حذف کریں",
+    "edit": "ترمیم کریں",
+    "create": "بنائیں",
+    "update": "اپ ڈیٹ کریں",
+    "confirm": "تصدیق کریں",
+    "back": "واپس",
+    "next": "اگلا",
+    "submit": "جمع کرائیں",
+    "search": "تلاش کریں",
+    "filter": "فلٹر کریں",
+    "export": "ایکسپورٹ کریں",
+    "import": "امپورٹ کریں",
+    "refresh": "تازہ کریں",
+    "settings": "ترتیبات",
+    "logout": "لاگ آؤٹ",
+    "change": "تبدیل کریں"
+  },
+  "labels": {
+    "email": "ای میل ایڈریس",
+    "password": "پاس ورڈ",
+    "username": "صارف نام",
+    "name": "نام",
+    "phone": "فون",
+    "address": "پتہ",
+    "city": "شہر",
+    "province": "صوبہ",
+    "postalCode": "پوسٹل کوڈ",
+    "country": "ملک",
+    "status": "حیثیت",
+    "actions": "اقدامات",
+    "description": "تفصیل",
+    "notes": "نوٹس",
+    "date": "تاریخ",
+    "time": "وقت",
+    "total": "کل",
+    "subtotal": "ذیلی کل",
+    "tax": "ٹیکس",
+    "quantity": "مقدار",
+    "price": "قیمت",
+    "language": "زبان"
+  },
+  "placeholders": {
+    "enterEmail": "اپنا ای میل درج کریں",
+    "enterPassword": "اپنا پاس ورڈ درج کریں",
+    "search": "تلاش کریں...",
+    "selectOption": "ایک آپشن منتخب کریں",
+    "typeMessage": "اپنا پیغام ٹائپ کریں...",
+    "enterName": "نام درج کریں",
+    "enterPhone": "فون نمبر درج کریں"
+  },
+  "messages": {
+    "loading": "لوڈ ہو رہا ہے...",
+    "saving": "محفوظ ہو رہا ہے...",
+    "success": "کامیابی!",
+    "error": "ایک خرابی واقع ہوئی",
+    "noData": "کوئی ڈیٹا دستیاب نہیں",
+    "confirm": "کیا آپ کو یقین ہے؟",
+    "unsavedChanges": "آپ کے پاس غیر محفوظ تبدیلیاں ہیں"
+  },
+  "errors": {
+    "required": "یہ فیلڈ ضروری ہے",
+    "invalidEmail": "غلط ای میل ایڈریس",
+    "invalidPhone": "غلط فون نمبر",
+    "networkError": "نیٹ ورک کی خرابی۔ براہ کرم دوبارہ کوشش کریں۔",
+    "serverError": "سرور کی خرابی۔ براہ کرم بعد میں کوشش کریں۔",
+    "unauthorized": "غیر مجاز رسائی",
+    "notFound": "نہیں ملا",
+    "sessionExpired": "آپ کا سیشن ختم ہو گیا ہے۔ براہ کرم دوبارہ لاگ ان کریں۔",
+    "validation": {
+      "selectStore": "براہ کرم ایک سٹور منتخب کریں",
+      "selectSupplier": "براہ کرم ایک سپلائر منتخب کریں",
+      "addAtLeastOneItem": "براہ کرم کم از کم ایک آئٹم شامل کریں",
+      "fillRequiredFields": "براہ کرم ہر آئٹم کے لیے تمام ضروری فیلڈز بھریں",
+      "enterLicenseNumber": "براہ کرم لائسنس نمبر درج کریں",
+      "fillAllRequiredFields": "براہ کرم تمام ضروری فیلڈز بھریں: {{fields}}",
+      "invalidJson": "غلط JSON محفوظ نہیں کیا جا سکتا: {{message}}",
+      "invalidCode": "غلط کوڈ",
+      "invalidVerificationCode": "غلط توثیقی کوڈ"
+    },
+    "operations": {
+      "saveFailed": "ترتیبات محفوظ کرنے میں ناکام",
+      "validationFailed": "توثیق ناکام ہو گئی",
+      "fetchFailed": "{{resource}} لانے میں ناکام",
+      "createFailed": "{{resource}} بنانے میں ناکام",
+      "updateFailed": "{{resource}} اپ ڈیٹ کرنے میں ناکام",
+      "deleteFailed": "{{resource}} حذف کرنے میں ناکام",
+      "searchFailed": "{{resource}} تلاش کرنے میں ناکام",
+      "loadFailed": "{{resource}} لوڈ کرنے میں ناکام۔ براہ کرم صفحہ تازہ کریں۔",
+      "sendFailed": "{{resource}} بھیجنے میں ناکام",
+      "generateFailed": "{{resource}} بنانے میں ناکام",
+      "verifyFailed": "{{resource}} کی توثیق میں ناکام",
+      "processFailed": "{{action}} پر عمل درآمد میں ناکام۔ براہ کرم دوبارہ کوشش کریں۔",
+      "testConnectionFailed": "کنکشن ٹیسٹ ناکام۔ براہ کرم اپنا نیٹ ورک چیک کریں۔"
+    }
+  },
+  "common": {
+    "yes": "ہاں",
+    "no": "نہیں",
+    "or": "یا",
+    "and": "اور",
+    "today": "آج",
+    "yesterday": "کل",
+    "week": "ہفتہ",
+    "month": "مہینہ",
+    "year": "سال",
+    "all": "تمام",
+    "none": "کوئی نہیں",
+    "active": "فعال",
+    "inactive": "غیر فعال",
+    "pending": "زیر التواء",
+    "completed": "مکمل",
+    "failed": "ناکام",
+    "notSpecified": "متعین نہیں",
+    "unknown": "نامعلوم",
+    "na": "لاگو نہیں"
+  },
+  "toasts": {
+    "password": {
+      "changeSuccess": "پاس ورڈ کامیابی سے تبدیل ہو گیا! براہ کرم دوبارہ لاگ ان کریں۔",
+      "changeFailed": "پاس ورڈ تبدیل کرنے میں ناکام۔ براہ کرم دوبارہ کوشش کریں۔"
+    },
+    "broadcast": {
+      "createSuccess": "براڈکاسٹ کامیابی سے بن گیا!",
+      "createFailed": "براڈکاسٹ بنانے میں ناکام"
+    },
+    "template": {
+      "fetchFailed": "ٹیمپلیٹس لانے میں ناکام",
+      "createSuccess": "ٹیمپلیٹ کامیابی سے بن گیا",
+      "createFailed": "ٹیمپلیٹ بنانے میں ناکام",
+      "updateSuccess": "ٹیمپلیٹ کامیابی سے اپ ڈیٹ ہو گیا",
+      "updateFailed": "ٹیمپلیٹ اپ ڈیٹ کرنے میں ناکام",
+      "deleteSuccess": "ٹیمپلیٹ کامیابی سے حذف ہو گیا",
+      "deleteFailed": "ٹیمپلیٹ حذف کرنے میں ناکام"
+    },
+    "model": {
+      "fetchFailed": "ماڈلز لانے میں ناکام",
+      "loadFailed": "ماڈل لوڈ کرنے میں ناکام",
+      "unloadSuccess": "ماڈل کامیابی سے ان لوڈ ہو گیا",
+      "unloadFailed": "ماڈل ان لوڈ کرنے میں ناکام",
+      "updateFailed": "ماڈل اپ ڈیٹ کرنے میں ناکام"
+    },
+    "config": {
+      "fetchFailed": "کنفیگریشن لانے میں ناکام",
+      "updateSuccess": "کنفیگریشن کامیابی سے اپ ڈیٹ ہو گئی",
+      "updateFailed": "کنفیگریشن محفوظ کرنے میں ناکام"
+    },
+    "agent": {
+      "fetchFailed": "ایجنٹس لانے میں ناکام"
+    },
+    "personality": {
+      "fetchFailed": "شخصیات لانے میں ناکام"
+    },
+    "router": {
+      "statsFetchFailed": "راؤٹر کے اعداد و شمار لانے میں ناکام",
+      "toggleFailed": "انفرنس موڈ ٹوگل کرنے میں ناکام"
+    }
+  },
+  "confirmations": {
+    "deleteUser": "کیا آپ واقعی صارف {{email}} کو حذف کرنا چاہتے ہیں؟",
+    "deleteUserPermanent": "کیا آپ واقعی اس صارف کو حذف کرنا چاہتے ہیں؟ یہ عمل کالعدم نہیں کیا جا سکتا۔",
+    "deleteTerminal": "کیا آپ واقعی اس ٹرمینل کو حذف کرنا چاہتے ہیں؟",
+    "passwordResetMethod": "ای میل کے ذریعے پاس ورڈ ری سیٹ لنک بھیجنے کے لیے اوکے پر کلک کریں\nعارضی پاس ورڈ بنانے اور دکھانے کے لیے منسوخ پر کلک کریں"
+  },
+  "modals": {
+    "changePassword": {
+      "title": "پاس ورڈ تبدیل کریں",
+      "currentPassword": "موجودہ پاس ورڈ",
+      "newPassword": "نیا پاس ورڈ",
+      "confirmPassword": "نیا پاس ورڈ کی تصدیق کریں",
+      "placeholders": {
+        "currentPassword": "موجودہ پاس ورڈ درج کریں",
+        "newPassword": "نیا پاس ورڈ درج کریں",
+        "confirmPassword": "نیا پاس ورڈ کی تصدیق کریں"
+      },
+      "requirements": {
+        "title": "پاس ورڈ میں ہونا ضروری ہے:",
+        "minLength": "کم از کم 8 حروف",
+        "uppercase": "ایک بڑا حرف",
+        "lowercase": "ایک چھوٹا حرف",
+        "number": "ایک نمبر"
+      },
+      "validation": {
+        "currentRequired": "موجودہ پاس ورڈ ضروری ہے",
+        "newRequired": "نیا پاس ورڈ ضروری ہے",
+        "notMeetRequirements": "پاس ورڈ تقاضے پورے نہیں کرتا",
+        "confirmRequired": "براہ کرم اپنے نئے پاس ورڈ کی تصدیق کریں",
+        "notMatch": "پاس ورڈ مماثل نہیں ہیں",
+        "mustBeDifferent": "نیا پاس ورڈ موجودہ پاس ورڈ سے مختلف ہونا چاہیے",
+        "incorrectCurrent": "موجودہ پاس ورڈ غلط ہے"
+      },
+      "securityNotice": "اپنا پاس ورڈ تبدیل کرنے کے بعد، آپ لاگ آؤٹ ہو جائیں گے اور آپ کو اپنی نئی اسناد کے ساتھ دوبارہ لاگ ان کرنا ہوگا۔",
+      "changing": "تبدیل ہو رہا ہے..."
+    }
+  }
+}
