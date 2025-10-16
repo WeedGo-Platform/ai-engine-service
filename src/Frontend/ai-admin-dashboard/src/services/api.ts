@@ -1,6 +1,20 @@
 import axios, { AxiosInstance } from 'axios';
 import { appConfig, getApiEndpoint } from '../config/app.config';
 
+/**
+ * Enhanced error interface for better error handling
+ * Extends standard axios errors with additional context
+ */
+export interface ApiError extends Error {
+  code?: string;
+  statusCode?: number;
+  details?: any;
+  isNetworkError?: boolean;
+  isAuthError?: boolean;
+  isValidationError?: boolean;
+  originalError?: any;
+}
+
 // Create axios instance with default config
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: appConfig.api.baseUrl, // Use base URL directly without /api prefix
@@ -32,18 +46,55 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// Response interceptor
+// Response interceptor with enhanced error handling
 axiosInstance.interceptors.response.use(
   (response) => {
     return response;
   },
   (error) => {
-    if (error.response?.status === 401) {
-      // Handle unauthorized access
-      localStorage.removeItem('authToken');
-      window.location.href = '/login';
+    // Create enhanced error object
+    const apiError: ApiError = new Error(error.message || 'An error occurred') as ApiError;
+    apiError.originalError = error;
+
+    if (error.response) {
+      // Server responded with error status
+      apiError.statusCode = error.response.status;
+      apiError.code = error.response.data?.code || error.response.data?.error;
+      apiError.details = error.response.data?.details;
+      apiError.message = error.response.data?.message || error.message || 'An error occurred';
+
+      // Flag specific error types for easier handling
+      apiError.isAuthError = error.response.status === 401 || error.response.status === 403;
+      apiError.isValidationError = error.response.status === 422 || error.response.status === 400;
+      apiError.isNetworkError = false;
+
+      // Handle unauthorized access - clear auth and redirect to login
+      if (error.response.status === 401) {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
+
+        // Only redirect if not already on login page
+        if (window.location.pathname !== '/login') {
+          window.location.href = '/login';
+        }
+      }
+    } else if (error.request) {
+      // Request made but no response (network error)
+      apiError.code = 'NETWORK_ERROR';
+      apiError.isNetworkError = true;
+      apiError.isAuthError = false;
+      apiError.isValidationError = false;
+      apiError.statusCode = 0;
+      apiError.message = 'Network error occurred';
+    } else {
+      // Something else happened (programming error, etc.)
+      apiError.code = 'UNKNOWN_ERROR';
+      apiError.isNetworkError = false;
+      apiError.isAuthError = false;
+      apiError.isValidationError = false;
     }
-    return Promise.reject(error);
+
+    return Promise.reject(apiError);
   }
 );
 

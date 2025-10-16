@@ -4,6 +4,7 @@ import {
   ArrowLeft, ArrowRight, CheckCircle, AlertCircle, Leaf,
   Eye, EyeOff, Shield, Loader2, UserPlus, LogIn, CheckCircle2
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import tenantService from '../services/tenantService';
 import '../styles/signup-animations.css';
 
@@ -48,6 +49,7 @@ interface FormErrors {
 }
 
 const TenantSignup = () => {
+  const { t } = useTranslation(['signup', 'common']);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const selectedPlan = searchParams.get('plan') || 'community';
@@ -93,26 +95,58 @@ const TenantSignup = () => {
   const [passwordStrength, setPasswordStrength] = useState(0);
 
   const provinces = [
-    { code: 'ON', name: 'Ontario' },
-    { code: 'BC', name: 'British Columbia' },
-    { code: 'AB', name: 'Alberta' },
-    { code: 'QC', name: 'Quebec' },
-    { code: 'MB', name: 'Manitoba' },
-    { code: 'SK', name: 'Saskatchewan' },
-    { code: 'NS', name: 'Nova Scotia' },
-    { code: 'NB', name: 'New Brunswick' },
-    { code: 'NL', name: 'Newfoundland and Labrador' },
-    { code: 'PE', name: 'Prince Edward Island' },
-    { code: 'NT', name: 'Northwest Territories' },
-    { code: 'YT', name: 'Yukon' },
-    { code: 'NU', name: 'Nunavut' }
+    { code: 'ON', name: t('signup:provinces.ON') },
+    { code: 'BC', name: t('signup:provinces.BC') },
+    { code: 'AB', name: t('signup:provinces.AB') },
+    { code: 'QC', name: t('signup:provinces.QC') },
+    { code: 'MB', name: t('signup:provinces.MB') },
+    { code: 'SK', name: t('signup:provinces.SK') },
+    { code: 'NS', name: t('signup:provinces.NS') },
+    { code: 'NB', name: t('signup:provinces.NB') },
+    { code: 'NL', name: t('signup:provinces.NL') },
+    { code: 'PE', name: t('signup:provinces.PE') },
+    { code: 'NT', name: t('signup:provinces.NT') },
+    { code: 'YT', name: t('signup:provinces.YT') },
+    { code: 'NU', name: t('signup:provinces.NU') }
   ];
 
   const subscriptionPlans = {
-    community_and_new_business: { name: 'Community and New Business', price: 0, features: ['1 Store', '2 Languages', '1 AI Personality'] },
-    small_business: { name: 'Small Business', price: 99, features: ['5 Stores', '5 Languages', '2 AI Personalities'] },
-    professional_and_growing_business: { name: 'Professional and Growing Business', price: 149, features: ['12 Stores', '10 Languages', '3 AI Personalities'] },
-    enterprise: { name: 'Enterprise', price: 299, features: ['Unlimited Stores', '25+ Languages', '5 AI Personalities'] }
+    community_and_new_business: {
+      name: t('signup:plans.community_and_new_business.name'),
+      price: 0,
+      features: [
+        t('signup:plans.community_and_new_business.features.stores'),
+        t('signup:plans.community_and_new_business.features.languages'),
+        t('signup:plans.community_and_new_business.features.personalities')
+      ]
+    },
+    small_business: {
+      name: t('signup:plans.small_business.name'),
+      price: 99,
+      features: [
+        t('signup:plans.small_business.features.stores'),
+        t('signup:plans.small_business.features.languages'),
+        t('signup:plans.small_business.features.personalities')
+      ]
+    },
+    professional_and_growing_business: {
+      name: t('signup:plans.professional_and_growing_business.name'),
+      price: 149,
+      features: [
+        t('signup:plans.professional_and_growing_business.features.stores'),
+        t('signup:plans.professional_and_growing_business.features.languages'),
+        t('signup:plans.professional_and_growing_business.features.personalities')
+      ]
+    },
+    enterprise: {
+      name: t('signup:plans.enterprise.name'),
+      price: 299,
+      features: [
+        t('signup:plans.enterprise.features.stores'),
+        t('signup:plans.enterprise.features.languages'),
+        t('signup:plans.enterprise.features.personalities')
+      ]
+    }
   };
 
   const validateStep = (step: number): boolean => {
@@ -120,65 +154,65 @@ const TenantSignup = () => {
     
     switch (step) {
       case 1: // Company Information
-        if (!formData.tenantName.trim()) newErrors.tenantName = 'Brand name is required';
-        if (!formData.website.trim()) newErrors.website = 'Website is required to generate brand code';
-        if (!formData.tenantCode.trim()) newErrors.tenantCode = 'Brand code is required (enter website to generate)';
+        if (!formData.tenantName.trim()) newErrors.tenantName = t('signup:validation.brandNameRequired');
+        if (!formData.website.trim()) newErrors.website = t('signup:validation.websiteRequired');
+        if (!formData.tenantCode.trim()) newErrors.tenantCode = t('signup:validation.brandCodeRequired');
         else if (!/^[A-Z0-9_-]+$/.test(formData.tenantCode)) {
-          newErrors.tenantCode = 'Brand code must contain only uppercase letters, numbers, hyphens, and underscores';
+          newErrors.tenantCode = t('signup:validation.brandCodeFormat');
         }
-        if (!formData.companyName.trim()) newErrors.companyName = 'Company name is required';
-        if (!formData.businessNumber.trim()) newErrors.businessNumber = 'Business number is required';
+        if (!formData.companyName.trim()) newErrors.companyName = t('signup:validation.companyNameRequired');
+        if (!formData.businessNumber.trim()) newErrors.businessNumber = t('signup:validation.businessNumberRequired');
         else if (!/^\d{9}$/.test(formData.businessNumber.replace(/\D/g, ''))) {
-          newErrors.businessNumber = 'Business number must be 9 digits';
+          newErrors.businessNumber = t('signup:validation.businessNumberFormat');
         }
-        if (!formData.gstHstNumber.trim()) newErrors.gstHstNumber = 'GST/HST number is required';
+        if (!formData.gstHstNumber.trim()) newErrors.gstHstNumber = t('signup:validation.gstHstRequired');
         else if (!/^\d{9}RT\d{4}$/.test(formData.gstHstNumber.replace(/\s/g, ''))) {
-          newErrors.gstHstNumber = 'GST/HST number format: 123456789RT0001';
+          newErrors.gstHstNumber = t('signup:validation.gstHstFormat');
         }
         break;
-        
+
       case 2: // Contact Details
-        if (!formData.contactEmail.trim()) newErrors.contactEmail = 'Email is required';
+        if (!formData.contactEmail.trim()) newErrors.contactEmail = t('signup:validation.emailRequired');
         else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.contactEmail)) {
-          newErrors.contactEmail = 'Please enter a valid email address';
+          newErrors.contactEmail = t('signup:validation.emailInvalid');
         }
-        if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
-        if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
-        if (!formData.street.trim()) newErrors.street = 'Street address is required';
-        if (!formData.city.trim()) newErrors.city = 'City is required';
-        if (!formData.postalCode.trim()) newErrors.postalCode = 'Postal code is required';
+        if (!formData.firstName.trim()) newErrors.firstName = t('signup:validation.firstNameRequired');
+        if (!formData.lastName.trim()) newErrors.lastName = t('signup:validation.lastNameRequired');
+        if (!formData.street.trim()) newErrors.street = t('signup:validation.streetRequired');
+        if (!formData.city.trim()) newErrors.city = t('signup:validation.cityRequired');
+        if (!formData.postalCode.trim()) newErrors.postalCode = t('signup:validation.postalCodeRequired');
         else if (!/^[A-Z]\d[A-Z]\s?\d[A-Z]\d$/.test(formData.postalCode.toUpperCase())) {
-          newErrors.postalCode = 'Please enter a valid Canadian postal code';
+          newErrors.postalCode = t('signup:validation.postalCodeFormat');
         }
         break;
-        
+
       case 3: // Account Setup
-        if (!formData.password) newErrors.password = 'Password is required';
+        if (!formData.password) newErrors.password = t('signup:validation.passwordRequired');
         else if (formData.password.length < 8) {
-          newErrors.password = 'Password must be at least 8 characters';
+          newErrors.password = t('signup:validation.passwordLength');
         } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
-          newErrors.password = 'Password must contain uppercase, lowercase, and number';
+          newErrors.password = t('signup:validation.passwordComplexity');
         }
         if (formData.password !== formData.confirmPassword) {
-          newErrors.confirmPassword = 'Passwords do not match';
+          newErrors.confirmPassword = t('signup:validation.passwordMismatch');
         }
         break;
-        
+
       case 4: // Payment
         if (formData.subscriptionTier !== 'enterprise' && formData.subscriptionTier !== 'community_and_new_business') {
-          if (!formData.cardNumber.trim()) newErrors.cardNumber = 'Card number is required';
+          if (!formData.cardNumber.trim()) newErrors.cardNumber = t('signup:validation.cardNumberRequired');
           else if (!/^\d{16}$/.test(formData.cardNumber.replace(/\s/g, ''))) {
-            newErrors.cardNumber = 'Please enter a valid 16-digit card number';
+            newErrors.cardNumber = t('signup:validation.cardNumberFormat');
           }
-          if (!formData.expiryDate.trim()) newErrors.expiryDate = 'Expiry date is required';
+          if (!formData.expiryDate.trim()) newErrors.expiryDate = t('signup:validation.expiryRequired');
           else if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(formData.expiryDate)) {
-            newErrors.expiryDate = 'Please enter MM/YY format';
+            newErrors.expiryDate = t('signup:validation.expiryFormat');
           }
-          if (!formData.cvv.trim()) newErrors.cvv = 'CVV is required';
+          if (!formData.cvv.trim()) newErrors.cvv = t('signup:validation.cvvRequired');
           else if (!/^\d{3,4}$/.test(formData.cvv)) {
-            newErrors.cvv = 'CVV must be 3 or 4 digits';
+            newErrors.cvv = t('signup:validation.cvvFormat');
           }
-          if (!formData.billingName.trim()) newErrors.billingName = 'Cardholder name is required';
+          if (!formData.billingName.trim()) newErrors.billingName = t('signup:validation.cardholderRequired');
         }
         break;
     }
@@ -207,11 +241,11 @@ const TenantSignup = () => {
   };
 
   const getPasswordStrengthText = (strength: number): string => {
-    if (strength < 30) return 'Weak';
-    if (strength < 50) return 'Fair';
-    if (strength < 70) return 'Good';
-    if (strength < 90) return 'Strong';
-    return 'Very Strong';
+    if (strength < 30) return t('signup:passwordStrength.weak');
+    if (strength < 50) return t('signup:passwordStrength.fair');
+    if (strength < 70) return t('signup:passwordStrength.good');
+    if (strength < 90) return t('signup:passwordStrength.strong');
+    return t('signup:passwordStrength.veryStrong');
   };
 
   const generateBrandCodeFromWebsite = (website: string): string => {
@@ -295,7 +329,7 @@ const TenantSignup = () => {
     if (!validateStep(4)) return;
 
     setIsSubmitting(true);
-    setSubmitProgress({ step: 'checking', message: 'Verifying availability...' });
+    setSubmitProgress({ step: 'checking', message: t('signup:tenant.progress.verifying') });
 
     try {
       // Add smooth delay for better UX
@@ -311,8 +345,8 @@ const TenantSignup = () => {
         // Show cleaner error message
         const conflict = checkResult.conflicts[0];
         const errorMessage = conflict.type === 'code'
-          ? `The tenant code "${conflict.value}" is already registered`
-          : `The website "${conflict.value}" is already in use`;
+          ? t('signup:tenant.errors.tenantExists', { code: conflict.value })
+          : t('signup:tenant.errors.websiteExists', { website: conflict.value });
 
         setErrors({
           submit: errorMessage,
@@ -329,7 +363,7 @@ const TenantSignup = () => {
       }
 
       // Update progress
-      setSubmitProgress({ step: 'creating', message: 'Creating your account...' });
+      setSubmitProgress({ step: 'creating', message: t('signup:tenant.progress.creating') });
       // Prepare the payload according to backend API
       const payload = {
         name: formData.tenantName,
@@ -368,7 +402,7 @@ const TenantSignup = () => {
 
       // Upload logo if provided
       if (logoFile && result?.id) {
-        setSubmitProgress({ step: 'uploading', message: 'Uploading logo...' });
+        setSubmitProgress({ step: 'uploading', message: t('signup:tenant.progress.uploading') });
         await new Promise(resolve => setTimeout(resolve, 500));
 
         const uploadFormData = new FormData();
@@ -385,7 +419,7 @@ const TenantSignup = () => {
       }
 
       // Mark as complete and show success
-      setSubmitProgress({ step: 'complete', message: 'Account created successfully!' });
+      setSubmitProgress({ step: 'complete', message: t('signup:tenant.progress.complete') });
       setShowSuccessAnimation(true);
       await new Promise(resolve => setTimeout(resolve, 2000));
 
@@ -478,7 +512,7 @@ const TenantSignup = () => {
           <div className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Brand Name *
+                {t('signup:tenant.companyInfo.brandName')} *
               </label>
               <input
                 type="text"
@@ -487,7 +521,7 @@ const TenantSignup = () => {
                 className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                   errors.tenantName ? 'border-red-500' : 'border-gray-200'
                 }`}
-                placeholder="e.g., Green Valley Dispensary"
+                placeholder={t('signup:tenant.companyInfo.brandNamePlaceholder')}
               />
               {errors.tenantName && (
                 <p className="mt-1 text-sm text-danger-600">{errors.tenantName}</p>
@@ -496,7 +530,7 @@ const TenantSignup = () => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Website *
+                {t('signup:tenant.companyInfo.website')} *
               </label>
               <input
                 type="text"
@@ -505,10 +539,10 @@ const TenantSignup = () => {
                 className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                   errors.website ? 'border-red-500' : 'border-gray-200'
                 }`}
-                placeholder="www.potpalace.ca or potpalace.ca"
+                placeholder={t('signup:tenant.companyInfo.websitePlaceholder')}
               />
               <p className="mt-1 text-sm text-gray-500">
-                Your website URL (used to generate brand code)
+                {t('signup:tenant.companyInfo.websiteHelp')}
               </p>
               {errors.website && (
                 <p className="mt-1 text-sm text-danger-600">{errors.website}</p>
@@ -517,17 +551,17 @@ const TenantSignup = () => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Brand Code * (auto-generated)
+                {t('signup:tenant.companyInfo.brandCodeAuto')}
               </label>
               <input
                 type="text"
                 value={formData.tenantCode}
                 readOnly
                 className="w-full px-4 py-3 border rounded-lg bg-gray-50 cursor-not-allowed border-gray-200"
-                placeholder="Enter website above to generate"
+                placeholder={t('signup:tenant.companyInfo.brandCodePlaceholder')}
               />
               <p className="mt-1 text-sm text-gray-500">
-                Will be used in your store URL: {formData.tenantCode.toLowerCase() || 'your-code'}.weedgo.com
+                {t('signup:tenant.companyInfo.brandCodeHelp', { code: formData.tenantCode.toLowerCase() || 'your-code' })}
               </p>
               {errors.tenantCode && (
                 <p className="mt-1 text-sm text-danger-600">{errors.tenantCode}</p>
@@ -536,7 +570,7 @@ const TenantSignup = () => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Legal Company Name *
+                {t('signup:tenant.companyInfo.legalCompanyName')} *
               </label>
               <input
                 type="text"
@@ -545,7 +579,7 @@ const TenantSignup = () => {
                 className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                   errors.companyName ? 'border-red-500' : 'border-gray-200'
                 }`}
-                placeholder="e.g., Green Valley Cannabis Inc."
+                placeholder={t('signup:tenant.companyInfo.legalCompanyPlaceholder')}
               />
               {errors.companyName && (
                 <p className="mt-1 text-sm text-danger-600">{errors.companyName}</p>
@@ -555,7 +589,7 @@ const TenantSignup = () => {
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Business Number *
+                  {t('signup:tenant.companyInfo.businessNumber')} *
                 </label>
                 <input
                   type="text"
@@ -564,10 +598,10 @@ const TenantSignup = () => {
                   className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                     errors.businessNumber ? 'border-red-500' : 'border-gray-200'
                   }`}
-                  placeholder="123456789"
+                  placeholder={t('signup:tenant.companyInfo.businessNumberPlaceholder')}
                 />
                 <p className="mt-1 text-sm text-gray-500">
-                  Canadian Business Number (9 digits)
+                  {t('signup:tenant.companyInfo.businessNumberHelp')}
                 </p>
                 {errors.businessNumber && (
                   <p className="mt-1 text-sm text-danger-600">{errors.businessNumber}</p>
@@ -576,7 +610,7 @@ const TenantSignup = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  GST/HST Number *
+                  {t('signup:tenant.companyInfo.gstHstNumber')} *
                 </label>
                 <input
                   type="text"
@@ -585,10 +619,10 @@ const TenantSignup = () => {
                   className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                     errors.gstHstNumber ? 'border-red-500' : 'border-gray-200'
                   }`}
-                  placeholder="123456789RT0001"
+                  placeholder={t('signup:tenant.companyInfo.gstHstPlaceholder')}
                 />
                 <p className="mt-1 text-sm text-gray-500">
-                  Format: 123456789RT0001
+                  {t('signup:tenant.companyInfo.gstHstHelp')}
                 </p>
                 {errors.gstHstNumber && (
                   <p className="mt-1 text-sm text-danger-600">{errors.gstHstNumber}</p>
@@ -599,7 +633,7 @@ const TenantSignup = () => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Logo Upload
+                {t('signup:tenant.companyInfo.logoUpload')}
               </label>
               <div className="space-y-2">
                 <div className="flex items-center space-x-3">
@@ -628,7 +662,7 @@ const TenantSignup = () => {
                   )}
                 </div>
                 <div className="text-xs text-gray-500">
-                  Max 2MB • PNG, JPG, WebP • Recommended: 500x500px square
+                  {t('signup:tenant.companyInfo.logoUploadHelp')}
                 </div>
               </div>
             </div>
@@ -641,7 +675,7 @@ const TenantSignup = () => {
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  First Name *
+                  {t('signup:tenant.contactInfo.firstName')} *
                 </label>
                 <input
                   type="text"
@@ -658,7 +692,7 @@ const TenantSignup = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Last Name *
+                  {t('signup:tenant.contactInfo.lastName')} *
                 </label>
                 <input
                   type="text"
@@ -677,7 +711,7 @@ const TenantSignup = () => {
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email Address *
+                  {t('signup:tenant.contactInfo.email')} *
                 </label>
                 <input
                   type="email"
@@ -694,21 +728,21 @@ const TenantSignup = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Phone Number
+                  {t('signup:tenant.contactInfo.phone')}
                 </label>
                 <input
                   type="tel"
                   value={formData.contactPhone}
                   onChange={(e) => handleInputChange('contactPhone', e.target.value)}
                   className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                  placeholder="(555) 123-4567"
+                  placeholder={t('signup:tenant.contactInfo.phonePlaceholder')}
                 />
               </div>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Street Address *
+                {t('signup:tenant.contactInfo.street')} *
               </label>
               <input
                 type="text"
@@ -726,7 +760,7 @@ const TenantSignup = () => {
             <div className="grid md:grid-cols-3 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  City *
+                  {t('signup:tenant.contactInfo.city')} *
                 </label>
                 <input
                   type="text"
@@ -743,7 +777,7 @@ const TenantSignup = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Province *
+                  {t('signup:tenant.contactInfo.province')} *
                 </label>
                 <select
                   value={formData.province}
@@ -760,7 +794,7 @@ const TenantSignup = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Postal Code *
+                  {t('signup:tenant.contactInfo.postalCode')} *
                 </label>
                 <input
                   type="text"
@@ -769,7 +803,7 @@ const TenantSignup = () => {
                   className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                     errors.postalCode ? 'border-red-500' : 'border-gray-200'
                   }`}
-                  placeholder="A1A 1A1"
+                  placeholder={t('signup:tenant.contactInfo.postalCodePlaceholder')}
                 />
                 {errors.postalCode && (
                   <p className="mt-1 text-sm text-danger-600">{errors.postalCode}</p>
@@ -784,7 +818,7 @@ const TenantSignup = () => {
           <div className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Password *
+                {t('signup:tenant.accountSetup.password')} *
               </label>
               <div className="relative">
                 <input
@@ -803,14 +837,14 @@ const TenantSignup = () => {
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
               </div>
-              
+
               {/* Password Strength Indicator */}
               {formData.password && (
                 <div className="mt-2">
                   <div className="flex items-center justify-between mb-1">
                     <div className="flex items-center">
                       <Shield className="h-3 w-3 text-gray-500 mr-1" />
-                      <span className="text-xs text-gray-600">Strength:</span>
+                      <span className="text-xs text-gray-600">{t('signup:tenant.accountSetup.passwordStrength')}</span>
                     </div>
                     <span className={`text-xs font-medium ${
                       passwordStrength < 30 ? 'text-red-600' :
@@ -830,9 +864,9 @@ const TenantSignup = () => {
                   </div>
                 </div>
               )}
-              
+
               <p className="mt-1 text-sm text-gray-500">
-                Must be at least 8 characters with uppercase, lowercase, and number
+                {t('signup:tenant.accountSetup.passwordHelp')}
               </p>
               {errors.password && (
                 <p className="mt-1 text-sm text-danger-600">{errors.password}</p>
@@ -841,7 +875,7 @@ const TenantSignup = () => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Confirm Password *
+                {t('signup:tenant.accountSetup.confirmPassword')} *
               </label>
               <div className="relative">
                 <input
@@ -869,9 +903,9 @@ const TenantSignup = () => {
               <div className="flex items-start">
                 <CheckCircle className="h-5 w-5 text-primary-600 mt-0.5 mr-3" />
                 <div>
-                  <h3 className="font-medium text-primary-900">Account Security</h3>
+                  <h3 className="font-medium text-primary-900">{t('signup:tenant.accountSetup.securityTitle')}</h3>
                   <p className="text-sm text-primary-700 mt-1">
-                    Your account will be secured with industry-standard encryption and multi-factor authentication options.
+                    {t('signup:tenant.accountSetup.securityDescription')}
                   </p>
                 </div>
               </div>
@@ -890,7 +924,7 @@ const TenantSignup = () => {
                 <div className="flex items-start">
                   <AlertCircle className="h-5 w-5 text-red-500 mt-0.5 mr-3 flex-shrink-0" />
                   <div>
-                    <h3 className="text-sm font-semibold text-red-800 mb-1">Account Creation Failed</h3>
+                    <h3 className="text-sm font-semibold text-red-800 mb-1">{t('signup:tenant.errors.accountCreationFailed')}</h3>
                     <p className="text-sm text-red-700">{errors.submit}</p>
                     <div className="mt-3 flex gap-3">
                       <button
@@ -901,7 +935,7 @@ const TenantSignup = () => {
                         }}
                         className="text-sm px-3 py-1.5 bg-white border border-red-300 text-red-700 rounded-md hover:bg-red-50"
                       >
-                        Try Again
+                        {t('signup:tenant.errors.tryAgain')}
                       </button>
                       {errors.existingTenant && (
                         <>
@@ -916,7 +950,7 @@ const TenantSignup = () => {
                             className="text-sm px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all transform hover:scale-105 flex items-center gap-2"
                           >
                             <UserPlus className="h-4 w-4" />
-                            Register as User
+                            {t('signup:tenant.errors.registerAsUser')}
                           </button>
                           <button
                             type="button"
@@ -924,7 +958,7 @@ const TenantSignup = () => {
                             className="text-sm px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-all transform hover:scale-105 flex items-center gap-2"
                           >
                             <LogIn className="h-4 w-4" />
-                            Sign In Instead
+                            {t('signup:tenant.errors.signInInstead')}
                           </button>
                         </>
                       )}
@@ -937,18 +971,18 @@ const TenantSignup = () => {
                 <>
                   <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="text-lg font-semibold">Selected Plan: {selectedPlanInfo.name}</h3>
+                      <h3 className="text-lg font-semibold">{t('signup:tenant.subscription.selectedPlan', { plan: selectedPlanInfo.name })}</h3>
                       <button
                         type="button"
                         onClick={() => handleInputChange('subscriptionTier', '')}
                         className="text-sm text-primary-600 hover:text-primary-700 underline"
                       >
-                        Change Plan
+                        {t('signup:tenant.subscription.changePlan')}
                       </button>
                     </div>
                     <div className="text-2xl font-bold text-primary-600 mb-2">
-                      {selectedPlanInfo.price === 0 ? 'FREE' :
-                       selectedPlanInfo.price ? `$${selectedPlanInfo.price}/month` : 'Custom Pricing'}
+                      {selectedPlanInfo.price === 0 ? t('signup:tenant.subscription.free') :
+                       selectedPlanInfo.price ? t('signup:tenant.subscription.perMonth', { price: selectedPlanInfo.price }) : t('signup:tenant.subscription.customPricing')}
                     </div>
                     <ul className="text-sm text-gray-600 space-y-1">
                       {selectedPlanInfo.features.map((feature, index) => (
@@ -963,7 +997,7 @@ const TenantSignup = () => {
                   {/* Billing Cycle */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Billing Cycle
+                      {t('signup:tenant.subscription.billingCycle')}
                     </label>
                     <div className="grid grid-cols-2 gap-6">
                       <label className="flex items-center p-6 border rounded-lg cursor-pointer hover:bg-gray-50">
@@ -976,8 +1010,8 @@ const TenantSignup = () => {
                           className="mr-3"
                         />
                         <div>
-                          <div className="font-medium">Monthly</div>
-                          <div className="text-sm text-gray-500">Billed monthly</div>
+                          <div className="font-medium">{t('signup:tenant.subscription.monthly')}</div>
+                          <div className="text-sm text-gray-500">{t('signup:tenant.subscription.monthlyBilled')}</div>
                         </div>
                       </label>
                       <label className="flex items-center p-6 border rounded-lg cursor-pointer hover:bg-gray-50">
@@ -990,8 +1024,8 @@ const TenantSignup = () => {
                           className="mr-3"
                         />
                         <div>
-                          <div className="font-medium">Annual</div>
-                          <div className="text-sm text-gray-500">Save 20%</div>
+                          <div className="font-medium">{t('signup:tenant.subscription.annual')}</div>
+                          <div className="text-sm text-gray-500">{t('signup:tenant.subscription.annualSave')}</div>
                         </div>
                       </label>
                     </div>
@@ -1003,7 +1037,7 @@ const TenantSignup = () => {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Cardholder Name <span className="text-red-500">*</span>
+                            {t('signup:tenant.payment.cardholderName')} <span className="text-red-500">*</span>
                           </label>
                           <input
                             type="text"
@@ -1012,12 +1046,12 @@ const TenantSignup = () => {
                             className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                               errors.billingName ? 'border-red-500' : 'border-gray-300'
                             }`}
-                            placeholder="John Doe"
+                            placeholder={t('signup:tenant.payment.cardholderPlaceholder')}
                           />
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Card Number <span className="text-red-500">*</span>
+                            {t('signup:tenant.payment.cardNumber')} <span className="text-red-500">*</span>
                           </label>
                           <input
                             type="text"
@@ -1027,14 +1061,14 @@ const TenantSignup = () => {
                             className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                               errors.cardNumber ? 'border-red-500' : 'border-gray-300'
                             }`}
-                            placeholder="1234 5678 9012 3456"
+                            placeholder={t('signup:tenant.payment.cardNumberPlaceholder')}
                           />
                         </div>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Expiry Date <span className="text-red-500">*</span>
+                            {t('signup:tenant.payment.expiryDate')} <span className="text-red-500">*</span>
                           </label>
                           <input
                             type="text"
@@ -1050,12 +1084,12 @@ const TenantSignup = () => {
                             className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                               errors.expiryDate ? 'border-red-500' : 'border-gray-300'
                             }`}
-                            placeholder="MM/YY"
+                            placeholder={t('signup:tenant.payment.expiryPlaceholder')}
                           />
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            CVV <span className="text-red-500">*</span>
+                            {t('signup:tenant.payment.cvv')} <span className="text-red-500">*</span>
                           </label>
                           <input
                             type="text"
@@ -1065,19 +1099,19 @@ const TenantSignup = () => {
                             className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                               errors.cvv ? 'border-red-500' : 'border-gray-300'
                             }`}
-                            placeholder="123"
+                            placeholder={t('signup:tenant.payment.cvvPlaceholder')}
                           />
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            ZIP/Postal Code
+                            {t('signup:tenant.payment.postalCode')}
                           </label>
                           <input
                             type="text"
                             value={formData.billingPostalCode}
                             onChange={(e) => handleInputChange('billingPostalCode', e.target.value)}
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                            placeholder="12345"
+                            placeholder={t('signup:tenant.payment.postalCodePlaceholder')}
                           />
                         </div>
                       </div>
@@ -1092,7 +1126,7 @@ const TenantSignup = () => {
         if (!selectedPlanInfo) {
           return (
             <div className="space-y-6">
-              <h3 className="text-lg font-semibold mb-4">Choose Your Subscription Plan</h3>
+              <h3 className="text-lg font-semibold mb-4">{t('signup:tenant.subscription.choosePlan')}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {Object.entries(subscriptionPlans).map(([key, plan]) => (
                   <div
@@ -1102,7 +1136,7 @@ const TenantSignup = () => {
                   >
                     <h4 className="font-semibold text-lg mb-2">{plan.name}</h4>
                     <div className="text-2xl font-bold text-primary-600 mb-3">
-                      {plan.price === 0 ? 'FREE' : plan.price ? `$${plan.price}/mo` : 'Custom'}
+                      {plan.price === 0 ? t('signup:tenant.subscription.free') : plan.price ? t('signup:tenant.subscription.perMonth', { price: plan.price }) : t('signup:tenant.subscription.customPricing')}
                     </div>
                     <ul className="text-sm space-y-1">
                       {plan.features.slice(0, 3).map((feature, idx) => (
@@ -1116,7 +1150,7 @@ const TenantSignup = () => {
                       type="button"
                       className="mt-4 w-full py-2 px-4 bg-primary-600 text-white rounded-md hover:bg-primary-700"
                     >
-                      Select Plan
+                      {t('signup:tenant.subscription.selectPlan')}
                     </button>
                   </div>
                 ))}
@@ -1130,18 +1164,18 @@ const TenantSignup = () => {
             {/* Plan Summary */}
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
               <div className="flex justify-between items-start mb-2">
-                <h3 className="text-lg font-semibold">Selected Plan: {selectedPlanInfo.name}</h3>
+                <h3 className="text-lg font-semibold">{t('signup:tenant.subscription.selectedPlan', { plan: selectedPlanInfo.name })}</h3>
                 <button
                   type="button"
                   onClick={() => handleInputChange('subscriptionTier', '')}
                   className="text-sm text-primary-600 hover:text-primary-700 underline"
                 >
-                  Change Plan
+                  {t('signup:tenant.subscription.changePlan')}
                 </button>
               </div>
               <div className="text-2xl font-bold text-primary-600 mb-2">
-                {selectedPlanInfo.price === 0 ? 'FREE' :
-                 selectedPlanInfo.price ? `$${selectedPlanInfo.price}/month` : 'Custom Pricing'}
+                {selectedPlanInfo.price === 0 ? t('signup:tenant.subscription.free') :
+                 selectedPlanInfo.price ? t('signup:tenant.subscription.perMonth', { price: selectedPlanInfo.price }) : t('signup:tenant.subscription.customPricing')}
               </div>
               <ul className="text-sm text-gray-600 space-y-1">
                 {selectedPlanInfo.features.map((feature, index) => (
@@ -1156,7 +1190,7 @@ const TenantSignup = () => {
             {/* Billing Cycle */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Billing Cycle
+                {t('signup:tenant.subscription.billingCycle')}
               </label>
               <div className="grid grid-cols-2 gap-6">
                 <label className="flex items-center p-6 border rounded-lg cursor-pointer hover:bg-gray-50">
@@ -1169,8 +1203,8 @@ const TenantSignup = () => {
                     className="mr-3"
                   />
                   <div>
-                    <div className="font-medium">Monthly</div>
-                    <div className="text-sm text-gray-500">Billed monthly</div>
+                    <div className="font-medium">{t('signup:tenant.subscription.monthly')}</div>
+                    <div className="text-sm text-gray-500">{t('signup:tenant.subscription.monthlyBilled')}</div>
                   </div>
                 </label>
                 <label className="flex items-center p-6 border rounded-lg cursor-pointer hover:bg-gray-50">
@@ -1183,8 +1217,8 @@ const TenantSignup = () => {
                     className="mr-3"
                   />
                   <div>
-                    <div className="font-medium">Annual</div>
-                    <div className="text-sm text-gray-500">Save 20%</div>
+                    <div className="font-medium">{t('signup:tenant.subscription.annual')}</div>
+                    <div className="text-sm text-gray-500">{t('signup:tenant.subscription.annualSave')}</div>
                   </div>
                 </label>
               </div>
@@ -1195,7 +1229,7 @@ const TenantSignup = () => {
               <>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Cardholder Name *
+                    {t('signup:tenant.payment.cardholderName')} *
                   </label>
                   <input
                     type="text"
@@ -1212,7 +1246,7 @@ const TenantSignup = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Card Number *
+                    {t('signup:tenant.payment.cardNumber')} *
                   </label>
                   <input
                     type="text"
@@ -1221,7 +1255,7 @@ const TenantSignup = () => {
                     className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                       errors.cardNumber ? 'border-red-500' : 'border-gray-200'
                     }`}
-                    placeholder="1234 5678 9012 3456"
+                    placeholder={t('signup:tenant.payment.cardNumberPlaceholder')}
                     maxLength={19}
                   />
                   {errors.cardNumber && (
@@ -1232,7 +1266,7 @@ const TenantSignup = () => {
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Expiry Date *
+                      {t('signup:tenant.payment.expiryDate')} *
                     </label>
                     <input
                       type="text"
@@ -1241,7 +1275,7 @@ const TenantSignup = () => {
                       className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                         errors.expiryDate ? 'border-red-500' : 'border-gray-200'
                       }`}
-                      placeholder="MM/YY"
+                      placeholder={t('signup:tenant.payment.expiryPlaceholder')}
                       maxLength={5}
                     />
                     {errors.expiryDate && (
@@ -1251,7 +1285,7 @@ const TenantSignup = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      CVV *
+                      {t('signup:tenant.payment.cvv')} *
                     </label>
                     <input
                       type="text"
@@ -1260,7 +1294,7 @@ const TenantSignup = () => {
                       className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                         errors.cvv ? 'border-red-500' : 'border-gray-200'
                       }`}
-                      placeholder="123"
+                      placeholder={t('signup:tenant.payment.cvvPlaceholder')}
                     />
                     {errors.cvv && (
                       <p className="mt-1 text-sm text-danger-600">{errors.cvv}</p>
@@ -1275,9 +1309,9 @@ const TenantSignup = () => {
                 <div className="flex items-start">
                   <AlertCircle className="h-5 w-5 text-accent-600 mt-0.5 mr-3" />
                   <div>
-                    <h3 className="font-medium text-blue-900">Enterprise Plan</h3>
+                    <h3 className="font-medium text-blue-900">{t('signup:tenant.subscription.enterpriseTitle')}</h3>
                     <p className="text-sm text-accent-700 mt-1">
-                      Our sales team will contact you within 24 hours to discuss custom pricing and setup.
+                      {t('signup:tenant.subscription.enterpriseDescription')}
                     </p>
                   </div>
                 </div>
@@ -1301,10 +1335,10 @@ const TenantSignup = () => {
   };
 
   const stepTitles = [
-    'Company Information',
-    'Contact Details',
-    'Account Setup',
-    'Subscription & Payment'
+    t('signup:tenant.steps.company'),
+    t('signup:tenant.steps.contact'),
+    t('signup:tenant.steps.account'),
+    t('signup:tenant.steps.payment')
   ];
 
   return (
@@ -1328,13 +1362,13 @@ const TenantSignup = () => {
                 </svg>
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-2 animate-fadeInUp">
-                Welcome to WeedGo!
+                {t('signup:tenant.success.welcome')}
               </h3>
               <p className="text-gray-600 mb-6 animate-fadeInUp" style={{ animationDelay: '0.1s' }}>
-                Your account has been created successfully.
+                {t('signup:tenant.success.accountCreated')}
               </p>
               <div className="space-y-2 animate-fadeInUp" style={{ animationDelay: '0.2s' }}>
-                <p className="text-sm text-gray-500">Tenant Code:</p>
+                <p className="text-sm text-gray-500">{t('signup:tenant.success.tenantCode')}</p>
                 <p className="text-lg font-mono font-bold text-primary-600 bg-gray-50 py-2 px-4 rounded-lg">
                   {formData.tenantCode}
                 </p>
@@ -1343,7 +1377,7 @@ const TenantSignup = () => {
                 <div className="h-1 w-full bg-gray-200 rounded-full overflow-hidden">
                   <div className="h-full bg-gradient-to-r from-green-500 to-green-600 loading-shimmer"></div>
                 </div>
-                <p className="text-sm text-gray-500 mt-2">Preparing your dashboard...</p>
+                <p className="text-sm text-gray-500 mt-2">{t('signup:tenant.success.preparing')}</p>
               </div>
             </div>
           </div>
@@ -1357,10 +1391,10 @@ const TenantSignup = () => {
             <Link to="/" className="flex items-center">
               <ArrowLeft className="h-5 w-5 text-gray-400 mr-2" />
               <Leaf className="h-8 w-8 text-primary-600" />
-              <span className="ml-2 text-2xl font-bold text-gray-900">WeedGo</span>
+              <span className="ml-2 text-2xl font-bold text-gray-900">{t('signup:tenant.header.title')}</span>
             </Link>
             <div className="text-sm text-gray-500">
-              Already have an account? <Link to="/login" className="text-primary-600 hover:text-primary-700">Sign in</Link>
+              {t('signup:tenant.header.alreadyHaveAccount')} <Link to="/login" className="text-primary-600 hover:text-primary-700">{t('signup:tenant.header.signIn')}</Link>
             </div>
           </div>
         </div>
@@ -1411,10 +1445,10 @@ const TenantSignup = () => {
                 {stepTitles[currentStep - 1]}
               </h1>
               <p className="text-gray-600">
-                {currentStep === 1 && 'Tell us about your business and brand'}
-                {currentStep === 2 && 'Provide your contact information and address'}
-                {currentStep === 3 && 'Create your admin account credentials'}
-                {currentStep === 4 && 'Select your plan and payment method'}
+                {currentStep === 1 && t('signup:tenant.stepDescriptions.company')}
+                {currentStep === 2 && t('signup:tenant.stepDescriptions.contact')}
+                {currentStep === 3 && t('signup:tenant.stepDescriptions.account')}
+                {currentStep === 4 && t('signup:tenant.stepDescriptions.payment')}
               </p>
             </div>
 
@@ -1434,7 +1468,7 @@ const TenantSignup = () => {
                 }`}
               >
                 <ArrowLeft className="h-5 w-5 mr-2" />
-                Previous
+                {t('signup:tenant.navigation.previous')}
               </button>
 
               {currentStep < 4 ? (
@@ -1442,7 +1476,7 @@ const TenantSignup = () => {
                   onClick={nextStep}
                   className="flex items-center px-6 py-3 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-colors"
                 >
-                  Next
+                  {t('signup:tenant.navigation.next')}
                   <ArrowRight className="h-5 w-5 ml-2" />
                 </button>
               ) : (
@@ -1455,12 +1489,12 @@ const TenantSignup = () => {
                     <>
                       <Loader2 className="h-5 w-5 mr-2 animate-spin" />
                       <span className="animate-pulse">
-                        {submitProgress.message || 'Processing...'}
+                        {submitProgress.message || t('signup:tenant.progress.processing')}
                       </span>
                     </>
                   ) : (
                     <>
-                      <span>Create Account</span>
+                      <span>{t('signup:tenant.navigation.createAccount')}</span>
                       <CheckCircle className="h-5 w-5 ml-2" />
                     </>
                   )}

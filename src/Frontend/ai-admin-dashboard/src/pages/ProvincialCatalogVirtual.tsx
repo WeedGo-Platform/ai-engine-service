@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { Upload, AlertCircle, CheckCircle, FileText, Loader2, Search, Filter, Download } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
@@ -166,6 +167,7 @@ const columns = [
 ];
 
 const ProvincialCatalogVirtual: React.FC = () => {
+  const { t } = useTranslation(['catalog', 'common']);
   const { isSuperAdmin } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -260,14 +262,14 @@ const ProvincialCatalogVirtual: React.FC = () => {
   const handleUpload = async () => {
     if (!selectedFile) return;
 
-    setUploadStatus({ type: 'uploading', message: 'Processing file...' });
+    setUploadStatus({ type: 'uploading', message: t('catalog:upload.processingFileShort') });
 
     try {
       const result = await uploadProvincialCatalog(selectedFile, selectedProvince);
       
       setUploadStatus({
         type: 'success',
-        message: result.message || 'Upload successful',
+        message: result.message || t('catalog:upload.uploadSuccessShort'),
         stats: result.stats
       });
 
@@ -282,7 +284,7 @@ const ProvincialCatalogVirtual: React.FC = () => {
     } catch (error: any) {
       setUploadStatus({
         type: 'error',
-        message: error.message || 'Upload failed'
+        message: error.message || t('catalog:upload.uploadFailedShort')
       });
     }
   };
@@ -291,22 +293,22 @@ const ProvincialCatalogVirtual: React.FC = () => {
     <div className="max-w-full mx-auto space-y-6">
       {/* Header */}
       <div className="bg-white  rounded-lg p-6">
-        <h1 className="text-2xl font-bold text-gray-900">Provincial Product Catalog (Virtual Scroll)</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t('catalog:titles.mainVirtual')}</h1>
         <p className="mt-2 text-gray-600">
-          Manage and upload provincial cannabis product catalogs
+          {t('catalog:descriptions.mainVirtual')}
         </p>
       </div>
 
       {/* Upload Section */}
       {canUpload && (
         <div className="bg-white  rounded-lg p-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">Upload Catalog</h2>
+          <h2 className="text-lg font-medium text-gray-900 mb-4">{t('catalog:titles.uploadSection')}</h2>
           
           <div className="space-y-4">
             {/* Province selector */}
             <div className="max-w-xs">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Select Province
+                {t('catalog:descriptions.selectProvince')}
               </label>
               <select
                 value={selectedProvince}
@@ -314,14 +316,14 @@ const ProvincialCatalogVirtual: React.FC = () => {
                 className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                 disabled={uploadStatus.type === 'uploading'}
               >
-                <option value="ON">Ontario (OCS)</option>
+                <option value="ON">{t('catalog:provinces.ontario')}</option>
               </select>
             </div>
 
             {/* File upload */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Upload File
+                {t('catalog:upload.uploadFile')}
               </label>
               <div className="flex items-center space-x-4">
                 <input
@@ -338,7 +340,7 @@ const ProvincialCatalogVirtual: React.FC = () => {
                   className="px-4 py-2 border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Upload className="inline-block w-4 h-4 mr-2" />
-                  Choose File
+                  {t('catalog:upload.chooseFile')}
                 </button>
                 {selectedFile && (
                   <span className="text-sm text-gray-600">
@@ -358,10 +360,10 @@ const ProvincialCatalogVirtual: React.FC = () => {
               {uploadStatus.type === 'uploading' ? (
                 <>
                   <Loader2 className="inline-block w-4 h-4 mr-2 animate-spin" />
-                  Uploading...
+                  {t('catalog:upload.uploading')}
                 </>
               ) : (
-                'Upload Catalog'
+                t('catalog:upload.uploadCatalog')
               )}
             </button>
 
@@ -376,11 +378,11 @@ const ProvincialCatalogVirtual: React.FC = () => {
                     </p>
                     {uploadStatus.stats && (
                       <div className="mt-2 text-sm text-primary-700">
-                        <p>Total records: {uploadStatus.stats.totalRecords}</p>
-                        <p>Inserted: {uploadStatus.stats.inserted}</p>
-                        <p>Updated: {uploadStatus.stats.updated}</p>
+                        <p>{t('catalog:stats.totalRecordsLabel')}: {uploadStatus.stats.totalRecords}</p>
+                        <p>{t('catalog:stats.inserted')}: {uploadStatus.stats.inserted}</p>
+                        <p>{t('catalog:stats.updated')}: {uploadStatus.stats.updated}</p>
                         {uploadStatus.stats.errors > 0 && (
-                          <p className="text-danger-600">Errors: {uploadStatus.stats.errors}</p>
+                          <p className="text-danger-600">{t('catalog:stats.errors')}: {uploadStatus.stats.errors}</p>
                         )}
                       </div>
                     )}
@@ -415,7 +417,7 @@ const ProvincialCatalogVirtual: React.FC = () => {
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search products..."
+                placeholder={t('catalog:search.placeholder')}
                 className="w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-primary-500 focus:border-primary-500"
               />
             </div>
@@ -426,7 +428,7 @@ const ProvincialCatalogVirtual: React.FC = () => {
               onChange={(e) => setSelectedCategory(e.target.value)}
               className="px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-primary-500 focus:border-primary-500 min-w-[150px]"
             >
-              <option value="">All Categories</option>
+              <option value="">{t('catalog:search.allCategories')}</option>
               <option value="Flower">Flower</option>
               <option value="Pre-Rolls">Pre-Rolls</option>
               <option value="Vapes">Vapes</option>
@@ -446,10 +448,10 @@ const ProvincialCatalogVirtual: React.FC = () => {
         <div className="mb-4 flex justify-between items-center">
           <div>
             <h2 className="text-lg font-medium text-gray-900">
-              Catalog Products ({filteredProducts.length} items)
+              {t('catalog:titles.catalogProducts')} ({t('catalog:table.itemsCount', { count: filteredProducts.length })})
             </h2>
             <p className="text-sm text-gray-500 mt-1">
-              Scroll horizontally to view all columns →
+              {t('catalog:descriptions.scrollHint')}
             </p>
           </div>
           <button
@@ -475,7 +477,7 @@ const ProvincialCatalogVirtual: React.FC = () => {
             }}
           >
             <Download className="inline-block w-4 h-4 mr-2" />
-            Export CSV
+            {t('catalog:buttons.exportCsv')}
           </button>
         </div>
 
@@ -485,7 +487,7 @@ const ProvincialCatalogVirtual: React.FC = () => {
           </div>
         ) : filteredProducts.length === 0 ? (
           <div className="text-center py-12 text-gray-500">
-            No products found. Upload a catalog to get started.
+            {t('catalog:table.noProductsUpload')}
           </div>
         ) : (
           <div ref={parentRef} className="border border-gray-200 rounded-lg">

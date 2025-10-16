@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Eye, EyeOff, Lock, AlertCircle, CheckCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import authService from '../services/authService';
 import toast from 'react-hot-toast';
 
@@ -14,6 +15,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
   onClose,
   onSuccess
 }) => {
+  const { t } = useTranslation(['common']);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -26,10 +28,10 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
   // Password strength validation
   const validatePassword = (password: string): string[] => {
     const errors: string[] = [];
-    if (password.length < 8) errors.push('At least 8 characters');
-    if (!/[A-Z]/.test(password)) errors.push('One uppercase letter');
-    if (!/[a-z]/.test(password)) errors.push('One lowercase letter');
-    if (!/[0-9]/.test(password)) errors.push('One number');
+    if (password.length < 8) errors.push(t('common:modals.changePassword.requirements.minLength'));
+    if (!/[A-Z]/.test(password)) errors.push(t('common:modals.changePassword.requirements.uppercase'));
+    if (!/[a-z]/.test(password)) errors.push(t('common:modals.changePassword.requirements.lowercase'));
+    if (!/[0-9]/.test(password)) errors.push(t('common:modals.changePassword.requirements.number'));
     return errors;
   };
 
@@ -46,23 +48,23 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
     const newErrors: { [key: string]: string } = {};
 
     if (!currentPassword) {
-      newErrors.currentPassword = 'Current password is required';
+      newErrors.currentPassword = t('common:modals.changePassword.validation.currentRequired');
     }
 
     if (!newPassword) {
-      newErrors.newPassword = 'New password is required';
+      newErrors.newPassword = t('common:modals.changePassword.validation.newRequired');
     } else if (passwordErrors.length > 0) {
-      newErrors.newPassword = 'Password does not meet requirements';
+      newErrors.newPassword = t('common:modals.changePassword.validation.notMeetRequirements');
     }
 
     if (!confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your new password';
+      newErrors.confirmPassword = t('common:modals.changePassword.validation.confirmRequired');
     } else if (newPassword !== confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+      newErrors.confirmPassword = t('common:modals.changePassword.validation.notMatch');
     }
 
     if (currentPassword && newPassword && currentPassword === newPassword) {
-      newErrors.newPassword = 'New password must be different from current password';
+      newErrors.newPassword = t('common:modals.changePassword.validation.mustBeDifferent');
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -75,7 +77,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
     try {
       await authService.changePassword(currentPassword, newPassword);
 
-      toast.success('Password changed successfully! Please log in again.');
+      toast.success(t('common:toasts.password.changeSuccess'));
 
       // Clear form
       setCurrentPassword('');
@@ -101,7 +103,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
       console.error('Password change error:', error);
 
       if (error.response?.status === 401) {
-        setErrors({ currentPassword: 'Current password is incorrect' });
+        setErrors({ currentPassword: t('common:modals.changePassword.validation.incorrectCurrent') });
       } else if (error.response?.data?.detail) {
         // Handle Pydantic validation errors
         const detail = error.response.data.detail;
@@ -116,7 +118,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
           toast.error(detail);
         }
       } else {
-        toast.error('Failed to change password. Please try again.');
+        toast.error(t('common:toasts.password.changeFailed'));
       }
     } finally {
       setLoading(false);
@@ -144,7 +146,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
             <div className="p-2 bg-primary-100 rounded-lg">
               <Lock className="h-5 w-5 text-primary-600" />
             </div>
-            <h2 className="text-xl font-semibold text-gray-900">Change Password</h2>
+            <h2 className="text-xl font-semibold text-gray-900">{t('common:modals.changePassword.title')}</h2>
           </div>
           <button
             onClick={handleClose}
@@ -160,7 +162,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
           {/* Current Password */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Current Password
+              {t('common:modals.changePassword.currentPassword')}
             </label>
             <div className="relative">
               <input
@@ -171,7 +173,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
                 className={`w-full px-3 py-2 border ${
                   errors.currentPassword ? 'border-red-300' : 'border-gray-300'
                 } rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 pr-10`}
-                placeholder="Enter current password"
+                placeholder={t('common:modals.changePassword.placeholders.currentPassword')}
               />
               <button
                 type="button"
@@ -192,7 +194,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
           {/* New Password */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              New Password
+              {t('common:modals.changePassword.newPassword')}
             </label>
             <div className="relative">
               <input
@@ -203,7 +205,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
                 className={`w-full px-3 py-2 border ${
                   errors.newPassword ? 'border-red-300' : 'border-gray-300'
                 } rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 pr-10`}
-                placeholder="Enter new password"
+                placeholder={t('common:modals.changePassword.placeholders.newPassword')}
               />
               <button
                 type="button"
@@ -223,8 +225,13 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
             {/* Password strength requirements */}
             {newPassword && (
               <div className="mt-2 space-y-1">
-                <p className="text-xs font-medium text-gray-700">Password must contain:</p>
-                {['At least 8 characters', 'One uppercase letter', 'One lowercase letter', 'One number'].map((requirement, index) => {
+                <p className="text-xs font-medium text-gray-700">{t('common:modals.changePassword.requirements.title')}</p>
+                {[
+                  t('common:modals.changePassword.requirements.minLength'),
+                  t('common:modals.changePassword.requirements.uppercase'),
+                  t('common:modals.changePassword.requirements.lowercase'),
+                  t('common:modals.changePassword.requirements.number')
+                ].map((requirement, index) => {
                   const isMet = !passwordErrors.includes(requirement);
                   return (
                     <div key={index} className="flex items-center gap-1 text-xs">
@@ -246,7 +253,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
           {/* Confirm Password */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Confirm New Password
+              {t('common:modals.changePassword.confirmPassword')}
             </label>
             <div className="relative">
               <input
@@ -257,7 +264,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
                 className={`w-full px-3 py-2 border ${
                   errors.confirmPassword ? 'border-red-300' : 'border-gray-300'
                 } rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 pr-10`}
-                placeholder="Confirm new password"
+                placeholder={t('common:modals.changePassword.placeholders.confirmPassword')}
               />
               <button
                 type="button"
@@ -278,7 +285,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
           {/* Security Notice */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
             <p className="text-xs text-blue-800">
-              <strong>Security Notice:</strong> After changing your password, you will be logged out and need to log in again with your new credentials.
+              <strong>Security Notice:</strong> {t('common:modals.changePassword.securityNotice')}
             </p>
           </div>
 
@@ -290,7 +297,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
               disabled={loading}
               className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Cancel
+              {t('common:buttons.cancel')}
             </button>
             <button
               type="submit"
@@ -300,10 +307,10 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
               {loading ? (
                 <>
                   <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Changing...
+                  {t('common:modals.changePassword.changing')}
                 </>
               ) : (
-                'Change Password'
+                t('common:modals.changePassword.title')
               )}
             </button>
           </div>

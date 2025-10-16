@@ -1,7 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Mic, MicOff, Volume2, VolumeX, Upload, Download, AlertCircle, CheckCircle } from 'lucide-react';
 
 const VoiceAPITest: React.FC = () => {
+  const { t } = useTranslation(['tools', 'common']);
+
   // State management
   const [isRecording, setIsRecording] = useState(false);
   const [recordedAudio, setRecordedAudio] = useState<Blob | null>(null);
@@ -32,10 +35,10 @@ const VoiceAPITest: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         setVoices(data.voices || []);
-        setSuccess('Voices fetched successfully');
+        setSuccess(t('tools:voiceApi.messages.voicesFetched'));
         setTimeout(() => setSuccess(''), 3000);
       } else {
-        setError('Failed to fetch voices');
+        setError(t('tools:voiceApi.messages.voicesFailed'));
       }
     } catch (err) {
       console.error('Error fetching voices:', err);
@@ -69,7 +72,7 @@ const VoiceAPITest: React.FC = () => {
         const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
         setRecordedAudio(audioBlob);
         stream.getTracks().forEach(track => track.stop());
-        setSuccess('Recording saved');
+        setSuccess(t('tools:voiceApi.messages.recordingSaved'));
         setTimeout(() => setSuccess(''), 3000);
       };
 
@@ -77,7 +80,7 @@ const VoiceAPITest: React.FC = () => {
       setIsRecording(true);
       setTranscription('');
     } catch (err) {
-      setError('Failed to start recording: ' + (err as Error).message);
+      setError(t('tools:voiceApi.messages.recordingFailed') + ': ' + (err as Error).message);
       console.error('Recording error:', err);
     }
   };
@@ -93,7 +96,7 @@ const VoiceAPITest: React.FC = () => {
   // Test transcription endpoint
   const testTranscription = async () => {
     if (!recordedAudio) {
-      setError('No audio recorded. Please record audio first.');
+      setError(t('tools:voiceApi.transcription.noAudio'));
       return;
     }
 
@@ -118,14 +121,14 @@ const VoiceAPITest: React.FC = () => {
       console.log('Transcription response:', result);
 
       if (response.ok && result.status === 'success') {
-        setTranscription(result.result?.text || 'No transcription available');
-        setSuccess('Transcription completed successfully');
+        setTranscription(result.result?.text || t('tools:voiceApi.transcription.noTranscription'));
+        setSuccess(t('tools:voiceApi.transcription.success'));
         setTimeout(() => setSuccess(''), 3000);
       } else {
-        setError(result.error || 'Transcription failed');
+        setError(result.error || t('tools:voiceApi.messages.transcriptionError'));
       }
     } catch (err) {
-      setError('Transcription error: ' + (err as Error).message);
+      setError(t('tools:voiceApi.messages.transcriptionError') + ': ' + (err as Error).message);
       console.error('Transcription error:', err);
     } finally {
       setIsTranscribing(false);
@@ -135,7 +138,7 @@ const VoiceAPITest: React.FC = () => {
   // Test synthesis endpoint
   const testSynthesis = async () => {
     if (!synthesisText.trim()) {
-      setError('Please enter text to synthesize');
+      setError(t('tools:voiceApi.synthesis.noText'));
       return;
     }
 
@@ -161,14 +164,14 @@ const VoiceAPITest: React.FC = () => {
         const audioBlob = await response.blob();
         const audioUrl = URL.createObjectURL(audioBlob);
         setSynthesizedAudio(audioUrl);
-        setSuccess('Synthesis completed successfully');
+        setSuccess(t('tools:voiceApi.synthesis.success'));
         setTimeout(() => setSuccess(''), 3000);
       } else {
         const error = await response.text();
-        setError('Synthesis failed: ' + error);
+        setError(t('tools:voiceApi.synthesis.failed') + ': ' + error);
       }
     } catch (err) {
-      setError('Synthesis error: ' + (err as Error).message);
+      setError(t('tools:voiceApi.messages.synthesisError') + ': ' + (err as Error).message);
       console.error('Synthesis error:', err);
     } finally {
       setIsSynthesizing(false);
@@ -196,11 +199,11 @@ const VoiceAPITest: React.FC = () => {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">Voice API Test</h1>
+      <h1 className="text-3xl font-bold mb-6">{t('tools:voiceApi.title')}</h1>
 
       {/* API Endpoint Configuration */}
       <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-        <label className="block text-sm font-medium mb-2">API Endpoint</label>
+        <label className="block text-sm font-medium mb-2">{t('tools:voiceApi.apiEndpoint')}</label>
         <input
           type="text"
           value={apiEndpoint}
@@ -227,7 +230,7 @@ const VoiceAPITest: React.FC = () => {
 
       {/* Recording Section */}
       <div className="mb-8 p-6 bg-white border rounded-lg shadow-sm">
-        <h2 className="text-xl font-semibold mb-4">1. Audio Recording</h2>
+        <h2 className="text-xl font-semibold mb-4">{t('tools:voiceApi.recording.title')}</h2>
 
         <div className="flex items-center space-x-4 mb-4">
           <button
@@ -241,12 +244,12 @@ const VoiceAPITest: React.FC = () => {
             {isRecording ? (
               <>
                 <MicOff className="mr-2" size={20} />
-                Stop Recording
+                {t('tools:voiceApi.recording.stop')}
               </>
             ) : (
               <>
                 <Mic className="mr-2" size={20} />
-                Start Recording
+                {t('tools:voiceApi.recording.start')}
               </>
             )}
           </button>
@@ -257,27 +260,27 @@ const VoiceAPITest: React.FC = () => {
               className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg flex items-center"
             >
               <Volume2 className="mr-2" size={20} />
-              Play Recording
+              {t('tools:voiceApi.recording.play')}
             </button>
           )}
         </div>
 
         {isRecording && (
           <div className="text-sm text-gray-600 animate-pulse">
-            Recording in progress...
+            {t('tools:voiceApi.recording.inProgress')}
           </div>
         )}
 
         {recordedAudio && (
           <div className="text-sm text-green-600">
-            Audio recorded and ready for transcription
+            {t('tools:voiceApi.recording.ready')}
           </div>
         )}
       </div>
 
       {/* Transcription Section */}
       <div className="mb-8 p-6 bg-white border rounded-lg shadow-sm">
-        <h2 className="text-xl font-semibold mb-4">2. Test Transcription</h2>
+        <h2 className="text-xl font-semibold mb-4">{t('tools:voiceApi.transcription.title')}</h2>
 
         <button
           onClick={testTranscription}
@@ -289,12 +292,12 @@ const VoiceAPITest: React.FC = () => {
           }`}
         >
           <Upload className="mr-2" size={20} />
-          {isTranscribing ? 'Transcribing...' : 'Transcribe Audio'}
+          {isTranscribing ? t('tools:voiceApi.transcription.buttonLoading') : t('tools:voiceApi.transcription.button')}
         </button>
 
         {transcription && (
           <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-            <h3 className="font-medium mb-2">Transcription Result:</h3>
+            <h3 className="font-medium mb-2">{t('tools:voiceApi.transcription.result')}</h3>
             <p className="text-gray-700">{transcription}</p>
           </div>
         )}
@@ -302,21 +305,21 @@ const VoiceAPITest: React.FC = () => {
 
       {/* Synthesis Section */}
       <div className="mb-8 p-6 bg-white border rounded-lg shadow-sm">
-        <h2 className="text-xl font-semibold mb-4">3. Test Synthesis</h2>
+        <h2 className="text-xl font-semibold mb-4">{t('tools:voiceApi.synthesis.title')}</h2>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-2">Text to Synthesize</label>
+          <label className="block text-sm font-medium mb-2">{t('tools:voiceApi.synthesis.textLabel')}</label>
           <textarea
             value={synthesisText}
             onChange={(e) => setSynthesisText(e.target.value)}
             className="w-full px-3 py-2 border rounded-md"
             rows={3}
-            placeholder="Enter text to convert to speech..."
+            placeholder={t('tools:voiceApi.synthesis.textPlaceholder')}
           />
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-2">Voice</label>
+          <label className="block text-sm font-medium mb-2">{t('tools:voiceApi.synthesis.voiceLabel')}</label>
           <select
             value={selectedVoice}
             onChange={(e) => setSelectedVoice(e.target.value)}
@@ -341,7 +344,7 @@ const VoiceAPITest: React.FC = () => {
             }`}
           >
             <Download className="mr-2" size={20} />
-            {isSynthesizing ? 'Synthesizing...' : 'Synthesize Speech'}
+            {isSynthesizing ? t('tools:voiceApi.synthesis.buttonLoading') : t('tools:voiceApi.synthesis.button')}
           </button>
 
           {synthesizedAudio && (
@@ -350,7 +353,7 @@ const VoiceAPITest: React.FC = () => {
               className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg flex items-center"
             >
               <Volume2 className="mr-2" size={20} />
-              Play Synthesized
+              {t('tools:voiceApi.synthesis.play')}
             </button>
           )}
         </div>
@@ -361,12 +364,12 @@ const VoiceAPITest: React.FC = () => {
 
       {/* Debug Info */}
       <div className="mt-8 p-4 bg-gray-100 rounded-lg">
-        <h3 className="font-medium mb-2">Debug Info</h3>
+        <h3 className="font-medium mb-2">{t('tools:voiceApi.debug.title')}</h3>
         <div className="text-sm text-gray-600 space-y-1">
-          <p>Endpoint: {apiEndpoint}</p>
-          <p>Transcription: {apiEndpoint}/api/voice/transcribe</p>
-          <p>Synthesis: {apiEndpoint}/api/voice/synthesize</p>
-          <p>Voices: {apiEndpoint}/api/voice/voices</p>
+          <p>{t('tools:voiceApi.debug.endpoint')}: {apiEndpoint}</p>
+          <p>{t('tools:voiceApi.debug.transcription')}: {apiEndpoint}/api/voice/transcribe</p>
+          <p>{t('tools:voiceApi.debug.synthesis')}: {apiEndpoint}/api/voice/synthesize</p>
+          <p>{t('tools:voiceApi.debug.voices')}: {apiEndpoint}/api/voice/voices</p>
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { useStoreContext } from '../contexts/StoreContext';
 import { api } from '../services/api';
@@ -143,6 +144,7 @@ interface AnalyticsData {
 }
 
 const Communications: React.FC = () => {
+  const { t } = useTranslation(['communications', 'common', 'errors']);
   const { user, isSuperAdmin, isTenantAdminOnly, isStoreManager } = useAuth();
   const { currentStore } = useStoreContext();
   const navigate = useNavigate();
@@ -198,7 +200,7 @@ const Communications: React.FC = () => {
     } catch (error) {
       console.error('Error fetching communications data:', error);
       console.error('Failed to fetch broadcasts:', error);
-      toast.error('Failed to fetch broadcasts');
+      toast.error(t('communications:messages.error.fetchBroadcasts'));
     } finally {
       setLoading(false);
     }
@@ -216,12 +218,12 @@ const Communications: React.FC = () => {
         }
       });
       if (response.ok) {
-        toast.success('Broadcast execution started');
+        toast.success(t('communications:messages.success.broadcastStarted'));
         setRefreshKey(prev => prev + 1);
       }
     } catch (error) {
       console.error('Failed to fetch broadcasts:', error);
-      toast.error('Failed to fetch broadcasts');
+      toast.error(t('communications:messages.error.fetchBroadcasts'));
     }
   };
 
@@ -237,12 +239,12 @@ const Communications: React.FC = () => {
         }
       });
       if (response.ok) {
-        toast.success('Broadcast paused');
+        toast.success(t('communications:messages.success.broadcastPaused'));
         setRefreshKey(prev => prev + 1);
       }
     } catch (error) {
       console.error('Failed to fetch broadcasts:', error);
-      toast.error('Failed to fetch broadcasts');
+      toast.error(t('communications:messages.error.fetchBroadcasts'));
     }
   };
 
@@ -258,17 +260,17 @@ const Communications: React.FC = () => {
         }
       });
       if (response.ok) {
-        toast.success('Broadcast resumed');
+        toast.success(t('communications:messages.success.broadcastResumed'));
         setRefreshKey(prev => prev + 1);
       }
     } catch (error) {
       console.error('Failed to fetch broadcasts:', error);
-      toast.error('Failed to fetch broadcasts');
+      toast.error(t('communications:messages.error.fetchBroadcasts'));
     }
   };
 
   const handleCancelBroadcast = async (broadcastId: string) => {
-    if (!confirm('Are you sure you want to cancel this broadcast?')) return;
+    if (!confirm(t('communications:confirm.cancelBroadcast'))) return;
 
     try {
       const token = localStorage.getItem('weedgo_auth_access_token');
@@ -281,12 +283,12 @@ const Communications: React.FC = () => {
         }
       });
       if (response.ok) {
-        toast.success('Broadcast cancelled');
+        toast.success(t('communications:messages.success.broadcastCancelled'));
         setRefreshKey(prev => prev + 1);
       }
     } catch (error) {
       console.error('Failed to fetch broadcasts:', error);
-      toast.error('Failed to fetch broadcasts');
+      toast.error(t('communications:messages.error.fetchBroadcasts'));
     }
   };
 
@@ -455,7 +457,7 @@ const Communications: React.FC = () => {
     if (!analyticsData) {
       return (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <p className="text-gray-600">No analytics data available</p>
+          <p className="text-gray-600">{t('communications:descriptions.noAnalytics')}</p>
         </div>
       );
     }
@@ -477,7 +479,7 @@ const Communications: React.FC = () => {
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Total Campaigns</p>
+              <p className="text-sm text-gray-600">{t('communications:stats.totalCampaigns')}</p>
               <p className="text-2xl font-bold text-gray-900">
                 {stats?.total_campaigns || 0}
               </p>
@@ -489,7 +491,7 @@ const Communications: React.FC = () => {
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Messages Sent</p>
+              <p className="text-sm text-gray-600">{t('communications:stats.messagesSent')}</p>
               <p className="text-2xl font-bold text-gray-900">
                 {stats?.total_sent || 0}
               </p>
@@ -501,7 +503,7 @@ const Communications: React.FC = () => {
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Success Rate</p>
+              <p className="text-sm text-gray-600">{t('communications:stats.successRate')}</p>
               <p className="text-2xl font-bold text-gray-900">
                 {stats?.avg_success_rate?.toFixed(1) || 0}%
               </p>
@@ -513,7 +515,7 @@ const Communications: React.FC = () => {
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Failed</p>
+              <p className="text-sm text-gray-600">{t('communications:stats.failed')}</p>
               <p className="text-2xl font-bold text-gray-900">
                 {stats?.total_failed || 0}
               </p>
@@ -526,7 +528,7 @@ const Communications: React.FC = () => {
       {/* Channel Performance */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200">
         <div className="p-6 border-b border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900">Channel Performance</h3>
+          <h3 className="text-lg font-semibold text-gray-900">{t('communications:titles.channelPerformance')}</h3>
         </div>
         <div className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -544,20 +546,20 @@ const Communications: React.FC = () => {
                   </div>
                   <div className="space-y-2">
                     <div className="flex justify-between">
-                      <span className="text-sm text-gray-600">Campaigns</span>
+                      <span className="text-sm text-gray-600">{t('communications:channels.campaigns')}</span>
                       <span className="text-sm font-medium">
                         {channelData?.campaigns_used || 0}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-sm text-gray-600">Messages</span>
+                      <span className="text-sm text-gray-600">{t('communications:channels.messages')}</span>
                       <span className="text-sm font-medium">
                         {channelData?.messages_sent || 0}
                       </span>
                     </div>
                     {channel !== 'sms' && (
                       <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Engagement</span>
+                        <span className="text-sm text-gray-600">{t('communications:channels.engagement')}</span>
                         <span className="text-sm font-medium">
                           {channelData?.avg_engagement_rate?.toFixed(1) || 0}%
                         </span>
@@ -574,12 +576,12 @@ const Communications: React.FC = () => {
       {/* Recent Campaigns */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200">
         <div className="p-6 border-b border-gray-200 flex justify-between items-center">
-          <h3 className="text-lg font-semibold text-gray-900">Recent Campaigns</h3>
+          <h3 className="text-lg font-semibold text-gray-900">{t('communications:titles.recentCampaigns')}</h3>
           <button
             onClick={() => setActiveTab('campaigns')}
             className="text-sm text-purple-600 hover:text-purple-700 font-medium"
           >
-            View All
+            {t('communications:actions.viewAll')}
           </button>
         </div>
         <div className="overflow-x-auto">
@@ -587,19 +589,19 @@ const Communications: React.FC = () => {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Campaign
+                  {t('communications:table.campaign')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
+                  {t('communications:table.status')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Recipients
+                  {t('communications:table.recipients')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Success Rate
+                  {t('communications:table.successRate')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Created
+                  {t('communications:table.created')}
                 </th>
               </tr>
             </thead>
@@ -621,7 +623,7 @@ const Communications: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(broadcast.status)}`}>
                       {getStatusIcon(broadcast.status)}
-                      <span className="capitalize">{broadcast.status}</span>
+                      <span className="capitalize">{t(`communications:status.${broadcast.status}`)}</span>
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -647,13 +649,13 @@ const Communications: React.FC = () => {
   const renderCampaigns = () => (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200">
       <div className="p-6 border-b border-gray-200 flex justify-between items-center">
-        <h3 className="text-lg font-semibold text-gray-900">Broadcast Campaigns</h3>
+        <h3 className="text-lg font-semibold text-gray-900">{t('communications:titles.broadcastCampaigns')}</h3>
         <button
           onClick={() => setShowCreateWizard(true)}
           className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center space-x-2"
         >
           <Plus className="w-4 h-4" />
-          <span>New Campaign</span>
+          <span>{t('communications:actions.newCampaign')}</span>
         </button>
       </div>
       <div className="overflow-x-auto">
@@ -661,22 +663,22 @@ const Communications: React.FC = () => {
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Campaign
+                {t('communications:table.campaign')}
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Status
+                {t('communications:table.status')}
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Channels
+                {t('communications:table.channels')}
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Recipients
+                {t('communications:table.recipients')}
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Scheduled
+                {t('communications:table.scheduled')}
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
+                {t('communications:table.actions')}
               </th>
             </tr>
           </thead>
@@ -694,14 +696,14 @@ const Communications: React.FC = () => {
                       </div>
                     )}
                     <div className="text-xs text-gray-400 mt-1">
-                      Created by {broadcast.created_by_name}
+                      {t('communications:table.createdBy')} {broadcast.created_by_name}
                     </div>
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(broadcast.status)}`}>
                     {getStatusIcon(broadcast.status)}
-                    <span className="capitalize">{broadcast.status}</span>
+                    <span className="capitalize">{t(`communications:status.${broadcast.status}`)}</span>
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
@@ -724,7 +726,7 @@ const Communications: React.FC = () => {
                   </div>
                   {broadcast.successful_sends > 0 && (
                     <div className="text-xs text-gray-500">
-                      {broadcast.successful_sends} sent
+                      {broadcast.successful_sends} {t('communications:table.sentCount')}
                     </div>
                   )}
                 </td>
@@ -736,7 +738,7 @@ const Communications: React.FC = () => {
                     <button
                       onClick={() => navigate(`/dashboard/communications/broadcast/${broadcast.id}`)}
                       className="text-purple-600 hover:text-purple-700"
-                      title="View Details"
+                      title={t('communications:actions.viewDetails')}
                     >
                       <Eye className="w-4 h-4" />
                     </button>
@@ -746,14 +748,14 @@ const Communications: React.FC = () => {
                         <button
                           onClick={() => navigate(`/dashboard/communications/broadcast/${broadcast.id}/edit`)}
                           className="text-blue-600 hover:text-blue-700"
-                          title="Edit"
+                          title={t('communications:actions.edit')}
                         >
                           <Edit className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleExecuteBroadcast(broadcast.id)}
                           className="text-green-600 hover:text-green-700"
-                          title="Send Now"
+                          title={t('communications:actions.sendNow')}
                         >
                           <Play className="w-4 h-4" />
                         </button>
@@ -764,7 +766,7 @@ const Communications: React.FC = () => {
                       <button
                         onClick={() => handleCancelBroadcast(broadcast.id)}
                         className="text-red-600 hover:text-red-700"
-                        title="Cancel"
+                        title={t('communications:actions.cancel')}
                       >
                         <StopCircle className="w-4 h-4" />
                       </button>
@@ -774,7 +776,7 @@ const Communications: React.FC = () => {
                       <button
                         onClick={() => handlePauseBroadcast(broadcast.id)}
                         className="text-orange-600 hover:text-orange-700"
-                        title="Pause"
+                        title={t('communications:actions.pause')}
                       >
                         <Pause className="w-4 h-4" />
                       </button>
@@ -784,7 +786,7 @@ const Communications: React.FC = () => {
                       <button
                         onClick={() => handleResumeBroadcast(broadcast.id)}
                         className="text-green-600 hover:text-green-700"
-                        title="Resume"
+                        title={t('communications:actions.resume')}
                       >
                         <Play className="w-4 h-4" />
                       </button>
@@ -809,8 +811,8 @@ const Communications: React.FC = () => {
               <Send className="w-8 h-8 text-primary-600" />
             </div>
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No Store Selected</h3>
-          <p className="text-gray-500">Please select a store to manage communications</p>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('communications:descriptions.noStoreSelected')}</h3>
+          <p className="text-gray-500">{t('communications:descriptions.selectStore')}</p>
         </div>
       </div>
     );
@@ -829,23 +831,23 @@ const Communications: React.FC = () => {
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Communications</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t('communications:titles.main')}</h1>
           <p className="text-sm text-gray-500 mt-1">
-            Managing communications for {currentStore.name}
+            {t('communications:descriptions.managingFor')} {currentStore.name}
           </p>
         </div>
         <div className="flex items-center space-x-3">
           <button
             onClick={() => setRefreshKey(prev => prev + 1)}
             className="p-2 text-gray-600 hover:text-gray-900"
-            title="Refresh"
+            title={t('communications:actions.refresh')}
           >
             <RefreshCw className="w-5 h-5" />
           </button>
           <button
             onClick={() => navigate('/dashboard/communications/settings')}
             className="p-2 text-gray-600 hover:text-gray-900"
-            title="Settings"
+            title={t('communications:actions.settings')}
           >
             <Settings className="w-5 h-5" />
           </button>
@@ -856,11 +858,11 @@ const Communications: React.FC = () => {
       <div className="border-b border-gray-200">
         <nav className="-mb-px flex space-x-8">
           {[
-            { id: 'overview', label: 'Overview', icon: BarChart3 },
-            { id: 'campaigns', label: 'Campaigns', icon: Send },
-            { id: 'templates', label: 'Templates', icon: FileText },
-            { id: 'segments', label: 'Segments', icon: Users },
-            { id: 'analytics', label: 'Analytics', icon: TrendingUp }
+            { id: 'overview', label: t('communications:tabs.overview'), icon: BarChart3 },
+            { id: 'campaigns', label: t('communications:tabs.campaigns'), icon: Send },
+            { id: 'templates', label: t('communications:tabs.templates'), icon: FileText },
+            { id: 'segments', label: t('communications:tabs.segments'), icon: Users },
+            { id: 'analytics', label: t('communications:tabs.analytics'), icon: TrendingUp }
           ].map((tab) => (
             <button
               key={tab.id}
@@ -889,7 +891,7 @@ const Communications: React.FC = () => {
         )}
         {activeTab === 'segments' && (
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <p className="text-gray-600">Customer segmentation coming soon...</p>
+            <p className="text-gray-600">{t('communications:descriptions.segmentationComingSoon')}</p>
           </div>
         )}
         {activeTab === 'analytics' && renderAnalytics()}

@@ -4,6 +4,7 @@ import {
   Bell, Users, Calendar, DollarSign, AlertCircle, Check,
   Zap
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { useStoreContext } from '../contexts/StoreContext';
 import toast from 'react-hot-toast';
@@ -35,6 +36,7 @@ type WizardStep = 'details' | 'audience' | 'message' | 'schedule' | 'review';
 const BroadcastWizard: React.FC<BroadcastWizardProps> = ({ isOpen, onClose, onComplete }) => {
   const { } = useAuth();
   const { currentStore } = useStoreContext();
+  const { t } = useTranslation(['common']);
   const [currentStep, setCurrentStep] = useState<WizardStep>('details');
   const [loading, setLoading] = useState(false);
   const [segments, setSegments] = useState<Segment[]>([]);
@@ -218,16 +220,16 @@ const BroadcastWizard: React.FC<BroadcastWizardProps> = ({ isOpen, onClose, onCo
 
       if (response.ok) {
         const data = await response.json();
-        toast.success('Broadcast created successfully!');
+        toast.success(t('common:toasts.broadcast.createSuccess'));
         onComplete(data.broadcast.id);
         onClose();
         resetForm();
       } else {
         const error = await response.json();
-        toast.error(error.detail || 'Failed to create broadcast');
+        toast.error(error.detail || t('common:toasts.broadcast.createFailed'));
       }
     } catch (error) {
-      toast.error('Failed to create broadcast');
+      toast.error(t('common:toasts.broadcast.createFailed'));
     } finally {
       setLoading(false);
     }

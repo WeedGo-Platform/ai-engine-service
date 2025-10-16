@@ -1,5 +1,6 @@
 // Enhanced Promotion Wizard with Step-based UI
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Plus, Edit2, Trash2, Calendar, DollarSign,
@@ -56,6 +57,7 @@ interface Promotion {
 }
 
 export default function Promotions() {
+  const { t } = useTranslation(['promotions', 'common', 'errors']);
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState<'create' | 'edit' | 'view'>('create');
   const [selectedPromotion, setSelectedPromotion] = useState<Promotion | null>(null);
@@ -162,11 +164,11 @@ export default function Promotions() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['promotions-v2'] });
       queryClient.invalidateQueries({ queryKey: ['promotion-analytics-v2'] });
-      toast.success('Promotion created successfully!');
+      toast.success(t('promotions:success.created'));
       setShowModal(false);
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.detail || 'Failed to create promotion');
+      toast.error(error.response?.data?.detail || t('promotions:errors.createFailed'));
     }
   });
 
@@ -204,11 +206,11 @@ export default function Promotions() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['promotions-v2'] });
       queryClient.invalidateQueries({ queryKey: ['promotion-analytics-v2'] });
-      toast.success('Promotion updated successfully!');
+      toast.success(t('promotions:success.updated'));
       setShowModal(false);
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.detail || 'Failed to update promotion');
+      toast.error(error.response?.data?.detail || t('promotions:errors.updateFailed'));
     }
   });
 
@@ -220,12 +222,12 @@ export default function Promotions() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['promotions-v2'] });
       queryClient.invalidateQueries({ queryKey: ['promotion-analytics-v2'] });
-      toast.success('Promotion deleted successfully!');
+      toast.success(t('promotions:success.deleted'));
       setShowDeleteDialog(false);
       setPromotionToDelete(null);
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.detail || 'Failed to delete promotion');
+      toast.error(error.response?.data?.detail || t('promotions:errors.deleteFailed'));
     }
   });
 
@@ -249,15 +251,15 @@ export default function Promotions() {
     const end = endDate ? new Date(endDate) : null;
 
     if (!active) {
-      return <span className="px-2 py-1 text-xs rounded-full bg-gray-50 text-gray-600">Inactive</span>;
+      return <span className="px-2 py-1 text-xs rounded-full bg-gray-50 text-gray-600">{t('promotions:status.inactive')}</span>;
     }
     if (now < start) {
-      return <span className="px-2 py-1 text-xs rounded-full bg-warning-100 text-warning-600">Scheduled</span>;
+      return <span className="px-2 py-1 text-xs rounded-full bg-warning-100 text-warning-600">{t('promotions:status.scheduled')}</span>;
     }
     if (end && now > end) {
-      return <span className="px-2 py-1 text-xs rounded-full bg-danger-100 text-danger-600">Expired</span>;
+      return <span className="px-2 py-1 text-xs rounded-full bg-danger-100 text-danger-600">{t('promotions:status.expired')}</span>;
     }
-    return <span className="px-2 py-1 text-xs rounded-full bg-primary-100 text-primary-600">Active</span>;
+    return <span className="px-2 py-1 text-xs rounded-full bg-primary-100 text-primary-600">{t('promotions:status.active')}</span>;
   };
 
   // Show "No Store Selected" UI if no store is selected
@@ -270,8 +272,8 @@ export default function Promotions() {
               <Tag className="w-8 h-8 text-primary-600" />
             </div>
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No Store Selected</h3>
-          <p className="text-gray-500">Please select a store to manage promotions and pricing</p>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('promotions:descriptions.noStoreSelected')}</h3>
+          <p className="text-gray-500">{t('promotions:descriptions.selectStoreForPromotions')}</p>
         </div>
       </div>
     );
@@ -282,8 +284,8 @@ export default function Promotions() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Promotions & Pricing</h1>
-          <p className="text-sm text-gray-500 mt-1">Managing promotions and pricing for {currentStore.name}</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t('promotions:titles.main')}</h1>
+          <p className="text-sm text-gray-500 mt-1">{t('promotions:descriptions.managingFor')} {currentStore.name}</p>
         </div>
         <button
           onClick={() => {
@@ -294,7 +296,7 @@ export default function Promotions() {
           className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
         >
           <Plus className="h-5 w-5 mr-2" />
-          Create New Promotion
+          {t('promotions:actions.createNew')}
         </button>
       </div>
 
@@ -305,7 +307,7 @@ export default function Promotions() {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
             <input
               type="text"
-              placeholder="Search promotions by name or code..."
+              placeholder={t('promotions:search.placeholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
@@ -325,7 +327,7 @@ export default function Promotions() {
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
             }`}
           >
-            Active Promotions
+            {t('promotions:titles.activePromotions')}
           </button>
           <button
             onClick={() => setActiveTab('analytics')}
@@ -335,7 +337,7 @@ export default function Promotions() {
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
             }`}
           >
-            Analytics
+            {t('promotions:titles.analytics')}
           </button>
           <button
             onClick={() => setActiveTab('pricing')}
@@ -345,7 +347,7 @@ export default function Promotions() {
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
             }`}
           >
-            Default Pricing
+            {t('promotions:titles.defaultPricing')}
           </button>
         </nav>
       </div>
@@ -354,32 +356,32 @@ export default function Promotions() {
       {activeTab === 'promotions' && (
         <div className="bg-white  rounded-lg">
           {isLoading ? (
-            <div className="p-8 text-center">Loading promotions...</div>
+            <div className="p-8 text-center">{t('promotions:messages.loading.promotions')}</div>
           ) : (
             <div className="overflow-hidden">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Promotion
+                      {t('promotions:table.promotion')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Code
+                      {t('promotions:table.code')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Discount
+                      {t('promotions:table.discount')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Usage
+                      {t('promotions:table.usage')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Duration
+                      {t('promotions:table.duration')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
+                      {t('promotions:table.status')}
                     </th>
                     <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
+                      {t('promotions:table.actions')}
                     </th>
                   </tr>
                 </thead>
@@ -410,7 +412,7 @@ export default function Promotions() {
                             <button
                               onClick={() => {
                                 navigator.clipboard.writeText(promo.code!);
-                                toast.success('Code copied!');
+                                toast.success(t('promotions:messages.codeCopied'));
                               }}
                               className="ml-2 text-gray-400 hover:text-gray-600"
                             >
@@ -429,7 +431,7 @@ export default function Promotions() {
                         </div>
                         {promo.min_purchase_amount && (
                           <div className="text-xs text-gray-500">
-                            Min: ${promo.min_purchase_amount}
+                            {t('promotions:table.min')}: ${promo.min_purchase_amount}
                           </div>
                         )}
                       </td>
@@ -439,14 +441,14 @@ export default function Promotions() {
                         </div>
                         {promo.usage_limit_per_customer && (
                           <div className="text-xs text-gray-500">
-                            {promo.usage_limit_per_customer} per customer
+                            {promo.usage_limit_per_customer} {t('promotions:table.perCustomer')}
                           </div>
                         )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <div>{format(new Date(promo.start_date), 'MMM d, yyyy')}</div>
                         {promo.end_date && (
-                          <div>to {format(new Date(promo.end_date), 'MMM d, yyyy')}</div>
+                          <div>{t('promotions:table.to')} {format(new Date(promo.end_date), 'MMM d, yyyy')}</div>
                         )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -460,7 +462,7 @@ export default function Promotions() {
                             setShowModal(true);
                           }}
                           className="text-indigo-600 hover:text-indigo-900 mr-3"
-                          title="Edit promotion"
+                          title={t('promotions:actions.edit')}
                         >
                           <Edit2 className="h-4 w-4" />
                         </button>
@@ -470,7 +472,7 @@ export default function Promotions() {
                             setShowDeleteDialog(true);
                           }}
                           className="text-danger-600 hover:text-red-900"
-                          title="Delete promotion"
+                          title={t('promotions:actions.delete')}
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -488,17 +490,17 @@ export default function Promotions() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Top Performing Promotions */}
           <div className="bg-white rounded-lg  p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Performing Promotions</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('promotions:titles.topPerforming')}</h3>
             <div className="space-y-3">
               {analytics.promotions?.slice(0, 5).map((promo: any) => (
                 <div key={promo.name} className="flex justify-between items-center">
                   <div>
                     <div className="text-sm font-medium text-gray-900">{promo.name}</div>
-                    <div className="text-xs text-gray-500">{promo.times_used} uses</div>
+                    <div className="text-xs text-gray-500">{promo.times_used} {t('promotions:table.uses')}</div>
                   </div>
                   <div className="text-right">
                     <div className="text-sm font-medium">${promo.total_revenue?.toFixed(2) || 0}</div>
-                    <div className="text-xs text-gray-500">revenue</div>
+                    <div className="text-xs text-gray-500">{t('promotions:table.revenue')}</div>
                   </div>
                 </div>
               ))}
@@ -507,31 +509,31 @@ export default function Promotions() {
 
           {/* Promotion Stats */}
           <div className="bg-white rounded-lg  p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Overall Stats</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('promotions:titles.overallStats')}</h3>
             <div className="grid grid-cols-2 gap-6">
               <div className="bg-gray-50 rounded-lg p-6">
                 <div className="text-2xl font-bold text-gray-900">
                   {analytics.promotions?.reduce((sum: number, p: any) => sum + (p.times_used || 0), 0) || 0}
                 </div>
-                <div className="text-sm text-gray-600">Total Uses</div>
+                <div className="text-sm text-gray-600">{t('promotions:stats.totalUses')}</div>
               </div>
               <div className="bg-gray-50 rounded-lg p-6">
                 <div className="text-2xl font-bold text-gray-900">
                   ${analytics.promotions?.reduce((sum: number, p: any) => sum + (p.total_discount_given || 0), 0).toFixed(2) || '0.00'}
                 </div>
-                <div className="text-sm text-gray-600">Total Discounts</div>
+                <div className="text-sm text-gray-600">{t('promotions:stats.totalDiscounts')}</div>
               </div>
               <div className="bg-gray-50 rounded-lg p-6">
                 <div className="text-2xl font-bold text-gray-900">
                   ${analytics.promotions?.reduce((sum: number, p: any) => sum + (p.total_revenue || 0), 0).toFixed(2) || '0.00'}
                 </div>
-                <div className="text-sm text-gray-600">Total Revenue</div>
+                <div className="text-sm text-gray-600">{t('promotions:stats.totalRevenue')}</div>
               </div>
               <div className="bg-gray-50 rounded-lg p-6">
                 <div className="text-2xl font-bold text-gray-900">
                   ${analytics.promotions?.[0]?.avg_order_value?.toFixed(2) || '0.00'}
                 </div>
-                <div className="text-sm text-gray-600">Avg Order Value</div>
+                <div className="text-sm text-gray-600">{t('promotions:stats.avgOrderValue')}</div>
               </div>
             </div>
           </div>
@@ -565,9 +567,9 @@ export default function Promotions() {
       {showDeleteDialog && promotionToDelete && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Delete Promotion</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('promotions:titles.deletePromotion')}</h3>
             <p className="text-gray-600 mb-6">
-              Are you sure you want to delete this promotion? This action cannot be undone.
+              {t('promotions:confirm.deletePromotion')}
             </p>
             <div className="flex justify-end space-x-3">
               <button
@@ -577,13 +579,13 @@ export default function Promotions() {
                 }}
                 className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
               >
-                Cancel
+                {t('promotions:actions.cancel')}
               </button>
               <button
                 onClick={() => deletePromotion.mutate(promotionToDelete)}
                 className="px-4 py-2 bg-danger-600 text-white rounded-lg hover:bg-danger-700"
               >
-                Delete
+                {t('promotions:actions.delete')}
               </button>
             </div>
           </div>
@@ -605,6 +607,7 @@ function PromotionModal({
   onClose: () => void;
   onSave: (data: Partial<Promotion>) => void;
 }) {
+  const { t } = useTranslation(['promotions', 'common']);
   const [currentStep, setCurrentStep] = useState(1);
   const { currentStore } = useStoreContext();
   const isEditing = mode === 'edit';
@@ -629,11 +632,11 @@ function PromotionModal({
 
   // Define steps based on role
   const steps = [
-    { id: 1, name: 'Basic Info', description: 'Name and description' },
-    { id: 2, name: 'Discount', description: 'Type and value' },
-    { id: 3, name: 'Scope', description: 'Where and when' },
-    { id: 4, name: 'Settings', description: 'Usage limits' },
-    { id: 5, name: 'Review', description: 'Confirm details' }
+    { id: 1, name: t('promotions:steps.basicInfo.name'), description: t('promotions:steps.basicInfo.description') },
+    { id: 2, name: t('promotions:steps.discount.name'), description: t('promotions:steps.discount.description') },
+    { id: 3, name: t('promotions:steps.scope.name'), description: t('promotions:steps.scope.description') },
+    { id: 4, name: t('promotions:steps.settings.name'), description: t('promotions:steps.settings.description') },
+    { id: 5, name: t('promotions:steps.review.name'), description: t('promotions:steps.review.description') }
   ];
 
   const [formData, setFormData] = useState<Partial<Promotion>>({
@@ -805,7 +808,7 @@ function PromotionModal({
         <div className="p-6 border-b bg-gradient-to-r from-primary-50 to-primary-100">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold text-gray-900">
-              {mode === 'edit' ? 'Edit Promotion' : mode === 'view' ? 'View Promotion' : 'Create New Promotion'}
+              {mode === 'edit' ? t('promotions:titles.editPromotion') : mode === 'view' ? t('promotions:titles.viewPromotion') : t('promotions:titles.createPromotion')}
             </h2>
             <button
               onClick={onClose}
@@ -920,7 +923,7 @@ function PromotionModal({
                   className="flex items-center px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                 >
                   <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back
+                  {t('promotions:actions.back')}
                 </button>
               )}
             </div>
@@ -931,7 +934,7 @@ function PromotionModal({
                 onClick={onClose}
                 className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
               >
-                Cancel
+                {t('promotions:actions.cancel')}
               </button>
 
               {currentStep < 5 ? (
@@ -941,7 +944,7 @@ function PromotionModal({
                   disabled={!isStepValid(currentStep)}
                   className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
                 >
-                  Next
+                  {t('promotions:actions.next')}
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </button>
               ) : (
@@ -949,7 +952,7 @@ function PromotionModal({
                   type="submit"
                   className="px-6 py-2 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-lg hover:from-primary-700 hover:to-primary-800 shadow-sm transition-all"
                 >
-                  {mode === 'edit' ? 'Update' : 'Create'} Promotion
+                  {mode === 'edit' ? t('promotions:actions.update') : t('promotions:actions.create')}
                 </button>
               )}
             </div>
@@ -962,6 +965,7 @@ function PromotionModal({
 
 // Pricing Configuration Component
 function PricingConfiguration() {
+  const { t } = useTranslation(['promotions', 'common']);
   const { currentStore } = useStoreContext();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -1028,13 +1032,13 @@ function PricingConfiguration() {
       return response.data;
     },
     onSuccess: (data) => {
-      toast.success('Default markup settings updated!');
+      toast.success(t('promotions:success.markupUpdated'));
       setSettingsUpdateSuccess(true);
       setTimeout(() => setSettingsUpdateSuccess(false), 3000);
       queryClient.invalidateQueries(['pricing-settings', currentStore?.id]);
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.detail || 'Failed to update settings');
+      toast.error(error.response?.data?.detail || t('promotions:errors.settingsUpdateFailed'));
     }
   });
 
@@ -1119,8 +1123,8 @@ function PricingConfiguration() {
     onSuccess: (data) => {
       // Show success toast with details
       const message = data.products_updated === 1
-        ? `Successfully updated 1 product!`
-        : `Successfully updated ${data.products_updated} products!`;
+        ? t('promotions:success.priceUpdated', { count: 1 })
+        : t('promotions:success.priceUpdatedPlural', { count: data.products_updated });
 
       toast.success(message, {
         duration: 5000,
@@ -1138,7 +1142,7 @@ function PricingConfiguration() {
       }
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.detail || 'Failed to update pricing');
+      toast.error(error.response?.data?.detail || t('promotions:errors.pricingUpdateFailed'));
     }
   });
 
@@ -1163,19 +1167,19 @@ function PricingConfiguration() {
       return response.data;
     },
     onSuccess: () => {
-      toast.success('Price overrides cleared successfully');
+      toast.success(t('promotions:success.overridesCleared'));
       // Trigger success animation
       setUpdateSuccess(true);
       setTimeout(() => setUpdateSuccess(false), 3000);
 
       // Refetch data
-      refetchCategories();
+      refetch();
       if (showProducts && selectedSubSubCategory) {
         refetchProducts();
       }
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.detail || 'Failed to reset price overrides');
+      toast.error(error.response?.data?.detail || t('promotions:errors.resetFailed'));
     }
   });
 
@@ -1202,7 +1206,7 @@ function PricingConfiguration() {
                   selectedCategory ? 'this category' :
                   'ALL products in the store';
 
-    if (window.confirm(`This will remove all price overrides for ${scope} and use the calculated markup. Are you sure?`)) {
+    if (window.confirm(t('promotions:confirm.resetOverrides', { scope }))) {
       resetOverrides.mutate(resetData);
     }
   };
@@ -1229,7 +1233,7 @@ function PricingConfiguration() {
 
     if (!selectedCategory && !selectedSubCategory && !selectedSubSubCategory && !selectedProduct) {
       // Apply to all products - show confirmation
-      if (window.confirm(`This will update the markup for ALL products in the store to ${markupValue}%. Are you sure?`)) {
+      if (window.confirm(t('promotions:confirm.applyAllProducts', { markup: markupValue }))) {
         updatePricing.mutate(updateData);
       }
     } else {
@@ -1293,7 +1297,7 @@ function PricingConfiguration() {
     return (
       <div className="bg-white rounded-lg p-6">
         <div className="text-center text-gray-500">
-          Please select a store to manage pricing
+          {t('promotions:descriptions.selectStoreForPricing')}
         </div>
       </div>
     );
@@ -1303,10 +1307,9 @@ function PricingConfiguration() {
     <div className="space-y-6">
       {/* Header with Instructions */}
       <div className="bg-white rounded-lg p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-2">Default Price Configuration</h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-2">{t('promotions:titles.defaultPriceConfig')}</h2>
         <p className="text-sm text-gray-600 mb-4">
-          Set markup percentages for products by category. The markup is applied to the unit cost to calculate the retail price.
-          More specific settings override general ones (e.g., sub-category overrides category).
+          {t('promotions:descriptions.pricingInstructions')}
         </p>
 
         {/* Store-wide Default Markup Setting */}
@@ -1316,7 +1319,7 @@ function PricingConfiguration() {
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <h3 className="text-sm font-semibold text-gray-900 mb-2 flex items-center">
-                Store-wide Default Markup
+                {t('promotions:titles.storeWideMarkup')}
                 {settingsUpdateSuccess && (
                   <CheckCircle className="ml-2 h-4 w-4 text-green-600 animate-bounce" />
                 )}
@@ -1329,11 +1332,11 @@ function PricingConfiguration() {
                     onChange={(e) => setDefaultMarkupEnabled(e.target.checked)}
                     className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                   />
-                  <span className="ml-2 text-sm text-gray-700">Enable default markup</span>
+                  <span className="ml-2 text-sm text-gray-700">{t('promotions:pricing.enableDefault')}</span>
                 </label>
 
                 <div className="flex items-center space-x-2">
-                  <label className="text-sm text-gray-700">Default:</label>
+                  <label className="text-sm text-gray-700">{t('promotions:pricing.default')}:</label>
                   <input
                     type="number"
                     value={storeDefaultMarkup}
@@ -1354,11 +1357,11 @@ function PricingConfiguration() {
                   disabled={updatePricingSettings.isPending}
                   className="px-3 py-1 text-sm bg-primary-600 text-white rounded hover:bg-primary-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
                 >
-                  {updatePricingSettings.isPending ? 'Saving...' : 'Save Default'}
+                  {updatePricingSettings.isPending ? t('promotions:messages.saving') : t('promotions:actions.saveDefault')}
                 </button>
               </div>
               <p className="mt-2 text-xs text-gray-500">
-                This default markup will be used when calculating prices for new products or when no specific category markup is set.
+                {t('promotions:descriptions.defaultMarkupInfo')}
               </p>
             </div>
           </div>
@@ -1367,7 +1370,7 @@ function PricingConfiguration() {
         {/* Quick Actions */}
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
-            <label className="text-sm font-medium text-gray-700">Quick Set Markup:</label>
+            <label className="text-sm font-medium text-gray-700">{t('promotions:actions.quickSetMarkup')}:</label>
             <button
               onClick={() => setMarkupValue(20)}
               className="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded"
@@ -1378,7 +1381,7 @@ function PricingConfiguration() {
               onClick={() => setMarkupValue(storeDefaultMarkup)}
               className="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded"
             >
-              Default
+              {t('promotions:pricing.default')}
             </button>
             <button
               onClick={() => setMarkupValue(30)}
@@ -1411,7 +1414,7 @@ function PricingConfiguration() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                 <input
                   type="text"
-                  placeholder="Search categories..."
+                  placeholder={t('promotions:search.categories')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
@@ -1421,7 +1424,7 @@ function PricingConfiguration() {
 
             <div className="p-4">
               {isLoading ? (
-                <div className="text-center py-8 text-gray-500">Loading categories...</div>
+                <div className="text-center py-8 text-gray-500">{t('promotions:messages.loading.categories')}</div>
               ) : (
                 <div className="space-y-2">
                   {/* All Products Option */}
@@ -1432,8 +1435,8 @@ function PricingConfiguration() {
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <div className="font-medium text-gray-900">All Products</div>
-                      <div className="text-sm text-gray-500">Store-wide default</div>
+                      <div className="font-medium text-gray-900">{t('promotions:pricing.allProducts')}</div>
+                      <div className="text-sm text-gray-500">{t('promotions:pricing.storeWideDefault')}</div>
                     </div>
                   </div>
 
@@ -1470,17 +1473,17 @@ function PricingConfiguration() {
                               >
                                 <span className="font-medium text-gray-900">{category}</span>
                                 <span className="ml-2 text-sm text-gray-500">
-                                  ({catData.product_count} products)
+                                  ({catData.product_count} {t('promotions:pricing.products')})
                                 </span>
                                 {catData.override_count > 0 && (
                                   <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
-                                    {catData.override_count} overrides
+                                    {catData.override_count} {t('promotions:pricing.overrides')}
                                   </span>
                                 )}
                               </div>
                             </div>
                             <div className="text-sm text-gray-600">
-                              Avg: {Math.round(catData.avg_markup || storeDefaultMarkup)}%
+                              {t('promotions:pricing.avg')}: {Math.round(catData.avg_markup || storeDefaultMarkup)}%
                             </div>
                           </div>
                         </div>
@@ -1570,10 +1573,10 @@ function PricingConfiguration() {
                                             {isSubSubSelected && showProducts && (
                                               <div className="mt-2 ml-4 p-3 bg-gray-50 rounded-lg">
                                                 {productsLoading ? (
-                                                  <div className="text-center py-4 text-sm text-gray-500">Loading products...</div>
+                                                  <div className="text-center py-4 text-sm text-gray-500">{t('promotions:messages.loading.products')}</div>
                                                 ) : productsData && productsData.length > 0 ? (
                                                   <div className="space-y-2">
-                                                    <div className="text-xs font-semibold text-gray-600 mb-2">Products in this category:</div>
+                                                    <div className="text-xs font-semibold text-gray-600 mb-2">{t('promotions:pricing.productsInCategory')}</div>
                                                     {productsData.map((product: any) => {
                                                       const isProductSelected = selectedProduct?.sku === product.sku;
                                                       return (
@@ -1662,7 +1665,7 @@ function PricingConfiguration() {
                                                     })}
                                                   </div>
                                                 ) : (
-                                                  <div className="text-center py-4 text-sm text-gray-500">No products found</div>
+                                                  <div className="text-center py-4 text-sm text-gray-500">{t('promotions:messages.noProducts')}</div>
                                                 )}
                                               </div>
                                             )}
@@ -1691,7 +1694,7 @@ function PricingConfiguration() {
             updateSuccess ? 'ring-4 ring-green-400 ring-opacity-50 scale-[1.02]' : ''
           }`}>
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center justify-between">
-              <span>Apply Markup</span>
+              <span>{t('promotions:titles.applyMarkup')}</span>
               {updateSuccess && (
                 <span className="text-green-600 animate-bounce">
                   <CheckCircle className="h-6 w-6" />
@@ -1708,7 +1711,7 @@ function PricingConfiguration() {
                 : 'bg-gray-50'
             }`}>
               <div className="text-sm text-gray-600 mb-1">
-                {updatePricing.isPending ? 'Updating:' : 'Applying to:'}
+                {updatePricing.isPending ? t('promotions:pricing.updating') : t('promotions:pricing.applyingTo')}
               </div>
               <div className="font-medium text-gray-900">
                 {selectedProduct ? (
@@ -1751,7 +1754,7 @@ function PricingConfiguration() {
                 ) : selectedCategory ? (
                   selectedCategory
                 ) : (
-                  'All Products (Store-wide)'
+                  t('promotions:pricing.allProductsStoreWide')
                 )}
               </div>
             </div>
@@ -1759,7 +1762,7 @@ function PricingConfiguration() {
             {/* Markup Input */}
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Markup Percentage
+                {t('promotions:pricing.markupPercentage')}
               </label>
               <div className="flex items-center space-x-2">
                 <input
@@ -1773,27 +1776,27 @@ function PricingConfiguration() {
                 <span className="text-gray-600">%</span>
               </div>
               <div className="mt-2 text-xs text-gray-500">
-                Retail Price = Cost × (1 + {markupValue}%)
+                {t('promotions:pricing.retailPriceFormula', { markup: markupValue })}
               </div>
             </div>
 
             {/* Price Preview */}
             <div className="mb-6 p-4 bg-blue-50 rounded-lg">
-              <div className="text-sm font-medium text-blue-900 mb-2">Example Calculation:</div>
+              <div className="text-sm font-medium text-blue-900 mb-2">{t('promotions:pricing.exampleCalculation')}</div>
               <div className="text-sm text-blue-700">
                 {selectedProduct && selectedProduct.unit_cost ? (
                   <>
-                    <div>Current cost = ${selectedProduct.unit_cost.toFixed(2)}</div>
-                    <div>Current retail = ${(selectedProduct.override_price || selectedProduct.retail_price)?.toFixed(2) || '0.00'}</div>
+                    <div>{t('promotions:pricing.currentCost')} = ${selectedProduct.unit_cost.toFixed(2)}</div>
+                    <div>{t('promotions:pricing.currentRetail')} = ${(selectedProduct.override_price || selectedProduct.retail_price)?.toFixed(2) || '0.00'}</div>
                     <div className="mt-2 pt-2 border-t border-blue-200">
-                      <div className="font-medium">New pricing with {markupValue}% markup:</div>
-                      <div>New retail price = ${(selectedProduct.unit_cost * (1 + markupValue / 100)).toFixed(2)}</div>
+                      <div className="font-medium">{t('promotions:pricing.newPricing', { markup: markupValue })}</div>
+                      <div>{t('promotions:pricing.newRetailPrice')} = ${(selectedProduct.unit_cost * (1 + markupValue / 100)).toFixed(2)}</div>
                       <div className="mt-1">
-                        Profit margin: ${(selectedProduct.unit_cost * (markupValue / 100)).toFixed(2)} ({markupValue}%)
+                        {t('promotions:pricing.profitMargin')}: ${(selectedProduct.unit_cost * (markupValue / 100)).toFixed(2)} ({markupValue}%)
                       </div>
                       {selectedProduct.retail_price && (
                         <div className="mt-1 text-xs">
-                          Price change: {
+                          {t('promotions:pricing.priceChange')}: {
                             ((selectedProduct.unit_cost * (1 + markupValue / 100)) - selectedProduct.retail_price) > 0
                               ? `+$${((selectedProduct.unit_cost * (1 + markupValue / 100)) - selectedProduct.retail_price).toFixed(2)}`
                               : `-$${Math.abs((selectedProduct.unit_cost * (1 + markupValue / 100)) - selectedProduct.retail_price).toFixed(2)}`
@@ -1804,10 +1807,10 @@ function PricingConfiguration() {
                   </>
                 ) : (
                   <>
-                    <div>If cost = $10.00</div>
-                    <div>Retail price = ${(10 * (1 + markupValue / 100)).toFixed(2)}</div>
+                    <div>{t('promotions:pricing.ifCost')} = $10.00</div>
+                    <div>{t('promotions:pricing.retailPrice')} = ${(10 * (1 + markupValue / 100)).toFixed(2)}</div>
                     <div className="mt-1 font-medium">
-                      Profit margin: ${(10 * (markupValue / 100)).toFixed(2)} ({markupValue}%)
+                      {t('promotions:pricing.profitMargin')}: ${(10 * (markupValue / 100)).toFixed(2)} ({markupValue}%)
                     </div>
                   </>
                 )}
@@ -1829,7 +1832,7 @@ function PricingConfiguration() {
               {updateSuccess ? (
                 <span className="flex items-center justify-center">
                   <CheckCircle className="mr-2 h-5 w-5" />
-                  Updated Successfully!
+                  {t('promotions:messages.updatedSuccessfully')}
                 </span>
               ) : updatePricing.isPending ? (
                 <span className="flex items-center justify-center">
@@ -1837,12 +1840,12 @@ function PricingConfiguration() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                   </svg>
-                  Updating Prices...
+                  {t('promotions:messages.updating')}
                 </span>
               ) : (
                 <span className="flex items-center justify-center">
                   <Percent className="mr-2 h-5 w-5" />
-                  Apply Markup
+                  {t('promotions:actions.applyMarkup')}
                 </span>
               )}
             </button>
@@ -1859,12 +1862,12 @@ function PricingConfiguration() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                   </svg>
-                  Resetting...
+                  {t('promotions:messages.resetting')}
                 </span>
               ) : (
                 <span className="flex items-center justify-center">
                   <RotateCcw className="mr-2 h-5 w-5" />
-                  Reset Overrides
+                  {t('promotions:actions.resetOverrides')}
                 </span>
               )}
             </button>
@@ -1873,7 +1876,7 @@ function PricingConfiguration() {
             {!selectedCategory && !selectedProduct && (
               <div className="mt-4 p-3 bg-warning-50 border border-warning-200 rounded-lg">
                 <div className="text-sm text-warning-800">
-                  <strong>Warning:</strong> This will update pricing for all products in the store.
+                  {t('promotions:warnings.storeWideUpdate')}
                 </div>
               </div>
             )}
@@ -1882,7 +1885,7 @@ function PricingConfiguration() {
             {selectedProduct && (
               <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                 <div className="text-sm text-blue-800">
-                  <strong>Note:</strong> Only this specific product will be updated.
+                  {t('promotions:warnings.singleProductNote')}
                 </div>
               </div>
             )}

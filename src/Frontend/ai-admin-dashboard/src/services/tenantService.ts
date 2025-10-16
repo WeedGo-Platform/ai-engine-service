@@ -16,21 +16,18 @@ export interface Tenant {
   id: string;
   name: string;
   code: string;
-  company_name?: string;
-  business_number?: string;
-  gst_hst_number?: string;
-  address?: Address;
-  contact_email?: string;
-  contact_phone?: string;
-  website?: string;
-  logo_url?: string;
-  status: string;
-  subscription_tier: string;
+  status: 'active' | 'suspended' | 'pending';
+  subscription_tier: 'starter' | 'growth' | 'enterprise';
   max_stores: number;
-  currency: string;
-  settings: Record<string, any>;
+  store_count: number;
+  contact_name: string;
+  contact_email: string;
+  contact_phone: string;
+  address: Address;
+  logo_url?: string;
   created_at: string;
   updated_at: string;
+  province_territory_id: string;
 }
 
 export interface Store {

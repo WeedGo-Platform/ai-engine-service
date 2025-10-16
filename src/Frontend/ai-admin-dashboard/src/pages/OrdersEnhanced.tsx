@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../services/api';
-import { 
-  ShoppingCart, Clock, CheckCircle, XCircle, Package, Truck, 
+import { useTranslation } from 'react-i18next';
+import {
+  ShoppingCart, Clock, CheckCircle, XCircle, Package, Truck,
   CreditCard, Eye, Filter, Search, Calendar, Download, MessageSquare,
   User, AlertCircle, MapPin, Phone, Mail, Cannabis, Timer,
   DollarSign, TrendingUp, Users, BarChart3, Send, Camera,
@@ -86,6 +87,7 @@ interface Driver {
 }
 
 const OrdersEnhanced: React.FC = () => {
+  const { t } = useTranslation(['orders', 'common', 'errors']);
   const queryClient = useQueryClient();
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
   const [selectedType, setSelectedType] = useState<string>('all');
@@ -227,11 +229,11 @@ const OrdersEnhanced: React.FC = () => {
   };
 
   const handleCancelOrder = (order: Order) => {
-    const reason = prompt('Please provide a reason for cancellation:');
+    const reason = prompt(t('orders:prompts.cancelReason'));
     if (reason) {
       updateMutation.mutate({
         id: order.id,
-        updates: { 
+        updates: {
           status: 'cancelled',
           cancelled_reason: reason,
         },
@@ -240,11 +242,11 @@ const OrdersEnhanced: React.FC = () => {
   };
 
   const handleRefund = (order: Order) => {
-    const reason = prompt('Please provide a reason for refund:');
+    const reason = prompt(t('orders:prompts.refundReason'));
     if (reason) {
       updateMutation.mutate({
         id: order.id,
-        updates: { 
+        updates: {
           status: 'refunded',
           payment_status: 'refunded',
           refund_reason: reason,
@@ -262,10 +264,10 @@ const OrdersEnhanced: React.FC = () => {
       'Total': order.total_amount,
       'Date': new Date(order.created_at).toLocaleString(),
     }));
-    
+
     // Convert to CSV and download
     console.log('Exporting orders:', csv);
-    alert('Export functionality would download CSV file');
+    alert(t('orders:messages.exportMessage'));
   };
 
   const metrics = calculateMetrics();
@@ -281,7 +283,7 @@ const OrdersEnhanced: React.FC = () => {
   if (error) {
     return (
       <div className="bg-danger-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-        Error loading orders: {(error as Error).message}
+        {t('orders:messages.loadingError')} {(error as Error).message}
       </div>
     );
   }
@@ -290,11 +292,12 @@ const OrdersEnhanced: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Order Management</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t('orders:titles.management')}</h1>
         <div className="flex gap-2">
           <button
             onClick={() => refetch()}
             className="p-2 bg-white rounded-lg  hover:border border-gray-200"
+            title={t('orders:actions.refresh')}
           >
             <RefreshCw className="h-5 w-5" />
           </button>
@@ -303,7 +306,7 @@ const OrdersEnhanced: React.FC = () => {
             className="px-4 py-2 bg-white rounded-lg  hover:border border-gray-200 flex items-center gap-2"
           >
             <Download className="h-5 w-5" />
-            Export
+            {t('orders:actions.export')}
           </button>
         </div>
       </div>
@@ -313,7 +316,7 @@ const OrdersEnhanced: React.FC = () => {
         <div className="bg-white rounded-lg  p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium text-gray-600">Pending</p>
+              <p className="text-xs font-medium text-gray-600">{t('orders:metrics.pending')}</p>
               <p className="text-2xl font-bold text-warning-600">{metrics.pending}</p>
             </div>
             <Clock className="h-8 w-8 text-warning-600 opacity-20" />
@@ -323,7 +326,7 @@ const OrdersEnhanced: React.FC = () => {
         <div className="bg-white rounded-lg  p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium text-gray-600">Preparing</p>
+              <p className="text-xs font-medium text-gray-600">{t('orders:metrics.preparing')}</p>
               <p className="text-2xl font-bold text-accent-600">{metrics.preparing}</p>
             </div>
             <Package className="h-8 w-8 text-accent-600 opacity-20" />
@@ -333,7 +336,7 @@ const OrdersEnhanced: React.FC = () => {
         <div className="bg-white rounded-lg  p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium text-gray-600">Ready</p>
+              <p className="text-xs font-medium text-gray-600">{t('orders:metrics.ready')}</p>
               <p className="text-2xl font-bold text-primary-600">{metrics.ready}</p>
             </div>
             <CheckCircle className="h-8 w-8 text-primary-600 opacity-20" />
@@ -343,7 +346,7 @@ const OrdersEnhanced: React.FC = () => {
         <div className="bg-white rounded-lg  p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium text-gray-600">Today's Revenue</p>
+              <p className="text-xs font-medium text-gray-600">{t('orders:metrics.todayRevenue')}</p>
               <p className="text-xl font-bold text-primary-600">${(metrics.revenue || 0).toFixed(2)}</p>
             </div>
             <DollarSign className="h-8 w-8 text-primary-600 opacity-20" />
@@ -353,8 +356,8 @@ const OrdersEnhanced: React.FC = () => {
         <div className="bg-white rounded-lg  p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium text-gray-600">Avg Process Time</p>
-              <p className="text-xl font-bold text-gray-700">{metrics.avgTime} min</p>
+              <p className="text-xs font-medium text-gray-600">{t('orders:metrics.avgProcessTime')}</p>
+              <p className="text-xl font-bold text-gray-700">{metrics.avgTime} {t('orders:messages.min')}</p>
             </div>
             <Timer className="h-8 w-8 text-gray-600 opacity-20" />
           </div>
@@ -369,7 +372,7 @@ const OrdersEnhanced: React.FC = () => {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
             <input
               type="text"
-              placeholder="Search by order #, customer, phone..."
+              placeholder={t('orders:messages.searchPlaceholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border rounded-lg"
@@ -382,15 +385,15 @@ const OrdersEnhanced: React.FC = () => {
             onChange={(e) => setSelectedStatus(e.target.value)}
             className="px-4 py-2 border rounded-lg"
           >
-            <option value="all">All Status</option>
-            <option value="pending">Pending</option>
-            <option value="confirmed">Confirmed</option>
-            <option value="preparing">Preparing</option>
-            <option value="ready">Ready</option>
-            <option value="out_for_delivery">Out for Delivery</option>
-            <option value="delivered">Delivered</option>
-            <option value="cancelled">Cancelled</option>
-            <option value="refunded">Refunded</option>
+            <option value="all">{t('orders:status.all')}</option>
+            <option value="pending">{t('orders:status.pending')}</option>
+            <option value="confirmed">{t('orders:status.confirmed')}</option>
+            <option value="preparing">{t('orders:status.preparing')}</option>
+            <option value="ready">{t('orders:status.ready')}</option>
+            <option value="out_for_delivery">{t('orders:status.outForDelivery')}</option>
+            <option value="delivered">{t('orders:status.delivered')}</option>
+            <option value="cancelled">{t('orders:status.cancelled')}</option>
+            <option value="refunded">{t('orders:status.refunded')}</option>
           </select>
 
           {/* Type Filter */}
@@ -399,10 +402,10 @@ const OrdersEnhanced: React.FC = () => {
             onChange={(e) => setSelectedType(e.target.value)}
             className="px-4 py-2 border rounded-lg"
           >
-            <option value="all">All Types</option>
-            <option value="delivery">Delivery</option>
-            <option value="pickup">Pickup</option>
-            <option value="in_store">In-Store</option>
+            <option value="all">{t('orders:orderTypes.all')}</option>
+            <option value="delivery">{t('orders:orderTypes.delivery')}</option>
+            <option value="pickup">{t('orders:orderTypes.pickup')}</option>
+            <option value="in_store">{t('orders:orderTypes.inStore')}</option>
           </select>
 
           {/* Date Range */}
@@ -412,7 +415,7 @@ const OrdersEnhanced: React.FC = () => {
             onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
             className="px-4 py-2 border rounded-lg"
           />
-          <span>to</span>
+          <span>{t('orders:messages.to')}</span>
           <input
             type="date"
             value={dateRange.end}
@@ -436,34 +439,34 @@ const OrdersEnhanced: React.FC = () => {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Order
+                  {t('orders:fields.orderNumber')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Customer
+                  {t('orders:fields.customer')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
+                  {t('orders:fields.status')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Type
+                  {t('orders:fields.type')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Items
+                  {t('orders:fields.items')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Cannabis
+                  {t('orders:fields.cannabis')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Total
+                  {t('orders:fields.total')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Verification
+                  {t('orders:fields.verification')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Time
+                  {t('orders:fields.time')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
+                  {t('orders:fields.actions')}
                 </th>
               </tr>
             </thead>
@@ -688,9 +691,9 @@ const OrdersEnhanced: React.FC = () => {
         {(!orders?.data || orders.data.length === 0) && (
           <div className="text-center py-12">
             <ShoppingCart className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No orders found</h3>
+            <h3 className="mt-2 text-sm font-medium text-gray-900">{t('orders:messages.noOrders')}</h3>
             <p className="mt-1 text-sm text-gray-500">
-              Orders will appear here when customers place them.
+              {t('orders:messages.ordersWillAppear')}
             </p>
           </div>
         )}

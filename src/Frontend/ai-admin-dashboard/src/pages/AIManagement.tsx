@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Bot, Loader2, AlertCircle, CheckCircle, Cpu, Settings, Database, FileCode, ChevronDown, ChevronRight, Eye, Edit, Network, Zap, RefreshCw, Cloud, Monitor } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import toast from 'react-hot-toast';
 import JsonEditor from '../components/JsonEditor';
@@ -13,6 +14,7 @@ interface Model {
 
 const AIManagement: React.FC = () => {
   const { token } = useAuth();
+  const { t } = useTranslation(['common']);
   const [models, setModels] = useState<Model[]>([]);
   const [currentModel, setCurrentModel] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -57,7 +59,7 @@ const AIManagement: React.FC = () => {
       }
     } catch (error) {
       console.error('Error fetching models:', error);
-      toast.error('Failed to fetch models');
+      toast.error(t('common:toasts.model.fetchFailed'));
     }
     setIsLoading(false);
   };
@@ -112,13 +114,13 @@ const AIManagement: React.FC = () => {
           fetchConfiguration();
         }
       } else {
-        setModelError(data.error || 'Failed to load model');
-        toast.error(data.error || 'Failed to load model');
+        setModelError(data.error || t('common:toasts.model.loadFailed'));
+        toast.error(data.error || t('common:toasts.model.loadFailed'));
       }
     } catch (error) {
       console.error('Error loading model:', error);
-      setModelError('Failed to load model');
-      toast.error('Failed to load model');
+      setModelError(t('common:toasts.model.loadFailed'));
+      toast.error(t('common:toasts.model.loadFailed'));
     }
 
     setIsLoadingModel(false);
@@ -142,15 +144,15 @@ const AIManagement: React.FC = () => {
       if (data.status === 'success') {
         setCurrentModel(null);
         setModelLoadStatus('Model unloaded');
-        toast.success('Model unloaded successfully');
+        toast.success(t('common:toasts.model.unloadSuccess'));
       } else {
-        setModelError(data.error || 'Failed to unload model');
-        toast.error(data.error || 'Failed to unload model');
+        setModelError(data.error || t('common:toasts.model.unloadFailed'));
+        toast.error(data.error || t('common:toasts.model.unloadFailed'));
       }
     } catch (error) {
       console.error('Error unloading model:', error);
-      setModelError('Failed to unload model');
-      toast.error('Failed to unload model');
+      setModelError(t('common:toasts.model.unloadFailed'));
+      toast.error(t('common:toasts.model.unloadFailed'));
     }
 
     setIsLoadingModel(false);
@@ -175,7 +177,7 @@ const AIManagement: React.FC = () => {
       setConfiguration(data);
     } catch (error) {
       console.error('Error fetching configuration:', error);
-      toast.error('Failed to fetch configuration');
+      toast.error(t('common:toasts.config.fetchFailed'));
     }
     setIsLoadingConfig(false);
   };
@@ -200,7 +202,7 @@ const AIManagement: React.FC = () => {
       }
     } catch (error) {
       console.error('Error fetching agents:', error);
-      toast.error('Failed to fetch agents');
+      toast.error(t('common:toasts.agent.fetchFailed'));
     }
     setIsLoadingAgents(false);
   };
@@ -224,7 +226,7 @@ const AIManagement: React.FC = () => {
       }
     } catch (error) {
       console.error('Error fetching personalities:', error);
-      toast.error('Failed to fetch personalities');
+      toast.error(t('common:toasts.personality.fetchFailed'));
     }
     setIsLoadingPersonalities(false);
   };
@@ -242,7 +244,7 @@ const AIManagement: React.FC = () => {
       setRouterStats(data);
     } catch (error) {
       console.error('Error fetching router stats:', error);
-      toast.error('Failed to fetch router stats');
+      toast.error(t('common:toasts.router.statsFetchFailed'));
     }
     setIsLoadingRouter(false);
   };
@@ -262,11 +264,11 @@ const AIManagement: React.FC = () => {
         toast.success(data.message || 'Inference mode toggled successfully');
         fetchRouterStats(); // Refresh stats
       } else {
-        toast.error(data.error || 'Failed to toggle inference mode');
+        toast.error(data.error || t('common:toasts.router.toggleFailed'));
       }
     } catch (error) {
       console.error('Error toggling router:', error);
-      toast.error('Failed to toggle inference mode');
+      toast.error(t('common:toasts.router.toggleFailed'));
     }
     setIsTogglingRouter(false);
   };
@@ -327,11 +329,11 @@ const AIManagement: React.FC = () => {
         fetchModelConfig();
         fetchRouterStats();
       } else {
-        toast.error(data.error || 'Failed to update model');
+        toast.error(data.error || t('common:toasts.model.updateFailed'));
       }
     } catch (error) {
       console.error('Error updating model:', error);
-      toast.error('Failed to update model');
+      toast.error(t('common:toasts.model.updateFailed'));
     }
     setIsUpdatingModel(false);
   };
@@ -1177,16 +1179,16 @@ const AIManagement: React.FC = () => {
               const data = await response.json();
 
               if (data.status === 'success') {
-                toast.success('Configuration updated successfully');
+                toast.success(t('common:toasts.config.updateSuccess'));
                 setEditingFile(null);
                 // Refresh configuration to show updated values
                 fetchConfiguration();
               } else {
-                toast.error(data.detail || 'Failed to update configuration');
+                toast.error(data.detail || t('common:toasts.config.updateFailed'));
               }
             } catch (error) {
               console.error('Error saving configuration:', error);
-              toast.error('Failed to save configuration');
+              toast.error(t('common:toasts.config.updateFailed'));
             }
           }}
           onCancel={() => setEditingFile(null)}

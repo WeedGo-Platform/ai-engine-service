@@ -33,6 +33,7 @@ import {
   Save,
   X
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import paymentService from '../services/paymentService';
 import tenantService from '../services/tenantService';
 
@@ -73,9 +74,10 @@ interface PaymentStats {
 }
 
 const TenantPaymentSettings: React.FC = () => {
+  const { t } = useTranslation(['payments', 'common']);
   const { tenantId } = useParams<{ tenantId: string }>();
   const navigate = useNavigate();
-  
+
   const [loading, setLoading] = useState(true);
   const [tenant, setTenant] = useState<any>(null);
   const [providers, setProviders] = useState<PaymentProvider[]>([]);
@@ -109,7 +111,7 @@ const TenantPaymentSettings: React.FC = () => {
       const data = await tenantService.getTenant(tenantId!);
       setTenant(data);
     } catch (err) {
-      setError('Failed to load tenant data');
+      setError(t('payments:settings.notifications.tenantLoadFailed'));
     }
   };
 
@@ -158,7 +160,7 @@ const TenantPaymentSettings: React.FC = () => {
       ];
       setProviders(mockProviders);
     } catch (err) {
-      setError('Failed to load payment providers');
+      setError(t('payments:settings.notifications.providersLoadFailed'));
     } finally {
       setLoading(false);
     }
@@ -188,9 +190,9 @@ const TenantPaymentSettings: React.FC = () => {
     try {
       // API call to test connection
       await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API call
-      setSuccess(`${provider.name} connection test successful`);
+      setSuccess(t('payments:settings.notifications.connectionTestSuccess', { providerName: provider.name }));
     } catch (err) {
-      setError(`${provider.name} connection test failed`);
+      setError(t('payments:settings.notifications.connectionTestFailed', { providerName: provider.name }));
     } finally {
       setIsTestingConnection(false);
     }
@@ -231,7 +233,7 @@ const TenantPaymentSettings: React.FC = () => {
         });
       }
       
-      setSuccess(`Credentials updated successfully for ${selectedProvider.name}`);
+      setSuccess(t('payments:settings.notifications.credentialsUpdated', { providerName: selectedProvider.name }));
       setShowCredentialModal(false);
       
       // Reset form
@@ -250,7 +252,7 @@ const TenantPaymentSettings: React.FC = () => {
       setTimeout(() => setSuccess(null), 3000);
     } catch (err: any) {
       // Handle error properly - extract message from error object
-      let errorMessage = 'Failed to update credentials';
+      let errorMessage = t('payments:settings.notifications.credentialsUpdateFailed');
       if (err.response?.data?.detail) {
         if (typeof err.response.data.detail === 'string') {
           errorMessage = err.response.data.detail;
@@ -319,7 +321,7 @@ const TenantPaymentSettings: React.FC = () => {
           </button>
           <div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Payment Settings
+              {t('payments:settings.title')}
             </h1>
             <p className="text-gray-600 dark:text-gray-400">
               {tenant?.name} - {tenant?.code}
@@ -329,7 +331,7 @@ const TenantPaymentSettings: React.FC = () => {
         <div className="flex gap-2">
           <button className="px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 flex items-center gap-2">
             <Plus className="w-4 h-4" />
-            Add Provider
+            {t('payments:settings.addProvider')}
           </button>
         </div>
       </div>
@@ -339,53 +341,53 @@ const TenantPaymentSettings: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Total Volume</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">{t('payments:settings.stats.totalVolume')}</span>
               <DollarSign className="w-4 h-4 text-primary-500" />
             </div>
             <div className="text-2xl font-bold text-gray-900 dark:text-white">
               ${stats.totalVolume.toLocaleString()}
             </div>
             <div className="text-xs text-gray-500 mt-1">
-              {stats.totalTransactions} transactions
+              {t('payments:settings.stats.transactionsCount', { count: stats.totalTransactions })}
             </div>
           </div>
 
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Success Rate</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">{t('payments:settings.stats.successRate')}</span>
               <TrendingUp className="w-4 h-4 text-accent-500" />
             </div>
             <div className="text-2xl font-bold text-gray-900 dark:text-white">
               {stats.successRate}%
             </div>
             <div className="text-xs text-gray-500 mt-1">
-              Avg ${stats.averageTransaction.toFixed(2)}
+              {t('payments:settings.stats.avgTransaction', { amount: stats.averageTransaction.toFixed(2) })}
             </div>
           </div>
 
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Today's Volume</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">{t('payments:settings.stats.todayVolume')}</span>
               <Activity className="w-4 h-4 text-purple-500" />
             </div>
             <div className="text-2xl font-bold text-gray-900 dark:text-white">
               ${stats.todayVolume.toLocaleString()}
             </div>
             <div className="text-xs text-gray-500 mt-1">
-              Pending: ${stats.pendingSettlement.toFixed(2)}
+              {t('payments:settings.stats.pendingSettlement', { amount: stats.pendingSettlement.toFixed(2) })}
             </div>
           </div>
 
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Net Revenue</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">{t('payments:settings.stats.netRevenue')}</span>
               <Zap className="w-4 h-4 text-yellow-500" />
             </div>
             <div className="text-2xl font-bold text-gray-900 dark:text-white">
               ${stats.netRevenue.toLocaleString()}
             </div>
             <div className="text-xs text-gray-500 mt-1">
-              Fees: ${stats.platformFees.toFixed(2)}
+              {t('payments:settings.stats.platformFees', { amount: stats.platformFees.toFixed(2) })}
             </div>
           </div>
         </div>
@@ -395,11 +397,11 @@ const TenantPaymentSettings: React.FC = () => {
       <div className="border-b border-gray-200 dark:border-gray-700">
         <nav className="flex gap-6">
           {[
-            { id: 'providers', label: 'Providers', icon: CreditCard },
-            { id: 'credentials', label: 'Credentials', icon: Key },
-            { id: 'fees', label: 'Fees & Limits', icon: DollarSign },
-            { id: 'webhooks', label: 'Webhooks', icon: Link },
-            { id: 'analytics', label: 'Analytics', icon: TrendingUp }
+            { id: 'providers', label: t('payments:settings.tabs.providers'), icon: CreditCard },
+            { id: 'credentials', label: t('payments:settings.tabs.credentials'), icon: Key },
+            { id: 'fees', label: t('payments:settings.tabs.feesLimits'), icon: DollarSign },
+            { id: 'webhooks', label: t('payments:settings.tabs.webhooks'), icon: Link },
+            { id: 'analytics', label: t('payments:settings.tabs.analytics'), icon: TrendingUp }
           ].map((tab) => (
             <button
               key={tab.id}
@@ -421,8 +423,8 @@ const TenantPaymentSettings: React.FC = () => {
       <div className="bg-white dark:bg-gray-800 rounded-lg p-6">
         {activeTab === 'providers' && (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold mb-4">Payment Providers</h3>
-            
+            <h3 className="text-lg font-semibold mb-4">{t('payments:settings.providersTab.title')}</h3>
+
             {providers.map((provider) => (
               <div
                 key={provider.id}
@@ -444,12 +446,12 @@ const TenantPaymentSettings: React.FC = () => {
                         {provider.environment === 'production' ? (
                           <span className="flex items-center gap-1">
                             <Globe className="w-3 h-3" />
-                            Production
+                            {t('payments:settings.providersTab.production')}
                           </span>
                         ) : (
                           <span className="flex items-center gap-1">
                             <Server className="w-3 h-3" />
-                            Sandbox
+                            {t('payments:settings.providersTab.sandbox')}
                           </span>
                         )}
                       </div>
@@ -459,10 +461,10 @@ const TenantPaymentSettings: React.FC = () => {
                   <div className="flex items-center gap-6">
                     <div className="text-right">
                       <div className="text-sm text-gray-600 dark:text-gray-400">
-                        Health Status
+                        {t('payments:settings.providersTab.healthStatus')}
                       </div>
                       <div className={`text-sm font-medium ${getStatusColor(provider.healthStatus || 'unknown')}`}>
-                        {provider.healthStatus || 'Unknown'}
+                        {provider.healthStatus || t('payments:settings.providersTab.unknown')}
                       </div>
                     </div>
 
@@ -471,7 +473,7 @@ const TenantPaymentSettings: React.FC = () => {
                         onClick={() => handleTestConnection(provider)}
                         disabled={isTestingConnection}
                         className="p-2 text-gray-600 hover:text-accent-600 dark:text-gray-400 dark:hover:text-blue-400"
-                        title="Test Connection"
+                        title={t('payments:settings.providersTab.testConnection')}
                       >
                         {isTestingConnection ? (
                           <Loader2 className="w-4 h-4 animate-spin" />
@@ -485,13 +487,13 @@ const TenantPaymentSettings: React.FC = () => {
                           setShowCredentialModal(true);
                         }}
                         className="p-2 text-gray-600 hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-400"
-                        title="Configure"
+                        title={t('payments:settings.providersTab.configure')}
                       >
                         <Settings className="w-4 h-4" />
                       </button>
                       <button
                         className="p-2 text-gray-600 hover:text-danger-600 dark:text-gray-400 dark:hover:text-red-400"
-                        title="Remove"
+                        title={t('payments:settings.providersTab.remove')}
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -503,14 +505,14 @@ const TenantPaymentSettings: React.FC = () => {
                   <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
                     <div className="grid grid-cols-3 gap-6 text-sm">
                       <div>
-                        <span className="text-gray-600 dark:text-gray-400">Merchant ID:</span>
+                        <span className="text-gray-600 dark:text-gray-400">{t('payments:settings.providersTab.merchantId')}</span>
                         <span className="ml-2 font-mono text-gray-900 dark:text-white">
                           {provider.merchantId}
                         </span>
                       </div>
                       {provider.lastSync && (
                         <div>
-                          <span className="text-gray-600 dark:text-gray-400">Last Sync:</span>
+                          <span className="text-gray-600 dark:text-gray-400">{t('payments:settings.providersTab.lastSync')}</span>
                           <span className="ml-2 text-gray-900 dark:text-white">
                             {new Date(provider.lastSync).toLocaleDateString()}
                           </span>
@@ -518,7 +520,7 @@ const TenantPaymentSettings: React.FC = () => {
                       )}
                       {provider.credentials?.oauthExpiry && (
                         <div>
-                          <span className="text-gray-600 dark:text-gray-400">OAuth Expires:</span>
+                          <span className="text-gray-600 dark:text-gray-400">{t('payments:settings.providersTab.oauthExpires')}</span>
                           <span className="ml-2 text-gray-900 dark:text-white">
                             {new Date(provider.credentials.oauthExpiry).toLocaleDateString()}
                           </span>
@@ -532,7 +534,7 @@ const TenantPaymentSettings: React.FC = () => {
 
             {providers.length === 0 && (
               <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                No payment providers configured. Add one to start accepting payments.
+                {t('payments:settings.providersTab.noProviders')}
               </div>
             )}
           </div>
@@ -540,14 +542,13 @@ const TenantPaymentSettings: React.FC = () => {
 
         {activeTab === 'credentials' && (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold mb-4">API Credentials</h3>
-            
+            <h3 className="text-lg font-semibold mb-4">{t('payments:settings.credentialsTab.title')}</h3>
+
             <div className="bg-warning-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6">
               <div className="flex gap-2">
                 <Shield className="w-5 h-5 text-warning-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
                 <div className="text-sm text-yellow-700 dark:text-yellow-300">
-                  <strong>Security Notice:</strong> API credentials are encrypted and stored securely. 
-                  Never share your secret keys or access tokens.
+                  <strong>{t('payments:settings.credentialsTab.securityNotice')}</strong> {t('payments:settings.credentialsTab.securityMessage')}
                 </div>
               </div>
             </div>
@@ -565,13 +566,13 @@ const TenantPaymentSettings: React.FC = () => {
                     }}
                     className="text-sm text-accent-600 hover:text-accent-700 dark:text-blue-400"
                   >
-                    Update Credentials
+                    {t('payments:settings.credentialsTab.updateCredentials')}
                   </button>
                 </div>
 
                 <div className="space-y-2">
                   <div className="flex items-center justify-between py-2">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">API Key</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('payments:settings.credentialsTab.apiKey')}</span>
                     <span className="flex items-center gap-2">
                       {provider.credentials?.hasApiKey ? (
                         <CheckCircle className="w-4 h-4 text-primary-500" />
@@ -579,13 +580,13 @@ const TenantPaymentSettings: React.FC = () => {
                         <XCircle className="w-4 h-4 text-red-500" />
                       )}
                       <span className="text-sm">
-                        {provider.credentials?.hasApiKey ? 'Configured' : 'Not configured'}
+                        {provider.credentials?.hasApiKey ? t('payments:settings.credentialsTab.configured') : t('payments:settings.credentialsTab.notConfigured')}
                       </span>
                     </span>
                   </div>
 
                   <div className="flex items-center justify-between py-2">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Secret Key</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('payments:settings.credentialsTab.secretKey')}</span>
                     <span className="flex items-center gap-2">
                       {provider.credentials?.hasSecret ? (
                         <CheckCircle className="w-4 h-4 text-primary-500" />
@@ -593,23 +594,23 @@ const TenantPaymentSettings: React.FC = () => {
                         <XCircle className="w-4 h-4 text-red-500" />
                       )}
                       <span className="text-sm">
-                        {provider.credentials?.hasSecret ? 'Configured' : 'Not configured'}
+                        {provider.credentials?.hasSecret ? t('payments:settings.credentialsTab.configured') : t('payments:settings.credentialsTab.notConfigured')}
                       </span>
                     </span>
                   </div>
 
                   {provider.type === 'clover' && (
                     <div className="flex items-center justify-between py-2">
-                      <span className="text-sm text-gray-600 dark:text-gray-400">OAuth Token</span>
+                      <span className="text-sm text-gray-600 dark:text-gray-400">{t('payments:settings.credentialsTab.oauthToken')}</span>
                       <span className="flex items-center gap-2">
                         {provider.credentials?.hasOAuth ? (
                           <>
                             <CheckCircle className="w-4 h-4 text-primary-500" />
                             <span className="text-sm">
-                              Connected
+                              {t('payments:settings.credentialsTab.connected')}
                               {provider.credentials.oauthExpiry && (
                                 <span className="text-gray-500 ml-1">
-                                  (expires {new Date(provider.credentials.oauthExpiry).toLocaleDateString()})
+                                  ({t('payments:settings.credentialsTab.expires', { date: new Date(provider.credentials.oauthExpiry).toLocaleDateString() })})
                                 </span>
                               )}
                             </span>
@@ -624,7 +625,7 @@ const TenantPaymentSettings: React.FC = () => {
                               }}
                               className="text-sm text-accent-600 hover:text-accent-700"
                             >
-                              Connect with OAuth
+                              {t('payments:settings.credentialsTab.connectOAuth')}
                             </button>
                           </>
                         )}
@@ -639,8 +640,8 @@ const TenantPaymentSettings: React.FC = () => {
 
         {activeTab === 'fees' && (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold mb-4">Fees & Transaction Limits</h3>
-            
+            <h3 className="text-lg font-semibold mb-4">{t('payments:settings.feesTab.title')}</h3>
+
             {providers.map((provider) => (
               <div key={provider.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
                 <h4 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
@@ -650,12 +651,12 @@ const TenantPaymentSettings: React.FC = () => {
                 <div className="grid grid-cols-2 gap-6">
                   <div>
                     <h5 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-                      Platform Fees
+                      {t('payments:settings.feesTab.platformFees')}
                     </h5>
                     <div className="space-y-3">
                       <div>
                         <label className="text-sm text-gray-600 dark:text-gray-400">
-                          Percentage Fee
+                          {t('payments:settings.feesTab.percentageFee')}
                         </label>
                         <div className="flex items-center gap-2 mt-1">
                           <input
@@ -671,7 +672,7 @@ const TenantPaymentSettings: React.FC = () => {
                       </div>
                       <div>
                         <label className="text-sm text-gray-600 dark:text-gray-400">
-                          Fixed Fee
+                          {t('payments:settings.feesTab.fixedFee')}
                         </label>
                         <div className="flex items-center gap-2 mt-1">
                           <span className="text-sm text-gray-600 dark:text-gray-400">$</span>
@@ -689,12 +690,12 @@ const TenantPaymentSettings: React.FC = () => {
 
                   <div>
                     <h5 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-                      Transaction Limits
+                      {t('payments:settings.feesTab.transactionLimits')}
                     </h5>
                     <div className="space-y-3">
                       <div>
                         <label className="text-sm text-gray-600 dark:text-gray-400">
-                          Daily Limit
+                          {t('payments:settings.feesTab.dailyLimit')}
                         </label>
                         <div className="flex items-center gap-2 mt-1">
                           <span className="text-sm text-gray-600 dark:text-gray-400">$</span>
@@ -709,7 +710,7 @@ const TenantPaymentSettings: React.FC = () => {
                       </div>
                       <div>
                         <label className="text-sm text-gray-600 dark:text-gray-400">
-                          Per Transaction Limit
+                          {t('payments:settings.feesTab.perTransactionLimit')}
                         </label>
                         <div className="flex items-center gap-2 mt-1">
                           <span className="text-sm text-gray-600 dark:text-gray-400">$</span>
@@ -728,7 +729,7 @@ const TenantPaymentSettings: React.FC = () => {
 
                 <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                   <button className="px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 text-sm">
-                    Save Changes
+                    {t('payments:settings.feesTab.saveChanges')}
                   </button>
                 </div>
               </div>
@@ -738,13 +739,13 @@ const TenantPaymentSettings: React.FC = () => {
 
         {activeTab === 'webhooks' && (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold mb-4">Webhook Configuration</h3>
-            
+            <h3 className="text-lg font-semibold mb-4">{t('payments:settings.webhooksTab.title')}</h3>
+
             <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
               <div className="flex gap-2">
                 <Info className="w-5 h-5 text-accent-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
                 <div className="text-sm text-accent-700 dark:text-blue-300">
-                  Configure webhook URLs in your payment provider's dashboard to receive real-time payment events.
+                  {t('payments:settings.webhooksTab.infoMessage')}
                 </div>
               </div>
             </div>
@@ -758,7 +759,7 @@ const TenantPaymentSettings: React.FC = () => {
                 <div className="space-y-3">
                   <div>
                     <label className="text-sm text-gray-600 dark:text-gray-400">
-                      Webhook URL
+                      {t('payments:settings.webhooksTab.webhookUrl')}
                     </label>
                     <div className="flex gap-2 mt-1">
                       <input
@@ -782,12 +783,12 @@ const TenantPaymentSettings: React.FC = () => {
 
                   <div>
                     <label className="text-sm text-gray-600 dark:text-gray-400">
-                      Webhook Secret
+                      {t('payments:settings.webhooksTab.webhookSecret')}
                     </label>
                     <div className="flex gap-2 mt-1">
                       <input
                         type="password"
-                        placeholder="Enter webhook signing secret"
+                        placeholder={t('payments:settings.webhooksTab.webhookSecretPlaceholder')}
                         className="flex-1 px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg dark:bg-gray-700"
                       />
                       <button className="px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
@@ -798,10 +799,15 @@ const TenantPaymentSettings: React.FC = () => {
 
                   <div>
                     <label className="text-sm text-gray-600 dark:text-gray-400">
-                      Events to Subscribe
+                      {t('payments:settings.webhooksTab.eventsToSubscribe')}
                     </label>
                     <div className="grid grid-cols-2 gap-2 mt-2">
-                      {['payment.completed', 'payment.failed', 'refund.created', 'dispute.created'].map((event) => (
+                      {[
+                        t('payments:settings.webhooksTab.eventTypes.paymentCompleted'),
+                        t('payments:settings.webhooksTab.eventTypes.paymentFailed'),
+                        t('payments:settings.webhooksTab.eventTypes.refundCreated'),
+                        t('payments:settings.webhooksTab.eventTypes.disputeCreated')
+                      ].map((event) => (
                         <label key={event} className="flex items-center gap-2">
                           <input type="checkbox" className="rounded" defaultChecked />
                           <span className="text-sm">{event}</span>
@@ -817,57 +823,57 @@ const TenantPaymentSettings: React.FC = () => {
 
         {activeTab === 'analytics' && (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold mb-4">Payment Analytics</h3>
-            
+            <h3 className="text-lg font-semibold mb-4">{t('payments:settings.analyticsTab.title')}</h3>
+
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-4">
                 <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Transaction Volume (Last 7 Days)
+                  {t('payments:settings.analyticsTab.transactionVolume')}
                 </h4>
                 <div className="h-48 bg-gray-50 dark:bg-gray-900 rounded-lg flex items-center justify-center">
-                  <span className="text-gray-500 dark:text-gray-400">Chart Placeholder</span>
+                  <span className="text-gray-500 dark:text-gray-400">{t('payments:settings.analyticsTab.chartPlaceholder')}</span>
                 </div>
               </div>
 
               <div className="space-y-4">
                 <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Success Rate by Provider
+                  {t('payments:settings.analyticsTab.successRateByProvider')}
                 </h4>
                 <div className="h-48 bg-gray-50 dark:bg-gray-900 rounded-lg flex items-center justify-center">
-                  <span className="text-gray-500 dark:text-gray-400">Chart Placeholder</span>
+                  <span className="text-gray-500 dark:text-gray-400">{t('payments:settings.analyticsTab.chartPlaceholder')}</span>
                 </div>
               </div>
             </div>
 
             <div className="mt-6">
               <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-                Recent Transactions
+                {t('payments:settings.analyticsTab.recentTransactions')}
               </h4>
               <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
                 <table className="w-full">
                   <thead className="bg-gray-50 dark:bg-gray-900">
                     <tr>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">
-                        Transaction ID
+                        {t('payments:settings.analyticsTab.tableHeaders.transactionId')}
                       </th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">
-                        Amount
+                        {t('payments:settings.analyticsTab.tableHeaders.amount')}
                       </th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">
-                        Provider
+                        {t('payments:settings.analyticsTab.tableHeaders.provider')}
                       </th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">
-                        Status
+                        {t('payments:settings.analyticsTab.tableHeaders.status')}
                       </th>
                       <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400">
-                        Date
+                        {t('payments:settings.analyticsTab.tableHeaders.date')}
                       </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                     <tr>
                       <td colSpan={5} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
-                        No recent transactions
+                        {t('payments:settings.analyticsTab.noRecentTransactions')}
                       </td>
                     </tr>
                   </tbody>
@@ -884,7 +890,7 @@ const TenantPaymentSettings: React.FC = () => {
           <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                Update {selectedProvider.name} Credentials
+                {t('payments:settings.credentialModal.title', { providerName: selectedProvider.name })}
               </h3>
               <button
                 onClick={() => {
@@ -907,43 +913,43 @@ const TenantPaymentSettings: React.FC = () => {
               {/* Environment Selection */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Environment
+                  {t('payments:settings.credentialModal.environment')}
                 </label>
                 <select
                   value={credentialForm.environment}
                   onChange={(e) => setCredentialForm({ ...credentialForm, environment: e.target.value as 'sandbox' | 'production' })}
                   className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 >
-                  <option value="sandbox">Sandbox</option>
-                  <option value="production">Production</option>
+                  <option value="sandbox">{t('payments:settings.credentialModal.environmentOptions.sandbox')}</option>
+                  <option value="production">{t('payments:settings.credentialModal.environmentOptions.production')}</option>
                 </select>
               </div>
 
               {/* API Key */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  API Key
+                  {t('payments:settings.credentialModal.apiKey')}
                 </label>
                 <input
                   type="password"
                   value={credentialForm.apiKey}
                   onChange={(e) => setCredentialForm({ ...credentialForm, apiKey: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  placeholder="Enter API Key"
+                  placeholder={t('payments:settings.credentialModal.apiKeyPlaceholder')}
                 />
               </div>
 
               {/* Secret Key */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Secret Key
+                  {t('payments:settings.credentialModal.secretKey')}
                 </label>
                 <input
                   type="password"
                   value={credentialForm.secret}
                   onChange={(e) => setCredentialForm({ ...credentialForm, secret: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  placeholder="Enter Secret Key"
+                  placeholder={t('payments:settings.credentialModal.secretKeyPlaceholder')}
                 />
               </div>
 
@@ -952,27 +958,27 @@ const TenantPaymentSettings: React.FC = () => {
                 <>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Merchant ID
+                      {t('payments:settings.credentialModal.merchantId')}
                     </label>
                     <input
                       type="text"
                       value={credentialForm.merchantId}
                       onChange={(e) => setCredentialForm({ ...credentialForm, merchantId: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                      placeholder="Enter Merchant ID"
+                      placeholder={t('payments:settings.credentialModal.merchantIdPlaceholder')}
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Access Token (Optional - for OAuth)
+                      {t('payments:settings.credentialModal.accessToken')}
                     </label>
                     <input
                       type="password"
                       value={credentialForm.accessToken}
                       onChange={(e) => setCredentialForm({ ...credentialForm, accessToken: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                      placeholder="Enter Access Token"
+                      placeholder={t('payments:settings.credentialModal.accessTokenPlaceholder')}
                     />
                   </div>
                 </>
@@ -983,8 +989,7 @@ const TenantPaymentSettings: React.FC = () => {
                 <div className="flex gap-2">
                   <Shield className="w-4 h-4 text-warning-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
                   <div className="text-xs text-yellow-700 dark:text-yellow-300">
-                    Credentials are encrypted using AES-256 encryption before storage. 
-                    Make sure you're in a secure environment when entering sensitive data.
+                    {t('payments:settings.credentialModal.securityWarning')}
                   </div>
                 </div>
               </div>
@@ -1004,7 +1009,7 @@ const TenantPaymentSettings: React.FC = () => {
                 }}
                 className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg"
               >
-                Cancel
+                {t('payments:settings.credentialModal.cancel')}
               </button>
               <button
                 onClick={handleUpdateCredentials}
@@ -1014,12 +1019,12 @@ const TenantPaymentSettings: React.FC = () => {
                 {loading ? (
                   <>
                     <RefreshCw className="w-4 h-4 animate-spin" />
-                    Updating...
+                    {t('payments:settings.credentialModal.updating')}
                   </>
                 ) : (
                   <>
                     <Save className="w-4 h-4" />
-                    Update Credentials
+                    {t('payments:settings.credentialModal.updateButton')}
                   </>
                 )}
               </button>

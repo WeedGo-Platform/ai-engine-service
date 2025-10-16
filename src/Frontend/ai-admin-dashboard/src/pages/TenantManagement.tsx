@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import toast from 'react-hot-toast';
 import {
   Building2,
   Plus,
@@ -31,10 +33,13 @@ import tenantService, { Tenant, CreateTenantRequest } from '../services/tenantSe
 import { getApiEndpoint } from '../config/app.config';
 import { useAuth } from '../contexts/AuthContext';
 import TenantEditModal from '../components/TenantEditModal';
+import { useErrorHandler } from '../hooks/useErrorHandler';
 
 const TenantManagement: React.FC = () => {
   const navigate = useNavigate();
   const { user, isSuperAdmin, isTenantAdmin, isStoreManager } = useAuth();
+  const { t } = useTranslation(['tenants', 'errors', 'modals', 'common']);
+  const { handleOperationError, handleErrorSmart } = useErrorHandler();
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -44,8 +49,6 @@ const TenantManagement: React.FC = () => {
   const [editingTenant, setEditingTenant] = useState<Tenant | null>(null);
   const [showTenantModal, setShowTenantModal] = useState(false);
   const [selectedTenant, setSelectedTenant] = useState<Tenant | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
   const [isTenantAdminView, setIsTenantAdminView] = useState(false);
   const [isStoreManagerView, setIsStoreManagerView] = useState(false);
   const [tenantMetrics, setTenantMetrics] = useState<any>(null);
@@ -64,20 +67,6 @@ const TenantManagement: React.FC = () => {
     }
   }, [filterStatus, filterTier, isSuperAdmin, isTenantAdmin, isStoreManager]);
 
-  useEffect(() => {
-    if (success) {
-      const timer = setTimeout(() => setSuccess(null), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [success]);
-
-  useEffect(() => {
-    if (error) {
-      const timer = setTimeout(() => setError(null), 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [error]);
-
   const loadTenantMetrics = async () => {
     try {
       const currentTenantId = user?.tenants?.[0]?.id;
@@ -89,7 +78,7 @@ const TenantManagement: React.FC = () => {
         }
       }
     } catch (err) {
-      console.error('Failed to load tenant metrics:', err);
+      handleOperationError(err, 'load', 'tenant');
     }
   };
 
@@ -104,7 +93,7 @@ const TenantManagement: React.FC = () => {
         setStoreCount({ total: totalStores, active: activeStores });
       }
     } catch (err) {
-      console.error('Failed to load store count:', err);
+      handleOperationError(err, 'load', 'store');
     }
   };
 
@@ -124,32 +113,30 @@ const TenantManagement: React.FC = () => {
               // Load store count for this tenant
               loadStoreCount(tenantData.id);
             } else {
-              setError('Failed to load organization data');
+              toast.error(t('tenants:messages.organizationLoadFailed'));
             }
           } catch (err) {
-            setError('Failed to load organization data');
-            console.error(err);
+            handleOperationError(err, 'load', 'tenant');
           }
         } else {
-          setError('No organization associated with user');
+          toast.error(t('tenants:messages.noOrganization'));
         }
       } else {
         // Super admin can see all tenants
         const params: any = {};
         if (filterStatus !== 'all') params.status = filterStatus;
         if (filterTier !== 'all') params.subscription_tier = filterTier;
-        
+
         const data = await tenantService.getTenants(params);
         setTenants(data);
-        
+
         // Load store count for the first tenant if available
         if (data && data.length > 0) {
           loadStoreCount(data[0].id);
         }
       }
     } catch (err) {
-      setError('Failed to load data');
-      console.error(err);
+      handleOperationError(err, 'load', 'tenant');
     } finally {
       setLoading(false);
     }
@@ -159,11 +146,10 @@ const TenantManagement: React.FC = () => {
     try {
       await tenantService.createTenant(data);
       setShowCreateModal(false);
-      setSuccess('Tenant created successfully');
+      toast.success(t('tenants:messages.created'));
       loadTenants();
     } catch (err) {
-      setError('Failed to create tenant');
-      console.error(err);
+      handleOperationError(err, 'create', 'tenant');
     }
   };
 
@@ -171,10 +157,10 @@ const TenantManagement: React.FC = () => {
     try {
       // Remove the code field from update data as it cannot be changed
       const { code, ...updateData } = data;
-      
+
       // Update tenant basic info first
       await tenantService.updateTenant(id, updateData);
-      
+
       // Upload logo if provided
       if (logoFile) {
         const formData = new FormData();
@@ -187,29 +173,28 @@ const TenantManagement: React.FC = () => {
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.detail || 'Failed to upload logo');
+          throw new Error(errorData.detail || t('tenants:messages.logoUploadFailed'));
         }
 
-        console.log('Logo uploaded successfully');
+        toast.success(t('tenants:messages.logoUploaded'));
       }
-      
+
       setEditingTenant(null);
-      setSuccess('Tenant updated successfully');
+      toast.success(t('tenants:messages.updated'));
       loadTenants();
     } catch (err) {
-      setError('Failed to update tenant');
-      console.error(err);
+      handleOperationError(err, 'update', 'tenant');
     }
   };
 
   const handleSuspendTenant = async (id: string) => {
-    if (window.confirm('Are you sure you want to suspend this tenant?')) {
+    if (window.confirm(t('tenants:confirmations.suspendMessage'))) {
       try {
         await tenantService.suspendTenant(id, 'Admin action');
+        toast.success(t('tenants:messages.suspended'));
         loadTenants();
       } catch (err) {
-        setError('Failed to suspend tenant');
-        console.error(err);
+        handleOperationError(err, 'update', 'tenant');
       }
     }
   };
@@ -217,20 +202,20 @@ const TenantManagement: React.FC = () => {
   const handleReactivateTenant = async (id: string) => {
     try {
       await tenantService.reactivateTenant(id);
+      toast.success(t('tenants:messages.reactivated'));
       loadTenants();
     } catch (err) {
-      setError('Failed to reactivate tenant');
-      console.error(err);
+      handleOperationError(err, 'update', 'tenant');
     }
   };
 
   const handleUpgradeSubscription = async (id: string, newTier: string) => {
     try {
       await tenantService.upgradeTenantSubscription(id, newTier);
+      toast.success(t('tenants:messages.upgraded'));
       loadTenants();
     } catch (err) {
-      setError('Failed to upgrade subscription');
-      console.error(err);
+      handleOperationError(err, 'update', 'tenant');
     }
   };
 
@@ -287,14 +272,14 @@ const TenantManagement: React.FC = () => {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            {isTenantAdminView || isStoreManagerView ? 'Organization Management' : 'Tenant Management'}
+            {isTenantAdminView || isStoreManagerView ? t('tenants:titles.organizationManagement') : t('tenants:titles.management')}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-2">
             {isStoreManagerView
-              ? 'View your organization and manage your store'
+              ? t('tenants:descriptions.viewOrganization')
               : isTenantAdminView
-                ? 'Manage your organization and stores'
-                : 'Manage multi-tenant organizations and subscriptions'}
+                ? t('tenants:descriptions.manageOrganization')
+                : t('tenants:descriptions.manageMultiTenant')}
           </p>
         </div>
         {!isTenantAdminView && !isStoreManagerView && (
@@ -303,7 +288,7 @@ const TenantManagement: React.FC = () => {
             className="flex items-center gap-2 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 transition-colors"
           >
             <Plus className="w-5 h-5" />
-            New Tenant
+            {t('tenants:titles.create')}
           </button>
         )}
       </div>
@@ -313,7 +298,7 @@ const TenantManagement: React.FC = () => {
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{isTenantAdminView ? 'Total Stores' : 'Total Tenants'}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{isTenantAdminView ? t('tenants:metrics.totalStores') : t('tenants:metrics.totalTenants')}</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {isTenantAdminView ? storeCount.total : tenants.length}
               </p>
@@ -325,7 +310,7 @@ const TenantManagement: React.FC = () => {
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{isTenantAdminView ? 'Active Stores' : 'Active'}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{isTenantAdminView ? t('tenants:metrics.activeStores') : t('tenants:status.active')}</p>
               <p className="text-2xl font-bold text-primary-600">
                 {isTenantAdminView ? storeCount.active : tenants.filter(t => t.status === 'active').length}
               </p>
@@ -337,7 +322,7 @@ const TenantManagement: React.FC = () => {
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Enterprise</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{t('tenants:subscription.enterprise')}</p>
               <p className="text-2xl font-bold text-purple-600">
                 {tenants.filter(t => t.subscription_tier === 'enterprise').length}
               </p>
@@ -349,7 +334,7 @@ const TenantManagement: React.FC = () => {
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{isTenantAdminView ? 'Last Month Revenue (All Stores)' : 'Monthly Revenue'}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{isTenantAdminView ? t('tenants:metrics.lastMonthRevenue') : t('tenants:metrics.monthlyRevenue')}</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 ${isTenantAdminView ?
                   (tenantMetrics?.last_month_revenue?.toLocaleString() || '0') :
@@ -379,7 +364,7 @@ const TenantManagement: React.FC = () => {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   type="text"
-                  placeholder="Search tenants..."
+                  placeholder={t('tenants:messages.searchPlaceholder')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
@@ -392,10 +377,10 @@ const TenantManagement: React.FC = () => {
               onChange={(e) => setFilterStatus(e.target.value)}
               className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
             >
-            <option value="all">All Status</option>
-            <option value="active">Active</option>
-            <option value="suspended">Suspended</option>
-            <option value="cancelled">Cancelled</option>
+            <option value="all">{t('tenants:messages.filterByStatus')}</option>
+            <option value="active">{t('tenants:status.active')}</option>
+            <option value="suspended">{t('tenants:status.suspended')}</option>
+            <option value="cancelled">{t('tenants:status.inactive')}</option>
           </select>
 
           <select
@@ -514,7 +499,7 @@ const TenantManagement: React.FC = () => {
                     className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
                   >
                     <Store className="w-4 h-4" />
-                    {isStoreManagerView ? 'View Stores' : 'Manage Stores'}
+                    {isStoreManagerView ? t('tenants:actions.viewStores') : t('tenants:actions.manageStores')}
                   </button>
                   {!isStoreManagerView && (
                     <button
@@ -522,7 +507,7 @@ const TenantManagement: React.FC = () => {
                       className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
                     >
                       <CreditCard className="w-4 h-4" />
-                      Payment Settings
+                      {t('tenants:actions.paymentSettings')}
                     </button>
                   )}
                 </div>
@@ -631,7 +616,7 @@ const TenantManagement: React.FC = () => {
                       <div className="flex items-center gap-2">
                         <Store className="w-4 h-4 text-gray-400" />
                         <span className="text-sm text-gray-900 dark:text-white">
-                          0 / {tenant.max_stores}
+                          {tenant.store_count} / {tenant.max_stores}
                         </span>
                       </div>
                     </td>
@@ -648,14 +633,14 @@ const TenantManagement: React.FC = () => {
                         <button
                           onClick={() => navigate(`/dashboard/tenants/${tenant.code}/stores`)}
                           className="p-1 text-gray-600 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400"
-                          title="Manage Stores"
+                          title={t('tenants:actions.manageStores')}
                         >
                           <Store className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => navigate(`/dashboard/tenants/${tenant.code}/payment-settings`)}
                           className="p-1 text-gray-600 hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-400"
-                          title="Payment Settings"
+                          title={t('tenants:actions.paymentSettings')}
                         >
                           <CreditCard className="w-4 h-4" />
                         </button>
@@ -938,17 +923,17 @@ const TenantFormModal: React.FC<{
 
   const handleDeleteUser = async (userId: string, userEmail: string) => {
     if (!tenant?.id) return;
-    
-    if (!window.confirm(`Are you sure you want to delete user ${userEmail}?`)) return;
-    
+
+    if (!window.confirm(t('common:confirmations.deleteUser', { email: userEmail }))) return;
+
     try {
       const response = await fetch(
         getApiEndpoint(`/tenants/${tenant.id}/users/${userId}`),
         { method: 'DELETE' }
       );
-      if (!response.ok) throw new Error('Failed to delete user');
+      if (!response.ok) throw new Error(t('tenants:messages.deleteFailed'));
       await fetchTenantUsers();
-      setUserSuccess('User deleted successfully');
+      setUserSuccess(t('tenants:userManagement.deleted'));
       setTimeout(() => setUserSuccess(null), 3000);
     } catch (err: any) {
       setUserError(err.message);
@@ -958,7 +943,7 @@ const TenantFormModal: React.FC<{
 
   const handleEditUserRole = async (userId: string, newRole: string) => {
     if (!tenant?.id) return;
-    
+
     try {
       const response = await fetch(
         getApiEndpoint(`/tenants/${tenant.id}/users/${userId}`),
@@ -968,9 +953,9 @@ const TenantFormModal: React.FC<{
           body: JSON.stringify({ role: newRole })
         }
       );
-      if (!response.ok) throw new Error('Failed to update user role');
+      if (!response.ok) throw new Error(t('tenants:messages.updateFailed'));
       await fetchTenantUsers();
-      setUserSuccess('User role updated successfully');
+      setUserSuccess(t('tenants:userManagement.roleUpdated'));
       setTimeout(() => setUserSuccess(null), 3000);
     } catch (err: any) {
       setUserError(err.message);
@@ -981,23 +966,23 @@ const TenantFormModal: React.FC<{
   const handleAddUser = async () => {
     // This would open a modal to add a new user
     // For now, let's create a simple prompt-based implementation
-    const email = window.prompt('Enter user email:');
+    const email = window.prompt(t('tenants:userManagement.enterEmail'));
     if (!email) return;
-    
-    const firstName = window.prompt('Enter first name:');
+
+    const firstName = window.prompt(t('tenants:userManagement.enterFirstName'));
     if (!firstName) return;
-    
-    const lastName = window.prompt('Enter last name:');
+
+    const lastName = window.prompt(t('tenants:userManagement.enterLastName'));
     if (!lastName) return;
-    
-    const role = window.prompt('Enter role (tenant_admin, store_manager, staff):');
+
+    const role = window.prompt(t('tenants:userManagement.enterRole'));
     if (!role || !['tenant_admin', 'store_manager', 'staff'].includes(role)) {
-      alert('Invalid role');
+      alert(t('tenants:userManagement.invalidRole'));
       return;
     }
-    
+
     if (!tenant?.id) return;
-    
+
     try {
       const response = await fetch(
         getApiEndpoint(`/tenants/${tenant.id}/users`),
@@ -1014,10 +999,10 @@ const TenantFormModal: React.FC<{
       );
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.detail || 'Failed to create user');
+        throw new Error(error.detail || t('tenants:messages.createFailed'));
       }
       await fetchTenantUsers();
-      setUserSuccess('User created successfully');
+      setUserSuccess(t('tenants:userManagement.created'));
       setTimeout(() => setUserSuccess(null), 3000);
     } catch (err: any) {
       setUserError(err.message);
@@ -1040,7 +1025,7 @@ const TenantFormModal: React.FC<{
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-6xl max-h-[90vh] overflow-y-auto">
         <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
-          {tenant ? 'Edit Tenant' : 'Create New Tenant'}
+          {tenant ? t('tenants:titles.edit') : t('tenants:titles.create')}
         </h2>
         
         {/* Tab Navigation */}
@@ -1590,25 +1575,25 @@ const TenantFormModal: React.FC<{
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Analytics Integrations</h3>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Google Analytics ID
+                  {t('tenants:seo.googleAnalytics')}
                 </label>
                 <input
                   type="text"
                   value={settings.analytics.google_analytics_id}
                   onChange={(e) => setSettings({ ...settings, analytics: { ...settings.analytics, google_analytics_id: e.target.value }})}
-                  placeholder="G-XXXXXXXXXX"
+                  placeholder={t('tenants:seo.googleAnalyticsPlaceholder')}
                   className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Facebook Pixel ID
+                  {t('tenants:seo.facebookPixel')}
                 </label>
                 <input
                   type="text"
                   value={settings.analytics.facebook_pixel_id}
                   onChange={(e) => setSettings({ ...settings, analytics: { ...settings.analytics, facebook_pixel_id: e.target.value }})}
-                  placeholder="XXXXXXXXXXXXXXX"
+                  placeholder={t('tenants:seo.facebookPixelPlaceholder')}
                   className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                 />
               </div>
@@ -1986,28 +1971,28 @@ const TenantFormModal: React.FC<{
           {/* SEO Tab */}
           {activeTab === 'seo' && (
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">SEO Settings</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t('tenants:seo.title')}</h3>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Meta Title
+                  {t('tenants:seo.metaTitle')}
                 </label>
                 <input
                   type="text"
                   value={settings.seo.meta_title}
                   onChange={(e) => setSettings({ ...settings, seo: { ...settings.seo, meta_title: e.target.value }})}
-                  placeholder="Your store title for search engines"
+                  placeholder={t('tenants:seo.metaTitlePlaceholder')}
                   className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Meta Description
+                  {t('tenants:seo.metaDescription')}
                 </label>
                 <textarea
                   value={settings.seo.meta_description}
                   onChange={(e) => setSettings({ ...settings, seo: { ...settings.seo, meta_description: e.target.value }})}
                   rows={3}
-                  placeholder="Brief description of your store for search results"
+                  placeholder={t('tenants:seo.metaDescriptionPlaceholder')}
                   className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                 />
               </div>
@@ -2024,13 +2009,13 @@ const TenantFormModal: React.FC<{
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Robots.txt Content
+                  {t('tenants:seo.robotsTxt')}
                 </label>
                 <textarea
                   value={settings.seo.robots_txt}
                   onChange={(e) => setSettings({ ...settings, seo: { ...settings.seo, robots_txt: e.target.value }})}
                   rows={4}
-                  placeholder="User-agent: *&#10;Disallow: /admin&#10;Allow: /"
+                  placeholder={t('tenants:seo.robotsTxtPlaceholder')}
                   className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white font-mono text-sm"
                 />
               </div>

@@ -18,6 +18,7 @@ import {
   Box,
   Building2
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { api } from '../services/api';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useStoreContext } from '../contexts/StoreContext';
@@ -84,6 +85,7 @@ interface InventoryItem {
 }
 
 const Inventory: React.FC = () => {
+  const { t } = useTranslation(['inventory', 'common', 'errors']);
   const [filters, setFilters] = usePersistentFilters('inventory', {
     searchTerm: '',
     category: 'all',
@@ -217,13 +219,13 @@ const Inventory: React.FC = () => {
     <div className="h-full flex flex-col space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center flex-shrink-0">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Inventory Management</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('inventory:titles.management')}</h1>
         <button
           onClick={() => setShowCreateModal(true)}
           className="flex items-center gap-2 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 transition-colors"
         >
           <Plus className="w-5 h-5" />
-          Add Product
+          {t('inventory:actions.addItem')}
         </button>
       </div>
 
@@ -232,7 +234,7 @@ const Inventory: React.FC = () => {
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Total Products</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{t('inventory:metrics.totalProducts')}</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {stats.totalItems}
               </p>
@@ -244,7 +246,7 @@ const Inventory: React.FC = () => {
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">In Stock</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{t('inventory:metrics.inStock')}</p>
               <p className="text-2xl font-bold text-primary-600">
                 {stats.inStock}
               </p>
@@ -256,7 +258,7 @@ const Inventory: React.FC = () => {
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Low Stock</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{t('inventory:metrics.lowStock')}</p>
               <p className="text-2xl font-bold text-warning-600">
                 {stats.lowStock}
               </p>
@@ -268,7 +270,7 @@ const Inventory: React.FC = () => {
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Total Value</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{t('inventory:metrics.totalValue')}</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 ${stats.totalValue.toLocaleString()}
               </p>
@@ -286,7 +288,7 @@ const Inventory: React.FC = () => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="text"
-                placeholder="Search products, SKU, or batch/lot..."
+                placeholder={t('inventory:messages.searchPlaceholder')}
                 value={filters.searchTerm}
                 onChange={(e) => setFilters(prev => ({ ...prev, searchTerm: e.target.value }))}
                 className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
@@ -299,13 +301,13 @@ const Inventory: React.FC = () => {
             onChange={(e) => setFilters(prev => ({ ...prev, category: e.target.value }))}
             className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
           >
-            <option value="all">All Categories</option>
-            <option value="flower">Flower</option>
-            <option value="pre-rolls">Pre-Rolls</option>
-            <option value="edibles">Edibles</option>
-            <option value="concentrates">Concentrates</option>
-            <option value="topicals">Topicals</option>
-            <option value="accessories">Accessories</option>
+            <option value="all">{t('inventory:categories.all')}</option>
+            <option value="flower">{t('inventory:categories.flower')}</option>
+            <option value="pre-rolls">{t('inventory:categories.preRolls')}</option>
+            <option value="edibles">{t('inventory:categories.edibles')}</option>
+            <option value="concentrates">{t('inventory:categories.concentrates')}</option>
+            <option value="topicals">{t('inventory:categories.topicals')}</option>
+            <option value="accessories">{t('inventory:categories.accessories')}</option>
           </select>
 
           <select
@@ -313,10 +315,10 @@ const Inventory: React.FC = () => {
             onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
             className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
           >
-            <option value="all">All Status</option>
-            <option value="in_stock">In Stock</option>
-            <option value="low_stock">Low Stock</option>
-            <option value="out_of_stock">Out of Stock</option>
+            <option value="all">{t('inventory:status.all')}</option>
+            <option value="in_stock">{t('inventory:status.inStock')}</option>
+            <option value="low_stock">{t('inventory:status.lowStock')}</option>
+            <option value="out_of_stock">{t('inventory:status.outOfStock')}</option>
           </select>
         </div>
       </div>
@@ -344,25 +346,25 @@ const Inventory: React.FC = () => {
             <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600 sticky top-0 z-10">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Product
+                  {t('inventory:fields.product')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  SKU
+                  {t('inventory:fields.sku')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Batch/Lot
+                  {t('inventory:fields.batchLot')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Available
+                  {t('inventory:fields.available')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Price
+                  {t('inventory:fields.price')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Status
+                  {t('inventory:fields.status')}
                 </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Actions
+                  {t('inventory:actions.label')}
                 </th>
               </tr>
             </thead>
@@ -370,13 +372,13 @@ const Inventory: React.FC = () => {
               {isLoading ? (
                 <tr>
                   <td colSpan={7} className="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
-                    Loading inventory...
+                    {t('inventory:messages.loading')}
                   </td>
                 </tr>
               ) : filteredItems.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
-                    No inventory items found
+                    {t('inventory:messages.noItems')}
                   </td>
                 </tr>
               ) : (
@@ -468,83 +470,83 @@ const Inventory: React.FC = () => {
                                 <div key={batchIndex} className="border-b border-gray-200 dark:border-gray-600 last:border-0 pb-4 last:pb-0">
                                   {item.batch_details.length > 1 && (
                                     <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-                                      Batch {batchIndex + 1} of {item.batch_details.length}
+                                      {t('inventory:fields.batchCount', { current: batchIndex + 1, total: item.batch_details.length })}
                                     </div>
                                   )}
                                   <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                                     <div>
-                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Batch/Lot Number</div>
+                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{t('inventory:fields.batchLot')}</div>
                                       <div className="text-sm text-gray-900 dark:text-white font-mono">
                                         {batch.batch_lot}
                                       </div>
                                     </div>
                                     <div>
-                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Packaged On</div>
+                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{t('inventory:fields.packagedOn')}</div>
                                       <div className="text-sm text-gray-900 dark:text-white">
                                         {batch.packaged_on_date ?
                                           new Date(batch.packaged_on_date).toLocaleDateString() :
-                                          'Not specified'}
+                                          t('common:notSpecified')}
                                       </div>
                                     </div>
                                     <div>
-                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Supplier</div>
+                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{t('inventory:fields.supplier')}</div>
                                       <div className="text-sm text-gray-900 dark:text-white">
-                                        {batch.supplier_name || 'Unknown'}
+                                        {batch.supplier_name || t('common:unknown')}
                                       </div>
                                     </div>
                                     <div>
-                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Case GTIN</div>
+                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{t('inventory:fields.caseGtin')}</div>
                                       <div className="text-sm text-gray-900 dark:text-white font-mono">
-                                        {batch.case_gtin || 'Not specified'}
+                                        {batch.case_gtin || t('common:notSpecified')}
                                       </div>
                                     </div>
                                     <div>
-                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Each GTIN</div>
+                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{t('inventory:fields.eachGtin')}</div>
                                       <div className="text-sm text-gray-900 dark:text-white font-mono">
-                                        {batch.each_gtin || 'Not specified'}
+                                        {batch.each_gtin || t('common:notSpecified')}
                                       </div>
                                     </div>
                                     <div>
-                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">GTIN Barcode</div>
+                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{t('inventory:fields.gtinBarcode')}</div>
                                       <div className="text-sm text-gray-900 dark:text-white font-mono text-xs">
-                                        {batch.gtin_barcode || 'Not specified'}
+                                        {batch.gtin_barcode || t('common:notSpecified')}
                                       </div>
                                     </div>
                                     <div>
-                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Vendor</div>
+                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{t('inventory:fields.vendor')}</div>
                                       <div className="text-sm text-gray-900 dark:text-white">
-                                        {batch.vendor || 'Not specified'}
+                                        {batch.vendor || t('common:notSpecified')}
                                       </div>
                                     </div>
                                     <div>
-                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Brand</div>
+                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{t('inventory:fields.brand')}</div>
                                       <div className="text-sm text-gray-900 dark:text-white">
-                                        {batch.brand || item.brand || 'Not specified'}
+                                        {batch.brand || item.brand || t('common:notSpecified')}
                                       </div>
                                     </div>
                                     <div>
-                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Quantity Remaining</div>
+                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{t('inventory:fields.quantityRemaining')}</div>
                                       <div className="text-sm text-gray-900 dark:text-white">
-                                        {batch.quantity_remaining || 0} units
+                                        {batch.quantity_remaining || 0} {t('inventory:fields.units')}
                                       </div>
                                     </div>
                                     <div>
-                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Unit Cost</div>
+                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{t('inventory:fields.unitCost')}</div>
                                       <div className="text-sm text-gray-900 dark:text-white">
                                         ${parseFloat(batch.unit_cost || 0).toFixed(2)}
                                       </div>
                                     </div>
                                     <div>
-                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">PO Number</div>
+                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{t('inventory:fields.poNumber')}</div>
                                       <div className="text-sm text-gray-900 dark:text-white font-mono">
-                                        {batch.po_number || 'N/A'}
+                                        {batch.po_number || t('common:na')}
                                       </div>
                                     </div>
                                     <div>
-                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">THC/CBD</div>
+                                      <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{t('inventory:fields.thcCbd')}</div>
                                       <div className="text-sm text-gray-900 dark:text-white">
-                                        THC: {item.thc_content || 0}% /
-                                        CBD: {item.cbd_content || 0}%
+                                        {t('inventory:fields.thcLabel')}: {item.thc_content || 0}% /
+                                        {t('inventory:fields.cbdLabel')}: {item.cbd_content || 0}%
                                       </div>
                                     </div>
                                   </div>
@@ -554,15 +556,15 @@ const Inventory: React.FC = () => {
                           ) : (
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                               <div>
-                                <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Batch/Lot Number</div>
+                                <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{t('inventory:fields.batchLot')}</div>
                                 <div className="text-sm text-gray-900 dark:text-white font-mono">
                                   {item.batch_lot}
                                 </div>
                               </div>
                               <div>
-                                <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">No batch details available</div>
+                                <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">{t('inventory:messages.noBatchDetails')}</div>
                                 <div className="text-sm text-gray-500 dark:text-gray-400">
-                                  Batch tracking data not found
+                                  {t('inventory:messages.batchTrackingNotFound')}
                                 </div>
                               </div>
                             </div>
@@ -589,7 +591,7 @@ const Inventory: React.FC = () => {
           }}
           onSave={(updatedItem) => {
             queryClient.invalidateQueries({ queryKey: ['inventory'] });
-            setSuccess('Inventory item updated successfully');
+            setSuccess(t('inventory:messages.updateSuccess'));
             setShowEditModal(false);
             setEditingItem(null);
           }}

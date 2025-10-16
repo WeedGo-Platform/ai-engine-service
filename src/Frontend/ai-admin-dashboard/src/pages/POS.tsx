@@ -9,6 +9,7 @@ import {
   Maximize2, Minimize2
 } from 'lucide-react';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 import PaymentModal from '../components/pos/PaymentModal';
 import { getApiEndpoint } from '../config/app.config';
 import CustomerModal from '../components/pos/CustomerModal';
@@ -258,6 +259,9 @@ export default function POS({
   // Get store context
   const { currentStore } = useStoreContext();
 
+  // Translation hook
+  const { t } = useTranslation(['pos', 'common', 'errors']);
+
   // State management
   const [activeTab, setActiveTab] = useState<'sale' | 'history' | 'parked' | 'settings'>('sale');
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -486,13 +490,13 @@ export default function POS({
     try {
       const response = await axios.get(getApiEndpoint(`/hardware/scanners/${scannerId}/test`));
       if (response.data.success) {
-        alert(`Scanner test successful! Test barcode: ${response.data.test_barcode}`);
+        alert(`${t('pos:messages.scannerTestSuccess')} ${response.data.test_barcode}`);
       } else {
-        alert('Scanner test failed');
+        alert(t('pos:messages.scannerTestFailed'));
       }
     } catch (error) {
       console.error('Failed to test scanner:', error);
-      alert('Failed to test scanner');
+      alert(t('pos:messages.scannerTestError'));
     } finally {
       setTestingScanner(null);
     }
@@ -592,11 +596,11 @@ export default function POS({
             // Clear search term after barcode scan
             setSearchTerm('');
           } else {
-            alert(`Product not found for barcode: ${barcodeInput}`);
+            alert(`${t('pos:messages.productNotFound')} ${barcodeInput}`);
           }
         } catch (error) {
           console.error('Error searching for product:', error);
-          alert(`Product not found for barcode: ${barcodeInput}`);
+          alert(`${t('pos:messages.productNotFound')} ${barcodeInput}`);
         } finally {
           setBarcodeInput('');
         }
@@ -770,10 +774,10 @@ export default function POS({
       await fetchParkedOrders();
       setCart([]);
       setCustomer(null);
-      alert('Sale parked successfully!');
+      alert(t('pos:messages.saleParkedSuccess'));
     } catch (error) {
       console.error('Failed to park transaction:', error);
-      alert('Failed to park sale. Please try again.');
+      alert(t('pos:messages.saleParkedFailed'));
     } finally {
       setTransactionLoading(false);
     }
@@ -800,7 +804,7 @@ export default function POS({
       setActiveTab('sale');
     } catch (error) {
       console.error('Failed to resume transaction:', error);
-      alert('Failed to resume sale. Please try again.');
+      alert(t('pos:messages.resumeFailed'));
     }
   };
 
@@ -832,7 +836,7 @@ export default function POS({
           <div className="px-3 sm:px-6 py-3 sm:py-4">
             <div className="flex items-center justify-between">
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6">
-                <h1 className="text-lg sm:text-2xl font-bold">Point of Sale</h1>
+                <h1 className="text-lg sm:text-2xl font-bold">{t('pos:titles.main')}</h1>
                 {currentStore && (
                   <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 text-accent-700 rounded-lg">
                     <Building2 className="w-4 h-4" />
@@ -841,7 +845,7 @@ export default function POS({
                 )}
                 <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-primary-50 text-primary-700 rounded-lg">
                   <Calendar className="w-4 h-4" />
-                  <span className="text-sm font-medium">Valid ID Date: {getValidAgeDate()} or earlier</span>
+                  <span className="text-sm font-medium">{t('pos:validation.validIdDate')} {getValidAgeDate()} {t('pos:validation.orEarlier')}</span>
                 </div>
               </div>
               <div className="flex items-center gap-2 sm:gap-6">
@@ -852,7 +856,7 @@ export default function POS({
                       ? 'bg-primary-100 text-primary-600 hover:bg-green-200'
                       : 'hover:bg-gray-50'
                   }`}
-                  title={scannerEnabled ? 'Scanner Enabled' : 'Scanner Disabled'}
+                  title={scannerEnabled ? t('pos:scanner.enabled') : t('pos:scanner.disabled')}
                 >
                   <Scan className="w-5 h-5" />
                 </button>
@@ -861,7 +865,7 @@ export default function POS({
                   <button
                     onClick={onFullscreenToggle}
                     className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-                    title={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+                    title={isFullscreen ? t('pos:fullscreen.exit') : t('pos:fullscreen.enter')}
                   >
                     {isFullscreen ? (
                       <Minimize2 className="w-5 h-5 text-gray-600" />
@@ -882,7 +886,7 @@ export default function POS({
                 }`}
               >
                 <ShoppingCart className="w-4 h-4 inline mr-1 sm:mr-2" />
-                <span className="text-sm sm:text-base">New Sale</span>
+                <span className="text-sm sm:text-base">{t('pos:tabs.newSale')}</span>
               </button>
               <button
                 onClick={() => setActiveTab('parked')}
@@ -891,7 +895,7 @@ export default function POS({
                 }`}
               >
                 <PauseCircle className="w-4 h-4 inline mr-1 sm:mr-2" />
-                <span className="text-sm sm:text-base">Parked ({parkedSales.length})</span>
+                <span className="text-sm sm:text-base">{t('pos:tabs.parked')} ({parkedSales.length})</span>
               </button>
               <button
                 onClick={() => setActiveTab('history')}
@@ -900,7 +904,7 @@ export default function POS({
                 }`}
               >
                 <History className="w-4 h-4 inline mr-1 sm:mr-2" />
-                <span className="text-sm sm:text-base">History</span>
+                <span className="text-sm sm:text-base">{t('pos:tabs.history')}</span>
               </button>
               <button
                 onClick={() => setActiveTab('settings')}
@@ -909,7 +913,7 @@ export default function POS({
                 }`}
               >
                 <Settings className="w-4 h-4 inline mr-1 sm:mr-2" />
-                <span className="text-sm sm:text-base">Settings</span>
+                <span className="text-sm sm:text-base">{t('pos:tabs.settings')}</span>
               </button>
             </div>
           </div>
@@ -1030,7 +1034,7 @@ export default function POS({
                 <input
                   ref={searchInputRef}
                   type="text"
-                  placeholder="Search products or scan barcode..."
+                  placeholder={t('pos:search.placeholder')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onKeyDown={async (e) => {
@@ -1120,7 +1124,7 @@ export default function POS({
                 />
                 {scannerEnabled && barcodeInput && (
                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-gray-500">
-                    Scanning: {barcodeInput}
+                    {t('pos:search.scanning')} {barcodeInput}
                   </div>
                 )}
               </div>
@@ -1129,7 +1133,7 @@ export default function POS({
                 className={`p-2 border rounded-lg transition-colors relative ${
                   showFilterPanel ? 'bg-blue-50 border-blue-300 text-accent-700' : 'hover:bg-gray-50'
                 }`}
-                title="Filter products"
+                title={t('pos:search.filterProducts')}
               >
                 <SlidersHorizontal className="w-5 h-5" />
                 {(selectedFilters.subcategories.length + selectedFilters.plantTypes.length + selectedFilters.sizes.length +
@@ -1157,7 +1161,7 @@ export default function POS({
                   </div>
                 ) : products.length === 0 ? (
                   <div className="text-center py-12 text-gray-500">
-                    <p>No products found</p>
+                    <p>{t('pos:products.noProductsFound')}</p>
                   </div>
                 ) : (
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -1246,12 +1250,12 @@ export default function POS({
                         <span className="text-lg font-bold">${product.price.toFixed(2)}</span>
                         <span className={`text-xs ${
                           !inStock ? 'text-red-500 font-medium' :
-                          lowStock ? 'text-warning-600' : 
+                          lowStock ? 'text-warning-600' :
                           'text-gray-500'
                         }`}>
-                          {!inStock ? 'Out of Stock' :
-                           lowStock ? `Low (${product.quantity_available})` :
-                           `Stock: ${product.quantity_available}`}
+                          {!inStock ? t('pos:products.outOfStock') :
+                           lowStock ? `${t('pos:products.low')} (${product.quantity_available})` :
+                           `${t('pos:products.stock')} ${product.quantity_available}`}
                         </span>
                       </div>
                       <div className="mt-2 text-xs text-gray-600">
@@ -1271,7 +1275,7 @@ export default function POS({
                           className="mt-2 flex items-center gap-1 text-xs text-accent-600 hover:text-accent-700"
                         >
                           <Package className="w-3 h-3" />
-                          <span>{product.batch_count} batch{product.batch_count > 1 ? 'es' : ''}</span>
+                          <span>{product.batch_count} {product.batch_count > 1 ? t('pos:products.batches') : t('pos:products.batch')}</span>
                         </button>
                       )}
                     </div>
@@ -1299,12 +1303,12 @@ export default function POS({
             {/* Customer Section */}
             <div className="p-6 border-b">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="font-semibold">Customer</h3>
+                <h3 className="font-semibold">{t('pos:customer.label')}</h3>
                 <button
                   onClick={() => setShowCustomerModal(true)}
                   className="text-accent-500 hover:text-accent-600"
                 >
-                  {customer ? 'Change' : 'Select'}
+                  {customer ? t('pos:customer.change') : t('pos:customer.select')}
                 </button>
               </div>
               {customer ? (
@@ -1312,7 +1316,7 @@ export default function POS({
                   <p className="font-medium">{customer.name}</p>
                   <p className="text-sm text-gray-600">{customer.phone}</p>
                   {customer.loyalty_points && (
-                    <p className="text-sm text-primary-600">Points: {customer.loyalty_points}</p>
+                    <p className="text-sm text-primary-600">{t('pos:customer.points')} {customer.loyalty_points}</p>
                   )}
                 </div>
               ) : (
@@ -1322,21 +1326,21 @@ export default function POS({
                     className="flex-1 px-3 py-2 bg-blue-50 text-accent-600 rounded-lg hover:bg-blue-100"
                   >
                     <Users className="w-4 h-4 inline mr-1" />
-                    Returning
+                    {t('pos:customer.returning')}
                   </button>
                   <button
-                    onClick={() => setCustomer({ id: 'new', name: 'New Customer', is_verified: false })}
+                    onClick={() => setCustomer({ id: 'new', name: t('pos:customer.newCustomer'), is_verified: false })}
                     className="flex-1 px-3 py-2 bg-primary-50 text-primary-600 rounded-lg hover:bg-primary-100"
                   >
                     <UserPlus className="w-4 h-4 inline mr-1" />
-                    New
+                    {t('pos:customer.new')}
                   </button>
                   <button
-                    onClick={() => setCustomer({ id: 'anon', name: 'Anonymous', is_verified: true })}
+                    onClick={() => setCustomer({ id: 'anon', name: t('pos:customer.anonymous'), is_verified: true })}
                     className="flex-1 px-3 py-2 bg-gray-50 text-gray-600 rounded-lg hover:bg-gray-50"
                   >
                     <User className="w-4 h-4 inline mr-1" />
-                    Anonymous
+                    {t('pos:customer.anonymous')}
                   </button>
                 </div>
               )}
@@ -1348,11 +1352,11 @@ export default function POS({
                 <div className="flex items-center gap-2">
                   <AlertCircle className="w-4 h-4" />
                   <span className="text-sm font-medium">
-                    Dried Flower Equivalent: {driedFlowerEquivalent.toFixed(1)}g / 30g
+                    {t('pos:weight.driedFlowerEquivalent')} {driedFlowerEquivalent.toFixed(1)}g {t('pos:weight.legalLimit')}
                   </span>
                 </div>
                 {driedFlowerEquivalent > 30 && (
-                  <p className="text-xs mt-1">Exceeds legal limit!</p>
+                  <p className="text-xs mt-1">{t('pos:weight.exceedsLimit')}</p>
                 )}
               </div>
             )}
@@ -1362,7 +1366,7 @@ export default function POS({
               {cart.length === 0 ? (
                 <div className="text-center text-gray-400 py-8">
                   <ShoppingCart className="w-12 h-12 mx-auto mb-2" />
-                  <p>Cart is empty</p>
+                  <p>{t('pos:cart.empty')}</p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -1376,12 +1380,12 @@ export default function POS({
                           </p>
                           {item.batch && (
                             <p className="text-xs text-accent-600">
-                              Batch: {item.batch.batch_lot}
+                              {t('pos:cart.batch')} {item.batch.batch_lot}
                             </p>
                           )}
                           {item.discount && (
                             <p className="text-sm text-primary-600">
-                              Discount: {item.discount}%
+                              {t('pos:cart.discount')} {item.discount}%
                             </p>
                           )}
                         </div>
@@ -1444,14 +1448,14 @@ export default function POS({
             {/* Totals */}
             <div className="border-t p-6 space-y-2">
               <div className="flex justify-between text-sm">
-                <span>Subtotal</span>
+                <span>{t('pos:totals.subtotal')}</span>
                 <span>${subtotal.toFixed(2)}</span>
               </div>
 
               {/* Discount Section */}
               <div className="border-t pt-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm">Discount</span>
+                  <span className="text-sm">{t('pos:totals.discount')}</span>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => {
@@ -1501,7 +1505,7 @@ export default function POS({
                 </div>
                 {discountAmount > 0 && (
                   <div className="flex justify-between text-sm text-primary-600 mt-1">
-                    <span>Discount applied</span>
+                    <span>{t('pos:totals.discountApplied')}</span>
                     <span>-${discountAmount.toFixed(2)}</span>
                   </div>
                 )}
@@ -1509,17 +1513,17 @@ export default function POS({
 
               {discountAmount > 0 && (
                 <div className="flex justify-between text-sm font-medium text-primary-600">
-                  <span>After Discount</span>
+                  <span>{t('pos:totals.afterDiscount')}</span>
                   <span>${discountedSubtotal.toFixed(2)}</span>
                 </div>
               )}
 
               <div className="flex justify-between text-sm">
-                <span>Tax (13%)</span>
+                <span>{t('pos:totals.tax')}</span>
                 <span>${tax.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-lg font-bold border-t pt-2">
-                <span>Total</span>
+                <span>{t('pos:totals.total')}</span>
                 <span>${total.toFixed(2)}</span>
               </div>
             </div>
@@ -1532,14 +1536,14 @@ export default function POS({
                   className="px-4 py-2 bg-warning-500 text-white rounded-lg hover:bg-warning-600"
                 >
                   <PauseCircle className="w-4 h-4 inline mr-1" />
-                  Park Sale
+                  {t('pos:actions.parkSale')}
                 </button>
                 <button
                   onClick={() => { setCart([]); setCustomer(null); }}
                   className="px-4 py-2 bg-danger-500 text-white rounded-lg hover:bg-danger-600"
                 >
                   <X className="w-4 h-4 inline mr-1" />
-                  Clear
+                  {t('pos:actions.clear')}
                 </button>
               </div>
               <button
@@ -1548,7 +1552,7 @@ export default function POS({
                 className="w-full px-4 py-3 bg-primary-500 text-white rounded-lg hover:bg-primary-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
               >
                 <CreditCard className="w-4 h-4 inline mr-2" />
-                Process Payment
+                {t('pos:actions.processPayment')}
               </button>
             </div>
           </div>
@@ -1558,11 +1562,11 @@ export default function POS({
       {/* Parked Sales Tab */}
       {activeTab === 'parked' && (
         <div className="flex-1 p-4 sm:p-6 overflow-y-auto">
-          <h2 className="text-lg sm:text-xl font-bold mb-4">Parked Sales</h2>
+          <h2 className="text-lg sm:text-xl font-bold mb-4">{t('pos:titles.parkedSales')}</h2>
           {parkedSales.length === 0 ? (
             <div className="text-center text-gray-400 py-12">
               <PauseCircle className="w-12 h-12 mx-auto mb-2" />
-              <p>No parked sales</p>
+              <p>{t('pos:parked.noParkedSales')}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
@@ -1578,13 +1582,13 @@ export default function POS({
                     <span className="text-lg font-bold">${sale.total.toFixed(2)}</span>
                   </div>
                   <p className="text-sm text-gray-600 mb-3">
-                    {sale.items.length} items
+                    {sale.items.length} {t('pos:parked.items')}
                   </p>
                   <button
                     onClick={() => resumeParkedSale(sale)}
                     className="w-full px-3 py-2 bg-accent-500 text-white rounded hover:bg-accent-600"
                   >
-                    Resume Sale
+                    {t('pos:actions.resumeSale')}
                   </button>
                 </div>
               ))}
@@ -1601,20 +1605,20 @@ export default function POS({
       {/* Settings Tab */}
       {activeTab === 'settings' && (
         <div className="flex-1 p-4 sm:p-6 overflow-y-auto">
-          <h2 className="text-xl font-bold mb-6">POS Settings</h2>
-          
+          <h2 className="text-xl font-bold mb-6">{t('pos:titles.posSettings')}</h2>
+
           <div className="space-y-6">
             {/* Hardware Configuration */}
             <div className="bg-white p-6 rounded-lg ">
-              <h3 className="text-lg font-semibold mb-4">Hardware Configuration</h3>
-              
+              <h3 className="text-lg font-semibold mb-4">{t('pos:titles.hardwareConfiguration')}</h3>
+
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <CreditCard className="w-5 h-5 text-gray-400" />
                     <div>
-                      <p className="font-medium">Payment Terminal</p>
-                      <p className="text-sm text-gray-500">Connect card reader</p>
+                      <p className="font-medium">{t('pos:hardware.paymentTerminal')}</p>
+                      <p className="text-sm text-gray-500">{t('pos:hardware.connectCardReader')}</p>
                     </div>
                   </div>
                   <label className="flex items-center gap-2">
@@ -1627,7 +1631,7 @@ export default function POS({
                       })}
                       className="rounded"
                     />
-                    <span className="text-sm">Enabled</span>
+                    <span className="text-sm">{t('pos:hardware.enabled')}</span>
                   </label>
                 </div>
 
@@ -1635,8 +1639,8 @@ export default function POS({
                   <div className="flex items-center gap-4">
                     <Printer className="w-5 h-5 text-gray-400" />
                     <div>
-                      <p className="font-medium">Receipt Printer</p>
-                      <p className="text-sm text-gray-500">Print receipts</p>
+                      <p className="font-medium">{t('pos:hardware.receiptPrinter')}</p>
+                      <p className="text-sm text-gray-500">{t('pos:hardware.printReceipts')}</p>
                     </div>
                   </div>
                   <label className="flex items-center gap-2">
@@ -1649,7 +1653,7 @@ export default function POS({
                       })}
                       className="rounded"
                     />
-                    <span className="text-sm">Enabled</span>
+                    <span className="text-sm">{t('pos:hardware.enabled')}</span>
                   </label>
                 </div>
 
@@ -1659,8 +1663,8 @@ export default function POS({
                     <div className="flex items-center gap-4">
                       <Scan className="w-5 h-5 text-gray-400" />
                       <div>
-                        <p className="font-medium">Barcode Scanners</p>
-                        <p className="text-sm text-gray-500">Manage connected scanners</p>
+                        <p className="font-medium">{t('pos:scanner.barcodeScanners')}</p>
+                        <p className="text-sm text-gray-500">{t('pos:scanner.manageConnected')}</p>
                       </div>
                     </div>
                     <button
@@ -1673,7 +1677,7 @@ export default function POS({
                       ) : (
                         <RefreshCw className="w-4 h-4" />
                       )}
-                      Detect Scanners
+                      {t('pos:actions.detectScanners')}
                     </button>
                   </div>
                   
@@ -1709,9 +1713,9 @@ export default function POS({
                                       scanner.confidence === 'medium' ? 'bg-warning-100 text-yellow-700' :
                                       'bg-gray-50 text-gray-600'
                                     }`}>
-                                      {scanner.confidence === 'high' ? '✓ Scanner' : 
-                                       scanner.confidence === 'medium' ? 'Likely Scanner' : 
-                                       'Possible Scanner'}
+                                      {scanner.confidence === 'high' ? t('pos:labels.confidence.high') :
+                                       scanner.confidence === 'medium' ? t('pos:labels.confidence.medium') :
+                                       t('pos:labels.confidence.low')}
                                     </span>
                                   )}
                                   {scanner.capabilities && (
@@ -1732,7 +1736,7 @@ export default function POS({
                                 {testingScanner === scanner.id ? (
                                   <Loader2 className="w-3 h-3 animate-spin" />
                                 ) : (
-                                  'Test'
+                                  t('pos:actions.test')
                                 )}
                               </button>
                               <label className="flex items-center gap-1">
@@ -1750,7 +1754,7 @@ export default function POS({
                                   }}
                                   className="rounded text-sm"
                                 />
-                                <span className="text-xs">Active</span>
+                                <span className="text-xs">{t('pos:actions.active')}</span>
                               </label>
                             </div>
                           </div>
@@ -1760,8 +1764,8 @@ export default function POS({
                   ) : (
                     <div className="text-center py-4 text-sm text-gray-500">
                       <Scan className="w-8 h-8 mx-auto mb-2 text-gray-300" />
-                      <p>No scanners detected</p>
-                      <p className="text-xs mt-1">Connect a scanner and click "Detect Scanners"</p>
+                      <p>{t('pos:scanner.noScannersDetected')}</p>
+                      <p className="text-xs mt-1">{t('pos:scanner.connectScanner')}</p>
                     </div>
                   )}
                 </div>
@@ -1770,8 +1774,8 @@ export default function POS({
                   <div className="flex items-center gap-4">
                     <DollarSign className="w-5 h-5 text-gray-400" />
                     <div>
-                      <p className="font-medium">Cash Drawer</p>
-                      <p className="text-sm text-gray-500">Manage cash</p>
+                      <p className="font-medium">{t('pos:hardware.cashDrawer')}</p>
+                      <p className="text-sm text-gray-500">{t('pos:hardware.manageCash')}</p>
                     </div>
                   </div>
                   <label className="flex items-center gap-2">
@@ -1784,7 +1788,7 @@ export default function POS({
                       })}
                       className="rounded"
                     />
-                    <span className="text-sm">Enabled</span>
+                    <span className="text-sm">{t('pos:hardware.enabled')}</span>
                   </label>
                 </div>
               </div>
@@ -1792,48 +1796,48 @@ export default function POS({
 
             {/* Cash Management */}
             <div className="bg-white p-6 rounded-lg ">
-              <h3 className="text-lg font-semibold mb-4">Cash Management</h3>
+              <h3 className="text-lg font-semibold mb-4">{t('pos:titles.cashManagement')}</h3>
               <div className="grid grid-cols-2 gap-6">
                 <button className="px-4 py-2 bg-blue-50 text-accent-600 rounded-lg hover:bg-blue-100">
                   <Calculator className="w-4 h-4 inline mr-2" />
-                  Open Register
+                  {t('pos:actions.openRegister')}
                 </button>
                 <button className="px-4 py-2 bg-blue-50 text-accent-600 rounded-lg hover:bg-blue-100">
                   <DollarSign className="w-4 h-4 inline mr-2" />
-                  Cash Count
+                  {t('pos:actions.cashCount')}
                 </button>
                 <button className="px-4 py-2 bg-blue-50 text-accent-600 rounded-lg hover:bg-blue-100">
                   <Clock className="w-4 h-4 inline mr-2" />
-                  End of Day
+                  {t('pos:actions.endOfDay')}
                 </button>
                 <button className="px-4 py-2 bg-blue-50 text-accent-600 rounded-lg hover:bg-blue-100">
                   <Printer className="w-4 h-4 inline mr-2" />
-                  Print Report
+                  {t('pos:actions.printReport')}
                 </button>
               </div>
             </div>
 
             {/* Discount Settings */}
             <div className="bg-white p-6 rounded-lg ">
-              <h3 className="text-lg font-semibold mb-4">Discounts & Promotions</h3>
+              <h3 className="text-lg font-semibold mb-4">{t('pos:titles.discountsPromotions')}</h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                   <div>
-                    <p className="font-medium">Senior Discount</p>
-                    <p className="text-sm text-gray-500">10% off for 65+</p>
+                    <p className="font-medium">{t('pos:promotions.seniorDiscount')}</p>
+                    <p className="text-sm text-gray-500">{t('pos:promotions.seniorDescription')}</p>
                   </div>
-                  <span className="px-2 py-1 bg-primary-100 text-primary-700 rounded text-sm">Active</span>
+                  <span className="px-2 py-1 bg-primary-100 text-primary-700 rounded text-sm">{t('pos:actions.active')}</span>
                 </div>
                 <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                   <div>
-                    <p className="font-medium">Happy Hour</p>
-                    <p className="text-sm text-gray-500">15% off 4-6pm</p>
+                    <p className="font-medium">{t('pos:promotions.happyHour')}</p>
+                    <p className="text-sm text-gray-500">{t('pos:promotions.happyHourDescription')}</p>
                   </div>
-                  <span className="px-2 py-1 bg-primary-100 text-primary-700 rounded text-sm">Active</span>
+                  <span className="px-2 py-1 bg-primary-100 text-primary-700 rounded text-sm">{t('pos:actions.active')}</span>
                 </div>
                 <button className="w-full px-4 py-2 border-2 border-dashed border-gray-200 text-gray-500 rounded-lg hover:border-gray-300">
                   <Plus className="w-4 h-4 inline mr-2" />
-                  Add Promotion
+                  {t('pos:actions.addPromotion')}
                 </button>
               </div>
             </div>
@@ -1902,12 +1906,12 @@ export default function POS({
               // Clear cart and customer
               setCart([]);
               setCustomer(null);
-              
+
               // Show success message
-              alert(`Payment successful! ${payment.printReceipt ? 'Receipt printed.' : ''}`);
+              alert(`${t('pos:messages.paymentSuccess')} ${payment.printReceipt ? t('pos:messages.receiptPrinted') : ''}`);
             } catch (error) {
               console.error('Failed to create transaction:', error);
-              alert('Failed to process transaction. Please try again.');
+              alert(t('pos:messages.transactionFailed'));
             } finally {
               setTransactionLoading(false);
             }

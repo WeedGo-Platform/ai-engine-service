@@ -67,37 +67,37 @@ const Login: React.FC = () => {
     
     try {
       await login(formData.email, formData.password, formData.rememberMe);
-      
-      setSuccess('Login successful! Redirecting...');
-      
+
+      setSuccess(t('errors:auth.loginSuccess'));
+
       // Redirect after a short delay for UX
       setTimeout(() => {
         navigate(from, { replace: true });
       }, 1000);
-      
+
     } catch (err: any) {
       console.error('Login error:', err);
-      
+
       // Handle specific error cases
       if (err.response?.status === 429) {
-        setError('Too many login attempts. Please try again later.');
+        setError(t('errors:auth.tooManyAttempts'));
       } else if (err.response?.status === 403) {
-        setError('Your account is disabled or lacks admin privileges.');
+        setError(t('errors:auth.accountDisabled'));
       } else if (err.response?.status === 401) {
-        setError('Invalid email or password. Please try again.');
+        setError(t('errors:auth.invalidCredentials'));
       } else if (err.message === 'Network Error') {
-        setError('Unable to connect to server. Please check your connection.');
+        setError(t('errors:api.networkError'));
       } else {
         // Handle FastAPI validation errors which may be arrays
         const detail = err.response?.data?.detail;
         if (Array.isArray(detail)) {
           // Extract validation error messages
           const messages = detail.map((d: any) => d.msg || d.message || JSON.stringify(d)).join(', ');
-          setError(messages || 'Validation error occurred');
+          setError(messages || t('errors:auth.validationError'));
         } else if (typeof detail === 'string') {
           setError(detail);
         } else {
-          setError('An error occurred during login');
+          setError(t('errors:auth.loginError'));
         }
       }
     } finally {
@@ -302,15 +302,15 @@ const Login: React.FC = () => {
             </div>
             
             <div className="mt-6 text-center">
-              <p className="text-sm text-gray-500">
-                Don't have an account?{' '}
-                <Link to="/signup" className="font-medium text-primary-600 hover:text-primary-700">
-                  Sign up for WeedGo
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                {t('auth:login.noAccount')}{' '}
+                <Link to="/signup" className="font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300">
+                  {t('auth:login.signUp')}
                 </Link>
               </p>
-              <p className="mt-2 text-sm text-gray-500">
-                <Link to="/" className="font-medium text-primary-600 hover:text-primary-700">
-                  Learn more about WeedGo
+              <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                <Link to="/" className="font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300">
+                  {t('auth:login.learnMore')}
                 </Link>
               </p>
             </div>
@@ -319,8 +319,8 @@ const Login: React.FC = () => {
       </div>
       
       {/* Footer */}
-      <div className="mt-8 text-center text-xs text-gray-400">
-        © 2024 WeedGo. All rights reserved.
+      <div className="mt-8 text-center text-xs text-gray-400 dark:text-gray-500">
+        {t('auth:login.copyright')}
       </div>
     </div>
   );

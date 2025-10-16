@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   X, Building2, Mail, Phone, Globe, CreditCard, Package,
   MapPin, Upload, Save, Users, UserPlus, Lock,
@@ -80,6 +81,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
   showUsersTab = true
 }) => {
   const { user: currentUser } = useAuth();
+  const { t } = useTranslation(['common']);
   const [editedTenant, setEditedTenant] = useState(tenant);
   const [activeTab, setActiveTab] = useState('general');
   const [logoFile, setLogoFile] = useState<File | null>(null);
@@ -146,13 +148,10 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
   const handleResetPassword = async (userId: string) => {
     setUserError(null);
     setUserSuccess(null);
-    
+
     // Show options dialog
-    const resetMethod = window.confirm(
-      'Click OK to send a password reset link via email\n' +
-      'Click Cancel to generate a one-time password'
-    );
-    
+    const resetMethod = window.confirm(t('common:confirmations.passwordResetMethod'));
+
     try {
       const response = await fetch(getApiEndpoint(`/tenants/${tenant.id}/users/${userId}/reset-password`), {
         method: 'POST',
@@ -225,9 +224,9 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
       setUserError('You cannot delete your own account');
       return;
     }
-    
-    if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) return;
-    
+
+    if (!window.confirm(t('common:confirmations.deleteUserPermanent'))) return;
+
     setUserError(null);
     setUserSuccess(null);
     

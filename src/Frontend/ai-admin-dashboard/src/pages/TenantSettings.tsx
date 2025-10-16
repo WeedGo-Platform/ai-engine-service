@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   Building2,
   Settings,
@@ -15,6 +16,7 @@ import communicationService from '../services/communicationService';
 import { usePersistentTab } from '../hooks/usePersistentState';
 
 const TenantSettings: React.FC = () => {
+  const { t } = useTranslation(['settings', 'common', 'errors']);
   const { tenantCode } = useParams<{ tenantCode: string }>();
   const navigate = useNavigate();
   const [tenant, setTenant] = useState<Tenant | null>(null);
@@ -55,7 +57,7 @@ const TenantSettings: React.FC = () => {
       setPaymentSettings(paymentData);
       setCommunicationSettings(communicationData);
     } catch (err) {
-      setError('Failed to load tenant settings');
+      setError(t('settings:messages.error.loadSettings'));
       console.error(err);
     } finally {
       setLoading(false);
@@ -66,9 +68,9 @@ const TenantSettings: React.FC = () => {
     try {
       await paymentService.updateTenantPaymentSettings(tenant!.id, settings);
       setPaymentSettings(settings);
-      setSuccess('Payment settings updated successfully');
+      setSuccess(t('settings:messages.success.paymentSettingsUpdated'));
     } catch (err) {
-      setError('Failed to update payment settings');
+      setError(t('settings:messages.error.updatePaymentSettings'));
       throw err;
     }
   };
@@ -77,7 +79,7 @@ const TenantSettings: React.FC = () => {
     try {
       const result = await paymentService.validatePaymentProvider(tenant!.id, provider);
       if (result.valid) {
-        setSuccess(`${provider} configuration is valid`);
+        setSuccess(`${provider} ${t('settings:messages.success.configurationValid')}`);
       } else {
         setError(result.message);
       }
@@ -90,9 +92,9 @@ const TenantSettings: React.FC = () => {
     try {
       await communicationService.updateTenantCommunicationSettings(tenant!.id, settings);
       setCommunicationSettings(settings);
-      setSuccess('Communication settings updated successfully');
+      setSuccess(t('settings:messages.success.communicationSettingsUpdated'));
     } catch (err) {
-      setError('Failed to update communication settings');
+      setError(t('settings:messages.error.updateCommunicationSettings'));
       throw err;
     }
   };
@@ -101,7 +103,7 @@ const TenantSettings: React.FC = () => {
     try {
       const result = await communicationService.validateCommunicationChannel(tenant!.id, channel);
       if (result.valid) {
-        setSuccess(`${channel.toUpperCase()} configuration is valid`);
+        setSuccess(`${channel.toUpperCase()} ${t('settings:messages.success.configurationValid')}`);
       } else {
         setError(result.message);
       }
@@ -122,7 +124,7 @@ const TenantSettings: React.FC = () => {
     return (
       <div className="p-6">
         <div className="bg-danger-50 border border-red-200 rounded-lg p-6">
-          <p className="text-red-700">Tenant not found</p>
+          <p className="text-red-700">{t('settings:messages.tenantNotFound')}</p>
         </div>
       </div>
     );
@@ -137,16 +139,16 @@ const TenantSettings: React.FC = () => {
           className="mb-4 flex items-center gap-2 text-gray-600 hover:text-gray-900"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to Tenants
+          {t('settings:actions.backToTenants')}
         </button>
         
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold flex items-center gap-4">
               <Building2 className="w-8 h-8" />
-              {tenant.name} Settings
+              {tenant.name} {t('settings:titles.tenantSettings')}
             </h1>
-            <p className="text-gray-600 mt-1">Manage tenant configuration and payment settings</p>
+            <p className="text-gray-600 mt-1">{t('settings:descriptions.tenantManagement')}</p>
           </div>
         </div>
       </div>
@@ -177,7 +179,7 @@ const TenantSettings: React.FC = () => {
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
             }`}
           >
-            General Settings
+            {t('settings:tabs.general')}
           </button>
           <button
             onClick={() => setActiveTab('payment')}
@@ -187,7 +189,7 @@ const TenantSettings: React.FC = () => {
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
             }`}
           >
-            Payment Settings
+            {t('settings:tabs.payment')}
           </button>
           <button
             onClick={() => setActiveTab('communication')}
@@ -197,7 +199,7 @@ const TenantSettings: React.FC = () => {
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
             }`}
           >
-            Communication Settings
+            {t('settings:tabs.communication')}
           </button>
         </nav>
       </div>
@@ -205,67 +207,67 @@ const TenantSettings: React.FC = () => {
       {/* Tab Content */}
       {activeTab === 'general' && (
         <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h2 className="text-xl font-semibold mb-4">General Information</h2>
+          <h2 className="text-xl font-semibold mb-4">{t('settings:titles.generalInformation')}</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Tenant Name
+                {t('settings:fields.tenantName')}
               </label>
               <p className="text-lg">{tenant.name}</p>
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Tenant Code
+                {t('settings:fields.tenantCode')}
               </label>
               <p className="text-lg font-mono">{tenant.code}</p>
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Company Name
+                {t('settings:fields.companyName')}
               </label>
-              <p className="text-lg">{tenant.company_name || 'Not specified'}</p>
+              <p className="text-lg">{tenant.company_name || t('settings:messages.notSpecified')}</p>
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Business Number
+                {t('settings:fields.businessNumber')}
               </label>
-              <p className="text-lg">{tenant.business_number || 'Not specified'}</p>
+              <p className="text-lg">{tenant.business_number || t('settings:messages.notSpecified')}</p>
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Contact Email
+                {t('settings:fields.contactEmail')}
               </label>
-              <p className="text-lg">{tenant.contact_email || 'Not specified'}</p>
+              <p className="text-lg">{tenant.contact_email || t('settings:messages.notSpecified')}</p>
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Contact Phone
+                {t('settings:fields.contactPhone')}
               </label>
-              <p className="text-lg">{tenant.contact_phone || 'Not specified'}</p>
+              <p className="text-lg">{tenant.contact_phone || t('settings:messages.notSpecified')}</p>
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Status
+                {t('settings:fields.status')}
               </label>
               <span className={`inline-flex px-2 py-1 rounded-full text-sm font-medium ${
-                tenant.status === 'active' 
+                tenant.status === 'active'
                   ? 'bg-primary-100 text-primary-700'
                   : 'bg-gray-50 text-gray-700'
               }`}>
                 {tenant.status}
               </span>
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Subscription Tier
+                {t('settings:fields.subscriptionTier')}
               </label>
               <span className="inline-flex px-2 py-1 rounded-full text-sm font-medium bg-blue-100 text-accent-700">
                 {tenant.subscription_tier}
@@ -276,7 +278,7 @@ const TenantSettings: React.FC = () => {
           {tenant.address && (
             <div className="mt-6">
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Address
+                {t('settings:fields.address')}
               </label>
               <p className="text-lg">
                 {tenant.address.street}<br />

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   Database, Server, Table, Trash2, Edit, Eye, Plus,
   RefreshCw, Search, AlertTriangle, Download, Upload,
@@ -41,6 +42,7 @@ interface ConnectionInfo {
 }
 
 export default function DatabaseManagement() {
+  const { t } = useTranslation(['database', 'common', 'errors']);
   const navigate = useNavigate();
   const { user, isSuperAdmin } = useAuth();
   const [tables, setTables] = useState<TableInfo[]>([]);
@@ -227,7 +229,7 @@ export default function DatabaseManagement() {
       }
     } catch (error) {
       console.error('Error adding row:', error);
-      alert('Failed to add row');
+      alert(t('database:errors.addRow'));
     }
   };
 
@@ -271,14 +273,14 @@ export default function DatabaseManagement() {
       }
     } catch (error) {
       console.error('Error updating row:', error);
-      alert('Failed to update row');
+      alert(t('database:errors.updateRow'));
     }
   };
 
   const handleDeleteRow = async (row: any) => {
     if (!selectedTable) return;
 
-    if (!confirm('Are you sure you want to delete this row?')) return;
+    if (!confirm(t('database:confirm.deleteRow'))) return;
 
     try {
       const whereConditions: Record<string, any> = {};
@@ -309,14 +311,14 @@ export default function DatabaseManagement() {
       }
     } catch (error) {
       console.error('Error deleting row:', error);
-      alert('Failed to delete row');
+      alert(t('database:errors.deleteRow'));
     }
   };
 
   const handleTruncateTable = async () => {
     if (!selectedTable) return;
 
-    if (!confirm(`Are you sure you want to TRUNCATE table ${selectedTable}? This will delete ALL rows!`)) return;
+    if (!confirm(t('database:confirm.truncateTable', { table: selectedTable }))) return;
 
     try {
       const response = await fetch(
@@ -341,7 +343,7 @@ export default function DatabaseManagement() {
       }
     } catch (error) {
       console.error('Error truncating table:', error);
-      alert('Failed to truncate table');
+      alert(t('database:errors.truncateTable'));
     }
   };
 
@@ -373,7 +375,7 @@ export default function DatabaseManagement() {
       }
     } catch (error) {
       console.error('Error dropping table:', error);
-      alert('Failed to drop table');
+      alert(t('database:errors.dropTable'));
     }
   };
 
@@ -403,7 +405,7 @@ export default function DatabaseManagement() {
       }
     } catch (error) {
       console.error('Error executing query:', error);
-      alert('Failed to execute query');
+      alert(t('database:errors.executeQuery'));
     } finally {
       setLoading(false);
     }
@@ -433,10 +435,10 @@ export default function DatabaseManagement() {
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
             <Database className="h-8 w-8 text-primary-600" />
-            Database Management
+            {t('database:titles.main')}
           </h1>
           <p className="text-gray-600 mt-2">
-            Super admin access to database tables and operations
+            {t('database:descriptions.main')}
           </p>
         </div>
 
@@ -460,7 +462,7 @@ export default function DatabaseManagement() {
                 <div className="flex items-center gap-2">
                   <Activity className="h-5 w-5 text-gray-500" />
                   <span className="text-sm text-gray-600">
-                    {connectionInfo.active_connections}/{connectionInfo.max_connections} connections
+                    {connectionInfo.active_connections}/{connectionInfo.max_connections} {t('database:connection.connections')}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -487,10 +489,10 @@ export default function DatabaseManagement() {
           {/* Tables List */}
           <div className="w-full lg:w-80 bg-white rounded-lg shadow-sm p-3 sm:p-4 max-h-96 lg:max-h-[calc(100vh-300px)] overflow-hidden">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">Database Objects</h2>
+              <h2 className="text-lg font-semibold text-gray-900">{t('database:titles.databaseObjects')}</h2>
               <div className="text-xs text-gray-500">
-                <div>{tables.filter(t => t.type === 'BASE TABLE').length} tables</div>
-                <div>{tables.filter(t => t.type === 'VIEW').length} views</div>
+                <div>{tables.filter(t => t.type === 'BASE TABLE').length} {t('database:table.tables')}</div>
+                <div>{tables.filter(t => t.type === 'VIEW').length} {t('database:table.views')}</div>
               </div>
             </div>
 
@@ -501,7 +503,7 @@ export default function DatabaseManagement() {
                 type="text"
                 value={tableSearchTerm}
                 onChange={(e) => setTableSearchTerm(e.target.value)}
-                placeholder="Filter tables and views..."
+                placeholder={t('database:placeholders.filterTables')}
                 className="w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm"
               />
               {tableSearchTerm && (
@@ -519,7 +521,7 @@ export default function DatabaseManagement() {
               {tables.filter(t => t.type === 'BASE TABLE' && (!tableSearchTerm || t.name.toLowerCase().includes(tableSearchTerm.toLowerCase()))).length > 0 && (
                 <>
                   <div className="text-xs font-semibold text-gray-500 uppercase px-3 py-1 sticky top-0 bg-white border-b">
-                    Tables ({tables.filter(t => t.type === 'BASE TABLE' && (!tableSearchTerm || t.name.toLowerCase().includes(tableSearchTerm.toLowerCase()))).length})
+                    {t('database:table.tables')} ({tables.filter(t => t.type === 'BASE TABLE' && (!tableSearchTerm || t.name.toLowerCase().includes(tableSearchTerm.toLowerCase()))).length})
                   </div>
                   {tables
                     .filter(t => t.type === 'BASE TABLE')
@@ -545,7 +547,7 @@ export default function DatabaseManagement() {
                       </div>
                       <div className="flex items-center justify-between mt-1">
                         <span className="text-xs text-gray-500">
-                          {table.column_count} columns
+                          {table.column_count} {t('database:table.columns')}
                         </span>
                         <span className="text-xs text-gray-500">{table.size}</span>
                       </div>
@@ -558,7 +560,7 @@ export default function DatabaseManagement() {
               {tables.filter(t => t.type === 'VIEW' && (!tableSearchTerm || t.name.toLowerCase().includes(tableSearchTerm.toLowerCase()))).length > 0 && (
                 <>
                   <div className="text-xs font-semibold text-gray-500 uppercase px-3 py-1 mt-3 sticky top-0 bg-white border-b">
-                    Views ({tables.filter(t => t.type === 'VIEW' && (!tableSearchTerm || t.name.toLowerCase().includes(tableSearchTerm.toLowerCase()))).length})
+                    {t('database:table.views')} ({tables.filter(t => t.type === 'VIEW' && (!tableSearchTerm || t.name.toLowerCase().includes(tableSearchTerm.toLowerCase()))).length})
                   </div>
                   {tables
                     .filter(t => t.type === 'VIEW')
@@ -585,7 +587,7 @@ export default function DatabaseManagement() {
                       </div>
                       <div className="flex items-center justify-between mt-1">
                         <span className="text-xs text-gray-500">
-                          {table.column_count} columns
+                          {table.column_count} {t('database:table.columns')}
                         </span>
                         <span className="text-xs text-gray-500">{table.size}</span>
                       </div>
@@ -622,7 +624,7 @@ export default function DatabaseManagement() {
                               : 'text-gray-600 hover:text-gray-900'
                           }`}
                         >
-                          Data
+                          {t('database:tabs.data')}
                         </button>
                         <button
                           onClick={() => setActiveTab('schema')}
@@ -632,7 +634,7 @@ export default function DatabaseManagement() {
                               : 'text-gray-600 hover:text-gray-900'
                           }`}
                         >
-                          Schema
+                          {t('database:tabs.schema')}
                         </button>
                         <button
                           onClick={() => setActiveTab('query')}
@@ -642,7 +644,7 @@ export default function DatabaseManagement() {
                               : 'text-gray-600 hover:text-gray-900'
                           }`}
                         >
-                          Query
+                          {t('database:tabs.query')}
                         </button>
                       </div>
 
@@ -660,8 +662,8 @@ export default function DatabaseManagement() {
                             className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-xs sm:text-sm"
                           >
                             <Plus className="h-3 sm:h-4 w-3 sm:w-4" />
-                            <span className="hidden sm:inline">Add Row</span>
-                            <span className="sm:hidden">Add</span>
+                            <span className="hidden sm:inline">{t('database:actions.addRow')}</span>
+                            <span className="sm:hidden">{t('database:actions.add')}</span>
                           </button>
                           <button
                             onClick={() => {
@@ -671,8 +673,8 @@ export default function DatabaseManagement() {
                             className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors text-xs sm:text-sm"
                           >
                             <Trash2 className="h-3 sm:h-4 w-3 sm:w-4" />
-                            <span className="hidden sm:inline">Truncate</span>
-                            <span className="sm:hidden">Clear</span>
+                            <span className="hidden sm:inline">{t('database:actions.truncate')}</span>
+                            <span className="sm:hidden">{t('database:actions.clear')}</span>
                           </button>
                         </>
                       )}
@@ -685,9 +687,9 @@ export default function DatabaseManagement() {
                       >
                         <AlertTriangle className="h-3 sm:h-4 w-3 sm:w-4" />
                         <span className="hidden sm:inline">
-                          {tables.find(t => t.name === selectedTable)?.type === 'VIEW' ? 'Drop View' : 'Drop Table'}
+                          {tables.find(t => t.name === selectedTable)?.type === 'VIEW' ? t('database:actions.dropView') : t('database:actions.dropTable')}
                         </span>
-                        <span className="sm:hidden">Drop</span>
+                        <span className="sm:hidden">{t('database:actions.drop')}</span>
                       </button>
                       <button
                         onClick={() => fetchTableData(selectedTable, currentPage)}
@@ -713,14 +715,14 @@ export default function DatabaseManagement() {
                                 fetchTableData(selectedTable, 1);
                               }
                             }}
-                            placeholder="Search table..."
+                            placeholder={t('database:placeholders.searchTable')}
                             className="w-full sm:w-auto pl-10 pr-20 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm"
                           />
                           {searchTerm && (
                             <button
                               onClick={() => setSearchTerm('')}
                               className="absolute right-10 top-1/2 transform -translate-y-1/2 p-1 hover:bg-gray-100 rounded-full transition-colors"
-                              title="Clear search"
+                              title={t('database:actions.clearSearch')}
                             >
                               <X className="h-3 w-3 text-gray-400" />
                             </button>
@@ -728,13 +730,13 @@ export default function DatabaseManagement() {
                           <button
                             onClick={() => fetchTableData(selectedTable, 1)}
                             className="absolute right-2 top-1/2 transform -translate-y-1/2 px-2 py-1 text-primary-600 hover:bg-primary-50 rounded transition-colors"
-                            title="Search"
+                            title={t('database:actions.search')}
                           >
                             <Search className="h-4 w-4" />
                           </button>
                         </div>
                         <span className="text-xs sm:text-sm text-gray-600">
-                          {totalRows.toLocaleString()} total rows
+                          {totalRows.toLocaleString()} {t('database:table.totalRows')}
                         </span>
                       </div>
 
@@ -753,7 +755,7 @@ export default function DatabaseManagement() {
                             <ChevronLeft className="h-5 w-5" />
                           </button>
                           <span className="text-sm text-gray-600">
-                            Page {currentPage} of {totalPages}
+                            {t('database:pagination.page')} {currentPage} {t('database:pagination.of')} {totalPages}
                           </span>
                           <button
                             onClick={() => {
@@ -798,7 +800,7 @@ export default function DatabaseManagement() {
                                     </th>
                                   ))}
                                 <th className="px-2 sm:px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider sticky right-0 bg-gray-50">
-                                  Actions
+                                  {t('database:messages.actions')}
                                 </th>
                               </tr>
                             </thead>
@@ -842,7 +844,7 @@ export default function DatabaseManagement() {
 
                           {tableData.length === 0 && (
                             <div className="text-center py-8 sm:py-12 text-gray-500 text-sm">
-                              No data found in this table
+                              {t('database:messages.noData')}
                             </div>
                           )}
                         </div>
@@ -857,19 +859,19 @@ export default function DatabaseManagement() {
                             <thead>
                               <tr className="border-b border-gray-200">
                                 <th className="px-2 sm:px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                  Column Name
+                                  {t('database:schema.columnName')}
                                 </th>
                                 <th className="px-2 sm:px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                  Data Type
+                                  {t('database:schema.dataType')}
                                 </th>
                                 <th className="px-2 sm:px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                  Nullable
+                                  {t('database:schema.nullable')}
                                 </th>
                                 <th className="px-2 sm:px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
-                                  Default
+                                  {t('database:schema.default')}
                                 </th>
                                 <th className="px-2 sm:px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
-                                  Max Length
+                                  {t('database:schema.maxLength')}
                                 </th>
                               </tr>
                             </thead>
@@ -909,7 +911,7 @@ export default function DatabaseManagement() {
                         <div className="space-y-4">
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              SQL Query (SELECT only)
+                              {t('database:placeholders.sqlQuery')}
                             </label>
                             <textarea
                               value={customQuery}
@@ -924,7 +926,7 @@ export default function DatabaseManagement() {
                             className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
                           >
                             <Code className="h-4 w-4" />
-                            Execute Query
+                            {t('database:actions.executeQuery')}
                           </button>
 
                           {queryResult.length > 0 && (
@@ -969,8 +971,8 @@ export default function DatabaseManagement() {
             ) : (
               <div className="flex flex-col items-center justify-center h-96 text-gray-500">
                 <Table className="h-12 w-12 mb-4" />
-                <p className="text-lg font-medium">Select a table to view data</p>
-                <p className="text-sm mt-2">Choose from the list on the left</p>
+                <p className="text-lg font-medium">{t('database:descriptions.selectTable')}</p>
+                <p className="text-sm mt-2">{t('database:descriptions.chooseFromList')}</p>
               </div>
             )}
           </div>
@@ -983,10 +985,10 @@ export default function DatabaseManagement() {
               <div className="p-4 sm:p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg sm:text-xl font-semibold text-gray-900">
-                    {modalType === 'add' && 'Add New Row'}
-                    {modalType === 'edit' && 'Edit Row'}
-                    {modalType === 'truncate' && 'Truncate Table'}
-                    {modalType === 'drop' && 'Drop Table'}
+                    {modalType === 'add' && t('database:titles.addRow')}
+                    {modalType === 'edit' && t('database:titles.editRow')}
+                    {modalType === 'truncate' && t('database:titles.truncateTable')}
+                    {modalType === 'drop' && t('database:titles.dropTable')}
                   </h3>
                   <button
                     onClick={() => {
@@ -1006,12 +1008,12 @@ export default function DatabaseManagement() {
                       <AlertTriangle className="h-5 sm:h-6 w-5 sm:w-6 text-red-600 flex-shrink-0 mt-0.5 sm:mt-0" />
                       <div>
                         <p className="text-red-900 font-medium text-sm sm:text-base">
-                          Warning: This action cannot be undone!
+                          {t('database:messages.warningCannotUndo')}
                         </p>
                         <p className="text-red-700 text-xs sm:text-sm mt-1">
                           {modalType === 'truncate'
-                            ? `All data in table "${selectedTable}" will be permanently deleted.`
-                            : `The entire table "${selectedTable}" and all its data will be permanently removed from the database.`}
+                            ? t('database:messages.truncateWarning', { table: selectedTable })
+                            : t('database:messages.dropWarning', { table: selectedTable })}
                         </p>
                       </div>
                     </div>
@@ -1021,13 +1023,13 @@ export default function DatabaseManagement() {
                         onClick={() => setShowModal(false)}
                         className="w-full sm:w-auto px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 text-sm"
                       >
-                        Cancel
+                        {t('database:actions.cancel')}
                       </button>
                       <button
                         onClick={modalType === 'truncate' ? handleTruncateTable : handleDropTable}
                         className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm"
                       >
-                        {modalType === 'truncate' ? 'Truncate Table' : 'Drop Table'}
+                        {modalType === 'truncate' ? t('database:titles.truncateTable') : t('database:titles.dropTable')}
                       </button>
                     </div>
                   </div>
@@ -1052,7 +1054,7 @@ export default function DatabaseManagement() {
                           className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                         />
                         <span className="text-xs text-gray-500">
-                          Type: {column.data_type}
+                          {t('database:messages.type')}: {column.data_type}
                         </span>
                       </div>
                     ))}
@@ -1066,13 +1068,13 @@ export default function DatabaseManagement() {
                         }}
                         className="w-full sm:w-auto px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 text-sm"
                       >
-                        Cancel
+                        {t('database:actions.cancel')}
                       </button>
                       <button
                         onClick={modalType === 'add' ? handleAddRow : handleUpdateRow}
                         className="w-full sm:w-auto px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 text-sm"
                       >
-                        {modalType === 'add' ? 'Add Row' : 'Update Row'}
+                        {modalType === 'add' ? t('database:actions.addRow') : t('database:actions.updateRow')}
                       </button>
                     </div>
                   </div>
