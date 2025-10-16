@@ -1,0 +1,201 @@
+{
+  "buttons": {
+    "send": "Enviar",
+    "close": "Fechar",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "create": "Criar",
+    "update": "Atualizar",
+    "confirm": "Confirmar",
+    "back": "Voltar",
+    "next": "Próximo",
+    "submit": "Enviar",
+    "search": "Pesquisar",
+    "filter": "Filtrar",
+    "export": "Exportar",
+    "import": "Importar",
+    "refresh": "Atualizar",
+    "settings": "Configurações",
+    "logout": "Sair",
+    "change": "Alterar"
+  },
+  "labels": {
+    "email": "Endereço de e-mail",
+    "password": "Senha",
+    "username": "Nome de usuário",
+    "name": "Nome",
+    "phone": "Telefone",
+    "address": "Endereço",
+    "city": "Cidade",
+    "province": "Província",
+    "postalCode": "Código postal",
+    "country": "País",
+    "status": "Status",
+    "actions": "Ações",
+    "description": "Descrição",
+    "notes": "Notas",
+    "date": "Data",
+    "time": "Hora",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "tax": "Imposto",
+    "quantity": "Quantidade",
+    "price": "Preço",
+    "language": "Idioma"
+  },
+  "placeholders": {
+    "enterEmail": "Digite seu e-mail",
+    "enterPassword": "Digite sua senha",
+    "search": "Pesquisar...",
+    "selectOption": "Selecione uma opção",
+    "typeMessage": "Digite sua mensagem...",
+    "enterName": "Digite o nome",
+    "enterPhone": "Digite o número de telefone"
+  },
+  "messages": {
+    "loading": "Carregando...",
+    "saving": "Salvando...",
+    "success": "Sucesso!",
+    "error": "Ocorreu um erro",
+    "noData": "Nenhum dado disponível",
+    "confirm": "Tem certeza?",
+    "unsavedChanges": "Você tem alterações não salvas"
+  },
+  "errors": {
+    "required": "Este campo é obrigatório",
+    "invalidEmail": "Endereço de e-mail inválido",
+    "invalidPhone": "Número de telefone inválido",
+    "networkError": "Erro de rede. Tente novamente.",
+    "serverError": "Erro do servidor. Tente novamente mais tarde.",
+    "unauthorized": "Acesso não autorizado",
+    "notFound": "Não encontrado",
+    "sessionExpired": "Sua sessão expirou. Faça login novamente.",
+    "validation": {
+      "selectStore": "Selecione uma loja",
+      "selectSupplier": "Selecione um fornecedor",
+      "addAtLeastOneItem": "Adicione pelo menos um item",
+      "fillRequiredFields": "Preencha todos os campos obrigatórios para cada item",
+      "enterLicenseNumber": "Digite um número de licença",
+      "fillAllRequiredFields": "Preencha todos os campos obrigatórios: {{fields}}",
+      "invalidJson": "Não é possível salvar JSON inválido: {{message}}",
+      "invalidCode": "Código inválido",
+      "invalidVerificationCode": "Código de verificação inválido"
+    },
+    "operations": {
+      "saveFailed": "Falha ao salvar as configurações",
+      "validationFailed": "Falha na validação",
+      "fetchFailed": "Falha ao buscar {{resource}}",
+      "createFailed": "Falha ao criar {{resource}}",
+      "updateFailed": "Falha ao atualizar {{resource}}",
+      "deleteFailed": "Falha ao excluir {{resource}}",
+      "searchFailed": "Falha ao pesquisar {{resource}}",
+      "loadFailed": "Falha ao carregar {{resource}}. Atualize a página.",
+      "sendFailed": "Falha ao enviar {{resource}}",
+      "generateFailed": "Falha ao gerar {{resource}}",
+      "verifyFailed": "Falha ao verificar {{resource}}",
+      "processFailed": "Falha ao processar {{action}}. Tente novamente.",
+      "testConnectionFailed": "Falha no teste de conexão. Verifique sua rede."
+    }
+  },
+  "common": {
+    "yes": "Sim",
+    "no": "Não",
+    "or": "ou",
+    "and": "e",
+    "today": "Hoje",
+    "yesterday": "Ontem",
+    "week": "Semana",
+    "month": "Mês",
+    "year": "Ano",
+    "all": "Todos",
+    "none": "Nenhum",
+    "active": "Ativo",
+    "inactive": "Inativo",
+    "pending": "Pendente",
+    "completed": "Concluído",
+    "failed": "Falhou",
+    "notSpecified": "Não especificado",
+    "unknown": "Desconhecido",
+    "na": "N/D"
+  },
+  "toasts": {
+    "password": {
+      "changeSuccess": "Senha alterada com sucesso! Faça login novamente.",
+      "changeFailed": "Falha ao alterar a senha. Tente novamente."
+    },
+    "broadcast": {
+      "createSuccess": "Transmissão criada com sucesso!",
+      "createFailed": "Falha ao criar a transmissão"
+    },
+    "template": {
+      "fetchFailed": "Falha ao buscar os modelos",
+      "createSuccess": "Modelo criado com sucesso",
+      "createFailed": "Falha ao criar o modelo",
+      "updateSuccess": "Modelo atualizado com sucesso",
+      "updateFailed": "Falha ao atualizar o modelo",
+      "deleteSuccess": "Modelo excluído com sucesso",
+      "deleteFailed": "Falha ao excluir o modelo"
+    },
+    "model": {
+      "fetchFailed": "Falha ao buscar os modelos",
+      "loadFailed": "Falha ao carregar o modelo",
+      "unloadSuccess": "Modelo descarregado com sucesso",
+      "unloadFailed": "Falha ao descarregar o modelo",
+      "updateFailed": "Falha ao atualizar o modelo"
+    },
+    "config": {
+      "fetchFailed": "Falha ao buscar a configuração",
+      "updateSuccess": "Configuração atualizada com sucesso",
+      "updateFailed": "Falha ao salvar a configuração"
+    },
+    "agent": {
+      "fetchFailed": "Falha ao buscar os agentes"
+    },
+    "personality": {
+      "fetchFailed": "Falha ao buscar as personalidades"
+    },
+    "router": {
+      "statsFetchFailed": "Falha ao buscar as estatísticas do roteador",
+      "toggleFailed": "Falha ao alternar o modo de inferência"
+    }
+  },
+  "confirmations": {
+    "deleteUser": "Tem certeza de que deseja excluir o usuário {{email}}?",
+    "deleteUserPermanent": "Tem certeza de que deseja excluir este usuário? Esta ação não pode ser desfeita.",
+    "deleteTerminal": "Tem certeza de que deseja excluir este terminal?",
+    "passwordResetMethod": "Clique em OK para enviar um link de redefinição de senha por e-mail\nClique em Cancelar para gerar e exibir uma senha temporária"
+  },
+  "modals": {
+    "changePassword": {
+      "title": "Alterar senha",
+      "currentPassword": "Senha atual",
+      "newPassword": "Nova senha",
+      "confirmPassword": "Confirmar nova senha",
+      "placeholders": {
+        "currentPassword": "Digite a senha atual",
+        "newPassword": "Digite a nova senha",
+        "confirmPassword": "Confirme a nova senha"
+      },
+      "requirements": {
+        "title": "A senha deve conter:",
+        "minLength": "Pelo menos 8 caracteres",
+        "uppercase": "Uma letra maiúscula",
+        "lowercase": "Uma letra minúscula",
+        "number": "Um número"
+      },
+      "validation": {
+        "currentRequired": "A senha atual é obrigatória",
+        "newRequired": "A nova senha é obrigatória",
+        "notMeetRequirements": "A senha não atende aos requisitos",
+        "confirmRequired": "Confirme sua nova senha",
+        "notMatch": "As senhas não coincidem",
+        "mustBeDifferent": "A nova senha deve ser diferente da senha atual",
+        "incorrectCurrent": "A senha atual está incorreta"
+      },
+      "securityNotice": "Após alterar sua senha, você será desconectado e precisará fazer login novamente com suas novas credenciais.",
+      "changing": "Alterando..."
+    }
+  }
+}
