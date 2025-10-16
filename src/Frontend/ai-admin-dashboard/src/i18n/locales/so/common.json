@@ -1,0 +1,201 @@
+{
+  "buttons": {
+    "send": "Dir",
+    "close": "Xir",
+    "cancel": "Jooji",
+    "save": "Kaydi",
+    "delete": "Tirtir",
+    "edit": "Wax ka badal",
+    "create": "Samee",
+    "update": "Cusboonaysii",
+    "confirm": "Xaqiiji",
+    "back": "Dib u noqo",
+    "next": "Xiga",
+    "submit": "Gudbi",
+    "search": "Raadi",
+    "filter": "Shaandhee",
+    "export": "Dhoofin",
+    "import": "Soo dejin",
+    "refresh": "Cusbooneysii",
+    "settings": "Dejinta",
+    "logout": "Ka bax",
+    "change": "Bedel"
+  },
+  "labels": {
+    "email": "Cinwaanka iimaylka",
+    "password": "Erayga sirta ah",
+    "username": "Magaca isticmaalaha",
+    "name": "Magac",
+    "phone": "Telefoon",
+    "address": "Cinwaan",
+    "city": "Magaalo",
+    "province": "Gobol",
+    "postalCode": "Koodhka boostada",
+    "country": "Waddan",
+    "status": "Xaaladda",
+    "actions": "Ficillo",
+    "description": "Sharaxaad",
+    "notes": "Qoraalada",
+    "date": "Taariikh",
+    "time": "Waqti",
+    "total": "Wadarta",
+    "subtotal": "Wadarta hoose",
+    "tax": "Canshuur",
+    "quantity": "Tirada",
+    "price": "Qiimaha",
+    "language": "Luqadda"
+  },
+  "placeholders": {
+    "enterEmail": "Geli iimaylkaaga",
+    "enterPassword": "Geli erayga sirta ah",
+    "search": "Raadi...",
+    "selectOption": "Dooro ikhtiyaar",
+    "typeMessage": "Qor fariintaada...",
+    "enterName": "Geli magaca",
+    "enterPhone": "Geli lambarka telefoonka"
+  },
+  "messages": {
+    "loading": "Waa la soo dejinayaa...",
+    "saving": "Waa la kaydiyaa...",
+    "success": "Guul!",
+    "error": "Khalad ayaa dhacay",
+    "noData": "Xog ma jirto",
+    "confirm": "Ma hubtaa?",
+    "unsavedChanges": "Waxaad leedahay isbeddello aan la kaydiysan"
+  },
+  "errors": {
+    "required": "Goobtan waa laga dhaadhiciyaa",
+    "invalidEmail": "Iimaylka aan sax ahayn",
+    "invalidPhone": "Lambarka telefoonka aan sax ahayn",
+    "networkError": "Khalad shabakad. Fadlan mar kale isku day.",
+    "serverError": "Khalad server. Fadlan mar dambe isku day.",
+    "unauthorized": "Marin la'aan aan la ogolaayn",
+    "notFound": "Lama helin",
+    "sessionExpired": "Waqtigaaga wuu dhammaaday. Fadlan mar kale gal.",
+    "validation": {
+      "selectStore": "Fadlan dooro dukaan",
+      "selectSupplier": "Fadlan dooro alaab-gade",
+      "addAtLeastOneItem": "Fadlan ku dar ugu yaraan hal shay",
+      "fillRequiredFields": "Fadlan buuxi dhammaan meelaha loo baahan yahay shay kasta",
+      "enterLicenseNumber": "Fadlan geli lambarka shati-oggolaanshaha",
+      "fillAllRequiredFields": "Fadlan buuxi dhammaan meelaha loo baahan yahay: {{fields}}",
+      "invalidJson": "Lama keydin karo JSON aan sax ahayn: {{message}}",
+      "invalidCode": "Koodh aan sax ahayn",
+      "invalidVerificationCode": "Koodh xaqiijin aan sax ahayn"
+    },
+    "operations": {
+      "saveFailed": "Kaydinta dejinta ayaa fashilantay",
+      "validationFailed": "Xaqiijinta ayaa fashilantay",
+      "fetchFailed": "Keenista {{resource}} ayaa fashilantay",
+      "createFailed": "Abuuraida {{resource}} ayaa fashilantay",
+      "updateFailed": "Cusboonaysiinta {{resource}} ayaa fashilantay",
+      "deleteFailed": "Tirtirida {{resource}} ayaa fashilantay",
+      "searchFailed": "Raadinta {{resource}} ayaa fashilantay",
+      "loadFailed": "Soo dejinta {{resource}} ayaa fashilantay. Fadlan bog cusbooneysii.",
+      "sendFailed": "Dirida {{resource}} ayaa fashilantay",
+      "generateFailed": "Soo saarida {{resource}} ayaa fashilantay",
+      "verifyFailed": "Xaqiijinta {{resource}} ayaa fashilantay",
+      "processFailed": "Habaynta {{action}} ayaa fashilantay. Fadlan mar kale isku day.",
+      "testConnectionFailed": "Tijaabinta isku-xirka ayaa fashilantay. Fadlan hubi shabakadaada."
+    }
+  },
+  "common": {
+    "yes": "Haa",
+    "no": "Maya",
+    "or": "ama",
+    "and": "iyo",
+    "today": "Maanta",
+    "yesterday": "Shalay",
+    "week": "Toddobaad",
+    "month": "Bil",
+    "year": "Sano",
+    "all": "Dhammaan",
+    "none": "Midna",
+    "active": "Firfircoon",
+    "inactive": "Ma firfircoon",
+    "pending": "Sugaya",
+    "completed": "La dhammaystiray",
+    "failed": "Fashilantay",
+    "notSpecified": "Lama cayimin",
+    "unknown": "Lama aqoon",
+    "na": "Ma jiro"
+  },
+  "toasts": {
+    "password": {
+      "changeSuccess": "Erayga sirta ah si guul leh ayaa loo beddelay! Fadlan mar kale gal.",
+      "changeFailed": "Beddelida erayga sirta ah ayaa fashilantay. Fadlan mar kale isku day."
+    },
+    "broadcast": {
+      "createSuccess": "Baahinta si guul leh ayaa loo sameeyay!",
+      "createFailed": "Abuuraida baahinta ayaa fashilantay"
+    },
+    "template": {
+      "fetchFailed": "Soo qaadista qaababka ayaa fashilantay",
+      "createSuccess": "Qaabka si guul leh ayaa loo sameeyay",
+      "createFailed": "Abuuraida qaabka ayaa fashilantay",
+      "updateSuccess": "Qaabka si guul leh ayaa loo cusboonaysiiyay",
+      "updateFailed": "Cusboonaysiinta qaabka ayaa fashilantay",
+      "deleteSuccess": "Qaabka si guul leh ayaa loo tirtiray",
+      "deleteFailed": "Tirtirida qaabka ayaa fashilantay"
+    },
+    "model": {
+      "fetchFailed": "Soo qaadista moodooyinka ayaa fashilantay",
+      "loadFailed": "Soo dejinta moodooyinka ayaa fashilantay",
+      "unloadSuccess": "Moodada si guul leh ayaa loo saaray",
+      "unloadFailed": "Saarida moodada ayaa fashilantay",
+      "updateFailed": "Cusboonaysiinta moodada ayaa fashilantay"
+    },
+    "config": {
+      "fetchFailed": "Soo qaadista habaynta ayaa fashilantay",
+      "updateSuccess": "Habaynta si guul leh ayaa loo cusboonaysiiyay",
+      "updateFailed": "Kaydinta habaynta ayaa fashilantay"
+    },
+    "agent": {
+      "fetchFailed": "Soo qaadista wakiillada ayaa fashilantay"
+    },
+    "personality": {
+      "fetchFailed": "Soo qaadista shakhsiyaadka ayaa fashilantay"
+    },
+    "router": {
+      "statsFetchFailed": "Soo qaadista xogta router-ka ayaa fashilantay",
+      "toggleFailed": "Beddelida habka qiyaasta ayaa fashilantay"
+    }
+  },
+  "confirmations": {
+    "deleteUser": "Ma hubtaa inaad tirtiri doonto isticmaalaha {{email}}?",
+    "deleteUserPermanent": "Ma hubtaa inaad tirtiri doonto isticmaalahan? Ficilkan lama soo celin karo.",
+    "deleteTerminal": "Ma hubtaa inaad tirtiri doonto terminal-kan?",
+    "passwordResetMethod": "Guji OK si aad ugu dirto link-ka dib u dejinta erayga sirta ah iimaylka\nGuji Jooji si aad u abuurto oo u muujiso erayga sirta ah ku meel gaar ah"
+  },
+  "modals": {
+    "changePassword": {
+      "title": "Bedel Erayga Sirta ah",
+      "currentPassword": "Erayga sirta ah ee hadda",
+      "newPassword": "Erayga sirta ah ee cusub",
+      "confirmPassword": "Xaqiiji erayga sirta ah ee cusub",
+      "placeholders": {
+        "currentPassword": "Geli erayga sirta ah ee hadda",
+        "newPassword": "Geli erayga sirta ah ee cusub",
+        "confirmPassword": "Xaqiiji erayga sirta ah ee cusub"
+      },
+      "requirements": {
+        "title": "Erayga sirta ah waa inuu ka kooban yahay:",
+        "minLength": "Ugu yaraan 8 xaraf",
+        "uppercase": "Hal xaraf weyn",
+        "lowercase": "Hal xaraf yar",
+        "number": "Hal lambar"
+      },
+      "validation": {
+        "currentRequired": "Erayga sirta ah ee hadda waa laga dhaadhiciyaa",
+        "newRequired": "Erayga sirta ah ee cusub waa laga dhaadhiciyaa",
+        "notMeetRequirements": "Erayga sirta ah ma buuxinayo shuruudaha",
+        "confirmRequired": "Fadlan xaqiiji erayga sirta ah ee cusub",
+        "notMatch": "Ereyada sirta ah ma isku mid aha",
+        "mustBeDifferent": "Erayga sirta ah ee cusub waa inuu ka duwan yahay kan hadda",
+        "incorrectCurrent": "Erayga sirta ah ee hadda wuu khaldan yahay"
+      },
+      "securityNotice": "Ka dib markaad bedesho erayga sirta ah, waa lagaa saari doonaa oo waxaad u baahan doontaa inaad ku soo gasho aqoonsiyadaada cusub.",
+      "changing": "Waa la bedelayaa..."
+    }
+  }
+}
