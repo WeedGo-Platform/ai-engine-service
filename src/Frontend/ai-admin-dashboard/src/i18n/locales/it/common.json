@@ -1,0 +1,201 @@
+{
+  "buttons": {
+    "send": "Invia",
+    "close": "Chiudi",
+    "cancel": "Annulla",
+    "save": "Salva",
+    "delete": "Elimina",
+    "edit": "Modifica",
+    "create": "Crea",
+    "update": "Aggiorna",
+    "confirm": "Conferma",
+    "back": "Indietro",
+    "next": "Avanti",
+    "submit": "Invia",
+    "search": "Cerca",
+    "filter": "Filtra",
+    "export": "Esporta",
+    "import": "Importa",
+    "refresh": "Aggiorna",
+    "settings": "Impostazioni",
+    "logout": "Esci",
+    "change": "Modifica"
+  },
+  "labels": {
+    "email": "Indirizzo email",
+    "password": "Password",
+    "username": "Nome utente",
+    "name": "Nome",
+    "phone": "Telefono",
+    "address": "Indirizzo",
+    "city": "Città",
+    "province": "Provincia",
+    "postalCode": "Codice postale",
+    "country": "Paese",
+    "status": "Stato",
+    "actions": "Azioni",
+    "description": "Descrizione",
+    "notes": "Note",
+    "date": "Data",
+    "time": "Ora",
+    "total": "Totale",
+    "subtotal": "Subtotale",
+    "tax": "Tassa",
+    "quantity": "Quantità",
+    "price": "Prezzo",
+    "language": "Lingua"
+  },
+  "placeholders": {
+    "enterEmail": "Inserisci la tua email",
+    "enterPassword": "Inserisci la tua password",
+    "search": "Cerca...",
+    "selectOption": "Seleziona un'opzione",
+    "typeMessage": "Scrivi il tuo messaggio...",
+    "enterName": "Inserisci il nome",
+    "enterPhone": "Inserisci il numero di telefono"
+  },
+  "messages": {
+    "loading": "Caricamento...",
+    "saving": "Salvataggio...",
+    "success": "Successo!",
+    "error": "Si è verificato un errore",
+    "noData": "Nessun dato disponibile",
+    "confirm": "Sei sicuro?",
+    "unsavedChanges": "Hai modifiche non salvate"
+  },
+  "errors": {
+    "required": "Questo campo è obbligatorio",
+    "invalidEmail": "Indirizzo email non valido",
+    "invalidPhone": "Numero di telefono non valido",
+    "networkError": "Errore di rete. Riprova.",
+    "serverError": "Errore del server. Riprova più tardi.",
+    "unauthorized": "Accesso non autorizzato",
+    "notFound": "Non trovato",
+    "sessionExpired": "La tua sessione è scaduta. Effettua nuovamente l'accesso.",
+    "validation": {
+      "selectStore": "Seleziona un negozio",
+      "selectSupplier": "Seleziona un fornitore",
+      "addAtLeastOneItem": "Aggiungi almeno un articolo",
+      "fillRequiredFields": "Compila tutti i campi obbligatori per ogni articolo",
+      "enterLicenseNumber": "Inserisci un numero di licenza",
+      "fillAllRequiredFields": "Compila tutti i campi obbligatori: {{fields}}",
+      "invalidJson": "Impossibile salvare JSON non valido: {{message}}",
+      "invalidCode": "Codice non valido",
+      "invalidVerificationCode": "Codice di verifica non valido"
+    },
+    "operations": {
+      "saveFailed": "Salvataggio delle impostazioni non riuscito",
+      "validationFailed": "Validazione non riuscita",
+      "fetchFailed": "Recupero di {{resource}} non riuscito",
+      "createFailed": "Creazione di {{resource}} non riuscita",
+      "updateFailed": "Aggiornamento di {{resource}} non riuscito",
+      "deleteFailed": "Eliminazione di {{resource}} non riuscita",
+      "searchFailed": "Ricerca di {{resource}} non riuscita",
+      "loadFailed": "Caricamento di {{resource}} non riuscito. Aggiorna la pagina.",
+      "sendFailed": "Invio di {{resource}} non riuscito",
+      "generateFailed": "Generazione di {{resource}} non riuscita",
+      "verifyFailed": "Verifica di {{resource}} non riuscita",
+      "processFailed": "Elaborazione di {{action}} non riuscita. Riprova.",
+      "testConnectionFailed": "Test di connessione non riuscito. Verifica la tua rete."
+    }
+  },
+  "common": {
+    "yes": "Sì",
+    "no": "No",
+    "or": "o",
+    "and": "e",
+    "today": "Oggi",
+    "yesterday": "Ieri",
+    "week": "Settimana",
+    "month": "Mese",
+    "year": "Anno",
+    "all": "Tutti",
+    "none": "Nessuno",
+    "active": "Attivo",
+    "inactive": "Inattivo",
+    "pending": "In attesa",
+    "completed": "Completato",
+    "failed": "Fallito",
+    "notSpecified": "Non specificato",
+    "unknown": "Sconosciuto",
+    "na": "N/D"
+  },
+  "toasts": {
+    "password": {
+      "changeSuccess": "Password modificata con successo! Effettua nuovamente l'accesso.",
+      "changeFailed": "Modifica della password non riuscita. Riprova."
+    },
+    "broadcast": {
+      "createSuccess": "Trasmissione creata con successo!",
+      "createFailed": "Creazione della trasmissione non riuscita"
+    },
+    "template": {
+      "fetchFailed": "Recupero dei modelli non riuscito",
+      "createSuccess": "Modello creato con successo",
+      "createFailed": "Creazione del modello non riuscita",
+      "updateSuccess": "Modello aggiornato con successo",
+      "updateFailed": "Aggiornamento del modello non riuscito",
+      "deleteSuccess": "Modello eliminato con successo",
+      "deleteFailed": "Eliminazione del modello non riuscita"
+    },
+    "model": {
+      "fetchFailed": "Recupero dei modelli non riuscito",
+      "loadFailed": "Caricamento del modello non riuscito",
+      "unloadSuccess": "Modello scaricato con successo",
+      "unloadFailed": "Scaricamento del modello non riuscito",
+      "updateFailed": "Aggiornamento del modello non riuscito"
+    },
+    "config": {
+      "fetchFailed": "Recupero della configurazione non riuscito",
+      "updateSuccess": "Configurazione aggiornata con successo",
+      "updateFailed": "Salvataggio della configurazione non riuscito"
+    },
+    "agent": {
+      "fetchFailed": "Recupero degli agenti non riuscito"
+    },
+    "personality": {
+      "fetchFailed": "Recupero delle personalità non riuscito"
+    },
+    "router": {
+      "statsFetchFailed": "Recupero delle statistiche del router non riuscito",
+      "toggleFailed": "Cambio della modalità di inferenza non riuscito"
+    }
+  },
+  "confirmations": {
+    "deleteUser": "Sei sicuro di voler eliminare l'utente {{email}}?",
+    "deleteUserPermanent": "Sei sicuro di voler eliminare questo utente? Questa azione non può essere annullata.",
+    "deleteTerminal": "Sei sicuro di voler eliminare questo terminale?",
+    "passwordResetMethod": "Fai clic su OK per inviare un link di ripristino password via email\nFai clic su Annulla per generare e visualizzare una password temporanea"
+  },
+  "modals": {
+    "changePassword": {
+      "title": "Modifica password",
+      "currentPassword": "Password attuale",
+      "newPassword": "Nuova password",
+      "confirmPassword": "Conferma nuova password",
+      "placeholders": {
+        "currentPassword": "Inserisci la password attuale",
+        "newPassword": "Inserisci la nuova password",
+        "confirmPassword": "Conferma la nuova password"
+      },
+      "requirements": {
+        "title": "La password deve contenere:",
+        "minLength": "Almeno 8 caratteri",
+        "uppercase": "Una lettera maiuscola",
+        "lowercase": "Una lettera minuscola",
+        "number": "Un numero"
+      },
+      "validation": {
+        "currentRequired": "La password attuale è obbligatoria",
+        "newRequired": "La nuova password è obbligatoria",
+        "notMeetRequirements": "La password non soddisfa i requisiti",
+        "confirmRequired": "Conferma la tua nuova password",
+        "notMatch": "Le password non corrispondono",
+        "mustBeDifferent": "La nuova password deve essere diversa dalla password attuale",
+        "incorrectCurrent": "La password attuale non è corretta"
+      },
+      "securityNotice": "Dopo aver modificato la password, verrai disconnesso e dovrai effettuare nuovamente l'accesso con le tue nuove credenziali.",
+      "changing": "Modifica in corso..."
+    }
+  }
+}
