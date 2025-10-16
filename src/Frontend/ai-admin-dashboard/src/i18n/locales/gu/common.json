@@ -1,0 +1,201 @@
+{
+  "buttons": {
+    "send": "મોકલો",
+    "close": "બંધ કરો",
+    "cancel": "રદ કરો",
+    "save": "સાચવો",
+    "delete": "કાઢી નાખો",
+    "edit": "સંપાદિત કરો",
+    "create": "બનાવો",
+    "update": "અપડેટ કરો",
+    "confirm": "પુષ્ટિ કરો",
+    "back": "પાછા",
+    "next": "આગળ",
+    "submit": "સબમિટ કરો",
+    "search": "શોધો",
+    "filter": "ફિલ્ટર કરો",
+    "export": "નિકાસ કરો",
+    "import": "આયાત કરો",
+    "refresh": "તાજું કરો",
+    "settings": "સેટિંગ્સ",
+    "logout": "લૉગઆઉટ",
+    "change": "બદલો"
+  },
+  "labels": {
+    "email": "ઇમેઇલ સરનામું",
+    "password": "પાસવર્ડ",
+    "username": "વપરાશકર્તા નામ",
+    "name": "નામ",
+    "phone": "ફોન",
+    "address": "સરનામું",
+    "city": "શહેર",
+    "province": "પ્રાંત",
+    "postalCode": "પોસ્ટલ કોડ",
+    "country": "દેશ",
+    "status": "સ્થિતિ",
+    "actions": "ક્રિયાઓ",
+    "description": "વર્ણન",
+    "notes": "નોંધ",
+    "date": "તારીખ",
+    "time": "સમય",
+    "total": "કુલ",
+    "subtotal": "પેટા કુલ",
+    "tax": "કર",
+    "quantity": "જથ્થો",
+    "price": "કિંમત",
+    "language": "ભાષા"
+  },
+  "placeholders": {
+    "enterEmail": "તમારું ઇમેઇલ દાખલ કરો",
+    "enterPassword": "તમારો પાસવર્ડ દાખલ કરો",
+    "search": "શોધો...",
+    "selectOption": "એક વિકલ્પ પસંદ કરો",
+    "typeMessage": "તમારો સંદેશ ટાઇપ કરો...",
+    "enterName": "નામ દાખલ કરો",
+    "enterPhone": "ફોન નંબર દાખલ કરો"
+  },
+  "messages": {
+    "loading": "લોડ થઈ રહ્યું છે...",
+    "saving": "સાચવી રહ્યું છે...",
+    "success": "સફળતા!",
+    "error": "એક ભૂલ થઈ",
+    "noData": "કોઈ ડેટા ઉપલબ્ધ નથી",
+    "confirm": "શું તમે ચોક્કસ છો?",
+    "unsavedChanges": "તમારી પાસે સાચવેલા નથી એવા ફેરફારો છે"
+  },
+  "errors": {
+    "required": "આ ફીલ્ડ આવશ્યક છે",
+    "invalidEmail": "અમાન્ય ઇમેઇલ સરનામું",
+    "invalidPhone": "અમાન્ય ફોન નંબર",
+    "networkError": "નેટવર્ક ભૂલ. કૃપા કરીને ફરીથી પ્રયાસ કરો.",
+    "serverError": "સર્વર ભૂલ. કૃપા કરીને પછીથી પ્રયાસ કરો.",
+    "unauthorized": "અનધિકૃત પ્રવેશ",
+    "notFound": "મળ્યું નહીં",
+    "sessionExpired": "તમારું સત્ર સમાપ્ત થઈ ગયું છે. કૃપા કરીને ફરીથી લૉગિન કરો.",
+    "validation": {
+      "selectStore": "કૃપા કરીને એક સ્ટોર પસંદ કરો",
+      "selectSupplier": "કૃપા કરીને એક સપ્લાયર પસંદ કરો",
+      "addAtLeastOneItem": "કૃપા કરીને ઓછામાં ઓછી એક આઇટમ ઉમેરો",
+      "fillRequiredFields": "કૃપા કરીને દરેક આઇટમ માટે બધા આવશ્યક ફીલ્ડ્સ ભરો",
+      "enterLicenseNumber": "કૃપા કરીને લાઇસન્સ નંબર દાખલ કરો",
+      "fillAllRequiredFields": "કૃપા કરીને બધા આવશ્યક ફીલ્ડ્સ ભરો: {{fields}}",
+      "invalidJson": "અમાન્ય JSON સાચવી શકાતું નથી: {{message}}",
+      "invalidCode": "અમાન્ય કોડ",
+      "invalidVerificationCode": "અમાન્ય ચકાસણી કોડ"
+    },
+    "operations": {
+      "saveFailed": "સેટિંગ્સ સાચવવામાં નિષ્ફળ",
+      "validationFailed": "માન્યતા નિષ્ફળ",
+      "fetchFailed": "{{resource}} લાવવામાં નિષ્ફળ",
+      "createFailed": "{{resource}} બનાવવામાં નિષ્ફળ",
+      "updateFailed": "{{resource}} અપડેટ કરવામાં નિષ્ફળ",
+      "deleteFailed": "{{resource}} કાઢી નાખવામાં નિષ્ફળ",
+      "searchFailed": "{{resource}} શોધવામાં નિષ્ફળ",
+      "loadFailed": "{{resource}} લોડ કરવામાં નિષ્ફળ. કૃપા કરીને પેજ તાજું કરો.",
+      "sendFailed": "{{resource}} મોકલવામાં નિષ્ફળ",
+      "generateFailed": "{{resource}} જનરેટ કરવામાં નિષ્ફળ",
+      "verifyFailed": "{{resource}} ચકાસવામાં નિષ્ફળ",
+      "processFailed": "{{action}} પ્રક્રિયા કરવામાં નિષ્ફળ. કૃપા કરીને ફરીથી પ્રયાસ કરો.",
+      "testConnectionFailed": "કનેક્શન ટેસ્ટ નિષ્ફળ. કૃપા કરીને તમારું નેટવર્ક તપાસો."
+    }
+  },
+  "common": {
+    "yes": "હા",
+    "no": "ના",
+    "or": "અથવા",
+    "and": "અને",
+    "today": "આજે",
+    "yesterday": "ગઈકાલે",
+    "week": "અઠવાડિયું",
+    "month": "મહિનો",
+    "year": "વર્ષ",
+    "all": "બધા",
+    "none": "કોઈ નહીં",
+    "active": "સક્રિય",
+    "inactive": "નિષ્ક્રિય",
+    "pending": "બાકી",
+    "completed": "પૂર્ણ",
+    "failed": "નિષ્ફળ",
+    "notSpecified": "નિર્દિષ્ટ નથી",
+    "unknown": "અજ્ઞાત",
+    "na": "લાગુ નથી"
+  },
+  "toasts": {
+    "password": {
+      "changeSuccess": "પાસવર્ડ સફળતાપૂર્વક બદલાયો! કૃપા કરીને ફરીથી લૉગિન કરો.",
+      "changeFailed": "પાસવર્ડ બદલવામાં નિષ્ફળ. કૃપા કરીને ફરીથી પ્રયાસ કરો."
+    },
+    "broadcast": {
+      "createSuccess": "બ્રોડકાસ્ટ સફળતાપૂર્વક બનાવવામાં આવ્યું!",
+      "createFailed": "બ્રોડકાસ્ટ બનાવવામાં નિષ્ફળ"
+    },
+    "template": {
+      "fetchFailed": "ટેમ્પલેટ્સ લાવવામાં નિષ્ફળ",
+      "createSuccess": "ટેમ્પલેટ સફળતાપૂર્વક બનાવવામાં આવી",
+      "createFailed": "ટેમ્પલેટ બનાવવામાં નિષ્ફળ",
+      "updateSuccess": "ટેમ્પલેટ સફળતાપૂર્વક અપડેટ થઈ",
+      "updateFailed": "ટેમ્પલેટ અપડેટ કરવામાં નિષ્ફળ",
+      "deleteSuccess": "ટેમ્પલેટ સફળતાપૂર્વક કાઢી નાખવામાં આવી",
+      "deleteFailed": "ટેમ્પલેટ કાઢી નાખવામાં નિષ્ફળ"
+    },
+    "model": {
+      "fetchFailed": "મૉડલ્સ લાવવામાં નિષ્ફળ",
+      "loadFailed": "મૉડલ લોડ કરવામાં નિષ્ફળ",
+      "unloadSuccess": "મૉડલ સફળતાપૂર્વક અનલોડ થયું",
+      "unloadFailed": "મૉડલ અનલોડ કરવામાં નિષ્ફળ",
+      "updateFailed": "મૉડલ અપડેટ કરવામાં નિષ્ફળ"
+    },
+    "config": {
+      "fetchFailed": "કૉન્ફિગરેશન લાવવામાં નિષ્ફળ",
+      "updateSuccess": "કૉન્ફિગરેશન સફળતાપૂર્વક અપડેટ થયું",
+      "updateFailed": "કૉન્ફિગરેશન સાચવવામાં નિષ્ફળ"
+    },
+    "agent": {
+      "fetchFailed": "એજન્ટ્સ લાવવામાં નિષ્ફળ"
+    },
+    "personality": {
+      "fetchFailed": "વ્યક્તિત્વો લાવવામાં નિષ્ફળ"
+    },
+    "router": {
+      "statsFetchFailed": "રાઉટર આંકડા લાવવામાં નિષ્ફળ",
+      "toggleFailed": "ઇનફરન્સ મોડ ટૉગલ કરવામાં નિષ્ફળ"
+    }
+  },
+  "confirmations": {
+    "deleteUser": "શું તમે ખરેખર વપરાશકર્તા {{email}} ને કાઢી નાખવા માંગો છો?",
+    "deleteUserPermanent": "શું તમે ખરેખર આ વપરાશકર્તાને કાઢી નાખવા માંગો છો? આ ક્રિયા રદ કરી શકાશે નહીં.",
+    "deleteTerminal": "શું તમે ખરેખર આ ટર્મિનલ કાઢી નાખવા માંગો છો?",
+    "passwordResetMethod": "ઇમેઇલ દ્વારા પાસવર્ડ રીસેટ લિંક મોકલવા માટે ઓકે પર ક્લિક કરો\nઅસ્થાયી પાસવર્ડ જનરેટ કરવા અને બતાવવા માટે રદ કરો પર ક્લિક કરો"
+  },
+  "modals": {
+    "changePassword": {
+      "title": "પાસવર્ડ બદલો",
+      "currentPassword": "વર્તમાન પાસવર્ડ",
+      "newPassword": "નવો પાસવર્ડ",
+      "confirmPassword": "નવો પાસવર્ડ પુષ્ટિ કરો",
+      "placeholders": {
+        "currentPassword": "વર્તમાન પાસવર્ડ દાખલ કરો",
+        "newPassword": "નવો પાસવર્ડ દાખલ કરો",
+        "confirmPassword": "નવો પાસવર્ડ પુષ્ટિ કરો"
+      },
+      "requirements": {
+        "title": "પાસવર્ડમાં હોવું જોઈએ:",
+        "minLength": "ઓછામાં ઓછા 8 અક્ષરો",
+        "uppercase": "એક મોટો અક્ષર",
+        "lowercase": "એક નાનો અક્ષર",
+        "number": "એક નંબર"
+      },
+      "validation": {
+        "currentRequired": "વર્તમાન પાસવર્ડ આવશ્યક છે",
+        "newRequired": "નવો પાસવર્ડ આવશ્યક છે",
+        "notMeetRequirements": "પાસવર્ડ આવશ્યકતાઓને પૂર્ણ કરતું નથી",
+        "confirmRequired": "કૃપા કરીને તમારા નવા પાસવર્ડની પુષ્ટિ કરો",
+        "notMatch": "પાસવર્ડ મેળ ખાતા નથી",
+        "mustBeDifferent": "નવો પાસવર્ડ વર્તમાન પાસવર્ડથી અલગ હોવો જોઈએ",
+        "incorrectCurrent": "વર્તમાન પાસવર્ડ ખોટો છે"
+      },
+      "securityNotice": "તમારો પાસવર્ડ બદલ્યા પછી, તમે લૉગઆઉટ થશો અને તમારે તમારા નવા ક્રેડેન્શિયલ્સ સાથે ફરીથી લૉગિન કરવું પડશે.",
+      "changing": "બદલાઈ રહ્યું છે..."
+    }
+  }
+}
