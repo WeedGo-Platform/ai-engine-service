@@ -1,0 +1,201 @@
+{
+  "buttons": {
+    "send": "Sipwêhtêh",
+    "close": "Kipah",
+    "cancel": "Pônipayih",
+    "save": "Kanawêyimih",
+    "delete": "Wanihah",
+    "edit": "Masinah",
+    "create": "Osîhtâ",
+    "update": "Âhkami osîhtâ",
+    "confirm": "Tâpwê",
+    "back": "Nîswâpisk",
+    "next": "Kîhtwa",
+    "submit": "Kîskisômâkan",
+    "search": "Nantônêh",
+    "filter": "Sêkihâso",
+    "export": "Pêci sâkahikanihk",
+    "import": "Pêci ocistâpânik",
+    "refresh": "Âhkami osîhtâ",
+    "settings": "Itâpiscikewin",
+    "logout": "Sipwêhtêh",
+    "change": "Masinipayiwin"
+  },
+  "labels": {
+    "email": "Masinahikanihk itâpiscikewin",
+    "password": "Kîmowin",
+    "username": "Isiyîhkâsowin",
+    "name": "Isiyîhkâsowin",
+    "phone": "Ayamihâwin mâskocis",
+    "address": "Têwiyâsowikamik",
+    "city": "Otênaw",
+    "province": "Askiy",
+    "postalCode": "Masinahikanihk iyiniw",
+    "country": "Askiy",
+    "status": "Itâpisiwin",
+    "actions": "Isîhcikewin",
+    "description": "Âcimowinis",
+    "notes": "Masinahikêwin",
+    "date": "Kîsikâw",
+    "time": "Tipahikan",
+    "total": "Mâmaw",
+    "subtotal": "Nîso mâmaw",
+    "tax": "Sôniyâw",
+    "quantity": "Tâni",
+    "price": "Kî tipahikaniw",
+    "language": "Nêhiyawêwin"
+  },
+  "placeholders": {
+    "enterEmail": "Masinahikanihk itâpiscikewin isi",
+    "enterPassword": "Kîmowin isi",
+    "search": "Nantônêh...",
+    "selectOption": "Wâpahta kîkway",
+    "typeMessage": "Masinah kîkway...",
+    "enterName": "Isiyîhkâsowin isi",
+    "enterPhone": "Ayamihâwin mâskocis isi"
+  },
+  "messages": {
+    "loading": "Pakitinâm...",
+    "saving": "Kanawêyimihk...",
+    "success": "Miyowisiwin!",
+    "error": "Kîkway mâmitonêyicikâtêw",
+    "noData": "Namôya kîkway",
+    "confirm": "Cî tâpwê?",
+    "unsavedChanges": "Namôya kanawêyimihk"
+  },
+  "errors": {
+    "required": "Ôma wîhkâc",
+    "invalidEmail": "Namôya tâpwê masinahikanihk",
+    "invalidPhone": "Namôya tâpwê mâskocis",
+    "networkError": "Mâmitonêyicikâtêw. Âhkami kwêskisin.",
+    "serverError": "Mâmitonêyicikâtêw kî mâskocis. Âhkami kwêskisin.",
+    "unauthorized": "Namôya astumâkanis",
+    "notFound": "Namôya miskam",
+    "sessionExpired": "Kî tipahikaniw pêyakwaniw. Âhkami itâpiscikewin.",
+    "validation": {
+      "selectStore": "Wâpahta atâwêwikamik",
+      "selectSupplier": "Wâpahta iyiniw",
+      "addAtLeastOneItem": "Isi pêyak kîkway",
+      "fillRequiredFields": "Isi mâmaw kîkway wîhkâc",
+      "enterLicenseNumber": "Isi kîkway mâskocis",
+      "fillAllRequiredFields": "Isi mâmaw kîkway wîhkâc: {{fields}}",
+      "invalidJson": "Namôya kanawêyimihk JSON: {{message}}",
+      "invalidCode": "Namôya tâpwê kîkway",
+      "invalidVerificationCode": "Namôya tâpwê tâpwê kîkway"
+    },
+    "operations": {
+      "saveFailed": "Namôya kanawêyimihk",
+      "validationFailed": "Namôya tâpwê",
+      "fetchFailed": "Namôya miskam {{resource}}",
+      "createFailed": "Namôya osîhtâ {{resource}}",
+      "updateFailed": "Namôya âhkami osîhtâ {{resource}}",
+      "deleteFailed": "Namôya wanihah {{resource}}",
+      "searchFailed": "Namôya nantônêh {{resource}}",
+      "loadFailed": "Namôya pakitinâm {{resource}}. Âhkami osîhtâ.",
+      "sendFailed": "Namôya sipwêhtêh {{resource}}",
+      "generateFailed": "Namôya osîhtâ {{resource}}",
+      "verifyFailed": "Namôya tâpwê {{resource}}",
+      "processFailed": "Namôya isîhcikewin {{action}}. Âhkami kwêskisin.",
+      "testConnectionFailed": "Namôya mâmitonêyicikâtêw. Wâpahta network."
+    }
+  },
+  "common": {
+    "yes": "Êhê",
+    "no": "Namôya",
+    "or": "ahpo",
+    "and": "mîna",
+    "today": "Anohc",
+    "yesterday": "Otâkosîhk",
+    "week": "Aniki kîsikâwa",
+    "month": "Pîsim",
+    "year": "Askiy",
+    "all": "Mâmaw",
+    "none": "Namôya",
+    "active": "Pimâtisiwin",
+    "inactive": "Namôya pimâtisiwin",
+    "pending": "Pêyakwan",
+    "completed": "Kîsitêw",
+    "failed": "Namôya",
+    "notSpecified": "Namôya kîkway",
+    "unknown": "Namôya kiskêyimâw",
+    "na": "Namôya"
+  },
+  "toasts": {
+    "password": {
+      "changeSuccess": "Kîmowin masinipayiwin miyowisiwin! Âhkami itâpiscikewin.",
+      "changeFailed": "Namôya masinipayiwin kîmowin. Âhkami kwêskisin."
+    },
+    "broadcast": {
+      "createSuccess": "Kîkiskwêwin osîhtâ miyowisiwin!",
+      "createFailed": "Namôya osîhtâ kîkiskwêwin"
+    },
+    "template": {
+      "fetchFailed": "Namôya miskam",
+      "createSuccess": "Osîhtâ miyowisiwin",
+      "createFailed": "Namôya osîhtâ",
+      "updateSuccess": "Âhkami osîhtâ miyowisiwin",
+      "updateFailed": "Namôya âhkami osîhtâ",
+      "deleteSuccess": "Wanihah miyowisiwin",
+      "deleteFailed": "Namôya wanihah"
+    },
+    "model": {
+      "fetchFailed": "Namôya miskam",
+      "loadFailed": "Namôya pakitinâm",
+      "unloadSuccess": "Pakitinâm miyowisiwin",
+      "unloadFailed": "Namôya pakitinâm",
+      "updateFailed": "Namôya âhkami osîhtâ"
+    },
+    "config": {
+      "fetchFailed": "Namôya miskam",
+      "updateSuccess": "Âhkami osîhtâ miyowisiwin",
+      "updateFailed": "Namôya kanawêyimihk"
+    },
+    "agent": {
+      "fetchFailed": "Namôya miskam"
+    },
+    "personality": {
+      "fetchFailed": "Namôya miskam"
+    },
+    "router": {
+      "statsFetchFailed": "Namôya miskam kîkway",
+      "toggleFailed": "Namôya masinipayiwin"
+    }
+  },
+  "confirmations": {
+    "deleteUser": "Cî tâpwê wanihah {{email}}?",
+    "deleteUserPermanent": "Cî tâpwê wanihah ôma? Namôya nîswâpisk.",
+    "deleteTerminal": "Cî tâpwê wanihah ôma?",
+    "passwordResetMethod": "Wâpahta OK sipwêhtêh masinahikanihk\nWâpahta Pônipayih osîhtâ kîmowin"
+  },
+  "modals": {
+    "changePassword": {
+      "title": "Masinipayiwin Kîmowin",
+      "currentPassword": "Anohc Kîmowin",
+      "newPassword": "Oskinîkiskwêw Kîmowin",
+      "confirmPassword": "Tâpwê Oskinîkiskwêw Kîmowin",
+      "placeholders": {
+        "currentPassword": "Isi anohc kîmowin",
+        "newPassword": "Isi oskinîkiskwêw kîmowin",
+        "confirmPassword": "Tâpwê oskinîkiskwêw kîmowin"
+      },
+      "requirements": {
+        "title": "Kîmowin wîhkâc:",
+        "minLength": "8 masinahikan",
+        "uppercase": "Pêyak mistahi",
+        "lowercase": "Pêyak apisîs",
+        "number": "Pêyak kîkway"
+      },
+      "validation": {
+        "currentRequired": "Anohc kîmowin wîhkâc",
+        "newRequired": "Oskinîkiskwêw kîmowin wîhkâc",
+        "notMeetRequirements": "Kîmowin namôya wîhkâc",
+        "confirmRequired": "Tâpwê oskinîkiskwêw kîmowin",
+        "notMatch": "Kîmowin namôya tâpwê",
+        "mustBeDifferent": "Oskinîkiskwêw kîmowin namôya anohc",
+        "incorrectCurrent": "Anohc kîmowin namôya tâpwê"
+      },
+      "securityNotice": "Kî masinipayiwin kîmowin, sipwêhtêh mîna âhkami itâpiscikewin.",
+      "changing": "Masinipayiwin..."
+    }
+  }
+}
