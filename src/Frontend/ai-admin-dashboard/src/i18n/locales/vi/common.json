@@ -1,0 +1,201 @@
+{
+  "buttons": {
+    "send": "Gửi",
+    "close": "Đóng",
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "delete": "Xóa",
+    "edit": "Chỉnh sửa",
+    "create": "Tạo",
+    "update": "Cập nhật",
+    "confirm": "Xác nhận",
+    "back": "Quay lại",
+    "next": "Tiếp theo",
+    "submit": "Gửi",
+    "search": "Tìm kiếm",
+    "filter": "Lọc",
+    "export": "Xuất",
+    "import": "Nhập",
+    "refresh": "Làm mới",
+    "settings": "Cài đặt",
+    "logout": "Đăng xuất",
+    "change": "Thay đổi"
+  },
+  "labels": {
+    "email": "Địa chỉ email",
+    "password": "Mật khẩu",
+    "username": "Tên người dùng",
+    "name": "Tên",
+    "phone": "Điện thoại",
+    "address": "Địa chỉ",
+    "city": "Thành phố",
+    "province": "Tỉnh/Thành",
+    "postalCode": "Mã bưu điện",
+    "country": "Quốc gia",
+    "status": "Trạng thái",
+    "actions": "Hành động",
+    "description": "Mô tả",
+    "notes": "Ghi chú",
+    "date": "Ngày",
+    "time": "Thời gian",
+    "total": "Tổng cộng",
+    "subtotal": "Tạm tính",
+    "tax": "Thuế",
+    "quantity": "Số lượng",
+    "price": "Giá",
+    "language": "Ngôn ngữ"
+  },
+  "placeholders": {
+    "enterEmail": "Nhập email của bạn",
+    "enterPassword": "Nhập mật khẩu của bạn",
+    "search": "Tìm kiếm...",
+    "selectOption": "Chọn một tùy chọn",
+    "typeMessage": "Nhập tin nhắn của bạn...",
+    "enterName": "Nhập tên",
+    "enterPhone": "Nhập số điện thoại"
+  },
+  "messages": {
+    "loading": "Đang tải...",
+    "saving": "Đang lưu...",
+    "success": "Thành công!",
+    "error": "Đã xảy ra lỗi",
+    "noData": "Không có dữ liệu",
+    "confirm": "Bạn có chắc chắn?",
+    "unsavedChanges": "Bạn có thay đổi chưa được lưu"
+  },
+  "errors": {
+    "required": "Trường này là bắt buộc",
+    "invalidEmail": "Địa chỉ email không hợp lệ",
+    "invalidPhone": "Số điện thoại không hợp lệ",
+    "networkError": "Lỗi mạng. Vui lòng thử lại.",
+    "serverError": "Lỗi máy chủ. Vui lòng thử lại sau.",
+    "unauthorized": "Truy cập không được phép",
+    "notFound": "Không tìm thấy",
+    "sessionExpired": "Phiên của bạn đã hết hạn. Vui lòng đăng nhập lại.",
+    "validation": {
+      "selectStore": "Vui lòng chọn một cửa hàng",
+      "selectSupplier": "Vui lòng chọn một nhà cung cấp",
+      "addAtLeastOneItem": "Vui lòng thêm ít nhất một mục",
+      "fillRequiredFields": "Vui lòng điền tất cả các trường bắt buộc cho mỗi mục",
+      "enterLicenseNumber": "Vui lòng nhập số giấy phép",
+      "fillAllRequiredFields": "Vui lòng điền tất cả các trường bắt buộc: {{fields}}",
+      "invalidJson": "Không thể lưu JSON không hợp lệ: {{message}}",
+      "invalidCode": "Mã không hợp lệ",
+      "invalidVerificationCode": "Mã xác minh không hợp lệ"
+    },
+    "operations": {
+      "saveFailed": "Không thể lưu cài đặt",
+      "validationFailed": "Xác thực không thành công",
+      "fetchFailed": "Không thể tải {{resource}}",
+      "createFailed": "Không thể tạo {{resource}}",
+      "updateFailed": "Không thể cập nhật {{resource}}",
+      "deleteFailed": "Không thể xóa {{resource}}",
+      "searchFailed": "Không thể tìm kiếm {{resource}}",
+      "loadFailed": "Không thể tải {{resource}}. Vui lòng làm mới trang.",
+      "sendFailed": "Không thể gửi {{resource}}",
+      "generateFailed": "Không thể tạo {{resource}}",
+      "verifyFailed": "Không thể xác minh {{resource}}",
+      "processFailed": "Không thể xử lý {{action}}. Vui lòng thử lại.",
+      "testConnectionFailed": "Kiểm tra kết nối không thành công. Vui lòng kiểm tra mạng của bạn."
+    }
+  },
+  "common": {
+    "yes": "Có",
+    "no": "Không",
+    "or": "hoặc",
+    "and": "và",
+    "today": "Hôm nay",
+    "yesterday": "Hôm qua",
+    "week": "Tuần",
+    "month": "Tháng",
+    "year": "Năm",
+    "all": "Tất cả",
+    "none": "Không có",
+    "active": "Hoạt động",
+    "inactive": "Không hoạt động",
+    "pending": "Đang chờ",
+    "completed": "Đã hoàn thành",
+    "failed": "Thất bại",
+    "notSpecified": "Không xác định",
+    "unknown": "Không rõ",
+    "na": "Không áp dụng"
+  },
+  "toasts": {
+    "password": {
+      "changeSuccess": "Mật khẩu đã được thay đổi thành công! Vui lòng đăng nhập lại.",
+      "changeFailed": "Không thể thay đổi mật khẩu. Vui lòng thử lại."
+    },
+    "broadcast": {
+      "createSuccess": "Quảng bá đã được tạo thành công!",
+      "createFailed": "Không thể tạo quảng bá"
+    },
+    "template": {
+      "fetchFailed": "Không thể tải mẫu",
+      "createSuccess": "Mẫu đã được tạo thành công",
+      "createFailed": "Không thể tạo mẫu",
+      "updateSuccess": "Mẫu đã được cập nhật thành công",
+      "updateFailed": "Không thể cập nhật mẫu",
+      "deleteSuccess": "Mẫu đã được xóa thành công",
+      "deleteFailed": "Không thể xóa mẫu"
+    },
+    "model": {
+      "fetchFailed": "Không thể tải mô hình",
+      "loadFailed": "Không thể tải mô hình",
+      "unloadSuccess": "Mô hình đã được gỡ tải thành công",
+      "unloadFailed": "Không thể gỡ tải mô hình",
+      "updateFailed": "Không thể cập nhật mô hình"
+    },
+    "config": {
+      "fetchFailed": "Không thể tải cấu hình",
+      "updateSuccess": "Cấu hình đã được cập nhật thành công",
+      "updateFailed": "Không thể lưu cấu hình"
+    },
+    "agent": {
+      "fetchFailed": "Không thể tải tác nhân"
+    },
+    "personality": {
+      "fetchFailed": "Không thể tải tính cách"
+    },
+    "router": {
+      "statsFetchFailed": "Không thể tải thống kê bộ định tuyến",
+      "toggleFailed": "Không thể chuyển đổi chế độ suy luận"
+    }
+  },
+  "confirmations": {
+    "deleteUser": "Bạn có chắc chắn muốn xóa người dùng {{email}}?",
+    "deleteUserPermanent": "Bạn có chắc chắn muốn xóa người dùng này? Hành động này không thể hoàn tác.",
+    "deleteTerminal": "Bạn có chắc chắn muốn xóa thiết bị đầu cuối này?",
+    "passwordResetMethod": "Nhấp OK để gửi liên kết đặt lại mật khẩu qua email\nNhấp Hủy để tạo và hiển thị mật khẩu tạm thời"
+  },
+  "modals": {
+    "changePassword": {
+      "title": "Thay đổi mật khẩu",
+      "currentPassword": "Mật khẩu hiện tại",
+      "newPassword": "Mật khẩu mới",
+      "confirmPassword": "Xác nhận mật khẩu mới",
+      "placeholders": {
+        "currentPassword": "Nhập mật khẩu hiện tại",
+        "newPassword": "Nhập mật khẩu mới",
+        "confirmPassword": "Xác nhận mật khẩu mới"
+      },
+      "requirements": {
+        "title": "Mật khẩu phải chứa:",
+        "minLength": "Ít nhất 8 ký tự",
+        "uppercase": "Một chữ cái viết hoa",
+        "lowercase": "Một chữ cái viết thường",
+        "number": "Một số"
+      },
+      "validation": {
+        "currentRequired": "Mật khẩu hiện tại là bắt buộc",
+        "newRequired": "Mật khẩu mới là bắt buộc",
+        "notMeetRequirements": "Mật khẩu không đáp ứng yêu cầu",
+        "confirmRequired": "Vui lòng xác nhận mật khẩu mới của bạn",
+        "notMatch": "Mật khẩu không khớp",
+        "mustBeDifferent": "Mật khẩu mới phải khác với mật khẩu hiện tại",
+        "incorrectCurrent": "Mật khẩu hiện tại không chính xác"
+      },
+      "securityNotice": "Sau khi thay đổi mật khẩu, bạn sẽ được đăng xuất và cần đăng nhập lại với thông tin xác thực mới.",
+      "changing": "Đang thay đổi..."
+    }
+  }
+}
