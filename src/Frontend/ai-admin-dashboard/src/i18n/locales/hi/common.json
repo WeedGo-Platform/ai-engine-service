@@ -1,0 +1,201 @@
+{
+  "buttons": {
+    "send": "भेजें",
+    "close": "बंद करें",
+    "cancel": "रद्द करें",
+    "save": "सहेजें",
+    "delete": "हटाएं",
+    "edit": "संपादित करें",
+    "create": "बनाएं",
+    "update": "अपडेट करें",
+    "confirm": "पुष्टि करें",
+    "back": "वापस",
+    "next": "आगे",
+    "submit": "जमा करें",
+    "search": "खोजें",
+    "filter": "फ़िल्टर करें",
+    "export": "निर्यात करें",
+    "import": "आयात करें",
+    "refresh": "रीफ़्रेश करें",
+    "settings": "सेटिंग्स",
+    "logout": "लॉगआउट",
+    "change": "बदलें"
+  },
+  "labels": {
+    "email": "ईमेल पता",
+    "password": "पासवर्ड",
+    "username": "उपयोगकर्ता नाम",
+    "name": "नाम",
+    "phone": "फ़ोन",
+    "address": "पता",
+    "city": "शहर",
+    "province": "प्रांत",
+    "postalCode": "पिन कोड",
+    "country": "देश",
+    "status": "स्थिति",
+    "actions": "कार्रवाई",
+    "description": "विवरण",
+    "notes": "टिप्पणियां",
+    "date": "तारीख",
+    "time": "समय",
+    "total": "कुल",
+    "subtotal": "उप-योग",
+    "tax": "कर",
+    "quantity": "मात्रा",
+    "price": "मूल्य",
+    "language": "भाषा"
+  },
+  "placeholders": {
+    "enterEmail": "अपना ईमेल दर्ज करें",
+    "enterPassword": "अपना पासवर्ड दर्ज करें",
+    "search": "खोजें...",
+    "selectOption": "एक विकल्प चुनें",
+    "typeMessage": "अपना संदेश टाइप करें...",
+    "enterName": "नाम दर्ज करें",
+    "enterPhone": "फ़ोन नंबर दर्ज करें"
+  },
+  "messages": {
+    "loading": "लोड हो रहा है...",
+    "saving": "सहेजा जा रहा है...",
+    "success": "सफलता!",
+    "error": "एक त्रुटि हुई",
+    "noData": "कोई डेटा उपलब्ध नहीं है",
+    "confirm": "क्या आप निश्चित हैं?",
+    "unsavedChanges": "आपके पास अनसेव परिवर्तन हैं"
+  },
+  "errors": {
+    "required": "यह फ़ील्ड आवश्यक है",
+    "invalidEmail": "अमान्य ईमेल पता",
+    "invalidPhone": "अमान्य फ़ोन नंबर",
+    "networkError": "नेटवर्क त्रुटि। कृपया पुनः प्रयास करें।",
+    "serverError": "सर्वर त्रुटि। कृपया बाद में पुनः प्रयास करें।",
+    "unauthorized": "अनधिकृत पहुंच",
+    "notFound": "नहीं मिला",
+    "sessionExpired": "आपका सत्र समाप्त हो गया है। कृपया फिर से लॉगिन करें।",
+    "validation": {
+      "selectStore": "कृपया एक स्टोर चुनें",
+      "selectSupplier": "कृपया एक आपूर्तिकर्ता चुनें",
+      "addAtLeastOneItem": "कृपया कम से कम एक आइटम जोड़ें",
+      "fillRequiredFields": "कृपया प्रत्येक आइटम के लिए सभी आवश्यक फ़ील्ड भरें",
+      "enterLicenseNumber": "कृपया एक लाइसेंस नंबर दर्ज करें",
+      "fillAllRequiredFields": "कृपया सभी आवश्यक फ़ील्ड भरें: {{fields}}",
+      "invalidJson": "अमान्य JSON सहेजा नहीं जा सकता: {{message}}",
+      "invalidCode": "अमान्य कोड",
+      "invalidVerificationCode": "अमान्य सत्यापन कोड"
+    },
+    "operations": {
+      "saveFailed": "सेटिंग्स सहेजने में विफल",
+      "validationFailed": "सत्यापन विफल रहा",
+      "fetchFailed": "{{resource}} प्राप्त करने में विफल",
+      "createFailed": "{{resource}} बनाने में विफल",
+      "updateFailed": "{{resource}} अपडेट करने में विफल",
+      "deleteFailed": "{{resource}} हटाने में विफल",
+      "searchFailed": "{{resource}} खोजने में विफल",
+      "loadFailed": "{{resource}} लोड करने में विफल। कृपया पृष्ठ को रीफ़्रेश करें।",
+      "sendFailed": "{{resource}} भेजने में विफल",
+      "generateFailed": "{{resource}} उत्पन्न करने में विफल",
+      "verifyFailed": "{{resource}} सत्यापित करने में विफल",
+      "processFailed": "{{action}} प्रक्रिया करने में विफल। कृपया पुनः प्रयास करें।",
+      "testConnectionFailed": "कनेक्शन परीक्षण विफल रहा। कृपया अपना नेटवर्क जांचें।"
+    }
+  },
+  "common": {
+    "yes": "हां",
+    "no": "नहीं",
+    "or": "या",
+    "and": "और",
+    "today": "आज",
+    "yesterday": "कल",
+    "week": "सप्ताह",
+    "month": "महीना",
+    "year": "वर्ष",
+    "all": "सभी",
+    "none": "कोई नहीं",
+    "active": "सक्रिय",
+    "inactive": "निष्क्रिय",
+    "pending": "लंबित",
+    "completed": "पूर्ण",
+    "failed": "विफल",
+    "notSpecified": "निर्दिष्ट नहीं",
+    "unknown": "अज्ञात",
+    "na": "लागू नहीं"
+  },
+  "toasts": {
+    "password": {
+      "changeSuccess": "पासवर्ड सफलतापूर्वक बदल गया! कृपया फिर से लॉगिन करें।",
+      "changeFailed": "पासवर्ड बदलने में विफल। कृपया पुनः प्रयास करें।"
+    },
+    "broadcast": {
+      "createSuccess": "प्रसारण सफलतापूर्वक बनाया गया!",
+      "createFailed": "प्रसारण बनाने में विफल"
+    },
+    "template": {
+      "fetchFailed": "टेम्पलेट प्राप्त करने में विफल",
+      "createSuccess": "टेम्पलेट सफलतापूर्वक बनाया गया",
+      "createFailed": "टेम्पलेट बनाने में विफल",
+      "updateSuccess": "टेम्पलेट सफलतापूर्वक अपडेट किया गया",
+      "updateFailed": "टेम्पलेट अपडेट करने में विफल",
+      "deleteSuccess": "टेम्पलेट सफलतापूर्वक हटाया गया",
+      "deleteFailed": "टेम्पलेट हटाने में विफल"
+    },
+    "model": {
+      "fetchFailed": "मॉडल प्राप्त करने में विफल",
+      "loadFailed": "मॉडल लोड करने में विफल",
+      "unloadSuccess": "मॉडल सफलतापूर्वक अनलोड किया गया",
+      "unloadFailed": "मॉडल अनलोड करने में विफल",
+      "updateFailed": "मॉडल अपडेट करने में विफल"
+    },
+    "config": {
+      "fetchFailed": "कॉन्फ़िगरेशन प्राप्त करने में विफल",
+      "updateSuccess": "कॉन्फ़िगरेशन सफलतापूर्वक अपडेट किया गया",
+      "updateFailed": "कॉन्फ़िगरेशन सहेजने में विफल"
+    },
+    "agent": {
+      "fetchFailed": "एजेंट प्राप्त करने में विफल"
+    },
+    "personality": {
+      "fetchFailed": "व्यक्तित्व प्राप्त करने में विफल"
+    },
+    "router": {
+      "statsFetchFailed": "राउटर आंकड़े प्राप्त करने में विफल",
+      "toggleFailed": "इनफरेंस मोड टॉगल करने में विफल"
+    }
+  },
+  "confirmations": {
+    "deleteUser": "क्या आप निश्चित हैं कि आप उपयोगकर्ता {{email}} को हटाना चाहते हैं?",
+    "deleteUserPermanent": "क्या आप निश्चित हैं कि आप इस उपयोगकर्ता को हटाना चाहते हैं? इस क्रिया को पूर्ववत नहीं किया जा सकता।",
+    "deleteTerminal": "क्या आप निश्चित हैं कि आप इस टर्मिनल को हटाना चाहते हैं?",
+    "passwordResetMethod": "ईमेल के माध्यम से पासवर्ड रीसेट लिंक भेजने के लिए ठीक क्लिक करें\nअस्थायी पासवर्ड उत्पन्न करने और प्रदर्शित करने के लिए रद्द करें क्लिक करें"
+  },
+  "modals": {
+    "changePassword": {
+      "title": "पासवर्ड बदलें",
+      "currentPassword": "वर्तमान पासवर्ड",
+      "newPassword": "नया पासवर्ड",
+      "confirmPassword": "नया पासवर्ड पुष्टि करें",
+      "placeholders": {
+        "currentPassword": "वर्तमान पासवर्ड दर्ज करें",
+        "newPassword": "नया पासवर्ड दर्ज करें",
+        "confirmPassword": "नया पासवर्ड पुष्टि करें"
+      },
+      "requirements": {
+        "title": "पासवर्ड में होना चाहिए:",
+        "minLength": "कम से कम 8 अक्षर",
+        "uppercase": "एक बड़ा अक्षर",
+        "lowercase": "एक छोटा अक्षर",
+        "number": "एक संख्या"
+      },
+      "validation": {
+        "currentRequired": "वर्तमान पासवर्ड आवश्यक है",
+        "newRequired": "नया पासवर्ड आवश्यक है",
+        "notMeetRequirements": "पासवर्ड आवश्यकताओं को पूरा नहीं करता",
+        "confirmRequired": "कृपया अपने नए पासवर्ड की पुष्टि करें",
+        "notMatch": "पासवर्ड मेल नहीं खाते",
+        "mustBeDifferent": "नया पासवर्ड वर्तमान पासवर्ड से अलग होना चाहिए",
+        "incorrectCurrent": "वर्तमान पासवर्ड गलत है"
+      },
+      "securityNotice": "अपना पासवर्ड बदलने के बाद, आप लॉगआउट हो जाएंगे और आपको अपनी नई क्रेडेंशियल्स के साथ फिर से लॉगिन करना होगा।",
+      "changing": "बदला जा रहा है..."
+    }
+  }
+}
