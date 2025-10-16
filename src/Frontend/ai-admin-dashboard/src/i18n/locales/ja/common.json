@@ -1,0 +1,201 @@
+{
+  "buttons": {
+    "send": "送信",
+    "close": "閉じる",
+    "cancel": "キャンセル",
+    "save": "保存",
+    "delete": "削除",
+    "edit": "編集",
+    "create": "作成",
+    "update": "更新",
+    "confirm": "確認",
+    "back": "戻る",
+    "next": "次へ",
+    "submit": "送信",
+    "search": "検索",
+    "filter": "絞り込み",
+    "export": "エクスポート",
+    "import": "インポート",
+    "refresh": "更新",
+    "settings": "設定",
+    "logout": "ログアウト",
+    "change": "変更"
+  },
+  "labels": {
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "username": "ユーザー名",
+    "name": "名前",
+    "phone": "電話番号",
+    "address": "住所",
+    "city": "市区町村",
+    "province": "都道府県",
+    "postalCode": "郵便番号",
+    "country": "国",
+    "status": "ステータス",
+    "actions": "アクション",
+    "description": "説明",
+    "notes": "備考",
+    "date": "日付",
+    "time": "時刻",
+    "total": "合計",
+    "subtotal": "小計",
+    "tax": "税金",
+    "quantity": "数量",
+    "price": "価格",
+    "language": "言語"
+  },
+  "placeholders": {
+    "enterEmail": "メールアドレスを入力",
+    "enterPassword": "パスワードを入力",
+    "search": "検索...",
+    "selectOption": "オプションを選択",
+    "typeMessage": "メッセージを入力...",
+    "enterName": "名前を入力",
+    "enterPhone": "電話番号を入力"
+  },
+  "messages": {
+    "loading": "読み込み中...",
+    "saving": "保存中...",
+    "success": "成功しました！",
+    "error": "エラーが発生しました",
+    "noData": "利用可能なデータがありません",
+    "confirm": "よろしいですか？",
+    "unsavedChanges": "保存されていない変更があります"
+  },
+  "errors": {
+    "required": "この項目は必須です",
+    "invalidEmail": "無効なメールアドレスです",
+    "invalidPhone": "無効な電話番号です",
+    "networkError": "ネットワークエラーです。もう一度お試しください。",
+    "serverError": "サーバーエラーです。後でもう一度お試しください。",
+    "unauthorized": "認証されていないアクセスです",
+    "notFound": "見つかりません",
+    "sessionExpired": "セッションが期限切れです。再度ログインしてください。",
+    "validation": {
+      "selectStore": "店舗を選択してください",
+      "selectSupplier": "仕入先を選択してください",
+      "addAtLeastOneItem": "少なくとも1つの項目を追加してください",
+      "fillRequiredFields": "各項目の必須フィールドをすべて入力してください",
+      "enterLicenseNumber": "ライセンス番号を入力してください",
+      "fillAllRequiredFields": "すべての必須フィールドを入力してください: {{fields}}",
+      "invalidJson": "無効なJSONは保存できません: {{message}}",
+      "invalidCode": "無効なコードです",
+      "invalidVerificationCode": "無効な確認コードです"
+    },
+    "operations": {
+      "saveFailed": "設定の保存に失敗しました",
+      "validationFailed": "検証に失敗しました",
+      "fetchFailed": "{{resource}}の取得に失敗しました",
+      "createFailed": "{{resource}}の作成に失敗しました",
+      "updateFailed": "{{resource}}の更新に失敗しました",
+      "deleteFailed": "{{resource}}の削除に失敗しました",
+      "searchFailed": "{{resource}}の検索に失敗しました",
+      "loadFailed": "{{resource}}の読み込みに失敗しました。ページを更新してください。",
+      "sendFailed": "{{resource}}の送信に失敗しました",
+      "generateFailed": "{{resource}}の生成に失敗しました",
+      "verifyFailed": "{{resource}}の確認に失敗しました",
+      "processFailed": "{{action}}の処理に失敗しました。もう一度お試しください。",
+      "testConnectionFailed": "接続テストに失敗しました。ネットワークを確認してください。"
+    }
+  },
+  "common": {
+    "yes": "はい",
+    "no": "いいえ",
+    "or": "または",
+    "and": "と",
+    "today": "今日",
+    "yesterday": "昨日",
+    "week": "週",
+    "month": "月",
+    "year": "年",
+    "all": "すべて",
+    "none": "なし",
+    "active": "有効",
+    "inactive": "無効",
+    "pending": "保留中",
+    "completed": "完了",
+    "failed": "失敗",
+    "notSpecified": "未指定",
+    "unknown": "不明",
+    "na": "該当なし"
+  },
+  "toasts": {
+    "password": {
+      "changeSuccess": "パスワードが正常に変更されました！再度ログインしてください。",
+      "changeFailed": "パスワードの変更に失敗しました。もう一度お試しください。"
+    },
+    "broadcast": {
+      "createSuccess": "ブロードキャストが正常に作成されました！",
+      "createFailed": "ブロードキャストの作成に失敗しました"
+    },
+    "template": {
+      "fetchFailed": "テンプレートの取得に失敗しました",
+      "createSuccess": "テンプレートが正常に作成されました",
+      "createFailed": "テンプレートの作成に失敗しました",
+      "updateSuccess": "テンプレートが正常に更新されました",
+      "updateFailed": "テンプレートの更新に失敗しました",
+      "deleteSuccess": "テンプレートが正常に削除されました",
+      "deleteFailed": "テンプレートの削除に失敗しました"
+    },
+    "model": {
+      "fetchFailed": "モデルの取得に失敗しました",
+      "loadFailed": "モデルの読み込みに失敗しました",
+      "unloadSuccess": "モデルが正常にアンロードされました",
+      "unloadFailed": "モデルのアンロードに失敗しました",
+      "updateFailed": "モデルの更新に失敗しました"
+    },
+    "config": {
+      "fetchFailed": "設定の取得に失敗しました",
+      "updateSuccess": "設定が正常に更新されました",
+      "updateFailed": "設定の保存に失敗しました"
+    },
+    "agent": {
+      "fetchFailed": "エージェントの取得に失敗しました"
+    },
+    "personality": {
+      "fetchFailed": "パーソナリティの取得に失敗しました"
+    },
+    "router": {
+      "statsFetchFailed": "ルーター統計の取得に失敗しました",
+      "toggleFailed": "推論モードの切り替えに失敗しました"
+    }
+  },
+  "confirmations": {
+    "deleteUser": "ユーザー {{email}} を削除してもよろしいですか？",
+    "deleteUserPermanent": "このユーザーを削除してもよろしいですか？この操作は元に戻せません。",
+    "deleteTerminal": "このターミナルを削除してもよろしいですか？",
+    "passwordResetMethod": "OKをクリックするとメールでパスワードリセットリンクが送信されます\nキャンセルをクリックすると一時パスワードを生成して表示します"
+  },
+  "modals": {
+    "changePassword": {
+      "title": "パスワード変更",
+      "currentPassword": "現在のパスワード",
+      "newPassword": "新しいパスワード",
+      "confirmPassword": "新しいパスワードの確認",
+      "placeholders": {
+        "currentPassword": "現在のパスワードを入力",
+        "newPassword": "新しいパスワードを入力",
+        "confirmPassword": "新しいパスワードを確認"
+      },
+      "requirements": {
+        "title": "パスワードには以下が必要です：",
+        "minLength": "8文字以上",
+        "uppercase": "大文字を1文字",
+        "lowercase": "小文字を1文字",
+        "number": "数字を1文字"
+      },
+      "validation": {
+        "currentRequired": "現在のパスワードが必要です",
+        "newRequired": "新しいパスワードが必要です",
+        "notMeetRequirements": "パスワードが要件を満たしていません",
+        "confirmRequired": "新しいパスワードを確認してください",
+        "notMatch": "パスワードが一致しません",
+        "mustBeDifferent": "新しいパスワードは現在のパスワードと異なる必要があります",
+        "incorrectCurrent": "現在のパスワードが正しくありません"
+      },
+      "securityNotice": "パスワードを変更すると、ログアウトされます。新しい資格情報で再度ログインする必要があります。",
+      "changing": "変更中..."
+    }
+  }
+}
