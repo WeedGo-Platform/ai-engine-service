@@ -1,0 +1,201 @@
+{
+  "buttons": {
+    "send": "Отправить",
+    "close": "Закрыть",
+    "cancel": "Отменить",
+    "save": "Сохранить",
+    "delete": "Удалить",
+    "edit": "Редактировать",
+    "create": "Создать",
+    "update": "Обновить",
+    "confirm": "Подтвердить",
+    "back": "Назад",
+    "next": "Далее",
+    "submit": "Отправить",
+    "search": "Поиск",
+    "filter": "Фильтр",
+    "export": "Экспорт",
+    "import": "Импорт",
+    "refresh": "Обновить",
+    "settings": "Настройки",
+    "logout": "Выйти",
+    "change": "Изменить"
+  },
+  "labels": {
+    "email": "Адрес электронной почты",
+    "password": "Пароль",
+    "username": "Имя пользователя",
+    "name": "Имя",
+    "phone": "Телефон",
+    "address": "Адрес",
+    "city": "Город",
+    "province": "Провинция",
+    "postalCode": "Почтовый индекс",
+    "country": "Страна",
+    "status": "Статус",
+    "actions": "Действия",
+    "description": "Описание",
+    "notes": "Заметки",
+    "date": "Дата",
+    "time": "Время",
+    "total": "Итого",
+    "subtotal": "Промежуточный итог",
+    "tax": "Налог",
+    "quantity": "Количество",
+    "price": "Цена",
+    "language": "Язык"
+  },
+  "placeholders": {
+    "enterEmail": "Введите ваш email",
+    "enterPassword": "Введите ваш пароль",
+    "search": "Поиск...",
+    "selectOption": "Выберите опцию",
+    "typeMessage": "Введите ваше сообщение...",
+    "enterName": "Введите имя",
+    "enterPhone": "Введите номер телефона"
+  },
+  "messages": {
+    "loading": "Загрузка...",
+    "saving": "Сохранение...",
+    "success": "Успешно!",
+    "error": "Произошла ошибка",
+    "noData": "Нет доступных данных",
+    "confirm": "Вы уверены?",
+    "unsavedChanges": "У вас есть несохраненные изменения"
+  },
+  "errors": {
+    "required": "Это поле обязательно",
+    "invalidEmail": "Неверный адрес электронной почты",
+    "invalidPhone": "Неверный номер телефона",
+    "networkError": "Ошибка сети. Попробуйте снова.",
+    "serverError": "Ошибка сервера. Попробуйте позже.",
+    "unauthorized": "Несанкционированный доступ",
+    "notFound": "Не найдено",
+    "sessionExpired": "Ваша сессия истекла. Войдите снова.",
+    "validation": {
+      "selectStore": "Пожалуйста, выберите магазин",
+      "selectSupplier": "Пожалуйста, выберите поставщика",
+      "addAtLeastOneItem": "Пожалуйста, добавьте хотя бы один элемент",
+      "fillRequiredFields": "Пожалуйста, заполните все обязательные поля для каждого элемента",
+      "enterLicenseNumber": "Пожалуйста, введите номер лицензии",
+      "fillAllRequiredFields": "Пожалуйста, заполните все обязательные поля: {{fields}}",
+      "invalidJson": "Невозможно сохранить недопустимый JSON: {{message}}",
+      "invalidCode": "Неверный код",
+      "invalidVerificationCode": "Неверный код подтверждения"
+    },
+    "operations": {
+      "saveFailed": "Не удалось сохранить настройки",
+      "validationFailed": "Проверка не удалась",
+      "fetchFailed": "Не удалось получить {{resource}}",
+      "createFailed": "Не удалось создать {{resource}}",
+      "updateFailed": "Не удалось обновить {{resource}}",
+      "deleteFailed": "Не удалось удалить {{resource}}",
+      "searchFailed": "Не удалось найти {{resource}}",
+      "loadFailed": "Не удалось загрузить {{resource}}. Обновите страницу.",
+      "sendFailed": "Не удалось отправить {{resource}}",
+      "generateFailed": "Не удалось сгенерировать {{resource}}",
+      "verifyFailed": "Не удалось проверить {{resource}}",
+      "processFailed": "Не удалось обработать {{action}}. Попробуйте снова.",
+      "testConnectionFailed": "Тест соединения не удался. Проверьте ваше сетевое подключение."
+    }
+  },
+  "common": {
+    "yes": "Да",
+    "no": "Нет",
+    "or": "или",
+    "and": "и",
+    "today": "Сегодня",
+    "yesterday": "Вчера",
+    "week": "Неделя",
+    "month": "Месяц",
+    "year": "Год",
+    "all": "Все",
+    "none": "Нет",
+    "active": "Активный",
+    "inactive": "Неактивный",
+    "pending": "Ожидание",
+    "completed": "Завершено",
+    "failed": "Не удалось",
+    "notSpecified": "Не указано",
+    "unknown": "Неизвестно",
+    "na": "Н/Д"
+  },
+  "toasts": {
+    "password": {
+      "changeSuccess": "Пароль успешно изменен! Пожалуйста, войдите снова.",
+      "changeFailed": "Не удалось изменить пароль. Попробуйте снова."
+    },
+    "broadcast": {
+      "createSuccess": "Трансляция успешно создана!",
+      "createFailed": "Не удалось создать трансляцию"
+    },
+    "template": {
+      "fetchFailed": "Не удалось получить шаблоны",
+      "createSuccess": "Шаблон успешно создан",
+      "createFailed": "Не удалось создать шаблон",
+      "updateSuccess": "Шаблон успешно обновлен",
+      "updateFailed": "Не удалось обновить шаблон",
+      "deleteSuccess": "Шаблон успешно удален",
+      "deleteFailed": "Не удалось удалить шаблон"
+    },
+    "model": {
+      "fetchFailed": "Не удалось получить модели",
+      "loadFailed": "Не удалось загрузить модель",
+      "unloadSuccess": "Модель успешно выгружена",
+      "unloadFailed": "Не удалось выгрузить модель",
+      "updateFailed": "Не удалось обновить модель"
+    },
+    "config": {
+      "fetchFailed": "Не удалось получить конфигурацию",
+      "updateSuccess": "Конфигурация успешно обновлена",
+      "updateFailed": "Не удалось сохранить конфигурацию"
+    },
+    "agent": {
+      "fetchFailed": "Не удалось получить агентов"
+    },
+    "personality": {
+      "fetchFailed": "Не удалось получить личности"
+    },
+    "router": {
+      "statsFetchFailed": "Не удалось получить статистику маршрутизатора",
+      "toggleFailed": "Не удалось переключить режим вывода"
+    }
+  },
+  "confirmations": {
+    "deleteUser": "Вы уверены, что хотите удалить пользователя {{email}}?",
+    "deleteUserPermanent": "Вы уверены, что хотите удалить этого пользователя? Это действие нельзя отменить.",
+    "deleteTerminal": "Вы уверены, что хотите удалить этот терминал?",
+    "passwordResetMethod": "Нажмите OK, чтобы отправить ссылку для сброса пароля по электронной почте\nНажмите Отмена, чтобы сгенерировать и отобразить временный пароль"
+  },
+  "modals": {
+    "changePassword": {
+      "title": "Изменить пароль",
+      "currentPassword": "Текущий пароль",
+      "newPassword": "Новый пароль",
+      "confirmPassword": "Подтвердите новый пароль",
+      "placeholders": {
+        "currentPassword": "Введите текущий пароль",
+        "newPassword": "Введите новый пароль",
+        "confirmPassword": "Подтвердите новый пароль"
+      },
+      "requirements": {
+        "title": "Пароль должен содержать:",
+        "minLength": "Не менее 8 символов",
+        "uppercase": "Одну заглавную букву",
+        "lowercase": "Одну строчную букву",
+        "number": "Одну цифру"
+      },
+      "validation": {
+        "currentRequired": "Текущий пароль обязателен",
+        "newRequired": "Новый пароль обязателен",
+        "notMeetRequirements": "Пароль не соответствует требованиям",
+        "confirmRequired": "Пожалуйста, подтвердите ваш новый пароль",
+        "notMatch": "Пароли не совпадают",
+        "mustBeDifferent": "Новый пароль должен отличаться от текущего пароля",
+        "incorrectCurrent": "Текущий пароль неверен"
+      },
+      "securityNotice": "После изменения пароля вы будете выведены из системы и вам потребуется войти снова с новыми учетными данными.",
+      "changing": "Изменение..."
+    }
+  }
+}
