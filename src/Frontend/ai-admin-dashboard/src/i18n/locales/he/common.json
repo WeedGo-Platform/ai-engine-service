@@ -1,0 +1,201 @@
+{
+  "buttons": {
+    "send": "שלח",
+    "close": "סגור",
+    "cancel": "בטל",
+    "save": "שמור",
+    "delete": "מחק",
+    "edit": "ערוך",
+    "create": "צור",
+    "update": "עדכן",
+    "confirm": "אשר",
+    "back": "חזור",
+    "next": "הבא",
+    "submit": "שלח",
+    "search": "חפש",
+    "filter": "סנן",
+    "export": "ייצא",
+    "import": "ייבא",
+    "refresh": "רענן",
+    "settings": "הגדרות",
+    "logout": "התנתק",
+    "change": "שנה"
+  },
+  "labels": {
+    "email": "כתובת דוא\"ל",
+    "password": "סיסמה",
+    "username": "שם משתמש",
+    "name": "שם",
+    "phone": "טלפון",
+    "address": "כתובת",
+    "city": "עיר",
+    "province": "מחוז",
+    "postalCode": "מיקוד",
+    "country": "מדינה",
+    "status": "סטטוס",
+    "actions": "פעולות",
+    "description": "תיאור",
+    "notes": "הערות",
+    "date": "תאריך",
+    "time": "שעה",
+    "total": "סה\"כ",
+    "subtotal": "סכום ביניים",
+    "tax": "מס",
+    "quantity": "כמות",
+    "price": "מחיר",
+    "language": "שפה"
+  },
+  "placeholders": {
+    "enterEmail": "הזן את כתובת הדוא\"ל שלך",
+    "enterPassword": "הזן את הסיסמה שלך",
+    "search": "חפש...",
+    "selectOption": "בחר אפשרות",
+    "typeMessage": "הקלד את ההודעה שלך...",
+    "enterName": "הזן שם",
+    "enterPhone": "הזן מספר טלפון"
+  },
+  "messages": {
+    "loading": "טוען...",
+    "saving": "שומר...",
+    "success": "הצלחה!",
+    "error": "אירעה שגיאה",
+    "noData": "אין נתונים זמינים",
+    "confirm": "האם אתה בטוח?",
+    "unsavedChanges": "יש לך שינויים שלא נשמרו"
+  },
+  "errors": {
+    "required": "שדה זה הוא חובה",
+    "invalidEmail": "כתובת דוא\"ל לא חוקית",
+    "invalidPhone": "מספר טלפון לא חוקי",
+    "networkError": "שגיאת רשת. אנא נסה שוב.",
+    "serverError": "שגיאת שרת. אנא נסה שוב מאוחר יותר.",
+    "unauthorized": "גישה לא מורשית",
+    "notFound": "לא נמצא",
+    "sessionExpired": "תוקף ההפעלה שלך פג. אנא התחבר שוב.",
+    "validation": {
+      "selectStore": "אנא בחר חנות",
+      "selectSupplier": "אנא בחר ספק",
+      "addAtLeastOneItem": "אנא הוסף לפחות פריט אחד",
+      "fillRequiredFields": "אנא מלא את כל השדות הנדרשים עבור כל פריט",
+      "enterLicenseNumber": "אנא הזן מספר רישיון",
+      "fillAllRequiredFields": "אנא מלא את כל השדות הנדרשים: {{fields}}",
+      "invalidJson": "לא ניתן לשמור JSON לא חוקי: {{message}}",
+      "invalidCode": "קוד לא חוקי",
+      "invalidVerificationCode": "קוד אימות לא חוקי"
+    },
+    "operations": {
+      "saveFailed": "שמירת ההגדרות נכשלה",
+      "validationFailed": "האימות נכשל",
+      "fetchFailed": "אחזור {{resource}} נכשל",
+      "createFailed": "יצירת {{resource}} נכשלה",
+      "updateFailed": "עדכון {{resource}} נכשל",
+      "deleteFailed": "מחיקת {{resource}} נכשלה",
+      "searchFailed": "חיפוש {{resource}} נכשל",
+      "loadFailed": "טעינת {{resource}} נכשלה. אנא רענן את הדף.",
+      "sendFailed": "שליחת {{resource}} נכשלה",
+      "generateFailed": "יצירת {{resource}} נכשלה",
+      "verifyFailed": "אימות {{resource}} נכשל",
+      "processFailed": "עיבוד {{action}} נכשל. אנא נסה שוב.",
+      "testConnectionFailed": "בדיקת החיבור נכשלה. אנא בדוק את הרשת שלך."
+    }
+  },
+  "common": {
+    "yes": "כן",
+    "no": "לא",
+    "or": "או",
+    "and": "ו",
+    "today": "היום",
+    "yesterday": "אתמול",
+    "week": "שבוע",
+    "month": "חודש",
+    "year": "שנה",
+    "all": "הכל",
+    "none": "אף אחד",
+    "active": "פעיל",
+    "inactive": "לא פעיל",
+    "pending": "ממתין",
+    "completed": "הושלם",
+    "failed": "נכשל",
+    "notSpecified": "לא צוין",
+    "unknown": "לא ידוע",
+    "na": "לא רלוונטי"
+  },
+  "toasts": {
+    "password": {
+      "changeSuccess": "הסיסמה שונתה בהצלחה! אנא התחבר שוב.",
+      "changeFailed": "שינוי הסיסמה נכשל. אנא נסה שוב."
+    },
+    "broadcast": {
+      "createSuccess": "השידור נוצר בהצלחה!",
+      "createFailed": "יצירת השידור נכשלה"
+    },
+    "template": {
+      "fetchFailed": "אחזור התבניות נכשל",
+      "createSuccess": "התבנית נוצרה בהצלחה",
+      "createFailed": "יצירת התבנית נכשלה",
+      "updateSuccess": "התבנית עודכנה בהצלחה",
+      "updateFailed": "עדכון התבנית נכשל",
+      "deleteSuccess": "התבנית נמחקה בהצלחה",
+      "deleteFailed": "מחיקת התבנית נכשלה"
+    },
+    "model": {
+      "fetchFailed": "אחזור המודלים נכשל",
+      "loadFailed": "טעינת המודל נכשלה",
+      "unloadSuccess": "המודל הוסר מהזיכרון בהצלחה",
+      "unloadFailed": "הסרת המודל מהזיכרון נכשלה",
+      "updateFailed": "עדכון המודל נכשל"
+    },
+    "config": {
+      "fetchFailed": "אחזור התצורה נכשל",
+      "updateSuccess": "התצורה עודכנה בהצלחה",
+      "updateFailed": "שמירת התצורה נכשלה"
+    },
+    "agent": {
+      "fetchFailed": "אחזור הסוכנים נכשל"
+    },
+    "personality": {
+      "fetchFailed": "אחזור האישיויות נכשל"
+    },
+    "router": {
+      "statsFetchFailed": "אחזור סטטיסטיקות הנתב נכשל",
+      "toggleFailed": "החלפת מצב הסקה נכשלה"
+    }
+  },
+  "confirmations": {
+    "deleteUser": "האם אתה בטוח שברצונך למחוק את המשתמש {{email}}?",
+    "deleteUserPermanent": "האם אתה בטוח שברצונך למחוק משתמש זה? לא ניתן לבטל פעולה זו.",
+    "deleteTerminal": "האם אתה בטוח שברצונך למחוק מסוף זה?",
+    "passwordResetMethod": "לחץ על אישור כדי לשלוח קישור לאיפוס סיסמה בדוא\"ל\nלחץ על ביטול כדי ליצור ולהציג סיסמה זמנית"
+  },
+  "modals": {
+    "changePassword": {
+      "title": "שנה סיסמה",
+      "currentPassword": "סיסמה נוכחית",
+      "newPassword": "סיסמה חדשה",
+      "confirmPassword": "אשר סיסמה חדשה",
+      "placeholders": {
+        "currentPassword": "הזן סיסמה נוכחית",
+        "newPassword": "הזן סיסמה חדשה",
+        "confirmPassword": "אשר סיסמה חדשה"
+      },
+      "requirements": {
+        "title": "הסיסמה חייבת להכיל:",
+        "minLength": "לפחות 8 תווים",
+        "uppercase": "אות גדולה אחת",
+        "lowercase": "אות קטנה אחת",
+        "number": "ספרה אחת"
+      },
+      "validation": {
+        "currentRequired": "נדרשת סיסמה נוכחית",
+        "newRequired": "נדרשת סיסמה חדשה",
+        "notMeetRequirements": "הסיסמה אינה עומדת בדרישות",
+        "confirmRequired": "אנא אשר את הסיסמה החדשה שלך",
+        "notMatch": "הסיסמאות אינן תואמות",
+        "mustBeDifferent": "הסיסמה החדשה חייבת להיות שונה מהסיסמה הנוכחית",
+        "incorrectCurrent": "הסיסמה הנוכחית שגויה"
+      },
+      "securityNotice": "לאחר שינוי הסיסמה שלך, תנותק ותצטרך להתחבר שוב עם האישורים החדשים שלך.",
+      "changing": "משנה..."
+    }
+  }
+}
