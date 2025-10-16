@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { X, Plus, Trash2, Package, DollarSign } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useStoreContext } from '../contexts/StoreContext';
 import { getApiEndpoint } from '../config/app.config';
 import StoreSelector from './StoreSelector';
@@ -26,14 +27,15 @@ interface CreatePurchaseOrderModalProps {
   products?: any[];
 }
 
-const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({ 
-  isOpen, 
-  onClose, 
-  suppliers 
+const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
+  isOpen,
+  onClose,
+  suppliers
 }) => {
+  const { t } = useTranslation(['common']);
   const queryClient = useQueryClient();
   const { currentStore } = useStoreContext();
-  
+
   // Form state
   const [supplierId, setSupplierId] = useState('');
   const [expectedDate, setExpectedDate] = useState('');
@@ -231,26 +233,26 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
   const handleSubmit = () => {
     // Validate
     if (!currentStore) {
-      setError('Please select a store');
+      setError(t('common:errors.validation.selectStore'));
       return;
     }
-    
+
     if (!supplierId) {
-      setError('Please select a supplier');
+      setError(t('common:errors.validation.selectSupplier'));
       return;
     }
-    
+
     if (items.length === 0) {
-      setError('Please add at least one item');
+      setError(t('common:errors.validation.addAtLeastOneItem'));
       return;
     }
-    
+
     const invalidItems = items.filter(item => !item.sku || item.quantity <= 0 || item.unit_cost <= 0);
     if (invalidItems.length > 0) {
-      setError('Please fill in all required fields for each item');
+      setError(t('common:errors.validation.fillRequiredFields'));
       return;
     }
-    
+
     setError(null);
     createPOMutation.mutate();
   };

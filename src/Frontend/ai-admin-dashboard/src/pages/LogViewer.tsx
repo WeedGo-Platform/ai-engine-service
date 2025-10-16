@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Search, Filter, RefreshCw, Download, X, ChevronDown, ChevronRight,
   AlertCircle, Info, AlertTriangle, XCircle, Calendar, Clock, User,
@@ -62,6 +63,7 @@ interface FilterState {
 }
 
 export default function LogViewer() {
+  const { t } = useTranslation(['tools', 'common']);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedLog, setSelectedLog] = useState<LogEntry | null>(null);
@@ -130,11 +132,11 @@ export default function LogViewer() {
       setTotalHits(data.total);
     } catch (error) {
       console.error('Error fetching logs:', error);
-      toast.error('Failed to fetch logs from Elasticsearch');
+      toast.error(t('tools:logs.messages.fetchFailed'));
     } finally {
       setLoading(false);
     }
-  }, [filters, page, pageSize]);
+  }, [filters, page, pageSize, t]);
 
   // Initial fetch and auto-refresh
   useEffect(() => {
@@ -158,7 +160,7 @@ export default function LogViewer() {
     link.download = `logs-${format(new Date(), 'yyyy-MM-dd-HH-mm-ss')}.json`;
     link.click();
     URL.revokeObjectURL(url);
-    toast.success('Logs exported successfully');
+    toast.success(t('tools:logs.messages.exportSuccess'));
   };
 
   // Get log level badge color
@@ -199,9 +201,9 @@ export default function LogViewer() {
     <div className="p-6 max-w-full">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">System Logs</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t('tools:logs.title')}</h1>
         <p className="mt-1 text-sm text-gray-600">
-          View and search application logs from Elasticsearch
+          {t('tools:logs.description')}
         </p>
       </div>
 
@@ -211,14 +213,14 @@ export default function LogViewer() {
           {/* Search */}
           <div className="lg:col-span-2">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Search Logs
+              {t('tools:logs.filters.search')}
             </label>
             <div className="relative">
               <input
                 type="text"
                 value={filters.search}
                 onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-                placeholder="Search message, logger, module..."
+                placeholder={t('tools:logs.filters.searchPlaceholder')}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
               <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
@@ -228,25 +230,25 @@ export default function LogViewer() {
           {/* Log Level */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Log Level
+              {t('tools:logs.filters.logLevel')}
             </label>
             <select
               value={filters.level}
               onChange={(e) => setFilters({ ...filters, level: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             >
-              <option value="all">All Levels</option>
-              <option value="ERROR">Error</option>
-              <option value="WARNING">Warning</option>
-              <option value="INFO">Info</option>
-              <option value="DEBUG">Debug</option>
+              <option value="all">{t('tools:logs.filters.allLevels')}</option>
+              <option value="ERROR">{t('tools:logs.filters.error')}</option>
+              <option value="WARNING">{t('tools:logs.filters.warning')}</option>
+              <option value="INFO">{t('tools:logs.filters.info')}</option>
+              <option value="DEBUG">{t('tools:logs.filters.debug')}</option>
             </select>
           </div>
 
           {/* Date Range */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Time Range
+              {t('tools:logs.filters.timeRange')}
             </label>
             <div className="flex gap-2">
               <input
@@ -265,7 +267,7 @@ export default function LogViewer() {
           className="flex items-center text-sm text-primary-600 hover:text-primary-700 font-medium mb-2"
         >
           {filters.showAdvanced ? <ChevronDown className="h-4 w-4 mr-1" /> : <ChevronRight className="h-4 w-4 mr-1" />}
-          Advanced Filters
+          {t('tools:logs.filters.advancedFilters')}
         </button>
 
         {/* Advanced Filters */}
@@ -274,13 +276,13 @@ export default function LogViewer() {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 <Activity className="inline h-4 w-4 mr-1" />
-                Correlation ID
+                {t('tools:logs.filters.correlationId')}
               </label>
               <input
                 type="text"
                 value={filters.correlationId}
                 onChange={(e) => setFilters({ ...filters, correlationId: e.target.value })}
-                placeholder="Filter by correlation ID"
+                placeholder={t('tools:logs.filters.correlationIdPlaceholder')}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
             </div>
@@ -288,13 +290,13 @@ export default function LogViewer() {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 <Building2 className="inline h-4 w-4 mr-1" />
-                Tenant ID
+                {t('tools:logs.filters.tenantId')}
               </label>
               <input
                 type="text"
                 value={filters.tenantId}
                 onChange={(e) => setFilters({ ...filters, tenantId: e.target.value })}
-                placeholder="Filter by tenant"
+                placeholder={t('tools:logs.filters.tenantIdPlaceholder')}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
             </div>
@@ -302,13 +304,13 @@ export default function LogViewer() {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 <Store className="inline h-4 w-4 mr-1" />
-                Store ID
+                {t('tools:logs.filters.storeId')}
               </label>
               <input
                 type="text"
                 value={filters.storeId}
                 onChange={(e) => setFilters({ ...filters, storeId: e.target.value })}
-                placeholder="Filter by store"
+                placeholder={t('tools:logs.filters.storeIdPlaceholder')}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
             </div>
@@ -316,13 +318,13 @@ export default function LogViewer() {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 <User className="inline h-4 w-4 mr-1" />
-                User ID
+                {t('tools:logs.filters.userId')}
               </label>
               <input
                 type="text"
                 value={filters.userId}
                 onChange={(e) => setFilters({ ...filters, userId: e.target.value })}
-                placeholder="Filter by user"
+                placeholder={t('tools:logs.filters.userIdPlaceholder')}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
             </div>
@@ -330,33 +332,33 @@ export default function LogViewer() {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 <Smartphone className="inline h-4 w-4 mr-1" />
-                Session ID
+                {t('tools:logs.filters.sessionId')}
               </label>
               <input
                 type="text"
                 value={filters.sessionId}
                 onChange={(e) => setFilters({ ...filters, sessionId: e.target.value })}
-                placeholder="Filter by session"
+                placeholder={t('tools:logs.filters.sessionIdPlaceholder')}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Service
+                {t('tools:logs.filters.service')}
               </label>
               <input
                 type="text"
                 value={filters.service}
                 onChange={(e) => setFilters({ ...filters, service: e.target.value })}
-                placeholder="Filter by service"
+                placeholder={t('tools:logs.filters.servicePlaceholder')}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                End Date
+                {t('tools:logs.filters.endDate')}
               </label>
               <input
                 type="datetime-local"
@@ -386,7 +388,7 @@ export default function LogViewer() {
                 }}
                 className="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
               >
-                Clear All Filters
+                {t('tools:logs.filters.clearAll')}
               </button>
             </div>
           </div>
@@ -401,7 +403,7 @@ export default function LogViewer() {
               className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 disabled:opacity-50"
             >
               <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-              Refresh
+              {t('tools:logs.actions.refresh')}
             </button>
 
             <button
@@ -409,7 +411,7 @@ export default function LogViewer() {
               className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
             >
               <Download className="h-4 w-4" />
-              Export
+              {t('tools:logs.actions.export')}
             </button>
           </div>
 
@@ -421,7 +423,7 @@ export default function LogViewer() {
                 onChange={(e) => setAutoRefresh(e.target.checked)}
                 className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
               />
-              Auto-refresh every
+              {t('tools:logs.actions.autoRefresh')}
               <select
                 value={refreshInterval}
                 onChange={(e) => setRefreshInterval(Number(e.target.value))}
@@ -436,7 +438,7 @@ export default function LogViewer() {
             </label>
 
             <div className="text-sm text-gray-600">
-              {totalHits.toLocaleString()} total logs
+              {totalHits.toLocaleString()} {t('tools:logs.table.totalLogs')}
             </div>
           </div>
         </div>
@@ -451,7 +453,7 @@ export default function LogViewer() {
         ) : logs.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-64 text-gray-500">
             <FileText className="h-12 w-12 mb-2" />
-            <p>No logs found</p>
+            <p>{t('tools:logs.table.noLogs')}</p>
           </div>
         ) : (
           <>
@@ -460,22 +462,22 @@ export default function LogViewer() {
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Timestamp
+                      {t('tools:logs.table.timestamp')}
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Level
+                      {t('tools:logs.table.level')}
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Service / Logger
+                      {t('tools:logs.table.serviceLogger')}
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Message
+                      {t('tools:logs.table.message')}
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Correlation ID
+                      {t('tools:logs.table.correlationId')}
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
+                      {t('tools:logs.table.actions')}
                     </th>
                   </tr>
                 </thead>
@@ -512,7 +514,7 @@ export default function LogViewer() {
                           className="text-primary-600 hover:text-primary-900 flex items-center gap-1"
                         >
                           <Eye className="h-4 w-4" />
-                          Details
+                          {t('tools:logs.actions.details')}
                         </button>
                       </td>
                     </tr>
@@ -526,7 +528,7 @@ export default function LogViewer() {
               <div className="flex-1 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-gray-700">
-                    Showing {((page - 1) * pageSize) + 1} to {Math.min(page * pageSize, totalHits)} of {totalHits.toLocaleString()}
+                    {t('tools:logs.pagination.showing', { from: ((page - 1) * pageSize) + 1, to: Math.min(page * pageSize, totalHits), total: totalHits.toLocaleString() })}
                   </span>
                   <select
                     value={pageSize}
@@ -536,10 +538,10 @@ export default function LogViewer() {
                     }}
                     className="px-2 py-1 border border-gray-300 rounded text-sm"
                   >
-                    <option value={25}>25 per page</option>
-                    <option value={50}>50 per page</option>
-                    <option value={100}>100 per page</option>
-                    <option value={200}>200 per page</option>
+                    <option value={25}>25 {t('tools:logs.pagination.perPage')}</option>
+                    <option value={50}>50 {t('tools:logs.pagination.perPage')}</option>
+                    <option value={100}>100 {t('tools:logs.pagination.perPage')}</option>
+                    <option value={200}>200 {t('tools:logs.pagination.perPage')}</option>
                   </select>
                 </div>
 
@@ -549,17 +551,17 @@ export default function LogViewer() {
                     disabled={page === 1}
                     className="px-3 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Previous
+                    {t('tools:logs.pagination.previous')}
                   </button>
                   <span className="px-3 py-1 text-sm text-gray-700">
-                    Page {page} of {totalPages}
+                    {t('tools:logs.pagination.page', { current: page, total: totalPages })}
                   </span>
                   <button
                     onClick={() => setPage(Math.min(totalPages, page + 1))}
                     disabled={page === totalPages}
                     className="px-3 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Next
+                    {t('tools:logs.pagination.next')}
                   </button>
                 </div>
               </div>
@@ -577,7 +579,7 @@ export default function LogViewer() {
             <div className="relative bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
               {/* Header */}
               <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900">Log Details</h3>
+                <h3 className="text-lg font-semibold text-gray-900">{t('tools:logs.details.title')}</h3>
                 <button
                   onClick={() => setSelectedLog(null)}
                   className="text-gray-400 hover:text-gray-500"
@@ -607,97 +609,97 @@ export default function LogViewer() {
                   <div className="grid grid-cols-2 gap-4">
                     {selectedLog._source.correlation_id && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">Correlation ID</dt>
+                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.correlationId')}</dt>
                         <dd className="mt-1 text-sm text-gray-900 font-mono">{selectedLog._source.correlation_id}</dd>
                       </div>
                     )}
                     {selectedLog._source.session_id && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">Session ID</dt>
+                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.sessionId')}</dt>
                         <dd className="mt-1 text-sm text-gray-900 font-mono">{selectedLog._source.session_id}</dd>
                       </div>
                     )}
                     {selectedLog._source.tenant_id && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">Tenant ID</dt>
+                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.tenantId')}</dt>
                         <dd className="mt-1 text-sm text-gray-900 font-mono">{selectedLog._source.tenant_id}</dd>
                       </div>
                     )}
                     {selectedLog._source.store_id && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">Store ID</dt>
+                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.storeId')}</dt>
                         <dd className="mt-1 text-sm text-gray-900 font-mono">{selectedLog._source.store_id}</dd>
                       </div>
                     )}
                     {selectedLog._source.user_id && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">User ID</dt>
+                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.userId')}</dt>
                         <dd className="mt-1 text-sm text-gray-900 font-mono">{selectedLog._source.user_id}</dd>
                       </div>
                     )}
                     {selectedLog._source.service && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">Service</dt>
+                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.service')}</dt>
                         <dd className="mt-1 text-sm text-gray-900">{selectedLog._source.service}</dd>
                       </div>
                     )}
                     {selectedLog._source.environment && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">Environment</dt>
+                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.environment')}</dt>
                         <dd className="mt-1 text-sm text-gray-900">{selectedLog._source.environment}</dd>
                       </div>
                     )}
                     {selectedLog._source.logger && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">Logger</dt>
+                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.logger')}</dt>
                         <dd className="mt-1 text-sm text-gray-900">{selectedLog._source.logger}</dd>
                       </div>
                     )}
                     {selectedLog._source.module && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">Module</dt>
+                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.module')}</dt>
                         <dd className="mt-1 text-sm text-gray-900">{selectedLog._source.module}</dd>
                       </div>
                     )}
                     {selectedLog._source.function && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">Function</dt>
+                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.function')}</dt>
                         <dd className="mt-1 text-sm text-gray-900">{selectedLog._source.function}</dd>
                       </div>
                     )}
                     {selectedLog._source.line && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">Line Number</dt>
+                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.lineNumber')}</dt>
                         <dd className="mt-1 text-sm text-gray-900">{selectedLog._source.line}</dd>
                       </div>
                     )}
                     {selectedLog._source.duration_ms && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">Duration</dt>
+                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.duration')}</dt>
                         <dd className="mt-1 text-sm text-gray-900">{selectedLog._source.duration_ms}ms</dd>
                       </div>
                     )}
                     {selectedLog._source.status_code && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">Status Code</dt>
+                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.statusCode')}</dt>
                         <dd className="mt-1 text-sm text-gray-900">{selectedLog._source.status_code}</dd>
                       </div>
                     )}
                     {selectedLog._source.method && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">Method</dt>
+                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.method')}</dt>
                         <dd className="mt-1 text-sm text-gray-900">{selectedLog._source.method}</dd>
                       </div>
                     )}
                     {selectedLog._source.path && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">Path</dt>
+                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.path')}</dt>
                         <dd className="mt-1 text-sm text-gray-900">{selectedLog._source.path}</dd>
                       </div>
                     )}
                     {selectedLog._source.client_host && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">Client Host</dt>
+                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.clientHost')}</dt>
                         <dd className="mt-1 text-sm text-gray-900">{selectedLog._source.client_host}</dd>
                       </div>
                     )}
@@ -706,7 +708,7 @@ export default function LogViewer() {
                   {/* Exception */}
                   {selectedLog._source.exception && (
                     <div>
-                      <dt className="text-sm font-medium text-gray-500 mb-2">Exception</dt>
+                      <dt className="text-sm font-medium text-gray-500 mb-2">{t('tools:logs.details.exception')}</dt>
                       <dd className="text-sm text-red-900 bg-red-50 p-3 rounded-lg font-mono whitespace-pre-wrap">
                         {selectedLog._source.exception}
                       </dd>
@@ -716,7 +718,7 @@ export default function LogViewer() {
                   {/* Raw JSON */}
                   <details className="mt-4">
                     <summary className="cursor-pointer text-sm font-medium text-gray-700 hover:text-gray-900">
-                      View Raw JSON
+                      {t('tools:logs.details.viewRawJson')}
                     </summary>
                     <pre className="mt-2 p-4 bg-gray-900 text-green-400 rounded-lg overflow-x-auto text-xs">
                       {JSON.stringify(selectedLog._source, null, 2)}
@@ -737,18 +739,18 @@ export default function LogViewer() {
                     link.download = `log-${selectedLog._id}.json`;
                     link.click();
                     URL.revokeObjectURL(url);
-                    toast.success('Log exported');
+                    toast.success(t('tools:logs.messages.logExported'));
                   }}
                   className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
                 >
                   <Download className="inline h-4 w-4 mr-1" />
-                  Export
+                  {t('tools:logs.actions.export')}
                 </button>
                 <button
                   onClick={() => setSelectedLog(null)}
                   className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700"
                 >
-                  Close
+                  {t('tools:logs.actions.close')}
                 </button>
               </div>
             </div>

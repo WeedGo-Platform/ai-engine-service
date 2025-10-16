@@ -284,46 +284,46 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg  p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Active Customers</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('dashboard:activeCustomers')}</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {stats?.customers?.total || 0}
               </p>
               <div className="flex items-center mt-2">
-                <span className="text-sm text-gray-500">
-                  {stats?.customers?.new || 0} new this week
+                <span className="text-sm text-gray-500 dark:text-gray-400">
+                  {stats?.customers?.new || 0} {t('dashboard:newThisWeek')}
                 </span>
               </div>
             </div>
-            <Users className="h-8 w-8 text-purple-600" />
+            <Users className="h-8 w-8 text-purple-600 dark:text-purple-400" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg  p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Inventory Items</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('dashboard:inventoryItems')}</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {inventoryStats?.total_skus || stats?.inventory?.total || 0}
               </p>
               <div className="flex items-center mt-2">
                 <AlertTriangle className="h-4 w-4 text-yellow-500 mr-1" />
-                <span className="text-sm text-warning-600">
-                  {inventoryStats?.low_stock_items || stats?.inventory?.low_stock || 0} low stock
+                <span className="text-sm text-warning-600 dark:text-warning-400">
+                  {inventoryStats?.low_stock_items || stats?.inventory?.low_stock || 0} {t('dashboard:lowStockCount')}
                 </span>
               </div>
             </div>
-            <Package className="h-8 w-8 text-orange-600" />
+            <Package className="h-8 w-8 text-orange-600 dark:text-orange-400" />
           </div>
         </div>
       </div>
 
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg  p-6">
-          <h3 className="text-lg font-semibold mb-4">Revenue Trend</h3>
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('dashboard:revenueTrend')}</h3>
           <div style={{ height: '300px', position: 'relative' }}>
             <Line 
               data={revenueData} 
@@ -341,8 +341,8 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg  p-6">
-          <h3 className="text-lg font-semibold mb-4">Sales by Category</h3>
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('dashboard:salesByCategory')}</h3>
           <div style={{ height: '300px', position: 'relative' }}>
             <Doughnut 
               data={categoryData} 
@@ -363,8 +363,8 @@ const Dashboard: React.FC = () => {
       {/* Additional Charts for Admin Users */}
       {(isSuperAdmin() || isTenantAdmin()) && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white rounded-lg  p-6">
-            <h3 className="text-lg font-semibold mb-4">Order Status Distribution</h3>
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('dashboard:orderStatusDistribution')}</h3>
             <div style={{ height: '300px', position: 'relative' }}>
               <Bar 
                 data={orderStatusData} 
@@ -382,8 +382,8 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg  p-6">
-            <h3 className="text-lg font-semibold mb-4">Store Performance</h3>
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('dashboard:storePerformance')}</h3>
             <div className="space-y-4">
               {stores.slice(0, 5).map((store) => (
                 <div key={store.id} className="flex items-center justify-between">
@@ -411,9 +411,9 @@ const Dashboard: React.FC = () => {
 
       {/* Recent Activity Tables */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg ">
-          <div className="px-6 py-4 border-b">
-            <h3 className="text-lg font-semibold">Recent Orders</h3>
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+          <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t('dashboard:recentOrders')}</h3>
           </div>
           <div className="p-6">
             {(stats?.orders?.recent?.length > 0 || orders?.orders?.length > 0) ? (
@@ -421,32 +421,32 @@ const Dashboard: React.FC = () => {
                 {(stats?.orders?.recent || orders?.orders || []).slice(0, 5).map((order: any, index: number) => (
                   <div key={order.id || index} className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium">#{order.id || order.order_number}</p>
-                      <p className="text-xs text-gray-500">{order.customer || order.customer_name}</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">#{order.id || order.order_number}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{order.customer || order.customer_name}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-medium">${order.total}</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">${order.total}</p>
                       <span className={`text-xs px-2 py-1 rounded-full ${
-                        order.status === 'completed' ? 'bg-primary-100 text-primary-800' :
-                        order.status === 'processing' ? 'bg-blue-100 text-blue-800' :
-                        order.status === 'shipped' ? 'bg-purple-100 text-purple-800' :
-                        'bg-warning-100 text-warning-800'
+                        order.status === 'completed' ? 'bg-primary-100 text-primary-800 dark:bg-primary-900/20 dark:text-primary-300' :
+                        order.status === 'processing' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300' :
+                        order.status === 'shipped' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300' :
+                        'bg-warning-100 text-warning-800 dark:bg-warning-900/20 dark:text-warning-300'
                       }`}>
-                        {order.status}
+                        {t(`dashboard:orderStatuses.${order.status}`, { defaultValue: order.status })}
                       </span>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-gray-500">No recent orders</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{t('dashboard:noRecentOrders')}</p>
             )}
           </div>
         </div>
 
-        <div className="bg-white rounded-lg ">
-          <div className="px-6 py-4 border-b">
-            <h3 className="text-lg font-semibold">Low Stock Alerts</h3>
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+          <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t('dashboard:lowStockAlerts')}</h3>
           </div>
           <div className="p-6">
             {inventory?.items?.length > 0 ? (
@@ -454,22 +454,22 @@ const Dashboard: React.FC = () => {
                 {inventory.items.slice(0, 5).map((item: any) => (
                   <div key={item.id} className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium">{item.name}</p>
-                      <p className="text-xs text-gray-500">SKU: {item.sku}</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">{item.name}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">SKU: {item.sku}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-medium text-danger-600">
-                        {item.quantity} left
+                      <p className="text-sm font-medium text-danger-600 dark:text-danger-400">
+                        {item.quantity} {t('dashboard:left')}
                       </p>
-                      <p className="text-xs text-gray-500">
-                        Reorder: {item.reorder_point}
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        {t('dashboard:reorder')}: {item.reorder_point}
                       </p>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-gray-500">No low stock items</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{t('dashboard:noLowStockItems')}</p>
             )}
           </div>
         </div>

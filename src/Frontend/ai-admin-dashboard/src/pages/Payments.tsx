@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Card,
   CardContent,
@@ -115,6 +116,8 @@ interface PaymentMetrics {
 }
 
 const PaymentsPage: React.FC = () => {
+  const { t } = useTranslation(['payments', 'common', 'errors']);
+
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [providers, setProviders] = useState<PaymentProvider[]>([]);
   const [metrics, setMetrics] = useState<PaymentMetrics | null>(null);
@@ -150,8 +153,8 @@ const PaymentsPage: React.FC = () => {
     } catch (error) {
       console.error('Error fetching transactions:', error);
       toast({
-        title: 'Error',
-        description: 'Failed to fetch transactions',
+        title: t('payments:messages.error.title'),
+        description: t('payments:messages.error.fetchTransactions'),
         variant: 'destructive',
       });
     } finally {
@@ -199,27 +202,27 @@ const PaymentsPage: React.FC = () => {
       });
 
       const result = await response.json();
-      
+
       if (result.success) {
         toast({
-          title: 'Success',
-          description: 'Refund processed successfully',
+          title: t('common:messages.success'),
+          description: t('payments:messages.success.refundProcessed'),
         });
         setIsRefundDialogOpen(false);
         fetchTransactions();
         fetchMetrics();
       } else {
         toast({
-          title: 'Error',
-          description: result.error || 'Failed to process refund',
+          title: t('payments:messages.error.title'),
+          description: result.error || t('payments:messages.error.processRefund'),
           variant: 'destructive',
         });
       }
     } catch (error) {
       console.error('Error processing refund:', error);
       toast({
-        title: 'Error',
-        description: 'Failed to process refund',
+        title: t('payments:messages.error.title'),
+        description: t('payments:messages.error.processRefund'),
         variant: 'destructive',
       });
     }
@@ -235,16 +238,16 @@ const PaymentsPage: React.FC = () => {
 
       if (response.ok) {
         toast({
-          title: 'Success',
-          description: `Provider ${isActive ? 'disabled' : 'enabled'} successfully`,
+          title: t('common:messages.success'),
+          description: isActive ? t('payments:messages.success.providerDisabled') : t('payments:messages.success.providerEnabled'),
         });
         fetchProviders();
       }
     } catch (error) {
       console.error('Error updating provider:', error);
       toast({
-        title: 'Error',
-        description: 'Failed to update provider status',
+        title: t('payments:messages.error.title'),
+        description: t('payments:messages.error.updateProvider'),
         variant: 'destructive',
       });
     }
@@ -265,7 +268,7 @@ const PaymentsPage: React.FC = () => {
     return (
       <Badge variant={config.variant} className="flex items-center gap-1">
         <Icon className="h-3 w-3" />
-        {status}
+        {t(`payments:status.${status}`)}
       </Badge>
     );
   };
@@ -295,15 +298,15 @@ const PaymentsPage: React.FC = () => {
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Payment Management</h1>
+        <h1 className="text-3xl font-bold">{t('payments:titles.main')}</h1>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => fetchTransactions()}>
             <RefreshCw className="h-4 w-4 mr-2" />
-            Refresh
+            {t('payments:actions.refresh')}
           </Button>
           <Button variant="outline">
             <Download className="h-4 w-4 mr-2" />
-            Export
+            {t('payments:actions.export')}
           </Button>
         </div>
       </div>
@@ -313,52 +316,52 @@ const PaymentsPage: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('payments:metrics.totalRevenue')}</CardTitle>
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">${metrics.total_amount.toFixed(2)}</div>
               <p className="text-xs text-muted-foreground">
-                {metrics.total_transactions} transactions
+                {metrics.total_transactions} {t('payments:metrics.transactions')}
               </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Success Rate</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('payments:metrics.successRate')}</CardTitle>
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{metrics.success_rate.toFixed(1)}%</div>
               <p className="text-xs text-muted-foreground">
-                {metrics.successful_transactions} successful
+                {metrics.successful_transactions} {t('payments:metrics.successful')}
               </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Refunds</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('payments:metrics.totalRefunds')}</CardTitle>
               <TrendingDown className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">${metrics.total_refunds.toFixed(2)}</div>
               <p className="text-xs text-muted-foreground">
-                From revenue
+                {t('payments:metrics.fromRevenue')}
               </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Processing Fees</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('payments:metrics.processingFees')}</CardTitle>
               <AlertCircle className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">${metrics.total_fees.toFixed(2)}</div>
               <p className="text-xs text-muted-foreground">
-                {((metrics.total_fees / metrics.total_amount) * 100).toFixed(2)}% of revenue
+                {((metrics.total_fees / metrics.total_amount) * 100).toFixed(2)}% {t('payments:metrics.ofRevenue')}
               </p>
             </CardContent>
           </Card>
@@ -367,18 +370,18 @@ const PaymentsPage: React.FC = () => {
 
       <Tabs defaultValue="transactions" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="transactions">Transactions</TabsTrigger>
-          <TabsTrigger value="providers">Payment Providers</TabsTrigger>
-          <TabsTrigger value="methods">Payment Methods</TabsTrigger>
-          <TabsTrigger value="settlements">Settlements</TabsTrigger>
+          <TabsTrigger value="transactions">{t('payments:tabs.transactions')}</TabsTrigger>
+          <TabsTrigger value="providers">{t('payments:tabs.providers')}</TabsTrigger>
+          <TabsTrigger value="methods">{t('payments:tabs.methods')}</TabsTrigger>
+          <TabsTrigger value="settlements">{t('payments:tabs.settlements')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="transactions" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Transaction History</CardTitle>
+              <CardTitle>{t('payments:titles.transactionHistory')}</CardTitle>
               <CardDescription>
-                View and manage all payment transactions
+                {t('payments:descriptions.transactionHistory')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -387,7 +390,7 @@ const PaymentsPage: React.FC = () => {
                   <div className="relative">
                     <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                     <Input
-                      placeholder="Search transactions..."
+                      placeholder={t('payments:filters.searchPlaceholder')}
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="pl-8"
@@ -400,22 +403,22 @@ const PaymentsPage: React.FC = () => {
                 />
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
                   <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Status" />
+                    <SelectValue placeholder={t('payments:filters.status')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="completed">Completed</SelectItem>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="failed">Failed</SelectItem>
-                    <SelectItem value="refunded">Refunded</SelectItem>
+                    <SelectItem value="all">{t('payments:filters.allStatus')}</SelectItem>
+                    <SelectItem value="completed">{t('payments:status.completed')}</SelectItem>
+                    <SelectItem value="pending">{t('payments:status.pending')}</SelectItem>
+                    <SelectItem value="failed">{t('payments:status.failed')}</SelectItem>
+                    <SelectItem value="refunded">{t('payments:status.refunded')}</SelectItem>
                   </SelectContent>
                 </Select>
                 <Select value={providerFilter} onValueChange={setProviderFilter}>
                   <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Provider" />
+                    <SelectValue placeholder={t('payments:filters.provider')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Providers</SelectItem>
+                    <SelectItem value="all">{t('payments:filters.allProviders')}</SelectItem>
                     {providers.map(provider => (
                       <SelectItem key={provider.id} value={provider.provider_type}>
                         {provider.name}
@@ -429,13 +432,13 @@ const PaymentsPage: React.FC = () => {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Reference</TableHead>
-                      <TableHead>Customer</TableHead>
-                      <TableHead>Amount</TableHead>
-                      <TableHead>Provider</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Actions</TableHead>
+                      <TableHead>{t('payments:table.reference')}</TableHead>
+                      <TableHead>{t('payments:table.customer')}</TableHead>
+                      <TableHead>{t('payments:table.amount')}</TableHead>
+                      <TableHead>{t('payments:table.provider')}</TableHead>
+                      <TableHead>{t('payments:table.status')}</TableHead>
+                      <TableHead>{t('payments:table.date')}</TableHead>
+                      <TableHead>{t('payments:table.actions')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -496,9 +499,9 @@ const PaymentsPage: React.FC = () => {
         <TabsContent value="providers" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Payment Providers</CardTitle>
+              <CardTitle>{t('payments:titles.paymentProviders')}</CardTitle>
               <CardDescription>
-                Manage payment gateway configurations
+                {t('payments:descriptions.paymentProviders')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -516,17 +519,17 @@ const PaymentsPage: React.FC = () => {
                         </div>
                         <div className="flex gap-2">
                           {provider.is_default && (
-                            <Badge variant="secondary">Default</Badge>
+                            <Badge variant="secondary">{t('payments:provider.default')}</Badge>
                           )}
                           <Badge variant={provider.is_active ? 'success' : 'destructive'}>
-                            {provider.is_active ? 'Active' : 'Inactive'}
+                            {provider.is_active ? t('payments:status.active') : t('payments:status.inactive')}
                           </Badge>
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => toggleProviderStatus(provider.id, provider.is_active)}
                           >
-                            {provider.is_active ? 'Disable' : 'Enable'}
+                            {provider.is_active ? t('payments:actions.disable') : t('payments:actions.enable')}
                           </Button>
                         </div>
                       </div>
@@ -534,11 +537,11 @@ const PaymentsPage: React.FC = () => {
                     <CardContent>
                       <div className="grid grid-cols-2 gap-6 text-sm">
                         <div>
-                          <p className="text-muted-foreground">Supported Currencies</p>
+                          <p className="text-muted-foreground">{t('payments:provider.supportedCurrencies')}</p>
                           <p className="font-medium">{provider.supported_currencies.join(', ')}</p>
                         </div>
                         <div>
-                          <p className="text-muted-foreground">Capabilities</p>
+                          <p className="text-muted-foreground">{t('payments:provider.capabilities')}</p>
                           <div className="flex flex-wrap gap-1 mt-1">
                             {Object.entries(provider.capabilities || {}).map(([key, value]) => (
                               value && (
@@ -561,14 +564,14 @@ const PaymentsPage: React.FC = () => {
         <TabsContent value="methods" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Payment Methods</CardTitle>
+              <CardTitle>{t('payments:titles.paymentMethods')}</CardTitle>
               <CardDescription>
-                Manage saved customer payment methods
+                {t('payments:descriptions.paymentMethods')}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="text-center py-8 text-muted-foreground">
-                Payment methods management coming soon
+                {t('payments:messages.comingSoon.paymentMethods')}
               </div>
             </CardContent>
           </Card>
@@ -577,14 +580,14 @@ const PaymentsPage: React.FC = () => {
         <TabsContent value="settlements" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Settlements</CardTitle>
+              <CardTitle>{t('payments:titles.settlements')}</CardTitle>
               <CardDescription>
-                View settlement batches and reconciliation
+                {t('payments:descriptions.settlements')}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="text-center py-8 text-muted-foreground">
-                Settlement reports coming soon
+                {t('payments:messages.comingSoon.settlements')}
               </div>
             </CardContent>
           </Card>
@@ -595,20 +598,20 @@ const PaymentsPage: React.FC = () => {
       <Dialog open={isRefundDialogOpen} onOpenChange={setIsRefundDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Process Refund</DialogTitle>
+            <DialogTitle>{t('payments:titles.processRefund')}</DialogTitle>
             <DialogDescription>
-              Refund transaction {selectedTransaction?.transaction_reference}
+              {t('payments:descriptions.refundTransaction')} {selectedTransaction?.transaction_reference}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <Label>Original Amount</Label>
+              <Label>{t('payments:refund.originalAmount')}</Label>
               <p className="text-2xl font-bold">
                 ${selectedTransaction?.amount.toFixed(2)} {selectedTransaction?.currency}
               </p>
             </div>
             <div>
-              <Label htmlFor="refund-amount">Refund Amount (leave empty for full refund)</Label>
+              <Label htmlFor="refund-amount">{t('payments:refund.refundAmount')} ({t('payments:refund.refundAmountHint')})</Label>
               <Input
                 id="refund-amount"
                 type="number"
@@ -616,24 +619,24 @@ const PaymentsPage: React.FC = () => {
                 max={selectedTransaction?.amount}
                 value={refundAmount}
                 onChange={(e) => setRefundAmount(e.target.value)}
-                placeholder="Enter amount"
+                placeholder={t('payments:refund.enterAmount')}
               />
             </div>
             <div>
-              <Label htmlFor="refund-reason">Reason</Label>
+              <Label htmlFor="refund-reason">{t('payments:refund.reason')}</Label>
               <Input
                 id="refund-reason"
                 value={refundReason}
                 onChange={(e) => setRefundReason(e.target.value)}
-                placeholder="Enter reason for refund"
+                placeholder={t('payments:refund.enterReason')}
               />
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsRefundDialogOpen(false)}>
-              Cancel
+              {t('payments:actions.cancel')}
             </Button>
-            <Button onClick={processRefund}>Process Refund</Button>
+            <Button onClick={processRefund}>{t('payments:actions.processRefund')}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -642,7 +645,7 @@ const PaymentsPage: React.FC = () => {
       <Dialog open={isDetailDialogOpen} onOpenChange={setIsDetailDialogOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Transaction Details</DialogTitle>
+            <DialogTitle>{t('payments:titles.transactionDetails')}</DialogTitle>
             <DialogDescription>
               {selectedTransaction?.transaction_reference}
             </DialogDescription>
@@ -650,58 +653,58 @@ const PaymentsPage: React.FC = () => {
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-6">
               <div>
-                <Label>Transaction ID</Label>
+                <Label>{t('payments:details.transactionId')}</Label>
                 <p className="font-medium">{selectedTransaction?.id}</p>
               </div>
               <div>
-                <Label>Provider Transaction ID</Label>
-                <p className="font-medium">{selectedTransaction?.provider_transaction_id || 'N/A'}</p>
+                <Label>{t('payments:details.providerTransactionId')}</Label>
+                <p className="font-medium">{selectedTransaction?.provider_transaction_id || t('payments:details.notAvailable')}</p>
               </div>
               <div>
-                <Label>Order ID</Label>
-                <p className="font-medium">{selectedTransaction?.order_id || 'N/A'}</p>
+                <Label>{t('payments:details.orderId')}</Label>
+                <p className="font-medium">{selectedTransaction?.order_id || t('payments:details.notAvailable')}</p>
               </div>
               <div>
-                <Label>Status</Label>
+                <Label>{t('payments:details.status')}</Label>
                 <div className="mt-1">
                   {selectedTransaction && getStatusBadge(selectedTransaction.status)}
                 </div>
               </div>
               <div>
-                <Label>Amount</Label>
+                <Label>{t('payments:details.amount')}</Label>
                 <p className="font-medium">
                   ${selectedTransaction?.amount.toFixed(2)} {selectedTransaction?.currency}
                 </p>
               </div>
               <div>
-                <Label>Provider</Label>
+                <Label>{t('payments:details.provider')}</Label>
                 <p className="font-medium">{selectedTransaction?.provider_name}</p>
               </div>
               <div>
-                <Label>Created At</Label>
+                <Label>{t('payments:details.createdAt')}</Label>
                 <p className="font-medium">
                   {selectedTransaction && format(new Date(selectedTransaction.created_at), 'PPpp')}
                 </p>
               </div>
               <div>
-                <Label>Completed At</Label>
+                <Label>{t('payments:details.completedAt')}</Label>
                 <p className="font-medium">
-                  {selectedTransaction?.completed_at 
+                  {selectedTransaction?.completed_at
                     ? format(new Date(selectedTransaction.completed_at), 'PPpp')
-                    : 'N/A'}
+                    : t('payments:details.notAvailable')}
                 </p>
               </div>
             </div>
             {selectedTransaction?.error_message && (
               <div>
-                <Label>Error Message</Label>
+                <Label>{t('payments:details.errorMessage')}</Label>
                 <p className="font-medium text-destructive">{selectedTransaction.error_message}</p>
               </div>
             )}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsDetailDialogOpen(false)}>
-              Close
+              {t('payments:actions.close')}
             </Button>
           </DialogFooter>
         </DialogContent>

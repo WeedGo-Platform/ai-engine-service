@@ -9,6 +9,7 @@ import {
   TestTube,
   Shield
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface PaymentProvider {
   enabled: boolean;
@@ -69,6 +70,7 @@ const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> =
   settings: initialonSave,
   onValidate
 }) => {
+  const { t } = useTranslation(['common']);
   const [settings, setSettings] = useState<PaymentProviderSettings>(initialSettings || {});
   const [activeProvider, setActiveProvider] = useState<string | null>(null);
   const [showSecrets, setShowSecrets] = useState<{ [key: string]: boolean }>({});
@@ -109,11 +111,11 @@ const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> =
   const handleSave = async () => {
     setSaving(true);
     setErrors({});
-    
+
     try {
       await onSave(settings);
     } catch (error: any) {
-      setErrors({ save: error.message || 'Failed to save settings' });
+      setErrors({ save: error.message || t('common:errors.operations.saveFailed') });
     } finally {
       setSaving(false);
     }
@@ -121,14 +123,14 @@ const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> =
 
   const handleValidate = async (providerId: string) => {
     if (!onValidate) return;
-    
+
     setValidating(providerId);
     setErrors({});
-    
+
     try {
       await onValidate(providerId);
     } catch (error: any) {
-      setErrors({ [providerId]: error.message || 'Validation failed' });
+      setErrors({ [providerId]: error.message || t('common:errors.operations.validationFailed') });
     } finally {
       setValidating(null);
     }

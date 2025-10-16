@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Phone, Shield, CheckCircle, AlertCircle, RefreshCcw } from 'lucide-react';
 
@@ -10,6 +11,7 @@ interface LocationState {
 }
 
 const Verification = () => {
+  const { t } = useTranslation(['auth', 'common']);
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state as LocationState;
@@ -44,9 +46,9 @@ const Verification = () => {
   const handleVerifyCode = async (type: 'email' | 'phone') => {
     const code = type === 'email' ? emailCode : phoneCode;
     const identifier = type === 'email' ? state.email : state.phone;
-    
+
     if (!code || code.length < 4) {
-      setErrors({ [type]: 'Please enter a valid code' });
+      setErrors({ [type]: t('auth:errors.invalidCode') });
       return;
     }
     
@@ -66,10 +68,10 @@ const Verification = () => {
           purpose: 'verification'
         })
       });
-      
+
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.detail || 'Invalid verification code');
+        throw new Error(error.detail || t('auth:errors.verificationFailed'));
       }
       
       const result = await response.json();
@@ -92,9 +94,9 @@ const Verification = () => {
           });
         }, 1500);
       }
-      
+
     } catch (error: any) {
-      setErrors({ [type]: error.message || 'Verification failed' });
+      setErrors({ [type]: error.message || t('auth:errors.verificationError') });
     } finally {
       setIsLoading(false);
     }
@@ -120,17 +122,17 @@ const Verification = () => {
           purpose: 'verification'
         })
       });
-      
+
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.detail || 'Failed to resend code');
+        throw new Error(error.detail || t('auth:errors.resendFailed'));
       }
       
       // Set 60 second cooldown
       setResendTimer(prev => ({ ...prev, [type]: 60 }));
-      
+
     } catch (error: any) {
-      setErrors({ [type]: error.message || 'Failed to resend code' });
+      setErrors({ [type]: error.message || t('auth:errors.resendFailed') });
     } finally {
       setIsLoading(false);
     }
@@ -153,9 +155,9 @@ const Verification = () => {
           <div className="mx-auto h-12 w-12 bg-primary-600 rounded-full flex items-center justify-center mb-4">
             <Shield className="h-6 w-6 text-white" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-900">Verify Your Account</h2>
+          <h2 className="text-3xl font-bold text-gray-900">{t('auth:verification.title')}</h2>
           <p className="mt-2 text-gray-600">
-            We've sent verification codes to your email {state.phone && 'and phone'}
+            {state.phone ? t('auth:verification.subtitleWithPhone') : t('auth:verification.subtitle')}
           </p>
         </div>
 
@@ -165,7 +167,7 @@ const Verification = () => {
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center">
                 <Mail className={`h-5 w-5 mr-2 ${emailVerified ? 'text-primary-600' : 'text-gray-500'}`} />
-                <span className="font-medium text-gray-700">Email Verification</span>
+                <span className="font-medium text-gray-700">{t('auth:verification.email.title')}</span>
               </div>
               {emailVerified && <CheckCircle className="h-5 w-5 text-primary-600" />}
             </div>
@@ -173,7 +175,7 @@ const Verification = () => {
             {!emailVerified && (
               <>
                 <p className="text-sm text-gray-600 mb-3">
-                  Enter the code sent to {state.email}
+                  {t('auth:verification.email.instruction', { email: state.email })}
                 </p>
                 
                 <div className="flex space-x-2">
@@ -181,7 +183,7 @@ const Verification = () => {
                     type="text"
                     value={emailCode}
                     onChange={(e) => setEmailCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                    placeholder="000000"
+                    placeholder={t('auth:verification.codePlaceholder')}
                     className="flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-center font-mono text-lg"
                     maxLength={6}
                     disabled={isLoading || emailVerified}
@@ -191,7 +193,7 @@ const Verification = () => {
                     disabled={isLoading || emailVerified || !emailCode}
                     className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Verify
+                    {t('auth:verification.verify')}
                   </button>
                 </div>
                 
@@ -205,13 +207,13 @@ const Verification = () => {
                   className="mt-2 text-sm text-primary-600 hover:text-primary-700 disabled:text-gray-400 disabled:cursor-not-allowed flex items-center"
                 >
                   <RefreshCcw className="h-3 w-3 mr-1" />
-                  {resendTimer.email > 0 ? `Resend in ${resendTimer.email}s` : 'Resend code'}
+                  {resendTimer.email > 0 ? t('auth:verification.resendTimer', { seconds: resendTimer.email }) : t('auth:verification.resend')}
                 </button>
               </>
             )}
-            
+
             {emailVerified && (
-              <p className="text-sm text-primary-600">Email verified successfully!</p>
+              <p className="text-sm text-primary-600">{t('auth:verification.email.verified')}</p>
             )}
           </div>
 
@@ -221,7 +223,7 @@ const Verification = () => {
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center">
                   <Phone className={`h-5 w-5 mr-2 ${phoneVerified ? 'text-primary-600' : 'text-gray-500'}`} />
-                  <span className="font-medium text-gray-700">Phone Verification</span>
+                  <span className="font-medium text-gray-700">{t('auth:verification.phone.title')}</span>
                 </div>
                 {phoneVerified && <CheckCircle className="h-5 w-5 text-primary-600" />}
               </div>
@@ -229,7 +231,7 @@ const Verification = () => {
               {!phoneVerified && (
                 <>
                   <p className="text-sm text-gray-600 mb-3">
-                    Enter the code sent to {state.phone}
+                    {t('auth:verification.phone.instruction', { phone: state.phone })}
                   </p>
                   
                   <div className="flex space-x-2">
@@ -237,7 +239,7 @@ const Verification = () => {
                       type="text"
                       value={phoneCode}
                       onChange={(e) => setPhoneCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                      placeholder="000000"
+                      placeholder={t('auth:verification.codePlaceholder')}
                       className="flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-center font-mono text-lg"
                       maxLength={6}
                       disabled={isLoading || phoneVerified}
@@ -247,7 +249,7 @@ const Verification = () => {
                       disabled={isLoading || phoneVerified || !phoneCode}
                       className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Verify
+                      {t('auth:verification.verify')}
                     </button>
                   </div>
                   
@@ -261,13 +263,13 @@ const Verification = () => {
                     className="mt-2 text-sm text-primary-600 hover:text-primary-700 disabled:text-gray-400 disabled:cursor-not-allowed flex items-center"
                   >
                     <RefreshCcw className="h-3 w-3 mr-1" />
-                    {resendTimer.phone > 0 ? `Resend in ${resendTimer.phone}s` : 'Resend code'}
+                    {resendTimer.phone > 0 ? t('auth:verification.resendTimer', { seconds: resendTimer.phone }) : t('auth:verification.resend')}
                   </button>
                 </>
               )}
-              
+
               {phoneVerified && (
-                <p className="text-sm text-primary-600">Phone verified successfully!</p>
+                <p className="text-sm text-primary-600">{t('auth:verification.phone.verified')}</p>
               )}
             </div>
           )}
@@ -277,7 +279,7 @@ const Verification = () => {
             <div className="bg-primary-50 border border-green-200 rounded-lg p-6">
               <div className="flex items-center">
                 <CheckCircle className="h-5 w-5 text-primary-600 mr-2" />
-                <p className="text-primary-700 font-medium">All verifications complete! Redirecting...</p>
+                <p className="text-primary-700 font-medium">{t('auth:verification.allComplete')}</p>
               </div>
             </div>
           )}
@@ -289,7 +291,7 @@ const Verification = () => {
                 onClick={handleSkipVerification}
                 className="text-sm text-gray-600 hover:text-gray-800"
               >
-                Skip verification for now
+                {t('auth:verification.skip')}
               </button>
             </div>
           )}

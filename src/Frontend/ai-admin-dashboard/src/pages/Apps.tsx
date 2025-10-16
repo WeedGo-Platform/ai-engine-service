@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ShoppingCart, Monitor, Menu, Maximize, Minimize, Tv } from 'lucide-react';
 import POS from './POS';
 import { KioskProvider, useKiosk } from '../contexts/KioskContext';
@@ -41,12 +42,14 @@ function KioskApp({ currentStore }: { currentStore: { id: string; name: string }
     setCurrentScreen('welcome');
   };
 
+  const { t } = useTranslation(['apps', 'common']);
+
   // Don't render if no store is selected
   if (!currentStore) {
     return (
       <div className="h-full flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <p className="text-gray-500">Please select a store to continue</p>
+          <p className="text-gray-500">{t('apps:storeSelection.pleaseSelect')}</p>
         </div>
       </div>
     );
@@ -93,6 +96,7 @@ function KioskApp({ currentStore }: { currentStore: { id: string; name: string }
 }
 
 export default function Apps() {
+  const { t } = useTranslation(['apps', 'common']);
   const [activeTab, setActiveTab] = useState<'pos' | 'kiosk' | 'menu-display'>('pos');
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isKioskFullscreen, setIsKioskFullscreen] = useState(false);
@@ -190,7 +194,7 @@ export default function Apps() {
         <div className="px-4 sm:px-6 py-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <h1 className="text-lg sm:text-xl font-bold">Apps</h1>
+              <h1 className="text-lg sm:text-xl font-bold">{t('apps:title')}</h1>
 
               {/* Tabs - more compact */}
               <div className="flex gap-1 sm:gap-2">
@@ -203,8 +207,8 @@ export default function Apps() {
                   }`}
                 >
                   <ShoppingCart className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Point of Sale</span>
-                  <span className="sm:hidden">POS</span>
+                  <span className="hidden sm:inline">{t('apps:tabs.pos')}</span>
+                  <span className="sm:hidden">{t('apps:tabs.posShort')}</span>
                 </button>
                 <button
                   onClick={() => setActiveTab('kiosk')}
@@ -215,8 +219,8 @@ export default function Apps() {
                   }`}
                 >
                   <Monitor className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Self-Service Kiosk</span>
-                  <span className="sm:hidden">Kiosk</span>
+                  <span className="hidden sm:inline">{t('apps:tabs.kiosk')}</span>
+                  <span className="sm:hidden">{t('apps:tabs.kioskShort')}</span>
                 </button>
                 <button
                   onClick={() => setActiveTab('menu-display')}
@@ -227,8 +231,8 @@ export default function Apps() {
                   }`}
                 >
                   <Menu className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Menu Display</span>
-                  <span className="sm:hidden">Menu</span>
+                  <span className="hidden sm:inline">{t('apps:tabs.menuDisplay')}</span>
+                  <span className="sm:hidden">{t('apps:tabs.menuShort')}</span>
                 </button>
               </div>
             </div>
@@ -238,7 +242,7 @@ export default function Apps() {
               <button
                 onClick={handleKioskFullscreenToggle}
                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                title={isKioskFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
+                title={isKioskFullscreen ? t('apps:fullscreen.exit') : t('apps:fullscreen.enter')}
               >
                 {isKioskFullscreen ? (
                   <Minimize className="w-5 h-5 text-gray-600" />
@@ -262,13 +266,17 @@ export default function Apps() {
                   <Monitor className="w-8 h-8 text-warning-600" />
                 </div>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Store Selection Required</h3>
-              <p className="text-gray-500 mb-4">Please select a store to access the {activeTab === 'pos' ? 'Point of Sale' : activeTab === 'kiosk' ? 'Self-Service Kiosk' : 'Menu Display'}</p>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('apps:storeSelection.required')}</h3>
+              <p className="text-gray-500 mb-4">
+                {t('apps:storeSelection.description', {
+                  appName: activeTab === 'pos' ? t('apps:tabs.pos') : activeTab === 'kiosk' ? t('apps:tabs.kiosk') : t('apps:tabs.menuDisplay')
+                })}
+              </p>
               <button
                 onClick={() => setShowStoreSelectionModal(true)}
                 className="px-4 py-2 bg-accent-500 text-white rounded-lg hover:bg-accent-600 transition-colors"
               >
-                Select Store
+                {t('apps:storeSelection.selectButton')}
               </button>
             </div>
           </div>

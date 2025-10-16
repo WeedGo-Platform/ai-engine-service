@@ -6,6 +6,7 @@ import {
   Mail, Phone, Calendar, Building, MapPin, Globe,
   FileText, Clock, TrendingUp, RefreshCw
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 
 interface PendingAccount {
@@ -41,6 +42,7 @@ interface ReviewStats {
 }
 
 const TenantReview: React.FC = () => {
+  const { t } = useTranslation(['signup', 'common']);
   const { user, isSuperAdmin, isTenantAdmin, getAuthHeader } = useAuth();
   const queryClient = useQueryClient();
   const [selectedAccount, setSelectedAccount] = useState<string | null>(null);
@@ -138,10 +140,10 @@ const TenantReview: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ['review-stats'] });
       setSelectedAccount(null);
       setAdminNotes('');
-      alert('Account approved successfully!');
+      alert(t('signup:review.messages.approved'));
     },
     onError: (error: Error) => {
-      alert(`Failed to approve account: ${error.message}`);
+      alert(t('signup:review.messages.approveFailed', { error: error.message }));
     }
   });
 
@@ -173,10 +175,10 @@ const TenantReview: React.FC = () => {
       setSelectedAccount(null);
       setShowRejectModal(false);
       setRejectReason('');
-      alert('Account rejected successfully.');
+      alert(t('signup:review.messages.rejected'));
     },
     onError: (error: Error) => {
-      alert(`Failed to reject account: ${error.message}`);
+      alert(t('signup:review.messages.rejectFailed', { error: error.message }));
     }
   });
 
@@ -185,7 +187,7 @@ const TenantReview: React.FC = () => {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <AlertCircle className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
-          <p className="text-gray-600">You don't have permission to review tenant accounts.</p>
+          <p className="text-gray-600">{t('signup:review.messages.noPermission')}</p>
         </div>
       </div>
     );
@@ -204,9 +206,9 @@ const TenantReview: React.FC = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Tenant Account Review</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t('signup:review.title')}</h1>
           <p className="text-sm text-gray-500 mt-1">
-            Review and approve accounts flagged for manual verification
+            {t('signup:review.description')}
           </p>
         </div>
         <button
@@ -214,7 +216,7 @@ const TenantReview: React.FC = () => {
           className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
         >
           <RefreshCw className="h-4 w-4" />
-          Refresh
+          {t('signup:review.refresh')}
         </button>
       </div>
 
@@ -223,7 +225,7 @@ const TenantReview: React.FC = () => {
         <div className="bg-white rounded-lg p-6 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Pending</p>
+              <p className="text-sm font-medium text-gray-600">{t('signup:review.stats.totalPending')}</p>
               <p className="text-2xl font-bold text-gray-900">
                 {stats?.total_pending || 0}
               </p>
@@ -235,7 +237,7 @@ const TenantReview: React.FC = () => {
         <div className="bg-white rounded-lg p-6 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">This Week</p>
+              <p className="text-sm font-medium text-gray-600">{t('signup:review.stats.thisWeek')}</p>
               <p className="text-2xl font-bold text-gray-900">
                 {stats?.pending_this_week || 0}
               </p>
@@ -247,7 +249,7 @@ const TenantReview: React.FC = () => {
         <div className="bg-white rounded-lg p-6 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Avg Review Time</p>
+              <p className="text-sm font-medium text-gray-600">{t('signup:review.stats.avgReviewTime')}</p>
               <p className="text-2xl font-bold text-gray-900">
                 {stats?.avg_review_time_hours || 0}h
               </p>
@@ -259,7 +261,7 @@ const TenantReview: React.FC = () => {
         <div className="bg-white rounded-lg p-6 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Approval Rate</p>
+              <p className="text-sm font-medium text-gray-600">{t('signup:review.stats.approvalRate')}</p>
               <p className="text-2xl font-bold text-gray-900">
                 {stats?.approval_rate || 0}%
               </p>
@@ -272,7 +274,7 @@ const TenantReview: React.FC = () => {
       {/* Pending Accounts List */}
       <div className="bg-white rounded-lg shadow-sm">
         <div className="px-6 py-4 border-b">
-          <h2 className="text-lg font-semibold">Pending Accounts</h2>
+          <h2 className="text-lg font-semibold">{t('signup:review.table.title')}</h2>
         </div>
 
         {pendingAccounts && pendingAccounts.length > 0 ? (
@@ -281,22 +283,22 @@ const TenantReview: React.FC = () => {
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Store Name
+                    {t('signup:review.table.storeName')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Contact
+                    {t('signup:review.table.contact')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    License Number
+                    {t('signup:review.table.licenseNumber')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Submitted
+                    {t('signup:review.table.submitted')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Tier
+                    {t('signup:review.table.tier')}
                   </th>
                   <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
+                    {t('signup:review.table.actions')}
                   </th>
                 </tr>
               </thead>
@@ -340,7 +342,7 @@ const TenantReview: React.FC = () => {
                         onClick={() => setSelectedAccount(account.tenant_id)}
                         className="text-primary-600 hover:text-primary-900"
                       >
-                        Review
+                        {t('signup:review.table.review')}
                       </button>
                     </td>
                   </tr>
@@ -351,7 +353,7 @@ const TenantReview: React.FC = () => {
         ) : (
           <div className="p-12 text-center">
             <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-            <p className="text-gray-600">No pending accounts to review!</p>
+            <p className="text-gray-600">{t('signup:review.table.noPending')}</p>
           </div>
         )}
       </div>
@@ -362,7 +364,7 @@ const TenantReview: React.FC = () => {
           <div className="bg-white rounded-lg max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
             <div className="px-6 py-4 border-b flex justify-between items-center">
-              <h2 className="text-xl font-bold">Review Account</h2>
+              <h2 className="text-xl font-bold">{t('signup:review.modal.title')}</h2>
               <button
                 onClick={() => setSelectedAccount(null)}
                 className="text-gray-400 hover:text-gray-600"
@@ -377,31 +379,31 @@ const TenantReview: React.FC = () => {
               <div>
                 <h3 className="text-lg font-semibold mb-4 flex items-center">
                   <Building className="h-5 w-5 mr-2" />
-                  Store Information
+                  {t('signup:review.modal.storeInfo')}
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-medium text-gray-600">Store Name</label>
+                    <label className="text-sm font-medium text-gray-600">{t('signup:review.modal.storeName')}</label>
                     <p className="text-gray-900">{accountDetail.store_name}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600">License Number</label>
+                    <label className="text-sm font-medium text-gray-600">{t('signup:review.modal.licenseNumber')}</label>
                     <p className="text-gray-900">{accountDetail.license_number}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600">CRSA Address</label>
+                    <label className="text-sm font-medium text-gray-600">{t('signup:review.modal.crsaAddress')}</label>
                     <p className="text-gray-900">{accountDetail.crsa_address}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600">Municipality</label>
+                    <label className="text-sm font-medium text-gray-600">{t('signup:review.modal.municipality')}</label>
                     <p className="text-gray-900">{accountDetail.crsa_municipality || 'N/A'}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600">CRSA Status</label>
+                    <label className="text-sm font-medium text-gray-600">{t('signup:review.modal.crsaStatus')}</label>
                     <p className="text-gray-900">{accountDetail.crsa_store_status}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600">CRSA Website</label>
+                    <label className="text-sm font-medium text-gray-600">{t('signup:review.modal.crsaWebsite')}</label>
                     <p className="text-gray-900">{accountDetail.crsa_website || 'N/A'}</p>
                   </div>
                 </div>
@@ -411,23 +413,23 @@ const TenantReview: React.FC = () => {
               <div>
                 <h3 className="text-lg font-semibold mb-4 flex items-center">
                   <Mail className="h-5 w-5 mr-2" />
-                  Contact Information
+                  {t('signup:review.modal.contactInfo')}
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-medium text-gray-600">Contact Name</label>
+                    <label className="text-sm font-medium text-gray-600">{t('signup:review.modal.contactName')}</label>
                     <p className="text-gray-900">{accountDetail.contact_name}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600">Role</label>
+                    <label className="text-sm font-medium text-gray-600">{t('signup:review.modal.role')}</label>
                     <p className="text-gray-900">{accountDetail.contact_role}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600">Email</label>
+                    <label className="text-sm font-medium text-gray-600">{t('signup:review.modal.email')}</label>
                     <p className="text-gray-900">{accountDetail.contact_email}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600">Phone</label>
+                    <label className="text-sm font-medium text-gray-600">{t('signup:review.modal.phone')}</label>
                     <p className="text-gray-900">{accountDetail.contact_phone || 'N/A'}</p>
                   </div>
                 </div>
@@ -437,21 +439,21 @@ const TenantReview: React.FC = () => {
               <div>
                 <h3 className="text-lg font-semibold mb-4 flex items-center">
                   <FileText className="h-5 w-5 mr-2" />
-                  Verification Context
+                  {t('signup:review.modal.verificationContext')}
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-medium text-gray-600">Email Domain</label>
+                    <label className="text-sm font-medium text-gray-600">{t('signup:review.modal.emailDomain')}</label>
                     <p className="text-gray-900">{accountDetail.email_domain}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600">Domain Matches CRSA</label>
+                    <label className="text-sm font-medium text-gray-600">{t('signup:review.modal.domainMatchesCrsa')}</label>
                     <p className={`font-semibold ${accountDetail.domain_matches_crsa ? 'text-green-600' : 'text-yellow-600'}`}>
-                      {accountDetail.domain_matches_crsa ? '✓ Yes' : '✗ No'}
+                      {accountDetail.domain_matches_crsa ? t('signup:review.modal.yes') : t('signup:review.modal.no')}
                     </p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600">Verification Tier</label>
+                    <label className="text-sm font-medium text-gray-600">{t('signup:review.modal.verificationTier')}</label>
                     <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                       accountDetail.verification_tier === 'auto_approved'
                         ? 'bg-green-100 text-green-800'
@@ -461,7 +463,7 @@ const TenantReview: React.FC = () => {
                     </span>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600">Submitted</label>
+                    <label className="text-sm font-medium text-gray-600">{t('signup:review.modal.submitted')}</label>
                     <p className="text-gray-900">
                       {new Date(accountDetail.submitted_at).toLocaleString()}
                     </p>
@@ -472,14 +474,14 @@ const TenantReview: React.FC = () => {
               {/* Admin Notes */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Admin Notes (Optional)
+                  {t('signup:review.modal.adminNotes')}
                 </label>
                 <textarea
                   value={adminNotes}
                   onChange={(e) => setAdminNotes(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500"
                   rows={3}
-                  placeholder="Add any notes about this review..."
+                  placeholder={t('signup:review.modal.adminNotesPlaceholder')}
                 />
               </div>
 
@@ -493,7 +495,7 @@ const TenantReview: React.FC = () => {
                   disabled={rejectMutation.isPending}
                 >
                   <UserX className="h-4 w-4" />
-                  Reject
+                  {t('signup:review.modal.reject')}
                 </button>
                 <button
                   onClick={() => approveMutation.mutate(selectedAccount)}
@@ -501,7 +503,7 @@ const TenantReview: React.FC = () => {
                   disabled={approveMutation.isPending}
                 >
                   <UserCheck className="h-4 w-4" />
-                  {approveMutation.isPending ? 'Approving...' : 'Approve Account'}
+                  {approveMutation.isPending ? t('signup:review.modal.approving') : t('signup:review.modal.approve')}
                 </button>
               </div>
             </div>
@@ -514,18 +516,18 @@ const TenantReview: React.FC = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg max-w-md w-full mx-4">
             <div className="px-6 py-4 border-b">
-              <h2 className="text-xl font-bold">Reject Account</h2>
+              <h2 className="text-xl font-bold">{t('signup:review.reject.title')}</h2>
             </div>
             <div className="p-6 space-y-4">
               <p className="text-gray-600">
-                Please provide a reason for rejecting this account. This will be logged for audit purposes.
+                {t('signup:review.reject.description')}
               </p>
               <textarea
                 value={rejectReason}
                 onChange={(e) => setRejectReason(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500"
                 rows={4}
-                placeholder="Reason for rejection (minimum 10 characters)..."
+                placeholder={t('signup:review.reject.reasonPlaceholder')}
                 required
               />
               <div className="flex justify-end gap-4">
@@ -536,12 +538,12 @@ const TenantReview: React.FC = () => {
                   }}
                   className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
                 >
-                  Cancel
+                  {t('signup:review.reject.cancel')}
                 </button>
                 <button
                   onClick={() => {
                     if (rejectReason.length < 10) {
-                      alert('Please provide a reason (at least 10 characters)');
+                      alert(t('signup:review.reject.minLength'));
                       return;
                     }
                     rejectMutation.mutate(selectedAccount);
@@ -549,7 +551,7 @@ const TenantReview: React.FC = () => {
                   className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
                   disabled={rejectMutation.isPending || rejectReason.length < 10}
                 >
-                  {rejectMutation.isPending ? 'Rejecting...' : 'Confirm Rejection'}
+                  {rejectMutation.isPending ? t('signup:review.reject.rejecting') : t('signup:review.reject.confirm')}
                 </button>
               </div>
             </div>

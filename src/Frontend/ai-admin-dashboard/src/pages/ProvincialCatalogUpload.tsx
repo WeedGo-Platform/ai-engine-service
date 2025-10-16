@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Upload, AlertCircle, CheckCircle, FileText, Loader2, Calendar, Package, Search, Filter, Download, Eye, ChevronDown, ChevronUp, Info, Leaf, FlaskConical, Box, Zap } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { getApiEndpoint } from '../config/app.config';
@@ -140,6 +141,7 @@ const DetailField: React.FC<{ label: string; value: any }> = ({ label, value }) 
 );
 
 const ProvincialCatalogUpload: React.FC = () => {
+  const { t } = useTranslation(['catalog', 'common']);
   const { user, isSuperAdmin } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -202,7 +204,7 @@ const ProvincialCatalogUpload: React.FC = () => {
       if (!validTypes.includes(fileExt)) {
         setUploadStatus({
           type: 'error',
-          message: 'Invalid file type. Please upload a CSV or Excel file.'
+          message: t('catalog:upload.invalidFileType')
         });
         return;
       }
@@ -216,19 +218,19 @@ const ProvincialCatalogUpload: React.FC = () => {
     if (!selectedFile) {
       setUploadStatus({
         type: 'error',
-        message: 'Please select a file to upload.'
+        message: t('catalog:upload.pleaseSelectFile')
       });
       return;
     }
 
-    setUploadStatus({ type: 'uploading', message: 'Processing catalog file...' });
+    setUploadStatus({ type: 'uploading', message: t('catalog:upload.processingFile') });
 
     try {
       const result = await uploadProvincialCatalog(selectedFile, selectedProvince);
       
       setUploadStatus({
         type: 'success',
-        message: 'Catalog uploaded successfully!',
+        message: t('catalog:upload.uploadSuccess'),
         stats: result.stats
       });
       
@@ -244,7 +246,7 @@ const ProvincialCatalogUpload: React.FC = () => {
     } catch (error) {
       setUploadStatus({
         type: 'error',
-        message: error instanceof Error ? error.message : 'Failed to upload catalog'
+        message: error instanceof Error ? error.message : t('catalog:upload.uploadFailed')
       });
     }
   };
@@ -268,7 +270,7 @@ const ProvincialCatalogUpload: React.FC = () => {
       if (!validTypes.includes(fileExt)) {
         setUploadStatus({
           type: 'error',
-          message: 'Invalid file type. Please upload a CSV or Excel file.'
+          message: t('catalog:upload.invalidFileType')
         });
         return;
       }
@@ -291,9 +293,9 @@ const ProvincialCatalogUpload: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto p-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Provincial Product Catalog</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('catalog:titles.main')}</h1>
         <p className="text-gray-600">
-          View and manage product catalogs from provincial cannabis distributors.
+          {t('catalog:descriptions.main')}
         </p>
       </div>
 
@@ -303,7 +305,7 @@ const ProvincialCatalogUpload: React.FC = () => {
           <div className="flex items-center">
             <Package className="h-10 w-10 text-accent-600 mr-3" />
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Products</p>
+              <p className="text-sm font-medium text-gray-600">{t('catalog:stats.totalProducts')}</p>
               <p className="text-2xl font-bold text-gray-900">{catalogStats?.total_products || 0}</p>
             </div>
           </div>
@@ -313,9 +315,9 @@ const ProvincialCatalogUpload: React.FC = () => {
           <div className="flex items-center">
             <Calendar className="h-10 w-10 text-primary-600 mr-3" />
             <div>
-              <p className="text-sm font-medium text-gray-600">Last Updated</p>
+              <p className="text-sm font-medium text-gray-600">{t('catalog:stats.lastUpdated')}</p>
               <p className="text-lg font-semibold text-gray-900">
-                {catalogStats?.last_updated ? formatDate(catalogStats.last_updated) : 'Never'}
+                {catalogStats?.last_updated ? formatDate(catalogStats.last_updated) : t('catalog:stats.never')}
               </p>
             </div>
           </div>
@@ -325,7 +327,7 @@ const ProvincialCatalogUpload: React.FC = () => {
           <div className="flex items-center">
             <Filter className="h-10 w-10 text-purple-600 mr-3" />
             <div>
-              <p className="text-sm font-medium text-gray-600">Categories</p>
+              <p className="text-sm font-medium text-gray-600">{t('catalog:stats.categories')}</p>
               <p className="text-2xl font-bold text-gray-900">
                 {Object.keys(catalogStats?.categories || {}).length}
               </p>
@@ -341,23 +343,23 @@ const ProvincialCatalogUpload: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Select Province
+                  {t('catalog:descriptions.selectProvince')}
                 </label>
                 <select
                   value={selectedProvince}
                   onChange={(e) => setSelectedProvince(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="ON">Ontario (OCS)</option>
-                  <option value="BC" disabled>British Columbia (Coming Soon)</option>
-                  <option value="AB" disabled>Alberta (Coming Soon)</option>
-                  <option value="QC" disabled>Quebec (Coming Soon)</option>
+                  <option value="ON">{t('catalog:provinces.ontario')}</option>
+                  <option value="BC" disabled>{t('catalog:provinces.bc')}</option>
+                  <option value="AB" disabled>{t('catalog:provinces.alberta')}</option>
+                  <option value="QC" disabled>{t('catalog:provinces.quebec')}</option>
                 </select>
               </div>
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Upload New Catalog
+                  {t('catalog:upload.selectFile')}
                 </label>
                 <div className="flex items-center space-x-2">
                   <input
@@ -373,7 +375,7 @@ const ProvincialCatalogUpload: React.FC = () => {
                     className="inline-flex items-center px-4 py-2 border border-gray-200 rounded-lg  text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer"
                   >
                     <Upload className="h-4 w-4 mr-2" />
-                    Choose File
+                    {t('catalog:upload.chooseFile')}
                   </label>
                   {selectedFile && (
                     <span className="text-sm text-gray-600">{selectedFile.name}</span>
@@ -390,10 +392,10 @@ const ProvincialCatalogUpload: React.FC = () => {
                     {uploadStatus.type === 'uploading' ? (
                       <>
                         <Loader2 className="inline-block h-4 w-4 mr-2 animate-spin" />
-                        Uploading...
+                        {t('catalog:upload.uploading')}
                       </>
                     ) : (
-                      'Upload'
+                      t('catalog:upload.uploadButton')
                     )}
                   </button>
                 </div>
@@ -430,11 +432,11 @@ const ProvincialCatalogUpload: React.FC = () => {
                   
                   {uploadStatus.stats && (
                     <div className="mt-2 text-sm text-gray-600">
-                      <p>Total Records: {uploadStatus.stats.totalRecords}</p>
-                      <p>Inserted: {uploadStatus.stats.inserted}</p>
-                      <p>Updated: {uploadStatus.stats.updated}</p>
+                      <p>{t('catalog:stats.totalRecords')}: {uploadStatus.stats.totalRecords}</p>
+                      <p>{t('catalog:stats.inserted')}: {uploadStatus.stats.inserted}</p>
+                      <p>{t('catalog:stats.updated')}: {uploadStatus.stats.updated}</p>
                       {uploadStatus.stats.errors > 0 && (
-                        <p className="text-danger-600">Errors: {uploadStatus.stats.errors}</p>
+                        <p className="text-danger-600">{t('catalog:stats.errors')}: {uploadStatus.stats.errors}</p>
                       )}
                     </div>
                   )}
@@ -451,22 +453,22 @@ const ProvincialCatalogUpload: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Viewing Province Catalog
+                {t('catalog:descriptions.viewingProvince')}
               </label>
               <select
                 value={selectedProvince}
                 onChange={(e) => setSelectedProvince(e.target.value)}
                 className="px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="ON">Ontario (OCS)</option>
-                <option value="BC" disabled>British Columbia (Coming Soon)</option>
-                <option value="AB" disabled>Alberta (Coming Soon)</option>
-                <option value="QC" disabled>Quebec (Coming Soon)</option>
+                <option value="ON">{t('catalog:provinces.ontario')}</option>
+                <option value="BC" disabled>{t('catalog:provinces.bc')}</option>
+                <option value="AB" disabled>{t('catalog:provinces.alberta')}</option>
+                <option value="QC" disabled>{t('catalog:provinces.quebec')}</option>
               </select>
             </div>
             <div className="text-sm text-gray-500">
               <Calendar className="inline-block h-4 w-4 mr-1" />
-              Last catalog update: {catalogStats?.last_updated ? formatDate(catalogStats.last_updated) : 'Never'}
+              {t('catalog:messages.lastCatalogUpdate')} {catalogStats?.last_updated ? formatDate(catalogStats.last_updated) : t('catalog:stats.never')}
             </div>
           </div>
         </div>
@@ -480,7 +482,7 @@ const ProvincialCatalogUpload: React.FC = () => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search products..."
+                placeholder={t('catalog:search.placeholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -493,17 +495,17 @@ const ProvincialCatalogUpload: React.FC = () => {
             onChange={(e) => setSelectedCategory(e.target.value)}
             className="px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">All Categories</option>
+            <option value="">{t('catalog:search.allCategories')}</option>
             {Object.keys(catalogStats?.categories || {}).map(category => (
               <option key={category} value={category}>
                 {category} ({catalogStats?.categories[category]})
               </option>
             ))}
           </select>
-          
+
           <button className="px-4 py-2 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50">
             <Download className="h-4 w-4 inline-block mr-2" />
-            Export
+            {t('catalog:buttons.export')}
           </button>
         </div>
       </div>
@@ -595,7 +597,7 @@ const ProvincialCatalogUpload: React.FC = () => {
                 <tr>
                   <td colSpan={71} className="px-6 py-4 text-center text-gray-500">
                     <Loader2 className="inline-block h-5 w-5 animate-spin mr-2" />
-                    Loading catalog...
+                    {t('catalog:table.loadingCatalog')}
                   </td>
                 </tr>
               ) : catalogProducts && catalogProducts.length > 0 ? (
@@ -679,7 +681,7 @@ const ProvincialCatalogUpload: React.FC = () => {
               ) : (
                 <tr>
                   <td colSpan={71} className="px-6 py-4 text-center text-gray-500">
-                    No products found in catalog
+                    {t('catalog:table.noProductsFound')}
                   </td>
                 </tr>
               )}
@@ -691,7 +693,7 @@ const ProvincialCatalogUpload: React.FC = () => {
         {catalogProducts && catalogProducts.length > 0 && (
           <div className="bg-gray-50 px-6 py-3 flex items-center justify-between">
             <div className="text-sm text-gray-700">
-              Showing page {currentPage} of results
+              {t('catalog:table.showingPage', { page: currentPage })}
             </div>
             <div className="flex space-x-2">
               <button
@@ -699,14 +701,14 @@ const ProvincialCatalogUpload: React.FC = () => {
                 disabled={currentPage === 1}
                 className="px-3 py-1 border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Previous
+                {t('catalog:buttons.previous')}
               </button>
               <button
                 onClick={() => setCurrentPage(currentPage + 1)}
                 disabled={catalogProducts.length < productsPerPage}
                 className="px-3 py-1 border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Next
+                {t('catalog:buttons.next')}
               </button>
             </div>
           </div>
@@ -716,23 +718,23 @@ const ProvincialCatalogUpload: React.FC = () => {
       {/* Instructions (Super Admin Only) */}
       {canUpload && (
         <div className="mt-8 bg-blue-50 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-blue-900 mb-3">Upload Instructions</h3>
+          <h3 className="text-lg font-semibold text-blue-900 mb-3">{t('catalog:titles.uploadInstructions')}</h3>
           <ul className="space-y-2 text-sm text-blue-800">
             <li className="flex items-start">
               <span className="block w-1.5 h-1.5 rounded-full bg-accent-600 mt-1.5 mr-2 flex-shrink-0"></span>
-              <span>The OCS catalog file should contain all required columns as per the OCS specification.</span>
+              <span>{t('catalog:instructions.line1')}</span>
             </li>
             <li className="flex items-start">
               <span className="block w-1.5 h-1.5 rounded-full bg-accent-600 mt-1.5 mr-2 flex-shrink-0"></span>
-              <span>Products are matched and updated using the OCS Variant Number as the unique key.</span>
+              <span>{t('catalog:instructions.line2')}</span>
             </li>
             <li className="flex items-start">
               <span className="block w-1.5 h-1.5 rounded-full bg-accent-600 mt-1.5 mr-2 flex-shrink-0"></span>
-              <span>New products will be inserted, existing products will be updated with the latest information.</span>
+              <span>{t('catalog:instructions.line3')}</span>
             </li>
             <li className="flex items-start">
               <span className="block w-1.5 h-1.5 rounded-full bg-accent-600 mt-1.5 mr-2 flex-shrink-0"></span>
-              <span>Rating and rating count fields will be preserved during updates.</span>
+              <span>{t('catalog:instructions.line4')}</span>
             </li>
           </ul>
         </div>

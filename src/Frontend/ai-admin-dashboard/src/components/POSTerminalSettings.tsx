@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Monitor,
   Plus,
@@ -77,6 +78,7 @@ const POSTerminalSettingsComponent: React.FC<POSTerminalSettingsProps> = ({
   settings: initialonSave,
   onPingTerminal
 }) => {
+  const { t } = useTranslation(['common']);
   const [settings, setSettings] = useState<POSTerminalSettings>(initialSettings || {
     terminals: [],
     payment_methods: ['tap', 'chip', 'swipe', 'cash'],
@@ -133,7 +135,7 @@ const POSTerminalSettingsComponent: React.FC<POSTerminalSettingsProps> = ({
   };
 
   const handleDeleteTerminal = (terminalId: string) => {
-    if (window.confirm('Are you sure you want to delete this terminal?')) {
+    if (window.confirm(t('common:confirmations.deleteTerminal'))) {
       setSettings(prev => ({
         ...prev,
         terminals: prev.terminals.filter(t => t.id !== terminalId)

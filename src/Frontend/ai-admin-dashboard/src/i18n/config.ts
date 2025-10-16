@@ -1,98 +1,67 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
-
-// Import translation files
-import commonEN from './locales/en/common.json';
-import commonES from './locales/es/common.json';
-import commonFR from './locales/fr/common.json';
-import commonZH from './locales/zh/common.json';
-import commonAR from './locales/ar/common.json';
-import commonDE from './locales/de/common.json';
-import commonJA from './locales/ja/common.json';
-
-import authEN from './locales/en/auth.json';
-import authES from './locales/es/auth.json';
-import authFR from './locales/fr/auth.json';
-import authZH from './locales/zh/auth.json';
-import authAR from './locales/ar/auth.json';
-import authDE from './locales/de/auth.json';
-import authJA from './locales/ja/auth.json';
-
-import dashboardEN from './locales/en/dashboard.json';
-import dashboardES from './locales/es/dashboard.json';
-import dashboardFR from './locales/fr/dashboard.json';
-import dashboardZH from './locales/zh/dashboard.json';
-import dashboardAR from './locales/ar/dashboard.json';
-import dashboardDE from './locales/de/dashboard.json';
-import dashboardJA from './locales/ja/dashboard.json';
-
-import landingEN from './locales/en/landing.json';
-import landingES from './locales/es/landing.json';
-import landingFR from './locales/fr/landing.json';
-import landingZH from './locales/zh/landing.json';
-import landingAR from './locales/ar/landing.json';
-import landingDE from './locales/de/landing.json';
-import landingJA from './locales/ja/landing.json';
+import { applyTextDirection } from '../utils/rtl';
 
 // Supported languages configuration
 export const SUPPORTED_LANGUAGES = [
   { code: 'en', name: 'English', flag: '🇺🇸', nativeName: 'English' },
   { code: 'es', name: 'Spanish', flag: '🇪🇸', nativeName: 'Español' },
   { code: 'fr', name: 'French', flag: '🇫🇷', nativeName: 'Français' },
-  { code: 'zh', name: 'Chinese', flag: '🇨🇳', nativeName: '中文' },
+  { code: 'zh', name: 'Mandarin', flag: '🇨🇳', nativeName: '中文' },
+  { code: 'yue', name: 'Cantonese', flag: '🇭🇰', nativeName: '廣東話' },
+  { code: 'pa', name: 'Punjabi', flag: '🇮🇳', nativeName: 'ਪੰਜਾਬੀ' },
   { code: 'ar', name: 'Arabic', flag: '🇸🇦', nativeName: 'العربية' },
+  { code: 'tl', name: 'Tagalog', flag: '🇵🇭', nativeName: 'Tagalog' },
   { code: 'de', name: 'German', flag: '🇩🇪', nativeName: 'Deutsch' },
+  { code: 'it', name: 'Italian', flag: '🇮🇹', nativeName: 'Italiano' },
+  { code: 'pt', name: 'Portuguese', flag: '🇵🇹', nativeName: 'Português' },
+  { code: 'pl', name: 'Polish', flag: '🇵🇱', nativeName: 'Polski' },
+  { code: 'ru', name: 'Russian', flag: '🇷🇺', nativeName: 'Русский' },
+  { code: 'vi', name: 'Vietnamese', flag: '🇻🇳', nativeName: 'Tiếng Việt' },
+  { code: 'hi', name: 'Hindi', flag: '🇮🇳', nativeName: 'हिन्दी' },
+  { code: 'uk', name: 'Ukrainian', flag: '🇺🇦', nativeName: 'Українська' },
+  { code: 'fa', name: 'Persian', flag: '🇮🇷', nativeName: 'فارسی' },
+  { code: 'ko', name: 'Korean', flag: '🇰🇷', nativeName: '한국어' },
+  { code: 'ta', name: 'Tamil', flag: '🇮🇳', nativeName: 'தமிழ்' },
+  { code: 'ur', name: 'Urdu', flag: '🇵🇰', nativeName: 'اردو' },
+  { code: 'gu', name: 'Gujarati', flag: '🇮🇳', nativeName: 'ગુજરાતી' },
+  { code: 'ro', name: 'Romanian', flag: '🇷🇴', nativeName: 'Română' },
+  { code: 'nl', name: 'Dutch', flag: '🇳🇱', nativeName: 'Nederlands' },
+  { code: 'cr', name: 'Cree', flag: '🇨🇦', nativeName: 'ᓀᐦᐃᔭᐍᐏᐣ' },
+  { code: 'iu', name: 'Inuktitut', flag: '🇨🇦', nativeName: 'ᐃᓄᒃᑎᑐᑦ' },
+  { code: 'bn', name: 'Bengali', flag: '🇧🇩', nativeName: 'বাংলা' },
+  { code: 'he', name: 'Hebrew', flag: '🇮🇱', nativeName: 'עברית' },
+  { code: 'so', name: 'Somali', flag: '🇸🇴', nativeName: 'Soomaali' },
   { code: 'ja', name: 'Japanese', flag: '🇯🇵', nativeName: '日本語' },
 ] as const;
 
 export type SupportedLanguage = typeof SUPPORTED_LANGUAGES[number]['code'];
 
-// Language resources
-const resources = {
-  en: {
-    common: commonEN,
-    auth: authEN,
-    dashboard: dashboardEN,
-    landing: landingEN,
-  },
-  es: {
-    common: commonES,
-    auth: authES,
-    dashboard: dashboardES,
-    landing: landingES,
-  },
-  fr: {
-    common: commonFR,
-    auth: authFR,
-    dashboard: dashboardFR,
-    landing: landingFR,
-  },
-  zh: {
-    common: commonZH,
-    auth: authZH,
-    dashboard: dashboardZH,
-    landing: landingZH,
-  },
-  ar: {
-    common: commonAR,
-    auth: authAR,
-    dashboard: dashboardAR,
-    landing: landingAR,
-  },
-  de: {
-    common: commonDE,
-    auth: authDE,
-    dashboard: dashboardDE,
-    landing: landingDE,
-  },
-  ja: {
-    common: commonJA,
-    auth: authJA,
-    dashboard: dashboardJA,
-    landing: landingJA,
-  },
+// All available namespaces
+const namespaces = ['common', 'auth', 'dashboard', 'landing', 'forms', 'errors', 'modals', 'tenants', 'stores', 'inventory', 'orders', 'pos', 'payments', 'settings', 'communications', 'database', 'promotions', 'catalog', 'apps', 'tools', 'signup'];
+
+// Dynamically load resources for all languages and namespaces
+const loadResources = () => {
+  const resources: Record<string, Record<string, any>> = {};
+
+  SUPPORTED_LANGUAGES.forEach(({ code }) => {
+    resources[code] = {};
+    namespaces.forEach(ns => {
+      try {
+        // @ts-ignore - Dynamic imports
+        resources[code][ns] = require(`./locales/${code}/${ns}.json`);
+      } catch (error) {
+        console.warn(`Failed to load namespace "${ns}" for language "${code}"`);
+      }
+    });
+  });
+
+  return resources;
 };
+
+// Language resources
+export const resources = loadResources();
 
 i18n
   // Detect user language
@@ -104,8 +73,8 @@ i18n
     resources,
     fallbackLng: 'en',
     defaultNS: 'common',
-    ns: ['common', 'auth', 'dashboard', 'landing'],
-    
+    ns: namespaces,
+
     // Language detection options
     detection: {
       order: ['localStorage', 'navigator', 'htmlTag'],
@@ -125,5 +94,13 @@ i18n
     // Debug mode (disable in production)
     debug: import.meta.env.DEV,
   });
+
+// Apply RTL direction on language change
+i18n.on('languageChanged', (lng) => {
+  applyTextDirection(lng);
+});
+
+// Initialize RTL on startup
+applyTextDirection(i18n.language);
 
 export default i18n;

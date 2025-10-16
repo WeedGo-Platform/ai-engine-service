@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   Store as StoreIcon,
   Plus,
@@ -51,6 +52,7 @@ const StoreManagement: React.FC = () => {
   const navigate = useNavigate();
   const { user, isSuperAdmin, isTenantAdmin, isStoreManager } = useAuth();
   const { currentStore } = useStoreContext();
+  const { t } = useTranslation(['stores', 'errors', 'modals', 'common']);
   const [tenant, setTenant] = useState<Tenant | null>(null);
   const [stores, setStores] = useState<Store[]>([]);
   const [loading, setLoading] = useState(true);
@@ -102,7 +104,7 @@ const StoreManagement: React.FC = () => {
       // Store managers cannot add new stores
       setCanAddStore(isStoreManagerView ? false : canAdd.can_add_store);
     } catch (err) {
-      setError('Failed to load tenant and stores');
+      setError(t('stores:messages.loadFailed'));
       console.error(err);
     } finally {
       setLoading(false);
@@ -117,7 +119,7 @@ const StoreManagement: React.FC = () => {
       loadTenantAndStores();
     } catch (err: any) {
       // Extract error details from the server response
-      let errorMessage = 'Failed to create store';
+      let errorMessage = t('stores:messages.createFailed');
 
       if (err.response?.data) {
         // Handle validation errors (422)
@@ -170,7 +172,7 @@ const StoreManagement: React.FC = () => {
       loadTenantAndStores();
     } catch (err: any) {
       // Extract error details from the server response
-      let errorMessage = 'Failed to update store';
+      let errorMessage = t('stores:messages.updateFailed');
 
       if (err.response?.data) {
         if (err.response.data.detail) {
@@ -215,12 +217,12 @@ const StoreManagement: React.FC = () => {
   };
 
   const handleSuspendStore = async (id: string) => {
-    if (window.confirm('Are you sure you want to suspend this store?')) {
+    if (window.confirm(t('stores:confirmations.suspendStore'))) {
       try {
         await tenantService.suspendStore(id, 'Admin action');
         loadTenantAndStores();
       } catch (err) {
-        setError('Failed to suspend store');
+        setError(t('stores:messages.suspendFailed'));
         console.error(err);
       }
     }
@@ -231,18 +233,18 @@ const StoreManagement: React.FC = () => {
       await tenantService.reactivateStore(id);
       loadTenantAndStores();
     } catch (err) {
-      setError('Failed to reactivate store');
+      setError(t('stores:messages.reactivateFailed'));
       console.error(err);
     }
   };
 
   const handleCloseStore = async (id: string) => {
-    if (window.confirm('Are you sure you want to permanently close this store?')) {
+    if (window.confirm(t('stores:confirmations.closeStore'))) {
       try {
         await tenantService.closeStore(id);
         loadTenantAndStores();
       } catch (err) {
-        setError('Failed to close store');
+        setError(t('stores:messages.closeFailed'));
         console.error(err);
       }
     }
@@ -272,7 +274,7 @@ const StoreManagement: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-gray-500 dark:text-gray-400">Loading...</div>
+        <div className="text-gray-500 dark:text-gray-400">{t('stores:messages.loading')}</div>
       </div>
     );
   }
@@ -280,7 +282,7 @@ const StoreManagement: React.FC = () => {
   if (!tenant) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-gray-500 dark:text-gray-400">Tenant not found</div>
+        <div className="text-gray-500 dark:text-gray-400">{t('stores:messages.tenantNotFound')}</div>
       </div>
     );
   }
@@ -295,10 +297,10 @@ const StoreManagement: React.FC = () => {
             className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-2"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Tenants
+            {t('stores:actions.backToTenants')}
           </button>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Store Management
+            {t('stores:titles.management')}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-2">
             {tenant.name} - {tenant.code}
@@ -310,7 +312,7 @@ const StoreManagement: React.FC = () => {
             className="flex items-center gap-2 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 transition-colors"
           >
             <Plus className="w-5 h-5" />
-            New Store
+            {t('stores:actions.new')}
           </button>
         )}
       </div>
@@ -319,25 +321,25 @@ const StoreManagement: React.FC = () => {
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Subscription</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">{t('stores:labels.subscription')}</p>
             <p className="text-lg font-semibold text-gray-900 dark:text-white capitalize">
               {tenant.subscription_tier.replace('_', ' ')}
             </p>
           </div>
           <div>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Store Limit</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">{t('stores:labels.storeLimit')}</p>
             <p className="text-lg font-semibold text-gray-900 dark:text-white">
               {stores.length} / {tenant.max_stores}
             </p>
           </div>
           <div>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Status</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">{t('stores:labels.status')}</p>
             <p className="text-lg font-semibold text-gray-900 dark:text-white capitalize">
               {tenant.status}
             </p>
           </div>
           <div>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Contact</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">{t('stores:labels.contact')}</p>
             <p className="text-lg font-semibold text-gray-900 dark:text-white">
               {tenant.contact_email}
             </p>
@@ -358,13 +360,13 @@ const StoreManagement: React.FC = () => {
         {stores.length === 0 ? (
           <div className="col-span-2 bg-white dark:bg-gray-800 p-12 rounded-lg  text-center">
             <StoreIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-500 dark:text-gray-400">No stores created yet</p>
+            <p className="text-gray-500 dark:text-gray-400">{t('stores:messages.noStoresYet')}</p>
             {canAddStore && (
               <button
                 onClick={() => setShowCreateModal(true)}
                 className="mt-4 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700"
               >
-                Create First Store
+                {t('stores:actions.createFirst')}
               </button>
             )}
           </div>
@@ -378,7 +380,7 @@ const StoreManagement: React.FC = () => {
                       {store.name}
                     </h3>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                      Code: {store.store_code}
+                      {t('stores:labels.code')}: {store.store_code}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
@@ -417,8 +419,8 @@ const StoreManagement: React.FC = () => {
                     <div className="flex items-center gap-2">
                       <Shield className="w-4 h-4 text-gray-400" />
                       <span className="text-sm text-gray-600 dark:text-gray-400">
-                        License: {store.license_number}
-                        {store.license_expiry && ` (Expires: ${store.license_expiry})`}
+                        {t('stores:labels.license')}: {store.license_number}
+                        {store.license_expiry && ` (${t('stores:labels.expires')}: ${store.license_expiry})`}
                       </span>
                     </div>
                   )}
@@ -429,28 +431,28 @@ const StoreManagement: React.FC = () => {
                   <div className="flex items-center gap-2">
                     {getFeatureIcon(store.delivery_enabled)}
                     <span className="text-sm text-gray-600 dark:text-gray-400">
-                      Delivery ({store.delivery_radius_km}km)
+                      {t('stores:features.delivery')} ({store.delivery_radius_km}km)
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     {getFeatureIcon(store.pickup_enabled)}
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Pickup</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('stores:features.pickup')}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     {getFeatureIcon(store.pos_enabled)}
-                    <span className="text-sm text-gray-600 dark:text-gray-400">POS</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('stores:features.pos')}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     {getFeatureIcon(store.ecommerce_enabled)}
-                    <span className="text-sm text-gray-600 dark:text-gray-400">E-commerce</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('stores:features.ecommerce')}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     {getFeatureIcon(store.kiosk_enabled)}
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Kiosk</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('stores:features.kiosk')}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-gray-600 dark:text-gray-400">
-                      Tax: {store.tax_rate}%
+                      {t('stores:labels.tax')}: {store.tax_rate}%
                     </span>
                   </div>
                 </div>
@@ -464,20 +466,20 @@ const StoreManagement: React.FC = () => {
                         className="px-3 py-1.5 text-sm text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg flex items-center gap-1"
                       >
                         <Settings className="w-4 h-4" />
-                        Settings
+                        {t('stores:actions.settings')}
                       </button>
                       <button
                         onClick={() => navigate(`/dashboard/stores/${store.store_code}/hours`)}
                         className="px-3 py-1.5 text-sm text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-lg flex items-center gap-1"
                       >
                         <Clock className="w-4 h-4" />
-                        Hours
+                        {t('stores:actions.hours')}
                       </button>
                       <button
                         onClick={() => setEditingStore(store)}
                         className="px-3 py-1.5 text-sm text-accent-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg"
                       >
-                        Edit
+                        {t('stores:actions.edit')}
                       </button>
                     </>
                   )}
@@ -489,14 +491,14 @@ const StoreManagement: React.FC = () => {
                           onClick={() => handleSuspendStore(store.id)}
                           className="px-3 py-1.5 text-sm text-warning-600 dark:text-yellow-400 hover:bg-warning-50 dark:hover:bg-yellow-900/20 rounded-lg"
                         >
-                          Suspend
+                          {t('stores:actions.suspend')}
                         </button>
                       ) : store.status === 'suspended' ? (
                         <button
                           onClick={() => handleReactivateStore(store.id)}
                           className="px-3 py-1.5 text-sm text-primary-600 dark:text-green-400 hover:bg-primary-50 dark:hover:bg-green-900/20 rounded-lg"
                         >
-                          Reactivate
+                          {t('stores:actions.reactivate')}
                         </button>
                       ) : null}
                       {store.status !== 'inactive' && (
@@ -504,7 +506,7 @@ const StoreManagement: React.FC = () => {
                           onClick={() => handleCloseStore(store.id)}
                           className="px-3 py-1.5 text-sm text-danger-600 dark:text-red-400 hover:bg-danger-50 dark:hover:bg-red-900/20 rounded-lg"
                         >
-                          Close
+                          {t('stores:actions.close')}
                         </button>
                       )}
                     </>
@@ -548,6 +550,7 @@ const StoreFormModal: React.FC<{
   onSave: (data: Partial<CreateStoreRequest>) => void;
   onClose: () => void;
 }> = ({ tenantId, store, error, onSave, onClose }) => {
+  const { t } = useTranslation(['stores', 'errors', 'common']);
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [loadingProvinces, setLoadingProvinces] = useState(true);
 
@@ -619,13 +622,13 @@ const StoreFormModal: React.FC<{
 
     // Validate province_code format
     if (!formData.province_code || !/^[A-Z]{2}$/.test(formData.province_code)) {
-      alert('Please select a valid province');
+      alert(t('stores:validation.invalidProvince'));
       return;
     }
 
     // Ensure all required fields are present
     if (!formData.name || !formData.address?.street || !formData.address?.city || !formData.address?.postal_code) {
-      alert('Please fill in all required fields');
+      alert(t('stores:validation.requiredFields'));
       return;
     }
 
@@ -647,7 +650,7 @@ const StoreFormModal: React.FC<{
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto">
         <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
-          {store ? 'Edit Store' : 'Create New Store'}
+          {store ? t('stores:titles.edit') : t('stores:titles.create')}
         </h2>
 
         {/* Error message display */}
@@ -659,7 +662,7 @@ const StoreFormModal: React.FC<{
               </svg>
               <div>
                 <p className="text-sm font-medium text-red-800 dark:text-red-200">
-                  {store ? 'Failed to update store' : 'Failed to create store'}
+                  {store ? t('stores:messages.updateFailed') : t('stores:messages.createFailed')}
                 </p>
                 <div className="text-sm text-red-600 dark:text-red-400 mt-1">
                   {error.split('\n').map((line, index) => (

@@ -4,6 +4,7 @@ import {
   Mail, Smartphone, Bell, Hash, Clock, User, CheckCircle, AlertCircle,
   Eye, Code, Type, Image, Link2, List, Bold, Italic, Underline
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { useStoreContext } from '../contexts/StoreContext';
 import toast from 'react-hot-toast';
@@ -31,6 +32,7 @@ interface TemplateManagerProps {
 const TemplateManager: React.FC<TemplateManagerProps> = ({ onSelectTemplate, selectedType }) => {
   const { user } = useAuth();
   const { currentStore } = useStoreContext();
+  const { t } = useTranslation(['common']);
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -100,11 +102,11 @@ const TemplateManager: React.FC<TemplateManagerProps> = ({ onSelectTemplate, sel
         const data = await response.json();
         setTemplates(data.templates || []);
       } else {
-        toast.error('Failed to fetch templates');
+        toast.error(t('common:toasts.template.fetchFailed'));
       }
     } catch (error) {
       console.error('Error fetching templates:', error);
-      toast.error('Failed to fetch templates');
+      toast.error(t('common:toasts.template.fetchFailed'));
     } finally {
       setLoading(false);
     }
@@ -132,16 +134,16 @@ const TemplateManager: React.FC<TemplateManagerProps> = ({ onSelectTemplate, sel
       );
 
       if (response.ok) {
-        toast.success('Template created successfully');
+        toast.success(t('common:toasts.template.createSuccess'));
         setShowCreateModal(false);
         resetForm();
         fetchTemplates();
       } else {
         const error = await response.json();
-        toast.error(error.detail || 'Failed to create template');
+        toast.error(error.detail || t('common:toasts.template.createFailed'));
       }
     } catch (error) {
-      toast.error('Failed to create template');
+      toast.error(t('common:toasts.template.createFailed'));
     }
   };
 
@@ -164,16 +166,16 @@ const TemplateManager: React.FC<TemplateManagerProps> = ({ onSelectTemplate, sel
       );
 
       if (response.ok) {
-        toast.success('Template updated successfully');
+        toast.success(t('common:toasts.template.updateSuccess'));
         setEditingTemplate(null);
         resetForm();
         fetchTemplates();
       } else {
         const error = await response.json();
-        toast.error(error.detail || 'Failed to update template');
+        toast.error(error.detail || t('common:toasts.template.updateFailed'));
       }
     } catch (error) {
-      toast.error('Failed to update template');
+      toast.error(t('common:toasts.template.updateFailed'));
     }
   };
 
@@ -194,13 +196,13 @@ const TemplateManager: React.FC<TemplateManagerProps> = ({ onSelectTemplate, sel
       );
 
       if (response.ok) {
-        toast.success('Template deleted successfully');
+        toast.success(t('common:toasts.template.deleteSuccess'));
         fetchTemplates();
       } else {
-        toast.error('Failed to delete template');
+        toast.error(t('common:toasts.template.deleteFailed'));
       }
     } catch (error) {
-      toast.error('Failed to delete template');
+      toast.error(t('common:toasts.template.deleteFailed'));
     }
   };
 
