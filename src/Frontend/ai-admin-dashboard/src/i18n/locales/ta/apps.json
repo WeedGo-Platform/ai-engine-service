@@ -1,0 +1,21 @@
+{
+  "title": "செயலிகள்",
+  "tabs": {
+    "pos": "விற்பனை புள்ளி",
+    "posShort": "POS",
+    "kiosk": "சுய-சேவை Kiosk",
+    "kioskShort": "Kiosk",
+    "menuDisplay": "மெனு காட்சி",
+    "menuShort": "மெனு"
+  },
+  "fullscreen": {
+    "enter": "முழுத்திரையில் நுழையவும்",
+    "exit": "முழுத்திரையிலிருந்து வெளியேறவும்"
+  },
+  "storeSelection": {
+    "required": "கடை தேர்வு தேவை",
+    "pleaseSelect": "தொடர ஒரு கடையைத் தேர்ந்தெடுக்கவும்",
+    "selectButton": "கடையைத் தேர்ந்தெடுக்கவும்",
+    "description": "{{appName}} அணுக ஒரு கடையைத் தேர்ந்தெடுக்கவும்"
+  }
+}

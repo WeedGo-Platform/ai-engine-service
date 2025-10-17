@@ -1,0 +1,228 @@
+{
+  "titles": {
+    "main": "Gestion des paiements",
+    "transactionHistory": "Historique des transactions",
+    "paymentProviders": "Fournisseurs de paiement",
+    "paymentMethods": "Méthodes de paiement",
+    "settlements": "Règlements",
+    "processRefund": "Traiter le remboursement",
+    "transactionDetails": "Détails de la transaction"
+  },
+  "descriptions": {
+    "transactionHistory": "Afficher et gérer toutes les transactions de paiement",
+    "paymentProviders": "Gérer les configurations de passerelle de paiement",
+    "paymentMethods": "Gérer les méthodes de paiement enregistrées des clients",
+    "settlements": "Afficher les lots de règlement et la réconciliation",
+    "refundTransaction": "Rembourser la transaction"
+  },
+  "metrics": {
+    "totalRevenue": "Revenus totaux",
+    "successRate": "Taux de réussite",
+    "totalRefunds": "Remboursements totaux",
+    "processingFees": "Frais de traitement",
+    "transactions": "transactions",
+    "successful": "réussies",
+    "fromRevenue": "Des revenus",
+    "ofRevenue": "des revenus"
+  },
+  "tabs": {
+    "transactions": "Transactions",
+    "providers": "Fournisseurs de paiement",
+    "methods": "Méthodes de paiement",
+    "settlements": "Règlements"
+  },
+  "filters": {
+    "status": "Statut",
+    "provider": "Fournisseur",
+    "allStatus": "Tous les statuts",
+    "allProviders": "Tous les fournisseurs",
+    "searchPlaceholder": "Rechercher des transactions..."
+  },
+  "status": {
+    "completed": "Complété",
+    "pending": "En attente",
+    "processing": "En traitement",
+    "failed": "Échoué",
+    "refunded": "Remboursé",
+    "active": "Actif",
+    "inactive": "Inactif"
+  },
+  "table": {
+    "reference": "Référence",
+    "customer": "Client",
+    "amount": "Montant",
+    "provider": "Fournisseur",
+    "status": "Statut",
+    "date": "Date",
+    "actions": "Actions"
+  },
+  "provider": {
+    "default": "Par défaut",
+    "supportedCurrencies": "Devises prises en charge",
+    "capabilities": "Capacités"
+  },
+  "actions": {
+    "refresh": "Actualiser",
+    "export": "Exporter",
+    "disable": "Désactiver",
+    "enable": "Activer",
+    "cancel": "Annuler",
+    "close": "Fermer",
+    "processRefund": "Traiter le remboursement"
+  },
+  "refund": {
+    "originalAmount": "Montant original",
+    "refundAmount": "Montant du remboursement",
+    "refundAmountHint": "laisser vide pour un remboursement complet",
+    "reason": "Raison",
+    "enterAmount": "Entrer le montant",
+    "enterReason": "Entrer la raison du remboursement"
+  },
+  "details": {
+    "transactionId": "ID de transaction",
+    "providerTransactionId": "ID de transaction du fournisseur",
+    "orderId": "ID de commande",
+    "status": "Statut",
+    "amount": "Montant",
+    "provider": "Fournisseur",
+    "createdAt": "Créé le",
+    "completedAt": "Complété le",
+    "errorMessage": "Message d'erreur",
+    "notAvailable": "N/D"
+  },
+  "messages": {
+    "comingSoon": {
+      "paymentMethods": "La gestion des méthodes de paiement arrive bientôt",
+      "settlements": "Les rapports de règlement arrivent bientôt"
+    },
+    "success": {
+      "refundProcessed": "Remboursement traité avec succès",
+      "providerEnabled": "Fournisseur activé avec succès",
+      "providerDisabled": "Fournisseur désactivé avec succès"
+    },
+    "error": {
+      "title": "Erreur",
+      "fetchTransactions": "Échec de la récupération des transactions",
+      "processRefund": "Échec du traitement du remboursement",
+      "updateProvider": "Échec de la mise à jour du statut du fournisseur"
+    }
+  },
+  "settings": {
+    "title": "Paramètres de paiement",
+    "addProvider": "Ajouter un fournisseur",
+    "backToTenants": "Retour aux locataires",
+    "stats": {
+      "totalVolume": "Volume total",
+      "successRate": "Taux de réussite",
+      "todayVolume": "Volume d'aujourd'hui",
+      "netRevenue": "Revenu net",
+      "transactionsCount": "{{count}} transactions",
+      "avgTransaction": "Moy. ${{amount}}",
+      "pendingSettlement": "En attente : ${{amount}}",
+      "platformFees": "Frais : ${{amount}}"
+    },
+    "tabs": {
+      "providers": "Fournisseurs",
+      "credentials": "Identifiants",
+      "feesLimits": "Frais et limites",
+      "webhooks": "Webhooks",
+      "analytics": "Analytique"
+    },
+    "providersTab": {
+      "title": "Fournisseurs de paiement",
+      "noProviders": "Aucun fournisseur de paiement configuré. Ajoutez-en un pour commencer à accepter les paiements.",
+      "production": "Production",
+      "sandbox": "Bac à sable",
+      "healthStatus": "État de santé",
+      "unknown": "Inconnu",
+      "testConnection": "Tester la connexion",
+      "configure": "Configurer",
+      "remove": "Supprimer",
+      "merchantId": "ID marchand :",
+      "lastSync": "Dernière synchronisation :",
+      "oauthExpires": "OAuth expire :"
+    },
+    "credentialsTab": {
+      "title": "Identifiants API",
+      "securityNotice": "Avis de sécurité :",
+      "securityMessage": "Les identifiants API sont cryptés et stockés en toute sécurité. Ne partagez jamais vos clés secrètes ou jetons d'accès.",
+      "updateCredentials": "Mettre à jour les identifiants",
+      "apiKey": "Clé API",
+      "secretKey": "Clé secrète",
+      "oauthToken": "Jeton OAuth",
+      "configured": "Configuré",
+      "notConfigured": "Non configuré",
+      "connected": "Connecté",
+      "expires": "expire le {{date}}",
+      "connectOAuth": "Se connecter avec OAuth"
+    },
+    "feesTab": {
+      "title": "Frais et limites de transaction",
+      "platformFees": "Frais de plateforme",
+      "percentageFee": "Frais en pourcentage",
+      "fixedFee": "Frais fixes",
+      "transactionLimits": "Limites de transaction",
+      "dailyLimit": "Limite quotidienne",
+      "perTransactionLimit": "Limite par transaction",
+      "saveChanges": "Enregistrer les modifications"
+    },
+    "webhooksTab": {
+      "title": "Configuration des webhooks",
+      "infoMessage": "Configurez les URL de webhook dans le tableau de bord de votre fournisseur de paiement pour recevoir les événements de paiement en temps réel.",
+      "webhookUrl": "URL du webhook",
+      "webhookSecret": "Secret du webhook",
+      "webhookSecretPlaceholder": "Entrer le secret de signature du webhook",
+      "eventsToSubscribe": "Événements auxquels s'abonner",
+      "eventTypes": {
+        "paymentCompleted": "payment.completed",
+        "paymentFailed": "payment.failed",
+        "refundCreated": "refund.created",
+        "disputeCreated": "dispute.created"
+      }
+    },
+    "analyticsTab": {
+      "title": "Analytique des paiements",
+      "transactionVolume": "Volume des transactions (7 derniers jours)",
+      "successRateByProvider": "Taux de réussite par fournisseur",
+      "chartPlaceholder": "Espace réservé au graphique",
+      "recentTransactions": "Transactions récentes",
+      "noRecentTransactions": "Aucune transaction récente",
+      "tableHeaders": {
+        "transactionId": "ID de transaction",
+        "amount": "Montant",
+        "provider": "Fournisseur",
+        "status": "Statut",
+        "date": "Date"
+      }
+    },
+    "credentialModal": {
+      "title": "Mettre à jour les identifiants {{providerName}}",
+      "environment": "Environnement",
+      "environmentOptions": {
+        "sandbox": "Bac à sable",
+        "production": "Production"
+      },
+      "apiKey": "Clé API",
+      "apiKeyPlaceholder": "Entrer la clé API",
+      "secretKey": "Clé secrète",
+      "secretKeyPlaceholder": "Entrer la clé secrète",
+      "merchantId": "ID marchand",
+      "merchantIdPlaceholder": "Entrer l'ID marchand",
+      "accessToken": "Jeton d'accès (Optionnel - pour OAuth)",
+      "accessTokenPlaceholder": "Entrer le jeton d'accès",
+      "securityWarning": "Les identifiants sont cryptés en utilisant le cryptage AES-256 avant le stockage. Assurez-vous d'être dans un environnement sécurisé lors de la saisie de données sensibles.",
+      "cancel": "Annuler",
+      "updateButton": "Mettre à jour les identifiants",
+      "updating": "Mise à jour..."
+    },
+    "notifications": {
+      "connectionTestSuccess": "Test de connexion {{providerName}} réussi",
+      "connectionTestFailed": "Test de connexion {{providerName}} échoué",
+      "credentialsUpdated": "Identifiants mis à jour avec succès pour {{providerName}}",
+      "credentialsUpdateFailed": "Échec de la mise à jour des identifiants",
+      "tenantLoadFailed": "Échec du chargement des données du locataire",
+      "providersLoadFailed": "Échec du chargement des fournisseurs de paiement",
+      "webhookUrlCopied": "URL du webhook copiée dans le presse-papiers"
+    }
+  }
+}

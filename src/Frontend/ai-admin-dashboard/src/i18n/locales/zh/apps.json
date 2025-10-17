@@ -1,0 +1,21 @@
+{
+  "title": "应用程序",
+  "tabs": {
+    "pos": "销售点系统",
+    "posShort": "POS",
+    "kiosk": "自助服务终端",
+    "kioskShort": "Kiosk",
+    "menuDisplay": "菜单显示",
+    "menuShort": "菜单"
+  },
+  "fullscreen": {
+    "enter": "进入全屏",
+    "exit": "退出全屏"
+  },
+  "storeSelection": {
+    "required": "需要选择商店",
+    "pleaseSelect": "请选择一家商店以继续",
+    "selectButton": "选择商店",
+    "description": "请选择一家商店以访问{{appName}}"
+  }
+}

@@ -1,0 +1,228 @@
+{
+  "titles": {
+    "main": "決済管理",
+    "transactionHistory": "取引履歴",
+    "paymentProviders": "決済プロバイダー",
+    "paymentMethods": "決済方法",
+    "settlements": "精算",
+    "processRefund": "返金処理",
+    "transactionDetails": "取引詳細"
+  },
+  "descriptions": {
+    "transactionHistory": "すべての決済取引を表示および管理",
+    "paymentProviders": "決済ゲートウェイの設定を管理",
+    "paymentMethods": "顧客の保存済み決済方法を管理",
+    "settlements": "精算バッチと照合を表示",
+    "refundTransaction": "取引を返金"
+  },
+  "metrics": {
+    "totalRevenue": "総収益",
+    "successRate": "成功率",
+    "totalRefunds": "総返金額",
+    "processingFees": "処理手数料",
+    "transactions": "件の取引",
+    "successful": "成功",
+    "fromRevenue": "収益から",
+    "ofRevenue": "収益の"
+  },
+  "tabs": {
+    "transactions": "取引",
+    "providers": "決済プロバイダー",
+    "methods": "決済方法",
+    "settlements": "精算"
+  },
+  "filters": {
+    "status": "ステータス",
+    "provider": "プロバイダー",
+    "allStatus": "すべてのステータス",
+    "allProviders": "すべてのプロバイダー",
+    "searchPlaceholder": "取引を検索..."
+  },
+  "status": {
+    "completed": "完了",
+    "pending": "保留中",
+    "processing": "処理中",
+    "failed": "失敗",
+    "refunded": "返金済み",
+    "active": "アクティブ",
+    "inactive": "非アクティブ"
+  },
+  "table": {
+    "reference": "参照",
+    "customer": "顧客",
+    "amount": "金額",
+    "provider": "プロバイダー",
+    "status": "ステータス",
+    "date": "日付",
+    "actions": "アクション"
+  },
+  "provider": {
+    "default": "デフォルト",
+    "supportedCurrencies": "対応通貨",
+    "capabilities": "機能"
+  },
+  "actions": {
+    "refresh": "更新",
+    "export": "エクスポート",
+    "disable": "無効化",
+    "enable": "有効化",
+    "cancel": "キャンセル",
+    "close": "閉じる",
+    "processRefund": "返金処理"
+  },
+  "refund": {
+    "originalAmount": "元の金額",
+    "refundAmount": "返金額",
+    "refundAmountHint": "全額返金の場合は空欄",
+    "reason": "理由",
+    "enterAmount": "金額を入力",
+    "enterReason": "返金理由を入力"
+  },
+  "details": {
+    "transactionId": "取引ID",
+    "providerTransactionId": "プロバイダー取引ID",
+    "orderId": "注文ID",
+    "status": "ステータス",
+    "amount": "金額",
+    "provider": "プロバイダー",
+    "createdAt": "作成日時",
+    "completedAt": "完了日時",
+    "errorMessage": "エラーメッセージ",
+    "notAvailable": "N/A"
+  },
+  "messages": {
+    "comingSoon": {
+      "paymentMethods": "決済方法管理は近日公開",
+      "settlements": "精算レポートは近日公開"
+    },
+    "success": {
+      "refundProcessed": "返金が正常に処理されました",
+      "providerEnabled": "プロバイダーが正常に有効化されました",
+      "providerDisabled": "プロバイダーが正常に無効化されました"
+    },
+    "error": {
+      "title": "エラー",
+      "fetchTransactions": "取引の取得に失敗しました",
+      "processRefund": "返金処理に失敗しました",
+      "updateProvider": "プロバイダーのステータス更新に失敗しました"
+    }
+  },
+  "settings": {
+    "title": "決済設定",
+    "addProvider": "プロバイダーを追加",
+    "backToTenants": "テナントに戻る",
+    "stats": {
+      "totalVolume": "総取引量",
+      "successRate": "成功率",
+      "todayVolume": "本日の取引量",
+      "netRevenue": "純収益",
+      "transactionsCount": "{{count}}件の取引",
+      "avgTransaction": "平均 ${{amount}}",
+      "pendingSettlement": "保留中: ${{amount}}",
+      "platformFees": "手数料: ${{amount}}"
+    },
+    "tabs": {
+      "providers": "プロバイダー",
+      "credentials": "認証情報",
+      "feesLimits": "手数料と制限",
+      "webhooks": "Webhooks",
+      "analytics": "分析"
+    },
+    "providersTab": {
+      "title": "決済プロバイダー",
+      "noProviders": "決済プロバイダーが設定されていません。支払いの受付を開始するには追加してください。",
+      "production": "本番環境",
+      "sandbox": "サンドボックス",
+      "healthStatus": "ヘルスステータス",
+      "unknown": "不明",
+      "testConnection": "接続をテスト",
+      "configure": "設定",
+      "remove": "削除",
+      "merchantId": "マーチャントID:",
+      "lastSync": "最終同期:",
+      "oauthExpires": "OAuth有効期限:"
+    },
+    "credentialsTab": {
+      "title": "API認証情報",
+      "securityNotice": "セキュリティに関する注意:",
+      "securityMessage": "API認証情報は暗号化されて安全に保存されます。秘密鍵やアクセストークンは決して共有しないでください。",
+      "updateCredentials": "認証情報を更新",
+      "apiKey": "APIキー",
+      "secretKey": "秘密鍵",
+      "oauthToken": "OAuthトークン",
+      "configured": "設定済み",
+      "notConfigured": "未設定",
+      "connected": "接続済み",
+      "expires": "{{date}}に期限切れ",
+      "connectOAuth": "OAuthで接続"
+    },
+    "feesTab": {
+      "title": "手数料と取引制限",
+      "platformFees": "プラットフォーム手数料",
+      "percentageFee": "パーセンテージ手数料",
+      "fixedFee": "固定手数料",
+      "transactionLimits": "取引制限",
+      "dailyLimit": "1日の上限",
+      "perTransactionLimit": "取引ごとの上限",
+      "saveChanges": "変更を保存"
+    },
+    "webhooksTab": {
+      "title": "Webhook設定",
+      "infoMessage": "リアルタイムで決済イベントを受信するには、決済プロバイダーのダッシュボードでWebhook URLを設定してください。",
+      "webhookUrl": "Webhook URL",
+      "webhookSecret": "Webhookシークレット",
+      "webhookSecretPlaceholder": "Webhook署名シークレットを入力",
+      "eventsToSubscribe": "購読するイベント",
+      "eventTypes": {
+        "paymentCompleted": "payment.completed",
+        "paymentFailed": "payment.failed",
+        "refundCreated": "refund.created",
+        "disputeCreated": "dispute.created"
+      }
+    },
+    "analyticsTab": {
+      "title": "決済分析",
+      "transactionVolume": "取引量（過去7日間）",
+      "successRateByProvider": "プロバイダー別成功率",
+      "chartPlaceholder": "チャートプレースホルダー",
+      "recentTransactions": "最近の取引",
+      "noRecentTransactions": "最近の取引はありません",
+      "tableHeaders": {
+        "transactionId": "取引ID",
+        "amount": "金額",
+        "provider": "プロバイダー",
+        "status": "ステータス",
+        "date": "日付"
+      }
+    },
+    "credentialModal": {
+      "title": "{{providerName}}の認証情報を更新",
+      "environment": "環境",
+      "environmentOptions": {
+        "sandbox": "サンドボックス",
+        "production": "本番環境"
+      },
+      "apiKey": "APIキー",
+      "apiKeyPlaceholder": "APIキーを入力",
+      "secretKey": "秘密鍵",
+      "secretKeyPlaceholder": "秘密鍵を入力",
+      "merchantId": "マーチャントID",
+      "merchantIdPlaceholder": "マーチャントIDを入力",
+      "accessToken": "アクセストークン（オプション - OAuth用）",
+      "accessTokenPlaceholder": "アクセストークンを入力",
+      "securityWarning": "認証情報は保存前にAES-256暗号化を使用して暗号化されます。機密データを入力する際は、安全な環境にいることを確認してください。",
+      "cancel": "キャンセル",
+      "updateButton": "認証情報を更新",
+      "updating": "更新中..."
+    },
+    "notifications": {
+      "connectionTestSuccess": "{{providerName}}の接続テストが成功しました",
+      "connectionTestFailed": "{{providerName}}の接続テストが失敗しました",
+      "credentialsUpdated": "{{providerName}}の認証情報が正常に更新されました",
+      "credentialsUpdateFailed": "認証情報の更新に失敗しました",
+      "tenantLoadFailed": "テナントデータの読み込みに失敗しました",
+      "providersLoadFailed": "決済プロバイダーの読み込みに失敗しました",
+      "webhookUrlCopied": "Webhook URLをクリップボードにコピーしました"
+    }
+  }
+}

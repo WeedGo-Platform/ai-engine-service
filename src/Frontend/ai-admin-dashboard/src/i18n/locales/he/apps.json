@@ -1,0 +1,21 @@
+{
+  "title": "אפליקציות",
+  "tabs": {
+    "pos": "נקודת מכירה",
+    "posShort": "POS",
+    "kiosk": "Kiosk שירות עצמי",
+    "kioskShort": "Kiosk",
+    "menuDisplay": "תצוגת תפריט",
+    "menuShort": "תפריט"
+  },
+  "fullscreen": {
+    "enter": "כניסה למסך מלא",
+    "exit": "יציאה ממסך מלא"
+  },
+  "storeSelection": {
+    "required": "נדרשת בחירת חנות",
+    "pleaseSelect": "אנא בחר חנות כדי להמשיך",
+    "selectButton": "בחר חנות",
+    "description": "אנא בחר חנות כדי לגשת ל-{{appName}}"
+  }
+}

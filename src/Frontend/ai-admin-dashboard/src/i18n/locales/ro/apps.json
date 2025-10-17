@@ -1,0 +1,21 @@
+{
+  "title": "Aplicații",
+  "tabs": {
+    "pos": "Punct de vânzare",
+    "posShort": "POS",
+    "kiosk": "Kiosk cu autoservire",
+    "kioskShort": "Kiosk",
+    "menuDisplay": "Afișare meniu",
+    "menuShort": "Meniu"
+  },
+  "fullscreen": {
+    "enter": "Intrați în modul ecran complet",
+    "exit": "Ieșiți din modul ecran complet"
+  },
+  "storeSelection": {
+    "required": "Selecția magazinului este necesară",
+    "pleaseSelect": "Vă rugăm să selectați un magazin pentru a continua",
+    "selectButton": "Selectați magazin",
+    "description": "Vă rugăm să selectați un magazin pentru a accesa {{appName}}"
+  }
+}

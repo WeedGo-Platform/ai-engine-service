@@ -1,0 +1,228 @@
+{
+  "titles": {
+    "main": "Gestión de pagos",
+    "transactionHistory": "Historial de transacciones",
+    "paymentProviders": "Proveedores de pago",
+    "paymentMethods": "Métodos de pago",
+    "settlements": "Liquidaciones",
+    "processRefund": "Procesar reembolso",
+    "transactionDetails": "Detalles de la transacción"
+  },
+  "descriptions": {
+    "transactionHistory": "Ver y gestionar todas las transacciones de pago",
+    "paymentProviders": "Gestionar configuraciones de pasarelas de pago",
+    "paymentMethods": "Gestionar métodos de pago guardados de clientes",
+    "settlements": "Ver lotes de liquidación y reconciliación",
+    "refundTransaction": "Reembolsar transacción"
+  },
+  "metrics": {
+    "totalRevenue": "Ingresos totales",
+    "successRate": "Tasa de éxito",
+    "totalRefunds": "Reembolsos totales",
+    "processingFees": "Comisiones de procesamiento",
+    "transactions": "transacciones",
+    "successful": "exitosas",
+    "fromRevenue": "De ingresos",
+    "ofRevenue": "de ingresos"
+  },
+  "tabs": {
+    "transactions": "Transacciones",
+    "providers": "Proveedores de pago",
+    "methods": "Métodos de pago",
+    "settlements": "Liquidaciones"
+  },
+  "filters": {
+    "status": "Estado",
+    "provider": "Proveedor",
+    "allStatus": "Todos los estados",
+    "allProviders": "Todos los proveedores",
+    "searchPlaceholder": "Buscar transacciones..."
+  },
+  "status": {
+    "completed": "Completado",
+    "pending": "Pendiente",
+    "processing": "Procesando",
+    "failed": "Fallido",
+    "refunded": "Reembolsado",
+    "active": "Activo",
+    "inactive": "Inactivo"
+  },
+  "table": {
+    "reference": "Referencia",
+    "customer": "Cliente",
+    "amount": "Monto",
+    "provider": "Proveedor",
+    "status": "Estado",
+    "date": "Fecha",
+    "actions": "Acciones"
+  },
+  "provider": {
+    "default": "Predeterminado",
+    "supportedCurrencies": "Monedas admitidas",
+    "capabilities": "Capacidades"
+  },
+  "actions": {
+    "refresh": "Actualizar",
+    "export": "Exportar",
+    "disable": "Desactivar",
+    "enable": "Activar",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "processRefund": "Procesar reembolso"
+  },
+  "refund": {
+    "originalAmount": "Monto original",
+    "refundAmount": "Monto del reembolso",
+    "refundAmountHint": "dejar en blanco para reembolso completo",
+    "reason": "Motivo",
+    "enterAmount": "Ingresar monto",
+    "enterReason": "Ingresar motivo del reembolso"
+  },
+  "details": {
+    "transactionId": "ID de transacción",
+    "providerTransactionId": "ID de transacción del proveedor",
+    "orderId": "ID de pedido",
+    "status": "Estado",
+    "amount": "Monto",
+    "provider": "Proveedor",
+    "createdAt": "Creado el",
+    "completedAt": "Completado el",
+    "errorMessage": "Mensaje de error",
+    "notAvailable": "N/D"
+  },
+  "messages": {
+    "comingSoon": {
+      "paymentMethods": "La gestión de métodos de pago estará disponible próximamente",
+      "settlements": "Los informes de liquidación estarán disponibles próximamente"
+    },
+    "success": {
+      "refundProcessed": "Reembolso procesado exitosamente",
+      "providerEnabled": "Proveedor activado exitosamente",
+      "providerDisabled": "Proveedor desactivado exitosamente"
+    },
+    "error": {
+      "title": "Error",
+      "fetchTransactions": "Error al obtener transacciones",
+      "processRefund": "Error al procesar reembolso",
+      "updateProvider": "Error al actualizar estado del proveedor"
+    }
+  },
+  "settings": {
+    "title": "Configuración de pagos",
+    "addProvider": "Agregar proveedor",
+    "backToTenants": "Volver a inquilinos",
+    "stats": {
+      "totalVolume": "Volumen total",
+      "successRate": "Tasa de éxito",
+      "todayVolume": "Volumen de hoy",
+      "netRevenue": "Ingresos netos",
+      "transactionsCount": "{{count}} transacciones",
+      "avgTransaction": "Prom. ${{amount}}",
+      "pendingSettlement": "Pendiente: ${{amount}}",
+      "platformFees": "Comisiones: ${{amount}}"
+    },
+    "tabs": {
+      "providers": "Proveedores",
+      "credentials": "Credenciales",
+      "feesLimits": "Comisiones y límites",
+      "webhooks": "Webhooks",
+      "analytics": "Analítica"
+    },
+    "providersTab": {
+      "title": "Proveedores de pago",
+      "noProviders": "No hay proveedores de pago configurados. Agregue uno para comenzar a aceptar pagos.",
+      "production": "Producción",
+      "sandbox": "Sandbox",
+      "healthStatus": "Estado de salud",
+      "unknown": "Desconocido",
+      "testConnection": "Probar conexión",
+      "configure": "Configurar",
+      "remove": "Eliminar",
+      "merchantId": "ID de comerciante:",
+      "lastSync": "Última sincronización:",
+      "oauthExpires": "OAuth expira:"
+    },
+    "credentialsTab": {
+      "title": "Credenciales de API",
+      "securityNotice": "Aviso de seguridad:",
+      "securityMessage": "Las credenciales de API están cifradas y almacenadas de forma segura. Nunca comparta sus claves secretas o tokens de acceso.",
+      "updateCredentials": "Actualizar credenciales",
+      "apiKey": "Clave de API",
+      "secretKey": "Clave secreta",
+      "oauthToken": "Token OAuth",
+      "configured": "Configurado",
+      "notConfigured": "No configurado",
+      "connected": "Conectado",
+      "expires": "expira el {{date}}",
+      "connectOAuth": "Conectar con OAuth"
+    },
+    "feesTab": {
+      "title": "Comisiones y límites de transacción",
+      "platformFees": "Comisiones de la plataforma",
+      "percentageFee": "Comisión porcentual",
+      "fixedFee": "Comisión fija",
+      "transactionLimits": "Límites de transacción",
+      "dailyLimit": "Límite diario",
+      "perTransactionLimit": "Límite por transacción",
+      "saveChanges": "Guardar cambios"
+    },
+    "webhooksTab": {
+      "title": "Configuración de webhooks",
+      "infoMessage": "Configure las URL de webhook en el panel de su proveedor de pago para recibir eventos de pago en tiempo real.",
+      "webhookUrl": "URL del webhook",
+      "webhookSecret": "Secreto del webhook",
+      "webhookSecretPlaceholder": "Ingresar secreto de firma del webhook",
+      "eventsToSubscribe": "Eventos a los que suscribirse",
+      "eventTypes": {
+        "paymentCompleted": "payment.completed",
+        "paymentFailed": "payment.failed",
+        "refundCreated": "refund.created",
+        "disputeCreated": "dispute.created"
+      }
+    },
+    "analyticsTab": {
+      "title": "Analítica de pagos",
+      "transactionVolume": "Volumen de transacciones (últimos 7 días)",
+      "successRateByProvider": "Tasa de éxito por proveedor",
+      "chartPlaceholder": "Espacio reservado para gráfico",
+      "recentTransactions": "Transacciones recientes",
+      "noRecentTransactions": "No hay transacciones recientes",
+      "tableHeaders": {
+        "transactionId": "ID de transacción",
+        "amount": "Monto",
+        "provider": "Proveedor",
+        "status": "Estado",
+        "date": "Fecha"
+      }
+    },
+    "credentialModal": {
+      "title": "Actualizar credenciales de {{providerName}}",
+      "environment": "Entorno",
+      "environmentOptions": {
+        "sandbox": "Sandbox",
+        "production": "Producción"
+      },
+      "apiKey": "Clave de API",
+      "apiKeyPlaceholder": "Ingresar clave de API",
+      "secretKey": "Clave secreta",
+      "secretKeyPlaceholder": "Ingresar clave secreta",
+      "merchantId": "ID de comerciante",
+      "merchantIdPlaceholder": "Ingresar ID de comerciante",
+      "accessToken": "Token de acceso (Opcional - para OAuth)",
+      "accessTokenPlaceholder": "Ingresar token de acceso",
+      "securityWarning": "Las credenciales se cifran utilizando cifrado AES-256 antes de almacenarse. Asegúrese de estar en un entorno seguro al ingresar datos sensibles.",
+      "cancel": "Cancelar",
+      "updateButton": "Actualizar credenciales",
+      "updating": "Actualizando..."
+    },
+    "notifications": {
+      "connectionTestSuccess": "Prueba de conexión de {{providerName}} exitosa",
+      "connectionTestFailed": "Prueba de conexión de {{providerName}} fallida",
+      "credentialsUpdated": "Credenciales actualizadas exitosamente para {{providerName}}",
+      "credentialsUpdateFailed": "Error al actualizar credenciales",
+      "tenantLoadFailed": "Error al cargar datos del inquilino",
+      "providersLoadFailed": "Error al cargar proveedores de pago",
+      "webhookUrlCopied": "URL del webhook copiada al portapapeles"
+    }
+  }
+}

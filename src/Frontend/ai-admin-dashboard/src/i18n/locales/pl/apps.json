@@ -1,0 +1,21 @@
+{
+  "title": "Aplikacje",
+  "tabs": {
+    "pos": "Punkt sprzedaży",
+    "posShort": "POS",
+    "kiosk": "Kiosk samoobsługowy",
+    "kioskShort": "Kiosk",
+    "menuDisplay": "Wyświetlanie menu",
+    "menuShort": "Menu"
+  },
+  "fullscreen": {
+    "enter": "Wejdź w tryb pełnoekranowy",
+    "exit": "Wyjdź z trybu pełnoekranowego"
+  },
+  "storeSelection": {
+    "required": "Wymagany wybór sklepu",
+    "pleaseSelect": "Wybierz sklep, aby kontynuować",
+    "selectButton": "Wybierz sklep",
+    "description": "Wybierz sklep, aby uzyskać dostęp do {{appName}}"
+  }
+}

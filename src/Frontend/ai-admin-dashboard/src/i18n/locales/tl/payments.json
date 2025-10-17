@@ -1,0 +1,228 @@
+{
+  "titles": {
+    "main": "Pamamahala ng Pagbabayad",
+    "transactionHistory": "Kasaysayan ng Transaksyon",
+    "paymentProviders": "Mga Nagbibigay ng Pagbabayad",
+    "paymentMethods": "Mga Paraan ng Pagbabayad",
+    "settlements": "Mga Settlement",
+    "processRefund": "Proseso ng Refund",
+    "transactionDetails": "Detalye ng Transaksyon"
+  },
+  "descriptions": {
+    "transactionHistory": "Tingnan at pamahalaan ang lahat ng transaksyon sa pagbabayad",
+    "paymentProviders": "Pamahalaan ang mga konpi gurasyon ng payment gateway",
+    "paymentMethods": "Pamahalaan ang mga naka-save na paraan ng pagbabayad ng customer",
+    "settlements": "Tingnan ang mga batch ng settlement at reconciliation",
+    "refundTransaction": "I-refund ang transaksyon"
+  },
+  "metrics": {
+    "totalRevenue": "Kabuuang Kita",
+    "successRate": "Rate ng Tagumpay",
+    "totalRefunds": "Kabuuang Refund",
+    "processingFees": "Bayad sa Pagproseso",
+    "transactions": "mga transaksyon",
+    "successful": "matagumpay",
+    "fromRevenue": "Mula sa kita",
+    "ofRevenue": "ng kita"
+  },
+  "tabs": {
+    "transactions": "Mga Transaksyon",
+    "providers": "Mga Nagbibigay ng Pagbabayad",
+    "methods": "Mga Paraan ng Pagbabayad",
+    "settlements": "Mga Settlement"
+  },
+  "filters": {
+    "status": "Katayuan",
+    "provider": "Nagbibigay",
+    "allStatus": "Lahat ng Katayuan",
+    "allProviders": "Lahat ng Nagbibigay",
+    "searchPlaceholder": "Maghanap ng mga transaksyon..."
+  },
+  "status": {
+    "completed": "Nakumpleto",
+    "pending": "Nakabinbin",
+    "processing": "Pinoproseso",
+    "failed": "Nabigo",
+    "refunded": "Nai-refund",
+    "active": "Aktibo",
+    "inactive": "Hindi Aktibo"
+  },
+  "table": {
+    "reference": "Sanggunian",
+    "customer": "Customer",
+    "amount": "Halaga",
+    "provider": "Nagbibigay",
+    "status": "Katayuan",
+    "date": "Petsa",
+    "actions": "Mga Aksyon"
+  },
+  "provider": {
+    "default": "Default",
+    "supportedCurrencies": "Mga Suportadong Pera",
+    "capabilities": "Mga Kakayahan"
+  },
+  "actions": {
+    "refresh": "I-refresh",
+    "export": "I-export",
+    "disable": "Huwag paganahin",
+    "enable": "Paganahin",
+    "cancel": "Kanselahin",
+    "close": "Isara",
+    "processRefund": "Proseso ng Refund"
+  },
+  "refund": {
+    "originalAmount": "Orihinal na Halaga",
+    "refundAmount": "Halaga ng Refund",
+    "refundAmountHint": "iwanang blangko para sa buong refund",
+    "reason": "Dahilan",
+    "enterAmount": "Ilagay ang halaga",
+    "enterReason": "Ilagay ang dahilan ng refund"
+  },
+  "details": {
+    "transactionId": "ID ng Transaksyon",
+    "providerTransactionId": "ID ng Transaksyon ng Provider",
+    "orderId": "ID ng Order",
+    "status": "Katayuan",
+    "amount": "Halaga",
+    "provider": "Nagbibigay",
+    "createdAt": "Nilikha Noong",
+    "completedAt": "Nakumpleto Noong",
+    "errorMessage": "Mensahe ng Error",
+    "notAvailable": "Walang Available"
+  },
+  "messages": {
+    "comingSoon": {
+      "paymentMethods": "Pamamahala ng mga paraan ng pagbabayad ay paparating na",
+      "settlements": "Mga ulat ng settlement ay paparating na"
+    },
+    "success": {
+      "refundProcessed": "Matagumpay na naproseso ang refund",
+      "providerEnabled": "Matagumpay na pinagana ang provider",
+      "providerDisabled": "Matagumpay na hindi pinagana ang provider"
+    },
+    "error": {
+      "title": "Error",
+      "fetchTransactions": "Nabigong kunin ang mga transaksyon",
+      "processRefund": "Nabigong proseso ang refund",
+      "updateProvider": "Nabigong i-update ang katayuan ng provider"
+    }
+  },
+  "settings": {
+    "title": "Mga Setting ng Pagbabayad",
+    "addProvider": "Magdagdag ng Provider",
+    "backToTenants": "Bumalik sa mga Tenant",
+    "stats": {
+      "totalVolume": "Kabuuang Dami",
+      "successRate": "Rate ng Tagumpay",
+      "todayVolume": "Dami Ngayong Araw",
+      "netRevenue": "Net na Kita",
+      "transactionsCount": "{{count}} mga transaksyon",
+      "avgTransaction": "Avg ${{amount}}",
+      "pendingSettlement": "Nakabinbin: ${{amount}}",
+      "platformFees": "Bayad: ${{amount}}"
+    },
+    "tabs": {
+      "providers": "Mga Provider",
+      "credentials": "Mga Kredensyal",
+      "feesLimits": "Mga Bayad at Limitasyon",
+      "webhooks": "Webhooks",
+      "analytics": "Analytics"
+    },
+    "providersTab": {
+      "title": "Mga Nagbibigay ng Pagbabayad",
+      "noProviders": "Walang naka-configure na payment provider. Magdagdag ng isa upang magsimulang tumanggap ng mga pagbabayad.",
+      "production": "Production",
+      "sandbox": "Sandbox",
+      "healthStatus": "Katayuan ng Kalusugan",
+      "unknown": "Hindi Alam",
+      "testConnection": "Subukan ang Koneksyon",
+      "configure": "I-configure",
+      "remove": "Alisin",
+      "merchantId": "Merchant ID:",
+      "lastSync": "Huling Sync:",
+      "oauthExpires": "Nag-expire ang OAuth:"
+    },
+    "credentialsTab": {
+      "title": "Mga Kredensyal ng API",
+      "securityNotice": "Paalala sa Seguridad:",
+      "securityMessage": "Ang mga kredensyal ng API ay naka-encrypt at ligtas na naka-imbak. Huwag kailanman ibahagi ang iyong mga secret key o access token.",
+      "updateCredentials": "I-update ang mga Kredensyal",
+      "apiKey": "API Key",
+      "secretKey": "Secret Key",
+      "oauthToken": "OAuth Token",
+      "configured": "Naka-configure",
+      "notConfigured": "Hindi naka-configure",
+      "connected": "Nakakonekta",
+      "expires": "nag-expire sa {{date}}",
+      "connectOAuth": "Kumonekta gamit ang OAuth"
+    },
+    "feesTab": {
+      "title": "Mga Bayad at Limitasyon ng Transaksyon",
+      "platformFees": "Mga Bayad ng Platform",
+      "percentageFee": "Porsyentong Bayad",
+      "fixedFee": "Nakapirming Bayad",
+      "transactionLimits": "Mga Limitasyon ng Transaksyon",
+      "dailyLimit": "Arawang Limitasyon",
+      "perTransactionLimit": "Limitasyon Bawat Transaksyon",
+      "saveChanges": "I-save ang mga Pagbabago"
+    },
+    "webhooksTab": {
+      "title": "Kumpigurasyon ng Webhook",
+      "infoMessage": "I-configure ang mga webhook URL sa dashboard ng iyong payment provider upang makatanggap ng real-time na mga payment event.",
+      "webhookUrl": "Webhook URL",
+      "webhookSecret": "Webhook Secret",
+      "webhookSecretPlaceholder": "Ilagay ang webhook signing secret",
+      "eventsToSubscribe": "Mga Event na Mag-subscribe",
+      "eventTypes": {
+        "paymentCompleted": "payment.completed",
+        "paymentFailed": "payment.failed",
+        "refundCreated": "refund.created",
+        "disputeCreated": "dispute.created"
+      }
+    },
+    "analyticsTab": {
+      "title": "Analytics ng Pagbabayad",
+      "transactionVolume": "Dami ng Transaksyon (Huling 7 Araw)",
+      "successRateByProvider": "Rate ng Tagumpay ayon sa Provider",
+      "chartPlaceholder": "Placeholder ng Chart",
+      "recentTransactions": "Mga Kamakailang Transaksyon",
+      "noRecentTransactions": "Walang kamakailang transaksyon",
+      "tableHeaders": {
+        "transactionId": "ID ng Transaksyon",
+        "amount": "Halaga",
+        "provider": "Nagbibigay",
+        "status": "Katayuan",
+        "date": "Petsa"
+      }
+    },
+    "credentialModal": {
+      "title": "I-update ang {{providerName}} Kredensyal",
+      "environment": "Kapaligiran",
+      "environmentOptions": {
+        "sandbox": "Sandbox",
+        "production": "Production"
+      },
+      "apiKey": "API Key",
+      "apiKeyPlaceholder": "Ilagay ang API Key",
+      "secretKey": "Secret Key",
+      "secretKeyPlaceholder": "Ilagay ang Secret Key",
+      "merchantId": "Merchant ID",
+      "merchantIdPlaceholder": "Ilagay ang Merchant ID",
+      "accessToken": "Access Token (Opsyonal - para sa OAuth)",
+      "accessTokenPlaceholder": "Ilagay ang Access Token",
+      "securityWarning": "Ang mga kredensyal ay naka-encrypt gamit ang AES-256 encryption bago mag-imbak. Siguraduhing nasa ligtas na kapaligiran ka kapag nag-input ng sensitibong data.",
+      "cancel": "Kanselahin",
+      "updateButton": "I-update ang mga Kredensyal",
+      "updating": "Nag-u-update..."
+    },
+    "notifications": {
+      "connectionTestSuccess": "Matagumpay ang {{providerName}} connection test",
+      "connectionTestFailed": "Nabigo ang {{providerName}} connection test",
+      "credentialsUpdated": "Matagumpay na na-update ang mga kredensyal para sa {{providerName}}",
+      "credentialsUpdateFailed": "Nabigong i-update ang mga kredensyal",
+      "tenantLoadFailed": "Nabigong i-load ang datos ng tenant",
+      "providersLoadFailed": "Nabigong i-load ang mga payment provider",
+      "webhookUrlCopied": "Ang Webhook URL ay nakopya sa clipboard"
+    }
+  }
+}

@@ -1,0 +1,228 @@
+{
+  "titles": {
+    "main": "إدارة المدفوعات",
+    "transactionHistory": "سجل المعاملات",
+    "paymentProviders": "مزودو الدفع",
+    "paymentMethods": "طرق الدفع",
+    "settlements": "التسويات",
+    "processRefund": "معالجة الاسترداد",
+    "transactionDetails": "تفاصيل المعاملة"
+  },
+  "descriptions": {
+    "transactionHistory": "عرض وإدارة جميع معاملات الدفع",
+    "paymentProviders": "إدارة إعدادات بوابة الدفع",
+    "paymentMethods": "إدارة طرق الدفع المحفوظة للعملاء",
+    "settlements": "عرض دفعات التسوية والمطابقة",
+    "refundTransaction": "استرداد المعاملة"
+  },
+  "metrics": {
+    "totalRevenue": "إجمالي الإيرادات",
+    "successRate": "معدل النجاح",
+    "totalRefunds": "إجمالي المبالغ المستردة",
+    "processingFees": "رسوم المعالجة",
+    "transactions": "معاملات",
+    "successful": "ناجحة",
+    "fromRevenue": "من الإيرادات",
+    "ofRevenue": "من الإيرادات"
+  },
+  "tabs": {
+    "transactions": "المعاملات",
+    "providers": "مزودو الدفع",
+    "methods": "طرق الدفع",
+    "settlements": "التسويات"
+  },
+  "filters": {
+    "status": "الحالة",
+    "provider": "المزود",
+    "allStatus": "جميع الحالات",
+    "allProviders": "جميع المزودين",
+    "searchPlaceholder": "البحث عن المعاملات..."
+  },
+  "status": {
+    "completed": "مكتمل",
+    "pending": "قيد الانتظار",
+    "processing": "قيد المعالجة",
+    "failed": "فشل",
+    "refunded": "تم الاسترداد",
+    "active": "نشط",
+    "inactive": "غير نشط"
+  },
+  "table": {
+    "reference": "المرجع",
+    "customer": "العميل",
+    "amount": "المبلغ",
+    "provider": "المزود",
+    "status": "الحالة",
+    "date": "التاريخ",
+    "actions": "الإجراءات"
+  },
+  "provider": {
+    "default": "افتراضي",
+    "supportedCurrencies": "العملات المدعومة",
+    "capabilities": "القدرات"
+  },
+  "actions": {
+    "refresh": "تحديث",
+    "export": "تصدير",
+    "disable": "تعطيل",
+    "enable": "تفعيل",
+    "cancel": "إلغاء",
+    "close": "إغلاق",
+    "processRefund": "معالجة الاسترداد"
+  },
+  "refund": {
+    "originalAmount": "المبلغ الأصلي",
+    "refundAmount": "مبلغ الاسترداد",
+    "refundAmountHint": "اترك فارغاً للاسترداد الكامل",
+    "reason": "السبب",
+    "enterAmount": "إدخال المبلغ",
+    "enterReason": "إدخال سبب الاسترداد"
+  },
+  "details": {
+    "transactionId": "معرّف المعاملة",
+    "providerTransactionId": "معرّف معاملة المزود",
+    "orderId": "معرّف الطلب",
+    "status": "الحالة",
+    "amount": "المبلغ",
+    "provider": "المزود",
+    "createdAt": "تم الإنشاء في",
+    "completedAt": "تم الاكتمال في",
+    "errorMessage": "رسالة الخطأ",
+    "notAvailable": "غير متوفر"
+  },
+  "messages": {
+    "comingSoon": {
+      "paymentMethods": "إدارة طرق الدفع قريباً",
+      "settlements": "تقارير التسوية قريباً"
+    },
+    "success": {
+      "refundProcessed": "تمت معالجة الاسترداد بنجاح",
+      "providerEnabled": "تم تفعيل المزود بنجاح",
+      "providerDisabled": "تم تعطيل المزود بنجاح"
+    },
+    "error": {
+      "title": "خطأ",
+      "fetchTransactions": "فشل في جلب المعاملات",
+      "processRefund": "فشل في معالجة الاسترداد",
+      "updateProvider": "فشل في تحديث حالة المزود"
+    }
+  },
+  "settings": {
+    "title": "إعدادات الدفع",
+    "addProvider": "إضافة مزود",
+    "backToTenants": "العودة إلى المستأجرين",
+    "stats": {
+      "totalVolume": "الحجم الإجمالي",
+      "successRate": "معدل النجاح",
+      "todayVolume": "حجم اليوم",
+      "netRevenue": "صافي الإيرادات",
+      "transactionsCount": "{{count}} معاملة",
+      "avgTransaction": "متوسط ${{amount}}",
+      "pendingSettlement": "قيد الانتظار: ${{amount}}",
+      "platformFees": "الرسوم: ${{amount}}"
+    },
+    "tabs": {
+      "providers": "المزودون",
+      "credentials": "بيانات الاعتماد",
+      "feesLimits": "الرسوم والحدود",
+      "webhooks": "Webhooks",
+      "analytics": "التحليلات"
+    },
+    "providersTab": {
+      "title": "مزودو الدفع",
+      "noProviders": "لم يتم تكوين مزودي الدفع. أضف واحداً لبدء قبول المدفوعات.",
+      "production": "الإنتاج",
+      "sandbox": "بيئة الاختبار",
+      "healthStatus": "حالة الصحة",
+      "unknown": "غير معروف",
+      "testConnection": "اختبار الاتصال",
+      "configure": "تكوين",
+      "remove": "إزالة",
+      "merchantId": "معرّف التاجر:",
+      "lastSync": "آخر مزامنة:",
+      "oauthExpires": "OAuth تنتهي:"
+    },
+    "credentialsTab": {
+      "title": "بيانات اعتماد API",
+      "securityNotice": "إشعار أمني:",
+      "securityMessage": "بيانات اعتماد API مشفرة ومخزنة بشكل آمن. لا تشارك مفاتيحك السرية أو رموز الوصول أبداً.",
+      "updateCredentials": "تحديث بيانات الاعتماد",
+      "apiKey": "مفتاح API",
+      "secretKey": "المفتاح السري",
+      "oauthToken": "رمز OAuth",
+      "configured": "تم التكوين",
+      "notConfigured": "لم يتم التكوين",
+      "connected": "متصل",
+      "expires": "تنتهي في {{date}}",
+      "connectOAuth": "الاتصال بـ OAuth"
+    },
+    "feesTab": {
+      "title": "الرسوم وحدود المعاملات",
+      "platformFees": "رسوم المنصة",
+      "percentageFee": "الرسوم النسبية",
+      "fixedFee": "الرسوم الثابتة",
+      "transactionLimits": "حدود المعاملات",
+      "dailyLimit": "الحد اليومي",
+      "perTransactionLimit": "الحد لكل معاملة",
+      "saveChanges": "حفظ التغييرات"
+    },
+    "webhooksTab": {
+      "title": "تكوين Webhook",
+      "infoMessage": "قم بتكوين عناوين URL للـ webhook في لوحة تحكم مزود الدفع الخاص بك لتلقي أحداث الدفع في الوقت الفعلي.",
+      "webhookUrl": "Webhook URL",
+      "webhookSecret": "Webhook السري",
+      "webhookSecretPlaceholder": "إدخال Webhook السري للتوقيع",
+      "eventsToSubscribe": "الأحداث للاشتراك",
+      "eventTypes": {
+        "paymentCompleted": "payment.completed",
+        "paymentFailed": "payment.failed",
+        "refundCreated": "refund.created",
+        "disputeCreated": "dispute.created"
+      }
+    },
+    "analyticsTab": {
+      "title": "تحليلات الدفع",
+      "transactionVolume": "حجم المعاملات (آخر 7 أيام)",
+      "successRateByProvider": "معدل النجاح حسب المزود",
+      "chartPlaceholder": "مساحة للرسم البياني",
+      "recentTransactions": "المعاملات الأخيرة",
+      "noRecentTransactions": "لا توجد معاملات حديثة",
+      "tableHeaders": {
+        "transactionId": "معرّف المعاملة",
+        "amount": "المبلغ",
+        "provider": "المزود",
+        "status": "الحالة",
+        "date": "التاريخ"
+      }
+    },
+    "credentialModal": {
+      "title": "تحديث بيانات اعتماد {{providerName}}",
+      "environment": "البيئة",
+      "environmentOptions": {
+        "sandbox": "بيئة الاختبار",
+        "production": "الإنتاج"
+      },
+      "apiKey": "مفتاح API",
+      "apiKeyPlaceholder": "إدخال مفتاح API",
+      "secretKey": "المفتاح السري",
+      "secretKeyPlaceholder": "إدخال المفتاح السري",
+      "merchantId": "معرّف التاجر",
+      "merchantIdPlaceholder": "إدخال معرّف التاجر",
+      "accessToken": "رمز الوصول (اختياري - لـ OAuth)",
+      "accessTokenPlaceholder": "إدخال رمز الوصول",
+      "securityWarning": "يتم تشفير بيانات الاعتماد باستخدام تشفير AES-256 قبل التخزين. تأكد من أنك في بيئة آمنة عند إدخال بيانات حساسة.",
+      "cancel": "إلغاء",
+      "updateButton": "تحديث بيانات الاعتماد",
+      "updating": "جارٍ التحديث..."
+    },
+    "notifications": {
+      "connectionTestSuccess": "اختبار اتصال {{providerName}} ناجح",
+      "connectionTestFailed": "فشل اختبار اتصال {{providerName}}",
+      "credentialsUpdated": "تم تحديث بيانات الاعتماد بنجاح لـ {{providerName}}",
+      "credentialsUpdateFailed": "فشل تحديث بيانات الاعتماد",
+      "tenantLoadFailed": "فشل تحميل بيانات المستأجر",
+      "providersLoadFailed": "فشل تحميل مزودي الدفع",
+      "webhookUrlCopied": "تم نسخ Webhook URL إلى الحافظة"
+    }
+  }
+}

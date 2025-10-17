@@ -1,0 +1,21 @@
+{
+  "title": "ᐊᐱᐧᐊᐠ",
+  "tabs": {
+    "pos": "ᐊᑕᐍᐏᐣ ᐃᑕᒪᑫᐃᐧᐣ",
+    "posShort": "POS",
+    "kiosk": "ᑌᐯᐧᐊᑌᑯᐢᐃᐏᐣ Kiosk",
+    "kioskShort": "Kiosk",
+    "menuDisplay": "ᒣᓄ ᐋᐱᒋᐦᒋᑲᑌᐠ",
+    "menuShort": "ᒣᓄ"
+  },
+  "fullscreen": {
+    "enter": "ᐱᑐᑲᐣ ᒥᓯᐍ ᐋᐱᒋᐦᒋᑲᑌᐠ",
+    "exit": "ᓂᔑᑲᐣ ᒥᓯᐍ ᐋᐱᒋᐦᒋᑲᑌᐠ"
+  },
+  "storeSelection": {
+    "required": "ᐊᑕᐍᐏᑲᒥᐠ ᓇᓇᑲᒋᐦᑐᐏᐣ",
+    "pleaseSelect": "ᓇᓇᑲᒋᐦᑕᐣ ᐊᑕᐍᐏᑲᒥᐠ ᒋ ᐊᑕᒧᐏᐣ",
+    "selectButton": "ᓇᓇᑲᒋᐦᑕᐣ ᐊᑕᐍᐏᑲᒥᐠ",
+    "description": "ᓇᓇᑲᒋᐦᑕᐣ ᐊᑕᐍᐏᑲᒥᐠ ᒋ ᐋᐸᒋᐦᑕᒪᐣ {{appName}}"
+  }
+}

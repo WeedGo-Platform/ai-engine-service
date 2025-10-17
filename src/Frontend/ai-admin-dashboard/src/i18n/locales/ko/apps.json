@@ -1,0 +1,21 @@
+{
+  "title": "앱",
+  "tabs": {
+    "pos": "판매 시점",
+    "posShort": "POS",
+    "kiosk": "셀프 서비스 Kiosk",
+    "kioskShort": "Kiosk",
+    "menuDisplay": "메뉴 디스플레이",
+    "menuShort": "메뉴"
+  },
+  "fullscreen": {
+    "enter": "전체 화면 시작",
+    "exit": "전체 화면 종료"
+  },
+  "storeSelection": {
+    "required": "매장 선택 필요",
+    "pleaseSelect": "계속하려면 매장을 선택하세요",
+    "selectButton": "매장 선택",
+    "description": "{{appName}}에 접근하려면 매장을 선택하세요"
+  }
+}

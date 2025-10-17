@@ -1,0 +1,228 @@
+{
+  "titles": {
+    "main": "付款管理",
+    "transactionHistory": "交易記錄",
+    "paymentProviders": "付款供應商",
+    "paymentMethods": "付款方式",
+    "settlements": "結算",
+    "processRefund": "處理退款",
+    "transactionDetails": "交易詳情"
+  },
+  "descriptions": {
+    "transactionHistory": "查看同管理所有付款交易",
+    "paymentProviders": "管理付款閘道配置",
+    "paymentMethods": "管理客戶已儲存嘅付款方式",
+    "settlements": "查看結算批次同對賬",
+    "refundTransaction": "退款交易"
+  },
+  "metrics": {
+    "totalRevenue": "總收入",
+    "successRate": "成功率",
+    "totalRefunds": "總退款",
+    "processingFees": "處理費用",
+    "transactions": "交易",
+    "successful": "成功",
+    "fromRevenue": "從收入",
+    "ofRevenue": "收入嘅"
+  },
+  "tabs": {
+    "transactions": "交易",
+    "providers": "付款供應商",
+    "methods": "付款方式",
+    "settlements": "結算"
+  },
+  "filters": {
+    "status": "狀態",
+    "provider": "供應商",
+    "allStatus": "所有狀態",
+    "allProviders": "所有供應商",
+    "searchPlaceholder": "搜尋交易..."
+  },
+  "status": {
+    "completed": "已完成",
+    "pending": "待處理",
+    "processing": "處理緊",
+    "failed": "失敗",
+    "refunded": "已退款",
+    "active": "活躍",
+    "inactive": "非活躍"
+  },
+  "table": {
+    "reference": "參考編號",
+    "customer": "客戶",
+    "amount": "金額",
+    "provider": "供應商",
+    "status": "狀態",
+    "date": "日期",
+    "actions": "操作"
+  },
+  "provider": {
+    "default": "預設",
+    "supportedCurrencies": "支援貨幣",
+    "capabilities": "功能"
+  },
+  "actions": {
+    "refresh": "重新整理",
+    "export": "匯出",
+    "disable": "停用",
+    "enable": "啟用",
+    "cancel": "取消",
+    "close": "關閉",
+    "processRefund": "處理退款"
+  },
+  "refund": {
+    "originalAmount": "原始金額",
+    "refundAmount": "退款金額",
+    "refundAmountHint": "留空表示全額退款",
+    "reason": "原因",
+    "enterAmount": "輸入金額",
+    "enterReason": "輸入退款原因"
+  },
+  "details": {
+    "transactionId": "交易編號",
+    "providerTransactionId": "供應商交易編號",
+    "orderId": "訂單編號",
+    "status": "狀態",
+    "amount": "金額",
+    "provider": "供應商",
+    "createdAt": "建立時間",
+    "completedAt": "完成時間",
+    "errorMessage": "錯誤訊息",
+    "notAvailable": "唔適用"
+  },
+  "messages": {
+    "comingSoon": {
+      "paymentMethods": "付款方式管理即將推出",
+      "settlements": "結算報告即將推出"
+    },
+    "success": {
+      "refundProcessed": "退款處理成功",
+      "providerEnabled": "供應商啟用成功",
+      "providerDisabled": "供應商停用成功"
+    },
+    "error": {
+      "title": "錯誤",
+      "fetchTransactions": "載入交易失敗",
+      "processRefund": "處理退款失敗",
+      "updateProvider": "更新供應商狀態失敗"
+    }
+  },
+  "settings": {
+    "title": "付款設定",
+    "addProvider": "新增供應商",
+    "backToTenants": "返回租戶",
+    "stats": {
+      "totalVolume": "總交易量",
+      "successRate": "成功率",
+      "todayVolume": "今日交易量",
+      "netRevenue": "淨收入",
+      "transactionsCount": "{{count}} 筆交易",
+      "avgTransaction": "平均 ${{amount}}",
+      "pendingSettlement": "待結算: ${{amount}}",
+      "platformFees": "費用: ${{amount}}"
+    },
+    "tabs": {
+      "providers": "供應商",
+      "credentials": "憑證",
+      "feesLimits": "費用同限額",
+      "webhooks": "Webhooks",
+      "analytics": "分析"
+    },
+    "providersTab": {
+      "title": "付款供應商",
+      "noProviders": "未配置任何付款供應商。新增一個開始接受付款。",
+      "production": "正式環境",
+      "sandbox": "測試環境",
+      "healthStatus": "健康狀態",
+      "unknown": "未知",
+      "testConnection": "測試連接",
+      "configure": "配置",
+      "remove": "移除",
+      "merchantId": "商戶編號:",
+      "lastSync": "上次同步:",
+      "oauthExpires": "OAuth 到期:"
+    },
+    "credentialsTab": {
+      "title": "API 憑證",
+      "securityNotice": "安全提示:",
+      "securityMessage": "API 憑證已加密並安全儲存。千祈唔好分享你嘅密鑰或訪問令牌。",
+      "updateCredentials": "更新憑證",
+      "apiKey": "API 密鑰",
+      "secretKey": "秘密密鑰",
+      "oauthToken": "OAuth 令牌",
+      "configured": "已配置",
+      "notConfigured": "未配置",
+      "connected": "已連接",
+      "expires": "{{date}} 到期",
+      "connectOAuth": "使用 OAuth 連接"
+    },
+    "feesTab": {
+      "title": "費用同交易限額",
+      "platformFees": "平台費用",
+      "percentageFee": "百分比費用",
+      "fixedFee": "固定費用",
+      "transactionLimits": "交易限額",
+      "dailyLimit": "每日限額",
+      "perTransactionLimit": "每筆交易限額",
+      "saveChanges": "儲存更改"
+    },
+    "webhooksTab": {
+      "title": "Webhook 配置",
+      "infoMessage": "喺你嘅付款供應商儀表板配置 webhook URL 嚟接收即時付款事件。",
+      "webhookUrl": "Webhook URL",
+      "webhookSecret": "Webhook 密鑰",
+      "webhookSecretPlaceholder": "輸入 webhook 簽名密鑰",
+      "eventsToSubscribe": "訂閱事件",
+      "eventTypes": {
+        "paymentCompleted": "payment.completed",
+        "paymentFailed": "payment.failed",
+        "refundCreated": "refund.created",
+        "disputeCreated": "dispute.created"
+      }
+    },
+    "analyticsTab": {
+      "title": "付款分析",
+      "transactionVolume": "交易量(過去7日)",
+      "successRateByProvider": "供應商成功率",
+      "chartPlaceholder": "圖表佔位符",
+      "recentTransactions": "最近交易",
+      "noRecentTransactions": "無最近交易",
+      "tableHeaders": {
+        "transactionId": "交易編號",
+        "amount": "金額",
+        "provider": "供應商",
+        "status": "狀態",
+        "date": "日期"
+      }
+    },
+    "credentialModal": {
+      "title": "更新 {{providerName}} 憑證",
+      "environment": "環境",
+      "environmentOptions": {
+        "sandbox": "測試環境",
+        "production": "正式環境"
+      },
+      "apiKey": "API 密鑰",
+      "apiKeyPlaceholder": "輸入 API 密鑰",
+      "secretKey": "秘密密鑰",
+      "secretKeyPlaceholder": "輸入秘密密鑰",
+      "merchantId": "商戶編號",
+      "merchantIdPlaceholder": "輸入商戶編號",
+      "accessToken": "訪問令牌(可選 - 用於 OAuth)",
+      "accessTokenPlaceholder": "輸入訪問令牌",
+      "securityWarning": "憑證喺儲存之前會使用 AES-256 加密進行加密。確保你喺安全嘅環境輸入敏感資料。",
+      "cancel": "取消",
+      "updateButton": "更新憑證",
+      "updating": "更新緊..."
+    },
+    "notifications": {
+      "connectionTestSuccess": "{{providerName}} 連接測試成功",
+      "connectionTestFailed": "{{providerName}} 連接測試失敗",
+      "credentialsUpdated": "{{providerName}} 憑證更新成功",
+      "credentialsUpdateFailed": "更新憑證失敗",
+      "tenantLoadFailed": "載入租戶資料失敗",
+      "providersLoadFailed": "載入付款供應商失敗",
+      "webhookUrlCopied": "Webhook URL 已複製到剪貼簿"
+    }
+  }
+}

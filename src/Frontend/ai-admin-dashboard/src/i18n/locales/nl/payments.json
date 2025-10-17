@@ -1,0 +1,228 @@
+{
+  "titles": {
+    "main": "Betalingsbeheer",
+    "transactionHistory": "Transactiegeschiedenis",
+    "paymentProviders": "Betalingsaanbieders",
+    "paymentMethods": "Betaalmethoden",
+    "settlements": "Afrekeningen",
+    "processRefund": "Terugbetaling verwerken",
+    "transactionDetails": "Transactiedetails"
+  },
+  "descriptions": {
+    "transactionHistory": "Bekijk en beheer alle betalingstransacties",
+    "paymentProviders": "Beheer betalingsgateway configuraties",
+    "paymentMethods": "Beheer opgeslagen betaalmethoden van klanten",
+    "settlements": "Bekijk afrekeningsbatches en reconciliatie",
+    "refundTransaction": "Transactie terugbetalen"
+  },
+  "metrics": {
+    "totalRevenue": "Totale omzet",
+    "successRate": "Succespercentage",
+    "totalRefunds": "Totale terugbetalingen",
+    "processingFees": "Verwerkingskosten",
+    "transactions": "transacties",
+    "successful": "succesvol",
+    "fromRevenue": "Van omzet",
+    "ofRevenue": "van omzet"
+  },
+  "tabs": {
+    "transactions": "Transacties",
+    "providers": "Betalingsaanbieders",
+    "methods": "Betaalmethoden",
+    "settlements": "Afrekeningen"
+  },
+  "filters": {
+    "status": "Status",
+    "provider": "Aanbieder",
+    "allStatus": "Alle statussen",
+    "allProviders": "Alle aanbieders",
+    "searchPlaceholder": "Zoek transacties..."
+  },
+  "status": {
+    "completed": "Voltooid",
+    "pending": "In behandeling",
+    "processing": "Wordt verwerkt",
+    "failed": "Mislukt",
+    "refunded": "Terugbetaald",
+    "active": "Actief",
+    "inactive": "Inactief"
+  },
+  "table": {
+    "reference": "Referentie",
+    "customer": "Klant",
+    "amount": "Bedrag",
+    "provider": "Aanbieder",
+    "status": "Status",
+    "date": "Datum",
+    "actions": "Acties"
+  },
+  "provider": {
+    "default": "Standaard",
+    "supportedCurrencies": "Ondersteunde valuta's",
+    "capabilities": "Mogelijkheden"
+  },
+  "actions": {
+    "refresh": "Vernieuwen",
+    "export": "Exporteren",
+    "disable": "Uitschakelen",
+    "enable": "Inschakelen",
+    "cancel": "Annuleren",
+    "close": "Sluiten",
+    "processRefund": "Terugbetaling verwerken"
+  },
+  "refund": {
+    "originalAmount": "Oorspronkelijk bedrag",
+    "refundAmount": "Terugbetalingsbedrag",
+    "refundAmountHint": "laat leeg voor volledige terugbetaling",
+    "reason": "Reden",
+    "enterAmount": "Voer bedrag in",
+    "enterReason": "Voer reden voor terugbetaling in"
+  },
+  "details": {
+    "transactionId": "Transactie-ID",
+    "providerTransactionId": "Aanbieder transactie-ID",
+    "orderId": "Bestelling-ID",
+    "status": "Status",
+    "amount": "Bedrag",
+    "provider": "Aanbieder",
+    "createdAt": "Aangemaakt op",
+    "completedAt": "Voltooid op",
+    "errorMessage": "Foutmelding",
+    "notAvailable": "N.v.t."
+  },
+  "messages": {
+    "comingSoon": {
+      "paymentMethods": "Beheer van betaalmethoden komt binnenkort",
+      "settlements": "Afrekeningsrapporten komen binnenkort"
+    },
+    "success": {
+      "refundProcessed": "Terugbetaling succesvol verwerkt",
+      "providerEnabled": "Aanbieder succesvol ingeschakeld",
+      "providerDisabled": "Aanbieder succesvol uitgeschakeld"
+    },
+    "error": {
+      "title": "Fout",
+      "fetchTransactions": "Transacties ophalen mislukt",
+      "processRefund": "Terugbetaling verwerken mislukt",
+      "updateProvider": "Status van aanbieder bijwerken mislukt"
+    }
+  },
+  "settings": {
+    "title": "Betalingsinstellingen",
+    "addProvider": "Aanbieder toevoegen",
+    "backToTenants": "Terug naar huurders",
+    "stats": {
+      "totalVolume": "Totaal volume",
+      "successRate": "Succespercentage",
+      "todayVolume": "Huidig volume",
+      "netRevenue": "Netto-omzet",
+      "transactionsCount": "{{count}} transacties",
+      "avgTransaction": "Gem. ${{amount}}",
+      "pendingSettlement": "In behandeling: ${{amount}}",
+      "platformFees": "Kosten: ${{amount}}"
+    },
+    "tabs": {
+      "providers": "Aanbieders",
+      "credentials": "Inloggegevens",
+      "feesLimits": "Kosten en limieten",
+      "webhooks": "Webhooks",
+      "analytics": "Analyse"
+    },
+    "providersTab": {
+      "title": "Betalingsaanbieders",
+      "noProviders": "Geen betalingsaanbieders geconfigureerd. Voeg er een toe om betalingen te accepteren.",
+      "production": "Productie",
+      "sandbox": "Sandbox",
+      "healthStatus": "Gezondheidsstatus",
+      "unknown": "Onbekend",
+      "testConnection": "Verbinding testen",
+      "configure": "Configureren",
+      "remove": "Verwijderen",
+      "merchantId": "Handelaar-ID:",
+      "lastSync": "Laatste synchronisatie:",
+      "oauthExpires": "OAuth verloopt:"
+    },
+    "credentialsTab": {
+      "title": "API-inloggegevens",
+      "securityNotice": "Beveiligingsmelding:",
+      "securityMessage": "API-inloggegevens zijn versleuteld en veilig opgeslagen. Deel nooit uw geheime sleutels of toegangstokens.",
+      "updateCredentials": "Inloggegevens bijwerken",
+      "apiKey": "API-sleutel",
+      "secretKey": "Geheime sleutel",
+      "oauthToken": "OAuth-token",
+      "configured": "Geconfigureerd",
+      "notConfigured": "Niet geconfigureerd",
+      "connected": "Verbonden",
+      "expires": "verloopt {{date}}",
+      "connectOAuth": "Verbinden met OAuth"
+    },
+    "feesTab": {
+      "title": "Kosten en transactielimieten",
+      "platformFees": "Platformkosten",
+      "percentageFee": "Percentagekosten",
+      "fixedFee": "Vaste kosten",
+      "transactionLimits": "Transactielimieten",
+      "dailyLimit": "Dagelijkse limiet",
+      "perTransactionLimit": "Limiet per transactie",
+      "saveChanges": "Wijzigingen opslaan"
+    },
+    "webhooksTab": {
+      "title": "Webhook-configuratie",
+      "infoMessage": "Configureer webhook-URL's in het dashboard van uw betalingsaanbieder om realtime betalingsgebeurtenissen te ontvangen.",
+      "webhookUrl": "Webhook-URL",
+      "webhookSecret": "Webhook-geheim",
+      "webhookSecretPlaceholder": "Voer webhook-ondertekeningsgeheim in",
+      "eventsToSubscribe": "Te abonneren gebeurtenissen",
+      "eventTypes": {
+        "paymentCompleted": "payment.completed",
+        "paymentFailed": "payment.failed",
+        "refundCreated": "refund.created",
+        "disputeCreated": "dispute.created"
+      }
+    },
+    "analyticsTab": {
+      "title": "Betalingsanalyse",
+      "transactionVolume": "Transactievolume (Laatste 7 dagen)",
+      "successRateByProvider": "Succespercentage per aanbieder",
+      "chartPlaceholder": "Grafiekplaatshouder",
+      "recentTransactions": "Recente transacties",
+      "noRecentTransactions": "Geen recente transacties",
+      "tableHeaders": {
+        "transactionId": "Transactie-ID",
+        "amount": "Bedrag",
+        "provider": "Aanbieder",
+        "status": "Status",
+        "date": "Datum"
+      }
+    },
+    "credentialModal": {
+      "title": "Inloggegevens van {{providerName}} bijwerken",
+      "environment": "Omgeving",
+      "environmentOptions": {
+        "sandbox": "Sandbox",
+        "production": "Productie"
+      },
+      "apiKey": "API-sleutel",
+      "apiKeyPlaceholder": "Voer API-sleutel in",
+      "secretKey": "Geheime sleutel",
+      "secretKeyPlaceholder": "Voer geheime sleutel in",
+      "merchantId": "Handelaar-ID",
+      "merchantIdPlaceholder": "Voer handelaar-ID in",
+      "accessToken": "Toegangstoken (Optioneel - voor OAuth)",
+      "accessTokenPlaceholder": "Voer toegangstoken in",
+      "securityWarning": "Inloggegevens worden versleuteld met AES-256-versleuteling voordat ze worden opgeslagen. Zorg ervoor dat u zich in een beveiligde omgeving bevindt bij het invoeren van gevoelige gegevens.",
+      "cancel": "Annuleren",
+      "updateButton": "Inloggegevens bijwerken",
+      "updating": "Bijwerken..."
+    },
+    "notifications": {
+      "connectionTestSuccess": "{{providerName}} verbindingstest succesvol",
+      "connectionTestFailed": "{{providerName}} verbindingstest mislukt",
+      "credentialsUpdated": "Inloggegevens succesvol bijgewerkt voor {{providerName}}",
+      "credentialsUpdateFailed": "Inloggegevens bijwerken mislukt",
+      "tenantLoadFailed": "Huurdergegevens laden mislukt",
+      "providersLoadFailed": "Betalingsaanbieders laden mislukt",
+      "webhookUrlCopied": "Webhook-URL gekopieerd naar klembord"
+    }
+  }
+}

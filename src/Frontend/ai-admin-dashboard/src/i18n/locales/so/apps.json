@@ -1,0 +1,21 @@
+{
+  "title": "Abbaanka",
+  "tabs": {
+    "pos": "Goobta Iibka",
+    "posShort": "POS",
+    "kiosk": "Kiosk Adeeg-Isweydaarsiga",
+    "kioskShort": "Kiosk",
+    "menuDisplay": "Muuqaalka Liiska",
+    "menuShort": "Liis"
+  },
+  "fullscreen": {
+    "enter": "Gal Shaashadda Buuxa",
+    "exit": "Ka Bax Shaashadda Buuxa"
+  },
+  "storeSelection": {
+    "required": "Xulashada Dukaanka Waa Loo Baahan Yahay",
+    "pleaseSelect": "Fadlan xulo dukaan si aad u sii waddo",
+    "selectButton": "Xulo Dukaan",
+    "description": "Fadlan xulo dukaan si aad u hesho {{appName}}"
+  }
+}

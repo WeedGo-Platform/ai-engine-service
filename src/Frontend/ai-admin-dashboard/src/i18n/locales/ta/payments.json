@@ -1,0 +1,228 @@
+{
+  "titles": {
+    "main": "கட்டண மேலாண்மை",
+    "transactionHistory": "பரிவர்த்தனை வரலாறு",
+    "paymentProviders": "கட்டண வழங்குநர்கள்",
+    "paymentMethods": "கட்டண முறைகள்",
+    "settlements": "தீர்வுகள்",
+    "processRefund": "பணத்தைத் திரும்பச் செலுத்தவும்",
+    "transactionDetails": "பரிவர்த்தனை விவரங்கள்"
+  },
+  "descriptions": {
+    "transactionHistory": "அனைத்து கட்டண பரிவர்த்தனைகளையும் காணவும் நிர்வகிக்கவும்",
+    "paymentProviders": "கட்டண நுழைவாயில் கட்டமைப்புகளை நிர்வகிக்கவும்",
+    "paymentMethods": "வாடிக்கையாளர்களின் சேமிக்கப்பட்ட கட்டண முறைகளை நிர்வகிக்கவும்",
+    "settlements": "தீர்வு தொகுதிகள் மற்றும் சமரசத்தைக் காண்க",
+    "refundTransaction": "பரிவர்த்தனையை திரும்பச் செலுத்தவும்"
+  },
+  "metrics": {
+    "totalRevenue": "மொத்த வருவாய்",
+    "successRate": "வெற்றி விகிதம்",
+    "totalRefunds": "மொத்த திரும்பச் செலுத்துதல்கள்",
+    "processingFees": "செயலாக்க கட்டணங்கள்",
+    "transactions": "பரிவர்த்தனைகள்",
+    "successful": "வெற்றிகரமான",
+    "fromRevenue": "வருவாயிலிருந்து",
+    "ofRevenue": "வருவாயின்"
+  },
+  "tabs": {
+    "transactions": "பரிவர்த்தனைகள்",
+    "providers": "கட்டண வழங்குநர்கள்",
+    "methods": "கட்டண முறைகள்",
+    "settlements": "தீர்வுகள்"
+  },
+  "filters": {
+    "status": "நிலை",
+    "provider": "வழங்குநர்",
+    "allStatus": "அனைத்து நிலைகளும்",
+    "allProviders": "அனைத்து வழங்குநர்களும்",
+    "searchPlaceholder": "பரிவர்த்தனைகளைத் தேடுங்கள்..."
+  },
+  "status": {
+    "completed": "முடிந்தது",
+    "pending": "நிலுவையில்",
+    "processing": "செயல்படுத்தப்படுகிறது",
+    "failed": "தோல்வியடைந்தது",
+    "refunded": "திரும்பச் செலுத்தப்பட்டது",
+    "active": "செயல்பாட்டில்",
+    "inactive": "செயலில் இல்லை"
+  },
+  "table": {
+    "reference": "குறிப்பு",
+    "customer": "வாடிக்கையாளர்",
+    "amount": "தொகை",
+    "provider": "வழங்குநர்",
+    "status": "நிலை",
+    "date": "தேதி",
+    "actions": "செயல்கள்"
+  },
+  "provider": {
+    "default": "இயல்புநிலை",
+    "supportedCurrencies": "ஆதரிக்கப்படும் நாணயங்கள்",
+    "capabilities": "திறன்கள்"
+  },
+  "actions": {
+    "refresh": "புதுப்பிக்கவும்",
+    "export": "ஏற்றுமதி செய்யவும்",
+    "disable": "முடக்கவும்",
+    "enable": "செயல்படுத்தவும்",
+    "cancel": "ரத்து செய்யவும்",
+    "close": "மூடவும்",
+    "processRefund": "திரும்பச் செலுத்துதலை செயலாக்கவும்"
+  },
+  "refund": {
+    "originalAmount": "அசல் தொகை",
+    "refundAmount": "திரும்பச் செலுத்தும் தொகை",
+    "refundAmountHint": "முழு திரும்பச் செலுத்துதலுக்கு வெற்றாக விடவும்",
+    "reason": "காரணம்",
+    "enterAmount": "தொகையை உள்ளிடவும்",
+    "enterReason": "திரும்பச் செலுத்துதலுக்கான காரணத்தை உள்ளிடவும்"
+  },
+  "details": {
+    "transactionId": "பரிவர்த்தனை ID",
+    "providerTransactionId": "வழங்குநர் பரிவர்த்தனை ID",
+    "orderId": "ஆர்டர் ID",
+    "status": "நிலை",
+    "amount": "தொகை",
+    "provider": "வழங்குநர்",
+    "createdAt": "உருவாக்கப்பட்டது",
+    "completedAt": "முடிவடைந்தது",
+    "errorMessage": "பிழை செய்தி",
+    "notAvailable": "கிடைக்கவில்லை"
+  },
+  "messages": {
+    "comingSoon": {
+      "paymentMethods": "கட்டண முறைகள் மேலாண்மை விரைவில் வரும்",
+      "settlements": "தீர்வு அறிக்கைகள் விரைவில் வரும்"
+    },
+    "success": {
+      "refundProcessed": "திரும்பச் செலுத்துதல் வெற்றிகரமாக செயலாக்கப்பட்டது",
+      "providerEnabled": "வழங்குநர் வெற்றிகரமாக செயல்படுத்தப்பட்டது",
+      "providerDisabled": "வழங்குநர் வெற்றிகரமாக முடக்கப்பட்டது"
+    },
+    "error": {
+      "title": "பிழை",
+      "fetchTransactions": "பரிவர்த்தனைகளைப் பெறுவதில் தோல்வி",
+      "processRefund": "திரும்பச் செலுத்துதலை செயலாக்குவதில் தோல்வி",
+      "updateProvider": "வழங்குநர் நிலையைப் புதுப்பிப்பதில் தோல்வி"
+    }
+  },
+  "settings": {
+    "title": "கட்டண அமைப்புகள்",
+    "addProvider": "வழங்குநரைச் சேர்க்கவும்",
+    "backToTenants": "குத்தகைதாரர்களுக்குத் திரும்பவும்",
+    "stats": {
+      "totalVolume": "மொத்த அளவு",
+      "successRate": "வெற்றி விகிதம்",
+      "todayVolume": "இன்றைய அளவு",
+      "netRevenue": "நிகர வருவாய்",
+      "transactionsCount": "{{count}} பரிவர்த்தனைகள்",
+      "avgTransaction": "சராசரி ${{amount}}",
+      "pendingSettlement": "நிலுவையில்: ${{amount}}",
+      "platformFees": "கட்டணங்கள்: ${{amount}}"
+    },
+    "tabs": {
+      "providers": "வழங்குநர்கள்",
+      "credentials": "சான்றுகள்",
+      "feesLimits": "கட்டணங்கள் மற்றும் வரம்புகள்",
+      "webhooks": "Webhooks",
+      "analytics": "பகுப்பாய்வு"
+    },
+    "providersTab": {
+      "title": "கட்டண வழங்குநர்கள்",
+      "noProviders": "கட்டண வழங்குநர்கள் கட்டமைக்கப்படவில்லை. கட்டணங்களை ஏற்க ஒன்றைச் சேர்க்கவும்.",
+      "production": "உற்பத்தி",
+      "sandbox": "சாண்ட்பாக்ஸ்",
+      "healthStatus": "ஆரோக்கிய நிலை",
+      "unknown": "தெரியாதது",
+      "testConnection": "இணைப்பை சோதிக்கவும்",
+      "configure": "கட்டமைக்கவும்",
+      "remove": "அகற்றவும்",
+      "merchantId": "வணிகர் ID:",
+      "lastSync": "கடைசி ஒத்திசைவு:",
+      "oauthExpires": "OAuth காலாவதியாகிறது:"
+    },
+    "credentialsTab": {
+      "title": "API சான்றுகள்",
+      "securityNotice": "பாதுகாப்பு அறிவிப்பு:",
+      "securityMessage": "API சான்றுகள் குறியாக்கம் செய்யப்பட்டு பாதுகாப்பாக சேமிக்கப்படுகின்றன. உங்கள் ரகசிய விசைகள் அல்லது அணுகல் டோக்கன்களை ஒருபோதும் பகிர வேண்டாம்.",
+      "updateCredentials": "சான்றுகளை புதுப்பிக்கவும்",
+      "apiKey": "API விசை",
+      "secretKey": "ரகசிய விசை",
+      "oauthToken": "OAuth டோக்கன்",
+      "configured": "கட்டமைக்கப்பட்டது",
+      "notConfigured": "கட்டமைக்கப்படவில்லை",
+      "connected": "இணைக்கப்பட்டது",
+      "expires": "{{date}} அன்று காலாவதியாகிறது",
+      "connectOAuth": "OAuth உடன் இணைக்கவும்"
+    },
+    "feesTab": {
+      "title": "கட்டணங்கள் மற்றும் பரிவர்த்தனை வரம்புகள்",
+      "platformFees": "தளக் கட்டணங்கள்",
+      "percentageFee": "சதவீத கட்டணம்",
+      "fixedFee": "நிலையான கட்டணம்",
+      "transactionLimits": "பரிவர்த்தனை வரம்புகள்",
+      "dailyLimit": "தினசரி வரம்பு",
+      "perTransactionLimit": "ஒரு பரிவர்த்தனைக்கான வரம்பு",
+      "saveChanges": "மாற்றங்களை சேமிக்கவும்"
+    },
+    "webhooksTab": {
+      "title": "Webhook கட்டமைப்பு",
+      "infoMessage": "நிகழ்நேர கட்டண நிகழ்வுகளைப் பெற உங்கள் கட்டண வழங்குநரின் டாஷ்போர்டில் webhook URL களை கட்டமைக்கவும்.",
+      "webhookUrl": "Webhook URL",
+      "webhookSecret": "Webhook ரகசியம்",
+      "webhookSecretPlaceholder": "webhook கையெழுத்து ரகசியத்தை உள்ளிடவும்",
+      "eventsToSubscribe": "குழுசந்தா செய்ய வேண்டிய நிகழ்வுகள்",
+      "eventTypes": {
+        "paymentCompleted": "payment.completed",
+        "paymentFailed": "payment.failed",
+        "refundCreated": "refund.created",
+        "disputeCreated": "dispute.created"
+      }
+    },
+    "analyticsTab": {
+      "title": "கட்டண பகுப்பாய்வு",
+      "transactionVolume": "பரிவர்த்தனை அளவு (கடந்த 7 நாட்கள்)",
+      "successRateByProvider": "வழங்குநரின் வெற்றி விகிதம்",
+      "chartPlaceholder": "விளக்கப்படம் ஒதுக்கீடு",
+      "recentTransactions": "சமீபத்திய பரிவர்த்தனைகள்",
+      "noRecentTransactions": "சமீபத்திய பரிவர்த்தனைகள் இல்லை",
+      "tableHeaders": {
+        "transactionId": "பரிவர்த்தனை ID",
+        "amount": "தொகை",
+        "provider": "வழங்குநர்",
+        "status": "நிலை",
+        "date": "தேதி"
+      }
+    },
+    "credentialModal": {
+      "title": "{{providerName}} சான்றுகளை புதுப்பிக்கவும்",
+      "environment": "சூழல்",
+      "environmentOptions": {
+        "sandbox": "சாண்ட்பாக்ஸ்",
+        "production": "உற்பத்தி"
+      },
+      "apiKey": "API விசை",
+      "apiKeyPlaceholder": "API விசையை உள்ளிடவும்",
+      "secretKey": "ரகசிய விசை",
+      "secretKeyPlaceholder": "ரகசிய விசையை உள்ளிடவும்",
+      "merchantId": "வணிகர் ID",
+      "merchantIdPlaceholder": "வணிகர் ID யை உள்ளிடவும்",
+      "accessToken": "அணுகல் டோக்கன் (விருப்பமானது - OAuth க்கு)",
+      "accessTokenPlaceholder": "அணுகல் டோக்கனை உள்ளிடவும்",
+      "securityWarning": "சான்றுகள் சேமிப்பதற்கு முன் AES-256 குறியாக்கத்தைப் பயன்படுத்தி குறியாக்கம் செய்யப்படுகின்றன. உணர்திறன் தரவை உள்ளிடும்போது நீங்கள் பாதுகாப்பான சூழலில் இருப்பதை உறுதிப்படுத்திக் கொள்ளுங்கள்.",
+      "cancel": "ரத்து செய்யவும்",
+      "updateButton": "சான்றுகளை புதுப்பிக்கவும்",
+      "updating": "புதுப்பிக்கப்படுகிறது..."
+    },
+    "notifications": {
+      "connectionTestSuccess": "{{providerName}} இணைப்பு சோதனை வெற்றிகரமானது",
+      "connectionTestFailed": "{{providerName}} இணைப்பு சோதனை தோல்வியடைந்தது",
+      "credentialsUpdated": "{{providerName}} க்கான சான்றுகள் வெற்றிகரமாக புதுப்பிக்கப்பட்டன",
+      "credentialsUpdateFailed": "சான்றுகளை புதுப்பிப்பதில் தோல்வி",
+      "tenantLoadFailed": "குத்தகைதாரர் தரவை ஏற்றுவதில் தோல்வி",
+      "providersLoadFailed": "கட்டண வழங்குநர்களை ஏற்றுவதில் தோல்வி",
+      "webhookUrlCopied": "Webhook URL கிளிப்போர்டுக்கு நகலெடுக்கப்பட்டது"
+    }
+  }
+}

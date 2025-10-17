@@ -1,0 +1,228 @@
+{
+  "titles": {
+    "main": "ادائیگی کا انتظام",
+    "transactionHistory": "لین دین کی تاریخ",
+    "paymentProviders": "ادائیگی فراہم کنندگان",
+    "paymentMethods": "ادائیگی کے طریقے",
+    "settlements": "تصفیہ جات",
+    "processRefund": "رقم کی واپسی پر کارروائی کریں",
+    "transactionDetails": "لین دین کی تفصیلات"
+  },
+  "descriptions": {
+    "transactionHistory": "تمام ادائیگی کے لین دین دیکھیں اور منظم کریں",
+    "paymentProviders": "ادائیگی گیٹ وے کی ترتیبات کا انتظام کریں",
+    "paymentMethods": "صارفین کے محفوظ کردہ ادائیگی کے طریقوں کا انتظام کریں",
+    "settlements": "تصفیہ کی بیچز اور مفاہمت دیکھیں",
+    "refundTransaction": "لین دین کی رقم واپس کریں"
+  },
+  "metrics": {
+    "totalRevenue": "کل آمدنی",
+    "successRate": "کامیابی کی شرح",
+    "totalRefunds": "کل رقوم کی واپسی",
+    "processingFees": "پروسیسنگ فیس",
+    "transactions": "لین دین",
+    "successful": "کامیاب",
+    "fromRevenue": "آمدنی سے",
+    "ofRevenue": "آمدنی کا"
+  },
+  "tabs": {
+    "transactions": "لین دین",
+    "providers": "ادائیگی فراہم کنندگان",
+    "methods": "ادائیگی کے طریقے",
+    "settlements": "تصفیہ جات"
+  },
+  "filters": {
+    "status": "حیثیت",
+    "provider": "فراہم کنندہ",
+    "allStatus": "تمام حیثیتیں",
+    "allProviders": "تمام فراہم کنندگان",
+    "searchPlaceholder": "لین دین تلاش کریں..."
+  },
+  "status": {
+    "completed": "مکمل",
+    "pending": "زیر التواء",
+    "processing": "پروسیسنگ",
+    "failed": "ناکام",
+    "refunded": "رقم واپس کی گئی",
+    "active": "فعال",
+    "inactive": "غیر فعال"
+  },
+  "table": {
+    "reference": "حوالہ",
+    "customer": "گاہک",
+    "amount": "رقم",
+    "provider": "فراہم کنندہ",
+    "status": "حیثیت",
+    "date": "تاریخ",
+    "actions": "کارروائیاں"
+  },
+  "provider": {
+    "default": "ڈیفالٹ",
+    "supportedCurrencies": "تعاون یافتہ کرنسیاں",
+    "capabilities": "صلاحیتیں"
+  },
+  "actions": {
+    "refresh": "تازہ کریں",
+    "export": "برآمد کریں",
+    "disable": "غیر فعال کریں",
+    "enable": "فعال کریں",
+    "cancel": "منسوخ کریں",
+    "close": "بند کریں",
+    "processRefund": "رقم کی واپسی پر کارروائی کریں"
+  },
+  "refund": {
+    "originalAmount": "اصل رقم",
+    "refundAmount": "واپسی کی رقم",
+    "refundAmountHint": "مکمل رقم کی واپسی کے لیے خالی چھوڑ دیں",
+    "reason": "وجہ",
+    "enterAmount": "رقم درج کریں",
+    "enterReason": "رقم کی واپسی کی وجہ درج کریں"
+  },
+  "details": {
+    "transactionId": "لین دین کی شناخت",
+    "providerTransactionId": "فراہم کنندہ کے لین دین کی شناخت",
+    "orderId": "آرڈر کی شناخت",
+    "status": "حیثیت",
+    "amount": "رقم",
+    "provider": "فراہم کنندہ",
+    "createdAt": "تخلیق کی تاریخ",
+    "completedAt": "تکمیل کی تاریخ",
+    "errorMessage": "خرابی کا پیغام",
+    "notAvailable": "دستیاب نہیں"
+  },
+  "messages": {
+    "comingSoon": {
+      "paymentMethods": "ادائیگی کے طریقوں کا انتظام جلد آ رہا ہے",
+      "settlements": "تصفیہ کی رپورٹیں جلد آ رہی ہیں"
+    },
+    "success": {
+      "refundProcessed": "رقم کی واپسی کامیابی سے عمل میں آئی",
+      "providerEnabled": "فراہم کنندہ کامیابی سے فعال ہو گیا",
+      "providerDisabled": "فراہم کنندہ کامیابی سے غیر فعال ہو گیا"
+    },
+    "error": {
+      "title": "خرابی",
+      "fetchTransactions": "لین دین حاصل کرنے میں ناکامی",
+      "processRefund": "رقم کی واپسی پر عمل کرنے میں ناکامی",
+      "updateProvider": "فراہم کنندہ کی حیثیت اپ ڈیٹ کرنے میں ناکامی"
+    }
+  },
+  "settings": {
+    "title": "ادائیگی کی ترتیبات",
+    "addProvider": "فراہم کنندہ شامل کریں",
+    "backToTenants": "کرایہ داروں کی طرف واپس جائیں",
+    "stats": {
+      "totalVolume": "کل حجم",
+      "successRate": "کامیابی کی شرح",
+      "todayVolume": "آج کا حجم",
+      "netRevenue": "خالص آمدنی",
+      "transactionsCount": "{{count}} لین دین",
+      "avgTransaction": "اوسط ${{amount}}",
+      "pendingSettlement": "زیر التواء: ${{amount}}",
+      "platformFees": "فیس: ${{amount}}"
+    },
+    "tabs": {
+      "providers": "فراہم کنندگان",
+      "credentials": "اسناد",
+      "feesLimits": "فیس اور حدود",
+      "webhooks": "Webhooks",
+      "analytics": "تجزیات"
+    },
+    "providersTab": {
+      "title": "ادائیگی فراہم کنندگان",
+      "noProviders": "کوئی ادائیگی فراہم کنندہ ترتیب نہیں دیا گیا۔ ادائیگیاں قبول کرنا شروع کرنے کے لیے ایک شامل کریں۔",
+      "production": "پروڈکشن",
+      "sandbox": "سینڈ باکس",
+      "healthStatus": "صحت کی حیثیت",
+      "unknown": "نامعلوم",
+      "testConnection": "کنکشن کی جانچ کریں",
+      "configure": "ترتیب دیں",
+      "remove": "ہٹائیں",
+      "merchantId": "تاجر کی شناخت:",
+      "lastSync": "آخری ہم وقت سازی:",
+      "oauthExpires": "OAuth ختم ہوتا ہے:"
+    },
+    "credentialsTab": {
+      "title": "API اسناد",
+      "securityNotice": "حفاظتی نوٹس:",
+      "securityMessage": "API اسناد کو خفیہ کر کے محفوظ طریقے سے محفوظ کیا جاتا ہے۔ اپنی خفیہ کلیدوں یا رسائی کے ٹوکن کو کبھی شیئر نہ کریں۔",
+      "updateCredentials": "اسناد اپ ڈیٹ کریں",
+      "apiKey": "API کلید",
+      "secretKey": "خفیہ کلید",
+      "oauthToken": "OAuth ٹوکن",
+      "configured": "ترتیب شدہ",
+      "notConfigured": "ترتیب نہیں دی گئی",
+      "connected": "منسلک",
+      "expires": "{{date}} کو ختم ہوتا ہے",
+      "connectOAuth": "OAuth کے ساتھ منسلک کریں"
+    },
+    "feesTab": {
+      "title": "فیس اور لین دین کی حدود",
+      "platformFees": "پلیٹ فارم کی فیس",
+      "percentageFee": "فیصد فیس",
+      "fixedFee": "مقررہ فیس",
+      "transactionLimits": "لین دین کی حدود",
+      "dailyLimit": "روزانہ کی حد",
+      "perTransactionLimit": "فی لین دین کی حد",
+      "saveChanges": "تبدیلیاں محفوظ کریں"
+    },
+    "webhooksTab": {
+      "title": "Webhook ترتیب",
+      "infoMessage": "حقیقی وقت میں ادائیگی کے واقعات وصول کرنے کے لیے اپنے ادائیگی فراہم کنندہ کے ڈیش بورڈ میں webhook URL ترتیب دیں۔",
+      "webhookUrl": "Webhook URL",
+      "webhookSecret": "Webhook راز",
+      "webhookSecretPlaceholder": "webhook دستخط کا راز درج کریں",
+      "eventsToSubscribe": "سبسکرائب کرنے کے لیے واقعات",
+      "eventTypes": {
+        "paymentCompleted": "payment.completed",
+        "paymentFailed": "payment.failed",
+        "refundCreated": "refund.created",
+        "disputeCreated": "dispute.created"
+      }
+    },
+    "analyticsTab": {
+      "title": "ادائیگی کے تجزیات",
+      "transactionVolume": "لین دین کا حجم (آخری 7 دن)",
+      "successRateByProvider": "فراہم کنندہ کے لحاظ سے کامیابی کی شرح",
+      "chartPlaceholder": "چارٹ کی جگہ",
+      "recentTransactions": "حالیہ لین دین",
+      "noRecentTransactions": "کوئی حالیہ لین دین نہیں",
+      "tableHeaders": {
+        "transactionId": "لین دین کی شناخت",
+        "amount": "رقم",
+        "provider": "فراہم کنندہ",
+        "status": "حیثیت",
+        "date": "تاریخ"
+      }
+    },
+    "credentialModal": {
+      "title": "{{providerName}} اسناد اپ ڈیٹ کریں",
+      "environment": "ماحول",
+      "environmentOptions": {
+        "sandbox": "سینڈ باکس",
+        "production": "پروڈکشن"
+      },
+      "apiKey": "API کلید",
+      "apiKeyPlaceholder": "API کلید درج کریں",
+      "secretKey": "خفیہ کلید",
+      "secretKeyPlaceholder": "خفیہ کلید درج کریں",
+      "merchantId": "تاجر کی شناخت",
+      "merchantIdPlaceholder": "تاجر کی شناخت درج کریں",
+      "accessToken": "رسائی کا ٹوکن (اختیاری - OAuth کے لیے)",
+      "accessTokenPlaceholder": "رسائی کا ٹوکن درج کریں",
+      "securityWarning": "اسناد کو محفوظ کرنے سے پہلے AES-256 خفیہ کاری کا استعمال کرتے ہوئے خفیہ کیا جاتا ہے۔ حساس ڈیٹا درج کرتے وقت یقینی بنائیں کہ آپ محفوظ ماحول میں ہیں۔",
+      "cancel": "منسوخ کریں",
+      "updateButton": "اسناد اپ ڈیٹ کریں",
+      "updating": "اپ ڈیٹ ہو رہا ہے..."
+    },
+    "notifications": {
+      "connectionTestSuccess": "{{providerName}} کنکشن ٹیسٹ کامیاب",
+      "connectionTestFailed": "{{providerName}} کنکشن ٹیسٹ ناکام",
+      "credentialsUpdated": "{{providerName}} کے لیے اسناد کامیابی سے اپ ڈیٹ ہو گئے",
+      "credentialsUpdateFailed": "اسناد اپ ڈیٹ کرنے میں ناکامی",
+      "tenantLoadFailed": "کرایہ دار کا ڈیٹا لوڈ کرنے میں ناکامی",
+      "providersLoadFailed": "ادائیگی فراہم کنندگان کو لوڈ کرنے میں ناکامی",
+      "webhookUrlCopied": "Webhook URL کلپ بورڈ پر کاپی ہو گیا"
+    }
+  }
+}

@@ -1,0 +1,228 @@
+{
+  "titles": {
+    "main": "পেমেন্ট ম্যানেজমেন্ট",
+    "transactionHistory": "লেনদেন ইতিহাস",
+    "paymentProviders": "পেমেন্ট প্রদানকারী",
+    "paymentMethods": "পেমেন্ট পদ্ধতি",
+    "settlements": "নিষ্পত্তি",
+    "processRefund": "রিফান্ড প্রক্রিয়া করুন",
+    "transactionDetails": "লেনদেন বিবরণ"
+  },
+  "descriptions": {
+    "transactionHistory": "সমস্ত পেমেন্ট লেনদেন দেখুন এবং পরিচালনা করুন",
+    "paymentProviders": "পেমেন্ট গেটওয়ে কনফিগারেশন পরিচালনা করুন",
+    "paymentMethods": "গ্রাহকদের সংরক্ষিত পেমেন্ট পদ্ধতি পরিচালনা করুন",
+    "settlements": "নিষ্পত্তি ব্যাচ এবং সমন্বয় দেখুন",
+    "refundTransaction": "লেনদেন রিফান্ড করুন"
+  },
+  "metrics": {
+    "totalRevenue": "মোট রাজস্ব",
+    "successRate": "সাফল্যের হার",
+    "totalRefunds": "মোট রিফান্ড",
+    "processingFees": "প্রক্রিয়াকরণ ফি",
+    "transactions": "লেনদেন",
+    "successful": "সফল",
+    "fromRevenue": "রাজস্ব থেকে",
+    "ofRevenue": "রাজস্বের"
+  },
+  "tabs": {
+    "transactions": "লেনদেন",
+    "providers": "পেমেন্ট প্রদানকারী",
+    "methods": "পেমেন্ট পদ্ধতি",
+    "settlements": "নিষ্পত্তি"
+  },
+  "filters": {
+    "status": "অবস্থা",
+    "provider": "প্রদানকারী",
+    "allStatus": "সমস্ত অবস্থা",
+    "allProviders": "সমস্ত প্রদানকারী",
+    "searchPlaceholder": "লেনদেন খুঁজুন..."
+  },
+  "status": {
+    "completed": "সম্পন্ন",
+    "pending": "মুলতুবি",
+    "processing": "প্রক্রিয়াধীন",
+    "failed": "ব্যর্থ",
+    "refunded": "রিফান্ড করা হয়েছে",
+    "active": "সক্রিয়",
+    "inactive": "নিষ্ক্রিয়"
+  },
+  "table": {
+    "reference": "রেফারেন্স",
+    "customer": "গ্রাহক",
+    "amount": "পরিমাণ",
+    "provider": "প্রদানকারী",
+    "status": "অবস্থা",
+    "date": "তারিখ",
+    "actions": "কর্ম"
+  },
+  "provider": {
+    "default": "ডিফল্ট",
+    "supportedCurrencies": "সমর্থিত মুদ্রা",
+    "capabilities": "ক্ষমতা"
+  },
+  "actions": {
+    "refresh": "রিফ্রেশ করুন",
+    "export": "রপ্তানি করুন",
+    "disable": "অক্ষম করুন",
+    "enable": "সক্ষম করুন",
+    "cancel": "বাতিল করুন",
+    "close": "বন্ধ করুন",
+    "processRefund": "রিফান্ড প্রক্রিয়া করুন"
+  },
+  "refund": {
+    "originalAmount": "মূল পরিমাণ",
+    "refundAmount": "রিফান্ড পরিমাণ",
+    "refundAmountHint": "সম্পূর্ণ রিফান্ডের জন্য খালি রাখুন",
+    "reason": "কারণ",
+    "enterAmount": "পরিমাণ প্রবেশ করুন",
+    "enterReason": "রিফান্ডের কারণ প্রবেশ করুন"
+  },
+  "details": {
+    "transactionId": "লেনদেন ID",
+    "providerTransactionId": "প্রদানকারী লেনদেন ID",
+    "orderId": "অর্ডার ID",
+    "status": "অবস্থা",
+    "amount": "পরিমাণ",
+    "provider": "প্রদানকারী",
+    "createdAt": "তৈরি করা হয়েছে",
+    "completedAt": "সম্পন্ন হয়েছে",
+    "errorMessage": "ত্রুটি বার্তা",
+    "notAvailable": "প্রযোজ্য নয়"
+  },
+  "messages": {
+    "comingSoon": {
+      "paymentMethods": "পেমেন্ট পদ্ধতি ব্যবস্থাপনা শীঘ্রই আসছে",
+      "settlements": "নিষ্পত্তি প্রতিবেদন শীঘ্রই আসছে"
+    },
+    "success": {
+      "refundProcessed": "রিফান্ড সফলভাবে প্রক্রিয়া করা হয়েছে",
+      "providerEnabled": "প্রদানকারী সফলভাবে সক্ষম করা হয়েছে",
+      "providerDisabled": "প্রদানকারী সফলভাবে অক্ষম করা হয়েছে"
+    },
+    "error": {
+      "title": "ত্রুটি",
+      "fetchTransactions": "লেনদেন পেতে ব্যর্থ হয়েছে",
+      "processRefund": "রিফান্ড প্রক্রিয়া করতে ব্যর্থ হয়েছে",
+      "updateProvider": "প্রদানকারী অবস্থা আপডেট করতে ব্যর্থ হয়েছে"
+    }
+  },
+  "settings": {
+    "title": "পেমেন্ট সেটিংস",
+    "addProvider": "প্রদানকারী যোগ করুন",
+    "backToTenants": "ভাড়াটেদের কাছে ফিরে যান",
+    "stats": {
+      "totalVolume": "মোট ভলিউম",
+      "successRate": "সাফল্যের হার",
+      "todayVolume": "আজকের ভলিউম",
+      "netRevenue": "নিট রাজস্ব",
+      "transactionsCount": "{{count}} লেনদেন",
+      "avgTransaction": "গড় ${{amount}}",
+      "pendingSettlement": "মুলতুবি: ${{amount}}",
+      "platformFees": "ফি: ${{amount}}"
+    },
+    "tabs": {
+      "providers": "প্রদানকারী",
+      "credentials": "শংসাপত্র",
+      "feesLimits": "ফি এবং সীমা",
+      "webhooks": "Webhooks",
+      "analytics": "বিশ্লেষণ"
+    },
+    "providersTab": {
+      "title": "পেমেন্ট প্রদানকারী",
+      "noProviders": "কোন পেমেন্ট প্রদানকারী কনফিগার করা নেই। পেমেন্ট গ্রহণ শুরু করতে একটি যোগ করুন।",
+      "production": "প্রোডাকশন",
+      "sandbox": "স্যান্ডবক্স",
+      "healthStatus": "স্বাস্থ্য অবস্থা",
+      "unknown": "অজানা",
+      "testConnection": "সংযোগ পরীক্ষা করুন",
+      "configure": "কনফিগার করুন",
+      "remove": "সরান",
+      "merchantId": "বণিক ID:",
+      "lastSync": "শেষ সিঙ্ক:",
+      "oauthExpires": "OAuth মেয়াদ শেষ:"
+    },
+    "credentialsTab": {
+      "title": "API শংসাপত্র",
+      "securityNotice": "নিরাপত্তা বিজ্ঞপ্তি:",
+      "securityMessage": "API শংসাপত্র এনক্রিপ্ট করা এবং নিরাপদে সংরক্ষণ করা হয়েছে। আপনার গোপন কী বা অ্যাক্সেস টোকেন কখনই শেয়ার করবেন না।",
+      "updateCredentials": "শংসাপত্র আপডেট করুন",
+      "apiKey": "API কী",
+      "secretKey": "গোপন কী",
+      "oauthToken": "OAuth টোকেন",
+      "configured": "কনফিগার করা",
+      "notConfigured": "কনফিগার করা হয়নি",
+      "connected": "সংযুক্ত",
+      "expires": "{{date}} তারিখে মেয়াদ শেষ",
+      "connectOAuth": "OAuth দিয়ে সংযোগ করুন"
+    },
+    "feesTab": {
+      "title": "ফি এবং লেনদেন সীমা",
+      "platformFees": "প্ল্যাটফর্ম ফি",
+      "percentageFee": "শতাংশ ফি",
+      "fixedFee": "নির্দিষ্ট ফি",
+      "transactionLimits": "লেনদেন সীমা",
+      "dailyLimit": "দৈনিক সীমা",
+      "perTransactionLimit": "প্রতি লেনদেন সীমা",
+      "saveChanges": "পরিবর্তন সংরক্ষণ করুন"
+    },
+    "webhooksTab": {
+      "title": "Webhook কনফিগারেশন",
+      "infoMessage": "রিয়েল-টাইম পেমেন্ট ইভেন্ট পেতে আপনার পেমেন্ট প্রদানকারীর ড্যাশবোর্ডে webhook URL কনফিগার করুন।",
+      "webhookUrl": "Webhook URL",
+      "webhookSecret": "Webhook গোপন",
+      "webhookSecretPlaceholder": "webhook স্বাক্ষর গোপন প্রবেশ করুন",
+      "eventsToSubscribe": "সাবস্ক্রাইব করার জন্য ইভেন্ট",
+      "eventTypes": {
+        "paymentCompleted": "payment.completed",
+        "paymentFailed": "payment.failed",
+        "refundCreated": "refund.created",
+        "disputeCreated": "dispute.created"
+      }
+    },
+    "analyticsTab": {
+      "title": "পেমেন্ট বিশ্লেষণ",
+      "transactionVolume": "লেনদেন ভলিউম (শেষ 7 দিন)",
+      "successRateByProvider": "প্রদানকারী অনুসারে সাফল্যের হার",
+      "chartPlaceholder": "চার্ট প্লেসহোল্ডার",
+      "recentTransactions": "সাম্প্রতিক লেনদেন",
+      "noRecentTransactions": "কোন সাম্প্রতিক লেনদেন নেই",
+      "tableHeaders": {
+        "transactionId": "লেনদেন ID",
+        "amount": "পরিমাণ",
+        "provider": "প্রদানকারী",
+        "status": "অবস্থা",
+        "date": "তারিখ"
+      }
+    },
+    "credentialModal": {
+      "title": "{{providerName}} শংসাপত্র আপডেট করুন",
+      "environment": "পরিবেশ",
+      "environmentOptions": {
+        "sandbox": "স্যান্ডবক্স",
+        "production": "প্রোডাকশন"
+      },
+      "apiKey": "API কী",
+      "apiKeyPlaceholder": "API কী প্রবেশ করুন",
+      "secretKey": "গোপন কী",
+      "secretKeyPlaceholder": "গোপন কী প্রবেশ করুন",
+      "merchantId": "বণিক ID",
+      "merchantIdPlaceholder": "বণিক ID প্রবেশ করুন",
+      "accessToken": "অ্যাক্সেস টোকেন (ঐচ্ছিক - OAuth এর জন্য)",
+      "accessTokenPlaceholder": "অ্যাক্সেস টোকেন প্রবেশ করুন",
+      "securityWarning": "শংসাপত্র সংরক্ষণের আগে AES-256 এনক্রিপশন ব্যবহার করে এনক্রিপ্ট করা হয়। সংবেদনশীল ডেটা প্রবেশ করার সময় নিশ্চিত করুন যে আপনি একটি নিরাপদ পরিবেশে আছেন।",
+      "cancel": "বাতিল করুন",
+      "updateButton": "শংসাপত্র আপডেট করুন",
+      "updating": "আপডেট হচ্ছে..."
+    },
+    "notifications": {
+      "connectionTestSuccess": "{{providerName}} সংযোগ পরীক্ষা সফল",
+      "connectionTestFailed": "{{providerName}} সংযোগ পরীক্ষা ব্যর্থ হয়েছে",
+      "credentialsUpdated": "{{providerName}} এর জন্য শংসাপত্র সফলভাবে আপডেট করা হয়েছে",
+      "credentialsUpdateFailed": "শংসাপত্র আপডেট করতে ব্যর্থ হয়েছে",
+      "tenantLoadFailed": "ভাড়াটে ডেটা লোড করতে ব্যর্থ হয়েছে",
+      "providersLoadFailed": "পেমেন্ট প্রদানকারী লোড করতে ব্যর্থ হয়েছে",
+      "webhookUrlCopied": "Webhook URL ক্লিপবোর্ডে কপি করা হয়েছে"
+    }
+  }
+}

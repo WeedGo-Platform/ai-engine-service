@@ -1,0 +1,228 @@
+{
+  "titles": {
+    "main": "Gestionarea plăților",
+    "transactionHistory": "Istoricul tranzacțiilor",
+    "paymentProviders": "Furnizori de plată",
+    "paymentMethods": "Metode de plată",
+    "settlements": "Decontări",
+    "processRefund": "Procesează rambursarea",
+    "transactionDetails": "Detalii tranzacție"
+  },
+  "descriptions": {
+    "transactionHistory": "Vezi și gestionează toate tranzacțiile de plată",
+    "paymentProviders": "Gestionează configurațiile gateway-urilor de plată",
+    "paymentMethods": "Gestionează metodele de plată salvate ale clienților",
+    "settlements": "Vezi loturile de decontare și reconciliere",
+    "refundTransaction": "Rambursează tranzacția"
+  },
+  "metrics": {
+    "totalRevenue": "Venit total",
+    "successRate": "Rata de succes",
+    "totalRefunds": "Rambursări totale",
+    "processingFees": "Taxe de procesare",
+    "transactions": "tranzacții",
+    "successful": "reușite",
+    "fromRevenue": "Din venit",
+    "ofRevenue": "din venit"
+  },
+  "tabs": {
+    "transactions": "Tranzacții",
+    "providers": "Furnizori de plată",
+    "methods": "Metode de plată",
+    "settlements": "Decontări"
+  },
+  "filters": {
+    "status": "Status",
+    "provider": "Furnizor",
+    "allStatus": "Toate statusurile",
+    "allProviders": "Toți furnizorii",
+    "searchPlaceholder": "Caută tranzacții..."
+  },
+  "status": {
+    "completed": "Finalizat",
+    "pending": "În așteptare",
+    "processing": "În procesare",
+    "failed": "Eșuat",
+    "refunded": "Rambursat",
+    "active": "Activ",
+    "inactive": "Inactiv"
+  },
+  "table": {
+    "reference": "Referință",
+    "customer": "Client",
+    "amount": "Sumă",
+    "provider": "Furnizor",
+    "status": "Status",
+    "date": "Dată",
+    "actions": "Acțiuni"
+  },
+  "provider": {
+    "default": "Implicit",
+    "supportedCurrencies": "Valute suportate",
+    "capabilities": "Capabilități"
+  },
+  "actions": {
+    "refresh": "Reîmprospătează",
+    "export": "Exportă",
+    "disable": "Dezactivează",
+    "enable": "Activează",
+    "cancel": "Anulează",
+    "close": "Închide",
+    "processRefund": "Procesează rambursarea"
+  },
+  "refund": {
+    "originalAmount": "Suma originală",
+    "refundAmount": "Suma rambursată",
+    "refundAmountHint": "lasă gol pentru rambursare completă",
+    "reason": "Motiv",
+    "enterAmount": "Introdu suma",
+    "enterReason": "Introdu motivul rambursării"
+  },
+  "details": {
+    "transactionId": "ID tranzacție",
+    "providerTransactionId": "ID tranzacție furnizor",
+    "orderId": "ID comandă",
+    "status": "Status",
+    "amount": "Sumă",
+    "provider": "Furnizor",
+    "createdAt": "Creat la",
+    "completedAt": "Finalizat la",
+    "errorMessage": "Mesaj de eroare",
+    "notAvailable": "N/A"
+  },
+  "messages": {
+    "comingSoon": {
+      "paymentMethods": "Gestionarea metodelor de plată în curând",
+      "settlements": "Rapoarte de decontare în curând"
+    },
+    "success": {
+      "refundProcessed": "Rambursare procesată cu succes",
+      "providerEnabled": "Furnizor activat cu succes",
+      "providerDisabled": "Furnizor dezactivat cu succes"
+    },
+    "error": {
+      "title": "Eroare",
+      "fetchTransactions": "Nu s-au putut prelua tranzacțiile",
+      "processRefund": "Nu s-a putut procesa rambursarea",
+      "updateProvider": "Nu s-a putut actualiza statusul furnizorului"
+    }
+  },
+  "settings": {
+    "title": "Setări plăți",
+    "addProvider": "Adaugă furnizor",
+    "backToTenants": "Înapoi la chiriași",
+    "stats": {
+      "totalVolume": "Volum total",
+      "successRate": "Rata de succes",
+      "todayVolume": "Volumul de astăzi",
+      "netRevenue": "Venit net",
+      "transactionsCount": "{{count}} tranzacții",
+      "avgTransaction": "Medie ${{amount}}",
+      "pendingSettlement": "În așteptare: ${{amount}}",
+      "platformFees": "Taxe: ${{amount}}"
+    },
+    "tabs": {
+      "providers": "Furnizori",
+      "credentials": "Credențiale",
+      "feesLimits": "Taxe și limite",
+      "webhooks": "Webhooks",
+      "analytics": "Analiză"
+    },
+    "providersTab": {
+      "title": "Furnizori de plată",
+      "noProviders": "Niciun furnizor de plată configurat. Adaugă unul pentru a începe să accepți plăți.",
+      "production": "Producție",
+      "sandbox": "Sandbox",
+      "healthStatus": "Status sănătate",
+      "unknown": "Necunoscut",
+      "testConnection": "Testează conexiunea",
+      "configure": "Configurează",
+      "remove": "Elimină",
+      "merchantId": "ID comerciant:",
+      "lastSync": "Ultima sincronizare:",
+      "oauthExpires": "OAuth expiră:"
+    },
+    "credentialsTab": {
+      "title": "Credențiale API",
+      "securityNotice": "Notificare de securitate:",
+      "securityMessage": "Credențialele API sunt criptate și stocate în siguranță. Nu împărtășiți niciodată cheile secrete sau token-urile de acces.",
+      "updateCredentials": "Actualizează credențiale",
+      "apiKey": "Cheie API",
+      "secretKey": "Cheie secretă",
+      "oauthToken": "Token OAuth",
+      "configured": "Configurat",
+      "notConfigured": "Neconfigurat",
+      "connected": "Conectat",
+      "expires": "expiră {{date}}",
+      "connectOAuth": "Conectează cu OAuth"
+    },
+    "feesTab": {
+      "title": "Taxe și limite de tranzacție",
+      "platformFees": "Taxe platformă",
+      "percentageFee": "Taxă procentuală",
+      "fixedFee": "Taxă fixă",
+      "transactionLimits": "Limite de tranzacție",
+      "dailyLimit": "Limită zilnică",
+      "perTransactionLimit": "Limită per tranzacție",
+      "saveChanges": "Salvează modificări"
+    },
+    "webhooksTab": {
+      "title": "Configurare webhook",
+      "infoMessage": "Configurează URL-urile webhook în tabloul de bord al furnizorului de plată pentru a primi evenimente de plată în timp real.",
+      "webhookUrl": "URL webhook",
+      "webhookSecret": "Secret webhook",
+      "webhookSecretPlaceholder": "Introdu secretul de semnare webhook",
+      "eventsToSubscribe": "Evenimente la care să te abonezi",
+      "eventTypes": {
+        "paymentCompleted": "payment.completed",
+        "paymentFailed": "payment.failed",
+        "refundCreated": "refund.created",
+        "disputeCreated": "dispute.created"
+      }
+    },
+    "analyticsTab": {
+      "title": "Analiză plăți",
+      "transactionVolume": "Volum tranzacții (Ultimele 7 zile)",
+      "successRateByProvider": "Rata de succes pe furnizor",
+      "chartPlaceholder": "Placeholder grafic",
+      "recentTransactions": "Tranzacții recente",
+      "noRecentTransactions": "Nu există tranzacții recente",
+      "tableHeaders": {
+        "transactionId": "ID tranzacție",
+        "amount": "Sumă",
+        "provider": "Furnizor",
+        "status": "Status",
+        "date": "Dată"
+      }
+    },
+    "credentialModal": {
+      "title": "Actualizează credențiale {{providerName}}",
+      "environment": "Mediu",
+      "environmentOptions": {
+        "sandbox": "Sandbox",
+        "production": "Producție"
+      },
+      "apiKey": "Cheie API",
+      "apiKeyPlaceholder": "Introdu cheia API",
+      "secretKey": "Cheie secretă",
+      "secretKeyPlaceholder": "Introdu cheia secretă",
+      "merchantId": "ID comerciant",
+      "merchantIdPlaceholder": "Introdu ID-ul comerciantului",
+      "accessToken": "Token de acces (Opțional - pentru OAuth)",
+      "accessTokenPlaceholder": "Introdu token-ul de acces",
+      "securityWarning": "Credențialele sunt criptate folosind criptarea AES-256 înainte de stocare. Asigură-te că ești într-un mediu securizat când introduci date sensibile.",
+      "cancel": "Anulează",
+      "updateButton": "Actualizează credențiale",
+      "updating": "Se actualizează..."
+    },
+    "notifications": {
+      "connectionTestSuccess": "Test de conexiune {{providerName}} reușit",
+      "connectionTestFailed": "Test de conexiune {{providerName}} eșuat",
+      "credentialsUpdated": "Credențiale actualizate cu succes pentru {{providerName}}",
+      "credentialsUpdateFailed": "Nu s-au putut actualiza credențialele",
+      "tenantLoadFailed": "Nu s-au putut încărca datele chiriaș ului",
+      "providersLoadFailed": "Nu s-au putut încărca furnizorii de plată",
+      "webhookUrlCopied": "URL webhook copiat în clipboard"
+    }
+  }
+}

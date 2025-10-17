@@ -1,0 +1,228 @@
+{
+  "titles": {
+    "main": "Maareynta Lacag-Bixinta",
+    "transactionHistory": "Taariikhda Wax-Ku-Beddelka",
+    "paymentProviders": "Bixiyeyaasha Lacag-Bixinta",
+    "paymentMethods": "Habka Lacag-Bixinta",
+    "settlements": "Dejinta",
+    "processRefund": "Hagaaji Lacag-Celinta",
+    "transactionDetails": "Faahfaahinta Wax-Ku-Beddelka"
+  },
+  "descriptions": {
+    "transactionHistory": "Arag oo maamul dhammaan wax-ku-beddellada lacag-bixinta",
+    "paymentProviders": "Maamul qaabaynta albaabada lacag-bixinta",
+    "paymentMethods": "Maamul habka lacag-bixinta ee macaamiisha kaydsan",
+    "settlements": "Arag kooxaha dejinta iyo heshiisinta",
+    "refundTransaction": "Lacag-celi wax-ku-beddelka"
+  },
+  "metrics": {
+    "totalRevenue": "Wadarta Dakhliga",
+    "successRate": "Heerka Guusha",
+    "totalRefunds": "Wadarta Lacag-Celinta",
+    "processingFees": "Khidmadaha Habaynta",
+    "transactions": "wax-ku-beddel",
+    "successful": "guuleystay",
+    "fromRevenue": "Dakhliga laga helay",
+    "ofRevenue": "dakhliga"
+  },
+  "tabs": {
+    "transactions": "Wax-Ku-Beddellada",
+    "providers": "Bixiyeyaasha Lacag-Bixinta",
+    "methods": "Habka Lacag-Bixinta",
+    "settlements": "Dejinta"
+  },
+  "filters": {
+    "status": "Xaalad",
+    "provider": "Bixiye",
+    "allStatus": "Dhammaan Xaaladaha",
+    "allProviders": "Dhammaan Bixiyeyaasha",
+    "searchPlaceholder": "Raadi wax-ku-beddellada..."
+  },
+  "status": {
+    "completed": "La Dhammeeyay",
+    "pending": "Sugitaan",
+    "processing": "Habaynta",
+    "failed": "Fashilmay",
+    "refunded": "La Lacag-Celiyay",
+    "active": "Firfircoon",
+    "inactive": "Ma Firfircoonaan"
+  },
+  "table": {
+    "reference": "Tixraac",
+    "customer": "Macmiil",
+    "amount": "Qaddar",
+    "provider": "Bixiye",
+    "status": "Xaalad",
+    "date": "Taariikh",
+    "actions": "Ficillo"
+  },
+  "provider": {
+    "default": "Caadi",
+    "supportedCurrencies": "Lacagaha La Taageerayo",
+    "capabilities": "Awoodo"
+  },
+  "actions": {
+    "refresh": "Cusboonaysii",
+    "export": "Dhoofin",
+    "disable": "Jooji",
+    "enable": "Daar",
+    "cancel": "Jooji",
+    "close": "Xir",
+    "processRefund": "Hagaaji Lacag-Celinta"
+  },
+  "refund": {
+    "originalAmount": "Qaddarka Asalka",
+    "refundAmount": "Qaddarka Lacag-Celinta",
+    "refundAmountHint": "ka tag madhan lacag-celinta oo dhan",
+    "reason": "Sabab",
+    "enterAmount": "Geli qaddarka",
+    "enterReason": "Geli sababta lacag-celinta"
+  },
+  "details": {
+    "transactionId": "Aqoonsiga Wax-Ku-Beddelka",
+    "providerTransactionId": "Aqoonsiga Wax-Ku-Beddelka Bixiyaha",
+    "orderId": "Aqoonsiga Dalabka",
+    "status": "Xaalad",
+    "amount": "Qaddar",
+    "provider": "Bixiye",
+    "createdAt": "La Abuuray",
+    "completedAt": "La Dhammeeyay",
+    "errorMessage": "Fariinta Khaladka",
+    "notAvailable": "La Heli Maayo"
+  },
+  "messages": {
+    "comingSoon": {
+      "paymentMethods": "Maareynta habka lacag-bixinta ayaa soo socota",
+      "settlements": "Warbixinnada dejinta ayaa soo socda"
+    },
+    "success": {
+      "refundProcessed": "Lacag-celinta waxaa lagu guuleystay habaynta",
+      "providerEnabled": "Bixiyaha waxaa lagu guuleystay daridda",
+      "providerDisabled": "Bixiyaha waxaa lagu guuleystay joojinta"
+    },
+    "error": {
+      "title": "Khalad",
+      "fetchTransactions": "Waxaa fashilantay soo qaadida wax-ku-beddellada",
+      "processRefund": "Waxaa fashilantay habaynta lacag-celinta",
+      "updateProvider": "Waxaa fashilantay cusboonaysiinta xaaladda bixiyaha"
+    }
+  },
+  "settings": {
+    "title": "Dejinta Lacag-Bixinta",
+    "addProvider": "Ku Dar Bixiye",
+    "backToTenants": "Ku Noqo Kirayste",
+    "stats": {
+      "totalVolume": "Wadarta Baaxadda",
+      "successRate": "Heerka Guusha",
+      "todayVolume": "Baaxadda Maanta",
+      "netRevenue": "Dakhliga Saafi",
+      "transactionsCount": "{{count}} wax-ku-beddel",
+      "avgTransaction": "Celcelis ${{amount}}",
+      "pendingSettlement": "Sugitaan: ${{amount}}",
+      "platformFees": "Khidmado: ${{amount}}"
+    },
+    "tabs": {
+      "providers": "Bixiyeyaasha",
+      "credentials": "Shahaadooyinka",
+      "feesLimits": "Khidmado iyo Xadudo",
+      "webhooks": "Webhooks",
+      "analytics": "Falanqayn"
+    },
+    "providersTab": {
+      "title": "Bixiyeyaasha Lacag-Bixinta",
+      "noProviders": "Ma jiro bixiyeyaal lacag-bixin oo la qaabeeyay. Mid ku dar si aad u bilowdo qaadashada lacag-bixinta.",
+      "production": "Soo-Saar",
+      "sandbox": "Sandbox",
+      "healthStatus": "Xaaladda Caafimaadka",
+      "unknown": "La Garan Maayo",
+      "testConnection": "Tijaabi Isku-Xirka",
+      "configure": "Qaabee",
+      "remove": "Ka Saar",
+      "merchantId": "Aqoonsiga Ganacsatada:",
+      "lastSync": "Isku-xidhka Ugu Danbeeyay:",
+      "oauthExpires": "OAuth Waqtiga Dhammaanayo:"
+    },
+    "credentialsTab": {
+      "title": "Shahaadooyinka API",
+      "securityNotice": "Ogeysiiska Amniga:",
+      "securityMessage": "Shahaadooyinka API waxaa lagu siri khafiiyay oo si amaan ah loo kaydiyay. Weligaa ha wadaagin furayaashaaga qarsoodi ah ama calaamadaha galitaanka.",
+      "updateCredentials": "Cusboonaysii Shahaadooyinka",
+      "apiKey": "Furaha API",
+      "secretKey": "Furaha Qarsoodi",
+      "oauthToken": "Calaamadda OAuth",
+      "configured": "La Qaabeeyay",
+      "notConfigured": "Lama qaabeeyin",
+      "connected": "La Xidhay",
+      "expires": "waqtiga dhammaan {{date}}",
+      "connectOAuth": "Ku Xidh OAuth"
+    },
+    "feesTab": {
+      "title": "Khidmado iyo Xaduda Wax-Ku-Beddellada",
+      "platformFees": "Khidmadaha Goobta",
+      "percentageFee": "Khidmadda Boqolkiiba",
+      "fixedFee": "Khidmad Joogto ah",
+      "transactionLimits": "Xaduda Wax-Ku-Beddellada",
+      "dailyLimit": "Xadka Maalin Walba",
+      "perTransactionLimit": "Xadka Wax-Ku-Beddelka Kasta",
+      "saveChanges": "Kaydi Isbeddelada"
+    },
+    "webhooksTab": {
+      "title": "Qaabaynta Webhook",
+      "infoMessage": "Qaabee URL-yada webhook ee dashboard-ka bixiyaha lacag-bixintaada si aad u hesho dhacdooyinka lacag-bixinta waqti-dhabta ah.",
+      "webhookUrl": "Webhook URL",
+      "webhookSecret": "Webhook Qarsoodi",
+      "webhookSecretPlaceholder": "Geli webhook qarsoodi saxiix",
+      "eventsToSubscribe": "Dhacdooyinka La Isu-Qoro",
+      "eventTypes": {
+        "paymentCompleted": "payment.completed",
+        "paymentFailed": "payment.failed",
+        "refundCreated": "refund.created",
+        "disputeCreated": "dispute.created"
+      }
+    },
+    "analyticsTab": {
+      "title": "Falanqaynta Lacag-Bixinta",
+      "transactionVolume": "Baaxadda Wax-Ku-Beddellada (7-kii Maalmood Ee Ugu Dambeeyay)",
+      "successRateByProvider": "Heerka Guusha Bixiyaha",
+      "chartPlaceholder": "Placeholder Jaantuska",
+      "recentTransactions": "Wax-Ku-Beddellada Dhow",
+      "noRecentTransactions": "Ma jiro wax-ku-beddello dhow",
+      "tableHeaders": {
+        "transactionId": "Aqoonsiga Wax-Ku-Beddelka",
+        "amount": "Qaddar",
+        "provider": "Bixiye",
+        "status": "Xaalad",
+        "date": "Taariikh"
+      }
+    },
+    "credentialModal": {
+      "title": "Cusboonaysii {{providerName}} Shahaadooyinka",
+      "environment": "Deegaan",
+      "environmentOptions": {
+        "sandbox": "Sandbox",
+        "production": "Soo-Saar"
+      },
+      "apiKey": "Furaha API",
+      "apiKeyPlaceholder": "Geli Furaha API",
+      "secretKey": "Furaha Qarsoodi",
+      "secretKeyPlaceholder": "Geli Furaha Qarsoodi",
+      "merchantId": "Aqoonsiga Ganacsatada",
+      "merchantIdPlaceholder": "Geli Aqoonsiga Ganacsatada",
+      "accessToken": "Calaamadda Galitaanka (Doorasho - OAuth loo baahan yahay)",
+      "accessTokenPlaceholder": "Geli Calaamadda Galitaanka",
+      "securityWarning": "Shahaadooyinka waxaa lagu siri khafiiyay AES-256 encryption ka hor kaydka. Hubi inaad ku jirto deegaan amaan ah marka aad gelayso macluumaadka sirta ah.",
+      "cancel": "Jooji",
+      "updateButton": "Cusboonaysii Shahaadooyinka",
+      "updating": "Waa la cusboonaysiinayaa..."
+    },
+    "notifications": {
+      "connectionTestSuccess": "{{providerName}} imtixaanka isku-xirka guuleystay",
+      "connectionTestFailed": "{{providerName}} imtixaanka isku-xirka fashilmay",
+      "credentialsUpdated": "Shahaadooyinka waxaa lagu guuleystay cusboonaysiinta {{providerName}}",
+      "credentialsUpdateFailed": "Waxaa fashilantay cusboonaysiinta shahaadooyinka",
+      "tenantLoadFailed": "Waxaa fashilantay soo dejinta xogta kiraystaha",
+      "providersLoadFailed": "Waxaa fashilantay soo dejinta bixiyeyaasha lacag-bixinta",
+      "webhookUrlCopied": "Webhook URL waxaa lagu koobiyay clipboard"
+    }
+  }
+}

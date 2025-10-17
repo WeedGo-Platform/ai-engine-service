@@ -1,0 +1,228 @@
+{
+  "titles": {
+    "main": "Управління платежами",
+    "transactionHistory": "Історія транзакцій",
+    "paymentProviders": "Платіжні провайдери",
+    "paymentMethods": "Способи оплати",
+    "settlements": "Розрахунки",
+    "processRefund": "Обробити повернення",
+    "transactionDetails": "Деталі транзакції"
+  },
+  "descriptions": {
+    "transactionHistory": "Переглянути та керувати всіма платіжними транзакціями",
+    "paymentProviders": "Керувати конфігураціями платіжних шлюзів",
+    "paymentMethods": "Керувати збереженими способами оплати клієнтів",
+    "settlements": "Переглянути партії розрахунків та звірки",
+    "refundTransaction": "Повернути транзакцію"
+  },
+  "metrics": {
+    "totalRevenue": "Загальний дохід",
+    "successRate": "Рівень успіху",
+    "totalRefunds": "Загальні повернення",
+    "processingFees": "Комісії за обробку",
+    "transactions": "транзакції",
+    "successful": "успішно",
+    "fromRevenue": "З доходу",
+    "ofRevenue": "від доходу"
+  },
+  "tabs": {
+    "transactions": "Транзакції",
+    "providers": "Платіжні провайдери",
+    "methods": "Способи оплати",
+    "settlements": "Розрахунки"
+  },
+  "filters": {
+    "status": "Статус",
+    "provider": "Провайдер",
+    "allStatus": "Всі статуси",
+    "allProviders": "Всі провайдери",
+    "searchPlaceholder": "Пошук транзакцій..."
+  },
+  "status": {
+    "completed": "Завершено",
+    "pending": "Очікується",
+    "processing": "Обробляється",
+    "failed": "Не вдалося",
+    "refunded": "Повернено",
+    "active": "Активний",
+    "inactive": "Неактивний"
+  },
+  "table": {
+    "reference": "Посилання",
+    "customer": "Клієнт",
+    "amount": "Сума",
+    "provider": "Провайдер",
+    "status": "Статус",
+    "date": "Дата",
+    "actions": "Дії"
+  },
+  "provider": {
+    "default": "За замовчуванням",
+    "supportedCurrencies": "Підтримувані валюти",
+    "capabilities": "Можливості"
+  },
+  "actions": {
+    "refresh": "Оновити",
+    "export": "Експортувати",
+    "disable": "Вимкнути",
+    "enable": "Увімкнути",
+    "cancel": "Скасувати",
+    "close": "Закрити",
+    "processRefund": "Обробити повернення"
+  },
+  "refund": {
+    "originalAmount": "Початкова сума",
+    "refundAmount": "Сума повернення",
+    "refundAmountHint": "залиште порожнім для повного повернення",
+    "reason": "Причина",
+    "enterAmount": "Введіть суму",
+    "enterReason": "Введіть причину повернення"
+  },
+  "details": {
+    "transactionId": "ID транзакції",
+    "providerTransactionId": "ID транзакції провайдера",
+    "orderId": "ID замовлення",
+    "status": "Статус",
+    "amount": "Сума",
+    "provider": "Провайдер",
+    "createdAt": "Створено",
+    "completedAt": "Завершено",
+    "errorMessage": "Повідомлення про помилку",
+    "notAvailable": "Н/Д"
+  },
+  "messages": {
+    "comingSoon": {
+      "paymentMethods": "Управління способами оплати незабаром",
+      "settlements": "Звіти про розрахунки незабаром"
+    },
+    "success": {
+      "refundProcessed": "Повернення успішно оброблено",
+      "providerEnabled": "Провайдер успішно увімкнено",
+      "providerDisabled": "Провайдер успішно вимкнено"
+    },
+    "error": {
+      "title": "Помилка",
+      "fetchTransactions": "Не вдалося отримати транзакції",
+      "processRefund": "Не вдалося обробити повернення",
+      "updateProvider": "Не вдалося оновити статус провайдера"
+    }
+  },
+  "settings": {
+    "title": "Налаштування платежів",
+    "addProvider": "Додати провайдера",
+    "backToTenants": "Повернутися до орендарів",
+    "stats": {
+      "totalVolume": "Загальний обсяг",
+      "successRate": "Рівень успіху",
+      "todayVolume": "Сьогоднішній обсяг",
+      "netRevenue": "Чистий дохід",
+      "transactionsCount": "{{count}} транзакцій",
+      "avgTransaction": "Серед. ${{amount}}",
+      "pendingSettlement": "Очікується: ${{amount}}",
+      "platformFees": "Комісії: ${{amount}}"
+    },
+    "tabs": {
+      "providers": "Провайдери",
+      "credentials": "Облікові дані",
+      "feesLimits": "Комісії та ліміти",
+      "webhooks": "Webhooks",
+      "analytics": "Аналітика"
+    },
+    "providersTab": {
+      "title": "Платіжні провайдери",
+      "noProviders": "Платіжні провайдери не налаштовані. Додайте один, щоб почати приймати платежі.",
+      "production": "Продакшн",
+      "sandbox": "Пісочниця",
+      "healthStatus": "Стан здоров'я",
+      "unknown": "Невідомо",
+      "testConnection": "Перевірити з'єднання",
+      "configure": "Налаштувати",
+      "remove": "Видалити",
+      "merchantId": "ID продавця:",
+      "lastSync": "Остання синхронізація:",
+      "oauthExpires": "OAuth закінчується:"
+    },
+    "credentialsTab": {
+      "title": "Облікові дані API",
+      "securityNotice": "Повідомлення про безпеку:",
+      "securityMessage": "Облікові дані API зашифровані та зберігаються безпечно. Ніколи не діліться своїми секретними ключами або токенами доступу.",
+      "updateCredentials": "Оновити облікові дані",
+      "apiKey": "Ключ API",
+      "secretKey": "Секретний ключ",
+      "oauthToken": "Токен OAuth",
+      "configured": "Налаштовано",
+      "notConfigured": "Не налаштовано",
+      "connected": "Підключено",
+      "expires": "закінчується {{date}}",
+      "connectOAuth": "Підключитися через OAuth"
+    },
+    "feesTab": {
+      "title": "Комісії та ліміти транзакцій",
+      "platformFees": "Комісії платформи",
+      "percentageFee": "Відсоткова комісія",
+      "fixedFee": "Фіксована комісія",
+      "transactionLimits": "Ліміти транзакцій",
+      "dailyLimit": "Денний ліміт",
+      "perTransactionLimit": "Ліміт на транзакцію",
+      "saveChanges": "Зберегти зміни"
+    },
+    "webhooksTab": {
+      "title": "Налаштування webhook",
+      "infoMessage": "Налаштуйте URL-адреси webhook на панелі вашого платіжного провайдера для отримання подій платежів у реальному часі.",
+      "webhookUrl": "URL webhook",
+      "webhookSecret": "Секрет webhook",
+      "webhookSecretPlaceholder": "Введіть секрет підпису webhook",
+      "eventsToSubscribe": "Події для підписки",
+      "eventTypes": {
+        "paymentCompleted": "payment.completed",
+        "paymentFailed": "payment.failed",
+        "refundCreated": "refund.created",
+        "disputeCreated": "dispute.created"
+      }
+    },
+    "analyticsTab": {
+      "title": "Аналітика платежів",
+      "transactionVolume": "Обсяг транзакцій (Останні 7 днів)",
+      "successRateByProvider": "Рівень успіху за провайдерами",
+      "chartPlaceholder": "Заповнювач діаграми",
+      "recentTransactions": "Останні транзакції",
+      "noRecentTransactions": "Немає останніх транзакцій",
+      "tableHeaders": {
+        "transactionId": "ID транзакції",
+        "amount": "Сума",
+        "provider": "Провайдер",
+        "status": "Статус",
+        "date": "Дата"
+      }
+    },
+    "credentialModal": {
+      "title": "Оновити облікові дані {{providerName}}",
+      "environment": "Середовище",
+      "environmentOptions": {
+        "sandbox": "Пісочниця",
+        "production": "Продакшн"
+      },
+      "apiKey": "Ключ API",
+      "apiKeyPlaceholder": "Введіть ключ API",
+      "secretKey": "Секретний ключ",
+      "secretKeyPlaceholder": "Введіть секретний ключ",
+      "merchantId": "ID продавця",
+      "merchantIdPlaceholder": "Введіть ID продавця",
+      "accessToken": "Токен доступу (Необов'язково - для OAuth)",
+      "accessTokenPlaceholder": "Введіть токен доступу",
+      "securityWarning": "Облікові дані шифруються за допомогою шифрування AES-256 перед зберіганням. Переконайтеся, що ви перебуваєте в безпечному середовищі при введенні конфіденційних даних.",
+      "cancel": "Скасувати",
+      "updateButton": "Оновити облікові дані",
+      "updating": "Оновлення..."
+    },
+    "notifications": {
+      "connectionTestSuccess": "Тест з'єднання {{providerName}} успішний",
+      "connectionTestFailed": "Тест з'єднання {{providerName}} не вдався",
+      "credentialsUpdated": "Облікові дані успішно оновлено для {{providerName}}",
+      "credentialsUpdateFailed": "Не вдалося оновити облікові дані",
+      "tenantLoadFailed": "Не вдалося завантажити дані орендаря",
+      "providersLoadFailed": "Не вдалося завантажити платіжних провайдерів",
+      "webhookUrlCopied": "URL webhook скопійовано в буфер обміну"
+    }
+  }
+}

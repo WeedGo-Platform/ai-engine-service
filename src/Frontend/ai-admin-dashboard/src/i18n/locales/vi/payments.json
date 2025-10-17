@@ -1,0 +1,228 @@
+{
+  "titles": {
+    "main": "Quản lý thanh toán",
+    "transactionHistory": "Lịch sử giao dịch",
+    "paymentProviders": "Nhà cung cấp thanh toán",
+    "paymentMethods": "Phương thức thanh toán",
+    "settlements": "Thanh toán",
+    "processRefund": "Xử lý hoàn tiền",
+    "transactionDetails": "Chi tiết giao dịch"
+  },
+  "descriptions": {
+    "transactionHistory": "Xem và quản lý tất cả giao dịch thanh toán",
+    "paymentProviders": "Quản lý cấu hình cổng thanh toán",
+    "paymentMethods": "Quản lý phương thức thanh toán đã lưu của khách hàng",
+    "settlements": "Xem lô thanh toán và đối chiếu",
+    "refundTransaction": "Hoàn tiền giao dịch"
+  },
+  "metrics": {
+    "totalRevenue": "Tổng doanh thu",
+    "successRate": "Tỷ lệ thành công",
+    "totalRefunds": "Tổng hoàn tiền",
+    "processingFees": "Phí xử lý",
+    "transactions": "giao dịch",
+    "successful": "thành công",
+    "fromRevenue": "Từ doanh thu",
+    "ofRevenue": "của doanh thu"
+  },
+  "tabs": {
+    "transactions": "Giao dịch",
+    "providers": "Nhà cung cấp thanh toán",
+    "methods": "Phương thức thanh toán",
+    "settlements": "Thanh toán"
+  },
+  "filters": {
+    "status": "Trạng thái",
+    "provider": "Nhà cung cấp",
+    "allStatus": "Tất cả trạng thái",
+    "allProviders": "Tất cả nhà cung cấp",
+    "searchPlaceholder": "Tìm kiếm giao dịch..."
+  },
+  "status": {
+    "completed": "Đã hoàn thành",
+    "pending": "Đang chờ",
+    "processing": "Đang xử lý",
+    "failed": "Thất bại",
+    "refunded": "Đã hoàn tiền",
+    "active": "Hoạt động",
+    "inactive": "Không hoạt động"
+  },
+  "table": {
+    "reference": "Tham chiếu",
+    "customer": "Khách hàng",
+    "amount": "Số tiền",
+    "provider": "Nhà cung cấp",
+    "status": "Trạng thái",
+    "date": "Ngày",
+    "actions": "Thao tác"
+  },
+  "provider": {
+    "default": "Mặc định",
+    "supportedCurrencies": "Tiền tệ được hỗ trợ",
+    "capabilities": "Khả năng"
+  },
+  "actions": {
+    "refresh": "Làm mới",
+    "export": "Xuất",
+    "disable": "Vô hiệu hóa",
+    "enable": "Kích hoạt",
+    "cancel": "Hủy",
+    "close": "Đóng",
+    "processRefund": "Xử lý hoàn tiền"
+  },
+  "refund": {
+    "originalAmount": "Số tiền gốc",
+    "refundAmount": "Số tiền hoàn",
+    "refundAmountHint": "để trống để hoàn tiền đầy đủ",
+    "reason": "Lý do",
+    "enterAmount": "Nhập số tiền",
+    "enterReason": "Nhập lý do hoàn tiền"
+  },
+  "details": {
+    "transactionId": "ID giao dịch",
+    "providerTransactionId": "ID giao dịch nhà cung cấp",
+    "orderId": "ID đơn hàng",
+    "status": "Trạng thái",
+    "amount": "Số tiền",
+    "provider": "Nhà cung cấp",
+    "createdAt": "Được tạo lúc",
+    "completedAt": "Hoàn thành lúc",
+    "errorMessage": "Thông báo lỗi",
+    "notAvailable": "Không có"
+  },
+  "messages": {
+    "comingSoon": {
+      "paymentMethods": "Quản lý phương thức thanh toán sắp ra mắt",
+      "settlements": "Báo cáo thanh toán sắp ra mắt"
+    },
+    "success": {
+      "refundProcessed": "Đã xử lý hoàn tiền thành công",
+      "providerEnabled": "Đã kích hoạt nhà cung cấp thành công",
+      "providerDisabled": "Đã vô hiệu hóa nhà cung cấp thành công"
+    },
+    "error": {
+      "title": "Lỗi",
+      "fetchTransactions": "Không thể lấy giao dịch",
+      "processRefund": "Không thể xử lý hoàn tiền",
+      "updateProvider": "Không thể cập nhật trạng thái nhà cung cấp"
+    }
+  },
+  "settings": {
+    "title": "Cài đặt thanh toán",
+    "addProvider": "Thêm nhà cung cấp",
+    "backToTenants": "Quay lại người thuê",
+    "stats": {
+      "totalVolume": "Tổng khối lượng",
+      "successRate": "Tỷ lệ thành công",
+      "todayVolume": "Khối lượng hôm nay",
+      "netRevenue": "Doanh thu ròng",
+      "transactionsCount": "{{count}} giao dịch",
+      "avgTransaction": "TB ${{amount}}",
+      "pendingSettlement": "Đang chờ: ${{amount}}",
+      "platformFees": "Phí: ${{amount}}"
+    },
+    "tabs": {
+      "providers": "Nhà cung cấp",
+      "credentials": "Thông tin xác thực",
+      "feesLimits": "Phí và giới hạn",
+      "webhooks": "Webhooks",
+      "analytics": "Phân tích"
+    },
+    "providersTab": {
+      "title": "Nhà cung cấp thanh toán",
+      "noProviders": "Không có nhà cung cấp thanh toán nào được cấu hình. Thêm một để bắt đầu chấp nhận thanh toán.",
+      "production": "Sản xuất",
+      "sandbox": "Sandbox",
+      "healthStatus": "Trạng thái sức khỏe",
+      "unknown": "Không xác định",
+      "testConnection": "Kiểm tra kết nối",
+      "configure": "Cấu hình",
+      "remove": "Xóa",
+      "merchantId": "ID người bán:",
+      "lastSync": "Đồng bộ lần cuối:",
+      "oauthExpires": "OAuth hết hạn:"
+    },
+    "credentialsTab": {
+      "title": "Thông tin xác thực API",
+      "securityNotice": "Thông báo bảo mật:",
+      "securityMessage": "Thông tin xác thực API được mã hóa và lưu trữ an toàn. Không bao giờ chia sẻ khóa bí mật hoặc token truy cập của bạn.",
+      "updateCredentials": "Cập nhật thông tin xác thực",
+      "apiKey": "Khóa API",
+      "secretKey": "Khóa bí mật",
+      "oauthToken": "Token OAuth",
+      "configured": "Đã cấu hình",
+      "notConfigured": "Chưa cấu hình",
+      "connected": "Đã kết nối",
+      "expires": "hết hạn {{date}}",
+      "connectOAuth": "Kết nối với OAuth"
+    },
+    "feesTab": {
+      "title": "Phí và giới hạn giao dịch",
+      "platformFees": "Phí nền tảng",
+      "percentageFee": "Phí phần trăm",
+      "fixedFee": "Phí cố định",
+      "transactionLimits": "Giới hạn giao dịch",
+      "dailyLimit": "Giới hạn hàng ngày",
+      "perTransactionLimit": "Giới hạn mỗi giao dịch",
+      "saveChanges": "Lưu thay đổi"
+    },
+    "webhooksTab": {
+      "title": "Cấu hình Webhook",
+      "infoMessage": "Cấu hình URL webhook trong bảng điều khiển nhà cung cấp thanh toán của bạn để nhận sự kiện thanh toán theo thời gian thực.",
+      "webhookUrl": "URL Webhook",
+      "webhookSecret": "Bí mật Webhook",
+      "webhookSecretPlaceholder": "Nhập bí mật ký webhook",
+      "eventsToSubscribe": "Sự kiện để đăng ký",
+      "eventTypes": {
+        "paymentCompleted": "payment.completed",
+        "paymentFailed": "payment.failed",
+        "refundCreated": "refund.created",
+        "disputeCreated": "dispute.created"
+      }
+    },
+    "analyticsTab": {
+      "title": "Phân tích thanh toán",
+      "transactionVolume": "Khối lượng giao dịch (7 ngày qua)",
+      "successRateByProvider": "Tỷ lệ thành công theo nhà cung cấp",
+      "chartPlaceholder": "Vị trí biểu đồ",
+      "recentTransactions": "Giao dịch gần đây",
+      "noRecentTransactions": "Không có giao dịch gần đây",
+      "tableHeaders": {
+        "transactionId": "ID giao dịch",
+        "amount": "Số tiền",
+        "provider": "Nhà cung cấp",
+        "status": "Trạng thái",
+        "date": "Ngày"
+      }
+    },
+    "credentialModal": {
+      "title": "Cập nhật thông tin xác thực {{providerName}}",
+      "environment": "Môi trường",
+      "environmentOptions": {
+        "sandbox": "Sandbox",
+        "production": "Sản xuất"
+      },
+      "apiKey": "Khóa API",
+      "apiKeyPlaceholder": "Nhập khóa API",
+      "secretKey": "Khóa bí mật",
+      "secretKeyPlaceholder": "Nhập khóa bí mật",
+      "merchantId": "ID người bán",
+      "merchantIdPlaceholder": "Nhập ID người bán",
+      "accessToken": "Token truy cập (Tùy chọn - cho OAuth)",
+      "accessTokenPlaceholder": "Nhập token truy cập",
+      "securityWarning": "Thông tin xác thực được mã hóa bằng mã hóa AES-256 trước khi lưu trữ. Đảm bảo bạn ở trong môi trường an toàn khi nhập dữ liệu nhạy cảm.",
+      "cancel": "Hủy",
+      "updateButton": "Cập nhật thông tin xác thực",
+      "updating": "Đang cập nhật..."
+    },
+    "notifications": {
+      "connectionTestSuccess": "Kiểm tra kết nối {{providerName}} thành công",
+      "connectionTestFailed": "Kiểm tra kết nối {{providerName}} thất bại",
+      "credentialsUpdated": "Đã cập nhật thông tin xác thực thành công cho {{providerName}}",
+      "credentialsUpdateFailed": "Không thể cập nhật thông tin xác thực",
+      "tenantLoadFailed": "Không thể tải dữ liệu người thuê",
+      "providersLoadFailed": "Không thể tải nhà cung cấp thanh toán",
+      "webhookUrlCopied": "Đã sao chép URL Webhook vào clipboard"
+    }
+  }
+}

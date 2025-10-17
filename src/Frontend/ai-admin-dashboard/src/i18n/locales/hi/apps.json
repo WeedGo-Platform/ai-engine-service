@@ -1,0 +1,21 @@
+{
+  "title": "ऐप्स",
+  "tabs": {
+    "pos": "बिक्री स्थल",
+    "posShort": "POS",
+    "kiosk": "स्व-सेवा Kiosk",
+    "kioskShort": "Kiosk",
+    "menuDisplay": "मेनू प्रदर्शन",
+    "menuShort": "मेनू"
+  },
+  "fullscreen": {
+    "enter": "पूर्ण स्क्रीन दर्ज करें",
+    "exit": "पूर्ण स्क्रीन से बाहर निकलें"
+  },
+  "storeSelection": {
+    "required": "स्टोर चयन आवश्यक",
+    "pleaseSelect": "जारी रखने के लिए कृपया एक स्टोर चुनें",
+    "selectButton": "स्टोर चुनें",
+    "description": "{{appName}} तक पहुँचने के लिए कृपया एक स्टोर चुनें"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "title": "應用程式",
+  "tabs": {
+    "pos": "銷售點",
+    "posShort": "POS",
+    "kiosk": "自助服務 Kiosk",
+    "kioskShort": "Kiosk",
+    "menuDisplay": "餐牌顯示",
+    "menuShort": "餐牌"
+  },
+  "fullscreen": {
+    "enter": "進入全螢幕",
+    "exit": "離開全螢幕"
+  },
+  "storeSelection": {
+    "required": "需要選擇商店",
+    "pleaseSelect": "請選擇商店以繼續",
+    "selectButton": "選擇商店",
+    "description": "請選擇商店以存取{{appName}}"
+  }
+}

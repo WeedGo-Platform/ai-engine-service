@@ -1,0 +1,21 @@
+{
+  "title": "アプリ",
+  "tabs": {
+    "pos": "販売時点情報管理",
+    "posShort": "POS",
+    "kiosk": "セルフサービスキオスク",
+    "kioskShort": "Kiosk",
+    "menuDisplay": "メニュー表示",
+    "menuShort": "メニュー"
+  },
+  "fullscreen": {
+    "enter": "フルスクリーン表示",
+    "exit": "フルスクリーン終了"
+  },
+  "storeSelection": {
+    "required": "店舗選択が必要です",
+    "pleaseSelect": "続行するには店舗を選択してください",
+    "selectButton": "店舗を選択",
+    "description": "{{appName}}にアクセスするには店舗を選択してください"
+  }
+}

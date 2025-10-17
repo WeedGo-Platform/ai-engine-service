@@ -1,0 +1,21 @@
+{
+  "title": "Apps",
+  "tabs": {
+    "pos": "Verkooppunt",
+    "posShort": "POS",
+    "kiosk": "Zelfbedienings-Kiosk",
+    "kioskShort": "Kiosk",
+    "menuDisplay": "Menuweergave",
+    "menuShort": "Menu"
+  },
+  "fullscreen": {
+    "enter": "Volledig scherm openen",
+    "exit": "Volledig scherm sluiten"
+  },
+  "storeSelection": {
+    "required": "Winkelselectie vereist",
+    "pleaseSelect": "Selecteer een winkel om door te gaan",
+    "selectButton": "Winkel selecteren",
+    "description": "Selecteer een winkel om toegang te krijgen tot {{appName}}"
+  }
+}
