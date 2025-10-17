@@ -42,6 +42,7 @@ import Promotions from './pages/Promotions';
 import Recommendations from './pages/Recommendations';
 import POS from './pages/POS';
 import ProvincialCatalogVirtual from './pages/ProvincialCatalogVirtual';
+import ProvincialCatalogImproved from './pages/ProvincialCatalogImproved';
 import DatabaseManagement from './pages/DatabaseManagement';
 import DeliveryManagement from './pages/DeliveryManagement';
 import AIManagement from './pages/AIManagement';
@@ -454,7 +455,7 @@ const router = createBrowserRouter([
         path: 'provincial-catalog',
         element: (
           <ProtectedRoute requiredPermissions={['system:super_admin']}>
-            <ProvincialCatalogVirtual />
+            <ProvincialCatalogImproved />
           </ProtectedRoute>
         )
       },

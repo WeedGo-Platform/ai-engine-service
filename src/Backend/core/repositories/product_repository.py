@@ -161,12 +161,12 @@ class ProductRepository:
                         WHEN inv.available_quantity > 0 THEN 'Low Stock'
                         ELSE 'Out of Stock'
                     END as stock_status,
-                    inv.ocs_sku as sku,
+                    inv.sku as sku,
                     cat.ocs_variant_number,
                     cat.gtin
                 FROM ocs_inventory inv
                 LEFT JOIN ocs_product_catalog cat
-                    ON LOWER(TRIM(inv.ocs_sku)) = LOWER(TRIM(cat.ocs_variant_number))
+                    ON LOWER(TRIM(inv.sku)) = LOWER(TRIM(cat.ocs_variant_number))
                 WHERE inv.available_quantity > 0
             """
 
@@ -271,7 +271,7 @@ class ProductRepository:
                     END as stock_status
                 FROM ocs_inventory inv
                 LEFT JOIN ocs_product_catalog cat
-                    ON LOWER(TRIM(inv.ocs_sku)) = LOWER(TRIM(cat.ocs_variant_number))
+                    ON LOWER(TRIM(inv.sku)) = LOWER(TRIM(cat.ocs_variant_number))
                 WHERE inv.available_quantity > 10
                 AND cat.product_name IS NOT NULL
                 ORDER BY

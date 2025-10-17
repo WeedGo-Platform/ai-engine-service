@@ -79,7 +79,12 @@ class IStoreRepository(ABC):
     async def get_by_code(self, tenant_id: UUID, store_code: str) -> Optional[Store]:
         """Get store by tenant and store code"""
         pass
-    
+
+    @abstractmethod
+    async def get_by_store_code_only(self, store_code: str) -> Optional[Store]:
+        """Get store by store code (globally unique lookup)"""
+        pass
+
     @abstractmethod
     async def update(self, store: Store) -> Store:
         """Update store information"""

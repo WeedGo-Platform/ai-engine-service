@@ -115,19 +115,34 @@ class StoreRepository(IStoreRepository):
         async with self.pool.acquire() as conn:
             try:
                 query = """
-                    SELECT * FROM stores 
+                    SELECT * FROM stores
                     WHERE tenant_id = $1 AND store_code = $2
                 """
                 row = await conn.fetchrow(query, tenant_id, store_code)
-                
+
                 if row:
                     return self._row_to_store(row)
                 return None
-                
+
             except Exception as e:
                 logger.error(f"Error getting store by code {store_code}: {e}")
                 raise
-    
+
+    async def get_by_store_code_only(self, store_code: str) -> Optional[Store]:
+        """Get store by store code (globally unique lookup)"""
+        async with self.pool.acquire() as conn:
+            try:
+                query = "SELECT * FROM stores WHERE store_code = $1"
+                row = await conn.fetchrow(query, store_code)
+
+                if row:
+                    return self._row_to_store(row)
+                return None
+
+            except Exception as e:
+                logger.error(f"Error getting store by code {store_code}: {e}")
+                raise
+
     async def update(self, store: Store) -> Store:
         """Update store information"""
         async with self.pool.acquire() as conn:

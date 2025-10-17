@@ -43,7 +43,7 @@ from ddd_refactored.domain.pricing_promotions.value_objects.pricing_types import
 )
 
 router = APIRouter(
-    prefix="/v2/pricing-promotions",
+    prefix="/api/v2/pricing-promotions",
     tags=["💰 Pricing & Promotions V2 (DDD)"],
     responses={404: {"description": "Not found"}},
 )

@@ -409,19 +409,25 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
       if (jsonData.length === 0) {
         throw new Error('Excel file is empty');
       }
-      
-      // Validate required columns
+
+      // Validate required columns using exact matching
       const firstRow = jsonData[0] as any;
-      if (!('SKU' in firstRow) || !('Shipped_Qty' in firstRow)) {
-        throw new Error('Missing required columns: SKU and Shipped_Qty');
+      const requiredColumns = ['SKU', 'Shipped_Qty'];
+      const missingColumns: string[] = [];
+
+      requiredColumns.forEach(required => {
+        if (!(required in firstRow)) {
+          missingColumns.push(required);
+        }
+      });
+
+      if (missingColumns.length > 0) {
+        throw new Error(`Missing required columns: ${missingColumns.join(', ')}. Found columns: ${Object.keys(firstRow).join(', ')}`);
       }
 
-      // Log all column names for debugging
-      console.log('Excel columns detected:', Object.keys(firstRow));
-      
       const items: ASNItem[] = [];
       const totalRows = jsonData.length;
-      
+
       // Add delay function to avoid rate limiting
       const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
       
@@ -433,9 +439,10 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
         }
         const row = jsonData[i] as any;
         setProcessingProgress(Math.round(((i + 1) / totalRows) * 100));
-        
-        const sku = String(row.SKU);
-        const batchLot = String(row.BatchLot);
+
+        // Extract using exact column names
+        const sku = String(row['SKU'] || '');
+        const batchLot = String(row['BatchLot'] || '');
 
         // Check if this SKU + BatchLot exists in inventory
         const inventoryCheck = await checkInventoryExists(sku, batchLot);
@@ -445,10 +452,9 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
 
         // Convert date format from "MM/DD/YYYY 12:00:00 AM" to "YYYY-MM-DD"
         let formattedPackagedOnDate: string | undefined = undefined;
-        if (row.PackagedOnDate) {  // Column name without underscores
-          const rawDate = row.PackagedOnDate;
+        const rawDate = row['PackagedOnDate'];
+        if (rawDate) {
           const dateStr = String(rawDate);
-
 
           // Check if it's a serial date number (Excel date format)
           if (typeof rawDate === 'number' || !isNaN(Number(rawDate))) {
@@ -471,39 +477,37 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
           } else if (dateStr.includes('-')) {
             // Already in YYYY-MM-DD format
             formattedPackagedOnDate = dateStr.split(' ')[0];
-          } else {
-            // Unable to parse date
           }
         }
 
-        // Parse unit price from the row
-        const unitPrice = parseFloat(row.UnitPrice);
+        // Parse unit cost from the row
+        const unitPrice = parseFloat(row['UnitCost'] || '0');
 
         // Get comprehensive pricing info (inventory override > category rules > store default)
         const pricingInfo = await getPricingInfo(sku, unitPrice);
 
-        // Parse the row data using exact column names from Excel (NO underscores)
+        // Parse the row data using exact column names
         const item: ASNItem = {
-          shipment_id: String(row.ShipmentID),
-          container_id: String(row.ContainerID),
+          shipment_id: String(row['ShipmentID'] || ''),
+          container_id: String(row['ContainerID'] || ''),
           sku: sku,
-          item_name: String(row.ItemName),
+          item_name: String(row['ItemName'] || ''),
           unit_price: unitPrice,
-          vendor: String(row.Vendor),
-          brand: String(row.Brand),
-          case_gtin: String(row.CaseGTIN),
+          vendor: String(row['Vendor'] || ''),
+          brand: String(row['Brand'] || ''),
+          case_gtin: String(row['CaseGTIN'] || ''),
           packaged_on_date: formattedPackagedOnDate,
           batch_lot: batchLot,
-          gtin_barcode: String(row.GTINBarCode),
-          each_gtin: String(row.EachGTIN),
-          shipped_qty: parseInt(row.Shipped_Qty),
-          received_qty: parseInt(row.Shipped_Qty), // Default to shipped quantity
+          gtin_barcode: String(row['GTINBarcode'] || ''),
+          each_gtin: String(row['EachGTIN'] || ''),
+          shipped_qty: parseInt(row['Shipped_Qty'] || '0'),
+          received_qty: parseInt(row['Shipped_Qty'] || '0'), // Default to shipped quantity
           retail_price: pricingInfo.retail_price,
           markup_percentage: pricingInfo.markup_percentage,
           price_source: pricingInfo.price_source,
-          uom: String(row.UOM),
-          uom_conversion: parseFloat(row.UOMCONVERSION),
-          uom_conversion_qty: parseInt(row.UOMCONVERSIONQTY),
+          uom: String(row['UOM'] || 'EACH'),
+          uom_conversion: parseFloat(row['UOMConversion'] || '1'),
+          uom_conversion_qty: parseInt(row['UOMConversionQty'] || '1'),
           exists_in_inventory: inventoryCheck.exists,
           is_new_batch: inventoryCheck.isNewBatch,
           image_url: productInfo.image_url,

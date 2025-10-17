@@ -417,85 +417,42 @@ async def get_store_by_code(
     code: str,
     service: StoreService = Depends(get_store_service)
 ):
-    """Get store by store code"""
+    """Get store by store code (globally unique)"""
     try:
-        # Use the service to find the store instead of direct DB access
-        stores = await service.get_stores_by_tenant(None)  # Get all stores
-
-        # Find the store with matching code
-        store = None
-        for s in stores:
-            if s.store_code == code:
-                store = s
-                break
-
-        if store:
-            # Return the store found via service
-            return store
-
-        # Try direct DB query as fallback
-        pool = await get_db_pool()
-
-        query = """
-            SELECT
-                id, tenant_id, province_territory_id, store_code, name,
-                address, phone, email, hours, timezone,
-                license_number, license_expiry, tax_rate,
-                delivery_radius_km, delivery_enabled, pickup_enabled,
-                kiosk_enabled, pos_enabled, ecommerce_enabled,
-                status, settings, pos_integration, seo_config,
-                latitude, longitude, delivery_zone, delivery_zone_stats,
-                created_at, updated_at
-            FROM stores
-            WHERE store_code = $1
-        """
-
-        async with pool.acquire() as conn:
-            result = await conn.fetchrow(query, code)
-
-        if not result:
+        # Use DDD service layer - proper approach
+        store = await service.get_store_by_code_only(code)
+        if not store:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Store with code '{code}' not found")
 
-        # Parse the result
-        store_data = dict(result)
-
-        # Construct location dict from lat/lng
-        location = None
-        if store_data.get('latitude') is not None and store_data.get('longitude') is not None:
-            location = {
-                'latitude': float(store_data['latitude']),
-                'longitude': float(store_data['longitude'])
-            }
-
         return StoreResponse(
-            id=store_data['id'],
-            tenant_id=store_data['tenant_id'],
-            province_territory_id=store_data['province_territory_id'],
-            store_code=store_data['store_code'],
-            name=store_data['name'],
-            address=store_data['address'],
-            phone=store_data['phone'],
-            email=store_data['email'],
-            hours=store_data['hours'],
-            timezone=store_data['timezone'],
-            license_number=store_data['license_number'],
-            license_expiry=store_data['license_expiry'],
-            tax_rate=float(store_data['tax_rate']) if store_data['tax_rate'] else 0.0,
-            delivery_radius_km=store_data['delivery_radius_km'],
-            delivery_enabled=store_data['delivery_enabled'],
-            pickup_enabled=store_data['pickup_enabled'],
-            kiosk_enabled=store_data['kiosk_enabled'],
-            pos_enabled=store_data['pos_enabled'],
-            ecommerce_enabled=store_data['ecommerce_enabled'],
-            status=store_data['status'],
-            settings=store_data['settings'],
-            pos_integration=store_data['pos_integration'],
-            seo_config=store_data['seo_config'],
-            location=location,
-            delivery_zone=store_data.get('delivery_zone'),
-            delivery_zone_stats=store_data.get('delivery_zone_stats'),
-            created_at=store_data['created_at'],
-            updated_at=store_data['updated_at']
+            id=store.id,
+            tenant_id=store.tenant_id,
+            province_territory_id=store.province_territory_id,
+            store_code=store.store_code,
+            name=store.name,
+            address=store.address.to_dict() if store.address else None,
+            phone=store.phone,
+            email=store.email,
+            hours=store.hours,
+            timezone=store.timezone,
+            license_number=store.license_number,
+            license_expiry=store.license_expiry,
+            tax_rate=float(store.tax_rate),
+            delivery_radius_km=store.delivery_radius_km,
+            delivery_enabled=store.delivery_enabled,
+            pickup_enabled=store.pickup_enabled,
+            kiosk_enabled=store.kiosk_enabled,
+            pos_enabled=store.pos_enabled,
+            ecommerce_enabled=store.ecommerce_enabled,
+            status=store.status.value,
+            settings=store.settings,
+            pos_integration=store.pos_integration,
+            seo_config=store.seo_config,
+            location=store.location.to_dict() if store.location else None,
+            delivery_zone=getattr(store, 'delivery_zone', None),
+            delivery_zone_stats=getattr(store, 'delivery_zone_stats', None),
+            created_at=store.created_at,
+            updated_at=store.updated_at
         )
 
     except HTTPException:

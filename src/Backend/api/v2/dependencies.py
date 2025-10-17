@@ -213,6 +213,39 @@ async def get_promotion_repository() -> IPromotionRepository:
     return AsyncPGPromotionRepository(pool)
 
 
+# Provincial Catalog Repository Dependencies
+from ddd_refactored.domain.product_catalog.repositories import (
+    IProvincialCatalogRepository,
+    AsyncPGProvincialCatalogRepository
+)
+
+async def get_provincial_catalog_repository() -> IProvincialCatalogRepository:
+    """Get provincial catalog repository instance"""
+    pool = await get_db_pool()
+    return AsyncPGProvincialCatalogRepository(pool)
+
+
+# Purchase Order Repository Dependencies
+from ddd_refactored.domain.purchase_order.repositories import (
+    IPurchaseOrderRepository,
+    AsyncPGPurchaseOrderRepository
+)
+from ddd_refactored.application.services.purchase_order_service import (
+    PurchaseOrderApplicationService
+)
+
+async def get_purchase_order_repository() -> IPurchaseOrderRepository:
+    """Get purchase order repository instance"""
+    pool = await get_db_pool()
+    return AsyncPGPurchaseOrderRepository(pool)
+
+
+async def get_purchase_order_service() -> PurchaseOrderApplicationService:
+    """Get purchase order application service instance"""
+    repository = await get_purchase_order_repository()
+    return PurchaseOrderApplicationService(repository)
+
+
 # Authentication dependencies
 async def get_current_user(
     authorization: Optional[str] = Header(None)

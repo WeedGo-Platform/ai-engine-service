@@ -70,6 +70,25 @@ interface ChatWidgetProps {
   maxMessages?: number;
 }
 
+// Strip markdown for TTS - remove formatting but keep the text
+const stripMarkdown = (text: string): string => {
+  // Remove **bold** markers (keep the text inside)
+  let cleaned = text.replace(/\*\*(.+?)\*\*/g, '$1');
+  // Remove *italic* markers
+  cleaned = cleaned.replace(/\*(.+?)\*/g, '$1');
+  // Remove __bold__ markers
+  cleaned = cleaned.replace(/__(.+?)__/g, '$1');
+  // Remove _italic_ markers
+  cleaned = cleaned.replace(/_(.+?)_/g, '$1');
+  // Remove # headings
+  cleaned = cleaned.replace(/^#{1,6}\s+/gm, '');
+  // Remove [links](url) - keep just the link text
+  cleaned = cleaned.replace(/\[(.+?)\]\(.+?\)/g, '$1');
+  // Remove backticks for code
+  cleaned = cleaned.replace(/`(.+?)`/g, '$1');
+  return cleaned;
+};
+
 // Enhanced busy animation activities
 const busyActivities = [
   { icon: '🔍', text: 'Analyzing your request' },
@@ -802,7 +821,23 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
           if (isSpeakerEnabled && fullContent) {
             (async () => {
               try {
-                const audioBlob = await voiceApi.synthesize(fullContent);
+                // Strip markdown before TTS to avoid reading "asterisk asterisk"
+                const cleanContent = stripMarkdown(fullContent);
+                console.log('[ChatWidget] Starting TTS for message:', cleanContent.substring(0, 50) + '...');
+
+                // Detect browser language
+                const browserLang = navigator.language || navigator.languages?.[0] || 'en-US';
+                console.log('[ChatWidget] Browser language:', browserLang);
+
+                // Select voice based on personality and language
+                // rhomida = female voice, carlos = male voice
+                const gender = selectedPersonality === 'rhomida' ? 'female' : 'male';
+                const voice = voiceApi.selectVoice(browserLang, gender);
+                console.log('[ChatWidget] Using voice:', voice, 'for personality:', selectedPersonality, 'gender:', gender, 'language:', browserLang);
+
+                const audioBlob = await voiceApi.synthesize(cleanContent, voice);
+                console.log('[ChatWidget] Received audio blob, size:', audioBlob.size, 'type:', audioBlob.type);
+
                 const audioUrl = URL.createObjectURL(audioBlob);
 
                 // Stop any currently playing audio
@@ -817,21 +852,56 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
 
                 setIsSpeaking(true);
                 audio.onended = () => {
+                  console.log('[ChatWidget] TTS playback ended');
                   setIsSpeaking(false);
                   URL.revokeObjectURL(audioUrl);
                   currentAudioRef.current = null;
                 };
 
-                audio.onerror = () => {
+                audio.onerror = (e) => {
+                  console.error('[ChatWidget] Audio playback error:', e);
                   setIsSpeaking(false);
                   URL.revokeObjectURL(audioUrl);
                   currentAudioRef.current = null;
                 };
 
-                await audio.play();
+                // Try to play with better error handling for autoplay policies
+                try {
+                  await audio.play();
+                  console.log('[ChatWidget] TTS playback started successfully');
+                } catch (playError: any) {
+                  console.error('[ChatWidget] Audio play() failed:', playError);
+
+                  // If autoplay is blocked, try browser TTS as fallback
+                  if (playError.name === 'NotAllowedError' || playError.name === 'NotSupportedError') {
+                    console.warn('[ChatWidget] Autoplay blocked, falling back to browser TTS');
+                    if ('speechSynthesis' in window) {
+                      const utterance = new SpeechSynthesisUtterance(cleanContent);
+                      utterance.rate = 1.0;
+                      utterance.pitch = 1.0;
+                      utterance.volume = 1.0;
+                      window.speechSynthesis.speak(utterance);
+                      console.log('[ChatWidget] Browser TTS started');
+                    }
+                  }
+                  setIsSpeaking(false);
+                  URL.revokeObjectURL(audioUrl);
+                  currentAudioRef.current = null;
+                }
               } catch (error) {
-                console.error('TTS Error:', error);
+                console.error('[ChatWidget] TTS Error:', error);
                 setIsSpeaking(false);
+
+                // Try browser TTS as last resort with clean content
+                if ('speechSynthesis' in window) {
+                  const cleanContent = stripMarkdown(fullContent);
+                  console.warn('[ChatWidget] Attempting browser TTS fallback after error');
+                  const utterance = new SpeechSynthesisUtterance(cleanContent);
+                  utterance.rate = 1.0;
+                  utterance.pitch = 1.0;
+                  utterance.volume = 1.0;
+                  window.speechSynthesis.speak(utterance);
+                }
               }
             })();
           }

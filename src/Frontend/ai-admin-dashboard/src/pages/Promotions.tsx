@@ -488,52 +488,64 @@ export default function Promotions() {
 
       {activeTab === 'analytics' && analytics && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Top Performing Promotions */}
-          <div className="bg-white rounded-lg  p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('promotions:titles.topPerforming')}</h3>
-            <div className="space-y-3">
-              {analytics.promotions?.slice(0, 5).map((promo: any) => (
-                <div key={promo.name} className="flex justify-between items-center">
-                  <div>
-                    <div className="text-sm font-medium text-gray-900">{promo.name}</div>
-                    <div className="text-xs text-gray-500">{promo.times_used} {t('promotions:table.uses')}</div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-sm font-medium">${promo.total_revenue?.toFixed(2) || 0}</div>
-                    <div className="text-xs text-gray-500">{t('promotions:table.revenue')}</div>
-                  </div>
+          {/* Promotion Stats */}
+          <div className="bg-white rounded-lg p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('promotions:titles.overallStats')}</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-gray-50 rounded-lg p-4">
+                <div className="text-2xl font-bold text-gray-900">
+                  {analytics.promotions?.total || 0}
                 </div>
-              ))}
+                <div className="text-sm text-gray-600">Total Promotions</div>
+              </div>
+              <div className="bg-gray-50 rounded-lg p-4">
+                <div className="text-2xl font-bold text-green-600">
+                  {analytics.promotions?.active || 0}
+                </div>
+                <div className="text-sm text-gray-600">Active Now</div>
+              </div>
+              <div className="bg-gray-50 rounded-lg p-4">
+                <div className="text-2xl font-bold text-blue-600">
+                  {analytics.promotions?.scheduled || 0}
+                </div>
+                <div className="text-sm text-gray-600">Scheduled</div>
+              </div>
+              <div className="bg-gray-50 rounded-lg p-4">
+                <div className="text-2xl font-bold text-gray-500">
+                  {analytics.promotions?.expired || 0}
+                </div>
+                <div className="text-sm text-gray-600">Expired</div>
+              </div>
             </div>
           </div>
 
-          {/* Promotion Stats */}
-          <div className="bg-white rounded-lg  p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('promotions:titles.overallStats')}</h3>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-gray-50 rounded-lg p-6">
+          {/* Discount Code Stats */}
+          <div className="bg-white rounded-lg p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Discount Codes</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-gray-50 rounded-lg p-4">
                 <div className="text-2xl font-bold text-gray-900">
-                  {analytics.promotions?.reduce((sum: number, p: any) => sum + (p.times_used || 0), 0) || 0}
+                  {analytics.discount_codes?.total || 0}
                 </div>
-                <div className="text-sm text-gray-600">{t('promotions:stats.totalUses')}</div>
+                <div className="text-sm text-gray-600">Total Codes</div>
               </div>
-              <div className="bg-gray-50 rounded-lg p-6">
-                <div className="text-2xl font-bold text-gray-900">
-                  ${analytics.promotions?.reduce((sum: number, p: any) => sum + (p.total_discount_given || 0), 0).toFixed(2) || '0.00'}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <div className="text-2xl font-bold text-green-600">
+                  {analytics.discount_codes?.active || 0}
                 </div>
-                <div className="text-sm text-gray-600">{t('promotions:stats.totalDiscounts')}</div>
+                <div className="text-sm text-gray-600">Active Codes</div>
               </div>
-              <div className="bg-gray-50 rounded-lg p-6">
-                <div className="text-2xl font-bold text-gray-900">
-                  ${analytics.promotions?.reduce((sum: number, p: any) => sum + (p.total_revenue || 0), 0).toFixed(2) || '0.00'}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <div className="text-2xl font-bold text-blue-600">
+                  {analytics.discount_codes?.total_uses || 0}
                 </div>
-                <div className="text-sm text-gray-600">{t('promotions:stats.totalRevenue')}</div>
+                <div className="text-sm text-gray-600">Total Uses</div>
               </div>
-              <div className="bg-gray-50 rounded-lg p-6">
-                <div className="text-2xl font-bold text-gray-900">
-                  ${analytics.promotions?.[0]?.avg_order_value?.toFixed(2) || '0.00'}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <div className="text-2xl font-bold text-purple-600">
+                  ${analytics.totals?.total_discount_amount?.toFixed(2) || '0.00'}
                 </div>
-                <div className="text-sm text-gray-600">{t('promotions:stats.avgOrderValue')}</div>
+                <div className="text-sm text-gray-600">Total Discounts</div>
               </div>
             </div>
           </div>
@@ -977,8 +989,8 @@ function PricingConfiguration() {
   const [expandedSubCategories, setExpandedSubCategories] = useState<Set<string>>(new Set());
   const [showProducts, setShowProducts] = useState(false);
   const [updateSuccess, setUpdateSuccess] = useState(false);
-  const [defaultMarkupEnabled, setDefaultMarkupEnabled] = useState(true);
-  const [storeDefaultMarkup, setStoreDefaultMarkup] = useState(25);
+  const [defaultMarkupEnabled, setDefaultMarkupEnabled] = useState(false);
+  const [storeDefaultMarkup, setStoreDefaultMarkup] = useState(0);
   const [settingsUpdateSuccess, setSettingsUpdateSuccess] = useState(false);
   const queryClient = useQueryClient();
 
@@ -997,16 +1009,19 @@ function PricingConfiguration() {
           ...(token && { 'Authorization': `Bearer ${token}` })
         }
       });
-      return response.data.settings || { default_markup_enabled: false, default_markup_percentage: 0 };
+      return response.data || { default_markup_enabled: false, default_markup_percentage: 0 };
     },
-    enabled: !!currentStore?.id,
-    onSuccess: (data) => {
-      setDefaultMarkupEnabled(data.default_markup_enabled);
-      setStoreDefaultMarkup(data.default_markup_percentage);
-      // Set initial markup value to store default
-      setMarkupValue(data.default_markup_percentage);
-    }
+    enabled: !!currentStore?.id
   });
+
+  // Update state when pricing settings are loaded (React Query v4+ doesn't support onSuccess in useQuery)
+  useEffect(() => {
+    if (pricingSettings) {
+      setDefaultMarkupEnabled(pricingSettings.default_markup_enabled);
+      setStoreDefaultMarkup(pricingSettings.default_markup_percentage);
+      setMarkupValue(pricingSettings.default_markup_percentage);
+    }
+  }, [pricingSettings]);
 
   // Update pricing settings mutation
   const updatePricingSettings = useMutation({

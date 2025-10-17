@@ -41,17 +41,21 @@ export type SupportedLanguage = typeof SUPPORTED_LANGUAGES[number]['code'];
 // All available namespaces
 const namespaces = ['common', 'auth', 'dashboard', 'landing', 'forms', 'errors', 'modals', 'tenants', 'stores', 'inventory', 'orders', 'pos', 'payments', 'settings', 'communications', 'database', 'promotions', 'catalog', 'apps', 'tools', 'signup'];
 
-// Dynamically load resources for all languages and namespaces
+// Dynamically load resources for all languages and namespaces using Vite's import.meta.glob
 const loadResources = () => {
   const resources: Record<string, Record<string, any>> = {};
+
+  // Use Vite's glob import - this loads all JSON files at build time
+  const modules = import.meta.glob('./locales/**/*.json', { eager: true });
 
   SUPPORTED_LANGUAGES.forEach(({ code }) => {
     resources[code] = {};
     namespaces.forEach(ns => {
-      try {
-        // @ts-ignore - Dynamic imports
-        resources[code][ns] = require(`./locales/${code}/${ns}.json`);
-      } catch (error) {
+      const key = `./locales/${code}/${ns}.json`;
+      if (modules[key]) {
+        // @ts-ignore
+        resources[code][ns] = modules[key].default || modules[key];
+      } else {
         console.warn(`Failed to load namespace "${ns}" for language "${code}"`);
       }
     });
