@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
-import { Upload, X, CheckCircle, AlertCircle, FileSpreadsheet, TruckIcon, Loader2 } from 'lucide-react';
+import { Upload, X, CheckCircle, AlertCircle, FileSpreadsheet, TruckIcon, Loader2, ChevronDown, ChevronRight } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import { useStoreContext } from '../contexts/StoreContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -52,6 +52,7 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
   const [isProcessing, setIsProcessing] = useState(false);
   const [processingProgress, setProcessingProgress] = useState(0);
   const [uploadedFileName, setUploadedFileName] = useState<string>('');
+  const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
   
   // Form state for PO creation
   const [poNumber, setPoNumber] = useState('');
@@ -412,6 +413,15 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
 
       // Validate required columns using exact matching
       const firstRow = jsonData[0] as any;
+      const excelColumns = Object.keys(firstRow);
+
+      // Log all Excel column names for debugging
+      console.log('=== EXCEL COLUMN NAMES DEBUG ===');
+      console.log('Found columns:', excelColumns);
+      console.log('Total columns:', excelColumns.length);
+      console.log('Column details:', excelColumns.map((col, idx) => `${idx + 1}. "${col}"`).join('\n'));
+      console.log('================================');
+
       const requiredColumns = ['SKU', 'Shipped_Qty'];
       const missingColumns: string[] = [];
 
@@ -480,8 +490,23 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
           }
         }
 
-        // Parse unit cost from the row
-        const unitPrice = parseFloat(row['UnitCost'] || '0');
+        // Parse unit price from the row (Excel has "UnitPrice" not "UnitCost")
+        const unitPrice = parseFloat(row['UnitPrice'] || '0');
+
+        // Debug log for first item to see what's being extracted
+        if (i === 0) {
+          console.log('=== FIRST ROW DATA EXTRACTION DEBUG ===');
+          console.log('Raw row data:', row);
+          console.log('Extracted values:');
+          console.log('  SKU:', sku);
+          console.log('  UnitPrice (row["UnitPrice"]):', row['UnitPrice'], '=> unitPrice:', unitPrice);
+          console.log('  Vendor (row["Vendor"]):', row['Vendor']);
+          console.log('  ItemName (row["ItemName"]):', row['ItemName']);
+          console.log('  ShipmentID (row["ShipmentID"]):', row['ShipmentID']);
+          console.log('  ContainerID (row["ContainerID"]):', row['ContainerID']);
+          console.log('  BatchLot (row["BatchLot"]):', row['BatchLot']);
+          console.log('=======================================');
+        }
 
         // Get comprehensive pricing info (inventory override > category rules > store default)
         const pricingInfo = await getPricingInfo(sku, unitPrice);
@@ -498,7 +523,7 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
           case_gtin: String(row['CaseGTIN'] || ''),
           packaged_on_date: formattedPackagedOnDate,
           batch_lot: batchLot,
-          gtin_barcode: String(row['GTINBarcode'] || ''),
+          gtin_barcode: String(row['GTINBarCode'] || ''), // Excel has "GTINBarCode" with capital C
           each_gtin: String(row['EachGTIN'] || ''),
           shipped_qty: parseInt(row['Shipped_Qty'] || '0'),
           received_qty: parseInt(row['Shipped_Qty'] || '0'), // Default to shipped quantity
@@ -506,8 +531,8 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
           markup_percentage: pricingInfo.markup_percentage,
           price_source: pricingInfo.price_source,
           uom: String(row['UOM'] || 'EACH'),
-          uom_conversion: parseFloat(row['UOMConversion'] || '1'),
-          uom_conversion_qty: parseInt(row['UOMConversionQty'] || '1'),
+          uom_conversion: parseFloat(row['UOMCONVERSION'] || '1'), // Excel has "UOMCONVERSION" all caps
+          uom_conversion_qty: parseInt(row['UOMCONVERSIONQTY'] || '1'), // Excel has "UOMCONVERSIONQTY" all caps
           exists_in_inventory: inventoryCheck.exists,
           is_new_batch: inventoryCheck.isNewBatch,
           image_url: productInfo.image_url,
@@ -788,6 +813,16 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
     createPOMutation.mutate();
   };
 
+  const toggleRowExpansion = (index: number) => {
+    const newExpandedRows = new Set(expandedRows);
+    if (newExpandedRows.has(index)) {
+      newExpandedRows.delete(index);
+    } else {
+      newExpandedRows.add(index);
+    }
+    setExpandedRows(newExpandedRows);
+  };
+
   const handleClose = () => {
     setStep('upload');
     setAsnItems([]);
@@ -801,6 +836,7 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
     setIsProcessing(false);
     setProcessingProgress(0);
     setUploadedFileName('');
+    setExpandedRows(new Set());
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -906,29 +942,6 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
                   </>
                 )}
               </div>
-
-              <div className="bg-gray-50 rounded-lg p-6">
-                <h4 className="font-medium mb-2">Required Excel Columns:</h4>
-                <div className="grid grid-cols-4 gap-2 text-sm text-gray-600">
-                  <span>• Shipment_ID</span>
-                  <span>• Container_ID</span>
-                  <span>• SKU *</span>
-                  <span>• Item_Name</span>
-                  <span>• Unit_Price</span>
-                  <span>• Vendor</span>
-                  <span>• Brand</span>
-                  <span>• Case_GTIN</span>
-                  <span>• Packaged_On_Date</span>
-                  <span>• Batch_Lot</span>
-                  <span>• GTIN_BarCode</span>
-                  <span>• Each_GTIN</span>
-                  <span>• Shipped_Qty *</span>
-                  <span>• UOM</span>
-                  <span>• UOM_CONVERSION</span>
-                  <span>• UOM_CONVERSION_QTY</span>
-                </div>
-                <p className="text-xs text-gray-500 mt-2">* Required fields</p>
-              </div>
             </div>
           )}
 
@@ -953,6 +966,7 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
+                      <th className="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase w-12">Details</th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Image</th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">SKU</th>
@@ -965,56 +979,149 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {asnItems.map((item, index) => (
-                      <tr key={index} className={item.exists_in_inventory && !item.is_new_batch ? 'bg-blue-50' : ''}>
-                        <td className="px-4 py-3 whitespace-nowrap">
-                          <div className="flex flex-col items-center gap-1">
-                            {item.is_new_batch ? (
-                              <>
-                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-warning-100 text-warning-800">
-                                  New Batch
+                      <React.Fragment key={index}>
+                        <tr className={item.exists_in_inventory && !item.is_new_batch ? 'bg-blue-50' : ''}>
+                          <td className="px-2 py-3 whitespace-nowrap">
+                            <button
+                              onClick={() => toggleRowExpansion(index)}
+                              className="text-gray-500 hover:text-gray-700 focus:outline-none"
+                              aria-label={expandedRows.has(index) ? 'Collapse details' : 'Expand details'}
+                            >
+                              {expandedRows.has(index) ? (
+                                <ChevronDown className="h-5 w-5" />
+                              ) : (
+                                <ChevronRight className="h-5 w-5" />
+                              )}
+                            </button>
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap">
+                            <div className="flex flex-col items-center gap-1">
+                              {item.is_new_batch ? (
+                                <>
+                                  <span className="px-2 py-1 text-xs font-semibold rounded-full bg-warning-100 text-warning-800">
+                                    New Batch
+                                  </span>
+                                </>
+                              ) : item.exists_in_inventory ? (
+                                <span className="flex items-center gap-1 text-accent-600">
+                                  <CheckCircle className="h-4 w-4" />
+                                  <span className="text-xs">Exists</span>
                                 </span>
-                              </>
-                            ) : item.exists_in_inventory ? (
-                              <span className="flex items-center gap-1 text-accent-600">
-                                <CheckCircle className="h-4 w-4" />
-                                <span className="text-xs">Exists</span>
-                              </span>
-                            ) : (
-                              <span className="flex items-center gap-1 text-primary-600">
-                                <AlertCircle className="h-4 w-4" />
-                                <span className="text-xs">New</span>
-                              </span>
-                            )}
-                          </div>
-                        </td>
-                        <td className="px-4 py-3">
-                          {item.image_url && item.image_url !== 'null' && item.image_url !== 'undefined' ? (
-                            <img 
-                              src={item.image_url} 
-                              alt={item.product_name || item.item_name || 'Product'}
-                              className="h-12 w-12 object-cover rounded"
-                              loading="eager"
-                              onError={(e) => {
-                                // If image fails to load, hide it and log the error
-                                console.error(`Failed to load image for SKU ${item.sku}:`, item.image_url);
-                                (e.target as HTMLImageElement).style.visibility = 'hidden';
-                              }}
-                            />
-                          ) : (
-                            <div className="h-12 w-12 bg-gray-50 rounded flex items-center justify-center text-xs text-gray-500">
-                              {item.sku?.substring(0, 3)}
+                              ) : (
+                                <span className="flex items-center gap-1 text-primary-600">
+                                  <AlertCircle className="h-4 w-4" />
+                                  <span className="text-xs">New</span>
+                                </span>
+                              )}
                             </div>
-                          )}
-                        </td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm font-medium">{item.sku}</td>
-                        <td className="px-4 py-3 text-sm">{item.item_name || '-'}</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm">{item.shipped_qty}</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm">${item.unit_price.toFixed(2)}</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm font-medium">
-                          ${(item.shipped_qty * item.unit_price).toFixed(2)}
-                        </td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm">{item.vendor || '-'}</td>
-                      </tr>
+                          </td>
+                          <td className="px-4 py-3">
+                            {item.image_url && item.image_url !== 'null' && item.image_url !== 'undefined' ? (
+                              <img
+                                src={item.image_url}
+                                alt={item.product_name || item.item_name || 'Product'}
+                                className="h-12 w-12 object-cover rounded"
+                                loading="eager"
+                                onError={(e) => {
+                                  // If image fails to load, hide it and log the error
+                                  console.error(`Failed to load image for SKU ${item.sku}:`, item.image_url);
+                                  (e.target as HTMLImageElement).style.visibility = 'hidden';
+                                }}
+                              />
+                            ) : (
+                              <div className="h-12 w-12 bg-gray-50 rounded flex items-center justify-center text-xs text-gray-500">
+                                {item.sku?.substring(0, 3)}
+                              </div>
+                            )}
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm font-medium">{item.sku}</td>
+                          <td className="px-4 py-3 text-sm">{item.item_name || '-'}</td>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm">{item.shipped_qty}</td>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm">${item.unit_price.toFixed(2)}</td>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm font-medium">
+                            ${(item.shipped_qty * item.unit_price).toFixed(2)}
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm">{item.vendor || '-'}</td>
+                        </tr>
+                        {expandedRows.has(index) && (
+                          <tr className={item.exists_in_inventory && !item.is_new_batch ? 'bg-blue-50' : ''}>
+                            <td colSpan={9} className="px-4 py-4">
+                              <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                                  <FileSpreadsheet className="h-4 w-4" />
+                                  Complete Excel Data - All 16 Columns
+                                </h4>
+                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 text-sm">
+                                  <div>
+                                    <span className="font-medium text-gray-700">ShipmentID:</span>
+                                    <div className="text-gray-900 mt-1">{item.shipment_id || '-'}</div>
+                                  </div>
+                                  <div>
+                                    <span className="font-medium text-gray-700">ContainerID:</span>
+                                    <div className="text-gray-900 mt-1">{item.container_id || '-'}</div>
+                                  </div>
+                                  <div>
+                                    <span className="font-medium text-gray-700">SKU:</span>
+                                    <div className="text-gray-900 mt-1 font-mono">{item.sku}</div>
+                                  </div>
+                                  <div>
+                                    <span className="font-medium text-gray-700">ItemName:</span>
+                                    <div className="text-gray-900 mt-1">{item.item_name || '-'}</div>
+                                  </div>
+                                  <div>
+                                    <span className="font-medium text-gray-700">UnitPrice:</span>
+                                    <div className="text-gray-900 mt-1 font-semibold">${item.unit_price.toFixed(2)}</div>
+                                  </div>
+                                  <div>
+                                    <span className="font-medium text-gray-700">Vendor:</span>
+                                    <div className="text-gray-900 mt-1">{item.vendor || '-'}</div>
+                                  </div>
+                                  <div>
+                                    <span className="font-medium text-gray-700">Brand:</span>
+                                    <div className="text-gray-900 mt-1">{item.brand || '-'}</div>
+                                  </div>
+                                  <div>
+                                    <span className="font-medium text-gray-700">CaseGTIN:</span>
+                                    <div className="text-gray-900 mt-1 font-mono text-xs">{item.case_gtin || '-'}</div>
+                                  </div>
+                                  <div>
+                                    <span className="font-medium text-gray-700">PackagedOnDate:</span>
+                                    <div className="text-gray-900 mt-1">{item.packaged_on_date || '-'}</div>
+                                  </div>
+                                  <div>
+                                    <span className="font-medium text-gray-700">BatchLot:</span>
+                                    <div className="text-gray-900 mt-1">{item.batch_lot || '-'}</div>
+                                  </div>
+                                  <div>
+                                    <span className="font-medium text-gray-700">GTINBarCode:</span>
+                                    <div className="text-gray-900 mt-1 font-mono text-xs">{item.gtin_barcode || '-'}</div>
+                                  </div>
+                                  <div>
+                                    <span className="font-medium text-gray-700">EachGTIN:</span>
+                                    <div className="text-gray-900 mt-1 font-mono text-xs">{item.each_gtin || '-'}</div>
+                                  </div>
+                                  <div>
+                                    <span className="font-medium text-gray-700">Shipped_Qty:</span>
+                                    <div className="text-gray-900 mt-1 font-semibold">{item.shipped_qty}</div>
+                                  </div>
+                                  <div>
+                                    <span className="font-medium text-gray-700">UOM:</span>
+                                    <div className="text-gray-900 mt-1">{item.uom || 'EACH'}</div>
+                                  </div>
+                                  <div>
+                                    <span className="font-medium text-gray-700">UOMCONVERSION:</span>
+                                    <div className="text-gray-900 mt-1">{item.uom_conversion || 1}</div>
+                                  </div>
+                                  <div>
+                                    <span className="font-medium text-gray-700">UOMCONVERSIONQTY:</span>
+                                    <div className="text-gray-900 mt-1">{item.uom_conversion_qty || 1}</div>
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </React.Fragment>
                     ))}
                   </tbody>
                 </table>
