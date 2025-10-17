@@ -737,13 +737,29 @@ try:
 except Exception as e:
     logger.warning(f"Failed to load API gateway endpoints: {e}")
 
-# Import and include provincial catalog upload endpoints
+# Import and include provincial catalog upload endpoints (Legacy V1)
 try:
     from api.provincial_catalog_upload_endpoints import router as provincial_upload_router
     app.include_router(provincial_upload_router, prefix="/api/admin/provincial-catalog", tags=["Provincial Catalog Upload"])
-    logger.info("Provincial catalog upload endpoints loaded successfully")
+    logger.info("Provincial catalog upload endpoints (V1) loaded successfully")
 except Exception as e:
     logger.warning(f"Failed to load provincial catalog upload endpoints: {e}")
+
+# Import and include provincial catalog V2 endpoints (DDD)
+try:
+    from api.v2.provincial_catalog import router as provincial_catalog_v2_router
+    app.include_router(provincial_catalog_v2_router)
+    logger.info("Provincial catalog V2 endpoints (DDD) loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load provincial catalog V2 endpoints: {e}")
+
+# Import and include pricing & promotions V2 endpoints (DDD)
+try:
+    from api.v2.pricing_promotions.pricing_promotions_endpoints import router as pricing_promotions_v2_router
+    app.include_router(pricing_promotions_v2_router)
+    logger.info("Pricing & Promotions V2 endpoints (DDD) loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load pricing & promotions V2 endpoints: {e}")
 
 # Import and include SEO/Sitemap endpoints
 try:

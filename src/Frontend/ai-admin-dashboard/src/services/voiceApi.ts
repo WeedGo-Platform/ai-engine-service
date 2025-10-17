@@ -39,6 +39,35 @@ export const voiceApi = {
   },
 
   /**
+   * Select appropriate voice based on language and gender
+   */
+  selectVoice: (language: string = 'en', gender: 'male' | 'female' = 'male'): string => {
+    // Language-specific voice mapping
+    const voiceMap: Record<string, { male: string; female: string }> = {
+      'en': { male: 'ryan', female: 'amy' },
+      'en-US': { male: 'ryan', female: 'amy' },
+      'en-GB': { male: 'alan', female: 'alba' },
+      'fr': { male: 'gilles', female: 'siwis' },
+      'fr-FR': { male: 'gilles', female: 'siwis' },
+      'es': { male: 'davefx', female: 'ald' },
+      'es-ES': { male: 'davefx', female: 'ald' },
+      'es-MX': { male: 'davefx', female: 'ald' },
+      'pt': { male: 'cadu', female: 'faber' },
+      'pt-BR': { male: 'cadu', female: 'faber' },
+      'zh': { male: 'huayan_male', female: 'huayan' },
+      'zh-CN': { male: 'huayan_male', female: 'huayan' }
+    };
+
+    // Extract base language code (e.g., 'en-US' -> 'en')
+    const baseLang = language.split('-')[0].toLowerCase();
+
+    // Get voice for specific language or fallback to base language
+    const voices = voiceMap[language] || voiceMap[baseLang] || voiceMap['en'];
+
+    return gender === 'female' ? voices.female : voices.male;
+  },
+
+  /**
    * Synthesize text to speech
    */
   synthesize: async (text: string, voice?: string): Promise<Blob> => {

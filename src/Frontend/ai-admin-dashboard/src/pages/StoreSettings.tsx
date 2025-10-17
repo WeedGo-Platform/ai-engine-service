@@ -51,50 +51,33 @@ const StoreSettings: React.FC = () => {
       setLoading(true);
       let storeData: Store | null = null;
 
-      // First check if we have a current store in context
-      if (currentStore) {
-        // Fetch the complete store data with settings using store ID from context
+      // Use store code from URL to fetch directly from API
+      // This is simpler and more reliable than depending on context being populated
+      if (storeCode) {
         try {
-          storeData = await storeService.getStoreById(currentStore.id);
-        } catch (err) {
-          console.error('Error fetching store by ID:', err);
-        }
-      } else if (storeCode && stores.length > 0) {
-        // Find the store by code from the available stores
-        const contextStore = stores.find(s => s.store_code === storeCode);
+          storeData = await storeService.getStoreByCode(storeCode);
 
-        if (contextStore) {
-          // Select it in the context
-          await selectStore(contextStore.id);
-          // Fetch the complete store data with settings
-          try {
-            storeData = await storeService.getStoreById(contextStore.id);
-          } catch (err) {
-            console.error('Error fetching store by ID:', err);
+          // Update context with the found store for consistency
+          if (storeData && storeData.id !== currentStore?.id) {
+            await selectStore(storeData.id);
+          }
+        } catch (err: any) {
+          console.error('Error fetching store by code:', err);
+          // Check if it's a 404 or other error
+          if (err.response?.status === 404) {
+            setError(`Store with code "${storeCode}" not found`);
+          } else {
+            setError('Failed to load store data. Please try again.');
           }
         }
-      } else if (storeCode && user?.tenant_id) {
-        // Fallback: fetch stores if not in context
-        try {
-          const fetchedStores = await storeService.getStoresByTenant(user.tenant_id);
-          const foundStore = fetchedStores.find(s => s.store_code === storeCode);
-
-          if (foundStore) {
-            // Select it in the context
-            await selectStore(foundStore.id);
-            storeData = foundStore;
-          }
-        } catch (err) {
-          console.error('Error fetching stores:', err);
-        }
+      } else {
+        setError('No store code provided in URL');
       }
 
       if (storeData) {
         setStore(storeData);
         setStoreSettings(storeData.settings || {});
         setError(null);
-      } else {
-        setError('Store not found');
       }
     } catch (err) {
       setError('Failed to load store settings');

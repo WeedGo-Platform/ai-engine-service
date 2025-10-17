@@ -166,15 +166,15 @@ class InventoryService:
                 po_query = """
                     INSERT INTO purchase_orders
                     (po_number, supplier_id, order_date, expected_date, status, total_amount, notes, store_id,
-                     shipment_id, container_id, vendor, created_by, shipment_date)
-                    VALUES ($1, $2, CURRENT_DATE, $3, 'pending', $4, $5, $6, $7, $8, $9, $10, $11)
+                     shipment_id, container_id, vendor, created_by)
+                    VALUES ($1, $2, CURRENT_DATE, $3, 'pending', $4, $5, $6, $7, $8, $9, $10)
                     RETURNING id
                 """
 
                 po_id = await self.db.fetchval(
                     po_query,
                     po_number, supplier_id, expected_date, total_amount, notes, store_id,
-                    shipment_id, container_id, vendor, created_by, expected_date
+                    shipment_id, container_id, vendor, created_by
                 )
                 
                 # Add items to purchase order
@@ -195,13 +195,13 @@ class InventoryService:
                     await self.db.execute(
                         item_query,
                         po_id,
-                        item['sku'],
+                        item['sku'],  # SKU from Excel
                         item.get('item_name'),  # From Excel ItemName column
                         item['batch_lot'],  # Required from Excel
                         item['quantity'],
                         Decimal(str(item['unit_cost'])),
                         item['case_gtin'],  # Required from Excel
-                        gtin_barcode_value,  # From Excel Barcode column
+                        gtin_barcode_value,  # From Excel GTINBarcode column
                         item['each_gtin'],  # Required from Excel
                         item['vendor'],  # Required from Excel
                         item['brand'],  # Required from Excel
@@ -219,20 +219,134 @@ class InventoryService:
             logger.error(f"Error creating purchase order: {str(e)}")
             raise
     
-    async def receive_purchase_order(self, po_id: UUID, 
+    async def _get_applicable_markup(
+        self,
+        store_id: UUID,
+        category: Optional[str],
+        sub_category: Optional[str],
+        sub_sub_category: Optional[str]
+    ) -> Optional[float]:
+        """
+        Get applicable markup percentage for a product
+
+        Follows hierarchy: sub_sub_category > sub_category > category > store default
+        Returns None if no pricing configuration is found (fail-fast approach)
+        """
+        # Check for specific pricing rule (most specific first)
+        query = """
+            SELECT markup_percentage
+            FROM pricing_rules
+            WHERE store_id = $1
+            AND ($2::text IS NULL OR category = $2 OR category IS NULL)
+            AND ($3::text IS NULL OR sub_category = $3 OR sub_category IS NULL)
+            AND ($4::text IS NULL OR sub_sub_category = $4 OR sub_sub_category IS NULL)
+            AND is_active = true
+            ORDER BY
+                CASE
+                    WHEN sub_sub_category IS NOT NULL THEN 3
+                    WHEN sub_category IS NOT NULL THEN 2
+                    WHEN category IS NOT NULL THEN 1
+                    ELSE 0
+                END DESC
+            LIMIT 1
+        """
+
+        result = await self.db.fetchrow(query, store_id, category, sub_category, sub_sub_category)
+
+        if result:
+            return float(result['markup_percentage'])
+
+        # Fall back to store default markup from store_settings
+        settings_query = """
+            SELECT value->>'default_markup_percentage' as markup
+            FROM store_settings
+            WHERE store_id = $1 AND category = 'pricing' AND key = 'default_markup'
+        """
+
+        settings = await self.db.fetchrow(settings_query, store_id)
+        if settings and settings['markup']:
+            return float(settings['markup'])
+
+        # No pricing configuration found - return None to trigger validation error
+        return None
+
+    async def receive_purchase_order(self, po_id: UUID,
                                     received_items: List[Dict[str, Any]]) -> bool:
         """Process receipt of purchase order items"""
         try:
-            async with self.db.transaction():
-                # Get store_id from purchase order
-                store_query = """
-                    SELECT store_id FROM purchase_orders WHERE id = $1
+            # Get store_id from purchase order (before transaction)
+            store_query = """
+                SELECT store_id FROM purchase_orders WHERE id = $1
+            """
+            store_id = await self.db.fetchval(store_query, po_id)
+
+            if not store_id:
+                raise ValueError(f"Purchase order {po_id} does not have a store_id. Cannot receive items without a store assignment.")
+
+            # PRE-VALIDATE: Check pricing configuration for all items BEFORE starting transaction
+            items_missing_pricing = []
+
+            for item in received_items:
+                # Get product category for pricing rule lookup
+                category_query = """
+                    SELECT category, sub_category, sub_sub_category
+                    FROM ocs_product_catalog
+                    WHERE LOWER(TRIM(ocs_variant_number)) = LOWER(TRIM($1))
+                    LIMIT 1
                 """
-                store_id = await self.db.fetchval(store_query, po_id)
-                
-                if not store_id:
-                    raise ValueError(f"Purchase order {po_id} does not have a store_id. Cannot receive items without a store assignment.")
-                
+                product_cat = await self.db.fetchrow(category_query, item['sku'])
+
+                # Check if markup is available
+                markup_percentage = await self._get_applicable_markup(
+                    store_id,
+                    product_cat.get('category') if product_cat else None,
+                    product_cat.get('sub_category') if product_cat else None,
+                    product_cat.get('sub_sub_category') if product_cat else None
+                )
+
+                if markup_percentage is None:
+                    # Pricing configuration missing for this item
+                    items_missing_pricing.append({
+                        'sku': item['sku'],
+                        'item_name': item.get('item_name', 'Unknown'),
+                        'category': product_cat.get('category') if product_cat else None,
+                        'sub_category': product_cat.get('sub_category') if product_cat else None,
+                        'sub_sub_category': product_cat.get('sub_sub_category') if product_cat else None
+                    })
+
+            # If any items are missing pricing configuration, fail fast with clear error
+            if items_missing_pricing:
+                error_details = {
+                    'error': 'pricing_configuration_required',
+                    'message': f'Cannot receive purchase order: {len(items_missing_pricing)} item(s) missing pricing configuration',
+                    'affected_items': items_missing_pricing,
+                    'remediation': {
+                        'required_action': 'Configure pricing before receiving this purchase order',
+                        'options': [
+                            {
+                                'option': 'Set store-wide default markup',
+                                'description': 'Navigate to Store Settings → Default Price Configuration and set a store-wide default markup percentage',
+                                'applies_to': 'All items in this store without category-specific rules'
+                            },
+                            {
+                                'option': 'Set category-specific markup',
+                                'description': 'Navigate to Store Settings → Default Price Configuration and configure markup for affected categories',
+                                'applies_to': 'Items in specific categories/subcategories'
+                            }
+                        ]
+                    }
+                }
+
+                logger.warning(
+                    f"Purchase order {po_id} cannot be received - missing pricing config for {len(items_missing_pricing)} items. "
+                    f"Store ID: {store_id}"
+                )
+
+                # Raise ValueError with structured error details
+                raise ValueError(str(error_details))
+
+            # All items have pricing configuration - proceed with transaction
+            async with self.db.transaction():
                 # Update PO status
                 status_query = """
                     UPDATE purchase_orders
@@ -242,7 +356,7 @@ class InventoryService:
                     WHERE id = $1
                 """
                 await self.db.execute(status_query, po_id)
-                
+
                 # Process each received item
                 for item in received_items:
                     # Update PO item
@@ -260,27 +374,50 @@ class InventoryService:
                         item['sku']
                     )
                     
-                    # Update or create inventory record
+                    # Get product category for pricing rule lookup
+                    category_query = """
+                        SELECT category, sub_category, sub_sub_category
+                        FROM ocs_product_catalog
+                        WHERE LOWER(TRIM(ocs_variant_number)) = LOWER(TRIM($1))
+                        LIMIT 1
+                    """
+                    product_cat = await self.db.fetchrow(category_query, item['sku'])
+
+                    # Calculate retail price using pricing rules
+                    unit_cost = Decimal(str(item['unit_cost']))
+                    markup_percentage = await self._get_applicable_markup(
+                        store_id,
+                        product_cat.get('category') if product_cat else None,
+                        product_cat.get('sub_category') if product_cat else None,
+                        product_cat.get('sub_sub_category') if product_cat else None
+                    )
+
+                    # Calculate: retail_price = unit_cost × (1 + markup%)
+                    calculated_retail_price = unit_cost * (1 + Decimal(str(markup_percentage)) / 100)
+
+                    # Update or create inventory record with calculated retail price
                     inv_query = """
-                        INSERT INTO ocs_inventory (store_id, sku, quantity_on_hand, quantity_available, 
-                                             unit_cost, last_restock_date)
-                        VALUES ($1, $2, $3, $3, $4, CURRENT_TIMESTAMP)
+                        INSERT INTO ocs_inventory (store_id, sku, quantity_on_hand, quantity_available,
+                                             unit_cost, retail_price, last_restock_date)
+                        VALUES ($1, $2, $3, $3, $4, $5, CURRENT_TIMESTAMP)
                         ON CONFLICT (store_id, sku) DO UPDATE
                         SET quantity_on_hand = ocs_inventory.quantity_on_hand + $3,
                             quantity_available = ocs_inventory.quantity_available + $3,
-                            unit_cost = ((ocs_inventory.quantity_on_hand * ocs_inventory.unit_cost) + 
+                            unit_cost = ((ocs_inventory.quantity_on_hand * ocs_inventory.unit_cost) +
                                         ($3 * $4)) / (ocs_inventory.quantity_on_hand + $3),
+                            retail_price = COALESCE(ocs_inventory.retail_price, $5),
                             last_restock_date = CURRENT_TIMESTAMP,
                             updated_at = CURRENT_TIMESTAMP
                         RETURNING quantity_on_hand
                     """
-                    
+
                     new_balance = await self.db.fetchval(
                         inv_query,
                         store_id,
                         item['sku'],
                         item['quantity_received'],
-                        Decimal(str(item['unit_cost']))
+                        unit_cost,
+                        calculated_retail_price  # Calculated using markup rules
                     )
                     
                     # Record inventory transaction

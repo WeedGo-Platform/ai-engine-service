@@ -228,8 +228,18 @@ async def upload_provincial_catalog(
 
                 # Ensure slug uniqueness
                 slug = base_slug
-                ocs_variant = str(row.get('OCS Variant Number', '')).strip()
+                ocs_variant_raw = row.get('OCS Variant Number')
 
+                # Skip row if OCS Variant Number is missing or NaN
+                if pd.isna(ocs_variant_raw):
+                    error_msg = f"Row {index+2}: Skipped due to missing OCS Variant Number."
+                    stats['errors'] += 1
+                    if len(stats['error_details']) < 20: # Log first 20 errors
+                        stats['error_details'].append(error_msg)
+                    continue
+
+                ocs_variant = str(ocs_variant_raw).strip()
+                
                 # If we've seen this slug before for a different variant, add a counter
                 if base_slug in used_slugs and used_slugs[base_slug] != ocs_variant:
                     if base_slug not in slug_counter:
@@ -254,39 +264,30 @@ async def upload_provincial_catalog(
                             continue
                         
                         # Handle data type conversions
-                        if db_col == 'ocs_item_number':
-                            # OCS item number should be integer
-                            try:
-                                value = int(value)
-                            except (ValueError, TypeError):
+                        if db_col in ['rechargeable_battery', 'removable_battery', 'replacement_parts_available']:
+                            if pd.isna(value) or str(value).strip() in ['-', '']:
                                 continue
-                        elif db_col == 'ocs_variant_number':
-                            # OCS variant number should be string
-                            value = str(value).strip()
-                        elif db_col == 'gtin':
-                            # GTIN should be bigint
-                            try:
-                                value = int(value)
-                            except (ValueError, TypeError):
-                                continue
-                        elif db_col in ['rechargeable_battery', 'removable_battery', 'replacement_parts_available']:
-                            # These are boolean fields in the database (excluding temperature fields which are now strings)
-                            if pd.isna(value) or str(value).strip() == '-':
-                                continue  # Skip null/dash values
-                            # Convert Yes/No to boolean
                             str_value = str(value).strip().lower()
                             if str_value in ['yes', 'true', '1']:
                                 value = True
                             elif str_value in ['no', 'false', '0']:
                                 value = False
                             else:
-                                continue  # Skip invalid boolean values
-                        elif db_col in ['pack_size', 'number_of_items_in_retail_pack', 'eaches_per_inner_pack', 'eaches_per_master_case']:
-                            # These should be integers
-                            try:
-                                value = int(value)
-                            except (ValueError, TypeError):
+                                continue # Skip invalid boolean-like values
+                        
+                        elif db_col == 'ocs_variant_number' or db_col == 'gtin':
+                            value = str(value).strip() if not pd.isna(value) else None
+                            if value is None:
                                 continue
+
+                        elif db_col in ['ocs_item_number', 'pack_size', 'number_of_items_in_retail_pack', 'eaches_per_inner_pack', 'eaches_per_master_case']:
+                            try:
+                                value = int(float(value)) # Use float conversion first for robustness
+                            except (ValueError, TypeError):
+                                error_msg = f"Row {index+2}: Invalid integer value '{value}' for column '{col}'"
+                                if len(stats['error_details']) < 20: stats['error_details'].append(error_msg)
+                                continue
+                        
                         elif db_col in ['unit_price', 'physical_dimension_width', 'physical_dimension_height', 
                                        'physical_dimension_depth', 'physical_dimension_volume', 'physical_dimension_weight',
                                        'thc_content_per_unit', 'cbd_content_per_unit', 'thc_content_per_volume', 
@@ -294,14 +295,16 @@ async def upload_provincial_catalog(
                                        'minimum_thc_content_percent', 'maximum_thc_content_percent',
                                        'minimum_cbd_content_percent', 'maximum_cbd_content_percent',
                                        'thc_min', 'thc_max', 'cbd_min', 'cbd_max', 'net_weight']:
-                            # These should be numeric/decimal
                             try:
                                 value = float(value)
                             except (ValueError, TypeError):
+                                error_msg = f"Row {index+2}: Invalid numeric value '{value}' for column '{col}'"
+                                if len(stats['error_details']) < 20: stats['error_details'].append(error_msg)
                                 continue
                         else:
-                            # Everything else should be string
-                            value = str(value).strip() if not pd.isna(value) else value
+                            value = str(value).strip() if not pd.isna(value) else None
+                            if value is None:
+                                continue
                         
                         columns.append(db_col)
                         values.append(value)

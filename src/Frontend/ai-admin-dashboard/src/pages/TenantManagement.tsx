@@ -53,6 +53,8 @@ const TenantManagement: React.FC = () => {
   const [isStoreManagerView, setIsStoreManagerView] = useState(false);
   const [tenantMetrics, setTenantMetrics] = useState<any>(null);
   const [storeCount, setStoreCount] = useState({ total: 0, active: 0 });
+  const [success, setSuccess] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     // Check if user is tenant admin and not super admin

@@ -743,7 +743,12 @@ async def get_pricing_settings(
             result = await conn.fetchrow(query, store_id)
 
             if result and result['value']:
-                return result['value']
+                # Parse the JSON string if needed and return directly
+                import json
+                value_data = result['value']
+                if isinstance(value_data, str):
+                    value_data = json.loads(value_data)
+                return value_data
             else:
                 # Return default settings if none exist
                 return {

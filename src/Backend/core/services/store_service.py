@@ -157,7 +157,11 @@ class StoreService:
     async def get_store_by_code(self, tenant_id: UUID, store_code: str) -> Optional[Store]:
         """Get store by tenant and code"""
         return await self.store_repo.get_by_code(tenant_id, store_code)
-    
+
+    async def get_store_by_code_only(self, store_code: str) -> Optional[Store]:
+        """Get store by store code (globally unique lookup)"""
+        return await self.store_repo.get_by_store_code_only(store_code)
+
     async def update_store(
         self,
         store_id: UUID,

@@ -30,6 +30,8 @@ from pydantic import BaseModel, Field
 import logging
 
 from services.inventory_service import InventoryService
+from api.v2.dependencies import get_purchase_order_service
+from ddd_refactored.application.services.purchase_order_service import PurchaseOrderApplicationService
 import asyncpg
 import os
 
@@ -171,9 +173,16 @@ async def update_inventory(
 async def create_purchase_order(
     request: CreatePurchaseOrderRequest,
     x_store_id: Optional[str] = Header(None, alias="X-Store-ID"),
-    service: InventoryService = Depends(get_inventory_service)
+    po_service: PurchaseOrderApplicationService = Depends(get_purchase_order_service)
 ):
-    """Create a new purchase order"""
+    """
+    Create a new purchase order using DDD architecture
+
+    ⚡ REFACTORED: Now uses Domain-Driven Design application service
+    - Maintains exact same API contract for backward compatibility
+    - Internal implementation uses PurchaseOrder aggregate and repository
+    - Business logic encapsulated in domain model
+    """
     try:
         # Get store_id from request body or header
         store_id = request.store_id
@@ -185,26 +194,32 @@ async def create_purchase_order(
 
         if not store_id:
             raise HTTPException(status_code=400, detail="Store ID is required - please select a store")
-        
-        po_id = await service.create_purchase_order(
+
+        # Call DDD application service (same contract as legacy service)
+        result = await po_service.create_from_asn(
             supplier_id=request.supplier_id,
             items=[item.dict() for item in request.items],
             expected_date=request.expected_date,
-            notes=request.notes,
             excel_filename=request.excel_filename,
             store_id=store_id,
+            notes=request.notes,
             shipment_id=request.shipment_id,
             container_id=request.container_id,
             vendor=request.vendor,
-            ocs_order_number=request.ocs_order_number,
             tenant_id=request.tenant_id,
-            created_by=request.created_by,
-            shipment_date=request.shipment_date
-        )        return {
+            created_by=request.created_by
+        )
+
+        # Return same response format as legacy service for API compatibility
+        return {
             "success": True,
-            "purchase_order_id": str(po_id),
+            "purchase_order_id": str(result['id']),
             "message": f"Purchase order created with {len(request.items)} items"
         }
+    except ValueError as ve:
+        # Business validation errors from domain
+        logger.warning(f"Validation error creating purchase order: {ve}")
+        raise HTTPException(status_code=400, detail=str(ve))
     except Exception as e:
         logger.error(f"Error creating purchase order: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))

@@ -17,6 +17,12 @@ const Landing = () => {
   const { user } = useAuth();
   const { t } = useTranslation('landing');
 
+  // Helper function to safely get array from translation
+  const getArrayFromTranslation = (key: string): any[] => {
+    const result = t(key, { returnObjects: true });
+    return Array.isArray(result) ? result : [];
+  };
+
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
@@ -296,7 +302,7 @@ const Landing = () => {
                 </Link>
               </div>
               <ul className="mt-8 space-y-4">
-                {t('pricing.plans.community.features', { returnObjects: true }).map((feature: string, index: number) => (
+                {getArrayFromTranslation('pricing.plans.community.features').map((feature: string, index: number) => (
                   <li key={index} className="flex items-start">
                     <CheckCircle className="h-5 w-5 text-primary-500 mr-3 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700">{feature}</span>
@@ -322,7 +328,7 @@ const Landing = () => {
                 <p className="text-sm font-medium text-primary-600">{t('pricing.plans.smallBusiness.everythingIn')}</p>
               </div>
               <ul className="mt-4 space-y-4">
-                {t('pricing.plans.smallBusiness.features', { returnObjects: true }).map((feature: string, index: number) => (
+                {getArrayFromTranslation('pricing.plans.smallBusiness.features').map((feature: string, index: number) => (
                   <li key={index} className="flex items-start">
                     <CheckCircle className="h-5 w-5 text-primary-500 mr-3 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700">{feature}</span>
@@ -353,7 +359,7 @@ const Landing = () => {
                 <p className="text-sm font-medium text-primary-600">{t('pricing.plans.professional.everythingIn')}</p>
               </div>
               <ul className="mt-4 space-y-4">
-                {t('pricing.plans.professional.features', { returnObjects: true }).map((feature: string, index: number) => (
+                {getArrayFromTranslation('pricing.plans.professional.features').map((feature: string, index: number) => (
                   <li key={index} className="flex items-start">
                     <CheckCircle className="h-5 w-5 text-primary-500 mr-3 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700">{feature}</span>
@@ -379,7 +385,7 @@ const Landing = () => {
                 <p className="text-sm font-medium text-primary-600">{t('pricing.plans.enterprise.everythingIn')}</p>
               </div>
               <ul className="mt-4 space-y-4">
-                {t('pricing.plans.enterprise.features', { returnObjects: true }).map((feature: string, index: number) => (
+                {getArrayFromTranslation('pricing.plans.enterprise.features').map((feature: string, index: number) => (
                   <li key={index} className="flex items-start">
                     <CheckCircle className="h-5 w-5 text-primary-500 mr-3 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700" dangerouslySetInnerHTML={{ __html: feature }} />
@@ -404,7 +410,7 @@ const Landing = () => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {t('testimonials.items', { returnObjects: true }).map((testimonial: any, index: number) => (
+            {getArrayFromTranslation('testimonials.items').map((testimonial: any, index: number) => (
               <div key={index} className="bg-white p-6 rounded-xl ">
                 <div className="flex items-center mb-4">
                   {[...Array(5)].map((_, i) => (
