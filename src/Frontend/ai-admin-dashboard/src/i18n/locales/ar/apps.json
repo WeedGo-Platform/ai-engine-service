@@ -1,0 +1,21 @@
+{
+  "title": "التطبيقات",
+  "tabs": {
+    "pos": "نقطة البيع",
+    "posShort": "POS",
+    "kiosk": "كشك الخدمة الذاتية",
+    "kioskShort": "Kiosk",
+    "menuDisplay": "عرض القائمة",
+    "menuShort": "القائمة"
+  },
+  "fullscreen": {
+    "enter": "الدخول إلى وضع ملء الشاشة",
+    "exit": "الخروج من وضع ملء الشاشة"
+  },
+  "storeSelection": {
+    "required": "اختيار المتجر مطلوب",
+    "pleaseSelect": "يرجى تحديد متجر للمتابعة",
+    "selectButton": "اختيار متجر",
+    "description": "يرجى تحديد متجر للوصول إلى {{appName}}"
+  }
+}

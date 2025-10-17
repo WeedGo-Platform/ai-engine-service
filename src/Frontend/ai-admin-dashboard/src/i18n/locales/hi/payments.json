@@ -1,0 +1,228 @@
+{
+  "titles": {
+    "main": "भुगतान प्रबंधन",
+    "transactionHistory": "लेनदेन इतिहास",
+    "paymentProviders": "भुगतान प्रदाता",
+    "paymentMethods": "भुगतान विधियाँ",
+    "settlements": "निपटान",
+    "processRefund": "रिफंड प्रोसेस करें",
+    "transactionDetails": "लेनदेन विवरण"
+  },
+  "descriptions": {
+    "transactionHistory": "सभी भुगतान लेनदेन देखें और प्रबंधित करें",
+    "paymentProviders": "पेमेंट गेटवे कॉन्फ़िगरेशन प्रबंधित करें",
+    "paymentMethods": "ग्राहकों की सहेजी गई भुगतान विधियों को प्रबंधित करें",
+    "settlements": "निपटान बैच और समाधान देखें",
+    "refundTransaction": "लेनदेन रिफंड करें"
+  },
+  "metrics": {
+    "totalRevenue": "कुल राजस्व",
+    "successRate": "सफलता दर",
+    "totalRefunds": "कुल रिफंड",
+    "processingFees": "प्रोसेसिंग शुल्क",
+    "transactions": "लेनदेन",
+    "successful": "सफल",
+    "fromRevenue": "राजस्व से",
+    "ofRevenue": "राजस्व का"
+  },
+  "tabs": {
+    "transactions": "लेनदेन",
+    "providers": "भुगतान प्रदाता",
+    "methods": "भुगतान विधियाँ",
+    "settlements": "निपटान"
+  },
+  "filters": {
+    "status": "स्थिति",
+    "provider": "प्रदाता",
+    "allStatus": "सभी स्थितियाँ",
+    "allProviders": "सभी प्रदाता",
+    "searchPlaceholder": "लेनदेन खोजें..."
+  },
+  "status": {
+    "completed": "पूर्ण",
+    "pending": "लंबित",
+    "processing": "प्रोसेसिंग",
+    "failed": "विफल",
+    "refunded": "रिफंड किया गया",
+    "active": "सक्रिय",
+    "inactive": "निष्क्रिय"
+  },
+  "table": {
+    "reference": "संदर्भ",
+    "customer": "ग्राहक",
+    "amount": "राशि",
+    "provider": "प्रदाता",
+    "status": "स्थिति",
+    "date": "तिथि",
+    "actions": "कार्रवाई"
+  },
+  "provider": {
+    "default": "डिफ़ॉल्ट",
+    "supportedCurrencies": "समर्थित मुद्राएँ",
+    "capabilities": "क्षमताएँ"
+  },
+  "actions": {
+    "refresh": "रिफ्रेश करें",
+    "export": "एक्सपोर्ट करें",
+    "disable": "अक्षम करें",
+    "enable": "सक्षम करें",
+    "cancel": "रद्द करें",
+    "close": "बंद करें",
+    "processRefund": "रिफंड प्रोसेस करें"
+  },
+  "refund": {
+    "originalAmount": "मूल राशि",
+    "refundAmount": "रिफंड राशि",
+    "refundAmountHint": "पूर्ण रिफंड के लिए खाली छोड़ें",
+    "reason": "कारण",
+    "enterAmount": "राशि दर्ज करें",
+    "enterReason": "रिफंड कारण दर्ज करें"
+  },
+  "details": {
+    "transactionId": "लेनदेन ID",
+    "providerTransactionId": "प्रदाता लेनदेन ID",
+    "orderId": "ऑर्डर ID",
+    "status": "स्थिति",
+    "amount": "राशि",
+    "provider": "प्रदाता",
+    "createdAt": "बनाया गया",
+    "completedAt": "पूर्ण किया गया",
+    "errorMessage": "त्रुटि संदेश",
+    "notAvailable": "उपलब्ध नहीं"
+  },
+  "messages": {
+    "comingSoon": {
+      "paymentMethods": "भुगतान विधियाँ प्रबंधन जल्द आ रहा है",
+      "settlements": "निपटान रिपोर्ट जल्द आ रही है"
+    },
+    "success": {
+      "refundProcessed": "रिफंड सफलतापूर्वक प्रोसेस किया गया",
+      "providerEnabled": "प्रदाता सफलतापूर्वक सक्षम किया गया",
+      "providerDisabled": "प्रदाता सफलतापूर्वक अक्षम किया गया"
+    },
+    "error": {
+      "title": "त्रुटि",
+      "fetchTransactions": "लेनदेन प्राप्त करने में विफल",
+      "processRefund": "रिफंड प्रोसेस करने में विफल",
+      "updateProvider": "प्रदाता स्थिति अपडेट करने में विफल"
+    }
+  },
+  "settings": {
+    "title": "भुगतान सेटिंग्स",
+    "addProvider": "प्रदाता जोड़ें",
+    "backToTenants": "टेनेंट्स पर वापस जाएं",
+    "stats": {
+      "totalVolume": "कुल वॉल्यूम",
+      "successRate": "सफलता दर",
+      "todayVolume": "आज का वॉल्यूम",
+      "netRevenue": "शुद्ध राजस्व",
+      "transactionsCount": "{{count}} लेनदेन",
+      "avgTransaction": "औसत ${{amount}}",
+      "pendingSettlement": "लंबित: ${{amount}}",
+      "platformFees": "शुल्क: ${{amount}}"
+    },
+    "tabs": {
+      "providers": "प्रदाता",
+      "credentials": "क्रेडेंशियल",
+      "feesLimits": "शुल्क और सीमाएँ",
+      "webhooks": "Webhooks",
+      "analytics": "विश्लेषण"
+    },
+    "providersTab": {
+      "title": "भुगतान प्रदाता",
+      "noProviders": "कोई भुगतान प्रदाता कॉन्फ़िगर नहीं किया गया है। भुगतान स्वीकार करना शुरू करने के लिए एक जोड़ें।",
+      "production": "प्रोडक्शन",
+      "sandbox": "सैंडबॉक्स",
+      "healthStatus": "हेल्थ स्टेटस",
+      "unknown": "अज्ञात",
+      "testConnection": "कनेक्शन टेस्ट करें",
+      "configure": "कॉन्फ़िगर करें",
+      "remove": "हटाएं",
+      "merchantId": "मर्चेंट ID:",
+      "lastSync": "अंतिम सिंक:",
+      "oauthExpires": "OAuth समाप्ति:"
+    },
+    "credentialsTab": {
+      "title": "API क्रेडेंशियल",
+      "securityNotice": "सुरक्षा सूचना:",
+      "securityMessage": "API क्रेडेंशियल एन्क्रिप्ट किए गए हैं और सुरक्षित रूप से संग्रहीत हैं। अपनी गुप्त कुंजी या एक्सेस टोकन कभी साझा न करें।",
+      "updateCredentials": "क्रेडेंशियल अपडेट करें",
+      "apiKey": "API कुंजी",
+      "secretKey": "गुप्त कुंजी",
+      "oauthToken": "OAuth टोकन",
+      "configured": "कॉन्फ़िगर किया गया",
+      "notConfigured": "कॉन्फ़िगर नहीं किया गया",
+      "connected": "कनेक्ट किया गया",
+      "expires": "{{date}} को समाप्त होता है",
+      "connectOAuth": "OAuth से कनेक्ट करें"
+    },
+    "feesTab": {
+      "title": "शुल्क और लेनदेन सीमाएँ",
+      "platformFees": "प्लेटफ़ॉर्म शुल्क",
+      "percentageFee": "प्रतिशत शुल्क",
+      "fixedFee": "निश्चित शुल्क",
+      "transactionLimits": "लेनदेन सीमाएँ",
+      "dailyLimit": "दैनिक सीमा",
+      "perTransactionLimit": "प्रति लेनदेन सीमा",
+      "saveChanges": "परिवर्तन सहेजें"
+    },
+    "webhooksTab": {
+      "title": "Webhook कॉन्फ़िगरेशन",
+      "infoMessage": "वास्तविक समय में भुगतान इवेंट प्राप्त करने के लिए अपने भुगतान प्रदाता के डैशबोर्ड में webhook URL कॉन्फ़िगर करें।",
+      "webhookUrl": "Webhook URL",
+      "webhookSecret": "Webhook सीक्रेट",
+      "webhookSecretPlaceholder": "webhook हस्ताक्षर सीक्रेट दर्ज करें",
+      "eventsToSubscribe": "सब्सक्राइब करने के लिए इवेंट",
+      "eventTypes": {
+        "paymentCompleted": "payment.completed",
+        "paymentFailed": "payment.failed",
+        "refundCreated": "refund.created",
+        "disputeCreated": "dispute.created"
+      }
+    },
+    "analyticsTab": {
+      "title": "भुगतान विश्लेषण",
+      "transactionVolume": "लेनदेन वॉल्यूम (पिछले 7 दिन)",
+      "successRateByProvider": "प्रदाता द्वारा सफलता दर",
+      "chartPlaceholder": "चार्ट प्लेसहोल्डर",
+      "recentTransactions": "हाल के लेनदेन",
+      "noRecentTransactions": "कोई हाल के लेनदेन नहीं",
+      "tableHeaders": {
+        "transactionId": "लेनदेन ID",
+        "amount": "राशि",
+        "provider": "प्रदाता",
+        "status": "स्थिति",
+        "date": "तिथि"
+      }
+    },
+    "credentialModal": {
+      "title": "{{providerName}} क्रेडेंशियल अपडेट करें",
+      "environment": "वातावरण",
+      "environmentOptions": {
+        "sandbox": "सैंडबॉक्स",
+        "production": "प्रोडक्शन"
+      },
+      "apiKey": "API कुंजी",
+      "apiKeyPlaceholder": "API कुंजी दर्ज करें",
+      "secretKey": "गुप्त कुंजी",
+      "secretKeyPlaceholder": "गुप्त कुंजी दर्ज करें",
+      "merchantId": "मर्चेंट ID",
+      "merchantIdPlaceholder": "मर्चेंट ID दर्ज करें",
+      "accessToken": "एक्सेस टोकन (वैकल्पिक - OAuth के लिए)",
+      "accessTokenPlaceholder": "एक्सेस टोकन दर्ज करें",
+      "securityWarning": "क्रेडेंशियल संग्रहीत करने से पहले AES-256 एन्क्रिप्शन का उपयोग करके एन्क्रिप्ट किए जाते हैं। संवेदनशील डेटा दर्ज करते समय सुनिश्चित करें कि आप सुरक्षित वातावरण में हैं।",
+      "cancel": "रद्द करें",
+      "updateButton": "क्रेडेंशियल अपडेट करें",
+      "updating": "अपडेट हो रहा है..."
+    },
+    "notifications": {
+      "connectionTestSuccess": "{{providerName}} कनेक्शन टेस्ट सफल",
+      "connectionTestFailed": "{{providerName}} कनेक्शन टेस्ट विफल",
+      "credentialsUpdated": "{{providerName}} के लिए क्रेडेंशियल सफलतापूर्वक अपडेट किए गए",
+      "credentialsUpdateFailed": "क्रेडेंशियल अपडेट करने में विफल",
+      "tenantLoadFailed": "टेनेंट डेटा लोड करने में विफल",
+      "providersLoadFailed": "भुगतान प्रदाता लोड करने में विफल",
+      "webhookUrlCopied": "Webhook URL क्लिपबोर्ड पर कॉपी किया गया"
+    }
+  }
+}

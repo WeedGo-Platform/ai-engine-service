@@ -1,0 +1,21 @@
+{
+  "title": "ਐਪਸ",
+  "tabs": {
+    "pos": "ਵਿਕਰੀ ਸਥਾਨ",
+    "posShort": "POS",
+    "kiosk": "ਸਵੈ-ਸੇਵਾ Kiosk",
+    "kioskShort": "Kiosk",
+    "menuDisplay": "ਮੀਨੂ ਡਿਸਪਲੇ",
+    "menuShort": "ਮੀਨੂ"
+  },
+  "fullscreen": {
+    "enter": "ਪੂਰੀ ਸਕਰੀਨ ਵਿੱਚ ਦਾਖਲ ਹੋਵੋ",
+    "exit": "ਪੂਰੀ ਸਕਰੀਨ ਤੋਂ ਬਾਹਰ ਜਾਓ"
+  },
+  "storeSelection": {
+    "required": "ਸਟੋਰ ਚੋਣ ਲੋੜੀਂਦੀ ਹੈ",
+    "pleaseSelect": "ਜਾਰੀ ਰੱਖਣ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਸਟੋਰ ਚੁਣੋ",
+    "selectButton": "ਸਟੋਰ ਚੁਣੋ",
+    "description": "{{appName}} ਤੱਕ ਪਹੁੰਚ ਕਰਨ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਸਟੋਰ ਚੁਣੋ"
+  }
+}

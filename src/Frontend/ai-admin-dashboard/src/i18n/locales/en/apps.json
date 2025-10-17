@@ -1,0 +1,21 @@
+{
+  "title": "Apps",
+  "tabs": {
+    "pos": "Point of Sale",
+    "posShort": "POS",
+    "kiosk": "Self-Service Kiosk",
+    "kioskShort": "Kiosk",
+    "menuDisplay": "Menu Display",
+    "menuShort": "Menu"
+  },
+  "fullscreen": {
+    "enter": "Enter Fullscreen",
+    "exit": "Exit Fullscreen"
+  },
+  "storeSelection": {
+    "required": "Store Selection Required",
+    "pleaseSelect": "Please select a store to continue",
+    "selectButton": "Select Store",
+    "description": "Please select a store to access the {{appName}}"
+  }
+}

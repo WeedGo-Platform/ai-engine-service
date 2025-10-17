@@ -1,0 +1,21 @@
+{
+  "title": "ઍપ્સ",
+  "tabs": {
+    "pos": "વેચાણ સ્થળ",
+    "posShort": "POS",
+    "kiosk": "સ્વ-સેવા Kiosk",
+    "kioskShort": "Kiosk",
+    "menuDisplay": "મેનૂ ડિસ્પ્લે",
+    "menuShort": "મેનૂ"
+  },
+  "fullscreen": {
+    "enter": "પૂર્ણસ્ક્રીનમાં દાખલ થાઓ",
+    "exit": "પૂર્ણસ્ક્રીનમાંથી બહાર નીકળો"
+  },
+  "storeSelection": {
+    "required": "સ્ટોર પસંદગી જરૂરી છે",
+    "pleaseSelect": "ચાલુ રાખવા માટે કૃપા કરીને સ્ટોર પસંદ કરો",
+    "selectButton": "સ્ટોર પસંદ કરો",
+    "description": "{{appName}} ઍક્સેસ કરવા માટે કૃપા કરીને સ્ટોર પસંદ કરો"
+  }
+}

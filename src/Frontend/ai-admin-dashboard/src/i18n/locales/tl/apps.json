@@ -1,0 +1,21 @@
+{
+  "title": "Mga Apps",
+  "tabs": {
+    "pos": "Punto ng Pagbebenta",
+    "posShort": "POS",
+    "kiosk": "Self-Service na Kiosk",
+    "kioskShort": "Kiosk",
+    "menuDisplay": "Pagpapakita ng Menu",
+    "menuShort": "Menu"
+  },
+  "fullscreen": {
+    "enter": "Pumasok sa Fullscreen",
+    "exit": "Lumabas sa Fullscreen"
+  },
+  "storeSelection": {
+    "required": "Kailangan ang Pagpili ng Tindahan",
+    "pleaseSelect": "Mangyaring pumili ng tindahan upang magpatuloy",
+    "selectButton": "Pumili ng Tindahan",
+    "description": "Mangyaring pumili ng tindahan upang ma-access ang {{appName}}"
+  }
+}

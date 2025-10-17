@@ -1,0 +1,228 @@
+{
+  "titles": {
+    "main": "ਭੁਗਤਾਨ ਪ੍ਰਬੰਧਨ",
+    "transactionHistory": "ਲੈਣ-ਦੇਣ ਇਤਿਹਾਸ",
+    "paymentProviders": "ਭੁਗਤਾਨ ਪ੍ਰਦਾਤਾ",
+    "paymentMethods": "ਭੁਗਤਾਨ ਵਿਧੀਆਂ",
+    "settlements": "ਨਿਪਟਾਰੇ",
+    "processRefund": "ਰਿਫੰਡ ਪ੍ਰਕਿਰਿਆ ਕਰੋ",
+    "transactionDetails": "ਲੈਣ-ਦੇਣ ਵੇਰਵਾ"
+  },
+  "descriptions": {
+    "transactionHistory": "ਸਾਰੇ ਭੁਗਤਾਨ ਲੈਣ-ਦੇਣ ਦੇਖੋ ਅਤੇ ਪ੍ਰਬੰਧਿਤ ਕਰੋ",
+    "paymentProviders": "ਭੁਗਤਾਨ ਗੇਟਵੇ ਸੰਰਚਨਾਵਾਂ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰੋ",
+    "paymentMethods": "ਗਾਹਕਾਂ ਦੀਆਂ ਸੁਰੱਖਿਅਤ ਕੀਤੀਆਂ ਭੁਗਤਾਨ ਵਿਧੀਆਂ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰੋ",
+    "settlements": "ਨਿਪਟਾਰਾ ਬੈਚਾਂ ਅਤੇ ਮੇਲ-ਮਿਲਾਪ ਦੇਖੋ",
+    "refundTransaction": "ਲੈਣ-ਦੇਣ ਰਿਫੰਡ ਕਰੋ"
+  },
+  "metrics": {
+    "totalRevenue": "ਕੁੱਲ ਆਮਦਨ",
+    "successRate": "ਸਫਲਤਾ ਦਰ",
+    "totalRefunds": "ਕੁੱਲ ਰਿਫੰਡ",
+    "processingFees": "ਪ੍ਰਕਿਰਿਆ ਫੀਸ",
+    "transactions": "ਲੈਣ-ਦੇਣ",
+    "successful": "ਸਫਲ",
+    "fromRevenue": "ਆਮਦਨ ਤੋਂ",
+    "ofRevenue": "ਆਮਦਨ ਦਾ"
+  },
+  "tabs": {
+    "transactions": "ਲੈਣ-ਦੇਣ",
+    "providers": "ਭੁਗਤਾਨ ਪ੍ਰਦਾਤਾ",
+    "methods": "ਭੁਗਤਾਨ ਵਿਧੀਆਂ",
+    "settlements": "ਨਿਪਟਾਰੇ"
+  },
+  "filters": {
+    "status": "ਸਥਿਤੀ",
+    "provider": "ਪ੍ਰਦਾਤਾ",
+    "allStatus": "ਸਾਰੀਆਂ ਸਥਿਤੀਆਂ",
+    "allProviders": "ਸਾਰੇ ਪ੍ਰਦਾਤਾ",
+    "searchPlaceholder": "ਲੈਣ-ਦੇਣ ਖੋਜੋ..."
+  },
+  "status": {
+    "completed": "ਪੂਰਾ ਹੋਇਆ",
+    "pending": "ਬਕਾਇਆ",
+    "processing": "ਪ੍ਰਕਿਰਿਆ ਚੱਲ ਰਹੀ ਹੈ",
+    "failed": "ਅਸਫਲ",
+    "refunded": "ਰਿਫੰਡ ਕੀਤਾ",
+    "active": "ਸਰਗਰਮ",
+    "inactive": "ਅਕਿਰਿਆਸ਼ੀਲ"
+  },
+  "table": {
+    "reference": "ਸੰਦਰਭ",
+    "customer": "ਗਾਹਕ",
+    "amount": "ਰਕਮ",
+    "provider": "ਪ੍ਰਦਾਤਾ",
+    "status": "ਸਥਿਤੀ",
+    "date": "ਮਿਤੀ",
+    "actions": "ਕਾਰਵਾਈਆਂ"
+  },
+  "provider": {
+    "default": "ਡਿਫਾਲਟ",
+    "supportedCurrencies": "ਸਮਰਥਿਤ ਮੁਦਰਾਵਾਂ",
+    "capabilities": "ਯੋਗਤਾਵਾਂ"
+  },
+  "actions": {
+    "refresh": "ਤਾਜ਼ਾ ਕਰੋ",
+    "export": "ਨਿਰਯਾਤ ਕਰੋ",
+    "disable": "ਅਯੋਗ ਕਰੋ",
+    "enable": "ਯੋਗ ਕਰੋ",
+    "cancel": "ਰੱਦ ਕਰੋ",
+    "close": "ਬੰਦ ਕਰੋ",
+    "processRefund": "ਰਿਫੰਡ ਪ੍ਰਕਿਰਿਆ ਕਰੋ"
+  },
+  "refund": {
+    "originalAmount": "ਅਸਲ ਰਕਮ",
+    "refundAmount": "ਰਿਫੰਡ ਰਕਮ",
+    "refundAmountHint": "ਪੂਰੇ ਰਿਫੰਡ ਲਈ ਖਾਲੀ ਛੱਡੋ",
+    "reason": "ਕਾਰਨ",
+    "enterAmount": "ਰਕਮ ਦਾਖਲ ਕਰੋ",
+    "enterReason": "ਰਿਫੰਡ ਦਾ ਕਾਰਨ ਦਾਖਲ ਕਰੋ"
+  },
+  "details": {
+    "transactionId": "ਲੈਣ-ਦੇਣ ID",
+    "providerTransactionId": "ਪ੍ਰਦਾਤਾ ਲੈਣ-ਦੇਣ ID",
+    "orderId": "ਆਰਡਰ ID",
+    "status": "ਸਥਿਤੀ",
+    "amount": "ਰਕਮ",
+    "provider": "ਪ੍ਰਦਾਤਾ",
+    "createdAt": "ਬਣਾਇਆ ਗਿਆ",
+    "completedAt": "ਪੂਰਾ ਹੋਇਆ",
+    "errorMessage": "ਗਲਤੀ ਸੁਨੇਹਾ",
+    "notAvailable": "ਉਪਲਬਧ ਨਹੀਂ"
+  },
+  "messages": {
+    "comingSoon": {
+      "paymentMethods": "ਭੁਗਤਾਨ ਵਿਧੀਆਂ ਪ੍ਰਬੰਧਨ ਜਲਦੀ ਆ ਰਿਹਾ ਹੈ",
+      "settlements": "ਨਿਪਟਾਰਾ ਰਿਪੋਰਟਾਂ ਜਲਦੀ ਆ ਰਹੀਆਂ ਹਨ"
+    },
+    "success": {
+      "refundProcessed": "ਰਿਫੰਡ ਸਫਲਤਾਪੂਰਵਕ ਪ੍ਰਕਿਰਿਆ ਕੀਤਾ ਗਿਆ",
+      "providerEnabled": "ਪ੍ਰਦਾਤਾ ਸਫਲਤਾਪੂਰਵਕ ਯੋਗ ਕੀਤਾ ਗਿਆ",
+      "providerDisabled": "ਪ੍ਰਦਾਤਾ ਸਫਲਤਾਪੂਰਵਕ ਅਯੋਗ ਕੀਤਾ ਗਿਆ"
+    },
+    "error": {
+      "title": "ਗਲਤੀ",
+      "fetchTransactions": "ਲੈਣ-ਦੇਣ ਲੈਣ ਵਿੱਚ ਅਸਫਲ",
+      "processRefund": "ਰਿਫੰਡ ਪ੍ਰਕਿਰਿਆ ਵਿੱਚ ਅਸਫਲ",
+      "updateProvider": "ਪ੍ਰਦਾਤਾ ਸਥਿਤੀ ਅੱਪਡੇਟ ਕਰਨ ਵਿੱਚ ਅਸਫਲ"
+    }
+  },
+  "settings": {
+    "title": "ਭੁਗਤਾਨ ਸੈਟਿੰਗਾਂ",
+    "addProvider": "ਪ੍ਰਦਾਤਾ ਸ਼ਾਮਲ ਕਰੋ",
+    "backToTenants": "ਕਿਰਾਏਦਾਰਾਂ ਵੱਲ ਵਾਪਸ ਜਾਓ",
+    "stats": {
+      "totalVolume": "ਕੁੱਲ ਮਾਤਰਾ",
+      "successRate": "ਸਫਲਤਾ ਦਰ",
+      "todayVolume": "ਅੱਜ ਦੀ ਮਾਤਰਾ",
+      "netRevenue": "ਸ਼ੁੱਧ ਆਮਦਨ",
+      "transactionsCount": "{{count}} ਲੈਣ-ਦੇਣ",
+      "avgTransaction": "ਔਸਤ ${{amount}}",
+      "pendingSettlement": "ਬਕਾਇਆ: ${{amount}}",
+      "platformFees": "ਫੀਸਾਂ: ${{amount}}"
+    },
+    "tabs": {
+      "providers": "ਪ੍ਰਦਾਤਾ",
+      "credentials": "ਪ੍ਰਮਾਣ ਪੱਤਰ",
+      "feesLimits": "ਫੀਸਾਂ ਅਤੇ ਸੀਮਾਵਾਂ",
+      "webhooks": "Webhooks",
+      "analytics": "ਵਿਸ਼ਲੇਸ਼ਣ"
+    },
+    "providersTab": {
+      "title": "ਭੁਗਤਾਨ ਪ੍ਰਦਾਤਾ",
+      "noProviders": "ਕੋਈ ਭੁਗਤਾਨ ਪ੍ਰਦਾਤਾ ਸੰਰਚਿਤ ਨਹੀਂ ਹੈ। ਭੁਗਤਾਨ ਸਵੀਕਾਰ ਕਰਨਾ ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਇੱਕ ਸ਼ਾਮਲ ਕਰੋ।",
+      "production": "ਉਤਪਾਦਨ",
+      "sandbox": "ਸੈਂਡਬਾਕਸ",
+      "healthStatus": "ਸਿਹਤ ਸਥਿਤੀ",
+      "unknown": "ਅਣਜਾਣ",
+      "testConnection": "ਕਨੈਕਸ਼ਨ ਟੈਸਟ ਕਰੋ",
+      "configure": "ਸੰਰਚਿਤ ਕਰੋ",
+      "remove": "ਹਟਾਓ",
+      "merchantId": "ਵਪਾਰੀ ID:",
+      "lastSync": "ਆਖਰੀ ਸਿੰਕ:",
+      "oauthExpires": "OAuth ਮਿਆਦ ਖਤਮ:"
+    },
+    "credentialsTab": {
+      "title": "API ਪ੍ਰਮਾਣ ਪੱਤਰ",
+      "securityNotice": "ਸੁਰੱਖਿਆ ਨੋਟਿਸ:",
+      "securityMessage": "API ਪ੍ਰਮਾਣ ਪੱਤਰ ਐਨਕ੍ਰਿਪਟ ਕੀਤੇ ਗਏ ਹਨ ਅਤੇ ਸੁਰੱਖਿਅਤ ਢੰਗ ਨਾਲ ਸਟੋਰ ਕੀਤੇ ਗਏ ਹਨ। ਆਪਣੀਆਂ ਗੁਪਤ ਕੁੰਜੀਆਂ ਜਾਂ ਐਕਸੈਸ ਟੋਕਨ ਕਦੇ ਸਾਂਝੇ ਨਾ ਕਰੋ।",
+      "updateCredentials": "ਪ੍ਰਮਾਣ ਪੱਤਰ ਅੱਪਡੇਟ ਕਰੋ",
+      "apiKey": "API ਕੁੰਜੀ",
+      "secretKey": "ਗੁਪਤ ਕੁੰਜੀ",
+      "oauthToken": "OAuth ਟੋਕਨ",
+      "configured": "ਸੰਰਚਿਤ",
+      "notConfigured": "ਸੰਰਚਿਤ ਨਹੀਂ",
+      "connected": "ਜੁੜਿਆ ਹੋਇਆ",
+      "expires": "{{date}} ਨੂੰ ਮਿਆਦ ਖਤਮ",
+      "connectOAuth": "OAuth ਨਾਲ ਜੁੜੋ"
+    },
+    "feesTab": {
+      "title": "ਫੀਸਾਂ ਅਤੇ ਲੈਣ-ਦੇਣ ਸੀਮਾਵਾਂ",
+      "platformFees": "ਪਲੇਟਫਾਰਮ ਫੀਸਾਂ",
+      "percentageFee": "ਪ੍ਰਤੀਸ਼ਤ ਫੀਸ",
+      "fixedFee": "ਨਿਸ਼ਚਿਤ ਫੀਸ",
+      "transactionLimits": "ਲੈਣ-ਦੇਣ ਸੀਮਾਵਾਂ",
+      "dailyLimit": "ਰੋਜ਼ਾਨਾ ਸੀਮਾ",
+      "perTransactionLimit": "ਪ੍ਰਤੀ ਲੈਣ-ਦੇਣ ਸੀਮਾ",
+      "saveChanges": "ਤਬਦੀਲੀਆਂ ਸੰਭਾਲੋ"
+    },
+    "webhooksTab": {
+      "title": "Webhook ਸੰਰਚਨਾ",
+      "infoMessage": "ਅਸਲ ਸਮੇਂ ਵਿੱਚ ਭੁਗਤਾਨ ਇਵੈਂਟਾਂ ਪ੍ਰਾਪਤ ਕਰਨ ਲਈ ਆਪਣੇ ਭੁਗਤਾਨ ਪ੍ਰਦਾਤਾ ਦੇ ਡੈਸ਼ਬੋਰਡ ਵਿੱਚ webhook URL ਸੰਰਚਿਤ ਕਰੋ।",
+      "webhookUrl": "Webhook URL",
+      "webhookSecret": "Webhook ਗੁਪਤ",
+      "webhookSecretPlaceholder": "webhook ਦਸਤਖਤ ਗੁਪਤ ਦਾਖਲ ਕਰੋ",
+      "eventsToSubscribe": "ਸਬਸਕ੍ਰਾਈਬ ਕਰਨ ਲਈ ਇਵੈਂਟਸ",
+      "eventTypes": {
+        "paymentCompleted": "payment.completed",
+        "paymentFailed": "payment.failed",
+        "refundCreated": "refund.created",
+        "disputeCreated": "dispute.created"
+      }
+    },
+    "analyticsTab": {
+      "title": "ਭੁਗਤਾਨ ਵਿਸ਼ਲੇਸ਼ਣ",
+      "transactionVolume": "ਲੈਣ-ਦੇਣ ਮਾਤਰਾ (ਪਿਛਲੇ 7 ਦਿਨ)",
+      "successRateByProvider": "ਪ੍ਰਦਾਤਾ ਦੁਆਰਾ ਸਫਲਤਾ ਦਰ",
+      "chartPlaceholder": "ਚਾਰਟ ਪਲੇਸਹੋਲਡਰ",
+      "recentTransactions": "ਹਾਲੀਆ ਲੈਣ-ਦੇਣ",
+      "noRecentTransactions": "ਕੋਈ ਹਾਲੀਆ ਲੈਣ-ਦੇਣ ਨਹੀਂ",
+      "tableHeaders": {
+        "transactionId": "ਲੈਣ-ਦੇਣ ID",
+        "amount": "ਰਕਮ",
+        "provider": "ਪ੍ਰਦਾਤਾ",
+        "status": "ਸਥਿਤੀ",
+        "date": "ਮਿਤੀ"
+      }
+    },
+    "credentialModal": {
+      "title": "{{providerName}} ਪ੍ਰਮਾਣ ਪੱਤਰ ਅੱਪਡੇਟ ਕਰੋ",
+      "environment": "ਵਾਤਾਵਰਣ",
+      "environmentOptions": {
+        "sandbox": "ਸੈਂਡਬਾਕਸ",
+        "production": "ਉਤਪਾਦਨ"
+      },
+      "apiKey": "API ਕੁੰਜੀ",
+      "apiKeyPlaceholder": "API ਕੁੰਜੀ ਦਾਖਲ ਕਰੋ",
+      "secretKey": "ਗੁਪਤ ਕੁੰਜੀ",
+      "secretKeyPlaceholder": "ਗੁਪਤ ਕੁੰਜੀ ਦਾਖਲ ਕਰੋ",
+      "merchantId": "ਵਪਾਰੀ ID",
+      "merchantIdPlaceholder": "ਵਪਾਰੀ ID ਦਾਖਲ ਕਰੋ",
+      "accessToken": "ਐਕਸੈਸ ਟੋਕਨ (ਵਿਕਲਪਿਕ - OAuth ਲਈ)",
+      "accessTokenPlaceholder": "ਐਕਸੈਸ ਟੋਕਨ ਦਾਖਲ ਕਰੋ",
+      "securityWarning": "ਸਟੋਰੇਜ ਤੋਂ ਪਹਿਲਾਂ ਪ੍ਰਮਾਣ ਪੱਤਰ AES-256 ਐਨਕ੍ਰਿਪਸ਼ਨ ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਐਨਕ੍ਰਿਪਟ ਕੀਤੇ ਜਾਂਦੇ ਹਨ। ਸੰਵੇਦਨਸ਼ੀਲ ਡਾਟਾ ਦਾਖਲ ਕਰਦੇ ਸਮੇਂ ਯਕੀਨੀ ਬਣਾਓ ਕਿ ਤੁਸੀਂ ਸੁਰੱਖਿਅਤ ਵਾਤਾਵਰਣ ਵਿੱਚ ਹੋ।",
+      "cancel": "ਰੱਦ ਕਰੋ",
+      "updateButton": "ਪ੍ਰਮਾਣ ਪੱਤਰ ਅੱਪਡੇਟ ਕਰੋ",
+      "updating": "ਅੱਪਡੇਟ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ..."
+    },
+    "notifications": {
+      "connectionTestSuccess": "{{providerName}} ਕਨੈਕਸ਼ਨ ਟੈਸਟ ਸਫਲ",
+      "connectionTestFailed": "{{providerName}} ਕਨੈਕਸ਼ਨ ਟੈਸਟ ਅਸਫਲ",
+      "credentialsUpdated": "{{providerName}} ਲਈ ਪ੍ਰਮਾਣ ਪੱਤਰ ਸਫਲਤਾਪੂਰਵਕ ਅੱਪਡੇਟ ਕੀਤੇ ਗਏ",
+      "credentialsUpdateFailed": "ਪ੍ਰਮਾਣ ਪੱਤਰ ਅੱਪਡੇਟ ਕਰਨ ਵਿੱਚ ਅਸਫਲ",
+      "tenantLoadFailed": "ਕਿਰਾਏਦਾਰ ਡਾਟਾ ਲੋਡ ਕਰਨ ਵਿੱਚ ਅਸਫਲ",
+      "providersLoadFailed": "ਭੁਗਤਾਨ ਪ੍ਰਦਾਤਾ ਲੋਡ ਕਰਨ ਵਿੱਚ ਅਸਫਲ",
+      "webhookUrlCopied": "Webhook URL ਕਲਿੱਪਬੋਰਡ ਵਿੱਚ ਕਾਪੀ ਕੀਤਾ ਗਿਆ"
+    }
+  }
+}

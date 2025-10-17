@@ -1,0 +1,228 @@
+{
+  "titles": {
+    "main": "결제 관리",
+    "transactionHistory": "거래 내역",
+    "paymentProviders": "결제 제공업체",
+    "paymentMethods": "결제 수단",
+    "settlements": "정산",
+    "processRefund": "환불 처리",
+    "transactionDetails": "거래 상세정보"
+  },
+  "descriptions": {
+    "transactionHistory": "모든 결제 거래 보기 및 관리",
+    "paymentProviders": "결제 게이트웨이 설정 관리",
+    "paymentMethods": "고객의 저장된 결제 수단 관리",
+    "settlements": "정산 배치 및 조정 보기",
+    "refundTransaction": "거래 환불"
+  },
+  "metrics": {
+    "totalRevenue": "총 수익",
+    "successRate": "성공률",
+    "totalRefunds": "총 환불액",
+    "processingFees": "처리 수수료",
+    "transactions": "건의 거래",
+    "successful": "성공",
+    "fromRevenue": "수익에서",
+    "ofRevenue": "수익 중"
+  },
+  "tabs": {
+    "transactions": "거래",
+    "providers": "결제 제공업체",
+    "methods": "결제 수단",
+    "settlements": "정산"
+  },
+  "filters": {
+    "status": "상태",
+    "provider": "제공업체",
+    "allStatus": "모든 상태",
+    "allProviders": "모든 제공업체",
+    "searchPlaceholder": "거래 검색..."
+  },
+  "status": {
+    "completed": "완료됨",
+    "pending": "대기 중",
+    "processing": "처리 중",
+    "failed": "실패",
+    "refunded": "환불됨",
+    "active": "활성",
+    "inactive": "비활성"
+  },
+  "table": {
+    "reference": "참조",
+    "customer": "고객",
+    "amount": "금액",
+    "provider": "제공업체",
+    "status": "상태",
+    "date": "날짜",
+    "actions": "작업"
+  },
+  "provider": {
+    "default": "기본값",
+    "supportedCurrencies": "지원되는 통화",
+    "capabilities": "기능"
+  },
+  "actions": {
+    "refresh": "새로고침",
+    "export": "내보내기",
+    "disable": "비활성화",
+    "enable": "활성화",
+    "cancel": "취소",
+    "close": "닫기",
+    "processRefund": "환불 처리"
+  },
+  "refund": {
+    "originalAmount": "원래 금액",
+    "refundAmount": "환불 금액",
+    "refundAmountHint": "전액 환불의 경우 비워두기",
+    "reason": "사유",
+    "enterAmount": "금액 입력",
+    "enterReason": "환불 사유 입력"
+  },
+  "details": {
+    "transactionId": "거래 ID",
+    "providerTransactionId": "제공업체 거래 ID",
+    "orderId": "주문 ID",
+    "status": "상태",
+    "amount": "금액",
+    "provider": "제공업체",
+    "createdAt": "생성일",
+    "completedAt": "완료일",
+    "errorMessage": "오류 메시지",
+    "notAvailable": "해당 없음"
+  },
+  "messages": {
+    "comingSoon": {
+      "paymentMethods": "결제 수단 관리 곧 제공",
+      "settlements": "정산 보고서 곧 제공"
+    },
+    "success": {
+      "refundProcessed": "환불이 성공적으로 처리되었습니다",
+      "providerEnabled": "제공업체가 성공적으로 활성화되었습니다",
+      "providerDisabled": "제공업체가 성공적으로 비활성화되었습니다"
+    },
+    "error": {
+      "title": "오류",
+      "fetchTransactions": "거래를 가져오지 못했습니다",
+      "processRefund": "환불 처리에 실패했습니다",
+      "updateProvider": "제공업체 상태 업데이트에 실패했습니다"
+    }
+  },
+  "settings": {
+    "title": "결제 설정",
+    "addProvider": "제공업체 추가",
+    "backToTenants": "테넌트로 돌아가기",
+    "stats": {
+      "totalVolume": "총 거래량",
+      "successRate": "성공률",
+      "todayVolume": "오늘 거래량",
+      "netRevenue": "순수익",
+      "transactionsCount": "{{count}}건의 거래",
+      "avgTransaction": "평균 ${{amount}}",
+      "pendingSettlement": "대기 중: ${{amount}}",
+      "platformFees": "수수료: ${{amount}}"
+    },
+    "tabs": {
+      "providers": "제공업체",
+      "credentials": "자격증명",
+      "feesLimits": "수수료 및 한도",
+      "webhooks": "Webhooks",
+      "analytics": "분석"
+    },
+    "providersTab": {
+      "title": "결제 제공업체",
+      "noProviders": "구성된 결제 제공업체가 없습니다. 결제 수락을 시작하려면 추가하세요.",
+      "production": "프로덕션",
+      "sandbox": "샌드박스",
+      "healthStatus": "상태",
+      "unknown": "알 수 없음",
+      "testConnection": "연결 테스트",
+      "configure": "구성",
+      "remove": "제거",
+      "merchantId": "가맹점 ID:",
+      "lastSync": "마지막 동기화:",
+      "oauthExpires": "OAuth 만료:"
+    },
+    "credentialsTab": {
+      "title": "API 자격증명",
+      "securityNotice": "보안 공지:",
+      "securityMessage": "API 자격증명은 암호화되어 안전하게 저장됩니다. 비밀 키나 액세스 토큰을 절대 공유하지 마세요.",
+      "updateCredentials": "자격증명 업데이트",
+      "apiKey": "API 키",
+      "secretKey": "비밀 키",
+      "oauthToken": "OAuth 토큰",
+      "configured": "구성됨",
+      "notConfigured": "구성되지 않음",
+      "connected": "연결됨",
+      "expires": "{{date}}에 만료",
+      "connectOAuth": "OAuth로 연결"
+    },
+    "feesTab": {
+      "title": "수수료 및 거래 한도",
+      "platformFees": "플랫폼 수수료",
+      "percentageFee": "백분율 수수료",
+      "fixedFee": "고정 수수료",
+      "transactionLimits": "거래 한도",
+      "dailyLimit": "일일 한도",
+      "perTransactionLimit": "거래당 한도",
+      "saveChanges": "변경사항 저장"
+    },
+    "webhooksTab": {
+      "title": "Webhook 설정",
+      "infoMessage": "결제 이벤트를 실시간으로 수신하려면 결제 제공업체의 대시보드에서 Webhook URL을 구성하세요.",
+      "webhookUrl": "Webhook URL",
+      "webhookSecret": "Webhook 비밀",
+      "webhookSecretPlaceholder": "Webhook 서명 비밀 입력",
+      "eventsToSubscribe": "구독할 이벤트",
+      "eventTypes": {
+        "paymentCompleted": "payment.completed",
+        "paymentFailed": "payment.failed",
+        "refundCreated": "refund.created",
+        "disputeCreated": "dispute.created"
+      }
+    },
+    "analyticsTab": {
+      "title": "결제 분석",
+      "transactionVolume": "거래량 (최근 7일)",
+      "successRateByProvider": "제공업체별 성공률",
+      "chartPlaceholder": "차트 자리표시자",
+      "recentTransactions": "최근 거래",
+      "noRecentTransactions": "최근 거래 없음",
+      "tableHeaders": {
+        "transactionId": "거래 ID",
+        "amount": "금액",
+        "provider": "제공업체",
+        "status": "상태",
+        "date": "날짜"
+      }
+    },
+    "credentialModal": {
+      "title": "{{providerName}} 자격증명 업데이트",
+      "environment": "환경",
+      "environmentOptions": {
+        "sandbox": "샌드박스",
+        "production": "프로덕션"
+      },
+      "apiKey": "API 키",
+      "apiKeyPlaceholder": "API 키 입력",
+      "secretKey": "비밀 키",
+      "secretKeyPlaceholder": "비밀 키 입력",
+      "merchantId": "가맹점 ID",
+      "merchantIdPlaceholder": "가맹점 ID 입력",
+      "accessToken": "액세스 토큰 (선택사항 - OAuth용)",
+      "accessTokenPlaceholder": "액세스 토큰 입력",
+      "securityWarning": "자격증명은 저장 전에 AES-256 암호화를 사용하여 암호화됩니다. 민감한 데이터를 입력할 때는 안전한 환경에 있는지 확인하세요.",
+      "cancel": "취소",
+      "updateButton": "자격증명 업데이트",
+      "updating": "업데이트 중..."
+    },
+    "notifications": {
+      "connectionTestSuccess": "{{providerName}} 연결 테스트 성공",
+      "connectionTestFailed": "{{providerName}} 연결 테스트 실패",
+      "credentialsUpdated": "{{providerName}}의 자격증명이 성공적으로 업데이트되었습니다",
+      "credentialsUpdateFailed": "자격증명 업데이트 실패",
+      "tenantLoadFailed": "테넌트 데이터 로드 실패",
+      "providersLoadFailed": "결제 제공업체 로드 실패",
+      "webhookUrlCopied": "Webhook URL이 클립보드에 복사되었습니다"
+    }
+  }
+}

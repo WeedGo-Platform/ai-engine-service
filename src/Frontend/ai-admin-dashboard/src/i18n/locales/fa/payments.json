@@ -1,0 +1,228 @@
+{
+  "titles": {
+    "main": "Payment Management",
+    "transactionHistory": "Transaction History",
+    "paymentProviders": "Payment Providers",
+    "paymentMethods": "Payment Methods",
+    "settlements": "Settlements",
+    "processRefund": "Process Refund",
+    "transactionDetails": "Transaction Details"
+  },
+  "descriptions": {
+    "transactionHistory": "View and manage all payment transactions",
+    "paymentProviders": "Manage payment gateway configurations",
+    "paymentMethods": "Manage saved customer payment methods",
+    "settlements": "View settlement batches and reconciliation",
+    "refundTransaction": "Refund transaction"
+  },
+  "metrics": {
+    "totalRevenue": "Total Revenue",
+    "successRate": "Success Rate",
+    "totalRefunds": "Total Refunds",
+    "processingFees": "Processing Fees",
+    "transactions": "transactions",
+    "successful": "successful",
+    "fromRevenue": "From revenue",
+    "ofRevenue": "of revenue"
+  },
+  "tabs": {
+    "transactions": "Transactions",
+    "providers": "Payment Providers",
+    "methods": "Payment Methods",
+    "settlements": "Settlements"
+  },
+  "filters": {
+    "status": "Status",
+    "provider": "Provider",
+    "allStatus": "All Status",
+    "allProviders": "All Providers",
+    "searchPlaceholder": "Search transactions..."
+  },
+  "status": {
+    "completed": "Completed",
+    "pending": "Pending",
+    "processing": "Processing",
+    "failed": "Failed",
+    "refunded": "Refunded",
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "table": {
+    "reference": "Reference",
+    "customer": "Customer",
+    "amount": "Amount",
+    "provider": "Provider",
+    "status": "Status",
+    "date": "Date",
+    "actions": "Actions"
+  },
+  "provider": {
+    "default": "Default",
+    "supportedCurrencies": "Supported Currencies",
+    "capabilities": "Capabilities"
+  },
+  "actions": {
+    "refresh": "Refresh",
+    "export": "Export",
+    "disable": "Disable",
+    "enable": "Enable",
+    "cancel": "Cancel",
+    "close": "Close",
+    "processRefund": "Process Refund"
+  },
+  "refund": {
+    "originalAmount": "Original Amount",
+    "refundAmount": "Refund Amount",
+    "refundAmountHint": "leave empty for full refund",
+    "reason": "Reason",
+    "enterAmount": "Enter amount",
+    "enterReason": "Enter reason for refund"
+  },
+  "details": {
+    "transactionId": "Transaction ID",
+    "providerTransactionId": "Provider Transaction ID",
+    "orderId": "Order ID",
+    "status": "Status",
+    "amount": "Amount",
+    "provider": "Provider",
+    "createdAt": "Created At",
+    "completedAt": "Completed At",
+    "errorMessage": "Error Message",
+    "notAvailable": "N/A"
+  },
+  "messages": {
+    "comingSoon": {
+      "paymentMethods": "Payment methods management coming soon",
+      "settlements": "Settlement reports coming soon"
+    },
+    "success": {
+      "refundProcessed": "Refund processed successfully",
+      "providerEnabled": "Provider enabled successfully",
+      "providerDisabled": "Provider disabled successfully"
+    },
+    "error": {
+      "title": "Error",
+      "fetchTransactions": "Failed to fetch transactions",
+      "processRefund": "Failed to process refund",
+      "updateProvider": "Failed to update provider status"
+    }
+  },
+  "settings": {
+    "title": "Payment Settings",
+    "addProvider": "Add Provider",
+    "backToTenants": "Back to Tenants",
+    "stats": {
+      "totalVolume": "Total Volume",
+      "successRate": "Success Rate",
+      "todayVolume": "Today's Volume",
+      "netRevenue": "Net Revenue",
+      "transactionsCount": "{{count}} transactions",
+      "avgTransaction": "Avg ${{amount}}",
+      "pendingSettlement": "Pending: ${{amount}}",
+      "platformFees": "Fees: ${{amount}}"
+    },
+    "tabs": {
+      "providers": "Providers",
+      "credentials": "Credentials",
+      "feesLimits": "Fees & Limits",
+      "webhooks": "Webhooks",
+      "analytics": "Analytics"
+    },
+    "providersTab": {
+      "title": "Payment Providers",
+      "noProviders": "No payment providers configured. Add one to start accepting payments.",
+      "production": "Production",
+      "sandbox": "Sandbox",
+      "healthStatus": "Health Status",
+      "unknown": "Unknown",
+      "testConnection": "Test Connection",
+      "configure": "Configure",
+      "remove": "Remove",
+      "merchantId": "Merchant ID:",
+      "lastSync": "Last Sync:",
+      "oauthExpires": "OAuth Expires:"
+    },
+    "credentialsTab": {
+      "title": "API Credentials",
+      "securityNotice": "Security Notice:",
+      "securityMessage": "API credentials are encrypted and stored securely. Never share your secret keys or access tokens.",
+      "updateCredentials": "Update Credentials",
+      "apiKey": "API Key",
+      "secretKey": "Secret Key",
+      "oauthToken": "OAuth Token",
+      "configured": "Configured",
+      "notConfigured": "Not configured",
+      "connected": "Connected",
+      "expires": "expires {{date}}",
+      "connectOAuth": "Connect with OAuth"
+    },
+    "feesTab": {
+      "title": "Fees & Transaction Limits",
+      "platformFees": "Platform Fees",
+      "percentageFee": "Percentage Fee",
+      "fixedFee": "Fixed Fee",
+      "transactionLimits": "Transaction Limits",
+      "dailyLimit": "Daily Limit",
+      "perTransactionLimit": "Per Transaction Limit",
+      "saveChanges": "Save Changes"
+    },
+    "webhooksTab": {
+      "title": "Webhook Configuration",
+      "infoMessage": "Configure webhook URLs in your payment provider's dashboard to receive real-time payment events.",
+      "webhookUrl": "Webhook URL",
+      "webhookSecret": "Webhook Secret",
+      "webhookSecretPlaceholder": "Enter webhook signing secret",
+      "eventsToSubscribe": "Events to Subscribe",
+      "eventTypes": {
+        "paymentCompleted": "payment.completed",
+        "paymentFailed": "payment.failed",
+        "refundCreated": "refund.created",
+        "disputeCreated": "dispute.created"
+      }
+    },
+    "analyticsTab": {
+      "title": "Payment Analytics",
+      "transactionVolume": "Transaction Volume (Last 7 Days)",
+      "successRateByProvider": "Success Rate by Provider",
+      "chartPlaceholder": "Chart Placeholder",
+      "recentTransactions": "Recent Transactions",
+      "noRecentTransactions": "No recent transactions",
+      "tableHeaders": {
+        "transactionId": "Transaction ID",
+        "amount": "Amount",
+        "provider": "Provider",
+        "status": "Status",
+        "date": "Date"
+      }
+    },
+    "credentialModal": {
+      "title": "Update {{providerName}} Credentials",
+      "environment": "Environment",
+      "environmentOptions": {
+        "sandbox": "Sandbox",
+        "production": "Production"
+      },
+      "apiKey": "API Key",
+      "apiKeyPlaceholder": "Enter API Key",
+      "secretKey": "Secret Key",
+      "secretKeyPlaceholder": "Enter Secret Key",
+      "merchantId": "Merchant ID",
+      "merchantIdPlaceholder": "Enter Merchant ID",
+      "accessToken": "Access Token (Optional - for OAuth)",
+      "accessTokenPlaceholder": "Enter Access Token",
+      "securityWarning": "Credentials are encrypted using AES-256 encryption before storage. Make sure you're in a secure environment when entering sensitive data.",
+      "cancel": "Cancel",
+      "updateButton": "Update Credentials",
+      "updating": "Updating..."
+    },
+    "notifications": {
+      "connectionTestSuccess": "{{providerName}} connection test successful",
+      "connectionTestFailed": "{{providerName}} connection test failed",
+      "credentialsUpdated": "Credentials updated successfully for {{providerName}}",
+      "credentialsUpdateFailed": "Failed to update credentials",
+      "tenantLoadFailed": "Failed to load tenant data",
+      "providersLoadFailed": "Failed to load payment providers",
+      "webhookUrlCopied": "Webhook URL copied to clipboard"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "title": "Anwendungen",
+  "tabs": {
+    "pos": "Verkaufsstelle",
+    "posShort": "POS",
+    "kiosk": "Selbstbedienungskiosk",
+    "kioskShort": "Kiosk",
+    "menuDisplay": "Menüanzeige",
+    "menuShort": "Menü"
+  },
+  "fullscreen": {
+    "enter": "Vollbild aktivieren",
+    "exit": "Vollbild verlassen"
+  },
+  "storeSelection": {
+    "required": "Geschäftsauswahl erforderlich",
+    "pleaseSelect": "Bitte wählen Sie ein Geschäft aus, um fortzufahren",
+    "selectButton": "Geschäft auswählen",
+    "description": "Bitte wählen Sie ein Geschäft aus, um auf {{appName}} zuzugreifen"
+  }
+}

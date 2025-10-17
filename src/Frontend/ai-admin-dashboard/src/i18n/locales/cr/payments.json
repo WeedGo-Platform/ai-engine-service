@@ -1,0 +1,228 @@
+{
+  "titles": {
+    "main": "ᑎᐹᒋᑫᐎᐣ ᑭᓇᐏᒋᑫᐎᐣ",
+    "transactionHistory": "ᐊᑕᐍᐏᐣ ᑭᐱᒋᐦᐋᐎᐣ",
+    "paymentProviders": "ᑎᐹᒋᑫᐎᐣ ᐊᑕᐍᐃᐧᒋᑲᓀᐤ",
+    "paymentMethods": "ᑎᐹᒋᑫᐎᐣ ᐃᑐᑕᒧᐏᐣ",
+    "settlements": "ᑮᓇᐦᐊᒪᑫᐏᐣ",
+    "processRefund": "ᐊᑕᐍᐏᐣ ᐊᔨᐎᐣ",
+    "transactionDetails": "ᐊᑕᐍᐏᐣ ᐊᑕᐍᐎᐣ"
+  },
+  "descriptions": {
+    "transactionHistory": "ᐋᐸᒋᐦᑖ ᒥᓇ ᑭᓇᐏᒋᑲᑌ ᑳᑭᓈ ᑎᐹᒋᑫᐎᐣ ᐊᑕᐍᐏᐣ",
+    "paymentProviders": "ᑭᓇᐏᒋᑫᐎᐣ ᑎᐹᒋᑫᐎᐣ ᒪᔅᑭᒋᑭᐏᐣ ᑭᑐᑕᒧᐏᐣ",
+    "paymentMethods": "ᑭᓇᐏᒋᑫᐎᐣ ᑳᔅᑭᑐᑕᒧᓂᓂᐤ ᐊᑐᐸᑫᐃᐧᓂᐤ ᑎᐹᒋᑫᐎᐣ ᐃᑐᑕᒧᐏᐣ",
+    "settlements": "ᐋᐸᒋᐦᑖ ᑮᓇᐦᐊᒪᑫᐎᐣ ᑭᐱᓇᑎᓯᐏᐣ ᒥᓇ ᒫᒪᐏᐃᐧᑕᒧᐤ",
+    "refundTransaction": "ᐊᑕᐍᐏᐣ ᐊᔨᐎᐣ"
+  },
+  "metrics": {
+    "totalRevenue": "ᑭᑭᓄᐦᐋᒪᑫᐎᐣ ᔓᓂᔮᐤ",
+    "successRate": "ᒥᓀᐗᐃᐧᓇᐧᐠ ᐃᔑᐱᔨᐤ",
+    "totalRefunds": "ᑭᑭᓄᐦᐋᒪᑫᐎᐣ ᐊᑕᐍᐏᐣ ᐊᔨᐎᐣ",
+    "processingFees": "ᐃᑐᑕᒧᐏᐣ ᑎᐹᒋᑫᐏᓐ",
+    "transactions": "ᐊᑕᐍᐏᐣ",
+    "successful": "ᑮᒥᓀᐗᐋᑲᓂᐤ",
+    "fromRevenue": "ᔓᓂᔮᐤ ᐅᒋ",
+    "ofRevenue": "ᔓᓂᔮᐤ"
+  },
+  "tabs": {
+    "transactions": "ᐊᑕᐍᐏᐣ",
+    "providers": "ᑎᐹᒋᑫᐎᐣ ᐊᑕᐍᐃᐧᒋᑲᓀᐤ",
+    "methods": "ᑎᐹᒋᑫᐎᐣ ᐃᑐᑕᒧᐏᐣ",
+    "settlements": "ᑮᓇᐦᐊᒪᑫᐏᐣ"
+  },
+  "filters": {
+    "status": "ᑖᓂᑖᐎᐤ",
+    "provider": "ᐊᑕᐍᐃᐧᒋᑫ",
+    "allStatus": "ᑭᑭᓄᐦᐋᒪᑫᐏᐣ ᑖᓂᑖᐏᐣ",
+    "allProviders": "ᑭᑭᓄᐦᐋᒪᑫᐏᐣ ᐊᑕᐍᐃᐧᒋᑲᓀᒃ",
+    "searchPlaceholder": "ᓇᑐᓀᔭᐸᐦᑖ ᐊᑕᐍᐏᐣ..."
+  },
+  "status": {
+    "completed": "ᑮᑭᔑᑐᑕᒼ",
+    "pending": "ᐸᔭᑲᐧᑖᑲᓂᐤ",
+    "processing": "ᐃᑐᑕᒧᑲᑌᐤ",
+    "failed": "ᑭᐹᒋᒪᑲᓂᐤ",
+    "refunded": "ᑮᐊᑕᐍᔭᐦᐊᐧᐤ",
+    "active": "ᐊᔅᑲᐧᐤ",
+    "inactive": "ᓇᒪᐗᐃᐧᐣ ᐊᔅᑲᐧᐤ"
+  },
+  "table": {
+    "reference": "ᑭᑭᓄᐦᐊᒪᑫᐎᐣ",
+    "customer": "ᑳᑮᐃᔑᐤ",
+    "amount": "ᐊᔮᐃᐧᐣ",
+    "provider": "ᐊᑕᐍᐃᐧᒋᑫ",
+    "status": "ᑖᓂᑖᐎᐤ",
+    "date": "ᑭᔑᑳᐤ",
+    "actions": "ᐃᑐᑕᒧᐏᐣ"
+  },
+  "provider": {
+    "default": "ᓀᔥᑕ",
+    "supportedCurrencies": "ᓈᓯᑐᐗᐋᑲᓂᓂᐤ ᔓᓂᔮᐤ",
+    "capabilities": "ᑭᐱᒋᐦᐋᐎᐣ"
+  },
+  "actions": {
+    "refresh": "ᐅᔑᑕᐎᐤ",
+    "export": "ᐃᔑᐃᐧᓇᐦᐋ",
+    "disable": "ᒪᐦᑭᓯ",
+    "enable": "ᐱᑭᔅᑭᓇᐦᐊ",
+    "cancel": "ᐊᑕᐘᐦᐊ",
+    "close": "ᑭᐸᐦᐊᒼ",
+    "processRefund": "ᐊᑕᐍᐏᐣ ᐊᔨᐎᐣ ᐃᑐᑕᒧ"
+  },
+  "refund": {
+    "originalAmount": "ᓀᔥᑕ ᐊᔮᐃᐧᐣ",
+    "refundAmount": "ᐊᑕᐍᐏᐣ ᐊᔨᐎᐣ ᐊᔮᐃᐧᐣ",
+    "refundAmountHint": "ᓇᑲᑌ ᑭᑭᓄᐦᐋᒪᑫᐎᐣ ᐊᑕᐍᐏᐣ ᐊᔨᐎᐣ",
+    "reason": "ᑳᐅᒋ",
+    "enterAmount": "ᐱᑭᔅᑭᓇᐦᐊ ᐊᔮᐃᐧᐣ",
+    "enterReason": "ᐱᑭᔅᑭᓇᐦᐊ ᑳᐅᒋ ᐊᑕᐍᐏᐣ ᐊᔨᐎᐣ"
+  },
+  "details": {
+    "transactionId": "ᐊᑕᐍᐏᐣ ᑭᑭᓄᐦᐊᒪᑫᐎᐣ",
+    "providerTransactionId": "ᐊᑕᐍᐃᐧᒋᑫ ᐊᑕᐍᐏᐣ ᑭᑭᓄᐦᐊᒪᑫᐎᐣ",
+    "orderId": "ᐊᑕᐍᐏᐣ ᑭᑭᓄᐦᐊᒪᑫᐎᐣ",
+    "status": "ᑖᓂᑖᐎᐤ",
+    "amount": "ᐊᔮᐃᐧᐣ",
+    "provider": "ᐊᑕᐍᐃᐧᒋᑫ",
+    "createdAt": "ᑮᐅᓯᐦᑖᐤ",
+    "completedAt": "ᑮᑭᔑᑐᑕᒼ",
+    "errorMessage": "ᑭᐹᒋᒧᐎᐣ ᐊᔮᒧᐎᐣ",
+    "notAvailable": "ᓇᒪᐗᐃᐧᓂᐤ"
+  },
+  "messages": {
+    "comingSoon": {
+      "paymentMethods": "ᑎᐹᒋᑫᐎᐣ ᐃᑐᑕᒧᐏᐣ ᑭᓇᐏᒋᑫᐎᐣ ᐸᐗᐃᒋᑫᐤ",
+      "settlements": "ᑮᓇᐦᐊᒪᑫᐎᐣ ᐊᓄᑲᑕᒧᐏᐣ ᐸᐗᐃᒋᑫᐤ"
+    },
+    "success": {
+      "refundProcessed": "ᐊᑕᐍᐏᐣ ᐊᔨᐎᐣ ᑮᐃᑐᑕᒧᐤ ᒥᓀᐗᐃᐧᓇᐧᐠ",
+      "providerEnabled": "ᐊᑕᐍᐃᐧᒋᑫ ᑮᐱᑭᔅᑭᓇᐦᐊᐤ ᒥᓀᐗᐃᐧᓇᐧᐠ",
+      "providerDisabled": "ᐊᑕᐍᐃᐧᒋᑫ ᑮᒪᐦᑭᓯᐤ ᒥᓀᐗᐃᐧᓇᐧᐠ"
+    },
+    "error": {
+      "title": "ᑭᐹᒋᒧᐎᐣ",
+      "fetchTransactions": "ᑭᐹᒋᐦᐋᐤ ᐊᑕᐍᐏᐣ ᓇᑕᐍᐃᐧᒋᑲᑌᐤ",
+      "processRefund": "ᑭᐹᒋᐦᐋᐤ ᐊᑕᐍᐏᐣ ᐊᔨᐎᐣ ᐃᑐᑕᒧᐤ",
+      "updateProvider": "ᑭᐹᒋᐦᐋᐤ ᐊᑕᐍᐃᐧᒋᑫ ᑖᓂᑖᐎᐤ ᐅᔑᑕᐎᐤ"
+    }
+  },
+  "settings": {
+    "title": "ᑎᐹᒋᑫᐎᐣ ᑭᑐᑕᒧᐏᐣ",
+    "addProvider": "ᐊᑕᐍᐃᐧᒋᑫ ᐱᑭᔅᑭᓇᐦᐊ",
+    "backToTenants": "ᓇᔅᐱᒋ ᑳᑮᐃᔑᓂᒃ",
+    "stats": {
+      "totalVolume": "ᑭᑭᓄᐦᐋᒪᑫᐎᐣ ᐊᔮᐃᐧᐣ",
+      "successRate": "ᒥᓀᐗᐃᐧᓇᐧᐠ ᐃᔑᐱᔨᐤ",
+      "todayVolume": "ᐊᓄᒌ ᐊᔮᐃᐧᐣ",
+      "netRevenue": "ᑭᑭᓄᐦᐋᒪᑫᐎᐣ ᔓᓂᔮᐤ",
+      "transactionsCount": "{{count}} ᐊᑕᐍᐏᐣ",
+      "avgTransaction": "ᐊᐱᒋ ${{amount}}",
+      "pendingSettlement": "ᐸᔭᑲᐧᑖᑲᓂᐤ: ${{amount}}",
+      "platformFees": "ᑎᐹᒋᑫᐏᓐ: ${{amount}}"
+    },
+    "tabs": {
+      "providers": "ᐊᑕᐍᐃᐧᒋᑲᓀᒃ",
+      "credentials": "ᑭᑭᓄᐦᐊᒪᑫᐎᐣ ᐊᔮᒧᐏᐣ",
+      "feesLimits": "ᑎᐹᒋᑫᐏᓐ ᒥᓇ ᐊᐱᒋᐦᑖᐎᐣ",
+      "webhooks": "Webhooks",
+      "analytics": "ᐊᓄᑲᑕᒧᐏᐣ"
+    },
+    "providersTab": {
+      "title": "ᑎᐹᒋᑫᐎᐣ ᐊᑕᐍᐃᐧᒋᑲᓀᐤ",
+      "noProviders": "ᓇᒪᐗᐃᐧᓂᐤ ᑎᐹᒋᑫᐎᐣ ᐊᑕᐍᐃᐧᒋᑲᓀᐤ ᑭᑐᑕᒧᐤ. ᐱᑭᔅᑭᓇᐦᐊ ᐸᔭᑲᐧᑖᒪᑫᐎᐣ ᑎᐹᒋᑫᐎᐣ.",
+      "production": "ᐅᓯᐦᑖᐎᐣ",
+      "sandbox": "Sandbox",
+      "healthStatus": "ᒥᔪᓇᑲᓂᐤ ᑖᓂᑖᐎᐤ",
+      "unknown": "ᓇᒪᐗᐃᐧᑲᑌᐠ",
+      "testConnection": "ᐃᔑᐦᒋᑫ ᐸᐗᑕᓯᐣ",
+      "configure": "ᑭᑐᑕᒧ",
+      "remove": "ᐃᔑᐗᐋᐸᐦᑎ",
+      "merchantId": "ᐊᑕᐍᐃᐧᑫ ID:",
+      "lastSync": "ᐃᔑᑯᑕᒃ ᒫᒪᐏᐎᓇᐦᐊᐤ:",
+      "oauthExpires": "OAuth ᑭᔑᓈᑲᐧᓂᐤ:"
+    },
+    "credentialsTab": {
+      "title": "API ᑭᑭᓄᐦᐊᒪᑫᐎᐣ ᐊᔮᒧᐏᐣ",
+      "securityNotice": "ᐃᔑᐦᒋᑫᐎᐣ ᐊᓄᑲᑕᒧᐎᐣ:",
+      "securityMessage": "API ᑭᑭᓄᐦᐊᒪᑫᐎᐣ ᐊᔮᒧᐏᐣ ᑲᓇᐗᐊᐸᐦᑎᓂᐤ ᒥᓇ ᒥᔪᓇᑲᓂᐤᐦᒋ ᑳᔅᑭᑐᑕᒧᓂᓂᐤ. ᓇᒪᐗᐃᐧᐣ ᑭᐃᑕᐧᐊ ᑭᑭᑭᓄᐦᐊᒪᑫᐎᐣ ᐅᑭᒫᐎᓐ.",
+      "updateCredentials": "ᐅᔑᑕᐎᐤ ᑭᑭᓄᐦᐊᒪᑫᐎᐣ ᐊᔮᒧᐏᐣ",
+      "apiKey": "API ᐅᑭᒫᐤ",
+      "secretKey": "ᑲᓇᐗᐊᐸᐦᑎᓂᐤ ᐅᑭᒫᐤ",
+      "oauthToken": "OAuth ᐅᑭᒫᐤ",
+      "configured": "ᑮᑭᑐᑕᒧᐤ",
+      "notConfigured": "ᓇᒪᐗᐃᐧᐣ ᑭᑐᑕᒧᐤ",
+      "connected": "ᐸᐗᑕᓯᐣ",
+      "expires": "{{date}} ᑭᔑᓈᑲᐧᓂᐤ",
+      "connectOAuth": "ᐸᐗᑕᓯᐣ OAuth"
+    },
+    "feesTab": {
+      "title": "ᑎᐹᒋᑫᐏᓐ ᒥᓇ ᐊᑕᐍᐏᐣ ᐊᐱᒋᐦᑖᐎᐣ",
+      "platformFees": "ᐅᓯᐦᑖᐎᐣ ᑎᐹᒋᑫᐏᓐ",
+      "percentageFee": "ᐊᐱᒋ ᑎᐹᒋᑫᐎᐣ",
+      "fixedFee": "ᑭᑭᓄᐦᐋᒪᑫᐎᐣ ᑎᐹᒋᑫᐎᐣ",
+      "transactionLimits": "ᐊᑕᐍᐏᐣ ᐊᐱᒋᐦᑖᐎᐣ",
+      "dailyLimit": "ᑭᔑᑳᑯᓂᐤ ᐊᐱᒋᐦᑖᐎᐣ",
+      "perTransactionLimit": "ᐊᑕᐍᐏᐣ ᐊᐱᒋᐦᑖᐎᐣ",
+      "saveChanges": "ᑳᔅᑭᑐᑕᒧ ᐊᔮᐎᐣ"
+    },
+    "webhooksTab": {
+      "title": "Webhook ᑭᑐᑕᒧᐎᐣ",
+      "infoMessage": "ᑭᑐᑕᒧ webhook URLs ᑭᑎᐹᒋᑫᐎᐣ ᐊᑕᐍᐃᐧᒋᑫ ᐅᑭᒫᐎᐣ ᐱᑭᔅᑭᓇᐦᐊᐤ ᐊᓄᒌ ᑎᐹᒋᑫᐎᐣ ᐃᑐᑕᒧᐏᐣ.",
+      "webhookUrl": "Webhook URL",
+      "webhookSecret": "Webhook ᑲᓇᐗᐊᐸᐦᑎᓂᐤ",
+      "webhookSecretPlaceholder": "ᐱᑭᔅᑭᓇᐦᐊ webhook ᑲᓇᐗᐊᐸᐦᑎᓂᐤ",
+      "eventsToSubscribe": "ᐃᑐᑕᒧᐏᐣ ᐸᔭᑲᐧᑖᒪᑫᐎᐣ",
+      "eventTypes": {
+        "paymentCompleted": "payment.completed",
+        "paymentFailed": "payment.failed",
+        "refundCreated": "refund.created",
+        "disputeCreated": "dispute.created"
+      }
+    },
+    "analyticsTab": {
+      "title": "ᑎᐹᒋᑫᐎᐣ ᐊᓄᑲᑕᒧᐏᐣ",
+      "transactionVolume": "ᐊᑕᐍᐏᐣ ᐊᔮᐃᐧᐣ (ᐃᔑᑯᑕᒃ 7 ᑭᔑᑳᐤ)",
+      "successRateByProvider": "ᐊᑕᐍᐃᐧᒋᑫ ᒥᓀᐗᐃᐧᓇᐧᐠ ᐃᔑᐱᔨᐤ",
+      "chartPlaceholder": "ᐊᓄᑲᑕᒧᐎᐣ ᐅᑭᒫᐎᐣ",
+      "recentTransactions": "ᐅᔑᑖᑯᓂᐤ ᐊᑕᐍᐏᐣ",
+      "noRecentTransactions": "ᓇᒪᐗᐃᐧᓂᐤ ᐅᔑᑖᑯᓂᐤ ᐊᑕᐍᐏᐣ",
+      "tableHeaders": {
+        "transactionId": "ᐊᑕᐍᐏᐣ ID",
+        "amount": "ᐊᔮᐃᐧᐣ",
+        "provider": "ᐊᑕᐍᐃᐧᒋᑫ",
+        "status": "ᑖᓂᑖᐎᐤ",
+        "date": "ᑭᔑᑳᐤ"
+      }
+    },
+    "credentialModal": {
+      "title": "ᐅᔑᑕᐎᐤ {{providerName}} ᑭᑭᓄᐦᐊᒪᑫᐎᐣ ᐊᔮᒧᐏᐣ",
+      "environment": "ᑭᑐᑕᒧᐎᐣ",
+      "environmentOptions": {
+        "sandbox": "Sandbox",
+        "production": "ᐅᓯᐦᑖᐎᐣ"
+      },
+      "apiKey": "API ᐅᑭᒫᐤ",
+      "apiKeyPlaceholder": "ᐱᑭᔅᑭᓇᐦᐊ API ᐅᑭᒫᐤ",
+      "secretKey": "ᑲᓇᐗᐊᐸᐦᑎᓂᐤ ᐅᑭᒫᐤ",
+      "secretKeyPlaceholder": "ᐱᑭᔅᑭᓇᐦᐊ ᑲᓇᐗᐊᐸᐦᑎᓂᐤ ᐅᑭᒫᐤ",
+      "merchantId": "ᐊᑕᐍᐃᐧᑫ ID",
+      "merchantIdPlaceholder": "ᐱᑭᔅᑭᓇᐦᐊ ᐊᑕᐍᐃᐧᑫ ID",
+      "accessToken": "ᐱᑭᔅᑭᓇᐦᐊᐤ ᐅᑭᒫᐤ (ᐊᑌᐸᑕᒪᐤ - OAuth)",
+      "accessTokenPlaceholder": "ᐱᑭᔅᑭᓇᐦᐊ ᐱᑭᔅᑭᓇᐦᐊᐤ ᐅᑭᒫᐤ",
+      "securityWarning": "ᑭᑭᓄᐦᐊᒪᑫᐎᐣ ᐊᔮᒧᐏᐣ ᑲᓇᐗᐊᐸᐦᑎᓂᐤ AES-256 ᐱᑯ ᑳᔅᑭᑐᑕᒧᐤ. ᐃᔑᐦᒋᑫ ᑭᒥᔪᓇᑲᓂᐤ ᑳᐱᑭᔅᑭᓇᐦᐊᔭᐣ ᑲᓇᐗᐊᐸᐦᑎᓂᐤ ᐊᔮᒧᐏᐣ.",
+      "cancel": "ᐊᑕᐘᐦᐊ",
+      "updateButton": "ᐅᔑᑕᐎᐤ ᑭᑭᓄᐦᐊᒪᑫᐎᐣ ᐊᔮᒧᐏᐣ",
+      "updating": "ᐅᔑᑕᐎᐤᐦᒋ..."
+    },
+    "notifications": {
+      "connectionTestSuccess": "{{providerName}} ᐸᐗᑕᓯᐣ ᐃᔑᐦᒋᑫᐎᐣ ᒥᓀᐗᐃᐧᓇᐧᐠ",
+      "connectionTestFailed": "{{providerName}} ᐸᐗᑕᓯᐣ ᐃᔑᐦᒋᑫᐎᐣ ᑭᐹᒋᐦᐋᐤ",
+      "credentialsUpdated": "{{providerName}} ᑭᑭᓄᐦᐊᒪᑫᐎᐣ ᐊᔮᒧᐏᐣ ᑮᐅᔑᑕᐎᐤ ᒥᓀᐗᐃᐧᓇᐧᐠ",
+      "credentialsUpdateFailed": "ᑭᐹᒋᐦᐋᐤ ᑭᑭᓄᐦᐊᒪᑫᐎᐣ ᐊᔮᒧᐏᐣ ᐅᔑᑕᐎᐤ",
+      "tenantLoadFailed": "ᑭᐹᒋᐦᐋᐤ ᑳᑮᐃᔑᓂᒃ ᐊᔮᒧᐏᐣ ᓇᑕᐍᐃᐧᒋᑲᑌᐤ",
+      "providersLoadFailed": "ᑭᐹᒋᐦᐋᐤ ᑎᐹᒋᑫᐎᐣ ᐊᑕᐍᐃᐧᒋᑲᓀᐤ ᓇᑕᐍᐃᐧᒋᑲᑌᐤ",
+      "webhookUrlCopied": "Webhook URL ᑮᐃᔑᐗᐋᐸᐦᒋᑲᑌᐤ"
+    }
+  }
+}

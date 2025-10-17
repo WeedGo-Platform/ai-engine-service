@@ -1,0 +1,228 @@
+{
+  "titles": {
+    "main": "Zahlungsverwaltung",
+    "transactionHistory": "Transaktionsverlauf",
+    "paymentProviders": "Zahlungsanbieter",
+    "paymentMethods": "Zahlungsmethoden",
+    "settlements": "Abrechnungen",
+    "processRefund": "Rückerstattung bearbeiten",
+    "transactionDetails": "Transaktionsdetails"
+  },
+  "descriptions": {
+    "transactionHistory": "Alle Zahlungstransaktionen anzeigen und verwalten",
+    "paymentProviders": "Zahlungsgateway-Konfigurationen verwalten",
+    "paymentMethods": "Gespeicherte Zahlungsmethoden von Kunden verwalten",
+    "settlements": "Abrechnungsstapel und Abstimmung anzeigen",
+    "refundTransaction": "Transaktion erstatten"
+  },
+  "metrics": {
+    "totalRevenue": "Gesamtumsatz",
+    "successRate": "Erfolgsquote",
+    "totalRefunds": "Gesamtrückerstattungen",
+    "processingFees": "Bearbeitungsgebühren",
+    "transactions": "Transaktionen",
+    "successful": "erfolgreich",
+    "fromRevenue": "Vom Umsatz",
+    "ofRevenue": "des Umsatzes"
+  },
+  "tabs": {
+    "transactions": "Transaktionen",
+    "providers": "Zahlungsanbieter",
+    "methods": "Zahlungsmethoden",
+    "settlements": "Abrechnungen"
+  },
+  "filters": {
+    "status": "Status",
+    "provider": "Anbieter",
+    "allStatus": "Alle Status",
+    "allProviders": "Alle Anbieter",
+    "searchPlaceholder": "Transaktionen durchsuchen..."
+  },
+  "status": {
+    "completed": "Abgeschlossen",
+    "pending": "Ausstehend",
+    "processing": "In Bearbeitung",
+    "failed": "Fehlgeschlagen",
+    "refunded": "Erstattet",
+    "active": "Aktiv",
+    "inactive": "Inaktiv"
+  },
+  "table": {
+    "reference": "Referenz",
+    "customer": "Kunde",
+    "amount": "Betrag",
+    "provider": "Anbieter",
+    "status": "Status",
+    "date": "Datum",
+    "actions": "Aktionen"
+  },
+  "provider": {
+    "default": "Standard",
+    "supportedCurrencies": "Unterstützte Währungen",
+    "capabilities": "Funktionen"
+  },
+  "actions": {
+    "refresh": "Aktualisieren",
+    "export": "Exportieren",
+    "disable": "Deaktivieren",
+    "enable": "Aktivieren",
+    "cancel": "Abbrechen",
+    "close": "Schließen",
+    "processRefund": "Rückerstattung bearbeiten"
+  },
+  "refund": {
+    "originalAmount": "Ursprünglicher Betrag",
+    "refundAmount": "Rückerstattungsbetrag",
+    "refundAmountHint": "leer lassen für vollständige Rückerstattung",
+    "reason": "Grund",
+    "enterAmount": "Betrag eingeben",
+    "enterReason": "Grund für Rückerstattung eingeben"
+  },
+  "details": {
+    "transactionId": "Transaktions-ID",
+    "providerTransactionId": "Anbieter-Transaktions-ID",
+    "orderId": "Bestellungs-ID",
+    "status": "Status",
+    "amount": "Betrag",
+    "provider": "Anbieter",
+    "createdAt": "Erstellt am",
+    "completedAt": "Abgeschlossen am",
+    "errorMessage": "Fehlermeldung",
+    "notAvailable": "Nicht verfügbar"
+  },
+  "messages": {
+    "comingSoon": {
+      "paymentMethods": "Zahlungsmethodenverwaltung kommt bald",
+      "settlements": "Abrechnungsberichte kommen bald"
+    },
+    "success": {
+      "refundProcessed": "Rückerstattung erfolgreich bearbeitet",
+      "providerEnabled": "Anbieter erfolgreich aktiviert",
+      "providerDisabled": "Anbieter erfolgreich deaktiviert"
+    },
+    "error": {
+      "title": "Fehler",
+      "fetchTransactions": "Fehler beim Abrufen der Transaktionen",
+      "processRefund": "Fehler beim Bearbeiten der Rückerstattung",
+      "updateProvider": "Fehler beim Aktualisieren des Anbieterstatus"
+    }
+  },
+  "settings": {
+    "title": "Zahlungseinstellungen",
+    "addProvider": "Anbieter hinzufügen",
+    "backToTenants": "Zurück zu Mandanten",
+    "stats": {
+      "totalVolume": "Gesamtvolumen",
+      "successRate": "Erfolgsquote",
+      "todayVolume": "Heutiges Volumen",
+      "netRevenue": "Nettoumsatz",
+      "transactionsCount": "{{count}} Transaktionen",
+      "avgTransaction": "Durchschn. ${{amount}}",
+      "pendingSettlement": "Ausstehend: ${{amount}}",
+      "platformFees": "Gebühren: ${{amount}}"
+    },
+    "tabs": {
+      "providers": "Anbieter",
+      "credentials": "Zugangsdaten",
+      "feesLimits": "Gebühren und Limits",
+      "webhooks": "Webhooks",
+      "analytics": "Analytik"
+    },
+    "providersTab": {
+      "title": "Zahlungsanbieter",
+      "noProviders": "Keine Zahlungsanbieter konfiguriert. Fügen Sie einen hinzu, um Zahlungen zu akzeptieren.",
+      "production": "Produktion",
+      "sandbox": "Sandbox",
+      "healthStatus": "Gesundheitsstatus",
+      "unknown": "Unbekannt",
+      "testConnection": "Verbindung testen",
+      "configure": "Konfigurieren",
+      "remove": "Entfernen",
+      "merchantId": "Händler-ID:",
+      "lastSync": "Letzte Synchronisation:",
+      "oauthExpires": "OAuth läuft ab:"
+    },
+    "credentialsTab": {
+      "title": "API-Zugangsdaten",
+      "securityNotice": "Sicherheitshinweis:",
+      "securityMessage": "API-Zugangsdaten werden verschlüsselt und sicher gespeichert. Teilen Sie niemals Ihre geheimen Schlüssel oder Zugriffstoken.",
+      "updateCredentials": "Zugangsdaten aktualisieren",
+      "apiKey": "API-Schlüssel",
+      "secretKey": "Geheimer Schlüssel",
+      "oauthToken": "OAuth-Token",
+      "configured": "Konfiguriert",
+      "notConfigured": "Nicht konfiguriert",
+      "connected": "Verbunden",
+      "expires": "läuft ab am {{date}}",
+      "connectOAuth": "Mit OAuth verbinden"
+    },
+    "feesTab": {
+      "title": "Gebühren und Transaktionslimits",
+      "platformFees": "Plattformgebühren",
+      "percentageFee": "Prozentuale Gebühr",
+      "fixedFee": "Feste Gebühr",
+      "transactionLimits": "Transaktionslimits",
+      "dailyLimit": "Tageslimit",
+      "perTransactionLimit": "Limit pro Transaktion",
+      "saveChanges": "Änderungen speichern"
+    },
+    "webhooksTab": {
+      "title": "Webhook-Konfiguration",
+      "infoMessage": "Konfigurieren Sie Webhook-URLs im Dashboard Ihres Zahlungsanbieters, um Zahlungsereignisse in Echtzeit zu empfangen.",
+      "webhookUrl": "Webhook-URL",
+      "webhookSecret": "Webhook-Secret",
+      "webhookSecretPlaceholder": "Webhook-Signatursecret eingeben",
+      "eventsToSubscribe": "Zu abonnierende Ereignisse",
+      "eventTypes": {
+        "paymentCompleted": "payment.completed",
+        "paymentFailed": "payment.failed",
+        "refundCreated": "refund.created",
+        "disputeCreated": "dispute.created"
+      }
+    },
+    "analyticsTab": {
+      "title": "Zahlungsanalytik",
+      "transactionVolume": "Transaktionsvolumen (letzte 7 Tage)",
+      "successRateByProvider": "Erfolgsquote nach Anbieter",
+      "chartPlaceholder": "Diagrammplatzhalter",
+      "recentTransactions": "Letzte Transaktionen",
+      "noRecentTransactions": "Keine letzten Transaktionen",
+      "tableHeaders": {
+        "transactionId": "Transaktions-ID",
+        "amount": "Betrag",
+        "provider": "Anbieter",
+        "status": "Status",
+        "date": "Datum"
+      }
+    },
+    "credentialModal": {
+      "title": "{{providerName}}-Zugangsdaten aktualisieren",
+      "environment": "Umgebung",
+      "environmentOptions": {
+        "sandbox": "Sandbox",
+        "production": "Produktion"
+      },
+      "apiKey": "API-Schlüssel",
+      "apiKeyPlaceholder": "API-Schlüssel eingeben",
+      "secretKey": "Geheimer Schlüssel",
+      "secretKeyPlaceholder": "Geheimen Schlüssel eingeben",
+      "merchantId": "Händler-ID",
+      "merchantIdPlaceholder": "Händler-ID eingeben",
+      "accessToken": "Zugriffstoken (Optional - für OAuth)",
+      "accessTokenPlaceholder": "Zugriffstoken eingeben",
+      "securityWarning": "Zugangsdaten werden vor der Speicherung mit AES-256-Verschlüsselung verschlüsselt. Stellen Sie sicher, dass Sie sich in einer sicheren Umgebung befinden, wenn Sie sensible Daten eingeben.",
+      "cancel": "Abbrechen",
+      "updateButton": "Zugangsdaten aktualisieren",
+      "updating": "Aktualisiere..."
+    },
+    "notifications": {
+      "connectionTestSuccess": "{{providerName}}-Verbindungstest erfolgreich",
+      "connectionTestFailed": "{{providerName}}-Verbindungstest fehlgeschlagen",
+      "credentialsUpdated": "Zugangsdaten für {{providerName}} erfolgreich aktualisiert",
+      "credentialsUpdateFailed": "Fehler beim Aktualisieren der Zugangsdaten",
+      "tenantLoadFailed": "Fehler beim Laden der Mandantendaten",
+      "providersLoadFailed": "Fehler beim Laden der Zahlungsanbieter",
+      "webhookUrlCopied": "Webhook-URL in Zwischenablage kopiert"
+    }
+  }
+}

@@ -1,0 +1,228 @@
+{
+  "titles": {
+    "main": "支付管理",
+    "transactionHistory": "交易历史",
+    "paymentProviders": "支付提供商",
+    "paymentMethods": "支付方式",
+    "settlements": "结算",
+    "processRefund": "处理退款",
+    "transactionDetails": "交易详情"
+  },
+  "descriptions": {
+    "transactionHistory": "查看和管理所有支付交易",
+    "paymentProviders": "管理支付网关配置",
+    "paymentMethods": "管理客户保存的支付方式",
+    "settlements": "查看结算批次和对账",
+    "refundTransaction": "退款交易"
+  },
+  "metrics": {
+    "totalRevenue": "总收入",
+    "successRate": "成功率",
+    "totalRefunds": "总退款",
+    "processingFees": "处理费用",
+    "transactions": "笔交易",
+    "successful": "成功",
+    "fromRevenue": "来自收入",
+    "ofRevenue": "占收入"
+  },
+  "tabs": {
+    "transactions": "交易",
+    "providers": "支付提供商",
+    "methods": "支付方式",
+    "settlements": "结算"
+  },
+  "filters": {
+    "status": "状态",
+    "provider": "提供商",
+    "allStatus": "所有状态",
+    "allProviders": "所有提供商",
+    "searchPlaceholder": "搜索交易..."
+  },
+  "status": {
+    "completed": "已完成",
+    "pending": "待处理",
+    "processing": "处理中",
+    "failed": "失败",
+    "refunded": "已退款",
+    "active": "活跃",
+    "inactive": "停用"
+  },
+  "table": {
+    "reference": "参考号",
+    "customer": "客户",
+    "amount": "金额",
+    "provider": "提供商",
+    "status": "状态",
+    "date": "日期",
+    "actions": "操作"
+  },
+  "provider": {
+    "default": "默认",
+    "supportedCurrencies": "支持的货币",
+    "capabilities": "功能"
+  },
+  "actions": {
+    "refresh": "刷新",
+    "export": "导出",
+    "disable": "停用",
+    "enable": "启用",
+    "cancel": "取消",
+    "close": "关闭",
+    "processRefund": "处理退款"
+  },
+  "refund": {
+    "originalAmount": "原始金额",
+    "refundAmount": "退款金额",
+    "refundAmountHint": "留空表示全额退款",
+    "reason": "原因",
+    "enterAmount": "输入金额",
+    "enterReason": "输入退款原因"
+  },
+  "details": {
+    "transactionId": "交易ID",
+    "providerTransactionId": "提供商交易ID",
+    "orderId": "订单ID",
+    "status": "状态",
+    "amount": "金额",
+    "provider": "提供商",
+    "createdAt": "创建于",
+    "completedAt": "完成于",
+    "errorMessage": "错误消息",
+    "notAvailable": "不适用"
+  },
+  "messages": {
+    "comingSoon": {
+      "paymentMethods": "支付方式管理即将推出",
+      "settlements": "结算报告即将推出"
+    },
+    "success": {
+      "refundProcessed": "退款处理成功",
+      "providerEnabled": "提供商启用成功",
+      "providerDisabled": "提供商停用成功"
+    },
+    "error": {
+      "title": "错误",
+      "fetchTransactions": "获取交易失败",
+      "processRefund": "处理退款失败",
+      "updateProvider": "更新提供商状态失败"
+    }
+  },
+  "settings": {
+    "title": "支付设置",
+    "addProvider": "添加提供商",
+    "backToTenants": "返回租户",
+    "stats": {
+      "totalVolume": "总交易量",
+      "successRate": "成功率",
+      "todayVolume": "今日交易量",
+      "netRevenue": "净收入",
+      "transactionsCount": "{{count}}笔交易",
+      "avgTransaction": "平均 ${{amount}}",
+      "pendingSettlement": "待结算：${{amount}}",
+      "platformFees": "费用：${{amount}}"
+    },
+    "tabs": {
+      "providers": "提供商",
+      "credentials": "凭证",
+      "feesLimits": "费用和限制",
+      "webhooks": "Webhooks",
+      "analytics": "分析"
+    },
+    "providersTab": {
+      "title": "支付提供商",
+      "noProviders": "未配置支付提供商。添加一个以开始接受支付。",
+      "production": "生产环境",
+      "sandbox": "沙盒环境",
+      "healthStatus": "健康状态",
+      "unknown": "未知",
+      "testConnection": "测试连接",
+      "configure": "配置",
+      "remove": "移除",
+      "merchantId": "商户ID：",
+      "lastSync": "最后同步：",
+      "oauthExpires": "OAuth过期："
+    },
+    "credentialsTab": {
+      "title": "API凭证",
+      "securityNotice": "安全提示：",
+      "securityMessage": "API凭证已加密并安全存储。请勿共享您的密钥或访问令牌。",
+      "updateCredentials": "更新凭证",
+      "apiKey": "API密钥",
+      "secretKey": "密钥",
+      "oauthToken": "OAuth令牌",
+      "configured": "已配置",
+      "notConfigured": "未配置",
+      "connected": "已连接",
+      "expires": "于{{date}}过期",
+      "connectOAuth": "使用OAuth连接"
+    },
+    "feesTab": {
+      "title": "费用和交易限制",
+      "platformFees": "平台费用",
+      "percentageFee": "百分比费用",
+      "fixedFee": "固定费用",
+      "transactionLimits": "交易限制",
+      "dailyLimit": "每日限额",
+      "perTransactionLimit": "单笔交易限额",
+      "saveChanges": "保存更改"
+    },
+    "webhooksTab": {
+      "title": "Webhook配置",
+      "infoMessage": "在您的支付提供商仪表板中配置webhook URL，以实时接收支付事件。",
+      "webhookUrl": "Webhook URL",
+      "webhookSecret": "Webhook密钥",
+      "webhookSecretPlaceholder": "输入webhook签名密钥",
+      "eventsToSubscribe": "订阅的事件",
+      "eventTypes": {
+        "paymentCompleted": "payment.completed",
+        "paymentFailed": "payment.failed",
+        "refundCreated": "refund.created",
+        "disputeCreated": "dispute.created"
+      }
+    },
+    "analyticsTab": {
+      "title": "支付分析",
+      "transactionVolume": "交易量（最近7天）",
+      "successRateByProvider": "按提供商划分的成功率",
+      "chartPlaceholder": "图表占位符",
+      "recentTransactions": "最近交易",
+      "noRecentTransactions": "无最近交易",
+      "tableHeaders": {
+        "transactionId": "交易ID",
+        "amount": "金额",
+        "provider": "提供商",
+        "status": "状态",
+        "date": "日期"
+      }
+    },
+    "credentialModal": {
+      "title": "更新{{providerName}}凭证",
+      "environment": "环境",
+      "environmentOptions": {
+        "sandbox": "沙盒环境",
+        "production": "生产环境"
+      },
+      "apiKey": "API密钥",
+      "apiKeyPlaceholder": "输入API密钥",
+      "secretKey": "密钥",
+      "secretKeyPlaceholder": "输入密钥",
+      "merchantId": "商户ID",
+      "merchantIdPlaceholder": "输入商户ID",
+      "accessToken": "访问令牌（可选 - 用于OAuth）",
+      "accessTokenPlaceholder": "输入访问令牌",
+      "securityWarning": "凭证在存储前使用AES-256加密。在输入敏感数据时，请确保您处于安全环境中。",
+      "cancel": "取消",
+      "updateButton": "更新凭证",
+      "updating": "更新中..."
+    },
+    "notifications": {
+      "connectionTestSuccess": "{{providerName}}连接测试成功",
+      "connectionTestFailed": "{{providerName}}连接测试失败",
+      "credentialsUpdated": "{{providerName}}凭证更新成功",
+      "credentialsUpdateFailed": "凭证更新失败",
+      "tenantLoadFailed": "加载租户数据失败",
+      "providersLoadFailed": "加载支付提供商失败",
+      "webhookUrlCopied": "Webhook URL已复制到剪贴板"
+    }
+  }
+}

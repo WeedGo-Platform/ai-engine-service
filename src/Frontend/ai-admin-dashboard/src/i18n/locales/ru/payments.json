@@ -1,0 +1,228 @@
+{
+  "titles": {
+    "main": "Управление платежами",
+    "transactionHistory": "История транзакций",
+    "paymentProviders": "Платёжные провайдеры",
+    "paymentMethods": "Способы оплаты",
+    "settlements": "Расчёты",
+    "processRefund": "Обработать возврат",
+    "transactionDetails": "Детали транзакции"
+  },
+  "descriptions": {
+    "transactionHistory": "Просмотр и управление всеми платёжными транзакциями",
+    "paymentProviders": "Управление конфигурациями платёжных шлюзов",
+    "paymentMethods": "Управление сохранёнными способами оплаты клиентов",
+    "settlements": "Просмотр партий расчётов и сверки",
+    "refundTransaction": "Вернуть транзакцию"
+  },
+  "metrics": {
+    "totalRevenue": "Общая выручка",
+    "successRate": "Процент успеха",
+    "totalRefunds": "Всего возвратов",
+    "processingFees": "Комиссии за обработку",
+    "transactions": "транзакций",
+    "successful": "успешных",
+    "fromRevenue": "Из выручки",
+    "ofRevenue": "от выручки"
+  },
+  "tabs": {
+    "transactions": "Транзакции",
+    "providers": "Платёжные провайдеры",
+    "methods": "Способы оплаты",
+    "settlements": "Расчёты"
+  },
+  "filters": {
+    "status": "Статус",
+    "provider": "Провайдер",
+    "allStatus": "Все статусы",
+    "allProviders": "Все провайдеры",
+    "searchPlaceholder": "Поиск транзакций..."
+  },
+  "status": {
+    "completed": "Завершено",
+    "pending": "В ожидании",
+    "processing": "Обрабатывается",
+    "failed": "Не удалось",
+    "refunded": "Возвращено",
+    "active": "Активный",
+    "inactive": "Неактивный"
+  },
+  "table": {
+    "reference": "Ссылка",
+    "customer": "Клиент",
+    "amount": "Сумма",
+    "provider": "Провайдер",
+    "status": "Статус",
+    "date": "Дата",
+    "actions": "Действия"
+  },
+  "provider": {
+    "default": "По умолчанию",
+    "supportedCurrencies": "Поддерживаемые валюты",
+    "capabilities": "Возможности"
+  },
+  "actions": {
+    "refresh": "Обновить",
+    "export": "Экспортировать",
+    "disable": "Отключить",
+    "enable": "Включить",
+    "cancel": "Отменить",
+    "close": "Закрыть",
+    "processRefund": "Обработать возврат"
+  },
+  "refund": {
+    "originalAmount": "Исходная сумма",
+    "refundAmount": "Сумма возврата",
+    "refundAmountHint": "оставьте пустым для полного возврата",
+    "reason": "Причина",
+    "enterAmount": "Введите сумму",
+    "enterReason": "Введите причину возврата"
+  },
+  "details": {
+    "transactionId": "ID транзакции",
+    "providerTransactionId": "ID транзакции провайдера",
+    "orderId": "ID заказа",
+    "status": "Статус",
+    "amount": "Сумма",
+    "provider": "Провайдер",
+    "createdAt": "Создано",
+    "completedAt": "Завершено",
+    "errorMessage": "Сообщение об ошибке",
+    "notAvailable": "Н/Д"
+  },
+  "messages": {
+    "comingSoon": {
+      "paymentMethods": "Управление способами оплаты скоро",
+      "settlements": "Отчёты о расчётах скоро"
+    },
+    "success": {
+      "refundProcessed": "Возврат обработан успешно",
+      "providerEnabled": "Провайдер включён успешно",
+      "providerDisabled": "Провайдер отключён успешно"
+    },
+    "error": {
+      "title": "Ошибка",
+      "fetchTransactions": "Не удалось получить транзакции",
+      "processRefund": "Не удалось обработать возврат",
+      "updateProvider": "Не удалось обновить статус провайдера"
+    }
+  },
+  "settings": {
+    "title": "Настройки платежей",
+    "addProvider": "Добавить провайдера",
+    "backToTenants": "Вернуться к арендаторам",
+    "stats": {
+      "totalVolume": "Общий объём",
+      "successRate": "Процент успеха",
+      "todayVolume": "Сегодняшний объём",
+      "netRevenue": "Чистая выручка",
+      "transactionsCount": "{{count}} транзакций",
+      "avgTransaction": "Средн. ${{amount}}",
+      "pendingSettlement": "В ожидании: ${{amount}}",
+      "platformFees": "Комиссии: ${{amount}}"
+    },
+    "tabs": {
+      "providers": "Провайдеры",
+      "credentials": "Учётные данные",
+      "feesLimits": "Комиссии и лимиты",
+      "webhooks": "Webhooks",
+      "analytics": "Аналитика"
+    },
+    "providersTab": {
+      "title": "Платёжные провайдеры",
+      "noProviders": "Платёжные провайдеры не настроены. Добавьте один для начала приёма платежей.",
+      "production": "Продакшн",
+      "sandbox": "Песочница",
+      "healthStatus": "Статус здоровья",
+      "unknown": "Неизвестно",
+      "testConnection": "Проверить соединение",
+      "configure": "Настроить",
+      "remove": "Удалить",
+      "merchantId": "ID продавца:",
+      "lastSync": "Последняя синхронизация:",
+      "oauthExpires": "OAuth истекает:"
+    },
+    "credentialsTab": {
+      "title": "Учётные данные API",
+      "securityNotice": "Уведомление о безопасности:",
+      "securityMessage": "Учётные данные API зашифрованы и хранятся безопасно. Никогда не делитесь своими секретными ключами или токенами доступа.",
+      "updateCredentials": "Обновить учётные данные",
+      "apiKey": "Ключ API",
+      "secretKey": "Секретный ключ",
+      "oauthToken": "Токен OAuth",
+      "configured": "Настроено",
+      "notConfigured": "Не настроено",
+      "connected": "Подключено",
+      "expires": "истекает {{date}}",
+      "connectOAuth": "Подключиться через OAuth"
+    },
+    "feesTab": {
+      "title": "Комиссии и лимиты транзакций",
+      "platformFees": "Комиссии платформы",
+      "percentageFee": "Процентная комиссия",
+      "fixedFee": "Фиксированная комиссия",
+      "transactionLimits": "Лимиты транзакций",
+      "dailyLimit": "Дневной лимит",
+      "perTransactionLimit": "Лимит на транзакцию",
+      "saveChanges": "Сохранить изменения"
+    },
+    "webhooksTab": {
+      "title": "Настройка webhook",
+      "infoMessage": "Настройте URL-адреса webhook в панели вашего платёжного провайдера для получения событий платежей в реальном времени.",
+      "webhookUrl": "URL webhook",
+      "webhookSecret": "Секрет webhook",
+      "webhookSecretPlaceholder": "Введите секрет подписи webhook",
+      "eventsToSubscribe": "События для подписки",
+      "eventTypes": {
+        "paymentCompleted": "payment.completed",
+        "paymentFailed": "payment.failed",
+        "refundCreated": "refund.created",
+        "disputeCreated": "dispute.created"
+      }
+    },
+    "analyticsTab": {
+      "title": "Аналитика платежей",
+      "transactionVolume": "Объём транзакций (последние 7 дней)",
+      "successRateByProvider": "Процент успеха по провайдерам",
+      "chartPlaceholder": "Заполнитель диаграммы",
+      "recentTransactions": "Последние транзакции",
+      "noRecentTransactions": "Нет последних транзакций",
+      "tableHeaders": {
+        "transactionId": "ID транзакции",
+        "amount": "Сумма",
+        "provider": "Провайдер",
+        "status": "Статус",
+        "date": "Дата"
+      }
+    },
+    "credentialModal": {
+      "title": "Обновить учётные данные {{providerName}}",
+      "environment": "Среда",
+      "environmentOptions": {
+        "sandbox": "Песочница",
+        "production": "Продакшн"
+      },
+      "apiKey": "Ключ API",
+      "apiKeyPlaceholder": "Введите ключ API",
+      "secretKey": "Секретный ключ",
+      "secretKeyPlaceholder": "Введите секретный ключ",
+      "merchantId": "ID продавца",
+      "merchantIdPlaceholder": "Введите ID продавца",
+      "accessToken": "Токен доступа (Необязательно - для OAuth)",
+      "accessTokenPlaceholder": "Введите токен доступа",
+      "securityWarning": "Учётные данные шифруются с использованием шифрования AES-256 перед хранением. Убедитесь, что вы находитесь в безопасной среде при вводе конфиденциальных данных.",
+      "cancel": "Отменить",
+      "updateButton": "Обновить учётные данные",
+      "updating": "Обновление..."
+    },
+    "notifications": {
+      "connectionTestSuccess": "Проверка соединения {{providerName}} успешна",
+      "connectionTestFailed": "Проверка соединения {{providerName}} не удалась",
+      "credentialsUpdated": "Учётные данные успешно обновлены для {{providerName}}",
+      "credentialsUpdateFailed": "Не удалось обновить учётные данные",
+      "tenantLoadFailed": "Не удалось загрузить данные арендатора",
+      "providersLoadFailed": "Не удалось загрузить платёжных провайдеров",
+      "webhookUrlCopied": "URL webhook скопирован в буфер обмена"
+    }
+  }
+}

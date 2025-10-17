@@ -1,0 +1,21 @@
+{
+  "title": "Додатки",
+  "tabs": {
+    "pos": "Точка продажу",
+    "posShort": "POS",
+    "kiosk": "Kiosk самообслуговування",
+    "kioskShort": "Kiosk",
+    "menuDisplay": "Відображення меню",
+    "menuShort": "Меню"
+  },
+  "fullscreen": {
+    "enter": "Увійти в повноекранний режим",
+    "exit": "Вийти з повноекранного режиму"
+  },
+  "storeSelection": {
+    "required": "Потрібен вибір магазину",
+    "pleaseSelect": "Будь ласка, виберіть магазин, щоб продовжити",
+    "selectButton": "Вибрати магазин",
+    "description": "Будь ласка, виберіть магазин для доступу до {{appName}}"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "title": "Applicazioni",
+  "tabs": {
+    "pos": "Punto vendita",
+    "posShort": "POS",
+    "kiosk": "Chiosco self-service",
+    "kioskShort": "Kiosk",
+    "menuDisplay": "Visualizzazione menu",
+    "menuShort": "Menu"
+  },
+  "fullscreen": {
+    "enter": "Entra a schermo intero",
+    "exit": "Esci da schermo intero"
+  },
+  "storeSelection": {
+    "required": "Selezione negozio richiesta",
+    "pleaseSelect": "Seleziona un negozio per continuare",
+    "selectButton": "Seleziona negozio",
+    "description": "Seleziona un negozio per accedere a {{appName}}"
+  }
+}

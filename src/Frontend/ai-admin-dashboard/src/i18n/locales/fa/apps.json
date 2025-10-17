@@ -1,0 +1,21 @@
+{
+  "title": "برنامه‌ها",
+  "tabs": {
+    "pos": "نقطه فروش",
+    "posShort": "POS",
+    "kiosk": "Kiosk خودخدمتی",
+    "kioskShort": "Kiosk",
+    "menuDisplay": "نمایش منو",
+    "menuShort": "منو"
+  },
+  "fullscreen": {
+    "enter": "ورود به حالت تمام صفحه",
+    "exit": "خروج از حالت تمام صفحه"
+  },
+  "storeSelection": {
+    "required": "انتخاب فروشگاه الزامی است",
+    "pleaseSelect": "لطفاً برای ادامه یک فروشگاه انتخاب کنید",
+    "selectButton": "انتخاب فروشگاه",
+    "description": "لطفاً برای دسترسی به {{appName}} یک فروشگاه انتخاب کنید"
+  }
+}

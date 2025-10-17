@@ -1,0 +1,228 @@
+{
+  "titles": {
+    "main": "Zarządzanie płatnościami",
+    "transactionHistory": "Historia transakcji",
+    "paymentProviders": "Dostawcy płatności",
+    "paymentMethods": "Metody płatności",
+    "settlements": "Rozliczenia",
+    "processRefund": "Przetwórz zwrot",
+    "transactionDetails": "Szczegóły transakcji"
+  },
+  "descriptions": {
+    "transactionHistory": "Wyświetl i zarządzaj wszystkimi transakcjami płatności",
+    "paymentProviders": "Zarządzaj konfiguracjami bramek płatności",
+    "paymentMethods": "Zarządzaj zapisanymi metodami płatności klientów",
+    "settlements": "Wyświetl partie rozliczeń i uzgodnienia",
+    "refundTransaction": "Zwróć transakcję"
+  },
+  "metrics": {
+    "totalRevenue": "Całkowity przychód",
+    "successRate": "Wskaźnik sukcesu",
+    "totalRefunds": "Całkowite zwroty",
+    "processingFees": "Opłaty transakcyjne",
+    "transactions": "transakcje",
+    "successful": "udane",
+    "fromRevenue": "Z przychodu",
+    "ofRevenue": "z przychodu"
+  },
+  "tabs": {
+    "transactions": "Transakcje",
+    "providers": "Dostawcy płatności",
+    "methods": "Metody płatności",
+    "settlements": "Rozliczenia"
+  },
+  "filters": {
+    "status": "Status",
+    "provider": "Dostawca",
+    "allStatus": "Wszystkie statusy",
+    "allProviders": "Wszyscy dostawcy",
+    "searchPlaceholder": "Szukaj transakcji..."
+  },
+  "status": {
+    "completed": "Zakończone",
+    "pending": "Oczekujące",
+    "processing": "Przetwarzanie",
+    "failed": "Nieudane",
+    "refunded": "Zwrócone",
+    "active": "Aktywny",
+    "inactive": "Nieaktywny"
+  },
+  "table": {
+    "reference": "Odniesienie",
+    "customer": "Klient",
+    "amount": "Kwota",
+    "provider": "Dostawca",
+    "status": "Status",
+    "date": "Data",
+    "actions": "Działania"
+  },
+  "provider": {
+    "default": "Domyślny",
+    "supportedCurrencies": "Obsługiwane waluty",
+    "capabilities": "Możliwości"
+  },
+  "actions": {
+    "refresh": "Odśwież",
+    "export": "Eksportuj",
+    "disable": "Wyłącz",
+    "enable": "Włącz",
+    "cancel": "Anuluj",
+    "close": "Zamknij",
+    "processRefund": "Przetwórz zwrot"
+  },
+  "refund": {
+    "originalAmount": "Oryginalna kwota",
+    "refundAmount": "Kwota zwrotu",
+    "refundAmountHint": "zostaw puste dla pełnego zwrotu",
+    "reason": "Powód",
+    "enterAmount": "Wprowadź kwotę",
+    "enterReason": "Wprowadź powód zwrotu"
+  },
+  "details": {
+    "transactionId": "ID transakcji",
+    "providerTransactionId": "ID transakcji dostawcy",
+    "orderId": "ID zamówienia",
+    "status": "Status",
+    "amount": "Kwota",
+    "provider": "Dostawca",
+    "createdAt": "Utworzono",
+    "completedAt": "Zakończono",
+    "errorMessage": "Komunikat błędu",
+    "notAvailable": "Niedostępne"
+  },
+  "messages": {
+    "comingSoon": {
+      "paymentMethods": "Zarządzanie metodami płatności wkrótce",
+      "settlements": "Raporty rozliczeń wkrótce"
+    },
+    "success": {
+      "refundProcessed": "Zwrot przetworzony pomyślnie",
+      "providerEnabled": "Dostawca włączony pomyślnie",
+      "providerDisabled": "Dostawca wyłączony pomyślnie"
+    },
+    "error": {
+      "title": "Błąd",
+      "fetchTransactions": "Nie udało się pobrać transakcji",
+      "processRefund": "Nie udało się przetworzyć zwrotu",
+      "updateProvider": "Nie udało się zaktualizować statusu dostawcy"
+    }
+  },
+  "settings": {
+    "title": "Ustawienia płatności",
+    "addProvider": "Dodaj dostawcę",
+    "backToTenants": "Powrót do najemców",
+    "stats": {
+      "totalVolume": "Całkowity wolumen",
+      "successRate": "Wskaźnik sukcesu",
+      "todayVolume": "Dzisiejszy wolumen",
+      "netRevenue": "Przychód netto",
+      "transactionsCount": "{{count}} transakcji",
+      "avgTransaction": "Średnia ${{amount}}",
+      "pendingSettlement": "Oczekujące: ${{amount}}",
+      "platformFees": "Opłaty: ${{amount}}"
+    },
+    "tabs": {
+      "providers": "Dostawcy",
+      "credentials": "Dane uwierzytelniające",
+      "feesLimits": "Opłaty i limity",
+      "webhooks": "Webhooks",
+      "analytics": "Analityka"
+    },
+    "providersTab": {
+      "title": "Dostawcy płatności",
+      "noProviders": "Brak skonfigurowanych dostawców płatności. Dodaj jednego, aby rozpocząć przyjmowanie płatności.",
+      "production": "Produkcja",
+      "sandbox": "Sandbox",
+      "healthStatus": "Stan zdrowia",
+      "unknown": "Nieznany",
+      "testConnection": "Testuj połączenie",
+      "configure": "Konfiguruj",
+      "remove": "Usuń",
+      "merchantId": "ID sprzedawcy:",
+      "lastSync": "Ostatnia synchronizacja:",
+      "oauthExpires": "OAuth wygasa:"
+    },
+    "credentialsTab": {
+      "title": "Dane uwierzytelniające API",
+      "securityNotice": "Uwaga dotycząca bezpieczeństwa:",
+      "securityMessage": "Dane uwierzytelniające API są szyfrowane i przechowywane bezpiecznie. Nigdy nie udostępniaj swoich kluczy tajnych ani tokenów dostępu.",
+      "updateCredentials": "Zaktualizuj dane uwierzytelniające",
+      "apiKey": "Klucz API",
+      "secretKey": "Klucz tajny",
+      "oauthToken": "Token OAuth",
+      "configured": "Skonfigurowane",
+      "notConfigured": "Nie skonfigurowane",
+      "connected": "Połączony",
+      "expires": "wygasa {{date}}",
+      "connectOAuth": "Połącz z OAuth"
+    },
+    "feesTab": {
+      "title": "Opłaty i limity transakcji",
+      "platformFees": "Opłaty platformy",
+      "percentageFee": "Opłata procentowa",
+      "fixedFee": "Opłata stała",
+      "transactionLimits": "Limity transakcji",
+      "dailyLimit": "Limit dzienny",
+      "perTransactionLimit": "Limit na transakcję",
+      "saveChanges": "Zapisz zmiany"
+    },
+    "webhooksTab": {
+      "title": "Konfiguracja webhook",
+      "infoMessage": "Skonfiguruj adresy URL webhook w panelu dostawcy płatności, aby otrzymywać zdarzenia płatności w czasie rzeczywistym.",
+      "webhookUrl": "URL webhooka",
+      "webhookSecret": "Sekret webhooka",
+      "webhookSecretPlaceholder": "Wprowadź sekret podpisu webhooka",
+      "eventsToSubscribe": "Zdarzenia do subskrypcji",
+      "eventTypes": {
+        "paymentCompleted": "payment.completed",
+        "paymentFailed": "payment.failed",
+        "refundCreated": "refund.created",
+        "disputeCreated": "dispute.created"
+      }
+    },
+    "analyticsTab": {
+      "title": "Analityka płatności",
+      "transactionVolume": "Wolumen transakcji (ostatnie 7 dni)",
+      "successRateByProvider": "Wskaźnik sukcesu według dostawcy",
+      "chartPlaceholder": "Miejsce na wykres",
+      "recentTransactions": "Ostatnie transakcje",
+      "noRecentTransactions": "Brak ostatnich transakcji",
+      "tableHeaders": {
+        "transactionId": "ID transakcji",
+        "amount": "Kwota",
+        "provider": "Dostawca",
+        "status": "Status",
+        "date": "Data"
+      }
+    },
+    "credentialModal": {
+      "title": "Zaktualizuj dane uwierzytelniające {{providerName}}",
+      "environment": "Środowisko",
+      "environmentOptions": {
+        "sandbox": "Sandbox",
+        "production": "Produkcja"
+      },
+      "apiKey": "Klucz API",
+      "apiKeyPlaceholder": "Wprowadź klucz API",
+      "secretKey": "Klucz tajny",
+      "secretKeyPlaceholder": "Wprowadź klucz tajny",
+      "merchantId": "ID sprzedawcy",
+      "merchantIdPlaceholder": "Wprowadź ID sprzedawcy",
+      "accessToken": "Token dostępu (Opcjonalny - dla OAuth)",
+      "accessTokenPlaceholder": "Wprowadź token dostępu",
+      "securityWarning": "Dane uwierzytelniające są szyfrowane za pomocą szyfrowania AES-256 przed przechowywaniem. Upewnij się, że jesteś w bezpiecznym środowisku podczas wprowadzania poufnych danych.",
+      "cancel": "Anuluj",
+      "updateButton": "Zaktualizuj dane uwierzytelniające",
+      "updating": "Aktualizowanie..."
+    },
+    "notifications": {
+      "connectionTestSuccess": "Test połączenia {{providerName}} zakończony sukcesem",
+      "connectionTestFailed": "Test połączenia {{providerName}} nie powiódł się",
+      "credentialsUpdated": "Dane uwierzytelniające zaktualizowane pomyślnie dla {{providerName}}",
+      "credentialsUpdateFailed": "Nie udało się zaktualizować danych uwierzytelniających",
+      "tenantLoadFailed": "Nie udało się załadować danych najemcy",
+      "providersLoadFailed": "Nie udało się załadować dostawców płatności",
+      "webhookUrlCopied": "URL webhooka skopiowany do schowka"
+    }
+  }
+}

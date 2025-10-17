@@ -1,0 +1,21 @@
+{
+  "title": "Applications",
+  "tabs": {
+    "pos": "Point de vente",
+    "posShort": "POS",
+    "kiosk": "Borne libre-service",
+    "kioskShort": "Kiosk",
+    "menuDisplay": "Affichage du menu",
+    "menuShort": "Menu"
+  },
+  "fullscreen": {
+    "enter": "Passer en plein écran",
+    "exit": "Quitter le plein écran"
+  },
+  "storeSelection": {
+    "required": "Sélection de magasin requise",
+    "pleaseSelect": "Veuillez sélectionner un magasin pour continuer",
+    "selectButton": "Sélectionner un magasin",
+    "description": "Veuillez sélectionner un magasin pour accéder au {{appName}}"
+  }
+}

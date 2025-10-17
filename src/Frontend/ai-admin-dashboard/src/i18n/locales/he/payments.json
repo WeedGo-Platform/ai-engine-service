@@ -1,0 +1,228 @@
+{
+  "titles": {
+    "main": "ניהול תשלומים",
+    "transactionHistory": "היסטוריית עסקאות",
+    "paymentProviders": "ספקי תשלום",
+    "paymentMethods": "אמצעי תשלום",
+    "settlements": "הסדרי תשלום",
+    "processRefund": "עיבוד החזר",
+    "transactionDetails": "פרטי עסקה"
+  },
+  "descriptions": {
+    "transactionHistory": "צפה ונהל את כל עסקאות התשלום",
+    "paymentProviders": "נהל תצורות שער תשלום",
+    "paymentMethods": "נהל אמצעי תשלום שמורים של לקוחות",
+    "settlements": "צפה באצוות הסדרים ופיוס",
+    "refundTransaction": "החזר עסקה"
+  },
+  "metrics": {
+    "totalRevenue": "הכנסה כוללת",
+    "successRate": "שיעור הצלחה",
+    "totalRefunds": "החזרים כוללים",
+    "processingFees": "עמלות עיבוד",
+    "transactions": "עסקאות",
+    "successful": "מוצלח",
+    "fromRevenue": "מהכנסה",
+    "ofRevenue": "מההכנסה"
+  },
+  "tabs": {
+    "transactions": "עסקאות",
+    "providers": "ספקי תשלום",
+    "methods": "אמצעי תשלום",
+    "settlements": "הסדרי תשלום"
+  },
+  "filters": {
+    "status": "סטטוס",
+    "provider": "ספק",
+    "allStatus": "כל הסטטוסים",
+    "allProviders": "כל הספקים",
+    "searchPlaceholder": "חפש עסקאות..."
+  },
+  "status": {
+    "completed": "הושלם",
+    "pending": "בהמתנה",
+    "processing": "בעיבוד",
+    "failed": "נכשל",
+    "refunded": "הוחזר",
+    "active": "פעיל",
+    "inactive": "לא פעיל"
+  },
+  "table": {
+    "reference": "אסמכתא",
+    "customer": "לקוח",
+    "amount": "סכום",
+    "provider": "ספק",
+    "status": "סטטוס",
+    "date": "תאריך",
+    "actions": "פעולות"
+  },
+  "provider": {
+    "default": "ברירת מחדל",
+    "supportedCurrencies": "מטבעות נתמכים",
+    "capabilities": "יכולות"
+  },
+  "actions": {
+    "refresh": "רענן",
+    "export": "ייצא",
+    "disable": "השבת",
+    "enable": "הפעל",
+    "cancel": "בטל",
+    "close": "סגור",
+    "processRefund": "עבד החזר"
+  },
+  "refund": {
+    "originalAmount": "סכום מקורי",
+    "refundAmount": "סכום החזר",
+    "refundAmountHint": "השאר ריק להחזר מלא",
+    "reason": "סיבה",
+    "enterAmount": "הזן סכום",
+    "enterReason": "הזן סיבה להחזר"
+  },
+  "details": {
+    "transactionId": "מזהה עסקה",
+    "providerTransactionId": "מזהה עסקה של הספק",
+    "orderId": "מזהה הזמנה",
+    "status": "סטטוס",
+    "amount": "סכום",
+    "provider": "ספק",
+    "createdAt": "נוצר ב",
+    "completedAt": "הושלם ב",
+    "errorMessage": "הודעת שגיאה",
+    "notAvailable": "לא זמין"
+  },
+  "messages": {
+    "comingSoon": {
+      "paymentMethods": "ניהול אמצעי תשלום בקרוב",
+      "settlements": "דוחות הסדרים בקרוב"
+    },
+    "success": {
+      "refundProcessed": "החזר עובד בהצלחה",
+      "providerEnabled": "ספק הופעל בהצלחה",
+      "providerDisabled": "ספק הושבת בהצלחה"
+    },
+    "error": {
+      "title": "שגיאה",
+      "fetchTransactions": "נכשל בטעינת עסקאות",
+      "processRefund": "נכשל בעיבוד החזר",
+      "updateProvider": "נכשל בעדכון סטטוס הספק"
+    }
+  },
+  "settings": {
+    "title": "הגדרות תשלום",
+    "addProvider": "הוסף ספק",
+    "backToTenants": "חזור לשוכרים",
+    "stats": {
+      "totalVolume": "נפח כולל",
+      "successRate": "שיעור הצלחה",
+      "todayVolume": "נפח היום",
+      "netRevenue": "הכנסה נטו",
+      "transactionsCount": "{{count}} עסקאות",
+      "avgTransaction": "ממוצע ${{amount}}",
+      "pendingSettlement": "בהמתנה: ${{amount}}",
+      "platformFees": "עמלות: ${{amount}}"
+    },
+    "tabs": {
+      "providers": "ספקים",
+      "credentials": "אישורים",
+      "feesLimits": "עמלות ומגבלות",
+      "webhooks": "Webhooks",
+      "analytics": "ניתוח נתונים"
+    },
+    "providersTab": {
+      "title": "ספקי תשלום",
+      "noProviders": "לא הוגדרו ספקי תשלום. הוסף אחד כדי להתחיל לקבל תשלומים.",
+      "production": "ייצור",
+      "sandbox": "ארגז חול",
+      "healthStatus": "סטטוס בריאות",
+      "unknown": "לא ידוע",
+      "testConnection": "בדוק חיבור",
+      "configure": "הגדר",
+      "remove": "הסר",
+      "merchantId": "מזהה סוחר:",
+      "lastSync": "סנכרון אחרון:",
+      "oauthExpires": "OAuth פג תוקף:"
+    },
+    "credentialsTab": {
+      "title": "אישורי API",
+      "securityNotice": "הודעת אבטחה:",
+      "securityMessage": "אישורי API מוצפנים ומאוחסנים בצורה מאובטחת. לעולם אל תשתף את המפתחות הסודיים או אסימוני הגישה שלך.",
+      "updateCredentials": "עדכן אישורים",
+      "apiKey": "מפתח API",
+      "secretKey": "מפתח סודי",
+      "oauthToken": "אסימון OAuth",
+      "configured": "מוגדר",
+      "notConfigured": "לא מוגדר",
+      "connected": "מחובר",
+      "expires": "פג תוקף ב-{{date}}",
+      "connectOAuth": "התחבר עם OAuth"
+    },
+    "feesTab": {
+      "title": "עמלות ומגבלות עסקאות",
+      "platformFees": "עמלות פלטפורמה",
+      "percentageFee": "עמלת אחוז",
+      "fixedFee": "עמלה קבועה",
+      "transactionLimits": "מגבלות עסקה",
+      "dailyLimit": "מגבלה יומית",
+      "perTransactionLimit": "מגבלה לעסקה",
+      "saveChanges": "שמור שינויים"
+    },
+    "webhooksTab": {
+      "title": "תצורת Webhook",
+      "infoMessage": "הגדר כתובות URL של webhook בלוח הבקרה של ספק התשלום שלך כדי לקבל אירועי תשלום בזמן אמת.",
+      "webhookUrl": "כתובת Webhook",
+      "webhookSecret": "סוד Webhook",
+      "webhookSecretPlaceholder": "הזן סוד חתימת webhook",
+      "eventsToSubscribe": "אירועים להירשם",
+      "eventTypes": {
+        "paymentCompleted": "payment.completed",
+        "paymentFailed": "payment.failed",
+        "refundCreated": "refund.created",
+        "disputeCreated": "dispute.created"
+      }
+    },
+    "analyticsTab": {
+      "title": "ניתוח תשלומים",
+      "transactionVolume": "נפח עסקאות (7 ימים אחרונים)",
+      "successRateByProvider": "שיעור הצלחה לפי ספק",
+      "chartPlaceholder": "מציין תרשים",
+      "recentTransactions": "עסקאות אחרונות",
+      "noRecentTransactions": "אין עסקאות אחרונות",
+      "tableHeaders": {
+        "transactionId": "מזהה עסקה",
+        "amount": "סכום",
+        "provider": "ספק",
+        "status": "סטטוס",
+        "date": "תאריך"
+      }
+    },
+    "credentialModal": {
+      "title": "עדכן אישורי {{providerName}}",
+      "environment": "סביבה",
+      "environmentOptions": {
+        "sandbox": "ארגז חול",
+        "production": "ייצור"
+      },
+      "apiKey": "מפתח API",
+      "apiKeyPlaceholder": "הזן מפתח API",
+      "secretKey": "מפתח סודי",
+      "secretKeyPlaceholder": "הזן מפתח סודי",
+      "merchantId": "מזהה סוחר",
+      "merchantIdPlaceholder": "הזן מזהה סוחר",
+      "accessToken": "אסימון גישה (אופציונלי - עבור OAuth)",
+      "accessTokenPlaceholder": "הזן אסימון גישה",
+      "securityWarning": "אישורים מוצפנים באמצעות הצפנת AES-256 לפני האחסון. וודא שאתה בסביבה מאובטחת בעת הזנת נתונים רגישים.",
+      "cancel": "בטל",
+      "updateButton": "עדכן אישורים",
+      "updating": "מעדכן..."
+    },
+    "notifications": {
+      "connectionTestSuccess": "בדיקת חיבור {{providerName}} הצליחה",
+      "connectionTestFailed": "בדיקת חיבור {{providerName}} נכשלה",
+      "credentialsUpdated": "אישורים עודכנו בהצלחה עבור {{providerName}}",
+      "credentialsUpdateFailed": "נכשל בעדכון אישורים",
+      "tenantLoadFailed": "נכשל בטעינת נתוני שוכר",
+      "providersLoadFailed": "נכשל בטעינת ספקי תשלום",
+      "webhookUrlCopied": "כתובת Webhook הועתקה ללוח"
+    }
+  }
+}

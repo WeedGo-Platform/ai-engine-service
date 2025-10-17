@@ -1,0 +1,21 @@
+{
+  "title": "Aplicações",
+  "tabs": {
+    "pos": "Ponto de venda",
+    "posShort": "POS",
+    "kiosk": "Quiosque de autoatendimento",
+    "kioskShort": "Kiosk",
+    "menuDisplay": "Exibição do menu",
+    "menuShort": "Menu"
+  },
+  "fullscreen": {
+    "enter": "Entrar em tela cheia",
+    "exit": "Sair da tela cheia"
+  },
+  "storeSelection": {
+    "required": "Seleção de loja necessária",
+    "pleaseSelect": "Por favor, selecione uma loja para continuar",
+    "selectButton": "Selecionar loja",
+    "description": "Por favor, selecione uma loja para acessar {{appName}}"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "title": "অ্যাপস",
+  "tabs": {
+    "pos": "বিক্রয় পয়েন্ট",
+    "posShort": "POS",
+    "kiosk": "স্ব-সেবা Kiosk",
+    "kioskShort": "Kiosk",
+    "menuDisplay": "মেনু প্রদর্শন",
+    "menuShort": "মেনু"
+  },
+  "fullscreen": {
+    "enter": "পূর্ণ স্ক্রীনে প্রবেশ করুন",
+    "exit": "পূর্ণ স্ক্রীন থেকে প্রস্থান করুন"
+  },
+  "storeSelection": {
+    "required": "স্টোর নির্বাচন প্রয়োজন",
+    "pleaseSelect": "চালিয়ে যেতে অনুগ্রহ করে একটি স্টোর নির্বাচন করুন",
+    "selectButton": "স্টোর নির্বাচন করুন",
+    "description": "{{appName}} অ্যাক্সেস করতে অনুগ্রহ করে একটি স্টোর নির্বাচন করুন"
+  }
+}

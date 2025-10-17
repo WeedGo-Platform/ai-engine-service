@@ -1,0 +1,21 @@
+{
+  "title": "Ứng dụng",
+  "tabs": {
+    "pos": "Điểm bán hàng",
+    "posShort": "POS",
+    "kiosk": "Kiosk tự phục vụ",
+    "kioskShort": "Kiosk",
+    "menuDisplay": "Hiển thị thực đơn",
+    "menuShort": "Thực đơn"
+  },
+  "fullscreen": {
+    "enter": "Vào chế độ toàn màn hình",
+    "exit": "Thoát chế độ toàn màn hình"
+  },
+  "storeSelection": {
+    "required": "Yêu cầu chọn cửa hàng",
+    "pleaseSelect": "Vui lòng chọn cửa hàng để tiếp tục",
+    "selectButton": "Chọn cửa hàng",
+    "description": "Vui lòng chọn cửa hàng để truy cập {{appName}}"
+  }
+}

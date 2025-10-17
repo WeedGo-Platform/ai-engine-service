@@ -1,0 +1,228 @@
+{
+  "titles": {
+    "main": "પેમેન્ટ મેનેજમેન્ટ",
+    "transactionHistory": "ટ્રાન્ઝેક્શન ઇતિહાસ",
+    "paymentProviders": "પેમેન્ટ પ્રદાતાઓ",
+    "paymentMethods": "પેમેન્ટ પદ્ધતિઓ",
+    "settlements": "સેટલમેન્ટ્સ",
+    "processRefund": "રિફંડ પ્રોસેસ કરો",
+    "transactionDetails": "ટ્રાન્ઝેક્શન વિગતો"
+  },
+  "descriptions": {
+    "transactionHistory": "તમામ પેમેન્ટ ટ્રાન્ઝેક્શન્સ જુઓ અને મેનેજ કરો",
+    "paymentProviders": "પેમેન્ટ ગેટવે કન્ફિગરેશન્સ મેનેજ કરો",
+    "paymentMethods": "ગ્રાહકોની સાચવેલી પેમેન્ટ પદ્ધતિઓ મેનેજ કરો",
+    "settlements": "સેટલમેન્ટ બેચ અને સમાધાન જુઓ",
+    "refundTransaction": "ટ્રાન્ઝેક્શન રિફંડ કરો"
+  },
+  "metrics": {
+    "totalRevenue": "કુલ આવક",
+    "successRate": "સફળતા દર",
+    "totalRefunds": "કુલ રિફંડ્સ",
+    "processingFees": "પ્રોસેસિંગ ફી",
+    "transactions": "ટ્રાન્ઝેક્શન્સ",
+    "successful": "સફળ",
+    "fromRevenue": "આવક માંથી",
+    "ofRevenue": "આવકની"
+  },
+  "tabs": {
+    "transactions": "ટ્રાન્ઝેક્શન્સ",
+    "providers": "પેમેન્ટ પ્રદાતાઓ",
+    "methods": "પેમેન્ટ પદ્ધતિઓ",
+    "settlements": "સેટલમેન્ટ્સ"
+  },
+  "filters": {
+    "status": "સ્થિતિ",
+    "provider": "પ્રદાતા",
+    "allStatus": "તમામ સ્થિતિઓ",
+    "allProviders": "તમામ પ્રદાતાઓ",
+    "searchPlaceholder": "ટ્રાન્ઝેક્શન્સ શોધો..."
+  },
+  "status": {
+    "completed": "પૂર્ણ",
+    "pending": "બાકી",
+    "processing": "પ્રોસેસિંગ",
+    "failed": "નિષ્ફળ",
+    "refunded": "રિફંડ થયું",
+    "active": "સક્રિય",
+    "inactive": "નિષ્ક્રિય"
+  },
+  "table": {
+    "reference": "સંદર્ભ",
+    "customer": "ગ્રાહક",
+    "amount": "રકમ",
+    "provider": "પ્રદાતા",
+    "status": "સ્થિતિ",
+    "date": "તારીખ",
+    "actions": "ક્રિયાઓ"
+  },
+  "provider": {
+    "default": "ડિફોલ્ટ",
+    "supportedCurrencies": "સપોર્ટેડ ચલણો",
+    "capabilities": "ક્ષમતાઓ"
+  },
+  "actions": {
+    "refresh": "રિફ્રેશ કરો",
+    "export": "એક્સપોર્ટ કરો",
+    "disable": "અક્ષમ કરો",
+    "enable": "સક્ષમ કરો",
+    "cancel": "રદ કરો",
+    "close": "બંધ કરો",
+    "processRefund": "રિફંડ પ્રોસેસ કરો"
+  },
+  "refund": {
+    "originalAmount": "મૂળ રકમ",
+    "refundAmount": "રિફંડ રકમ",
+    "refundAmountHint": "સંપૂર્ણ રિફંડ માટે ખાલી છોડો",
+    "reason": "કારણ",
+    "enterAmount": "રકમ દાખલ કરો",
+    "enterReason": "રિફંડ માટેનું કારણ દાખલ કરો"
+  },
+  "details": {
+    "transactionId": "ટ્રાન્ઝેક્શન ID",
+    "providerTransactionId": "પ્રદાતા ટ્રાન્ઝેક્શન ID",
+    "orderId": "ઓર્ડર ID",
+    "status": "સ્થિતિ",
+    "amount": "રકમ",
+    "provider": "પ્રદાતા",
+    "createdAt": "બનાવ્યું",
+    "completedAt": "પૂર્ણ થયું",
+    "errorMessage": "ત્રુટિ સંદેશ",
+    "notAvailable": "ઉપલબ્ધ નથી"
+  },
+  "messages": {
+    "comingSoon": {
+      "paymentMethods": "પેમેન્ટ પદ્ધતિઓ મેનેજમેન્ટ ટૂંક સમયમાં આવી રહ્યું છે",
+      "settlements": "સેટલમેન્ટ રિપોર્ટ્સ ટૂંક સમયમાં આવી રહ્યા છે"
+    },
+    "success": {
+      "refundProcessed": "રિફંડ સફળતાપૂર્વક પ્રોસેસ થયું",
+      "providerEnabled": "પ્રદાતા સફળતાપૂર્વક સક્ષમ થયો",
+      "providerDisabled": "પ્રદાતા સફળતાપૂર્વક અક્ષમ થયો"
+    },
+    "error": {
+      "title": "ત્રુટિ",
+      "fetchTransactions": "ટ્રાન્ઝેક્શન્સ મેળવવામાં નિષ્ફળ",
+      "processRefund": "રિફંડ પ્રોસેસ કરવામાં નિષ્ફળ",
+      "updateProvider": "પ્રદાતા સ્થિતિ અપડેટ કરવામાં નિષ્ફળ"
+    }
+  },
+  "settings": {
+    "title": "પેમેન્ટ સેટિંગ્સ",
+    "addProvider": "પ્રદાતા ઉમેરો",
+    "backToTenants": "ભાડૂતો પર પાછા જાઓ",
+    "stats": {
+      "totalVolume": "કુલ વોલ્યુમ",
+      "successRate": "સફળતા દર",
+      "todayVolume": "આજનું વોલ્યુમ",
+      "netRevenue": "નેટ આવક",
+      "transactionsCount": "{{count}} ટ્રાન્ઝેક્શન્સ",
+      "avgTransaction": "સરેરાશ ${{amount}}",
+      "pendingSettlement": "બાકી: ${{amount}}",
+      "platformFees": "ફી: ${{amount}}"
+    },
+    "tabs": {
+      "providers": "પ્રદાતાઓ",
+      "credentials": "ઓળખપત્રો",
+      "feesLimits": "ફી અને મર્યાદાઓ",
+      "webhooks": "Webhooks",
+      "analytics": "વિશ્લેષણ"
+    },
+    "providersTab": {
+      "title": "પેમેન્ટ પ્રદાતાઓ",
+      "noProviders": "કોઈ પેમેન્ટ પ્રદાતાઓ કન્ફિગર કરેલા નથી. પેમેન્ટ્સ સ્વીકારવા શરૂ કરવા માટે એક ઉમેરો.",
+      "production": "પ્રોડક્શન",
+      "sandbox": "સેન્ડબોક્સ",
+      "healthStatus": "આરોગ્ય સ્થિતિ",
+      "unknown": "અજાણ્યું",
+      "testConnection": "કનેક્શન ટેસ્ટ કરો",
+      "configure": "કન્ફિગર કરો",
+      "remove": "દૂર કરો",
+      "merchantId": "વેપારી ID:",
+      "lastSync": "છેલ્લી સિંક:",
+      "oauthExpires": "OAuth સમાપ્ત:"
+    },
+    "credentialsTab": {
+      "title": "API ઓળખપત્રો",
+      "securityNotice": "સુરક્ષા નોટિસ:",
+      "securityMessage": "API ઓળખપત્રો એન્ક્રિપ્ટેડ અને સુરક્ષિત રીતે સંગ્રહિત છે. તમારી ગુપ્ત કીઓ અથવા એક્સેસ ટોકન્સ ક્યારેય શેર કરશો નહીં.",
+      "updateCredentials": "ઓળખપત્રો અપડેટ કરો",
+      "apiKey": "API કી",
+      "secretKey": "ગુપ્ત કી",
+      "oauthToken": "OAuth ટોકન",
+      "configured": "કન્ફિગર કરેલું",
+      "notConfigured": "કન્ફિગર કરેલું નથી",
+      "connected": "કનેક્ટ થયેલ",
+      "expires": "{{date}} ના રોજ સમાપ્ત",
+      "connectOAuth": "OAuth સાથે કનેક્ટ કરો"
+    },
+    "feesTab": {
+      "title": "ફી અને ટ્રાન્ઝેક્શન મર્યાદાઓ",
+      "platformFees": "પ્લેટફોર્મ ફી",
+      "percentageFee": "ટકાવારી ફી",
+      "fixedFee": "નિશ્ચિત ફી",
+      "transactionLimits": "ટ્રાન્ઝેક્શન મર્યાદાઓ",
+      "dailyLimit": "દૈનિક મર્યાદા",
+      "perTransactionLimit": "પ્રતિ ટ્રાન્ઝેક્શન મર્યાદા",
+      "saveChanges": "ફેરફારો સાચવો"
+    },
+    "webhooksTab": {
+      "title": "Webhook કન્ફિગરેશન",
+      "infoMessage": "રીઅલ-ટાઇમ પેમેન્ટ ઇવેન્ટ્સ મેળવવા માટે તમારા પેમેન્ટ પ્રદાતાના ડેશબોર્ડમાં webhook URL કન્ફિગર કરો.",
+      "webhookUrl": "Webhook URL",
+      "webhookSecret": "Webhook ગુપ્ત",
+      "webhookSecretPlaceholder": "webhook સહી ગુપ્ત દાખલ કરો",
+      "eventsToSubscribe": "સબ્સ્ક્રાઇબ કરવા માટે ઇવેન્ટ્સ",
+      "eventTypes": {
+        "paymentCompleted": "payment.completed",
+        "paymentFailed": "payment.failed",
+        "refundCreated": "refund.created",
+        "disputeCreated": "dispute.created"
+      }
+    },
+    "analyticsTab": {
+      "title": "પેમેન્ટ વિશ્લેષણ",
+      "transactionVolume": "ટ્રાન્ઝેક્શન વોલ્યુમ (છેલ્લા 7 દિવસ)",
+      "successRateByProvider": "પ્રદાતા દ્વારા સફળતા દર",
+      "chartPlaceholder": "ચાર્ટ પ્લેસહોલ્ડર",
+      "recentTransactions": "તાજેતરના ટ્રાન્ઝેક્શન્સ",
+      "noRecentTransactions": "કોઈ તાજેતરના ટ્રાન્ઝેક્શન્સ નથી",
+      "tableHeaders": {
+        "transactionId": "ટ્રાન્ઝેક્શન ID",
+        "amount": "રકમ",
+        "provider": "પ્રદાતા",
+        "status": "સ્થિતિ",
+        "date": "તારીખ"
+      }
+    },
+    "credentialModal": {
+      "title": "{{providerName}} ઓળખપત્રો અપડેટ કરો",
+      "environment": "વાતાવરણ",
+      "environmentOptions": {
+        "sandbox": "સેન્ડબોક્સ",
+        "production": "પ્રોડક્શન"
+      },
+      "apiKey": "API કી",
+      "apiKeyPlaceholder": "API કી દાખલ કરો",
+      "secretKey": "ગુપ્ત કી",
+      "secretKeyPlaceholder": "ગુપ્ત કી દાખલ કરો",
+      "merchantId": "વેપારી ID",
+      "merchantIdPlaceholder": "વેપારી ID દાખલ કરો",
+      "accessToken": "એક્સેસ ટોકન (વૈકલ્પિક - OAuth માટે)",
+      "accessTokenPlaceholder": "એક્સેસ ટોકન દાખલ કરો",
+      "securityWarning": "ઓળખપત્રો સંગ્રહ પહેલાં AES-256 એન્ક્રિપ્શનનો ઉપયોગ કરીને એન્ક્રિપ્ટ કરવામાં આવે છે. સંવેદનશીલ ડેટા દાખલ કરતી વખતે ખાતરી કરો કે તમે સુરક્ષિત વાતાવરણમાં છો.",
+      "cancel": "રદ કરો",
+      "updateButton": "ઓળખપત્રો અપડેટ કરો",
+      "updating": "અપડેટ કરી રહ્યું છે..."
+    },
+    "notifications": {
+      "connectionTestSuccess": "{{providerName}} કનેક્શન ટેસ્ટ સફળ",
+      "connectionTestFailed": "{{providerName}} કનેક્શન ટેસ્ટ નિષ્ફળ",
+      "credentialsUpdated": "{{providerName}} માટે ઓળખપત્રો સફળતાપૂર્વક અપડેટ થયા",
+      "credentialsUpdateFailed": "ઓળખપત્રો અપડેટ કરવામાં નિષ્ફળ",
+      "tenantLoadFailed": "ભાડૂત ડેટા લોડ કરવામાં નિષ્ફળ",
+      "providersLoadFailed": "પેમેન્ટ પ્રદાતાઓ લોડ કરવામાં નિષ્ફળ",
+      "webhookUrlCopied": "Webhook URL ક્લિપબોર્ડ પર કૉપિ થયું"
+    }
+  }
+}

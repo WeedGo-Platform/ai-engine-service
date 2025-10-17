@@ -1,0 +1,21 @@
+{
+  "title": "ایپس",
+  "tabs": {
+    "pos": "فروخت کا مقام",
+    "posShort": "POS",
+    "kiosk": "خود خدمت Kiosk",
+    "kioskShort": "Kiosk",
+    "menuDisplay": "مینو ڈسپلے",
+    "menuShort": "مینو"
+  },
+  "fullscreen": {
+    "enter": "مکمل اسکرین میں داخل ہوں",
+    "exit": "مکمل اسکرین سے باہر نکلیں"
+  },
+  "storeSelection": {
+    "required": "اسٹور کا انتخاب ضروری ہے",
+    "pleaseSelect": "جاری رکھنے کے لیے براہ کرم ایک اسٹور منتخب کریں",
+    "selectButton": "اسٹور منتخب کریں",
+    "description": "{{appName}} تک رسائی کے لیے براہ کرم ایک اسٹور منتخب کریں"
+  }
+}
