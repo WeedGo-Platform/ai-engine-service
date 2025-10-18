@@ -1,0 +1,75 @@
+{
+  "titles": {
+    "main": "صوبائی پروڈکٹ کیٹلاگ",
+    "mainVirtual": "صوبائی پروڈکٹ کیٹلاگ (ورچوئل سکرول)",
+    "uploadSection": "کیٹلاگ اپ لوڈ کریں",
+    "uploadInstructions": "اپ لوڈ کی ہدایات",
+    "catalogProducts": "کیٹلاگ مصنوعات"
+  },
+  "descriptions": {
+    "main": "صوبائی بھنگ تقسیم کاروں سے پروڈکٹ کیٹلاگ دیکھیں اور منظم کریں۔",
+    "mainVirtual": "صوبائی بھنگ پروڈکٹ کیٹلاگ منظم اور اپ لوڈ کریں",
+    "selectProvince": "صوبہ منتخب کریں",
+    "viewingProvince": "صوبائی کیٹلاگ دیکھا جا رہا ہے",
+    "scrollHint": "تمام کالم دیکھنے کے لیے افقی طور پر سکرول کریں ←"
+  },
+  "provinces": {
+    "ontario": "Ontario (OCS)",
+    "bc": "British Columbia (جلد آرہا ہے)",
+    "alberta": "Alberta (جلد آرہا ہے)",
+    "quebec": "Quebec (جلد آرہا ہے)"
+  },
+  "stats": {
+    "totalProducts": "کل مصنوعات",
+    "lastUpdated": "آخری اپ ڈیٹ",
+    "categories": "زمرے",
+    "never": "کبھی نہیں",
+    "totalRecords": "کل ریکارڈز",
+    "inserted": "داخل کیا گیا",
+    "updated": "اپ ڈیٹ کیا گیا",
+    "errors": "غلطیاں",
+    "totalRecordsLabel": "کل ریکارڈز"
+  },
+  "upload": {
+    "selectFile": "نیا کیٹلاگ اپ لوڈ کریں",
+    "chooseFile": "فائل منتخب کریں",
+    "uploadButton": "اپ لوڈ کریں",
+    "uploadCatalog": "کیٹلاگ اپ لوڈ کریں",
+    "uploading": "اپ لوڈ ہو رہا ہے...",
+    "uploadFile": "فائل اپ لوڈ کریں",
+    "invalidFileType": "غلط فائل کی قسم۔ براہ کرم CSV یا Excel فائل اپ لوڈ کریں۔",
+    "pleaseSelectFile": "براہ کرم اپ لوڈ کرنے کے لیے ایک فائل منتخب کریں۔",
+    "processingFile": "کیٹلاگ فائل پروسیس ہو رہی ہے...",
+    "processingFileShort": "فائل پروسیس ہو رہی ہے...",
+    "uploadSuccess": "کیٹلاگ کامیابی سے اپ لوڈ ہو گیا!",
+    "uploadSuccessShort": "اپ لوڈ کامیاب",
+    "uploadFailed": "کیٹلاگ اپ لوڈ ناکام",
+    "uploadFailedShort": "اپ لوڈ ناکام"
+  },
+  "search": {
+    "placeholder": "مصنوعات تلاش کریں...",
+    "allCategories": "تمام زمرے"
+  },
+  "buttons": {
+    "export": "برآمد کریں",
+    "exportCsv": "CSV برآمد کریں",
+    "previous": "پچھلا",
+    "next": "اگلا"
+  },
+  "table": {
+    "loadingCatalog": "کیٹلاگ لوڈ ہو رہا ہے...",
+    "noProductsFound": "کیٹلاگ میں کوئی مصنوعات نہیں ملیں",
+    "noProductsUpload": "کوئی مصنوعات نہیں ملیں۔ شروع کرنے کے لیے ایک کیٹلاگ اپ لوڈ کریں۔",
+    "showingPage": "نتائج کا {page} صفحہ دکھایا جا رہا ہے",
+    "itemsCount": "{count} اشیاء"
+  },
+  "instructions": {
+    "line1": "OCS کیٹلاگ فائل میں OCS تصریح کے مطابق تمام مطلوبہ کالم ہونے چاہئیں۔",
+    "line2": "مصنوعات کو OCS ویرینٹ نمبر کو منفرد کلید کے طور پر استعمال کرتے ہوئے میچ اور اپ ڈیٹ کیا جاتا ہے۔",
+    "line3": "نئی مصنوعات داخل کی جائیں گی، موجودہ مصنوعات کو تازہ ترین معلومات کے ساتھ اپ ڈیٹ کیا جائے گا۔",
+    "line4": "ریٹنگ اور ریٹنگ شمار فیلڈز اپ ڈیٹس کے دوران محفوظ رکھے جائیں گے۔"
+  },
+  "messages": {
+    "lastCatalogUpdate": "آخری کیٹلاگ اپ ڈیٹ:"
+  }
+}

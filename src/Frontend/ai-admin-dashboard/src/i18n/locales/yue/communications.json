@@ -1,0 +1,89 @@
+{
+  "titles": {
+    "main": "通訊",
+    "overview": "概覽",
+    "campaigns": "活動",
+    "templates": "範本",
+    "segments": "細分",
+    "analytics": "分析",
+    "broadcastCampaigns": "廣播活動",
+    "recentCampaigns": "最近活動",
+    "channelPerformance": "渠道表現"
+  },
+  "descriptions": {
+    "managingFor": "管理通訊",
+    "segmentationComingSoon": "客戶細分即將推出...",
+    "noAnalytics": "冇可用嘅分析數據",
+    "noStoreSelected": "未選擇商店",
+    "selectStore": "請選擇一間商店嚟管理通訊"
+  },
+  "tabs": {
+    "overview": "概覽",
+    "campaigns": "活動",
+    "templates": "範本",
+    "segments": "細分",
+    "analytics": "分析"
+  },
+  "stats": {
+    "totalCampaigns": "總活動數",
+    "messagesSent": "已發送訊息",
+    "successRate": "成功率",
+    "failed": "失敗"
+  },
+  "status": {
+    "draft": "draft",
+    "scheduled": "scheduled",
+    "sending": "sending",
+    "sent": "sent",
+    "paused": "paused",
+    "cancelled": "cancelled",
+    "failed": "failed"
+  },
+  "table": {
+    "campaign": "活動",
+    "status": "狀態",
+    "recipients": "收件人",
+    "successRate": "成功率",
+    "created": "建立時間",
+    "channels": "渠道",
+    "scheduled": "已排期",
+    "actions": "操作",
+    "createdBy": "建立者",
+    "sentCount": "sent"
+  },
+  "channels": {
+    "email": "email",
+    "sms": "sms",
+    "push": "push",
+    "campaigns": "活動",
+    "messages": "訊息",
+    "engagement": "參與度"
+  },
+  "actions": {
+    "newCampaign": "新活動",
+    "viewAll": "查看全部",
+    "viewDetails": "查看詳情",
+    "edit": "編輯",
+    "sendNow": "即刻發送",
+    "cancel": "取消",
+    "pause": "暫停",
+    "resume": "繼續",
+    "refresh": "重新整理",
+    "settings": "設定"
+  },
+  "messages": {
+    "success": {
+      "broadcastStarted": "廣播執行已開始",
+      "broadcastPaused": "廣播已暫停",
+      "broadcastResumed": "廣播已繼續",
+      "broadcastCancelled": "廣播已取消"
+    },
+    "error": {
+      "fetchBroadcasts": "獲取廣播失敗",
+      "fetchAnalytics": "獲取分析失敗"
+    }
+  },
+  "confirm": {
+    "cancelBroadcast": "你確定要取消呢個廣播咩？"
+  }
+}

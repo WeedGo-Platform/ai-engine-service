@@ -1,0 +1,80 @@
+{
+  "titles": {
+    "main": "مدیریت پایگاه داده",
+    "databaseObjects": "اشیاء پایگاه داده",
+    "addRow": "افزودن سطر جدید",
+    "editRow": "ویرایش سطر",
+    "truncateTable": "خالی کردن جدول",
+    "dropTable": "حذف جدول"
+  },
+  "descriptions": {
+    "main": "دسترسی سوپر مدیر به جداول و عملیات پایگاه داده",
+    "selectTable": "یک جدول برای مشاهده داده‌ها انتخاب کنید",
+    "chooseFromList": "از فهرست سمت چپ انتخاب کنید"
+  },
+  "tabs": {
+    "data": "داده‌ها",
+    "schema": "طرح",
+    "query": "پرس‌وجو"
+  },
+  "connection": {
+    "connections": "اتصالات"
+  },
+  "table": {
+    "tables": "جداول",
+    "views": "نماها",
+    "columns": "ستون‌ها",
+    "totalRows": "کل سطرها"
+  },
+  "actions": {
+    "addRow": "افزودن سطر",
+    "add": "افزودن",
+    "truncate": "خالی کردن",
+    "clear": "پاک کردن",
+    "dropView": "حذف نما",
+    "dropTable": "حذف جدول",
+    "drop": "حذف",
+    "refresh": "بازخوانی",
+    "search": "جستجو",
+    "clearSearch": "پاک کردن جستجو",
+    "executeQuery": "اجرای پرس‌وجو",
+    "cancel": "لغو",
+    "updateRow": "به‌روزرسانی سطر"
+  },
+  "placeholders": {
+    "filterTables": "فیلتر کردن جداول و نماها...",
+    "searchTable": "جستجوی جدول...",
+    "sqlQuery": "پرس‌وجوی SQL (فقط SELECT)"
+  },
+  "schema": {
+    "columnName": "نام ستون",
+    "dataType": "نوع داده",
+    "nullable": "قابل تهی بودن",
+    "default": "پیش‌فرض",
+    "maxLength": "حداکثر طول"
+  },
+  "pagination": {
+    "page": "صفحه",
+    "of": "از"
+  },
+  "messages": {
+    "noData": "هیچ داده‌ای در این جدول یافت نشد",
+    "warningCannotUndo": "هشدار: این عملیات قابل بازگشت نیست!",
+    "truncateWarning": "تمام داده‌های موجود در جدول \"{table}\" به طور دائم حذف خواهند شد.",
+    "dropWarning": "کل جدول \"{table}\" و تمام داده‌های آن به طور دائم از پایگاه داده حذف خواهند شد.",
+    "type": "نوع",
+    "actions": "عملیات"
+  },
+  "confirm": {
+    "deleteRow": "آیا مطمئن هستید که می‌خواهید این سطر را حذف کنید؟",
+    "truncateTable": "آیا مطمئن هستید که می‌خواهید جدول {table} را خالی کنید؟ این کار همه سطرها را حذف خواهد کرد!"
+  },
+  "errors": {
+    "addRow": "افزودن سطر ناموفق بود",
+    "updateRow": "به‌روزرسانی سطر ناموفق بود",
+    "deleteRow": "حذف سطر ناموفق بود",
+    "truncateTable": "خالی کردن جدول ناموفق بود",
+    "dropTable": "حذف جدول ناموفق بود",
+    "executeQuery": "اجرای پرس‌وجو ناموفق بود"
+  }
+}

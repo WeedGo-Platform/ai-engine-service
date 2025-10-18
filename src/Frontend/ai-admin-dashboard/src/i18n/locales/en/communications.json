@@ -1,0 +1,89 @@
+{
+  "titles": {
+    "main": "Communications",
+    "overview": "Overview",
+    "campaigns": "Campaigns",
+    "templates": "Templates",
+    "segments": "Segments",
+    "analytics": "Analytics",
+    "broadcastCampaigns": "Broadcast Campaigns",
+    "recentCampaigns": "Recent Campaigns",
+    "channelPerformance": "Channel Performance"
+  },
+  "descriptions": {
+    "managingFor": "Managing communications for",
+    "segmentationComingSoon": "Customer segmentation coming soon...",
+    "noAnalytics": "No analytics data available",
+    "noStoreSelected": "No Store Selected",
+    "selectStore": "Please select a store to manage communications"
+  },
+  "tabs": {
+    "overview": "Overview",
+    "campaigns": "Campaigns",
+    "templates": "Templates",
+    "segments": "Segments",
+    "analytics": "Analytics"
+  },
+  "stats": {
+    "totalCampaigns": "Total Campaigns",
+    "messagesSent": "Messages Sent",
+    "successRate": "Success Rate",
+    "failed": "Failed"
+  },
+  "status": {
+    "draft": "draft",
+    "scheduled": "scheduled",
+    "sending": "sending",
+    "sent": "sent",
+    "paused": "paused",
+    "cancelled": "cancelled",
+    "failed": "failed"
+  },
+  "table": {
+    "campaign": "Campaign",
+    "status": "Status",
+    "recipients": "Recipients",
+    "successRate": "Success Rate",
+    "created": "Created",
+    "channels": "Channels",
+    "scheduled": "Scheduled",
+    "actions": "Actions",
+    "createdBy": "Created by",
+    "sentCount": "sent"
+  },
+  "channels": {
+    "email": "email",
+    "sms": "sms",
+    "push": "push",
+    "campaigns": "Campaigns",
+    "messages": "Messages",
+    "engagement": "Engagement"
+  },
+  "actions": {
+    "newCampaign": "New Campaign",
+    "viewAll": "View All",
+    "viewDetails": "View Details",
+    "edit": "Edit",
+    "sendNow": "Send Now",
+    "cancel": "Cancel",
+    "pause": "Pause",
+    "resume": "Resume",
+    "refresh": "Refresh",
+    "settings": "Settings"
+  },
+  "messages": {
+    "success": {
+      "broadcastStarted": "Broadcast execution started",
+      "broadcastPaused": "Broadcast paused",
+      "broadcastResumed": "Broadcast resumed",
+      "broadcastCancelled": "Broadcast cancelled"
+    },
+    "error": {
+      "fetchBroadcasts": "Failed to fetch broadcasts",
+      "fetchAnalytics": "Failed to fetch analytics"
+    }
+  },
+  "confirm": {
+    "cancelBroadcast": "Are you sure you want to cancel this broadcast?"
+  }
+}

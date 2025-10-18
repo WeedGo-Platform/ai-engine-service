@@ -1,0 +1,127 @@
+{
+  "titles": {
+    "main": "Точка Продажи",
+    "posSettings": "Настройки POS",
+    "parkedSales": "Отложенные Продажи",
+    "hardwareConfiguration": "Конфигурация Оборудования",
+    "cashManagement": "Управление Наличными",
+    "discountsPromotions": "Скидки и Акции"
+  },
+  "tabs": {
+    "newSale": "Новая Продажа",
+    "parked": "Отложенные",
+    "history": "История",
+    "settings": "Настройки"
+  },
+  "customer": {
+    "label": "Клиент",
+    "select": "Выбрать",
+    "change": "Изменить",
+    "returning": "Постоянный",
+    "new": "Новый",
+    "anonymous": "Анонимный",
+    "newCustomer": "Новый Клиент",
+    "points": "Баллы:"
+  },
+  "cart": {
+    "empty": "Корзина пуста",
+    "batch": "Партия:",
+    "discount": "Скидка:",
+    "quantity": "Количество"
+  },
+  "weight": {
+    "driedFlowerEquivalent": "Dried Flower Equivalent:",
+    "legalLimit": "/ 30g",
+    "exceedsLimit": "Превышает законный лимит!"
+  },
+  "totals": {
+    "subtotal": "Промежуточный Итог",
+    "discount": "Скидка",
+    "discountApplied": "Скидка применена",
+    "afterDiscount": "После Скидки",
+    "tax": "Налог (13%)",
+    "total": "Итого"
+  },
+  "actions": {
+    "parkSale": "Отложить Продажу",
+    "clear": "Очистить",
+    "processPayment": "Обработать Платеж",
+    "resumeSale": "Возобновить Продажу",
+    "addPromotion": "Добавить Акцию",
+    "detectScanners": "Обнаружить Сканеры",
+    "openRegister": "Открыть Кассу",
+    "cashCount": "Подсчет Наличных",
+    "endOfDay": "Конец Дня",
+    "printReport": "Напечатать Отчет",
+    "test": "Тест",
+    "active": "Активный"
+  },
+  "search": {
+    "placeholder": "Поиск товаров или сканирование штрих-кода...",
+    "scanning": "Сканирование:",
+    "filterProducts": "Фильтр товаров"
+  },
+  "products": {
+    "noProductsFound": "Товары не найдены",
+    "outOfStock": "Нет в Наличии",
+    "low": "Мало",
+    "stock": "Запас:",
+    "batch": "партия",
+    "batches": "партии"
+  },
+  "parked": {
+    "noParkedSales": "Нет отложенных продаж",
+    "items": "товары"
+  },
+  "scanner": {
+    "enabled": "Сканер Включен",
+    "disabled": "Сканер Отключен",
+    "noScannersDetected": "Сканеры не обнаружены",
+    "connectScanner": "Подключите сканер и нажмите \"Обнаружить Сканеры\"",
+    "barcodeScanners": "Сканеры Штрих-Кодов",
+    "manageConnected": "Управление подключенными сканерами"
+  },
+  "hardware": {
+    "paymentTerminal": "Платежный Терминал",
+    "connectCardReader": "Подключить картридер",
+    "receiptPrinter": "Принтер Чеков",
+    "printReceipts": "Печать чеков",
+    "cashDrawer": "Денежный Ящик",
+    "manageCash": "Управление наличными",
+    "enabled": "Включено"
+  },
+  "validation": {
+    "validIdDate": "Дата Действительного ID:",
+    "orEarlier": "или раньше",
+    "validId": "Действительный ID:"
+  },
+  "promotions": {
+    "seniorDiscount": "Скидка для Пенсионеров",
+    "seniorDescription": "Скидка 10% для 65+",
+    "happyHour": "Счастливый Час",
+    "happyHourDescription": "Скидка 15% с 16:00 до 18:00"
+  },
+  "messages": {
+    "saleParkedSuccess": "Продажа успешно отложена!",
+    "saleParkedFailed": "Не удалось отложить продажу. Попробуйте снова.",
+    "resumeFailed": "Не удалось возобновить продажу. Попробуйте снова.",
+    "paymentSuccess": "Платеж успешен!",
+    "receiptPrinted": "Чек напечатан.",
+    "transactionFailed": "Не удалось обработать транзакцию. Попробуйте снова.",
+    "productNotFound": "Товар не найден для штрих-кода:",
+    "scannerTestSuccess": "Тест сканера успешен! Тестовый штрих-код:",
+    "scannerTestFailed": "Тест сканера не пройден",
+    "scannerTestError": "Не удалось протестировать сканер"
+  },
+  "fullscreen": {
+    "enter": "Войти в полноэкранный режим",
+    "exit": "Выйти из полноэкранного режима"
+  },
+  "labels": {
+    "confidence": {
+      "high": "✓ Сканер",
+      "medium": "Вероятно Сканер",
+      "low": "Возможно Сканер"
+    }
+  }
+}

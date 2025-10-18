@@ -1,0 +1,132 @@
+{
+  "voiceApi": {
+    "title": "Kiểm Tra API Giọng Nói",
+    "apiEndpoint": "Điểm Cuối API",
+    "recording": {
+      "title": "1. Ghi Âm",
+      "start": "Bắt Đầu Ghi",
+      "stop": "Dừng Ghi",
+      "play": "Phát Bản Ghi",
+      "inProgress": "Đang ghi âm...",
+      "ready": "Âm thanh đã được ghi và sẵn sàng để phiên âm"
+    },
+    "transcription": {
+      "title": "2. Kiểm Tra Phiên Âm",
+      "button": "Phiên Âm",
+      "buttonLoading": "Đang phiên âm...",
+      "result": "Kết Quả Phiên Âm:",
+      "noAudio": "Không có âm thanh được ghi. Vui lòng ghi âm trước.",
+      "noTranscription": "Không có bản phiên âm",
+      "success": "Phiên âm hoàn tất thành công"
+    },
+    "synthesis": {
+      "title": "3. Kiểm Tra Tổng Hợp",
+      "textLabel": "Văn Bản Để Tổng Hợp",
+      "textPlaceholder": "Nhập văn bản để chuyển thành giọng nói...",
+      "voiceLabel": "Giọng Nói",
+      "button": "Tổng Hợp Giọng Nói",
+      "buttonLoading": "Đang tổng hợp...",
+      "play": "Phát Bản Tổng Hợp",
+      "noText": "Vui lòng nhập văn bản để tổng hợp",
+      "success": "Tổng hợp hoàn tất thành công",
+      "failed": "Tổng hợp thất bại"
+    },
+    "debug": {
+      "title": "Thông Tin Gỡ Lỗi",
+      "endpoint": "Điểm cuối",
+      "transcription": "Phiên âm",
+      "synthesis": "Tổng hợp",
+      "voices": "Giọng nói"
+    },
+    "messages": {
+      "voicesFetched": "Lấy giọng nói thành công",
+      "voicesFailed": "Không thể lấy giọng nói",
+      "recordingFailed": "Không thể bắt đầu ghi âm",
+      "recordingSaved": "Bản ghi đã được lưu",
+      "transcriptionError": "Lỗi phiên âm",
+      "synthesisError": "Lỗi tổng hợp"
+    }
+  },
+  "logs": {
+    "title": "Nhật Ký Hệ Thống",
+    "description": "Xem và tìm kiếm nhật ký ứng dụng từ Elasticsearch",
+    "filters": {
+      "search": "Tìm Kiếm Nhật Ký",
+      "searchPlaceholder": "Tìm thông điệp, logger, mô-đun...",
+      "logLevel": "Mức Nhật Ký",
+      "allLevels": "Tất Cả Mức",
+      "error": "Lỗi",
+      "warning": "Cảnh báo",
+      "info": "Thông tin",
+      "debug": "Gỡ lỗi",
+      "timeRange": "Khoảng Thời Gian",
+      "advancedFilters": "Bộ Lọc Nâng Cao",
+      "correlationId": "ID Tương Quan",
+      "correlationIdPlaceholder": "Lọc theo ID tương quan",
+      "tenantId": "ID Người Thuê",
+      "tenantIdPlaceholder": "Lọc theo người thuê",
+      "storeId": "ID Cửa Hàng",
+      "storeIdPlaceholder": "Lọc theo cửa hàng",
+      "userId": "ID Người Dùng",
+      "userIdPlaceholder": "Lọc theo người dùng",
+      "sessionId": "ID Phiên",
+      "sessionIdPlaceholder": "Lọc theo phiên",
+      "service": "Dịch Vụ",
+      "servicePlaceholder": "Lọc theo dịch vụ",
+      "endDate": "Ngày Kết Thúc",
+      "clearAll": "Xóa Tất Cả Bộ Lọc"
+    },
+    "actions": {
+      "refresh": "Làm Mới",
+      "export": "Xuất",
+      "autoRefresh": "Tự động làm mới mỗi",
+      "details": "Chi Tiết",
+      "close": "Đóng"
+    },
+    "table": {
+      "timestamp": "Thời Gian",
+      "level": "Mức",
+      "serviceLogger": "Dịch Vụ / Logger",
+      "message": "Thông Điệp",
+      "correlationId": "ID Tương Quan",
+      "actions": "Hành Động",
+      "noLogs": "Không tìm thấy nhật ký",
+      "totalLogs": "tổng số nhật ký"
+    },
+    "pagination": {
+      "showing": "Hiển thị {{from}} đến {{to}} trong tổng số {{total}}",
+      "perPage": "mỗi trang",
+      "previous": "Trước",
+      "next": "Tiếp",
+      "page": "Trang {{current}} / {{total}}"
+    },
+    "details": {
+      "title": "Chi Tiết Nhật Ký",
+      "summary": "Tóm Tắt",
+      "metadata": "Siêu Dữ Liệu",
+      "correlationId": "ID Tương Quan",
+      "sessionId": "ID Phiên",
+      "tenantId": "ID Người Thuê",
+      "storeId": "ID Cửa Hàng",
+      "userId": "ID Người Dùng",
+      "service": "Dịch Vụ",
+      "environment": "Môi Trường",
+      "logger": "Logger",
+      "module": "Mô-đun",
+      "function": "Hàm",
+      "lineNumber": "Số Dòng",
+      "duration": "Thời Lượng",
+      "statusCode": "Mã Trạng Thái",
+      "method": "Phương Thức",
+      "path": "Đường Dẫn",
+      "clientHost": "Máy Chủ Khách",
+      "exception": "Ngoại Lệ",
+      "viewRawJson": "Xem JSON Thô"
+    },
+    "messages": {
+      "fetchFailed": "Không thể lấy nhật ký từ Elasticsearch",
+      "exportSuccess": "Nhật ký đã được xuất thành công",
+      "logExported": "Nhật ký đã được xuất"
+    }
+  }
+}

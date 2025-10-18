@@ -1,0 +1,43 @@
+{
+  "titles": {
+    "tenantSettings": "Налаштування",
+    "generalInformation": "Загальна Інформація"
+  },
+  "descriptions": {
+    "tenantManagement": "Керування конфігурацією орендаря та налаштуваннями платежів"
+  },
+  "tabs": {
+    "general": "Загальні Налаштування",
+    "payment": "Налаштування Платежів",
+    "communication": "Налаштування Зв'язку"
+  },
+  "fields": {
+    "tenantName": "Ім'я Орендаря",
+    "tenantCode": "Код Орендаря",
+    "companyName": "Назва Компанії",
+    "businessNumber": "Номер Підприємства",
+    "contactEmail": "Контактний Email",
+    "contactPhone": "Контактний Телефон",
+    "status": "Статус",
+    "subscriptionTier": "Рівень Підписки",
+    "address": "Адреса"
+  },
+  "actions": {
+    "backToTenants": "Повернутися до Орендарів"
+  },
+  "messages": {
+    "notSpecified": "Не вказано",
+    "loading": "Завантаження...",
+    "tenantNotFound": "Орендаря не знайдено",
+    "success": {
+      "paymentSettingsUpdated": "Налаштування платежів успішно оновлено",
+      "communicationSettingsUpdated": "Налаштування зв'язку успішно оновлено",
+      "configurationValid": "конфігурація дійсна"
+    },
+    "error": {
+      "loadSettings": "Не вдалося завантажити налаштування орендаря",
+      "updatePaymentSettings": "Не вдалося оновити налаштування платежів",
+      "updateCommunicationSettings": "Не вдалося оновити налаштування зв'язку"
+    }
+  }
+}

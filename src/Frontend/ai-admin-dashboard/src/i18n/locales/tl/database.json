@@ -1,0 +1,80 @@
+{
+  "titles": {
+    "main": "Pamamahala ng Database",
+    "databaseObjects": "Mga Bagay sa Database",
+    "addRow": "Magdagdag ng Bagong Hilera",
+    "editRow": "I-edit ang Hilera",
+    "truncateTable": "I-truncate ang Talahanayan",
+    "dropTable": "Tanggalin ang Talahanayan"
+  },
+  "descriptions": {
+    "main": "Super admin na access sa mga talahanayan at operasyon ng database",
+    "selectTable": "Pumili ng talahanayan upang tingnan ang data",
+    "chooseFromList": "Pumili mula sa listahan sa kaliwa"
+  },
+  "tabs": {
+    "data": "Data",
+    "schema": "Eskema",
+    "query": "Query"
+  },
+  "connection": {
+    "connections": "mga koneksyon"
+  },
+  "table": {
+    "tables": "mga talahanayan",
+    "views": "mga view",
+    "columns": "mga kolum",
+    "totalRows": "kabuuang mga hilera"
+  },
+  "actions": {
+    "addRow": "Magdagdag ng Hilera",
+    "add": "Magdagdag",
+    "truncate": "I-truncate",
+    "clear": "I-clear",
+    "dropView": "Tanggalin ang View",
+    "dropTable": "Tanggalin ang Talahanayan",
+    "drop": "Tanggalin",
+    "refresh": "I-refresh",
+    "search": "Maghanap",
+    "clearSearch": "I-clear ang paghahanap",
+    "executeQuery": "Isagawa ang Query",
+    "cancel": "Kanselahin",
+    "updateRow": "I-update ang Hilera"
+  },
+  "placeholders": {
+    "filterTables": "I-filter ang mga talahanayan at view...",
+    "searchTable": "Maghanap sa talahanayan...",
+    "sqlQuery": "SQL Query (SELECT lamang)"
+  },
+  "schema": {
+    "columnName": "Pangalan ng Kolum",
+    "dataType": "Uri ng Data",
+    "nullable": "Maaaring Null",
+    "default": "Default",
+    "maxLength": "Pinakamataas na Haba"
+  },
+  "pagination": {
+    "page": "Pahina",
+    "of": "ng"
+  },
+  "messages": {
+    "noData": "Walang data na nahanap sa talahanayan na ito",
+    "warningCannotUndo": "Babala: Hindi maaaring bawiin ang aksyong ito!",
+    "truncateWarning": "Ang lahat ng data sa talahanayan \"{table}\" ay permanenteng matatanggal.",
+    "dropWarning": "Ang buong talahanayan \"{table}\" at lahat ng data nito ay permanenteng maalis sa database.",
+    "type": "Uri",
+    "actions": "Mga Aksyon"
+  },
+  "confirm": {
+    "deleteRow": "Sigurado ka bang gusto mong tanggalin ang hilerang ito?",
+    "truncateTable": "Sigurado ka bang gusto mong I-TRUNCATE ang talahanayan {table}? Matatanggal nito ang LAHAT ng mga hilera!"
+  },
+  "errors": {
+    "addRow": "Nabigo ang pagdagdag ng hilera",
+    "updateRow": "Nabigo ang pag-update ng hilera",
+    "deleteRow": "Nabigo ang pagtanggal ng hilera",
+    "truncateTable": "Nabigo ang pag-truncate ng talahanayan",
+    "dropTable": "Nabigo ang pagtanggal ng talahanayan",
+    "executeQuery": "Nabigo ang pagsasagawa ng query"
+  }
+}

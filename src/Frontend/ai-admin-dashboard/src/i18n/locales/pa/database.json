@@ -1,0 +1,80 @@
+{
+  "titles": {
+    "main": "ਡੇਟਾਬੇਸ ਪ੍ਰਬੰਧਨ",
+    "databaseObjects": "ਡੇਟਾਬੇਸ ਆਬਜੈਕਟ",
+    "addRow": "ਨਵੀਂ ਕਤਾਰ ਸ਼ਾਮਲ ਕਰੋ",
+    "editRow": "ਕਤਾਰ ਸੰਪਾਦਿਤ ਕਰੋ",
+    "truncateTable": "ਟੇਬਲ ਕੱਟੋ",
+    "dropTable": "ਟੇਬਲ ਮਿਟਾਓ"
+  },
+  "descriptions": {
+    "main": "ਡੇਟਾਬੇਸ ਟੇਬਲਾਂ ਅਤੇ ਕਾਰਵਾਈਆਂ ਲਈ ਸੁਪਰ ਐਡਮਿਨ ਪਹੁੰਚ",
+    "selectTable": "ਡੇਟਾ ਦੇਖਣ ਲਈ ਇੱਕ ਟੇਬਲ ਚੁਣੋ",
+    "chooseFromList": "ਖੱਬੇ ਪਾਸੇ ਦੀ ਸੂਚੀ ਵਿੱਚੋਂ ਚੁਣੋ"
+  },
+  "tabs": {
+    "data": "ਡੇਟਾ",
+    "schema": "ਸਕੀਮਾ",
+    "query": "ਪੁੱਛਗਿੱਛ"
+  },
+  "connection": {
+    "connections": "ਕਨੈਕਸ਼ਨ"
+  },
+  "table": {
+    "tables": "ਟੇਬਲਾਂ",
+    "views": "ਦ੍ਰਿਸ਼",
+    "columns": "ਕਾਲਮ",
+    "totalRows": "ਕੁੱਲ ਕਤਾਰਾਂ"
+  },
+  "actions": {
+    "addRow": "ਕਤਾਰ ਸ਼ਾਮਲ ਕਰੋ",
+    "add": "ਸ਼ਾਮਲ ਕਰੋ",
+    "truncate": "ਕੱਟੋ",
+    "clear": "ਸਾਫ਼ ਕਰੋ",
+    "dropView": "ਦ੍ਰਿਸ਼ ਮਿਟਾਓ",
+    "dropTable": "ਟੇਬਲ ਮਿਟਾਓ",
+    "drop": "ਮਿਟਾਓ",
+    "refresh": "ਤਾਜ਼ਾ ਕਰੋ",
+    "search": "ਖੋਜੋ",
+    "clearSearch": "ਖੋਜ ਸਾਫ਼ ਕਰੋ",
+    "executeQuery": "ਪੁੱਛਗਿੱਛ ਚਲਾਓ",
+    "cancel": "ਰੱਦ ਕਰੋ",
+    "updateRow": "ਕਤਾਰ ਅੱਪਡੇਟ ਕਰੋ"
+  },
+  "placeholders": {
+    "filterTables": "ਟੇਬਲਾਂ ਅਤੇ ਦ੍ਰਿਸ਼ ਫਿਲਟਰ ਕਰੋ...",
+    "searchTable": "ਟੇਬਲ ਖੋਜੋ...",
+    "sqlQuery": "SQL ਪੁੱਛਗਿੱਛ (ਸਿਰਫ਼ SELECT)"
+  },
+  "schema": {
+    "columnName": "ਕਾਲਮ ਨਾਮ",
+    "dataType": "ਡੇਟਾ ਕਿਸਮ",
+    "nullable": "ਖਾਲੀ ਹੋ ਸਕਦਾ ਹੈ",
+    "default": "ਡਿਫੌਲਟ",
+    "maxLength": "ਅਧਿਕਤਮ ਲੰਬਾਈ"
+  },
+  "pagination": {
+    "page": "ਪੰਨਾ",
+    "of": "ਦਾ"
+  },
+  "messages": {
+    "noData": "ਇਸ ਟੇਬਲ ਵਿੱਚ ਕੋਈ ਡੇਟਾ ਨਹੀਂ ਮਿਲਿਆ",
+    "warningCannotUndo": "ਚੇਤਾਵਨੀ: ਇਸ ਕਾਰਵਾਈ ਨੂੰ ਰੱਦ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ!",
+    "truncateWarning": "ਟੇਬਲ \"{table}\" ਵਿੱਚ ਸਾਰਾ ਡੇਟਾ ਸਥਾਈ ਤੌਰ 'ਤੇ ਮਿਟਾ ਦਿੱਤਾ ਜਾਵੇਗਾ।",
+    "dropWarning": "ਪੂਰੀ ਟੇਬਲ \"{table}\" ਅਤੇ ਇਸਦਾ ਸਾਰਾ ਡੇਟਾ ਡੇਟਾਬੇਸ ਤੋਂ ਸਥਾਈ ਤੌਰ 'ਤੇ ਹਟਾ ਦਿੱਤਾ ਜਾਵੇਗਾ।",
+    "type": "ਕਿਸਮ",
+    "actions": "ਕਾਰਵਾਈਆਂ"
+  },
+  "confirm": {
+    "deleteRow": "ਕੀ ਤੁਸੀਂ ਪੱਕਾ ਇਸ ਕਤਾਰ ਨੂੰ ਮਿਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?",
+    "truncateTable": "ਕੀ ਤੁਸੀਂ ਪੱਕਾ ਟੇਬਲ {table} ਨੂੰ ਕੱਟਣਾ ਚਾਹੁੰਦੇ ਹੋ? ਇਹ ਸਾਰੀਆਂ ਕਤਾਰਾਂ ਨੂੰ ਮਿਟਾ ਦੇਵੇਗਾ!"
+  },
+  "errors": {
+    "addRow": "ਕਤਾਰ ਸ਼ਾਮਲ ਕਰਨ ਵਿੱਚ ਅਸਫਲ",
+    "updateRow": "ਕਤਾਰ ਅੱਪਡੇਟ ਕਰਨ ਵਿੱਚ ਅਸਫਲ",
+    "deleteRow": "ਕਤਾਰ ਮਿਟਾਉਣ ਵਿੱਚ ਅਸਫਲ",
+    "truncateTable": "ਟੇਬਲ ਕੱਟਣ ਵਿੱਚ ਅਸਫਲ",
+    "dropTable": "ਟੇਬਲ ਮਿਟਾਉਣ ਵਿੱਚ ਅਸਫਲ",
+    "executeQuery": "ਪੁੱਛਗਿੱਛ ਚਲਾਉਣ ਵਿੱਚ ਅਸਫਲ"
+  }
+}

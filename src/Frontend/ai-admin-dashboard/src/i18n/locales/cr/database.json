@@ -1,0 +1,80 @@
+{
+  "titles": {
+    "main": "ᑎᐯᔨᒋᑫᐃᐧᐣ ᐅᑕᐸᓯᑲᒋᑫᐃᐧᓇ",
+    "databaseObjects": "ᑎᐯᔨᒋᑫᐃᐧᐣ ᐅᐱᓇᐤ",
+    "addRow": "ᐅᔐᑎᓇ ᐅᔥᑭ ᐊᔭᐱᒋᑲᓇ",
+    "editRow": "ᒥᔨᑐᑕᒻ ᐊᔭᐱᒋᑲᓇ",
+    "truncateTable": "ᑭᔐᑲᐦᐊᒻ ᑎᐱᑲᓇ",
+    "dropTable": "ᐎᐸᑲᐦᐊᒻ ᑎᐱᑲᓇ"
+  },
+  "descriptions": {
+    "main": "ᑭᒋ ᐅᑭᒪᑲᓂᐤ ᑭᓀᐧᔨᐦᑎᑯᐤ ᑎᐯᔨᒋᑫᐃᐧᐣ ᑎᐱᑲᓇ ᐁᑲ ᐃᑖᓄᑭᐃᐧᓇ",
+    "selectTable": "ᐅᔐᑎᓇ ᑎᐱᑲᓇ ᒋ ᐙᐸᒋᒃ ᑎᐯᔨᒋᑫᐃᐧᓇ",
+    "chooseFromList": "ᐅᔐᑎᓇ ᓇᒪᑯᒋᑲᓇᐠ ᐅᔅᑭᓂᑯᐠ"
+  },
+  "tabs": {
+    "data": "ᑎᐯᔨᒋᑫᐃᐧᓇ",
+    "schema": "ᐃᔑ ᐅᓇᐦᐃᑕᐃᐧᐣ",
+    "query": "ᑲᑭᐧᒋᒥᑯᓇᓇᐗᐠ"
+  },
+  "connection": {
+    "connections": "ᐃᑌᐧᐃᐧᓇ"
+  },
+  "table": {
+    "tables": "ᑎᐱᑲᓇ",
+    "views": "ᐙᐸᒋᑫᐃᐧᓇ",
+    "columns": "ᑎᐸᐦᐃᑲᓇ",
+    "totalRows": "ᒥᓯᐧᐁ ᐊᔭᐱᒋᑲᓇ"
+  },
+  "actions": {
+    "addRow": "ᐅᔐᑎᓇ ᐊᔭᐱᒋᑲᓇ",
+    "add": "ᐅᔐᑎᓇ",
+    "truncate": "ᑭᔐᑲᐦᐊᒻ",
+    "clear": "ᑭᓯᐸᑲᐦᐊᒻ",
+    "dropView": "ᐎᐸᑲᐦᐊᒻ ᐙᐸᒋᑫᐃᐧᐣ",
+    "dropTable": "ᐎᐸᑲᐦᐊᒻ ᑎᐱᑲᓇ",
+    "drop": "ᐎᐸᑲᐦᐊᒻ",
+    "refresh": "ᐅᔥᑭᐙᒋᐦᐊᒻ",
+    "search": "ᓇᑐᓀᐧᔨᐦᑕᒻ",
+    "clearSearch": "ᑭᓯᐸᑲᐦᐊᒻ ᓇᑐᓀᐧᔨᒋᑫᐃᐧᐣ",
+    "executeQuery": "ᐃᑖᓄᑭᐦᑕᒻ ᑲᑭᐧᒋᒥᑯᓇᓇᐗᐠ",
+    "cancel": "ᐸᑲᑕᐦᐊᒻ",
+    "updateRow": "ᐅᔥᑭᐙᒋᐦᐊᒻ ᐊᔭᐱᒋᑲᓇ"
+  },
+  "placeholders": {
+    "filterTables": "ᓇᓇᑲᒋᐦᐊᒻ ᑎᐱᑲᓇ ᐁᑲ ᐙᐸᒋᑫᐃᐧᓇ...",
+    "searchTable": "ᓇᑐᓀᐧᔨᐦᑕᒻ ᑎᐱᑲᓇ...",
+    "sqlQuery": "SQL ᑲᑭᐧᒋᒥᑯᓇᓇᐗᐠ (SELECT ᐯᔭᐠ)"
+  },
+  "schema": {
+    "columnName": "ᑎᐸᐦᐃᑲᐣ ᐃᔑᓂᑲᓱᐃᐧᐣ",
+    "dataType": "ᑎᐯᔨᒋᑫᐃᐧᐣ ᐃᓇᑯᓂᑫᐃᐧᐣ",
+    "nullable": "ᑲᐧᐃᐣ ᑭᑫᐧᔦ",
+    "default": "ᓀᔥᑕ ᐃᑌᐧᐃᐧᐣ",
+    "maxLength": "ᑭᒋ ᑭᓀᐧᔦ"
+  },
+  "pagination": {
+    "page": "ᒪᓯᓇᐦᐃᑲᐣ",
+    "of": "ᐅᒋ"
+  },
+  "messages": {
+    "noData": "ᓇᒪᐃᐧᐣ ᑎᐯᔨᒋᑫᐃᐧᓇ ᐅᒪ ᑎᐱᑲᓇᐠ",
+    "warningCannotUndo": "ᑭᑕᑐᑕᒧᐤ: ᐅᒪ ᐃᑖᓄᑭᐃᐧᐣ ᓇᒪᐃᐧᐣ ᑭᑫᐧᔦ ᐊᑕ ᐃᑌᐧᐃᐧᐣ!",
+    "truncateWarning": "ᑲᑭᓇ ᑎᐯᔨᒋᑫᐃᐧᓇ ᑎᐱᑲᓇᐠ \"{table}\" ᑲᑲᐧᔦ ᐎᐸᑲᐦᐊᒥᐦᑯᐗᓇ.",
+    "dropWarning": "ᑲᑭᓇ ᑎᐱᑲᓇ \"{table}\" ᐁᑲ ᑲᑭᓇ ᐅᑎᐯᔨᒋᑫᐃᐧᓇ ᑲᑲᐧᔦ ᐎᐸᑲᐦᐊᒥᐦᑯᐗᓇ ᑎᐯᔨᒋᑫᐃᐧᐣ.",
+    "type": "ᐃᓇᑯᓂᑫᐃᐧᐣ",
+    "actions": "ᐃᑖᓄᑭᐃᐧᓇ"
+  },
+  "confirm": {
+    "deleteRow": "ᑭᑌᐸᐧᐃᐧᒥᓀᐣ ᒋ ᐎᐸᑲᐦᐊᒻ ᐅᒪ ᐊᔭᐱᒋᑲᓇ?",
+    "truncateTable": "ᑭᑌᐸᐧᐃᐧᒥᓀᐣ ᒋ ᑭᔐᑲᐦᐊᒻ ᑎᐱᑲᓇ {table}? ᐅᒪ ᑲᑭᓇ ᐊᔭᐱᒋᑲᓇ ᐎᐸᑲᐦᐊᒥᐦᑯᐗᓇ!"
+  },
+  "errors": {
+    "addRow": "ᓇᒪᐃᐧᐣ ᑭᑫᐧᔦ ᐅᔐᑎᓇᓇᐗᐠ ᐊᔭᐱᒋᑲᓇ",
+    "updateRow": "ᓇᒪᐃᐧᐣ ᑭᑫᐧᔦ ᐅᔥᑭᐙᒋᐦᐊᓇᐗᐠ ᐊᔭᐱᒋᑲᓇ",
+    "deleteRow": "ᓇᒪᐃᐧᐣ ᑭᑫᐧᔦ ᐎᐸᑲᐦᐊᓇᐗᐠ ᐊᔭᐱᒋᑲᓇ",
+    "truncateTable": "ᓇᒪᐃᐧᐣ ᑭᑫᐧᔦ ᑭᔐᑲᐦᐊᓇᐗᐠ ᑎᐱᑲᓇ",
+    "dropTable": "ᓇᒪᐃᐧᐣ ᑭᑫᐧᔦ ᐎᐸᑲᐦᐊᓇᐗᐠ ᑎᐱᑲᓇ",
+    "executeQuery": "ᓇᒪᐃᐧᐣ ᑭᑫᐧᔦ ᐃᑖᓄᑭᐦᑕᓇᐗᐠ ᑲᑭᐧᒋᒥᑯᓇᓇᐗᐠ"
+  }
+}

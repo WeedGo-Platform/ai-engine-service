@@ -1,8 +1,8 @@
 {
-  "title": "டாஷ்போர்டு",
+  "title": "Dashboard",
   "systemDashboard": "கணினி டாஷ்போர்டு",
-  "systemOverview": "கணினி-அளவிலான மேலோட்டம்",
-  "tenantOverview": "குத்தகைதாரர் மேலோட்டம்",
+  "systemOverview": "கணினி-அளவிலான கண்ணோட்டம்",
+  "tenantOverview": "குத்தகைதாரர் கண்ணோட்டம்",
   "storeMetrics": "கடை செயல்திறன் அளவீடுகள்",
   "activeStores": "செயலில் உள்ள கடைகள்",
   "totalRevenue": "மொத்த வருவாய்",
@@ -13,12 +13,12 @@
   "inventoryItems": "சரக்கு பொருட்கள்",
   "lowStock": "குறைந்த இருப்பு பொருட்கள்",
   "lowStockCount": "குறைந்த இருப்பு",
-  "newThisWeek": "இந்த வாரம் புதியவை",
-  "vsLastWeek": "vs கடந்த வாரம்",
-  "selectStoreMessage": "விரிவான அளவீடுகளைப் பார்க்க மேலே உள்ள கீழ்விரிப்பட்டியலில் இருந்து ஒரு கடையைத் தேர்ந்தெடுக்கவும்.",
+  "newThisWeek": "இந்த வாரம் புதியது",
+  "vsLastWeek": "கடந்த வாரத்துடன் ஒப்பிடும்போது",
+  "selectStoreMessage": "விரிவான அளவீடுகளை காண மேலே உள்ள கீழ்தோன்றலில் இருந்து ஒரு கடையைத் தேர்ந்தெடுக்கவும்.",
   "revenue": "வருவாய்",
   "revenueTrend": "வருவாய் போக்கு",
-  "salesByCategory": "வகையின்படி விற்பனை",
+  "salesByCategory": "வகை அடிப்படையில் விற்பனை",
   "orderStatus": "ஆர்டர் நிலை",
   "orderStatusDistribution": "ஆர்டர் நிலை விநியோகம்",
   "storePerformance": "கடை செயல்திறன்",
@@ -29,12 +29,12 @@
   "orders": "ஆர்டர்கள்",
   "noData": "தரவு இல்லை",
   "left": "மீதமுள்ளது",
-  "reorder": "மீண்டும் ஆர்டர் செய்க",
+  "reorder": "மீண்டும் ஆர்டர் செய்",
   "orderStatuses": {
     "completed": "முடிந்தது",
-    "processing": "செயலாக்கப்படுகிறது",
+    "processing": "செயலாக்குகிறது",
     "shipped": "அனுப்பப்பட்டது",
-    "pending": "நிலுவையில் உள்ளது",
-    "cancelled": "ரத்து செய்யப்பட்டது"
+    "pending": "நிலுவையில்",
+    "cancelled": "ரத்துசெய்யப்பட்டது"
   }
 }

@@ -1,0 +1,127 @@
+{
+  "titles": {
+    "main": "Punto Vendita",
+    "posSettings": "Impostazioni POS",
+    "parkedSales": "Vendite in Sospeso",
+    "hardwareConfiguration": "Configurazione Hardware",
+    "cashManagement": "Gestione Contanti",
+    "discountsPromotions": "Sconti e Promozioni"
+  },
+  "tabs": {
+    "newSale": "Nuova Vendita",
+    "parked": "In Sospeso",
+    "history": "Cronologia",
+    "settings": "Impostazioni"
+  },
+  "customer": {
+    "label": "Cliente",
+    "select": "Seleziona",
+    "change": "Cambia",
+    "returning": "Di Ritorno",
+    "new": "Nuovo",
+    "anonymous": "Anonimo",
+    "newCustomer": "Nuovo Cliente",
+    "points": "Punti:"
+  },
+  "cart": {
+    "empty": "Il carrello è vuoto",
+    "batch": "Lotto:",
+    "discount": "Sconto:",
+    "quantity": "Quantità"
+  },
+  "weight": {
+    "driedFlowerEquivalent": "Dried Flower Equivalent:",
+    "legalLimit": "/ 30g",
+    "exceedsLimit": "Supera il limite legale!"
+  },
+  "totals": {
+    "subtotal": "Subtotale",
+    "discount": "Sconto",
+    "discountApplied": "Sconto applicato",
+    "afterDiscount": "Dopo lo Sconto",
+    "tax": "Tassa (13%)",
+    "total": "Totale"
+  },
+  "actions": {
+    "parkSale": "Sospendi Vendita",
+    "clear": "Cancella",
+    "processPayment": "Elabora Pagamento",
+    "resumeSale": "Riprendi Vendita",
+    "addPromotion": "Aggiungi Promozione",
+    "detectScanners": "Rileva Scanner",
+    "openRegister": "Apri Cassa",
+    "cashCount": "Conteggio Contanti",
+    "endOfDay": "Fine Giornata",
+    "printReport": "Stampa Rapporto",
+    "test": "Test",
+    "active": "Attivo"
+  },
+  "search": {
+    "placeholder": "Cerca prodotti o scansiona codice a barre...",
+    "scanning": "Scansione:",
+    "filterProducts": "Filtra prodotti"
+  },
+  "products": {
+    "noProductsFound": "Nessun prodotto trovato",
+    "outOfStock": "Esaurito",
+    "low": "Basso",
+    "stock": "Scorte:",
+    "batch": "lotto",
+    "batches": "lotti"
+  },
+  "parked": {
+    "noParkedSales": "Nessuna vendita in sospeso",
+    "items": "articoli"
+  },
+  "scanner": {
+    "enabled": "Scanner Attivato",
+    "disabled": "Scanner Disattivato",
+    "noScannersDetected": "Nessuno scanner rilevato",
+    "connectScanner": "Collega uno scanner e fai clic su \"Rileva Scanner\"",
+    "barcodeScanners": "Scanner di Codici a Barre",
+    "manageConnected": "Gestisci scanner collegati"
+  },
+  "hardware": {
+    "paymentTerminal": "Terminale di Pagamento",
+    "connectCardReader": "Collega lettore di carte",
+    "receiptPrinter": "Stampante Ricevute",
+    "printReceipts": "Stampa ricevute",
+    "cashDrawer": "Cassetto Contanti",
+    "manageCash": "Gestisci contanti",
+    "enabled": "Attivato"
+  },
+  "validation": {
+    "validIdDate": "Data Documento Valido:",
+    "orEarlier": "o prima",
+    "validId": "Documento Valido:"
+  },
+  "promotions": {
+    "seniorDiscount": "Sconto Anziani",
+    "seniorDescription": "10% di sconto per 65+",
+    "happyHour": "Happy Hour",
+    "happyHourDescription": "15% di sconto dalle 16 alle 18"
+  },
+  "messages": {
+    "saleParkedSuccess": "Vendita sospesa con successo!",
+    "saleParkedFailed": "Impossibile sospendere la vendita. Riprova.",
+    "resumeFailed": "Impossibile riprendere la vendita. Riprova.",
+    "paymentSuccess": "Pagamento riuscito!",
+    "receiptPrinted": "Ricevuta stampata.",
+    "transactionFailed": "Impossibile elaborare la transazione. Riprova.",
+    "productNotFound": "Prodotto non trovato per il codice a barre:",
+    "scannerTestSuccess": "Test scanner riuscito! Codice a barre di test:",
+    "scannerTestFailed": "Test scanner fallito",
+    "scannerTestError": "Impossibile testare lo scanner"
+  },
+  "fullscreen": {
+    "enter": "Passa a schermo intero",
+    "exit": "Esci da schermo intero"
+  },
+  "labels": {
+    "confidence": {
+      "high": "✓ Scanner",
+      "medium": "Probabile Scanner",
+      "low": "Possibile Scanner"
+    }
+  }
+}

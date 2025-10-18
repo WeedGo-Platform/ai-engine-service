@@ -1,0 +1,132 @@
+{
+  "voiceApi": {
+    "title": "Тест Голосового API",
+    "apiEndpoint": "Кінцева точка API",
+    "recording": {
+      "title": "1. Запис Аудіо",
+      "start": "Почати Запис",
+      "stop": "Зупинити Запис",
+      "play": "Відтворити Запис",
+      "inProgress": "Запис триває...",
+      "ready": "Аудіо записано і готове до транскрипції"
+    },
+    "transcription": {
+      "title": "2. Тест Транскрипції",
+      "button": "Транскрибувати Аудіо",
+      "buttonLoading": "Транскрипція...",
+      "result": "Результат Транскрипції:",
+      "noAudio": "Аудіо не записано. Спочатку запишіть аудіо.",
+      "noTranscription": "Транскрипція недоступна",
+      "success": "Транскрипцію успішно завершено"
+    },
+    "synthesis": {
+      "title": "3. Тест Синтезу",
+      "textLabel": "Текст для Синтезу",
+      "textPlaceholder": "Введіть текст для перетворення на мовлення...",
+      "voiceLabel": "Голос",
+      "button": "Синтезувати Мовлення",
+      "buttonLoading": "Синтез...",
+      "play": "Відтворити Синтез",
+      "noText": "Будь ласка, введіть текст для синтезу",
+      "success": "Синтез успішно завершено",
+      "failed": "Синтез не вдався"
+    },
+    "debug": {
+      "title": "Відлагоджувальна Інформація",
+      "endpoint": "Кінцева точка",
+      "transcription": "Транскрипція",
+      "synthesis": "Синтез",
+      "voices": "Голоси"
+    },
+    "messages": {
+      "voicesFetched": "Голоси успішно отримано",
+      "voicesFailed": "Не вдалося отримати голоси",
+      "recordingFailed": "Не вдалося почати запис",
+      "recordingSaved": "Запис збережено",
+      "transcriptionError": "Помилка транскрипції",
+      "synthesisError": "Помилка синтезу"
+    }
+  },
+  "logs": {
+    "title": "Системні Журнали",
+    "description": "Перегляд та пошук журналів програми з Elasticsearch",
+    "filters": {
+      "search": "Пошук Журналів",
+      "searchPlaceholder": "Пошук повідомлення, логера, модуля...",
+      "logLevel": "Рівень Журналу",
+      "allLevels": "Усі Рівні",
+      "error": "Помилка",
+      "warning": "Попередження",
+      "info": "Інформація",
+      "debug": "Відлагодження",
+      "timeRange": "Часовий Діапазон",
+      "advancedFilters": "Розширені Фільтри",
+      "correlationId": "ID Кореляції",
+      "correlationIdPlaceholder": "Фільтр за ID кореляції",
+      "tenantId": "ID Орендаря",
+      "tenantIdPlaceholder": "Фільтр за орендарем",
+      "storeId": "ID Магазину",
+      "storeIdPlaceholder": "Фільтр за магазином",
+      "userId": "ID Користувача",
+      "userIdPlaceholder": "Фільтр за користувачем",
+      "sessionId": "ID Сеансу",
+      "sessionIdPlaceholder": "Фільтр за сеансом",
+      "service": "Сервіс",
+      "servicePlaceholder": "Фільтр за сервісом",
+      "endDate": "Дата Закінчення",
+      "clearAll": "Очистити Всі Фільтри"
+    },
+    "actions": {
+      "refresh": "Оновити",
+      "export": "Експортувати",
+      "autoRefresh": "Автооновлення кожні",
+      "details": "Деталі",
+      "close": "Закрити"
+    },
+    "table": {
+      "timestamp": "Часова Мітка",
+      "level": "Рівень",
+      "serviceLogger": "Сервіс / Логер",
+      "message": "Повідомлення",
+      "correlationId": "ID Кореляції",
+      "actions": "Дії",
+      "noLogs": "Журнали не знайдено",
+      "totalLogs": "усього журналів"
+    },
+    "pagination": {
+      "showing": "Показано з {{from}} по {{to}} із {{total}}",
+      "perPage": "на сторінці",
+      "previous": "Попередня",
+      "next": "Наступна",
+      "page": "Сторінка {{current}} із {{total}}"
+    },
+    "details": {
+      "title": "Деталі Журналу",
+      "summary": "Підсумок",
+      "metadata": "Метадані",
+      "correlationId": "ID Кореляції",
+      "sessionId": "ID Сеансу",
+      "tenantId": "ID Орендаря",
+      "storeId": "ID Магазину",
+      "userId": "ID Користувача",
+      "service": "Сервіс",
+      "environment": "Середовище",
+      "logger": "Логер",
+      "module": "Модуль",
+      "function": "Функція",
+      "lineNumber": "Номер Рядка",
+      "duration": "Тривалість",
+      "statusCode": "Код Статусу",
+      "method": "Метод",
+      "path": "Шлях",
+      "clientHost": "Хост Клієнта",
+      "exception": "Виняток",
+      "viewRawJson": "Переглянути Необроблений JSON"
+    },
+    "messages": {
+      "fetchFailed": "Не вдалося отримати журнали з Elasticsearch",
+      "exportSuccess": "Журнали успішно експортовано",
+      "logExported": "Журнал експортовано"
+    }
+  }
+}

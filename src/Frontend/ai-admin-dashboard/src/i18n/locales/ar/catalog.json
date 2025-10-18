@@ -1,0 +1,75 @@
+{
+  "titles": {
+    "main": "كتالوج المنتجات الإقليمية",
+    "mainVirtual": "كتالوج المنتجات الإقليمية (التمرير الافتراضي)",
+    "uploadSection": "تحميل الكتالوج",
+    "uploadInstructions": "تعليمات التحميل",
+    "catalogProducts": "منتجات الكتالوج"
+  },
+  "descriptions": {
+    "main": "عرض وإدارة كتالوجات المنتجات من موزعي القنب الإقليميين.",
+    "mainVirtual": "إدارة وتحميل كتالوجات منتجات القنب الإقليمية",
+    "selectProvince": "اختر المقاطعة",
+    "viewingProvince": "عرض كتالوج المقاطعة",
+    "scrollHint": "قم بالتمرير أفقيًا لعرض جميع الأعمدة ←"
+  },
+  "provinces": {
+    "ontario": "Ontario (OCS)",
+    "bc": "British Columbia (قريبًا)",
+    "alberta": "Alberta (قريبًا)",
+    "quebec": "Quebec (قريبًا)"
+  },
+  "stats": {
+    "totalProducts": "إجمالي المنتجات",
+    "lastUpdated": "آخر تحديث",
+    "categories": "الفئات",
+    "never": "أبدًا",
+    "totalRecords": "إجمالي السجلات",
+    "inserted": "المُدرجة",
+    "updated": "المُحدثة",
+    "errors": "الأخطاء",
+    "totalRecordsLabel": "إجمالي السجلات"
+  },
+  "upload": {
+    "selectFile": "تحميل كتالوج جديد",
+    "chooseFile": "اختر ملف",
+    "uploadButton": "تحميل",
+    "uploadCatalog": "تحميل الكتالوج",
+    "uploading": "جارٍ التحميل...",
+    "uploadFile": "تحميل الملف",
+    "invalidFileType": "نوع ملف غير صالح. يرجى تحميل ملف CSV أو Excel.",
+    "pleaseSelectFile": "يرجى تحديد ملف للتحميل.",
+    "processingFile": "معالجة ملف الكتالوج...",
+    "processingFileShort": "معالجة الملف...",
+    "uploadSuccess": "تم تحميل الكتالوج بنجاح!",
+    "uploadSuccessShort": "التحميل ناجح",
+    "uploadFailed": "فشل تحميل الكتالوج",
+    "uploadFailedShort": "فشل التحميل"
+  },
+  "search": {
+    "placeholder": "البحث عن المنتجات...",
+    "allCategories": "جميع الفئات"
+  },
+  "buttons": {
+    "export": "تصدير",
+    "exportCsv": "تصدير CSV",
+    "previous": "السابق",
+    "next": "التالي"
+  },
+  "table": {
+    "loadingCatalog": "تحميل الكتالوج...",
+    "noProductsFound": "لم يتم العثور على منتجات في الكتالوج",
+    "noProductsUpload": "لم يتم العثور على منتجات. قم بتحميل كتالوج للبدء.",
+    "showingPage": "عرض الصفحة {page} من النتائج",
+    "itemsCount": "{count} عنصر"
+  },
+  "instructions": {
+    "line1": "يجب أن يحتوي ملف كتالوج OCS على جميع الأعمدة المطلوبة وفقًا لمواصفات OCS.",
+    "line2": "يتم مطابقة المنتجات وتحديثها باستخدام رقم متغير OCS كمفتاح فريد.",
+    "line3": "سيتم إدراج المنتجات الجديدة، وسيتم تحديث المنتجات الموجودة بأحدث المعلومات.",
+    "line4": "سيتم الحفاظ على حقول التقييم وعدد التقييمات أثناء التحديثات."
+  },
+  "messages": {
+    "lastCatalogUpdate": "آخر تحديث للكتالوج:"
+  }
+}

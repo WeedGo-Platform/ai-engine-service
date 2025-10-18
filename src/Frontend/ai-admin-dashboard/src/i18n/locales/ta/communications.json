@@ -1,0 +1,89 @@
+{
+  "titles": {
+    "main": "தொடர்புகள்",
+    "overview": "மேலோட்டப் பார்வை",
+    "campaigns": "பிரச்சாரங்கள்",
+    "templates": "வார்ப்புருக்கள்",
+    "segments": "பிரிவுகள்",
+    "analytics": "பகுப்பாய்வு",
+    "broadcastCampaigns": "ஒளிபரப்பு பிரச்சாரங்கள்",
+    "recentCampaigns": "சமீபத்திய பிரச்சாரங்கள்",
+    "channelPerformance": "சேனல் செயல்திறன்"
+  },
+  "descriptions": {
+    "managingFor": "தொடர்புகளை நிர்வகித்தல்",
+    "segmentationComingSoon": "வாடிக்கையாளர் பிரிவினை விரைவில் வரும்...",
+    "noAnalytics": "பகுப்பாய்வு தரவு இல்லை",
+    "noStoreSelected": "கடை தேர்ந்தெடுக்கப்படவில்லை",
+    "selectStore": "தொடர்புகளை நிர்வகிக்க ஒரு கடையைத் தேர்ந்தெடுக்கவும்"
+  },
+  "tabs": {
+    "overview": "மேலோட்டப் பார்வை",
+    "campaigns": "பிரச்சாரங்கள்",
+    "templates": "வார்ப்புருக்கள்",
+    "segments": "பிரிவுகள்",
+    "analytics": "பகுப்பாய்வு"
+  },
+  "stats": {
+    "totalCampaigns": "மொத்த பிரச்சாரங்கள்",
+    "messagesSent": "அனுப்பப்பட்ட செய்திகள்",
+    "successRate": "வெற்றி விகிதம்",
+    "failed": "தோல்வி"
+  },
+  "status": {
+    "draft": "draft",
+    "scheduled": "scheduled",
+    "sending": "sending",
+    "sent": "sent",
+    "paused": "paused",
+    "cancelled": "cancelled",
+    "failed": "failed"
+  },
+  "table": {
+    "campaign": "பிரச்சாரம்",
+    "status": "நிலை",
+    "recipients": "பெறுநர்கள்",
+    "successRate": "வெற்றி விகிதம்",
+    "created": "உருவாக்கப்பட்டது",
+    "channels": "சேனல்கள்",
+    "scheduled": "திட்டமிடப்பட்டது",
+    "actions": "செயல்கள்",
+    "createdBy": "உருவாக்கியவர்",
+    "sentCount": "sent"
+  },
+  "channels": {
+    "email": "email",
+    "sms": "sms",
+    "push": "push",
+    "campaigns": "பிரச்சாரங்கள்",
+    "messages": "செய்திகள்",
+    "engagement": "ஈடுபாடு"
+  },
+  "actions": {
+    "newCampaign": "புதிய பிரச்சாரம்",
+    "viewAll": "அனைத்தையும் காண்க",
+    "viewDetails": "விவரங்களைக் காண்க",
+    "edit": "திருத்து",
+    "sendNow": "இப்போது அனுப்பு",
+    "cancel": "ரத்துசெய்",
+    "pause": "இடைநிறுத்து",
+    "resume": "மீண்டும் தொடங்கு",
+    "refresh": "புதுப்பி",
+    "settings": "அமைப்புகள்"
+  },
+  "messages": {
+    "success": {
+      "broadcastStarted": "ஒளிபரப்பு செயல்படுத்தல் தொடங்கியது",
+      "broadcastPaused": "ஒளிபரப்பு இடைநிறுத்தப்பட்டது",
+      "broadcastResumed": "ஒளிபரப்பு மீண்டும் தொடங்கியது",
+      "broadcastCancelled": "ஒளிபரப்பு ரத்துசெய்யப்பட்டது"
+    },
+    "error": {
+      "fetchBroadcasts": "ஒளிபரப்புகளைப் பெற முடியவில்லை",
+      "fetchAnalytics": "பகுப்பாய்வைப் பெற முடியவில்லை"
+    }
+  },
+  "confirm": {
+    "cancelBroadcast": "இந்த ஒளிபரப்பை ரத்துசெய்ய விரும்புகிறீர்களா?"
+  }
+}

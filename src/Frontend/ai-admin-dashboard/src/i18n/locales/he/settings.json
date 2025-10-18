@@ -1,0 +1,43 @@
+{
+  "titles": {
+    "tenantSettings": "הגדרות",
+    "generalInformation": "מידע כללי"
+  },
+  "descriptions": {
+    "tenantManagement": "נהל תצורת דייר והגדרות תשלום"
+  },
+  "tabs": {
+    "general": "הגדרות כלליות",
+    "payment": "הגדרות תשלום",
+    "communication": "הגדרות תקשורת"
+  },
+  "fields": {
+    "tenantName": "שם הדייר",
+    "tenantCode": "קוד דייר",
+    "companyName": "שם החברה",
+    "businessNumber": "מספר עסק",
+    "contactEmail": "דוא\"ל ליצירת קשר",
+    "contactPhone": "טלפון ליצירת קשר",
+    "status": "סטטוס",
+    "subscriptionTier": "רמת מנוי",
+    "address": "כתובת"
+  },
+  "actions": {
+    "backToTenants": "חזור לדיירים"
+  },
+  "messages": {
+    "notSpecified": "לא צוין",
+    "loading": "טוען...",
+    "tenantNotFound": "הדייר לא נמצא",
+    "success": {
+      "paymentSettingsUpdated": "הגדרות התשלום עודכנו בהצלחה",
+      "communicationSettingsUpdated": "הגדרות התקשורת עודכנו בהצלחה",
+      "configurationValid": "התצורה תקפה"
+    },
+    "error": {
+      "loadSettings": "טעינת הגדרות הדייר נכשלה",
+      "updatePaymentSettings": "עדכון הגדרות התשלום נכשל",
+      "updateCommunicationSettings": "עדכון הגדרות התקשורת נכשל"
+    }
+  }
+}

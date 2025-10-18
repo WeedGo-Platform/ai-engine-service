@@ -1,0 +1,127 @@
+{
+  "titles": {
+    "main": "Point de Vente",
+    "posSettings": "Paramètres POS",
+    "parkedSales": "Ventes en Attente",
+    "hardwareConfiguration": "Configuration Matérielle",
+    "cashManagement": "Gestion de la Caisse",
+    "discountsPromotions": "Réductions et Promotions"
+  },
+  "tabs": {
+    "newSale": "Nouvelle Vente",
+    "parked": "En Attente",
+    "history": "Historique",
+    "settings": "Paramètres"
+  },
+  "customer": {
+    "label": "Client",
+    "select": "Sélectionner",
+    "change": "Changer",
+    "returning": "De Retour",
+    "new": "Nouveau",
+    "anonymous": "Anonyme",
+    "newCustomer": "Nouveau Client",
+    "points": "Points:"
+  },
+  "cart": {
+    "empty": "Le panier est vide",
+    "batch": "Lot:",
+    "discount": "Réduction:",
+    "quantity": "Quantité"
+  },
+  "weight": {
+    "driedFlowerEquivalent": "Dried Flower Equivalent:",
+    "legalLimit": "/ 30g",
+    "exceedsLimit": "Dépasse la limite légale!"
+  },
+  "totals": {
+    "subtotal": "Sous-total",
+    "discount": "Réduction",
+    "discountApplied": "Réduction appliquée",
+    "afterDiscount": "Après Réduction",
+    "tax": "Taxe (13%)",
+    "total": "Total"
+  },
+  "actions": {
+    "parkSale": "Mettre en Attente",
+    "clear": "Effacer",
+    "processPayment": "Traiter le Paiement",
+    "resumeSale": "Reprendre la Vente",
+    "addPromotion": "Ajouter une Promotion",
+    "detectScanners": "Détecter les Scanners",
+    "openRegister": "Ouvrir la Caisse",
+    "cashCount": "Comptage de Caisse",
+    "endOfDay": "Fin de Journée",
+    "printReport": "Imprimer le Rapport",
+    "test": "Tester",
+    "active": "Actif"
+  },
+  "search": {
+    "placeholder": "Rechercher des produits ou scanner un code-barres...",
+    "scanning": "Numérisation:",
+    "filterProducts": "Filtrer les produits"
+  },
+  "products": {
+    "noProductsFound": "Aucun produit trouvé",
+    "outOfStock": "En Rupture de Stock",
+    "low": "Faible",
+    "stock": "Stock:",
+    "batch": "lot",
+    "batches": "lots"
+  },
+  "parked": {
+    "noParkedSales": "Aucune vente en attente",
+    "items": "articles"
+  },
+  "scanner": {
+    "enabled": "Scanner Activé",
+    "disabled": "Scanner Désactivé",
+    "noScannersDetected": "Aucun scanner détecté",
+    "connectScanner": "Connectez un scanner et cliquez sur \"Détecter les Scanners\"",
+    "barcodeScanners": "Scanners de Codes-Barres",
+    "manageConnected": "Gérer les scanners connectés"
+  },
+  "hardware": {
+    "paymentTerminal": "Terminal de Paiement",
+    "connectCardReader": "Connecter un lecteur de carte",
+    "receiptPrinter": "Imprimante de Reçus",
+    "printReceipts": "Imprimer les reçus",
+    "cashDrawer": "Tiroir-Caisse",
+    "manageCash": "Gérer l'argent",
+    "enabled": "Activé"
+  },
+  "validation": {
+    "validIdDate": "Date de Pièce d'Identité Valide:",
+    "orEarlier": "ou avant",
+    "validId": "Pièce d'Identité Valide:"
+  },
+  "promotions": {
+    "seniorDiscount": "Réduction Seniors",
+    "seniorDescription": "10% de réduction pour 65+",
+    "happyHour": "Happy Hour",
+    "happyHourDescription": "15% de réduction de 16h à 18h"
+  },
+  "messages": {
+    "saleParkedSuccess": "Vente mise en attente avec succès!",
+    "saleParkedFailed": "Échec de la mise en attente. Veuillez réessayer.",
+    "resumeFailed": "Échec de la reprise de la vente. Veuillez réessayer.",
+    "paymentSuccess": "Paiement réussi!",
+    "receiptPrinted": "Reçu imprimé.",
+    "transactionFailed": "Échec du traitement de la transaction. Veuillez réessayer.",
+    "productNotFound": "Produit introuvable pour le code-barres:",
+    "scannerTestSuccess": "Test du scanner réussi! Code-barres de test:",
+    "scannerTestFailed": "Échec du test du scanner",
+    "scannerTestError": "Échec du test du scanner"
+  },
+  "fullscreen": {
+    "enter": "Passer en plein écran",
+    "exit": "Quitter le plein écran"
+  },
+  "labels": {
+    "confidence": {
+      "high": "✓ Scanner",
+      "medium": "Scanner Probable",
+      "low": "Scanner Possible"
+    }
+  }
+}

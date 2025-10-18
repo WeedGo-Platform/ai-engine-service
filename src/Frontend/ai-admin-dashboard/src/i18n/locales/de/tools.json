@@ -1,0 +1,132 @@
+{
+  "voiceApi": {
+    "title": "Sprach-API-Test",
+    "apiEndpoint": "API-Endpunkt",
+    "recording": {
+      "title": "1. Audioaufnahme",
+      "start": "Aufnahme Starten",
+      "stop": "Aufnahme Stoppen",
+      "play": "Aufnahme Abspielen",
+      "inProgress": "Aufnahme läuft...",
+      "ready": "Audio aufgenommen und bereit für Transkription"
+    },
+    "transcription": {
+      "title": "2. Transkription Testen",
+      "button": "Audio Transkribieren",
+      "buttonLoading": "Transkribiere...",
+      "result": "Transkriptionsergebnis:",
+      "noAudio": "Kein Audio aufgenommen. Bitte nehmen Sie zuerst Audio auf.",
+      "noTranscription": "Keine Transkription verfügbar",
+      "success": "Transkription erfolgreich abgeschlossen"
+    },
+    "synthesis": {
+      "title": "3. Synthese Testen",
+      "textLabel": "Zu Synthetisierender Text",
+      "textPlaceholder": "Text eingeben, um ihn in Sprache umzuwandeln...",
+      "voiceLabel": "Stimme",
+      "button": "Sprache Synthetisieren",
+      "buttonLoading": "Synthetisiere...",
+      "play": "Synthese Abspielen",
+      "noText": "Bitte geben Sie Text zum Synthetisieren ein",
+      "success": "Synthese erfolgreich abgeschlossen",
+      "failed": "Synthese fehlgeschlagen"
+    },
+    "debug": {
+      "title": "Debug-Informationen",
+      "endpoint": "Endpunkt",
+      "transcription": "Transkription",
+      "synthesis": "Synthese",
+      "voices": "Stimmen"
+    },
+    "messages": {
+      "voicesFetched": "Stimmen erfolgreich abgerufen",
+      "voicesFailed": "Fehler beim Abrufen der Stimmen",
+      "recordingFailed": "Fehler beim Starten der Aufnahme",
+      "recordingSaved": "Aufnahme gespeichert",
+      "transcriptionError": "Transkriptionsfehler",
+      "synthesisError": "Synthesefehler"
+    }
+  },
+  "logs": {
+    "title": "Systemprotokolle",
+    "description": "Anwendungsprotokolle von Elasticsearch anzeigen und durchsuchen",
+    "filters": {
+      "search": "Protokolle Durchsuchen",
+      "searchPlaceholder": "Nachricht, Logger, Modul durchsuchen...",
+      "logLevel": "Protokollebene",
+      "allLevels": "Alle Ebenen",
+      "error": "Fehler",
+      "warning": "Warnung",
+      "info": "Info",
+      "debug": "Debug",
+      "timeRange": "Zeitbereich",
+      "advancedFilters": "Erweiterte Filter",
+      "correlationId": "Korrelations-ID",
+      "correlationIdPlaceholder": "Nach Korrelations-ID filtern",
+      "tenantId": "Mandanten-ID",
+      "tenantIdPlaceholder": "Nach Mandant filtern",
+      "storeId": "Geschäfts-ID",
+      "storeIdPlaceholder": "Nach Geschäft filtern",
+      "userId": "Benutzer-ID",
+      "userIdPlaceholder": "Nach Benutzer filtern",
+      "sessionId": "Sitzungs-ID",
+      "sessionIdPlaceholder": "Nach Sitzung filtern",
+      "service": "Dienst",
+      "servicePlaceholder": "Nach Dienst filtern",
+      "endDate": "Enddatum",
+      "clearAll": "Alle Filter Löschen"
+    },
+    "actions": {
+      "refresh": "Aktualisieren",
+      "export": "Exportieren",
+      "autoRefresh": "Auto-Aktualisierung alle",
+      "details": "Details",
+      "close": "Schließen"
+    },
+    "table": {
+      "timestamp": "Zeitstempel",
+      "level": "Ebene",
+      "serviceLogger": "Dienst / Logger",
+      "message": "Nachricht",
+      "correlationId": "Korrelations-ID",
+      "actions": "Aktionen",
+      "noLogs": "Keine Protokolle gefunden",
+      "totalLogs": "Protokolle insgesamt"
+    },
+    "pagination": {
+      "showing": "Zeige {{from}} bis {{to}} von {{total}}",
+      "perPage": "pro Seite",
+      "previous": "Zurück",
+      "next": "Weiter",
+      "page": "Seite {{current}} von {{total}}"
+    },
+    "details": {
+      "title": "Protokolldetails",
+      "summary": "Zusammenfassung",
+      "metadata": "Metadaten",
+      "correlationId": "Korrelations-ID",
+      "sessionId": "Sitzungs-ID",
+      "tenantId": "Mandanten-ID",
+      "storeId": "Geschäfts-ID",
+      "userId": "Benutzer-ID",
+      "service": "Dienst",
+      "environment": "Umgebung",
+      "logger": "Logger",
+      "module": "Modul",
+      "function": "Funktion",
+      "lineNumber": "Zeilennummer",
+      "duration": "Dauer",
+      "statusCode": "Statuscode",
+      "method": "Methode",
+      "path": "Pfad",
+      "clientHost": "Client-Host",
+      "exception": "Ausnahme",
+      "viewRawJson": "Rohes JSON Anzeigen"
+    },
+    "messages": {
+      "fetchFailed": "Fehler beim Abrufen der Protokolle von Elasticsearch",
+      "exportSuccess": "Protokolle erfolgreich exportiert",
+      "logExported": "Protokoll exportiert"
+    }
+  }
+}

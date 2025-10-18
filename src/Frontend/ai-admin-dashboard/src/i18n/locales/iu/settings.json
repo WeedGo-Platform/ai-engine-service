@@ -1,0 +1,43 @@
+{
+  "titles": {
+    "tenantSettings": "ᐋᔪᒃᑲᐃᑦ",
+    "generalInformation": "ᑐᑭᓯᒋᐊᕈᑏᑦ ᑕᒪᐃᓐᓂᒃ"
+  },
+  "descriptions": {
+    "tenantManagement": "ᐊᐅᓚᑦᑎᔨᐅᓂᖅ ᐃᒡᓗᓕᒃ ᐋᔪᒃᑲᐃᑦ ᐊᑭᓕᐅᑎᓂᒃ"
+  },
+  "tabs": {
+    "general": "ᐋᔪᒃᑲᐃᑦ ᑕᒪᐃᓐᓂᒃ",
+    "payment": "ᐊᑭᓕᐅᑎᓂᒃ ᐋᔪᒃᑲᐃᑦ",
+    "communication": "ᖃᐅᔨᒋᐊᕐᕕᒋᔭᐅᔪᑦ ᐋᔪᒃᑲᐃᑦ"
+  },
+  "fields": {
+    "tenantName": "ᐃᒡᓗᓕᒃ ᐊᑎᖓ",
+    "tenantCode": "ᐃᒡᓗᓕᒃ ᑎᑎᖅᑐᒐᖓ",
+    "companyName": "ᑯᐊᐳᕆᓴᓐ ᐊᑎᖓ",
+    "businessNumber": "ᐱᖁᑎᒋᔭᐅᔪᖅ ᓈᓴᐅᑎᖓ",
+    "contactEmail": "ᖃᐅᔨᒋᐊᕐᕕᒃ ᖃᕆᓴᐅᔭᒃᑯᑦ",
+    "contactPhone": "ᖃᐅᔨᒋᐊᕐᕕᒃ ᐅᖃᓚᐅᑎᖓ",
+    "status": "ᖃᓄᐃᓕᖓᓂᖓ",
+    "subscriptionTier": "ᐊᑎᓕᐅᕆᓂᕐᒥᒃ ᓛᕙᓐᓄᑦ",
+    "address": "ᐃᓂᖓ"
+  },
+  "actions": {
+    "backToTenants": "ᐅᑎᖅᐸᒃ ᐃᒡᓗᓕᒃᑦ"
+  },
+  "messages": {
+    "notSpecified": "ᖃᐅᔨᒪᑕᐅᓯᒪᓐᖏᑦᑐᖅ",
+    "loading": "ᐃᑭᐊᖅᑕᐅᔪᖅ...",
+    "tenantNotFound": "ᐃᒡᓗᓕᒃ ᓇᓂᔭᐅᓚᐅᓐᖏᑦᑐᖅ",
+    "success": {
+      "paymentSettingsUpdated": "ᐊᑭᓕᐅᑎᓂᒃ ᐋᔪᒃᑲᐃᑦ ᓄᑦᑎᑕᐅᓚᐅᖅᑐᑦ ᐱᔪᒪᔭᐅᓪᓗᓂ",
+      "communicationSettingsUpdated": "ᖃᐅᔨᒋᐊᕐᕕᒋᔭᐅᔪᑦ ᐋᔪᒃᑲᐃᑦ ᓄᑦᑎᑕᐅᓚᐅᖅᑐᑦ ᐱᔪᒪᔭᐅᓪᓗᓂ",
+      "configurationValid": "ᐋᔪᒃᑲᐃᑦ ᐊᑐᕐᓂᖅᓴᐅᔪᑦ"
+    },
+    "error": {
+      "loadSettings": "ᐃᑭᐊᖅᑕᐅᓂᖅ ᐃᒡᓗᓕᒃ ᐋᔪᒃᑲᐃᑦ ᐊᔪᖅᑐᖅ",
+      "updatePaymentSettings": "ᓄᑦᑎᑕᐅᓂᖅ ᐊᑭᓕᐅᑎᓂᒃ ᐋᔪᒃᑲᐃᑦ ᐊᔪᖅᑐᖅ",
+      "updateCommunicationSettings": "ᓄᑦᑎᑕᐅᓂᖅ ᖃᐅᔨᒋᐊᕐᕕᒋᔭᐅᔪᑦ ᐋᔪᒃᑲᐃᑦ ᐊᔪᖅᑐᖅ"
+    }
+  }
+}

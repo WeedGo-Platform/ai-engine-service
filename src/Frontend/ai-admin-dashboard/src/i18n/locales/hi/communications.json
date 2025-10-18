@@ -1,0 +1,89 @@
+{
+  "titles": {
+    "main": "संचार",
+    "overview": "अवलोकन",
+    "campaigns": "अभियान",
+    "templates": "टेम्पलेट",
+    "segments": "खंड",
+    "analytics": "विश्लेषण",
+    "broadcastCampaigns": "प्रसारण अभियान",
+    "recentCampaigns": "हाल के अभियान",
+    "channelPerformance": "चैनल प्रदर्शन"
+  },
+  "descriptions": {
+    "managingFor": "संचार प्रबंधन के लिए",
+    "segmentationComingSoon": "ग्राहक विभाजन जल्द आ रहा है...",
+    "noAnalytics": "कोई विश्लेषण डेटा उपलब्ध नहीं है",
+    "noStoreSelected": "कोई स्टोर चयनित नहीं",
+    "selectStore": "संचार प्रबंधित करने के लिए कृपया एक स्टोर चुनें"
+  },
+  "tabs": {
+    "overview": "अवलोकन",
+    "campaigns": "अभियान",
+    "templates": "टेम्पलेट",
+    "segments": "खंड",
+    "analytics": "विश्लेषण"
+  },
+  "stats": {
+    "totalCampaigns": "कुल अभियान",
+    "messagesSent": "भेजे गए संदेश",
+    "successRate": "सफलता दर",
+    "failed": "विफल"
+  },
+  "status": {
+    "draft": "draft",
+    "scheduled": "scheduled",
+    "sending": "sending",
+    "sent": "sent",
+    "paused": "paused",
+    "cancelled": "cancelled",
+    "failed": "failed"
+  },
+  "table": {
+    "campaign": "अभियान",
+    "status": "स्थिति",
+    "recipients": "प्राप्तकर्ता",
+    "successRate": "सफलता दर",
+    "created": "बनाया गया",
+    "channels": "चैनल",
+    "scheduled": "निर्धारित",
+    "actions": "क्रियाएं",
+    "createdBy": "द्वारा बनाया गया",
+    "sentCount": "sent"
+  },
+  "channels": {
+    "email": "email",
+    "sms": "sms",
+    "push": "push",
+    "campaigns": "अभियान",
+    "messages": "संदेश",
+    "engagement": "जुड़ाव"
+  },
+  "actions": {
+    "newCampaign": "नया अभियान",
+    "viewAll": "सभी देखें",
+    "viewDetails": "विवरण देखें",
+    "edit": "संपादित करें",
+    "sendNow": "अभी भेजें",
+    "cancel": "रद्द करें",
+    "pause": "रोकें",
+    "resume": "फिर से शुरू करें",
+    "refresh": "ताज़ा करें",
+    "settings": "सेटिंग्स"
+  },
+  "messages": {
+    "success": {
+      "broadcastStarted": "प्रसारण निष्पादन शुरू हुआ",
+      "broadcastPaused": "प्रसारण रोका गया",
+      "broadcastResumed": "प्रसारण फिर से शुरू हुआ",
+      "broadcastCancelled": "प्रसारण रद्द किया गया"
+    },
+    "error": {
+      "fetchBroadcasts": "प्रसारण प्राप्त करने में विफल",
+      "fetchAnalytics": "विश्लेषण प्राप्त करने में विफल"
+    }
+  },
+  "confirm": {
+    "cancelBroadcast": "क्या आप वाकई इस प्रसारण को रद्द करना चाहते हैं?"
+  }
+}

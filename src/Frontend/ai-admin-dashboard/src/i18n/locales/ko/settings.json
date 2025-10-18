@@ -1,0 +1,43 @@
+{
+  "titles": {
+    "tenantSettings": "설정",
+    "generalInformation": "일반 정보"
+  },
+  "descriptions": {
+    "tenantManagement": "테넌트 구성 및 결제 설정 관리"
+  },
+  "tabs": {
+    "general": "일반 설정",
+    "payment": "결제 설정",
+    "communication": "통신 설정"
+  },
+  "fields": {
+    "tenantName": "테넌트 이름",
+    "tenantCode": "테넌트 코드",
+    "companyName": "회사명",
+    "businessNumber": "사업자 번호",
+    "contactEmail": "연락처 이메일",
+    "contactPhone": "연락처 전화번호",
+    "status": "상태",
+    "subscriptionTier": "구독 등급",
+    "address": "주소"
+  },
+  "actions": {
+    "backToTenants": "테넌트 목록으로 돌아가기"
+  },
+  "messages": {
+    "notSpecified": "지정되지 않음",
+    "loading": "로딩 중...",
+    "tenantNotFound": "테넌트를 찾을 수 없습니다",
+    "success": {
+      "paymentSettingsUpdated": "결제 설정이 성공적으로 업데이트되었습니다",
+      "communicationSettingsUpdated": "통신 설정이 성공적으로 업데이트되었습니다",
+      "configurationValid": "구성이 유효합니다"
+    },
+    "error": {
+      "loadSettings": "테넌트 설정을 로드하지 못했습니다",
+      "updatePaymentSettings": "결제 설정 업데이트에 실패했습니다",
+      "updateCommunicationSettings": "통신 설정 업데이트에 실패했습니다"
+    }
+  }
+}

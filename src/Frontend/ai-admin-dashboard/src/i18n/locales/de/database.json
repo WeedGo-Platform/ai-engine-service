@@ -1,0 +1,80 @@
+{
+  "titles": {
+    "main": "Datenbankverwaltung",
+    "databaseObjects": "Datenbankobjekte",
+    "addRow": "Neue Zeile hinzufügen",
+    "editRow": "Zeile bearbeiten",
+    "truncateTable": "Tabelle leeren",
+    "dropTable": "Tabelle löschen"
+  },
+  "descriptions": {
+    "main": "Superadministrator-Zugriff auf Datenbanktabellen und -operationen",
+    "selectTable": "Wählen Sie eine Tabelle aus, um Daten anzuzeigen",
+    "chooseFromList": "Wählen Sie aus der Liste auf der linken Seite"
+  },
+  "tabs": {
+    "data": "Daten",
+    "schema": "Schema",
+    "query": "Abfrage"
+  },
+  "connection": {
+    "connections": "Verbindungen"
+  },
+  "table": {
+    "tables": "Tabellen",
+    "views": "Ansichten",
+    "columns": "Spalten",
+    "totalRows": "Gesamtzeilen"
+  },
+  "actions": {
+    "addRow": "Zeile hinzufügen",
+    "add": "Hinzufügen",
+    "truncate": "Leeren",
+    "clear": "Löschen",
+    "dropView": "Ansicht löschen",
+    "dropTable": "Tabelle löschen",
+    "drop": "Löschen",
+    "refresh": "Aktualisieren",
+    "search": "Suchen",
+    "clearSearch": "Suche löschen",
+    "executeQuery": "Abfrage ausführen",
+    "cancel": "Abbrechen",
+    "updateRow": "Zeile aktualisieren"
+  },
+  "placeholders": {
+    "filterTables": "Tabellen und Ansichten filtern...",
+    "searchTable": "Tabelle durchsuchen...",
+    "sqlQuery": "SQL-Abfrage (nur SELECT)"
+  },
+  "schema": {
+    "columnName": "Spaltenname",
+    "dataType": "Datentyp",
+    "nullable": "Nullbar",
+    "default": "Standard",
+    "maxLength": "Max. Länge"
+  },
+  "pagination": {
+    "page": "Seite",
+    "of": "von"
+  },
+  "messages": {
+    "noData": "Keine Daten in dieser Tabelle gefunden",
+    "warningCannotUndo": "Warnung: Diese Aktion kann nicht rückgängig gemacht werden!",
+    "truncateWarning": "Alle Daten in Tabelle \"{table}\" werden dauerhaft gelöscht.",
+    "dropWarning": "Die gesamte Tabelle \"{table}\" und alle ihre Daten werden dauerhaft aus der Datenbank entfernt.",
+    "type": "Typ",
+    "actions": "Aktionen"
+  },
+  "confirm": {
+    "deleteRow": "Sind Sie sicher, dass Sie diese Zeile löschen möchten?",
+    "truncateTable": "Sind Sie sicher, dass Sie die Tabelle {table} leeren möchten? Dies wird ALLE Zeilen löschen!"
+  },
+  "errors": {
+    "addRow": "Fehler beim Hinzufügen der Zeile",
+    "updateRow": "Fehler beim Aktualisieren der Zeile",
+    "deleteRow": "Fehler beim Löschen der Zeile",
+    "truncateTable": "Fehler beim Leeren der Tabelle",
+    "dropTable": "Fehler beim Löschen der Tabelle",
+    "executeQuery": "Fehler beim Ausführen der Abfrage"
+  }
+}

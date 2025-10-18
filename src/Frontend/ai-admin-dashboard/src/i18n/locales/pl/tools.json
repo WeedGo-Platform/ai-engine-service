@@ -1,0 +1,132 @@
+{
+  "voiceApi": {
+    "title": "Test API Głosowego",
+    "apiEndpoint": "Punkt końcowy API",
+    "recording": {
+      "title": "1. Nagrywanie Dźwięku",
+      "start": "Rozpocznij Nagrywanie",
+      "stop": "Zatrzymaj Nagrywanie",
+      "play": "Odtwórz Nagranie",
+      "inProgress": "Nagrywanie w toku...",
+      "ready": "Dźwięk nagrany i gotowy do transkrypcji"
+    },
+    "transcription": {
+      "title": "2. Testuj Transkrypcję",
+      "button": "Transkrybuj Dźwięk",
+      "buttonLoading": "Transkrypcja...",
+      "result": "Wynik Transkrypcji:",
+      "noAudio": "Brak nagranego dźwięku. Najpierw nagraj dźwięk.",
+      "noTranscription": "Brak dostępnej transkrypcji",
+      "success": "Transkrypcja zakończona pomyślnie"
+    },
+    "synthesis": {
+      "title": "3. Testuj Syntezę",
+      "textLabel": "Tekst do Syntezy",
+      "textPlaceholder": "Wprowadź tekst do zamiany na mowę...",
+      "voiceLabel": "Głos",
+      "button": "Syntetyzuj Mowę",
+      "buttonLoading": "Synteza...",
+      "play": "Odtwórz Syntezę",
+      "noText": "Wprowadź tekst do syntezy",
+      "success": "Synteza zakończona pomyślnie",
+      "failed": "Synteza nie powiodła się"
+    },
+    "debug": {
+      "title": "Informacje Debugowania",
+      "endpoint": "Punkt końcowy",
+      "transcription": "Transkrypcja",
+      "synthesis": "Synteza",
+      "voices": "Głosy"
+    },
+    "messages": {
+      "voicesFetched": "Głosy pobrane pomyślnie",
+      "voicesFailed": "Nie udało się pobrać głosów",
+      "recordingFailed": "Nie udało się rozpocząć nagrywania",
+      "recordingSaved": "Nagranie zapisane",
+      "transcriptionError": "Błąd transkrypcji",
+      "synthesisError": "Błąd syntezy"
+    }
+  },
+  "logs": {
+    "title": "Logi Systemowe",
+    "description": "Przeglądaj i przeszukuj logi aplikacji z Elasticsearch",
+    "filters": {
+      "search": "Przeszukaj Logi",
+      "searchPlaceholder": "Szukaj wiadomości, loggera, modułu...",
+      "logLevel": "Poziom Logu",
+      "allLevels": "Wszystkie Poziomy",
+      "error": "Błąd",
+      "warning": "Ostrzeżenie",
+      "info": "Info",
+      "debug": "Debug",
+      "timeRange": "Zakres Czasu",
+      "advancedFilters": "Filtry Zaawansowane",
+      "correlationId": "ID Korelacji",
+      "correlationIdPlaceholder": "Filtruj według ID korelacji",
+      "tenantId": "ID Najemcy",
+      "tenantIdPlaceholder": "Filtruj według najemcy",
+      "storeId": "ID Sklepu",
+      "storeIdPlaceholder": "Filtruj według sklepu",
+      "userId": "ID Użytkownika",
+      "userIdPlaceholder": "Filtruj według użytkownika",
+      "sessionId": "ID Sesji",
+      "sessionIdPlaceholder": "Filtruj według sesji",
+      "service": "Usługa",
+      "servicePlaceholder": "Filtruj według usługi",
+      "endDate": "Data Końcowa",
+      "clearAll": "Wyczyść Wszystkie Filtry"
+    },
+    "actions": {
+      "refresh": "Odśwież",
+      "export": "Eksportuj",
+      "autoRefresh": "Auto-odświeżanie co",
+      "details": "Szczegóły",
+      "close": "Zamknij"
+    },
+    "table": {
+      "timestamp": "Znacznik Czasu",
+      "level": "Poziom",
+      "serviceLogger": "Usługa / Logger",
+      "message": "Wiadomość",
+      "correlationId": "ID Korelacji",
+      "actions": "Akcje",
+      "noLogs": "Nie znaleziono logów",
+      "totalLogs": "łącznie logów"
+    },
+    "pagination": {
+      "showing": "Wyświetlanie od {{from}} do {{to}} z {{total}}",
+      "perPage": "na stronę",
+      "previous": "Poprzednia",
+      "next": "Następna",
+      "page": "Strona {{current}} z {{total}}"
+    },
+    "details": {
+      "title": "Szczegóły Logu",
+      "summary": "Podsumowanie",
+      "metadata": "Metadane",
+      "correlationId": "ID Korelacji",
+      "sessionId": "ID Sesji",
+      "tenantId": "ID Najemcy",
+      "storeId": "ID Sklepu",
+      "userId": "ID Użytkownika",
+      "service": "Usługa",
+      "environment": "Środowisko",
+      "logger": "Logger",
+      "module": "Moduł",
+      "function": "Funkcja",
+      "lineNumber": "Numer Linii",
+      "duration": "Czas Trwania",
+      "statusCode": "Kod Statusu",
+      "method": "Metoda",
+      "path": "Ścieżka",
+      "clientHost": "Host Klienta",
+      "exception": "Wyjątek",
+      "viewRawJson": "Zobacz Surowy JSON"
+    },
+    "messages": {
+      "fetchFailed": "Nie udało się pobrać logów z Elasticsearch",
+      "exportSuccess": "Logi wyeksportowane pomyślnie",
+      "logExported": "Log wyeksportowany"
+    }
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "voiceApi": {
+    "title": "Prueba de API de Voz",
+    "apiEndpoint": "Punto de acceso API",
+    "recording": {
+      "title": "1. Grabación de Audio",
+      "start": "Iniciar Grabación",
+      "stop": "Detener Grabación",
+      "play": "Reproducir Grabación",
+      "inProgress": "Grabación en progreso...",
+      "ready": "Audio grabado y listo para transcripción"
+    },
+    "transcription": {
+      "title": "2. Probar Transcripción",
+      "button": "Transcribir Audio",
+      "buttonLoading": "Transcribiendo...",
+      "result": "Resultado de la Transcripción:",
+      "noAudio": "No hay audio grabado. Por favor, grabe audio primero.",
+      "noTranscription": "No hay transcripción disponible",
+      "success": "Transcripción completada exitosamente"
+    },
+    "synthesis": {
+      "title": "3. Probar Síntesis",
+      "textLabel": "Texto a Sintetizar",
+      "textPlaceholder": "Ingrese texto para convertir a voz...",
+      "voiceLabel": "Voz",
+      "button": "Sintetizar Voz",
+      "buttonLoading": "Sintetizando...",
+      "play": "Reproducir Sintetizado",
+      "noText": "Por favor ingrese texto para sintetizar",
+      "success": "Síntesis completada exitosamente",
+      "failed": "Síntesis fallida"
+    },
+    "debug": {
+      "title": "Información de Depuración",
+      "endpoint": "Punto de acceso",
+      "transcription": "Transcripción",
+      "synthesis": "Síntesis",
+      "voices": "Voces"
+    },
+    "messages": {
+      "voicesFetched": "Voces obtenidas exitosamente",
+      "voicesFailed": "Error al obtener voces",
+      "recordingFailed": "Error al iniciar grabación",
+      "recordingSaved": "Grabación guardada",
+      "transcriptionError": "Error de transcripción",
+      "synthesisError": "Error de síntesis"
+    }
+  },
+  "logs": {
+    "title": "Registros del Sistema",
+    "description": "Ver y buscar registros de aplicación desde Elasticsearch",
+    "filters": {
+      "search": "Buscar Registros",
+      "searchPlaceholder": "Buscar mensaje, logger, módulo...",
+      "logLevel": "Nivel de Registro",
+      "allLevels": "Todos los Niveles",
+      "error": "Error",
+      "warning": "Advertencia",
+      "info": "Info",
+      "debug": "Depuración",
+      "timeRange": "Rango de Tiempo",
+      "advancedFilters": "Filtros Avanzados",
+      "correlationId": "ID de Correlación",
+      "correlationIdPlaceholder": "Filtrar por ID de correlación",
+      "tenantId": "ID de Inquilino",
+      "tenantIdPlaceholder": "Filtrar por inquilino",
+      "storeId": "ID de Tienda",
+      "storeIdPlaceholder": "Filtrar por tienda",
+      "userId": "ID de Usuario",
+      "userIdPlaceholder": "Filtrar por usuario",
+      "sessionId": "ID de Sesión",
+      "sessionIdPlaceholder": "Filtrar por sesión",
+      "service": "Servicio",
+      "servicePlaceholder": "Filtrar por servicio",
+      "endDate": "Fecha de Fin",
+      "clearAll": "Limpiar Todos los Filtros"
+    },
+    "actions": {
+      "refresh": "Actualizar",
+      "export": "Exportar",
+      "autoRefresh": "Actualización automática cada",
+      "details": "Detalles",
+      "close": "Cerrar"
+    },
+    "table": {
+      "timestamp": "Marca de Tiempo",
+      "level": "Nivel",
+      "serviceLogger": "Servicio / Logger",
+      "message": "Mensaje",
+      "correlationId": "ID de Correlación",
+      "actions": "Acciones",
+      "noLogs": "No se encontraron registros",
+      "totalLogs": "registros en total"
+    },
+    "pagination": {
+      "showing": "Mostrando {{from}} a {{to}} de {{total}}",
+      "perPage": "por página",
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "page": "Página {{current}} de {{total}}"
+    },
+    "details": {
+      "title": "Detalles del Registro",
+      "summary": "Resumen",
+      "metadata": "Metadatos",
+      "correlationId": "ID de Correlación",
+      "sessionId": "ID de Sesión",
+      "tenantId": "ID de Inquilino",
+      "storeId": "ID de Tienda",
+      "userId": "ID de Usuario",
+      "service": "Servicio",
+      "environment": "Entorno",
+      "logger": "Logger",
+      "module": "Módulo",
+      "function": "Función",
+      "lineNumber": "Número de Línea",
+      "duration": "Duración",
+      "statusCode": "Código de Estado",
+      "method": "Método",
+      "path": "Ruta",
+      "clientHost": "Host del Cliente",
+      "exception": "Excepción",
+      "viewRawJson": "Ver JSON Sin Procesar"
+    },
+    "messages": {
+      "fetchFailed": "Error al obtener registros desde Elasticsearch",
+      "exportSuccess": "Registros exportados exitosamente",
+      "logExported": "Registro exportado"
+    }
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "voiceApi": {
+    "title": "Spraak-API Test",
+    "apiEndpoint": "API Eindpunt",
+    "recording": {
+      "title": "1. Audio-opname",
+      "start": "Opname Starten",
+      "stop": "Opname Stoppen",
+      "play": "Opname Afspelen",
+      "inProgress": "Opname bezig...",
+      "ready": "Audio opgenomen en klaar voor transcriptie"
+    },
+    "transcription": {
+      "title": "2. Transcriptie Testen",
+      "button": "Audio Transcriberen",
+      "buttonLoading": "Transcriberen...",
+      "result": "Transcriptieresultaat:",
+      "noAudio": "Geen audio opgenomen. Neem eerst audio op.",
+      "noTranscription": "Geen transcriptie beschikbaar",
+      "success": "Transcriptie succesvol voltooid"
+    },
+    "synthesis": {
+      "title": "3. Synthese Testen",
+      "textLabel": "Te Synthetiseren Tekst",
+      "textPlaceholder": "Voer tekst in om te converteren naar spraak...",
+      "voiceLabel": "Stem",
+      "button": "Spraak Synthetiseren",
+      "buttonLoading": "Synthetiseren...",
+      "play": "Gesynthetiseerde Afspelen",
+      "noText": "Voer tekst in om te synthetiseren",
+      "success": "Synthese succesvol voltooid",
+      "failed": "Synthese mislukt"
+    },
+    "debug": {
+      "title": "Debug-informatie",
+      "endpoint": "Eindpunt",
+      "transcription": "Transcriptie",
+      "synthesis": "Synthese",
+      "voices": "Stemmen"
+    },
+    "messages": {
+      "voicesFetched": "Stemmen succesvol opgehaald",
+      "voicesFailed": "Ophalen van stemmen mislukt",
+      "recordingFailed": "Starten opname mislukt",
+      "recordingSaved": "Opname opgeslagen",
+      "transcriptionError": "Transcriptiefout",
+      "synthesisError": "Synthesefout"
+    }
+  },
+  "logs": {
+    "title": "Systeemlogs",
+    "description": "Applicatielogs bekijken en doorzoeken vanuit Elasticsearch",
+    "filters": {
+      "search": "Logs Doorzoeken",
+      "searchPlaceholder": "Zoek bericht, logger, module...",
+      "logLevel": "Logniveau",
+      "allLevels": "Alle Niveaus",
+      "error": "Fout",
+      "warning": "Waarschuwing",
+      "info": "Info",
+      "debug": "Debug",
+      "timeRange": "Tijdsbereik",
+      "advancedFilters": "Geavanceerde Filters",
+      "correlationId": "Correlatie-ID",
+      "correlationIdPlaceholder": "Filteren op correlatie-ID",
+      "tenantId": "Tenant-ID",
+      "tenantIdPlaceholder": "Filteren op tenant",
+      "storeId": "Winkel-ID",
+      "storeIdPlaceholder": "Filteren op winkel",
+      "userId": "Gebruikers-ID",
+      "userIdPlaceholder": "Filteren op gebruiker",
+      "sessionId": "Sessie-ID",
+      "sessionIdPlaceholder": "Filteren op sessie",
+      "service": "Service",
+      "servicePlaceholder": "Filteren op service",
+      "endDate": "Einddatum",
+      "clearAll": "Alle Filters Wissen"
+    },
+    "actions": {
+      "refresh": "Vernieuwen",
+      "export": "Exporteren",
+      "autoRefresh": "Auto-vernieuwen elke",
+      "details": "Details",
+      "close": "Sluiten"
+    },
+    "table": {
+      "timestamp": "Tijdstempel",
+      "level": "Niveau",
+      "serviceLogger": "Service / Logger",
+      "message": "Bericht",
+      "correlationId": "Correlatie-ID",
+      "actions": "Acties",
+      "noLogs": "Geen logs gevonden",
+      "totalLogs": "totaal logs"
+    },
+    "pagination": {
+      "showing": "{{from}} tot {{to}} van {{total}} weergegeven",
+      "perPage": "per pagina",
+      "previous": "Vorige",
+      "next": "Volgende",
+      "page": "Pagina {{current}} van {{total}}"
+    },
+    "details": {
+      "title": "Log Details",
+      "summary": "Samenvatting",
+      "metadata": "Metadata",
+      "correlationId": "Correlatie-ID",
+      "sessionId": "Sessie-ID",
+      "tenantId": "Tenant-ID",
+      "storeId": "Winkel-ID",
+      "userId": "Gebruikers-ID",
+      "service": "Service",
+      "environment": "Omgeving",
+      "logger": "Logger",
+      "module": "Module",
+      "function": "Functie",
+      "lineNumber": "Regelnummer",
+      "duration": "Duur",
+      "statusCode": "Statuscode",
+      "method": "Methode",
+      "path": "Pad",
+      "clientHost": "Client Host",
+      "exception": "Uitzondering",
+      "viewRawJson": "Ruwe JSON Bekijken"
+    },
+    "messages": {
+      "fetchFailed": "Ophalen logs van Elasticsearch mislukt",
+      "exportSuccess": "Logs succesvol geëxporteerd",
+      "logExported": "Log geëxporteerd"
+    }
+  }
+}

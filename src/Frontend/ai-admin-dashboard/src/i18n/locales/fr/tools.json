@@ -1,0 +1,132 @@
+{
+  "voiceApi": {
+    "title": "Test de l'API Vocale",
+    "apiEndpoint": "Point de terminaison API",
+    "recording": {
+      "title": "1. Enregistrement Audio",
+      "start": "Démarrer l'Enregistrement",
+      "stop": "Arrêter l'Enregistrement",
+      "play": "Lire l'Enregistrement",
+      "inProgress": "Enregistrement en cours...",
+      "ready": "Audio enregistré et prêt pour la transcription"
+    },
+    "transcription": {
+      "title": "2. Tester la Transcription",
+      "button": "Transcrire l'Audio",
+      "buttonLoading": "Transcription en cours...",
+      "result": "Résultat de la Transcription :",
+      "noAudio": "Aucun audio enregistré. Veuillez d'abord enregistrer de l'audio.",
+      "noTranscription": "Aucune transcription disponible",
+      "success": "Transcription terminée avec succès"
+    },
+    "synthesis": {
+      "title": "3. Tester la Synthèse",
+      "textLabel": "Texte à Synthétiser",
+      "textPlaceholder": "Entrez le texte à convertir en parole...",
+      "voiceLabel": "Voix",
+      "button": "Synthétiser la Parole",
+      "buttonLoading": "Synthèse en cours...",
+      "play": "Lire la Synthèse",
+      "noText": "Veuillez entrer du texte à synthétiser",
+      "success": "Synthèse terminée avec succès",
+      "failed": "Échec de la synthèse"
+    },
+    "debug": {
+      "title": "Infos de Débogage",
+      "endpoint": "Point de terminaison",
+      "transcription": "Transcription",
+      "synthesis": "Synthèse",
+      "voices": "Voix"
+    },
+    "messages": {
+      "voicesFetched": "Voix récupérées avec succès",
+      "voicesFailed": "Échec de la récupération des voix",
+      "recordingFailed": "Échec du démarrage de l'enregistrement",
+      "recordingSaved": "Enregistrement sauvegardé",
+      "transcriptionError": "Erreur de transcription",
+      "synthesisError": "Erreur de synthèse"
+    }
+  },
+  "logs": {
+    "title": "Journaux Système",
+    "description": "Afficher et rechercher les journaux d'application depuis Elasticsearch",
+    "filters": {
+      "search": "Rechercher dans les Journaux",
+      "searchPlaceholder": "Rechercher message, logger, module...",
+      "logLevel": "Niveau de Journal",
+      "allLevels": "Tous les Niveaux",
+      "error": "Erreur",
+      "warning": "Avertissement",
+      "info": "Info",
+      "debug": "Débogage",
+      "timeRange": "Plage Temporelle",
+      "advancedFilters": "Filtres Avancés",
+      "correlationId": "ID de Corrélation",
+      "correlationIdPlaceholder": "Filtrer par ID de corrélation",
+      "tenantId": "ID de Locataire",
+      "tenantIdPlaceholder": "Filtrer par locataire",
+      "storeId": "ID de Magasin",
+      "storeIdPlaceholder": "Filtrer par magasin",
+      "userId": "ID d'Utilisateur",
+      "userIdPlaceholder": "Filtrer par utilisateur",
+      "sessionId": "ID de Session",
+      "sessionIdPlaceholder": "Filtrer par session",
+      "service": "Service",
+      "servicePlaceholder": "Filtrer par service",
+      "endDate": "Date de Fin",
+      "clearAll": "Effacer Tous les Filtres"
+    },
+    "actions": {
+      "refresh": "Actualiser",
+      "export": "Exporter",
+      "autoRefresh": "Actualisation automatique toutes les",
+      "details": "Détails",
+      "close": "Fermer"
+    },
+    "table": {
+      "timestamp": "Horodatage",
+      "level": "Niveau",
+      "serviceLogger": "Service / Logger",
+      "message": "Message",
+      "correlationId": "ID de Corrélation",
+      "actions": "Actions",
+      "noLogs": "Aucun journal trouvé",
+      "totalLogs": "journaux au total"
+    },
+    "pagination": {
+      "showing": "Affichage de {{from}} à {{to}} sur {{total}}",
+      "perPage": "par page",
+      "previous": "Précédent",
+      "next": "Suivant",
+      "page": "Page {{current}} sur {{total}}"
+    },
+    "details": {
+      "title": "Détails du Journal",
+      "summary": "Résumé",
+      "metadata": "Métadonnées",
+      "correlationId": "ID de Corrélation",
+      "sessionId": "ID de Session",
+      "tenantId": "ID de Locataire",
+      "storeId": "ID de Magasin",
+      "userId": "ID d'Utilisateur",
+      "service": "Service",
+      "environment": "Environnement",
+      "logger": "Logger",
+      "module": "Module",
+      "function": "Fonction",
+      "lineNumber": "Numéro de Ligne",
+      "duration": "Durée",
+      "statusCode": "Code de Statut",
+      "method": "Méthode",
+      "path": "Chemin",
+      "clientHost": "Hôte Client",
+      "exception": "Exception",
+      "viewRawJson": "Voir le JSON Brut"
+    },
+    "messages": {
+      "fetchFailed": "Échec de la récupération des journaux depuis Elasticsearch",
+      "exportSuccess": "Journaux exportés avec succès",
+      "logExported": "Journal exporté"
+    }
+  }
+}

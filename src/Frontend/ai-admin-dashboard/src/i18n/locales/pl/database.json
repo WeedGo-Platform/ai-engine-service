@@ -1,0 +1,80 @@
+{
+  "titles": {
+    "main": "Zarządzanie bazą danych",
+    "databaseObjects": "Obiekty bazy danych",
+    "addRow": "Dodaj nowy wiersz",
+    "editRow": "Edytuj wiersz",
+    "truncateTable": "Obetnij tabelę",
+    "dropTable": "Usuń tabelę"
+  },
+  "descriptions": {
+    "main": "Dostęp superadministratora do tabel i operacji bazy danych",
+    "selectTable": "Wybierz tabelę, aby wyświetlić dane",
+    "chooseFromList": "Wybierz z listy po lewej stronie"
+  },
+  "tabs": {
+    "data": "Dane",
+    "schema": "Schemat",
+    "query": "Zapytanie"
+  },
+  "connection": {
+    "connections": "połączenia"
+  },
+  "table": {
+    "tables": "tabele",
+    "views": "widoki",
+    "columns": "kolumny",
+    "totalRows": "łączna liczba wierszy"
+  },
+  "actions": {
+    "addRow": "Dodaj wiersz",
+    "add": "Dodaj",
+    "truncate": "Obetnij",
+    "clear": "Wyczyść",
+    "dropView": "Usuń widok",
+    "dropTable": "Usuń tabelę",
+    "drop": "Usuń",
+    "refresh": "Odśwież",
+    "search": "Szukaj",
+    "clearSearch": "Wyczyść wyszukiwanie",
+    "executeQuery": "Wykonaj zapytanie",
+    "cancel": "Anuluj",
+    "updateRow": "Zaktualizuj wiersz"
+  },
+  "placeholders": {
+    "filterTables": "Filtruj tabele i widoki...",
+    "searchTable": "Przeszukaj tabelę...",
+    "sqlQuery": "Zapytanie SQL (tylko SELECT)"
+  },
+  "schema": {
+    "columnName": "Nazwa kolumny",
+    "dataType": "Typ danych",
+    "nullable": "Dopuszcza wartość null",
+    "default": "Domyślnie",
+    "maxLength": "Maksymalna długość"
+  },
+  "pagination": {
+    "page": "Strona",
+    "of": "z"
+  },
+  "messages": {
+    "noData": "Nie znaleziono danych w tej tabeli",
+    "warningCannotUndo": "Ostrzeżenie: Tej operacji nie można cofnąć!",
+    "truncateWarning": "Wszystkie dane w tabeli \"{table}\" zostaną trwale usunięte.",
+    "dropWarning": "Cała tabela \"{table}\" i wszystkie jej dane zostaną trwale usunięte z bazy danych.",
+    "type": "Typ",
+    "actions": "Działania"
+  },
+  "confirm": {
+    "deleteRow": "Czy na pewno chcesz usunąć ten wiersz?",
+    "truncateTable": "Czy na pewno chcesz OBCIĄĆ tabelę {table}? Spowoduje to usunięcie WSZYSTKICH wierszy!"
+  },
+  "errors": {
+    "addRow": "Nie udało się dodać wiersza",
+    "updateRow": "Nie udało się zaktualizować wiersza",
+    "deleteRow": "Nie udało się usunąć wiersza",
+    "truncateTable": "Nie udało się obciąć tabeli",
+    "dropTable": "Nie udało się usunąć tabeli",
+    "executeQuery": "Nie udało się wykonać zapytania"
+  }
+}

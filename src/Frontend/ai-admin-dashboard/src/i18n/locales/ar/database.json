@@ -1,0 +1,80 @@
+{
+  "titles": {
+    "main": "إدارة قاعدة البيانات",
+    "databaseObjects": "كائنات قاعدة البيانات",
+    "addRow": "إضافة صف جديد",
+    "editRow": "تحرير الصف",
+    "truncateTable": "اقتطاع الجدول",
+    "dropTable": "حذف الجدول"
+  },
+  "descriptions": {
+    "main": "وصول المسؤول الفائق إلى جداول قاعدة البيانات والعمليات",
+    "selectTable": "حدد جدولاً لعرض البيانات",
+    "chooseFromList": "اختر من القائمة على اليسار"
+  },
+  "tabs": {
+    "data": "البيانات",
+    "schema": "المخطط",
+    "query": "الاستعلام"
+  },
+  "connection": {
+    "connections": "اتصالات"
+  },
+  "table": {
+    "tables": "جداول",
+    "views": "طرق عرض",
+    "columns": "أعمدة",
+    "totalRows": "إجمالي الصفوف"
+  },
+  "actions": {
+    "addRow": "إضافة صف",
+    "add": "إضافة",
+    "truncate": "اقتطاع",
+    "clear": "مسح",
+    "dropView": "حذف طريقة العرض",
+    "dropTable": "حذف الجدول",
+    "drop": "حذف",
+    "refresh": "تحديث",
+    "search": "بحث",
+    "clearSearch": "مسح البحث",
+    "executeQuery": "تنفيذ الاستعلام",
+    "cancel": "إلغاء",
+    "updateRow": "تحديث الصف"
+  },
+  "placeholders": {
+    "filterTables": "تصفية الجداول وطرق العرض...",
+    "searchTable": "البحث في الجدول...",
+    "sqlQuery": "استعلام SQL (SELECT فقط)"
+  },
+  "schema": {
+    "columnName": "اسم العمود",
+    "dataType": "نوع البيانات",
+    "nullable": "قابل للإلغاء",
+    "default": "افتراضي",
+    "maxLength": "الطول الأقصى"
+  },
+  "pagination": {
+    "page": "صفحة",
+    "of": "من"
+  },
+  "messages": {
+    "noData": "لم يتم العثور على بيانات في هذا الجدول",
+    "warningCannotUndo": "تحذير: لا يمكن التراجع عن هذا الإجراء!",
+    "truncateWarning": "سيتم حذف جميع البيانات في الجدول \"{table}\" بشكل دائم.",
+    "dropWarning": "سيتم إزالة الجدول بأكمله \"{table}\" وجميع بياناته بشكل دائم من قاعدة البيانات.",
+    "type": "النوع",
+    "actions": "الإجراءات"
+  },
+  "confirm": {
+    "deleteRow": "هل أنت متأكد من أنك تريد حذف هذا الصف؟",
+    "truncateTable": "هل أنت متأكد من أنك تريد اقتطاع الجدول {table}؟ سيؤدي هذا إلى حذف جميع الصفوف!"
+  },
+  "errors": {
+    "addRow": "فشل في إضافة الصف",
+    "updateRow": "فشل في تحديث الصف",
+    "deleteRow": "فشل في حذف الصف",
+    "truncateTable": "فشل في اقتطاع الجدول",
+    "dropTable": "فشل في حذف الجدول",
+    "executeQuery": "فشل في تنفيذ الاستعلام"
+  }
+}

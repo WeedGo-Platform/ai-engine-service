@@ -1,0 +1,127 @@
+{
+  "titles": {
+    "main": "Точка Продажу",
+    "posSettings": "Налаштування POS",
+    "parkedSales": "Відкладені Продажі",
+    "hardwareConfiguration": "Конфігурація Обладнання",
+    "cashManagement": "Управління Готівкою",
+    "discountsPromotions": "Знижки та Акції"
+  },
+  "tabs": {
+    "newSale": "Новий Продаж",
+    "parked": "Відкладені",
+    "history": "Історія",
+    "settings": "Налаштування"
+  },
+  "customer": {
+    "label": "Клієнт",
+    "select": "Вибрати",
+    "change": "Змінити",
+    "returning": "Постійний",
+    "new": "Новий",
+    "anonymous": "Анонімний",
+    "newCustomer": "Новий Клієнт",
+    "points": "Бали:"
+  },
+  "cart": {
+    "empty": "Кошик порожній",
+    "batch": "Партія:",
+    "discount": "Знижка:",
+    "quantity": "Кількість"
+  },
+  "weight": {
+    "driedFlowerEquivalent": "Dried Flower Equivalent:",
+    "legalLimit": "/ 30g",
+    "exceedsLimit": "Перевищує законний ліміт!"
+  },
+  "totals": {
+    "subtotal": "Проміжний Підсумок",
+    "discount": "Знижка",
+    "discountApplied": "Знижку застосовано",
+    "afterDiscount": "Після Знижки",
+    "tax": "Податок (13%)",
+    "total": "Разом"
+  },
+  "actions": {
+    "parkSale": "Відкласти Продаж",
+    "clear": "Очистити",
+    "processPayment": "Обробити Платіж",
+    "resumeSale": "Відновити Продаж",
+    "addPromotion": "Додати Акцію",
+    "detectScanners": "Виявити Сканери",
+    "openRegister": "Відкрити Касу",
+    "cashCount": "Підрахунок Готівки",
+    "endOfDay": "Кінець Дня",
+    "printReport": "Надрукувати Звіт",
+    "test": "Тест",
+    "active": "Активний"
+  },
+  "search": {
+    "placeholder": "Пошук товарів або сканування штрих-коду...",
+    "scanning": "Сканування:",
+    "filterProducts": "Фільтр товарів"
+  },
+  "products": {
+    "noProductsFound": "Товарів не знайдено",
+    "outOfStock": "Немає в Наявності",
+    "low": "Мало",
+    "stock": "Запас:",
+    "batch": "партія",
+    "batches": "партії"
+  },
+  "parked": {
+    "noParkedSales": "Немає відкладених продажів",
+    "items": "товари"
+  },
+  "scanner": {
+    "enabled": "Сканер Увімкнено",
+    "disabled": "Сканер Вимкнено",
+    "noScannersDetected": "Сканери не виявлено",
+    "connectScanner": "Підключіть сканер і натисніть \"Виявити Сканери\"",
+    "barcodeScanners": "Сканери Штрих-Кодів",
+    "manageConnected": "Керування підключеними сканерами"
+  },
+  "hardware": {
+    "paymentTerminal": "Платіжний Термінал",
+    "connectCardReader": "Підключити картрідер",
+    "receiptPrinter": "Принтер Чеків",
+    "printReceipts": "Друкувати чеки",
+    "cashDrawer": "Грошовий Ящик",
+    "manageCash": "Керувати готівкою",
+    "enabled": "Увімкнено"
+  },
+  "validation": {
+    "validIdDate": "Дата Дійсного ID:",
+    "orEarlier": "або раніше",
+    "validId": "Дійсний ID:"
+  },
+  "promotions": {
+    "seniorDiscount": "Знижка для Пенсіонерів",
+    "seniorDescription": "Знижка 10% для 65+",
+    "happyHour": "Щаслива Година",
+    "happyHourDescription": "Знижка 15% з 16:00 до 18:00"
+  },
+  "messages": {
+    "saleParkedSuccess": "Продаж успішно відкладено!",
+    "saleParkedFailed": "Не вдалося відкласти продаж. Спробуйте знову.",
+    "resumeFailed": "Не вдалося відновити продаж. Спробуйте знову.",
+    "paymentSuccess": "Платіж успішний!",
+    "receiptPrinted": "Чек надруковано.",
+    "transactionFailed": "Не вдалося обробити транзакцію. Спробуйте знову.",
+    "productNotFound": "Товар не знайдено для штрих-коду:",
+    "scannerTestSuccess": "Тест сканера успішний! Тестовий штрих-код:",
+    "scannerTestFailed": "Тест сканера не пройдено",
+    "scannerTestError": "Не вдалося протестувати сканер"
+  },
+  "fullscreen": {
+    "enter": "Увійти в повноекранний режим",
+    "exit": "Вийти з повноекранного режиму"
+  },
+  "labels": {
+    "confidence": {
+      "high": "✓ Сканер",
+      "medium": "Ймовірно Сканер",
+      "low": "Можливо Сканер"
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "titles": {
+    "tenantSettings": "Setări",
+    "generalInformation": "Informații Generale"
+  },
+  "descriptions": {
+    "tenantManagement": "Gestionează configurația chiriașului și setările de plată"
+  },
+  "tabs": {
+    "general": "Setări Generale",
+    "payment": "Setări de Plată",
+    "communication": "Setări de Comunicare"
+  },
+  "fields": {
+    "tenantName": "Nume Chiriaș",
+    "tenantCode": "Cod Chiriaș",
+    "companyName": "Nume Companie",
+    "businessNumber": "Număr de Afaceri",
+    "contactEmail": "Email de Contact",
+    "contactPhone": "Telefon de Contact",
+    "status": "Status",
+    "subscriptionTier": "Nivel de Abonament",
+    "address": "Adresă"
+  },
+  "actions": {
+    "backToTenants": "Înapoi la Chiriași"
+  },
+  "messages": {
+    "notSpecified": "Nespecificat",
+    "loading": "Se încarcă...",
+    "tenantNotFound": "Chiriașul nu a fost găsit",
+    "success": {
+      "paymentSettingsUpdated": "Setările de plată au fost actualizate cu succes",
+      "communicationSettingsUpdated": "Setările de comunicare au fost actualizate cu succes",
+      "configurationValid": "configurația este validă"
+    },
+    "error": {
+      "loadSettings": "Încărcarea setărilor chiriașului a eșuat",
+      "updatePaymentSettings": "Actualizarea setărilor de plată a eșuat",
+      "updateCommunicationSettings": "Actualizarea setărilor de comunicare a eșuat"
+    }
+  }
+}

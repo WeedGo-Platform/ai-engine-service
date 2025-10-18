@@ -1,0 +1,127 @@
+{
+  "titles": {
+    "main": "ਵਿਕਰੀ ਸਥਾਨ",
+    "posSettings": "POS ਸੈਟਿੰਗਾਂ",
+    "parkedSales": "ਰੁਕੀਆਂ ਵਿਕਰੀਆਂ",
+    "hardwareConfiguration": "ਹਾਰਡਵੇਅਰ ਸੰਰਚਨਾ",
+    "cashManagement": "ਨਕਦੀ ਪ੍ਰਬੰਧਨ",
+    "discountsPromotions": "ਛੋਟਾਂ ਅਤੇ ਪ੍ਰਮੋਸ਼ਨ"
+  },
+  "tabs": {
+    "newSale": "ਨਵੀਂ ਵਿਕਰੀ",
+    "parked": "ਰੁਕੀਆਂ",
+    "history": "ਇਤਿਹਾਸ",
+    "settings": "ਸੈਟਿੰਗਾਂ"
+  },
+  "customer": {
+    "label": "ਗਾਹਕ",
+    "select": "ਚੁਣੋ",
+    "change": "ਬਦਲੋ",
+    "returning": "ਵਾਪਸ ਆਉਣ ਵਾਲਾ",
+    "new": "ਨਵਾਂ",
+    "anonymous": "ਅਗਿਆਤ",
+    "newCustomer": "ਨਵਾਂ ਗਾਹਕ",
+    "points": "ਪੁਆਇੰਟ:"
+  },
+  "cart": {
+    "empty": "ਕਾਰਟ ਖਾਲੀ ਹੈ",
+    "batch": "ਬੈਚ:",
+    "discount": "ਛੋਟ:",
+    "quantity": "ਮਾਤਰਾ"
+  },
+  "weight": {
+    "driedFlowerEquivalent": "Dried Flower Equivalent:",
+    "legalLimit": "/ 30g",
+    "exceedsLimit": "ਕਾਨੂੰਨੀ ਸੀਮਾ ਤੋਂ ਵੱਧ!"
+  },
+  "totals": {
+    "subtotal": "ਉਪ-ਜੋੜ",
+    "discount": "ਛੋਟ",
+    "discountApplied": "ਛੋਟ ਲਾਗੂ ਕੀਤੀ",
+    "afterDiscount": "ਛੋਟ ਤੋਂ ਬਾਅਦ",
+    "tax": "ਟੈਕਸ (13%)",
+    "total": "ਕੁੱਲ"
+  },
+  "actions": {
+    "parkSale": "ਵਿਕਰੀ ਰੋਕੋ",
+    "clear": "ਸਾਫ਼ ਕਰੋ",
+    "processPayment": "ਭੁਗਤਾਨ ਪ੍ਰਕਿਰਿਆ ਕਰੋ",
+    "resumeSale": "ਵਿਕਰੀ ਮੁੜ ਸ਼ੁਰੂ ਕਰੋ",
+    "addPromotion": "ਪ੍ਰਮੋਸ਼ਨ ਜੋੜੋ",
+    "detectScanners": "ਸਕੈਨਰ ਖੋਜੋ",
+    "openRegister": "ਰਜਿਸਟਰ ਖੋਲ੍ਹੋ",
+    "cashCount": "ਨਕਦੀ ਗਿਣਤੀ",
+    "endOfDay": "ਦਿਨ ਦਾ ਅੰਤ",
+    "printReport": "ਰਿਪੋਰਟ ਛਾਪੋ",
+    "test": "ਟੈਸਟ",
+    "active": "ਸਰਗਰਮ"
+  },
+  "search": {
+    "placeholder": "ਉਤਪਾਦ ਖੋਜੋ ਜਾਂ ਬਾਰਕੋਡ ਸਕੈਨ ਕਰੋ...",
+    "scanning": "ਸਕੈਨ ਕਰ ਰਹੇ ਹਾਂ:",
+    "filterProducts": "ਉਤਪਾਦ ਫਿਲਟਰ ਕਰੋ"
+  },
+  "products": {
+    "noProductsFound": "ਕੋਈ ਉਤਪਾਦ ਨਹੀਂ ਮਿਲਿਆ",
+    "outOfStock": "ਸਟਾਕ ਵਿੱਚ ਨਹੀਂ",
+    "low": "ਘੱਟ",
+    "stock": "ਸਟਾਕ:",
+    "batch": "ਬੈਚ",
+    "batches": "ਬੈਚ"
+  },
+  "parked": {
+    "noParkedSales": "ਕੋਈ ਰੁਕੀ ਵਿਕਰੀ ਨਹੀਂ",
+    "items": "ਆਈਟਮਾਂ"
+  },
+  "scanner": {
+    "enabled": "ਸਕੈਨਰ ਸਮਰੱਥ",
+    "disabled": "ਸਕੈਨਰ ਅਸਮਰੱਥ",
+    "noScannersDetected": "ਕੋਈ ਸਕੈਨਰ ਨਹੀਂ ਮਿਲਿਆ",
+    "connectScanner": "ਸਕੈਨਰ ਕਨੈਕਟ ਕਰੋ ਅਤੇ \"ਸਕੈਨਰ ਖੋਜੋ\" 'ਤੇ ਕਲਿੱਕ ਕਰੋ",
+    "barcodeScanners": "ਬਾਰਕੋਡ ਸਕੈਨਰ",
+    "manageConnected": "ਕਨੈਕਟ ਕੀਤੇ ਸਕੈਨਰ ਪ੍ਰਬੰਧਿਤ ਕਰੋ"
+  },
+  "hardware": {
+    "paymentTerminal": "ਭੁਗਤਾਨ ਟਰਮੀਨਲ",
+    "connectCardReader": "ਕਾਰਡ ਰੀਡਰ ਕਨੈਕਟ ਕਰੋ",
+    "receiptPrinter": "ਰਸੀਦ ਪ੍ਰਿੰਟਰ",
+    "printReceipts": "ਰਸੀਦਾਂ ਛਾਪੋ",
+    "cashDrawer": "ਨਕਦੀ ਦਰਾਜ਼",
+    "manageCash": "ਨਕਦੀ ਪ੍ਰਬੰਧਿਤ ਕਰੋ",
+    "enabled": "ਸਮਰੱਥ"
+  },
+  "validation": {
+    "validIdDate": "ਵੈਧ ID ਤਾਰੀਖ:",
+    "orEarlier": "ਜਾਂ ਪਹਿਲਾਂ",
+    "validId": "ਵੈਧ ID:"
+  },
+  "promotions": {
+    "seniorDiscount": "ਸੀਨੀਅਰ ਛੋਟ",
+    "seniorDescription": "65+ ਲਈ 10% ਛੋਟ",
+    "happyHour": "ਖੁਸ਼ੀ ਦਾ ਸਮਾਂ",
+    "happyHourDescription": "ਸ਼ਾਮ 4-6 ਵਜੇ 15% ਛੋਟ"
+  },
+  "messages": {
+    "saleParkedSuccess": "ਵਿਕਰੀ ਸਫਲਤਾਪੂਰਵਕ ਰੋਕੀ ਗਈ!",
+    "saleParkedFailed": "ਵਿਕਰੀ ਰੋਕਣ ਵਿੱਚ ਅਸਫਲ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+    "resumeFailed": "ਵਿਕਰੀ ਮੁੜ ਸ਼ੁਰੂ ਕਰਨ ਵਿੱਚ ਅਸਫਲ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+    "paymentSuccess": "ਭੁਗਤਾਨ ਸਫਲ!",
+    "receiptPrinted": "ਰਸੀਦ ਛਾਪੀ ਗਈ।",
+    "transactionFailed": "ਲੈਣ-ਦੇਣ ਪ੍ਰਕਿਰਿਆ ਵਿੱਚ ਅਸਫਲ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+    "productNotFound": "ਬਾਰਕੋਡ ਲਈ ਉਤਪਾਦ ਨਹੀਂ ਮਿਲਿਆ:",
+    "scannerTestSuccess": "ਸਕੈਨਰ ਟੈਸਟ ਸਫਲ! ਟੈਸਟ ਬਾਰਕੋਡ:",
+    "scannerTestFailed": "ਸਕੈਨਰ ਟੈਸਟ ਅਸਫਲ",
+    "scannerTestError": "ਸਕੈਨਰ ਟੈਸਟ ਕਰਨ ਵਿੱਚ ਅਸਫਲ"
+  },
+  "fullscreen": {
+    "enter": "ਪੂਰੀ ਸਕਰੀਨ ਵਿੱਚ ਦਾਖਲ ਹੋਵੋ",
+    "exit": "ਪੂਰੀ ਸਕਰੀਨ ਤੋਂ ਬਾਹਰ ਨਿਕਲੋ"
+  },
+  "labels": {
+    "confidence": {
+      "high": "✓ ਸਕੈਨਰ",
+      "medium": "ਸੰਭਾਵਤ ਸਕੈਨਰ",
+      "low": "ਹੋ ਸਕਦਾ ਹੈ ਸਕੈਨਰ"
+    }
+  }
+}

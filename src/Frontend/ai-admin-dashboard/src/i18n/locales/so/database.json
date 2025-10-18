@@ -1,0 +1,80 @@
+{
+  "titles": {
+    "main": "Maaraynta Xogta",
+    "databaseObjects": "Shayada Xogta",
+    "addRow": "Ku Dar Sadar Cusub",
+    "editRow": "Tafatir Sadar",
+    "truncateTable": "Xoog Miiska",
+    "dropTable": "Tirtir Miiska"
+  },
+  "descriptions": {
+    "main": "Gelitaanka maamulaha sare ee miisaska xogta iyo hawlgallada",
+    "selectTable": "Dooro miis si aad u aragto xogta",
+    "chooseFromList": "Ka dooro liiska bidix"
+  },
+  "tabs": {
+    "data": "Xog",
+    "schema": "Qaab",
+    "query": "Su'aal"
+  },
+  "connection": {
+    "connections": "xiriirro"
+  },
+  "table": {
+    "tables": "miisas",
+    "views": "muuqaallo",
+    "columns": "tiirarka",
+    "totalRows": "wadarta sadarrada"
+  },
+  "actions": {
+    "addRow": "Ku Dar Sadar",
+    "add": "Ku Dar",
+    "truncate": "Xoog",
+    "clear": "Nadiifi",
+    "dropView": "Tirtir Muuqaalka",
+    "dropTable": "Tirtir Miiska",
+    "drop": "Tirtir",
+    "refresh": "Cusbooneysii",
+    "search": "Raadi",
+    "clearSearch": "Nadiifi Raadinta",
+    "executeQuery": "Fulin Su'aasha",
+    "cancel": "Jooji",
+    "updateRow": "Cusbooneysii Sadarka"
+  },
+  "placeholders": {
+    "filterTables": "Kala saar miisaska iyo muuqaallada...",
+    "searchTable": "Ku raadi miiska...",
+    "sqlQuery": "Su'aalka SQL (SELECT kaliya)"
+  },
+  "schema": {
+    "columnName": "Magaca Tiirka",
+    "dataType": "Nooca Xogta",
+    "nullable": "Waa La Madhnaan Karaa",
+    "default": "Caadi",
+    "maxLength": "Dhererka Ugu Badan"
+  },
+  "pagination": {
+    "page": "Bog",
+    "of": "ka"
+  },
+  "messages": {
+    "noData": "Xog lama helin miiskan",
+    "warningCannotUndo": "Digniin: Talaabadan lama celin karo!",
+    "truncateWarning": "Dhammaan xogta miiska \"{table}\" ayaa si joogto ah loo tiri doonaa.",
+    "dropWarning": "Miiska oo dhan \"{table}\" iyo dhammaan xogtiisa ayaa si joogto ah looga saari doonaa xogta.",
+    "type": "Nooc",
+    "actions": "Falalka"
+  },
+  "confirm": {
+    "deleteRow": "Ma hubtaa inaad rabto inaad tirtirto sadarkaan?",
+    "truncateTable": "Ma hubtaa inaad rabto inaad XOOGTID miiska {table}? Tani waxay tiri doontaa DHAMMAAN sadarrada!"
+  },
+  "errors": {
+    "addRow": "Ku guuldaraystay in la daro sadar",
+    "updateRow": "Ku guuldaraystay in la cusboonaysiiyo sadar",
+    "deleteRow": "Ku guuldaraystay in la tirtiro sadar",
+    "truncateTable": "Ku guuldaraystay in la xoogo miiska",
+    "dropTable": "Ku guuldaraystay in la tirtiro miiska",
+    "executeQuery": "Ku guuldaraystay in la fuliyo su'aasha"
+  }
+}

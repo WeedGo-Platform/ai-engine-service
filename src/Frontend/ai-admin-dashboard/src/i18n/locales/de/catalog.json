@@ -1,0 +1,75 @@
+{
+  "titles": {
+    "main": "Provinzieller Produktkatalog",
+    "mainVirtual": "Provinzieller Produktkatalog (Virtuelles Scrollen)",
+    "uploadSection": "Katalog hochladen",
+    "uploadInstructions": "Upload-Anweisungen",
+    "catalogProducts": "Katalogprodukte"
+  },
+  "descriptions": {
+    "main": "Anzeigen und Verwalten von Produktkatalogen provinzieller Cannabis-Distributoren.",
+    "mainVirtual": "Verwalten und Hochladen provinzieller Cannabis-Produktkataloge",
+    "selectProvince": "Provinz auswählen",
+    "viewingProvince": "Provinzkatalog anzeigen",
+    "scrollHint": "Horizontal scrollen, um alle Spalten anzuzeigen →"
+  },
+  "provinces": {
+    "ontario": "Ontario (OCS)",
+    "bc": "British Columbia (Demnächst)",
+    "alberta": "Alberta (Demnächst)",
+    "quebec": "Quebec (Demnächst)"
+  },
+  "stats": {
+    "totalProducts": "Gesamtprodukte",
+    "lastUpdated": "Zuletzt aktualisiert",
+    "categories": "Kategorien",
+    "never": "Nie",
+    "totalRecords": "Gesamtdatensätze",
+    "inserted": "Eingefügt",
+    "updated": "Aktualisiert",
+    "errors": "Fehler",
+    "totalRecordsLabel": "Gesamtdatensätze"
+  },
+  "upload": {
+    "selectFile": "Neuen Katalog hochladen",
+    "chooseFile": "Datei auswählen",
+    "uploadButton": "Hochladen",
+    "uploadCatalog": "Katalog hochladen",
+    "uploading": "Wird hochgeladen...",
+    "uploadFile": "Datei hochladen",
+    "invalidFileType": "Ungültiger Dateityp. Bitte laden Sie eine CSV- oder Excel-Datei hoch.",
+    "pleaseSelectFile": "Bitte wählen Sie eine Datei zum Hochladen aus.",
+    "processingFile": "Katalogdatei wird verarbeitet...",
+    "processingFileShort": "Datei wird verarbeitet...",
+    "uploadSuccess": "Katalog erfolgreich hochgeladen!",
+    "uploadSuccessShort": "Upload erfolgreich",
+    "uploadFailed": "Katalog-Upload fehlgeschlagen",
+    "uploadFailedShort": "Upload fehlgeschlagen"
+  },
+  "search": {
+    "placeholder": "Produkte suchen...",
+    "allCategories": "Alle Kategorien"
+  },
+  "buttons": {
+    "export": "Exportieren",
+    "exportCsv": "CSV exportieren",
+    "previous": "Zurück",
+    "next": "Weiter"
+  },
+  "table": {
+    "loadingCatalog": "Katalog wird geladen...",
+    "noProductsFound": "Keine Produkte im Katalog gefunden",
+    "noProductsUpload": "Keine Produkte gefunden. Laden Sie einen Katalog hoch, um zu beginnen.",
+    "showingPage": "Seite {page} der Ergebnisse wird angezeigt",
+    "itemsCount": "{count} Artikel"
+  },
+  "instructions": {
+    "line1": "Die OCS-Katalogdatei sollte alle erforderlichen Spalten gemäß der OCS-Spezifikation enthalten.",
+    "line2": "Produkte werden anhand der OCS-Variantennummer als eindeutiger Schlüssel abgeglichen und aktualisiert.",
+    "line3": "Neue Produkte werden eingefügt, bestehende Produkte werden mit den neuesten Informationen aktualisiert.",
+    "line4": "Bewertungs- und Bewertungszählfelder werden bei Aktualisierungen beibehalten."
+  },
+  "messages": {
+    "lastCatalogUpdate": "Letzte Katalogaktualisierung:"
+  }
+}

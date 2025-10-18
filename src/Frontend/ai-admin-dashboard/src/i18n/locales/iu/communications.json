@@ -1,0 +1,89 @@
+{
+  "titles": {
+    "main": "ᑐᓴᐅᒪᔾᔪᑎᑦ",
+    "overview": "ᖃᐅᔨᓴᕐᓂᖅ",
+    "campaigns": "ᐱᓕᕆᐊᑦ",
+    "templates": "ᐊᑐᐃᓐᓇᐅᑎᑦ",
+    "segments": "ᐊᕕᒃᑐᖅᓯᒪᔪᑦ",
+    "analytics": "ᖃᐅᔨᓴᖅᑕᐅᔪᑦ",
+    "broadcastCampaigns": "ᑐᓴᖅᑎᑦᑎᓂᖅ ᐱᓕᕆᐊᑦ",
+    "recentCampaigns": "ᓄᑖᑦ ᐱᓕᕆᐊᑦ",
+    "channelPerformance": "ᐱᓕᕆᐊᖑᔪᑦ ᐱᐅᓂᖏᑦ"
+  },
+  "descriptions": {
+    "managingFor": "ᑐᓴᐅᒪᔾᔪᑎᑦ ᐊᐅᓚᑦᑎᓂᖅ",
+    "segmentationComingSoon": "ᐊᑐᖅᑐᐊᕐᑏᑦ ᐊᕕᒃᑐᖅᓯᒪᓂᖏᑦ ᖃᐃᑦᑐᖅ...",
+    "noAnalytics": "ᖃᐅᔨᓴᖅᑕᐅᔪᑦ ᓱᓕᔪᐃᑦᑐᑦ",
+    "noStoreSelected": "ᓂᐅᕕᕐᕕᖅ ᓂᕈᐊᖅᑕᐅᓯᒪᓐᖏᑦᑐᖅ",
+    "selectStore": "ᓂᕈᐊᕐᓗᒍ ᓂᐅᕕᕐᕕᒃ ᑐᓴᐅᒪᔾᔪᑎᓂᒃ ᐊᐅᓚᑦᑎᓂᕐᒧᑦ"
+  },
+  "tabs": {
+    "overview": "ᖃᐅᔨᓴᕐᓂᖅ",
+    "campaigns": "ᐱᓕᕆᐊᑦ",
+    "templates": "ᐊᑐᐃᓐᓇᐅᑎᑦ",
+    "segments": "ᐊᕕᒃᑐᖅᓯᒪᔪᑦ",
+    "analytics": "ᖃᐅᔨᓴᖅᑕᐅᔪᑦ"
+  },
+  "stats": {
+    "totalCampaigns": "ᐱᓕᕆᐊᑦ ᑲᑎᑦᑐᑦ",
+    "messagesSent": "ᑐᓴᐅᒪᔾᔪᑎᑦ ᑎᑎᕋᖅᑕᐅᔪᑦ",
+    "successRate": "ᐱᐅᓂᖓ",
+    "failed": "ᐱᔭᕇᕈᓐᓃᖅᑐᖅ"
+  },
+  "status": {
+    "draft": "draft",
+    "scheduled": "scheduled",
+    "sending": "sending",
+    "sent": "sent",
+    "paused": "paused",
+    "cancelled": "cancelled",
+    "failed": "failed"
+  },
+  "table": {
+    "campaign": "ᐱᓕᕆᐊᖅ",
+    "status": "ᐃᓂᖓ",
+    "recipients": "ᐱᔨᑦᑎᕋᐅᑎᑦ",
+    "successRate": "ᐱᐅᓂᖓ",
+    "created": "ᓴᓇᔭᐅᓯᒪᔪᖅ",
+    "channels": "ᐱᓕᕆᐊᖑᔪᑦ",
+    "scheduled": "ᐊᑐᓕᖅᑎᑕᐅᓯᒪᔪᖅ",
+    "actions": "ᐱᓕᕆᐊᑦ",
+    "createdBy": "ᓴᓇᔭᐅᓯᒪᔪᖅ",
+    "sentCount": "sent"
+  },
+  "channels": {
+    "email": "email",
+    "sms": "sms",
+    "push": "push",
+    "campaigns": "ᐱᓕᕆᐊᑦ",
+    "messages": "ᑐᓴᐅᒪᔾᔪᑎᑦ",
+    "engagement": "ᐃᓚᐅᑎᑦᑎᓂᖅ"
+  },
+  "actions": {
+    "newCampaign": "ᓄᑖᖅ ᐱᓕᕆᐊᖅ",
+    "viewAll": "ᑕᑯᒃᓴᐅᑎᑦᑎᓂᖅ ᑲᑎᑦᑐᑦ",
+    "viewDetails": "ᑕᑯᒃᓴᐅᑎᑦᑎᓂᖅ",
+    "edit": "ᐋᖅᑭᒃᓯᓂᖅ",
+    "sendNow": "ᐅᓪᓗᒥ ᑎᑎᕋᕐᓂᖅ",
+    "cancel": "ᓄᖅᑲᕐᓂᖅ",
+    "pause": "ᓄᖅᑲᕆᐊᓕᒃ",
+    "resume": "ᐱᒋᐊᕈᑎᑦᑎᓂᖅ",
+    "refresh": "ᓄᑖᖅᑎᑦᑎᓂᖅ",
+    "settings": "ᐋᖅᑭᒃᓯᒪᔪᑦ"
+  },
+  "messages": {
+    "success": {
+      "broadcastStarted": "ᑐᓴᖅᑎᑦᑎᓂᖅ ᐱᒋᐊᖅᑎᑕᐅᓯᒪᔪᖅ",
+      "broadcastPaused": "ᑐᓴᖅᑎᑦᑎᓂᖅ ᓄᖅᑲᖅᑎᑕᐅᓯᒪᔪᖅ",
+      "broadcastResumed": "ᑐᓴᖅᑎᑦᑎᓂᖅ ᐱᒋᐊᕈᑎᑕᐅᓯᒪᔪᖅ",
+      "broadcastCancelled": "ᑐᓴᖅᑎᑦᑎᓂᖅ ᓄᖅᑲᖅᑎᑕᐅᓯᒪᔪᖅ"
+    },
+    "error": {
+      "fetchBroadcasts": "ᑐᓴᖅᑎᑦᑎᓂᖅ ᐱᔭᕇᕈᓐᓃᖅᑐᖅ",
+      "fetchAnalytics": "ᖃᐅᔨᓴᖅᑕᐅᔪᑦ ᐱᔭᕇᕈᓐᓃᖅᑐᖅ"
+    }
+  },
+  "confirm": {
+    "cancelBroadcast": "ᓄᖅᑲᕈᒪᕕᑦ ᑐᓴᖅᑎᑦᑎᓂᕐᒥᒃ?"
+  }
+}

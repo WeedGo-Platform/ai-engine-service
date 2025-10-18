@@ -1,0 +1,43 @@
+{
+  "titles": {
+    "tenantSettings": "Dejinta",
+    "generalInformation": "Macluumaadka Guud"
+  },
+  "descriptions": {
+    "tenantManagement": "Maamul qaabeynta qofka kiraystaha ah iyo dejinta lacag bixinta"
+  },
+  "tabs": {
+    "general": "Dejinta Guud",
+    "payment": "Dejinta Lacag Bixinta",
+    "communication": "Dejinta Isgaarsiinta"
+  },
+  "fields": {
+    "tenantName": "Magaca Qofka Kiraystaha",
+    "tenantCode": "Koodhka Qofka Kiraystaha",
+    "companyName": "Magaca Shirkadda",
+    "businessNumber": "Lambarka Ganacsiga",
+    "contactEmail": "Email-ka Xiriirka",
+    "contactPhone": "Telefoonka Xiriirka",
+    "status": "Xaaladda",
+    "subscriptionTier": "Heerka Isdiiwaangelinta",
+    "address": "Cinwaanka"
+  },
+  "actions": {
+    "backToTenants": "Ku noqo Qofka Kiraystaha"
+  },
+  "messages": {
+    "notSpecified": "Lama cayimin",
+    "loading": "Waa la rarayo...",
+    "tenantNotFound": "Qofka kiraystaha lama helin",
+    "success": {
+      "paymentSettingsUpdated": "Dejinta lacag bixinta si guul leh ayaa loo cusbooneysiiyay",
+      "communicationSettingsUpdated": "Dejinta isgaarsiinta si guul leh ayaa loo cusbooneysiiyay",
+      "configurationValid": "qaabaynta waa sax"
+    },
+    "error": {
+      "loadSettings": "Rarista dejinta qofka kiraystaha ayaa fashilantay",
+      "updatePaymentSettings": "Cusboonaysiinta dejinta lacag bixinta ayaa fashilantay",
+      "updateCommunicationSettings": "Cusboonaysiinta dejinta isgaarsiinta ayaa fashilantay"
+    }
+  }
+}

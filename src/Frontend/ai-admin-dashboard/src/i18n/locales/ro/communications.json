@@ -1,0 +1,89 @@
+{
+  "titles": {
+    "main": "Comunicări",
+    "overview": "Prezentare Generală",
+    "campaigns": "Campanii",
+    "templates": "Șabloane",
+    "segments": "Segmente",
+    "analytics": "Analize",
+    "broadcastCampaigns": "Campanii de Difuzare",
+    "recentCampaigns": "Campanii Recente",
+    "channelPerformance": "Performanța Canalelor"
+  },
+  "descriptions": {
+    "managingFor": "Gestionarea comunicărilor pentru",
+    "segmentationComingSoon": "Segmentarea clienților în curând...",
+    "noAnalytics": "Nu există date analitice disponibile",
+    "noStoreSelected": "Niciun Magazin Selectat",
+    "selectStore": "Vă rugăm să selectați un magazin pentru a gestiona comunicările"
+  },
+  "tabs": {
+    "overview": "Prezentare Generală",
+    "campaigns": "Campanii",
+    "templates": "Șabloane",
+    "segments": "Segmente",
+    "analytics": "Analize"
+  },
+  "stats": {
+    "totalCampaigns": "Total Campanii",
+    "messagesSent": "Mesaje Trimise",
+    "successRate": "Rată de Succes",
+    "failed": "Eșuat"
+  },
+  "status": {
+    "draft": "draft",
+    "scheduled": "scheduled",
+    "sending": "sending",
+    "sent": "sent",
+    "paused": "paused",
+    "cancelled": "cancelled",
+    "failed": "failed"
+  },
+  "table": {
+    "campaign": "Campanie",
+    "status": "Stare",
+    "recipients": "Destinatari",
+    "successRate": "Rată de Succes",
+    "created": "Creat",
+    "channels": "Canale",
+    "scheduled": "Programat",
+    "actions": "Acțiuni",
+    "createdBy": "Creat de",
+    "sentCount": "sent"
+  },
+  "channels": {
+    "email": "email",
+    "sms": "sms",
+    "push": "push",
+    "campaigns": "Campanii",
+    "messages": "Mesaje",
+    "engagement": "Implicare"
+  },
+  "actions": {
+    "newCampaign": "Campanie Nouă",
+    "viewAll": "Vezi Toate",
+    "viewDetails": "Vezi Detalii",
+    "edit": "Editează",
+    "sendNow": "Trimite Acum",
+    "cancel": "Anulează",
+    "pause": "Pauză",
+    "resume": "Reia",
+    "refresh": "Reîmprospătează",
+    "settings": "Setări"
+  },
+  "messages": {
+    "success": {
+      "broadcastStarted": "Execuția difuzării a început",
+      "broadcastPaused": "Difuzare întreruptă",
+      "broadcastResumed": "Difuzare reluată",
+      "broadcastCancelled": "Difuzare anulată"
+    },
+    "error": {
+      "fetchBroadcasts": "Nu s-au putut prelua difuzările",
+      "fetchAnalytics": "Nu s-au putut prelua analizele"
+    }
+  },
+  "confirm": {
+    "cancelBroadcast": "Sigur doriți să anulați această difuzare?"
+  }
+}

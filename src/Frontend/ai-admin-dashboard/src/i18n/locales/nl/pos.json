@@ -1,0 +1,127 @@
+{
+  "titles": {
+    "main": "Verkooppunt",
+    "posSettings": "POS Instellingen",
+    "parkedSales": "Geparkeerde Verkopen",
+    "hardwareConfiguration": "Hardwareconfiguratie",
+    "cashManagement": "Kasbeheer",
+    "discountsPromotions": "Kortingen en Promoties"
+  },
+  "tabs": {
+    "newSale": "Nieuwe Verkoop",
+    "parked": "Geparkeerd",
+    "history": "Geschiedenis",
+    "settings": "Instellingen"
+  },
+  "customer": {
+    "label": "Klant",
+    "select": "Selecteren",
+    "change": "Wijzigen",
+    "returning": "Terugkerend",
+    "new": "Nieuw",
+    "anonymous": "Anoniem",
+    "newCustomer": "Nieuwe Klant",
+    "points": "Punten:"
+  },
+  "cart": {
+    "empty": "Winkelwagen is leeg",
+    "batch": "Batch:",
+    "discount": "Korting:",
+    "quantity": "Hoeveelheid"
+  },
+  "weight": {
+    "driedFlowerEquivalent": "Dried Flower Equivalent:",
+    "legalLimit": "/ 30g",
+    "exceedsLimit": "Overschrijdt wettelijke limiet!"
+  },
+  "totals": {
+    "subtotal": "Subtotaal",
+    "discount": "Korting",
+    "discountApplied": "Korting toegepast",
+    "afterDiscount": "Na Korting",
+    "tax": "Belasting (13%)",
+    "total": "Totaal"
+  },
+  "actions": {
+    "parkSale": "Parkeer Verkoop",
+    "clear": "Wissen",
+    "processPayment": "Verwerk Betaling",
+    "resumeSale": "Hervat Verkoop",
+    "addPromotion": "Voeg Promotie Toe",
+    "detectScanners": "Detecteer Scanners",
+    "openRegister": "Open Kassa",
+    "cashCount": "Kas Telling",
+    "endOfDay": "Einde van de Dag",
+    "printReport": "Print Rapport",
+    "test": "Test",
+    "active": "Actief"
+  },
+  "search": {
+    "placeholder": "Zoek producten of scan barcode...",
+    "scanning": "Scannen:",
+    "filterProducts": "Filter producten"
+  },
+  "products": {
+    "noProductsFound": "Geen producten gevonden",
+    "outOfStock": "Uitverkocht",
+    "low": "Laag",
+    "stock": "Voorraad:",
+    "batch": "batch",
+    "batches": "batches"
+  },
+  "parked": {
+    "noParkedSales": "Geen geparkeerde verkopen",
+    "items": "items"
+  },
+  "scanner": {
+    "enabled": "Scanner Ingeschakeld",
+    "disabled": "Scanner Uitgeschakeld",
+    "noScannersDetected": "Geen scanners gedetecteerd",
+    "connectScanner": "Sluit een scanner aan en klik op \"Detecteer Scanners\"",
+    "barcodeScanners": "Barcodescanners",
+    "manageConnected": "Beheer verbonden scanners"
+  },
+  "hardware": {
+    "paymentTerminal": "Betaalterminal",
+    "connectCardReader": "Kaartlezer aansluiten",
+    "receiptPrinter": "Bonprinter",
+    "printReceipts": "Bonnen afdrukken",
+    "cashDrawer": "Geldlade",
+    "manageCash": "Beheer contant geld",
+    "enabled": "Ingeschakeld"
+  },
+  "validation": {
+    "validIdDate": "Geldige ID Datum:",
+    "orEarlier": "of eerder",
+    "validId": "Geldige ID:"
+  },
+  "promotions": {
+    "seniorDiscount": "Seniorenkorting",
+    "seniorDescription": "10% korting voor 65+",
+    "happyHour": "Happy Hour",
+    "happyHourDescription": "15% korting 16-18 uur"
+  },
+  "messages": {
+    "saleParkedSuccess": "Verkoop succesvol geparkeerd!",
+    "saleParkedFailed": "Parkeren van verkoop mislukt. Probeer het opnieuw.",
+    "resumeFailed": "Hervatten van verkoop mislukt. Probeer het opnieuw.",
+    "paymentSuccess": "Betaling geslaagd!",
+    "receiptPrinted": "Bon afgedrukt.",
+    "transactionFailed": "Verwerken van transactie mislukt. Probeer het opnieuw.",
+    "productNotFound": "Product niet gevonden voor barcode:",
+    "scannerTestSuccess": "Scanner test geslaagd! Test barcode:",
+    "scannerTestFailed": "Scanner test mislukt",
+    "scannerTestError": "Scanner testen mislukt"
+  },
+  "fullscreen": {
+    "enter": "Volledig scherm openen",
+    "exit": "Volledig scherm verlaten"
+  },
+  "labels": {
+    "confidence": {
+      "high": "✓ Scanner",
+      "medium": "Waarschijnlijk Scanner",
+      "low": "Mogelijk Scanner"
+    }
+  }
+}

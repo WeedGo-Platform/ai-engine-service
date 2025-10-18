@@ -1,0 +1,43 @@
+{
+  "titles": {
+    "tenantSettings": "الإعدادات",
+    "generalInformation": "المعلومات العامة"
+  },
+  "descriptions": {
+    "tenantManagement": "إدارة تكوين المستأجر وإعدادات الدفع"
+  },
+  "tabs": {
+    "general": "الإعدادات العامة",
+    "payment": "إعدادات الدفع",
+    "communication": "إعدادات الاتصال"
+  },
+  "fields": {
+    "tenantName": "اسم المستأجر",
+    "tenantCode": "رمز المستأجر",
+    "companyName": "اسم الشركة",
+    "businessNumber": "رقم العمل",
+    "contactEmail": "البريد الإلكتروني للاتصال",
+    "contactPhone": "هاتف الاتصال",
+    "status": "الحالة",
+    "subscriptionTier": "مستوى الاشتراك",
+    "address": "العنوان"
+  },
+  "actions": {
+    "backToTenants": "العودة إلى المستأجرين"
+  },
+  "messages": {
+    "notSpecified": "غير محدد",
+    "loading": "جارٍ التحميل...",
+    "tenantNotFound": "لم يتم العثور على المستأجر",
+    "success": {
+      "paymentSettingsUpdated": "تم تحديث إعدادات الدفع بنجاح",
+      "communicationSettingsUpdated": "تم تحديث إعدادات الاتصال بنجاح",
+      "configurationValid": "التكوين صالح"
+    },
+    "error": {
+      "loadSettings": "فشل تحميل إعدادات المستأجر",
+      "updatePaymentSettings": "فشل تحديث إعدادات الدفع",
+      "updateCommunicationSettings": "فشل تحديث إعدادات الاتصال"
+    }
+  }
+}

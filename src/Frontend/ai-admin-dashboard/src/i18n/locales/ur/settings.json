@@ -1,0 +1,43 @@
+{
+  "titles": {
+    "tenantSettings": "ترتیبات",
+    "generalInformation": "عام معلومات"
+  },
+  "descriptions": {
+    "tenantManagement": "کرایہ دار کی تشکیل اور ادائیگی کی ترتیبات کا انتظام کریں"
+  },
+  "tabs": {
+    "general": "عام ترتیبات",
+    "payment": "ادائیگی کی ترتیبات",
+    "communication": "رابطے کی ترتیبات"
+  },
+  "fields": {
+    "tenantName": "کرایہ دار کا نام",
+    "tenantCode": "کرایہ دار کوڈ",
+    "companyName": "کمپنی کا نام",
+    "businessNumber": "کاروباری نمبر",
+    "contactEmail": "رابطہ ای میل",
+    "contactPhone": "رابطہ فون",
+    "status": "حیثیت",
+    "subscriptionTier": "سبسکرپشن کی سطح",
+    "address": "پتہ"
+  },
+  "actions": {
+    "backToTenants": "کرایہ داروں پر واپس جائیں"
+  },
+  "messages": {
+    "notSpecified": "متعین نہیں",
+    "loading": "لوڈ ہو رہا ہے...",
+    "tenantNotFound": "کرایہ دار نہیں ملا",
+    "success": {
+      "paymentSettingsUpdated": "ادائیگی کی ترتیبات کامیابی سے اپ ڈیٹ ہو گئیں",
+      "communicationSettingsUpdated": "رابطے کی ترتیبات کامیابی سے اپ ڈیٹ ہو گئیں",
+      "configurationValid": "تشکیل درست ہے"
+    },
+    "error": {
+      "loadSettings": "کرایہ دار کی ترتیبات لوڈ کرنے میں ناکامی",
+      "updatePaymentSettings": "ادائیگی کی ترتیبات اپ ڈیٹ کرنے میں ناکامی",
+      "updateCommunicationSettings": "رابطے کی ترتیبات اپ ڈیٹ کرنے میں ناکامی"
+    }
+  }
+}

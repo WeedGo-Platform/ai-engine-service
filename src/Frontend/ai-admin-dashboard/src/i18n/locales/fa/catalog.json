@@ -1,0 +1,75 @@
+{
+  "titles": {
+    "main": "کاتالوگ محصولات استانی",
+    "mainVirtual": "کاتالوگ محصولات استانی (پیمایش مجازی)",
+    "uploadSection": "بارگذاری کاتالوگ",
+    "uploadInstructions": "دستورالعمل‌های بارگذاری",
+    "catalogProducts": "محصولات کاتالوگ"
+  },
+  "descriptions": {
+    "main": "مشاهده و مدیریت کاتالوگ‌های محصولات از توزیع‌کنندگان استانی شاهدانه.",
+    "mainVirtual": "مدیریت و بارگذاری کاتالوگ‌های محصولات شاهدانه استانی",
+    "selectProvince": "انتخاب استان",
+    "viewingProvince": "مشاهده کاتالوگ استانی",
+    "scrollHint": "برای مشاهده همه ستون‌ها به صورت افقی پیمایش کنید ←"
+  },
+  "provinces": {
+    "ontario": "Ontario (OCS)",
+    "bc": "British Columbia (به زودی)",
+    "alberta": "Alberta (به زودی)",
+    "quebec": "Quebec (به زودی)"
+  },
+  "stats": {
+    "totalProducts": "کل محصولات",
+    "lastUpdated": "آخرین به‌روزرسانی",
+    "categories": "دسته‌بندی‌ها",
+    "never": "هرگز",
+    "totalRecords": "کل رکوردها",
+    "inserted": "درج شده",
+    "updated": "به‌روزرسانی شده",
+    "errors": "خطاها",
+    "totalRecordsLabel": "کل رکوردها"
+  },
+  "upload": {
+    "selectFile": "بارگذاری کاتالوگ جدید",
+    "chooseFile": "انتخاب فایل",
+    "uploadButton": "بارگذاری",
+    "uploadCatalog": "بارگذاری کاتالوگ",
+    "uploading": "در حال بارگذاری...",
+    "uploadFile": "بارگذاری فایل",
+    "invalidFileType": "نوع فایل نامعتبر است. لطفاً یک فایل CSV یا Excel بارگذاری کنید.",
+    "pleaseSelectFile": "لطفاً یک فایل برای بارگذاری انتخاب کنید.",
+    "processingFile": "در حال پردازش فایل کاتالوگ...",
+    "processingFileShort": "در حال پردازش فایل...",
+    "uploadSuccess": "کاتالوگ با موفقیت بارگذاری شد!",
+    "uploadSuccessShort": "بارگذاری موفق",
+    "uploadFailed": "بارگذاری کاتالوگ ناموفق بود",
+    "uploadFailedShort": "بارگذاری ناموفق"
+  },
+  "search": {
+    "placeholder": "جستجوی محصولات...",
+    "allCategories": "همه دسته‌بندی‌ها"
+  },
+  "buttons": {
+    "export": "صادرات",
+    "exportCsv": "صادرات CSV",
+    "previous": "قبلی",
+    "next": "بعدی"
+  },
+  "table": {
+    "loadingCatalog": "در حال بارگذاری کاتالوگ...",
+    "noProductsFound": "محصولی در کاتالوگ یافت نشد",
+    "noProductsUpload": "محصولی یافت نشد. برای شروع یک کاتالوگ بارگذاری کنید.",
+    "showingPage": "نمایش صفحه {page} از نتایج",
+    "itemsCount": "{count} مورد"
+  },
+  "instructions": {
+    "line1": "فایل کاتالوگ OCS باید شامل تمام ستون‌های مورد نیاز طبق مشخصات OCS باشد.",
+    "line2": "محصولات با استفاده از شماره نوع OCS به عنوان کلید منحصر به فرد مطابقت و به‌روزرسانی می‌شوند.",
+    "line3": "محصولات جدید درج خواهند شد، محصولات موجود با آخرین اطلاعات به‌روزرسانی می‌شوند.",
+    "line4": "فیلدهای امتیاز و تعداد امتیازها در طول به‌روزرسانی‌ها حفظ خواهند شد."
+  },
+  "messages": {
+    "lastCatalogUpdate": "آخرین به‌روزرسانی کاتالوگ:"
+  }
+}

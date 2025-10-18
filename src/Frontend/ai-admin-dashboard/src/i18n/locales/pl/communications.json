@@ -1,0 +1,89 @@
+{
+  "titles": {
+    "main": "Komunikacja",
+    "overview": "Przegląd",
+    "campaigns": "Kampanie",
+    "templates": "Szablony",
+    "segments": "Segmenty",
+    "analytics": "Analityka",
+    "broadcastCampaigns": "Kampanie Nadawcze",
+    "recentCampaigns": "Ostatnie Kampanie",
+    "channelPerformance": "Wydajność Kanałów"
+  },
+  "descriptions": {
+    "managingFor": "Zarządzanie komunikacją dla",
+    "segmentationComingSoon": "Segmentacja klientów wkrótce...",
+    "noAnalytics": "Brak dostępnych danych analitycznych",
+    "noStoreSelected": "Nie Wybrano Sklepu",
+    "selectStore": "Proszę wybrać sklep, aby zarządzać komunikacją"
+  },
+  "tabs": {
+    "overview": "Przegląd",
+    "campaigns": "Kampanie",
+    "templates": "Szablony",
+    "segments": "Segmenty",
+    "analytics": "Analityka"
+  },
+  "stats": {
+    "totalCampaigns": "Wszystkie Kampanie",
+    "messagesSent": "Wysłane Wiadomości",
+    "successRate": "Wskaźnik Sukcesu",
+    "failed": "Nieudane"
+  },
+  "status": {
+    "draft": "draft",
+    "scheduled": "scheduled",
+    "sending": "sending",
+    "sent": "sent",
+    "paused": "paused",
+    "cancelled": "cancelled",
+    "failed": "failed"
+  },
+  "table": {
+    "campaign": "Kampania",
+    "status": "Status",
+    "recipients": "Odbiorcy",
+    "successRate": "Wskaźnik Sukcesu",
+    "created": "Utworzono",
+    "channels": "Kanały",
+    "scheduled": "Zaplanowane",
+    "actions": "Akcje",
+    "createdBy": "Utworzone przez",
+    "sentCount": "sent"
+  },
+  "channels": {
+    "email": "email",
+    "sms": "sms",
+    "push": "push",
+    "campaigns": "Kampanie",
+    "messages": "Wiadomości",
+    "engagement": "Zaangażowanie"
+  },
+  "actions": {
+    "newCampaign": "Nowa Kampania",
+    "viewAll": "Zobacz Wszystkie",
+    "viewDetails": "Zobacz Szczegóły",
+    "edit": "Edytuj",
+    "sendNow": "Wyślij Teraz",
+    "cancel": "Anuluj",
+    "pause": "Wstrzymaj",
+    "resume": "Wznów",
+    "refresh": "Odśwież",
+    "settings": "Ustawienia"
+  },
+  "messages": {
+    "success": {
+      "broadcastStarted": "Rozpoczęto wykonywanie nadawania",
+      "broadcastPaused": "Nadawanie wstrzymane",
+      "broadcastResumed": "Nadawanie wznowione",
+      "broadcastCancelled": "Nadawanie anulowane"
+    },
+    "error": {
+      "fetchBroadcasts": "Nie udało się pobrać nadawań",
+      "fetchAnalytics": "Nie udało się pobrać analityki"
+    }
+  },
+  "confirm": {
+    "cancelBroadcast": "Czy na pewno chcesz anulować to nadawanie?"
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "titles": {
+    "main": "Buugga Alaabta Gobolka",
+    "mainVirtual": "Buugga Alaabta Gobolka (Scrollka Muuqaalka)",
+    "uploadSection": "Soo Geli Buugga",
+    "uploadInstructions": "Tilmaamaha Soo Gelinta",
+    "catalogProducts": "Alaabta Buugga"
+  },
+  "descriptions": {
+    "main": "Fiiri oo maamul buugaagta alaabta ee qaybiyayaasha cannabis-ka gobolka.",
+    "mainVirtual": "Maamul oo soo geli buugaagta alaabta cannabis-ka gobolka",
+    "selectProvince": "Dooro Gobol",
+    "viewingProvince": "Daawasho Buugga Gobolka",
+    "scrollHint": "Scrollka jiho toosan si aad u aragto dhammaan tiirarrada →"
+  },
+  "provinces": {
+    "ontario": "Ontario (OCS)",
+    "bc": "British Columbia (Dhawaan)",
+    "alberta": "Alberta (Dhawaan)",
+    "quebec": "Quebec (Dhawaan)"
+  },
+  "stats": {
+    "totalProducts": "Wadarta Alaabta",
+    "lastUpdated": "Cusboonaysiintii Ugu Dambeysay",
+    "categories": "Qaybaha",
+    "never": "Weligaa",
+    "totalRecords": "Wadarta Diiwaanada",
+    "inserted": "La Geliyay",
+    "updated": "La Cusboonaysiiyay",
+    "errors": "Khaladaadka",
+    "totalRecordsLabel": "Wadarta diiwaanada"
+  },
+  "upload": {
+    "selectFile": "Soo Geli Buug Cusub",
+    "chooseFile": "Dooro Faylka",
+    "uploadButton": "Soo Geli",
+    "uploadCatalog": "Soo Geli Buugga",
+    "uploading": "Waa la soo geliyaa...",
+    "uploadFile": "Soo Geli Faylka",
+    "invalidFileType": "Nooca faylka khalad ah. Fadlan soo geli fayl CSV ama Excel.",
+    "pleaseSelectFile": "Fadlan dooro fayl si aad u soo geliso.",
+    "processingFile": "Waa la habynayaa faylka buugga...",
+    "processingFileShort": "Waa la habynayaa faylka...",
+    "uploadSuccess": "Buugga si guul leh ayaa loo soo geliyay!",
+    "uploadSuccessShort": "Soo gelinta waa guul",
+    "uploadFailed": "Soo gelinta buugga waa fashilantay",
+    "uploadFailedShort": "Soo gelinta waa fashilantay"
+  },
+  "search": {
+    "placeholder": "Raadi alaabta...",
+    "allCategories": "Dhammaan Qaybaha"
+  },
+  "buttons": {
+    "export": "Dhoofin",
+    "exportCsv": "Dhoofin CSV",
+    "previous": "Hore",
+    "next": "Xiga"
+  },
+  "table": {
+    "loadingCatalog": "Waa la rarayo buugga...",
+    "noProductsFound": "Alaab kama helin buugga",
+    "noProductsUpload": "Alaab lama helin. Soo geli buug si aad u bilowdo.",
+    "showingPage": "Waxaa la muujinayaa bogga {page} ee natiijooyinka",
+    "itemsCount": "{count} shay"
+  },
+  "instructions": {
+    "line1": "Faylka buugga OCS waa inuu leeyahay dhammaan tiirarrada loo baahan yahay sida loo qeexay OCS.",
+    "line2": "Alaabta waxaa lagu qanacsanayaa oo la cusboonaysiinayaa iyadoo la isticmaalayo Nambarka OCS Variant sidii furaha gaarka ah.",
+    "line3": "Alaabta cusub waa la gelin doonaa, alaabta jirta waxaa lagu cusboonaysiin doonaa macluumaadka ugu dambeeyay.",
+    "line4": "Goobaha qiimaynta iyo tirinta qiimaynta waa la ilaalin doonaa inta lagu jiro cusboonaysiinta."
+  },
+  "messages": {
+    "lastCatalogUpdate": "Cusboonaysiintii buugga ee ugu dambeysay:"
+  }
+}

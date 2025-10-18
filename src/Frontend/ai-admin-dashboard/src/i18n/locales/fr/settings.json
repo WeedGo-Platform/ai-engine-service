@@ -1,0 +1,43 @@
+{
+  "titles": {
+    "tenantSettings": "Paramètres",
+    "generalInformation": "Informations Générales"
+  },
+  "descriptions": {
+    "tenantManagement": "Gérer la configuration du locataire et les paramètres de paiement"
+  },
+  "tabs": {
+    "general": "Paramètres Généraux",
+    "payment": "Paramètres de Paiement",
+    "communication": "Paramètres de Communication"
+  },
+  "fields": {
+    "tenantName": "Nom du Locataire",
+    "tenantCode": "Code du Locataire",
+    "companyName": "Nom de l'Entreprise",
+    "businessNumber": "Numéro d'Entreprise",
+    "contactEmail": "Email de Contact",
+    "contactPhone": "Téléphone de Contact",
+    "status": "Statut",
+    "subscriptionTier": "Niveau d'Abonnement",
+    "address": "Adresse"
+  },
+  "actions": {
+    "backToTenants": "Retour aux Locataires"
+  },
+  "messages": {
+    "notSpecified": "Non spécifié",
+    "loading": "Chargement...",
+    "tenantNotFound": "Locataire introuvable",
+    "success": {
+      "paymentSettingsUpdated": "Paramètres de paiement mis à jour avec succès",
+      "communicationSettingsUpdated": "Paramètres de communication mis à jour avec succès",
+      "configurationValid": "la configuration est valide"
+    },
+    "error": {
+      "loadSettings": "Échec du chargement des paramètres du locataire",
+      "updatePaymentSettings": "Échec de la mise à jour des paramètres de paiement",
+      "updateCommunicationSettings": "Échec de la mise à jour des paramètres de communication"
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "titles": {
+    "main": "Catálogo de productos provinciales",
+    "mainVirtual": "Catálogo de productos provinciales (Desplazamiento virtual)",
+    "uploadSection": "Subir catálogo",
+    "uploadInstructions": "Instrucciones de carga",
+    "catalogProducts": "Productos del catálogo"
+  },
+  "descriptions": {
+    "main": "Vea y gestione catálogos de productos de distribuidores provinciales de cannabis.",
+    "mainVirtual": "Gestionar y subir catálogos de productos de cannabis provinciales",
+    "selectProvince": "Seleccionar provincia",
+    "viewingProvince": "Visualización del catálogo provincial",
+    "scrollHint": "Desplácese horizontalmente para ver todas las columnas →"
+  },
+  "provinces": {
+    "ontario": "Ontario (OCS)",
+    "bc": "British Columbia (Próximamente)",
+    "alberta": "Alberta (Próximamente)",
+    "quebec": "Quebec (Próximamente)"
+  },
+  "stats": {
+    "totalProducts": "Productos totales",
+    "lastUpdated": "Última actualización",
+    "categories": "Categorías",
+    "never": "Nunca",
+    "totalRecords": "Registros totales",
+    "inserted": "Insertados",
+    "updated": "Actualizados",
+    "errors": "Errores",
+    "totalRecordsLabel": "Registros totales"
+  },
+  "upload": {
+    "selectFile": "Subir nuevo catálogo",
+    "chooseFile": "Elegir archivo",
+    "uploadButton": "Subir",
+    "uploadCatalog": "Subir catálogo",
+    "uploading": "Subiendo...",
+    "uploadFile": "Subir archivo",
+    "invalidFileType": "Tipo de archivo inválido. Por favor, suba un archivo CSV o Excel.",
+    "pleaseSelectFile": "Por favor, seleccione un archivo para subir.",
+    "processingFile": "Procesando archivo de catálogo...",
+    "processingFileShort": "Procesando archivo...",
+    "uploadSuccess": "¡Catálogo subido con éxito!",
+    "uploadSuccessShort": "Carga exitosa",
+    "uploadFailed": "Error al subir el catálogo",
+    "uploadFailedShort": "Carga fallida"
+  },
+  "search": {
+    "placeholder": "Buscar productos...",
+    "allCategories": "Todas las categorías"
+  },
+  "buttons": {
+    "export": "Exportar",
+    "exportCsv": "Exportar CSV",
+    "previous": "Anterior",
+    "next": "Siguiente"
+  },
+  "table": {
+    "loadingCatalog": "Cargando catálogo...",
+    "noProductsFound": "No se encontraron productos en el catálogo",
+    "noProductsUpload": "No se encontraron productos. Suba un catálogo para comenzar.",
+    "showingPage": "Mostrando página {page} de resultados",
+    "itemsCount": "{count} artículos"
+  },
+  "instructions": {
+    "line1": "El archivo de catálogo OCS debe contener todas las columnas requeridas según la especificación OCS.",
+    "line2": "Los productos se emparejan y actualizan utilizando el número de variante OCS como clave única.",
+    "line3": "Los nuevos productos se insertarán, los productos existentes se actualizarán con la información más reciente.",
+    "line4": "Los campos de calificación y recuento de calificaciones se conservarán durante las actualizaciones."
+  },
+  "messages": {
+    "lastCatalogUpdate": "Última actualización del catálogo:"
+  }
+}

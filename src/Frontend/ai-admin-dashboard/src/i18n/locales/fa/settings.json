@@ -1,0 +1,43 @@
+{
+  "titles": {
+    "tenantSettings": "تنظیمات",
+    "generalInformation": "اطلاعات عمومی"
+  },
+  "descriptions": {
+    "tenantManagement": "مدیریت پیکربندی مستاجر و تنظیمات پرداخت"
+  },
+  "tabs": {
+    "general": "تنظیمات عمومی",
+    "payment": "تنظیمات پرداخت",
+    "communication": "تنظیمات ارتباطات"
+  },
+  "fields": {
+    "tenantName": "نام مستاجر",
+    "tenantCode": "کد مستاجر",
+    "companyName": "نام شرکت",
+    "businessNumber": "شماره کسب‌وکار",
+    "contactEmail": "ایمیل تماس",
+    "contactPhone": "تلفن تماس",
+    "status": "وضعیت",
+    "subscriptionTier": "سطح اشتراک",
+    "address": "آدرس"
+  },
+  "actions": {
+    "backToTenants": "بازگشت به مستاجران"
+  },
+  "messages": {
+    "notSpecified": "مشخص نشده",
+    "loading": "در حال بارگذاری...",
+    "tenantNotFound": "مستاجر یافت نشد",
+    "success": {
+      "paymentSettingsUpdated": "تنظیمات پرداخت با موفقیت به‌روزرسانی شد",
+      "communicationSettingsUpdated": "تنظیمات ارتباطات با موفقیت به‌روزرسانی شد",
+      "configurationValid": "پیکربندی معتبر است"
+    },
+    "error": {
+      "loadSettings": "بارگذاری تنظیمات مستاجر ناموفق بود",
+      "updatePaymentSettings": "به‌روزرسانی تنظیمات پرداخت ناموفق بود",
+      "updateCommunicationSettings": "به‌روزرسانی تنظیمات ارتباطات ناموفق بود"
+    }
+  }
+}

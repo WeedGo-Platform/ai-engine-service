@@ -1,0 +1,89 @@
+{
+  "titles": {
+    "main": "যোগাযোগ",
+    "overview": "সংক্ষিপ্ত বিবরণ",
+    "campaigns": "ক্যাম্পেইন",
+    "templates": "টেমপ্লেট",
+    "segments": "বিভাগ",
+    "analytics": "বিশ্লেষণ",
+    "broadcastCampaigns": "সম্প্রচার ক্যাম্পেইন",
+    "recentCampaigns": "সাম্প্রতিক ক্যাম্পেইন",
+    "channelPerformance": "চ্যানেল পারফরম্যান্স"
+  },
+  "descriptions": {
+    "managingFor": "যোগাযোগ পরিচালনা করছে",
+    "segmentationComingSoon": "গ্রাহক বিভাজন শীঘ্রই আসছে...",
+    "noAnalytics": "কোনো বিশ্লেষণ ডেটা উপলব্ধ নেই",
+    "noStoreSelected": "কোনো স্টোর নির্বাচিত নেই",
+    "selectStore": "যোগাযোগ পরিচালনা করতে অনুগ্রহ করে একটি স্টোর নির্বাচন করুন"
+  },
+  "tabs": {
+    "overview": "সংক্ষিপ্ত বিবরণ",
+    "campaigns": "ক্যাম্পেইন",
+    "templates": "টেমপ্লেট",
+    "segments": "বিভাগ",
+    "analytics": "বিশ্লেষণ"
+  },
+  "stats": {
+    "totalCampaigns": "মোট ক্যাম্পেইন",
+    "messagesSent": "পাঠানো বার্তা",
+    "successRate": "সফলতার হার",
+    "failed": "ব্যর্থ"
+  },
+  "status": {
+    "draft": "draft",
+    "scheduled": "scheduled",
+    "sending": "sending",
+    "sent": "sent",
+    "paused": "paused",
+    "cancelled": "cancelled",
+    "failed": "failed"
+  },
+  "table": {
+    "campaign": "ক্যাম্পেইন",
+    "status": "অবস্থা",
+    "recipients": "প্রাপক",
+    "successRate": "সফলতার হার",
+    "created": "তৈরি করা হয়েছে",
+    "channels": "চ্যানেল",
+    "scheduled": "নির্ধারিত",
+    "actions": "কর্ম",
+    "createdBy": "তৈরি করেছেন",
+    "sentCount": "sent"
+  },
+  "channels": {
+    "email": "email",
+    "sms": "sms",
+    "push": "push",
+    "campaigns": "ক্যাম্পেইন",
+    "messages": "বার্তা",
+    "engagement": "সম্পৃক্ততা"
+  },
+  "actions": {
+    "newCampaign": "নতুন ক্যাম্পেইন",
+    "viewAll": "সব দেখুন",
+    "viewDetails": "বিস্তারিত দেখুন",
+    "edit": "সম্পাদনা করুন",
+    "sendNow": "এখনই পাঠান",
+    "cancel": "বাতিল করুন",
+    "pause": "বিরতি দিন",
+    "resume": "পুনরায় শুরু করুন",
+    "refresh": "রিফ্রেশ করুন",
+    "settings": "সেটিংস"
+  },
+  "messages": {
+    "success": {
+      "broadcastStarted": "সম্প্রচার সম্পাদন শুরু হয়েছে",
+      "broadcastPaused": "সম্প্রচার বিরতি দেওয়া হয়েছে",
+      "broadcastResumed": "সম্প্রচার পুনরায় শুরু হয়েছে",
+      "broadcastCancelled": "সম্প্রচার বাতিল করা হয়েছে"
+    },
+    "error": {
+      "fetchBroadcasts": "সম্প্রচার আনতে ব্যর্থ",
+      "fetchAnalytics": "বিশ্লেষণ আনতে ব্যর্থ"
+    }
+  },
+  "confirm": {
+    "cancelBroadcast": "আপনি কি নিশ্চিত যে আপনি এই সম্প্রচার বাতিল করতে চান?"
+  }
+}

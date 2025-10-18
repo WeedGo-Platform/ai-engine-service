@@ -1,0 +1,43 @@
+{
+  "titles": {
+    "tenantSettings": "ਸੈਟਿੰਗਾਂ",
+    "generalInformation": "ਆਮ ਜਾਣਕਾਰੀ"
+  },
+  "descriptions": {
+    "tenantManagement": "ਕਿਰਾਏਦਾਰ ਸੰਰਚਨਾ ਅਤੇ ਭੁਗਤਾਨ ਸੈਟਿੰਗਾਂ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰੋ"
+  },
+  "tabs": {
+    "general": "ਆਮ ਸੈਟਿੰਗਾਂ",
+    "payment": "ਭੁਗਤਾਨ ਸੈਟਿੰਗਾਂ",
+    "communication": "ਸੰਚਾਰ ਸੈਟਿੰਗਾਂ"
+  },
+  "fields": {
+    "tenantName": "ਕਿਰਾਏਦਾਰ ਦਾ ਨਾਮ",
+    "tenantCode": "ਕਿਰਾਏਦਾਰ ਕੋਡ",
+    "companyName": "ਕੰਪਨੀ ਦਾ ਨਾਮ",
+    "businessNumber": "ਕਾਰੋਬਾਰ ਨੰਬਰ",
+    "contactEmail": "ਸੰਪਰਕ ਈਮੇਲ",
+    "contactPhone": "ਸੰਪਰਕ ਫ਼ੋਨ",
+    "status": "ਸਥਿਤੀ",
+    "subscriptionTier": "ਗਾਹਕੀ ਪੱਧਰ",
+    "address": "ਪਤਾ"
+  },
+  "actions": {
+    "backToTenants": "ਕਿਰਾਏਦਾਰਾਂ 'ਤੇ ਵਾਪਸ ਜਾਓ"
+  },
+  "messages": {
+    "notSpecified": "ਨਿਰਧਾਰਿਤ ਨਹੀਂ",
+    "loading": "ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...",
+    "tenantNotFound": "ਕਿਰਾਏਦਾਰ ਨਹੀਂ ਮਿਲਿਆ",
+    "success": {
+      "paymentSettingsUpdated": "ਭੁਗਤਾਨ ਸੈਟਿੰਗਾਂ ਸਫਲਤਾਪੂਰਵਕ ਅੱਪਡੇਟ ਕੀਤੀਆਂ ਗਈਆਂ",
+      "communicationSettingsUpdated": "ਸੰਚਾਰ ਸੈਟਿੰਗਾਂ ਸਫਲਤਾਪੂਰਵਕ ਅੱਪਡੇਟ ਕੀਤੀਆਂ ਗਈਆਂ",
+      "configurationValid": "ਸੰਰਚਨਾ ਵੈਧ ਹੈ"
+    },
+    "error": {
+      "loadSettings": "ਕਿਰਾਏਦਾਰ ਸੈਟਿੰਗਾਂ ਲੋਡ ਕਰਨ ਵਿੱਚ ਅਸਫਲ",
+      "updatePaymentSettings": "ਭੁਗਤਾਨ ਸੈਟਿੰਗਾਂ ਅੱਪਡੇਟ ਕਰਨ ਵਿੱਚ ਅਸਫਲ",
+      "updateCommunicationSettings": "ਸੰਚਾਰ ਸੈਟਿੰਗਾਂ ਅੱਪਡੇਟ ਕਰਨ ਵਿੱਚ ਅਸਫਲ"
+    }
+  }
+}

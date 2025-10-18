@@ -1,0 +1,75 @@
+{
+  "titles": {
+    "main": "省級產品目錄",
+    "mainVirtual": "省級產品目錄（虛擬滾動）",
+    "uploadSection": "上載目錄",
+    "uploadInstructions": "上載指引",
+    "catalogProducts": "目錄產品"
+  },
+  "descriptions": {
+    "main": "查看同管理省級大麻經銷商嘅產品目錄。",
+    "mainVirtual": "管理同上載省級大麻產品目錄",
+    "selectProvince": "選擇省份",
+    "viewingProvince": "查看省級目錄",
+    "scrollHint": "水平滾動以查看所有欄 →"
+  },
+  "provinces": {
+    "ontario": "Ontario (OCS)",
+    "bc": "British Columbia（即將推出）",
+    "alberta": "Alberta（即將推出）",
+    "quebec": "Quebec（即將推出）"
+  },
+  "stats": {
+    "totalProducts": "總產品數",
+    "lastUpdated": "最後更新",
+    "categories": "類別",
+    "never": "從未",
+    "totalRecords": "總記錄數",
+    "inserted": "已插入",
+    "updated": "已更新",
+    "errors": "錯誤",
+    "totalRecordsLabel": "總記錄數"
+  },
+  "upload": {
+    "selectFile": "上載新目錄",
+    "chooseFile": "選擇檔案",
+    "uploadButton": "上載",
+    "uploadCatalog": "上載目錄",
+    "uploading": "上載緊...",
+    "uploadFile": "上載檔案",
+    "invalidFileType": "檔案類型無效。請上載CSV或Excel檔案。",
+    "pleaseSelectFile": "請選擇要上載嘅檔案。",
+    "processingFile": "處理緊目錄檔案...",
+    "processingFileShort": "處理緊檔案...",
+    "uploadSuccess": "目錄上載成功！",
+    "uploadSuccessShort": "上載成功",
+    "uploadFailed": "目錄上載失敗",
+    "uploadFailedShort": "上載失敗"
+  },
+  "search": {
+    "placeholder": "搜尋產品...",
+    "allCategories": "所有類別"
+  },
+  "buttons": {
+    "export": "匯出",
+    "exportCsv": "匯出CSV",
+    "previous": "上一頁",
+    "next": "下一頁"
+  },
+  "table": {
+    "loadingCatalog": "載入緊目錄...",
+    "noProductsFound": "目錄中搵唔到產品",
+    "noProductsUpload": "搵唔到產品。上載目錄以開始使用。",
+    "showingPage": "顯示第{page}頁結果",
+    "itemsCount": "{count}項"
+  },
+  "instructions": {
+    "line1": "OCS目錄檔案應包含OCS規範要求嘅所有欄。",
+    "line2": "產品使用OCS變體編號作為唯一鍵進行匹配同更新。",
+    "line3": "新產品將被插入，現有產品將使用最新資訊進行更新。",
+    "line4": "評分同評分計數欄位將喺更新期間保留。"
+  },
+  "messages": {
+    "lastCatalogUpdate": "上次目錄更新："
+  }
+}

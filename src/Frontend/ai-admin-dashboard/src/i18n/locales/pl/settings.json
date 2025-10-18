@@ -1,0 +1,43 @@
+{
+  "titles": {
+    "tenantSettings": "Ustawienia",
+    "generalInformation": "Informacje Ogólne"
+  },
+  "descriptions": {
+    "tenantManagement": "Zarządzaj konfiguracją najemcy i ustawieniami płatności"
+  },
+  "tabs": {
+    "general": "Ustawienia Ogólne",
+    "payment": "Ustawienia Płatności",
+    "communication": "Ustawienia Komunikacji"
+  },
+  "fields": {
+    "tenantName": "Nazwa Najemcy",
+    "tenantCode": "Kod Najemcy",
+    "companyName": "Nazwa Firmy",
+    "businessNumber": "Numer Działalności",
+    "contactEmail": "Email Kontaktowy",
+    "contactPhone": "Telefon Kontaktowy",
+    "status": "Status",
+    "subscriptionTier": "Poziom Subskrypcji",
+    "address": "Adres"
+  },
+  "actions": {
+    "backToTenants": "Powrót do Najemców"
+  },
+  "messages": {
+    "notSpecified": "Nie określono",
+    "loading": "Ładowanie...",
+    "tenantNotFound": "Nie znaleziono najemcy",
+    "success": {
+      "paymentSettingsUpdated": "Ustawienia płatności zaktualizowane pomyślnie",
+      "communicationSettingsUpdated": "Ustawienia komunikacji zaktualizowane pomyślnie",
+      "configurationValid": "konfiguracja jest prawidłowa"
+    },
+    "error": {
+      "loadSettings": "Nie udało się załadować ustawień najemcy",
+      "updatePaymentSettings": "Nie udało się zaktualizować ustawień płatności",
+      "updateCommunicationSettings": "Nie udało się zaktualizować ustawień komunikacji"
+    }
+  }
+}

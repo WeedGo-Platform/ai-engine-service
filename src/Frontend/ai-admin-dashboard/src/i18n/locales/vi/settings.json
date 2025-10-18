@@ -1,0 +1,43 @@
+{
+  "titles": {
+    "tenantSettings": "Cài Đặt",
+    "generalInformation": "Thông Tin Chung"
+  },
+  "descriptions": {
+    "tenantManagement": "Quản lý cấu hình người thuê và cài đặt thanh toán"
+  },
+  "tabs": {
+    "general": "Cài Đặt Chung",
+    "payment": "Cài Đặt Thanh Toán",
+    "communication": "Cài Đặt Giao Tiếp"
+  },
+  "fields": {
+    "tenantName": "Tên Người Thuê",
+    "tenantCode": "Mã Người Thuê",
+    "companyName": "Tên Công Ty",
+    "businessNumber": "Số Kinh Doanh",
+    "contactEmail": "Email Liên Hệ",
+    "contactPhone": "Điện Thoại Liên Hệ",
+    "status": "Trạng Thái",
+    "subscriptionTier": "Cấp Độ Đăng Ký",
+    "address": "Địa Chỉ"
+  },
+  "actions": {
+    "backToTenants": "Quay Lại Danh Sách Người Thuê"
+  },
+  "messages": {
+    "notSpecified": "Không xác định",
+    "loading": "Đang tải...",
+    "tenantNotFound": "Không tìm thấy người thuê",
+    "success": {
+      "paymentSettingsUpdated": "Cập nhật cài đặt thanh toán thành công",
+      "communicationSettingsUpdated": "Cập nhật cài đặt giao tiếp thành công",
+      "configurationValid": "cấu hình hợp lệ"
+    },
+    "error": {
+      "loadSettings": "Không thể tải cài đặt người thuê",
+      "updatePaymentSettings": "Không thể cập nhật cài đặt thanh toán",
+      "updateCommunicationSettings": "Không thể cập nhật cài đặt giao tiếp"
+    }
+  }
+}

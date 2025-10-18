@@ -1,0 +1,89 @@
+{
+  "titles": {
+    "main": "Communicatie",
+    "overview": "Overzicht",
+    "campaigns": "Campagnes",
+    "templates": "Sjablonen",
+    "segments": "Segmenten",
+    "analytics": "Analyses",
+    "broadcastCampaigns": "Uitzendcampagnes",
+    "recentCampaigns": "Recente Campagnes",
+    "channelPerformance": "Kanaal Prestaties"
+  },
+  "descriptions": {
+    "managingFor": "Communicatie beheren voor",
+    "segmentationComingSoon": "Klantsegmentatie binnenkort beschikbaar...",
+    "noAnalytics": "Geen analysegegevens beschikbaar",
+    "noStoreSelected": "Geen Winkel Geselecteerd",
+    "selectStore": "Selecteer een winkel om communicatie te beheren"
+  },
+  "tabs": {
+    "overview": "Overzicht",
+    "campaigns": "Campagnes",
+    "templates": "Sjablonen",
+    "segments": "Segmenten",
+    "analytics": "Analyses"
+  },
+  "stats": {
+    "totalCampaigns": "Totaal Campagnes",
+    "messagesSent": "Verzonden Berichten",
+    "successRate": "Succespercentage",
+    "failed": "Mislukt"
+  },
+  "status": {
+    "draft": "draft",
+    "scheduled": "scheduled",
+    "sending": "sending",
+    "sent": "sent",
+    "paused": "paused",
+    "cancelled": "cancelled",
+    "failed": "failed"
+  },
+  "table": {
+    "campaign": "Campagne",
+    "status": "Status",
+    "recipients": "Ontvangers",
+    "successRate": "Succespercentage",
+    "created": "Aangemaakt",
+    "channels": "Kanalen",
+    "scheduled": "Gepland",
+    "actions": "Acties",
+    "createdBy": "Gemaakt door",
+    "sentCount": "sent"
+  },
+  "channels": {
+    "email": "email",
+    "sms": "sms",
+    "push": "push",
+    "campaigns": "Campagnes",
+    "messages": "Berichten",
+    "engagement": "Betrokkenheid"
+  },
+  "actions": {
+    "newCampaign": "Nieuwe Campagne",
+    "viewAll": "Bekijk Alles",
+    "viewDetails": "Bekijk Details",
+    "edit": "Bewerken",
+    "sendNow": "Nu Verzenden",
+    "cancel": "Annuleren",
+    "pause": "Pauzeren",
+    "resume": "Hervatten",
+    "refresh": "Vernieuwen",
+    "settings": "Instellingen"
+  },
+  "messages": {
+    "success": {
+      "broadcastStarted": "Uitzending uitvoering gestart",
+      "broadcastPaused": "Uitzending gepauzeerd",
+      "broadcastResumed": "Uitzending hervat",
+      "broadcastCancelled": "Uitzending geannuleerd"
+    },
+    "error": {
+      "fetchBroadcasts": "Ophalen van uitzendingen mislukt",
+      "fetchAnalytics": "Ophalen van analyses mislukt"
+    }
+  },
+  "confirm": {
+    "cancelBroadcast": "Weet u zeker dat u deze uitzending wilt annuleren?"
+  }
+}

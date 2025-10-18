@@ -1,0 +1,132 @@
+{
+  "voiceApi": {
+    "title": "تست API صوتی",
+    "apiEndpoint": "نقطه پایانی API",
+    "recording": {
+      "title": "1. ضبط صدا",
+      "start": "شروع ضبط",
+      "stop": "توقف ضبط",
+      "play": "پخش ضبط",
+      "inProgress": "در حال ضبط...",
+      "ready": "صدا ضبط شد و آماده رونویسی است"
+    },
+    "transcription": {
+      "title": "2. تست رونویسی",
+      "button": "رونویسی صدا",
+      "buttonLoading": "در حال رونویسی...",
+      "result": "نتیجه رونویسی:",
+      "noAudio": "صدایی ضبط نشده است. لطفاً ابتدا صدا را ضبط کنید.",
+      "noTranscription": "رونویسی موجود نیست",
+      "success": "رونویسی با موفقیت کامل شد"
+    },
+    "synthesis": {
+      "title": "3. تست سنتز",
+      "textLabel": "متن برای سنتز",
+      "textPlaceholder": "متن را برای تبدیل به گفتار وارد کنید...",
+      "voiceLabel": "صدا",
+      "button": "سنتز گفتار",
+      "buttonLoading": "در حال سنتز...",
+      "play": "پخش سنتز شده",
+      "noText": "لطفاً متن را برای سنتز وارد کنید",
+      "success": "سنتز با موفقیت کامل شد",
+      "failed": "سنتز شکست خورد"
+    },
+    "debug": {
+      "title": "اطلاعات اشکال‌زدایی",
+      "endpoint": "نقطه پایانی",
+      "transcription": "رونویسی",
+      "synthesis": "سنتز",
+      "voices": "صداها"
+    },
+    "messages": {
+      "voicesFetched": "صداها با موفقیت دریافت شدند",
+      "voicesFailed": "دریافت صداها شکست خورد",
+      "recordingFailed": "شروع ضبط شکست خورد",
+      "recordingSaved": "ضبط ذخیره شد",
+      "transcriptionError": "خطای رونویسی",
+      "synthesisError": "خطای سنتز"
+    }
+  },
+  "logs": {
+    "title": "گزارش‌های سیستم",
+    "description": "مشاهده و جستجوی گزارش‌های برنامه از Elasticsearch",
+    "filters": {
+      "search": "جستجوی گزارش‌ها",
+      "searchPlaceholder": "جستجوی پیام، ثبت‌کننده، ماژول...",
+      "logLevel": "سطح گزارش",
+      "allLevels": "همه سطوح",
+      "error": "خطا",
+      "warning": "هشدار",
+      "info": "اطلاعات",
+      "debug": "اشکال‌زدایی",
+      "timeRange": "بازه زمانی",
+      "advancedFilters": "فیلترهای پیشرفته",
+      "correlationId": "شناسه همبستگی",
+      "correlationIdPlaceholder": "فیلتر بر اساس شناسه همبستگی",
+      "tenantId": "شناسه مستأجر",
+      "tenantIdPlaceholder": "فیلتر بر اساس مستأجر",
+      "storeId": "شناسه فروشگاه",
+      "storeIdPlaceholder": "فیلتر بر اساس فروشگاه",
+      "userId": "شناسه کاربر",
+      "userIdPlaceholder": "فیلتر بر اساس کاربر",
+      "sessionId": "شناسه جلسه",
+      "sessionIdPlaceholder": "فیلتر بر اساس جلسه",
+      "service": "سرویس",
+      "servicePlaceholder": "فیلتر بر اساس سرویس",
+      "endDate": "تاریخ پایان",
+      "clearAll": "پاک کردن همه فیلترها"
+    },
+    "actions": {
+      "refresh": "بازخوانی",
+      "export": "صادرات",
+      "autoRefresh": "بازخوانی خودکار هر",
+      "details": "جزئیات",
+      "close": "بستن"
+    },
+    "table": {
+      "timestamp": "مهر زمانی",
+      "level": "سطح",
+      "serviceLogger": "سرویس / ثبت‌کننده",
+      "message": "پیام",
+      "correlationId": "شناسه همبستگی",
+      "actions": "اقدامات",
+      "noLogs": "گزارشی یافت نشد",
+      "totalLogs": "کل گزارش‌ها"
+    },
+    "pagination": {
+      "showing": "نمایش {{from}} تا {{to}} از {{total}}",
+      "perPage": "در هر صفحه",
+      "previous": "قبلی",
+      "next": "بعدی",
+      "page": "صفحه {{current}} از {{total}}"
+    },
+    "details": {
+      "title": "جزئیات گزارش",
+      "summary": "خلاصه",
+      "metadata": "فراداده",
+      "correlationId": "شناسه همبستگی",
+      "sessionId": "شناسه جلسه",
+      "tenantId": "شناسه مستأجر",
+      "storeId": "شناسه فروشگاه",
+      "userId": "شناسه کاربر",
+      "service": "سرویس",
+      "environment": "محیط",
+      "logger": "ثبت‌کننده",
+      "module": "ماژول",
+      "function": "تابع",
+      "lineNumber": "شماره خط",
+      "duration": "مدت زمان",
+      "statusCode": "کد وضعیت",
+      "method": "روش",
+      "path": "مسیر",
+      "clientHost": "میزبان کلاینت",
+      "exception": "استثنا",
+      "viewRawJson": "مشاهده JSON خام"
+    },
+    "messages": {
+      "fetchFailed": "دریافت گزارش‌ها از Elasticsearch شکست خورد",
+      "exportSuccess": "گزارش‌ها با موفقیت صادر شدند",
+      "logExported": "گزارش صادر شد"
+    }
+  }
+}

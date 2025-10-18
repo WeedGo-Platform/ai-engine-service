@@ -1,0 +1,43 @@
+{
+  "titles": {
+    "tenantSettings": "Settings",
+    "generalInformation": "General Information"
+  },
+  "descriptions": {
+    "tenantManagement": "Manage tenant configuration and payment settings"
+  },
+  "tabs": {
+    "general": "General Settings",
+    "payment": "Payment Settings",
+    "communication": "Communication Settings"
+  },
+  "fields": {
+    "tenantName": "Tenant Name",
+    "tenantCode": "Tenant Code",
+    "companyName": "Company Name",
+    "businessNumber": "Business Number",
+    "contactEmail": "Contact Email",
+    "contactPhone": "Contact Phone",
+    "status": "Status",
+    "subscriptionTier": "Subscription Tier",
+    "address": "Address"
+  },
+  "actions": {
+    "backToTenants": "Back to Tenants"
+  },
+  "messages": {
+    "notSpecified": "Not specified",
+    "loading": "Loading...",
+    "tenantNotFound": "Tenant not found",
+    "success": {
+      "paymentSettingsUpdated": "Payment settings updated successfully",
+      "communicationSettingsUpdated": "Communication settings updated successfully",
+      "configurationValid": "configuration is valid"
+    },
+    "error": {
+      "loadSettings": "Failed to load tenant settings",
+      "updatePaymentSettings": "Failed to update payment settings",
+      "updateCommunicationSettings": "Failed to update communication settings"
+    }
+  }
+}

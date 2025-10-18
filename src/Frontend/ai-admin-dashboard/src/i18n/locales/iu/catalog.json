@@ -1,0 +1,75 @@
+{
+  "titles": {
+    "main": "Provincial Product Catalog",
+    "mainVirtual": "Provincial Product Catalog (Virtual Scroll)",
+    "uploadSection": "Upload Catalog",
+    "uploadInstructions": "Upload Instructions",
+    "catalogProducts": "Catalog Products"
+  },
+  "descriptions": {
+    "main": "View and manage product catalogs from provincial cannabis distributors.",
+    "mainVirtual": "Manage and upload provincial cannabis product catalogs",
+    "selectProvince": "Select Province",
+    "viewingProvince": "Viewing Province Catalog",
+    "scrollHint": "Scroll horizontally to view all columns →"
+  },
+  "provinces": {
+    "ontario": "Ontario (OCS)",
+    "bc": "British Columbia (Coming Soon)",
+    "alberta": "Alberta (Coming Soon)",
+    "quebec": "Quebec (Coming Soon)"
+  },
+  "stats": {
+    "totalProducts": "Total Products",
+    "lastUpdated": "Last Updated",
+    "categories": "Categories",
+    "never": "Never",
+    "totalRecords": "Total Records",
+    "inserted": "Inserted",
+    "updated": "Updated",
+    "errors": "Errors",
+    "totalRecordsLabel": "Total records"
+  },
+  "upload": {
+    "selectFile": "Upload New Catalog",
+    "chooseFile": "Choose File",
+    "uploadButton": "Upload",
+    "uploadCatalog": "Upload Catalog",
+    "uploading": "Uploading...",
+    "uploadFile": "Upload File",
+    "invalidFileType": "Invalid file type. Please upload a CSV or Excel file.",
+    "pleaseSelectFile": "Please select a file to upload.",
+    "processingFile": "Processing catalog file...",
+    "processingFileShort": "Processing file...",
+    "uploadSuccess": "Catalog uploaded successfully!",
+    "uploadSuccessShort": "Upload successful",
+    "uploadFailed": "Failed to upload catalog",
+    "uploadFailedShort": "Upload failed"
+  },
+  "search": {
+    "placeholder": "Search products...",
+    "allCategories": "All Categories"
+  },
+  "buttons": {
+    "export": "Export",
+    "exportCsv": "Export CSV",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "table": {
+    "loadingCatalog": "Loading catalog...",
+    "noProductsFound": "No products found in catalog",
+    "noProductsUpload": "No products found. Upload a catalog to get started.",
+    "showingPage": "Showing page {page} of results",
+    "itemsCount": "{count} items"
+  },
+  "instructions": {
+    "line1": "The OCS catalog file should contain all required columns as per the OCS specification.",
+    "line2": "Products are matched and updated using the OCS Variant Number as the unique key.",
+    "line3": "New products will be inserted, existing products will be updated with the latest information.",
+    "line4": "Rating and rating count fields will be preserved during updates."
+  },
+  "messages": {
+    "lastCatalogUpdate": "Last catalog update:"
+  }
+}

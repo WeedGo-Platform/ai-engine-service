@@ -1,0 +1,89 @@
+{
+  "titles": {
+    "main": "Isgaarsiinta",
+    "overview": "Guud Ahaan",
+    "campaigns": "Ololaha",
+    "templates": "Qaababka",
+    "segments": "Qaybaha",
+    "analytics": "Falanqaynta",
+    "broadcastCampaigns": "Ololaha Baahinta",
+    "recentCampaigns": "Ololaha Dhowaan",
+    "channelPerformance": "Waxqabadka Kanaalada"
+  },
+  "descriptions": {
+    "managingFor": "Maamulida isgaarsiinta ee",
+    "segmentationComingSoon": "Qaybinta macaamiisha dhawaan...",
+    "noAnalytics": "Ma jiraan xogta falanqaynta oo la heli karo",
+    "noStoreSelected": "Ma jiro Dukaan la Doortay",
+    "selectStore": "Fadlan dooro dukaan si aad u maamusho isgaarsiinta"
+  },
+  "tabs": {
+    "overview": "Guud Ahaan",
+    "campaigns": "Ololaha",
+    "templates": "Qaababka",
+    "segments": "Qaybaha",
+    "analytics": "Falanqaynta"
+  },
+  "stats": {
+    "totalCampaigns": "Wadarta Ololaha",
+    "messagesSent": "Fariimaha La Diray",
+    "successRate": "Heerka Guusha",
+    "failed": "Fashilay"
+  },
+  "status": {
+    "draft": "draft",
+    "scheduled": "scheduled",
+    "sending": "sending",
+    "sent": "sent",
+    "paused": "paused",
+    "cancelled": "cancelled",
+    "failed": "failed"
+  },
+  "table": {
+    "campaign": "Olole",
+    "status": "Xaalad",
+    "recipients": "Qaata",
+    "successRate": "Heerka Guusha",
+    "created": "La Abuuray",
+    "channels": "Kanaalada",
+    "scheduled": "La Qorsheeyay",
+    "actions": "Ficilada",
+    "createdBy": "Waxaa Abuuray",
+    "sentCount": "sent"
+  },
+  "channels": {
+    "email": "email",
+    "sms": "sms",
+    "push": "push",
+    "campaigns": "Ololaha",
+    "messages": "Fariimaha",
+    "engagement": "Ka Qayb Qaadashada"
+  },
+  "actions": {
+    "newCampaign": "Olole Cusub",
+    "viewAll": "Arag Dhammaan",
+    "viewDetails": "Arag Faahfaahinta",
+    "edit": "Wax Ka Bedel",
+    "sendNow": "Hadda Dir",
+    "cancel": "Jooji",
+    "pause": "Hakad",
+    "resume": "Sii Wad",
+    "refresh": "Cusboonaysii",
+    "settings": "Dejinta"
+  },
+  "messages": {
+    "success": {
+      "broadcastStarted": "Fulinta baahinta ayaa bilaabatay",
+      "broadcastPaused": "Baahinta waa la hakiyay",
+      "broadcastResumed": "Baahinta waa la sii wadey",
+      "broadcastCancelled": "Baahinta waa la joojiyay"
+    },
+    "error": {
+      "fetchBroadcasts": "Waa la fashiliyay in la soo helo baahinta",
+      "fetchAnalytics": "Waa la fashiliyay in la soo helo falanqaynta"
+    }
+  },
+  "confirm": {
+    "cancelBroadcast": "Ma hubtaa inaad rabto inaad joojiso baahinta?"
+  }
+}

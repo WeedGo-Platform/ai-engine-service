@@ -1,0 +1,89 @@
+{
+  "titles": {
+    "main": "Комунікації",
+    "overview": "Огляд",
+    "campaigns": "Кампанії",
+    "templates": "Шаблони",
+    "segments": "Сегменти",
+    "analytics": "Аналітика",
+    "broadcastCampaigns": "Розсилочні Кампанії",
+    "recentCampaigns": "Останні Кампанії",
+    "channelPerformance": "Ефективність Каналів"
+  },
+  "descriptions": {
+    "managingFor": "Керування комунікаціями для",
+    "segmentationComingSoon": "Сегментація клієнтів незабаром...",
+    "noAnalytics": "Дані аналітики недоступні",
+    "noStoreSelected": "Магазин Не Вибрано",
+    "selectStore": "Будь ласка, виберіть магазин для керування комунікаціями"
+  },
+  "tabs": {
+    "overview": "Огляд",
+    "campaigns": "Кампанії",
+    "templates": "Шаблони",
+    "segments": "Сегменти",
+    "analytics": "Аналітика"
+  },
+  "stats": {
+    "totalCampaigns": "Всього Кампаній",
+    "messagesSent": "Надіслано Повідомлень",
+    "successRate": "Відсоток Успіху",
+    "failed": "Невдало"
+  },
+  "status": {
+    "draft": "draft",
+    "scheduled": "scheduled",
+    "sending": "sending",
+    "sent": "sent",
+    "paused": "paused",
+    "cancelled": "cancelled",
+    "failed": "failed"
+  },
+  "table": {
+    "campaign": "Кампанія",
+    "status": "Статус",
+    "recipients": "Одержувачі",
+    "successRate": "Відсоток Успіху",
+    "created": "Створено",
+    "channels": "Канали",
+    "scheduled": "Заплановано",
+    "actions": "Дії",
+    "createdBy": "Створено",
+    "sentCount": "sent"
+  },
+  "channels": {
+    "email": "email",
+    "sms": "sms",
+    "push": "push",
+    "campaigns": "Кампанії",
+    "messages": "Повідомлення",
+    "engagement": "Залученість"
+  },
+  "actions": {
+    "newCampaign": "Нова Кампанія",
+    "viewAll": "Переглянути Все",
+    "viewDetails": "Переглянути Деталі",
+    "edit": "Редагувати",
+    "sendNow": "Надіслати Зараз",
+    "cancel": "Скасувати",
+    "pause": "Призупинити",
+    "resume": "Відновити",
+    "refresh": "Оновити",
+    "settings": "Налаштування"
+  },
+  "messages": {
+    "success": {
+      "broadcastStarted": "Розпочато виконання розсилки",
+      "broadcastPaused": "Розсилку призупинено",
+      "broadcastResumed": "Розсилку відновлено",
+      "broadcastCancelled": "Розсилку скасовано"
+    },
+    "error": {
+      "fetchBroadcasts": "Не вдалося отримати розсилки",
+      "fetchAnalytics": "Не вдалося отримати аналітику"
+    }
+  },
+  "confirm": {
+    "cancelBroadcast": "Ви впевнені, що хочете скасувати цю розсилку?"
+  }
+}

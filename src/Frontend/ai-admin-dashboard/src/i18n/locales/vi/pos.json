@@ -1,0 +1,127 @@
+{
+  "titles": {
+    "main": "Điểm Bán Hàng",
+    "posSettings": "Cài Đặt POS",
+    "parkedSales": "Đơn Hàng Tạm Dừng",
+    "hardwareConfiguration": "Cấu Hình Phần Cứng",
+    "cashManagement": "Quản Lý Tiền Mặt",
+    "discountsPromotions": "Giảm Giá & Khuyến Mãi"
+  },
+  "tabs": {
+    "newSale": "Bán Hàng Mới",
+    "parked": "Tạm Dừng",
+    "history": "Lịch Sử",
+    "settings": "Cài Đặt"
+  },
+  "customer": {
+    "label": "Khách Hàng",
+    "select": "Chọn",
+    "change": "Thay Đổi",
+    "returning": "Quay Lại",
+    "new": "Mới",
+    "anonymous": "Ẩn Danh",
+    "newCustomer": "Khách Hàng Mới",
+    "points": "Điểm:"
+  },
+  "cart": {
+    "empty": "Giỏ hàng trống",
+    "batch": "Lô:",
+    "discount": "Giảm Giá:",
+    "quantity": "Số Lượng"
+  },
+  "weight": {
+    "driedFlowerEquivalent": "Dried Flower Equivalent:",
+    "legalLimit": "/ 30g",
+    "exceedsLimit": "Vượt quá giới hạn pháp lý!"
+  },
+  "totals": {
+    "subtotal": "Tạm Tính",
+    "discount": "Giảm Giá",
+    "discountApplied": "Đã áp dụng giảm giá",
+    "afterDiscount": "Sau Giảm Giá",
+    "tax": "Thuế (13%)",
+    "total": "Tổng Cộng"
+  },
+  "actions": {
+    "parkSale": "Tạm Dừng Bán Hàng",
+    "clear": "Xóa",
+    "processPayment": "Xử Lý Thanh Toán",
+    "resumeSale": "Tiếp Tục Bán Hàng",
+    "addPromotion": "Thêm Khuyến Mãi",
+    "detectScanners": "Phát Hiện Máy Quét",
+    "openRegister": "Mở Quầy Thu Ngân",
+    "cashCount": "Đếm Tiền Mặt",
+    "endOfDay": "Kết Thúc Ngày",
+    "printReport": "In Báo Cáo",
+    "test": "Kiểm Tra",
+    "active": "Hoạt Động"
+  },
+  "search": {
+    "placeholder": "Tìm sản phẩm hoặc quét mã vạch...",
+    "scanning": "Đang quét:",
+    "filterProducts": "Lọc sản phẩm"
+  },
+  "products": {
+    "noProductsFound": "Không tìm thấy sản phẩm",
+    "outOfStock": "Hết Hàng",
+    "low": "Thấp",
+    "stock": "Tồn Kho:",
+    "batch": "lô",
+    "batches": "lô"
+  },
+  "parked": {
+    "noParkedSales": "Không có đơn hàng tạm dừng",
+    "items": "mục"
+  },
+  "scanner": {
+    "enabled": "Máy Quét Đã Bật",
+    "disabled": "Máy Quét Đã Tắt",
+    "noScannersDetected": "Không phát hiện máy quét",
+    "connectScanner": "Kết nối máy quét và nhấp \"Phát Hiện Máy Quét\"",
+    "barcodeScanners": "Máy Quét Mã Vạch",
+    "manageConnected": "Quản lý máy quét đã kết nối"
+  },
+  "hardware": {
+    "paymentTerminal": "Thiết Bị Thanh Toán",
+    "connectCardReader": "Kết nối đầu đọc thẻ",
+    "receiptPrinter": "Máy In Hóa Đơn",
+    "printReceipts": "In hóa đơn",
+    "cashDrawer": "Ngăn Kéo Tiền Mặt",
+    "manageCash": "Quản lý tiền mặt",
+    "enabled": "Đã Bật"
+  },
+  "validation": {
+    "validIdDate": "Ngày Giấy Tờ Hợp Lệ:",
+    "orEarlier": "hoặc sớm hơn",
+    "validId": "Giấy Tờ Hợp Lệ:"
+  },
+  "promotions": {
+    "seniorDiscount": "Giảm Giá Người Cao Tuổi",
+    "seniorDescription": "Giảm 10% cho 65+",
+    "happyHour": "Giờ Vàng",
+    "happyHourDescription": "Giảm 15% từ 4-6 chiều"
+  },
+  "messages": {
+    "saleParkedSuccess": "Đã tạm dừng bán hàng thành công!",
+    "saleParkedFailed": "Tạm dừng bán hàng thất bại. Vui lòng thử lại.",
+    "resumeFailed": "Tiếp tục bán hàng thất bại. Vui lòng thử lại.",
+    "paymentSuccess": "Thanh toán thành công!",
+    "receiptPrinted": "Đã in hóa đơn.",
+    "transactionFailed": "Xử lý giao dịch thất bại. Vui lòng thử lại.",
+    "productNotFound": "Không tìm thấy sản phẩm cho mã vạch:",
+    "scannerTestSuccess": "Kiểm tra máy quét thành công! Mã vạch kiểm tra:",
+    "scannerTestFailed": "Kiểm tra máy quét thất bại",
+    "scannerTestError": "Kiểm tra máy quét thất bại"
+  },
+  "fullscreen": {
+    "enter": "Vào chế độ toàn màn hình",
+    "exit": "Thoát chế độ toàn màn hình"
+  },
+  "labels": {
+    "confidence": {
+      "high": "✓ Máy Quét",
+      "medium": "Có Thể Là Máy Quét",
+      "low": "Có Thể Máy Quét"
+    }
+  }
+}

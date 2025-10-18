@@ -1,0 +1,127 @@
+{
+  "titles": {
+    "main": "बिक्री स्थल",
+    "posSettings": "POS सेटिंग्स",
+    "parkedSales": "रोकी गई बिक्री",
+    "hardwareConfiguration": "हार्डवेयर कॉन्फ़िगरेशन",
+    "cashManagement": "नकद प्रबंधन",
+    "discountsPromotions": "छूट और प्रमोशन"
+  },
+  "tabs": {
+    "newSale": "नई बिक्री",
+    "parked": "रोकी गई",
+    "history": "इतिहास",
+    "settings": "सेटिंग्स"
+  },
+  "customer": {
+    "label": "ग्राहक",
+    "select": "चुनें",
+    "change": "बदलें",
+    "returning": "वापस आने वाला",
+    "new": "नया",
+    "anonymous": "अनाम",
+    "newCustomer": "नया ग्राहक",
+    "points": "अंक:"
+  },
+  "cart": {
+    "empty": "कार्ट खाली है",
+    "batch": "बैच:",
+    "discount": "छूट:",
+    "quantity": "मात्रा"
+  },
+  "weight": {
+    "driedFlowerEquivalent": "Dried Flower Equivalent:",
+    "legalLimit": "/ 30g",
+    "exceedsLimit": "कानूनी सीमा से अधिक!"
+  },
+  "totals": {
+    "subtotal": "उप-योग",
+    "discount": "छूट",
+    "discountApplied": "छूट लागू की गई",
+    "afterDiscount": "छूट के बाद",
+    "tax": "कर (13%)",
+    "total": "कुल"
+  },
+  "actions": {
+    "parkSale": "बिक्री रोकें",
+    "clear": "साफ़ करें",
+    "processPayment": "भुगतान संसाधित करें",
+    "resumeSale": "बिक्री फिर से शुरू करें",
+    "addPromotion": "प्रमोशन जोड़ें",
+    "detectScanners": "स्कैनर का पता लगाएं",
+    "openRegister": "रजिस्टर खोलें",
+    "cashCount": "नकद गणना",
+    "endOfDay": "दिन का अंत",
+    "printReport": "रिपोर्ट प्रिंट करें",
+    "test": "परीक्षण",
+    "active": "सक्रिय"
+  },
+  "search": {
+    "placeholder": "उत्पाद खोजें या बारकोड स्कैन करें...",
+    "scanning": "स्कैन कर रहे हैं:",
+    "filterProducts": "उत्पाद फ़िल्टर करें"
+  },
+  "products": {
+    "noProductsFound": "कोई उत्पाद नहीं मिला",
+    "outOfStock": "स्टॉक में नहीं",
+    "low": "कम",
+    "stock": "स्टॉक:",
+    "batch": "बैच",
+    "batches": "बैच"
+  },
+  "parked": {
+    "noParkedSales": "कोई रोकी गई बिक्री नहीं",
+    "items": "आइटम"
+  },
+  "scanner": {
+    "enabled": "स्कैनर सक्षम",
+    "disabled": "स्कैनर अक्षम",
+    "noScannersDetected": "कोई स्कैनर नहीं मिला",
+    "connectScanner": "स्कैनर कनेक्ट करें और \"स्कैनर का पता लगाएं\" पर क्लिक करें",
+    "barcodeScanners": "बारकोड स्कैनर",
+    "manageConnected": "कनेक्टेड स्कैनर प्रबंधित करें"
+  },
+  "hardware": {
+    "paymentTerminal": "भुगतान टर्मिनल",
+    "connectCardReader": "कार्ड रीडर कनेक्ट करें",
+    "receiptPrinter": "रसीद प्रिंटर",
+    "printReceipts": "रसीद प्रिंट करें",
+    "cashDrawer": "नकद दराज",
+    "manageCash": "नकद प्रबंधित करें",
+    "enabled": "सक्षम"
+  },
+  "validation": {
+    "validIdDate": "वैध ID तिथि:",
+    "orEarlier": "या पहले",
+    "validId": "वैध ID:"
+  },
+  "promotions": {
+    "seniorDiscount": "वरिष्ठ नागरिक छूट",
+    "seniorDescription": "65+ के लिए 10% छूट",
+    "happyHour": "हैप्पी आवर",
+    "happyHourDescription": "शाम 4-6 बजे 15% छूट"
+  },
+  "messages": {
+    "saleParkedSuccess": "बिक्री सफलतापूर्वक रोकी गई!",
+    "saleParkedFailed": "बिक्री रोकने में विफल। कृपया पुनः प्रयास करें।",
+    "resumeFailed": "बिक्री फिर से शुरू करने में विफल। कृपया पुनः प्रयास करें।",
+    "paymentSuccess": "भुगतान सफल!",
+    "receiptPrinted": "रसीद प्रिंट की गई।",
+    "transactionFailed": "लेनदेन संसाधित करने में विफल। कृपया पुनः प्रयास करें।",
+    "productNotFound": "बारकोड के लिए उत्पाद नहीं मिला:",
+    "scannerTestSuccess": "स्कैनर परीक्षण सफल! परीक्षण बारकोड:",
+    "scannerTestFailed": "स्कैनर परीक्षण विफल",
+    "scannerTestError": "स्कैनर परीक्षण में विफल"
+  },
+  "fullscreen": {
+    "enter": "फुलस्क्रीन में प्रवेश करें",
+    "exit": "फुलस्क्रीन से बाहर निकलें"
+  },
+  "labels": {
+    "confidence": {
+      "high": "✓ स्कैनर",
+      "medium": "संभवतः स्कैनर",
+      "low": "हो सकता है स्कैनर"
+    }
+  }
+}

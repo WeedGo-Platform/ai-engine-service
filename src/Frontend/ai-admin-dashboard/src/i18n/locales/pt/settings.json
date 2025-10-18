@@ -1,0 +1,43 @@
+{
+  "titles": {
+    "tenantSettings": "Configurações",
+    "generalInformation": "Informações Gerais"
+  },
+  "descriptions": {
+    "tenantManagement": "Gerenciar configuração do inquilino e configurações de pagamento"
+  },
+  "tabs": {
+    "general": "Configurações Gerais",
+    "payment": "Configurações de Pagamento",
+    "communication": "Configurações de Comunicação"
+  },
+  "fields": {
+    "tenantName": "Nome do Inquilino",
+    "tenantCode": "Código do Inquilino",
+    "companyName": "Nome da Empresa",
+    "businessNumber": "Número de Negócio",
+    "contactEmail": "Email de Contato",
+    "contactPhone": "Telefone de Contato",
+    "status": "Status",
+    "subscriptionTier": "Nível de Assinatura",
+    "address": "Endereço"
+  },
+  "actions": {
+    "backToTenants": "Voltar para Inquilinos"
+  },
+  "messages": {
+    "notSpecified": "Não especificado",
+    "loading": "Carregando...",
+    "tenantNotFound": "Inquilino não encontrado",
+    "success": {
+      "paymentSettingsUpdated": "Configurações de pagamento atualizadas com sucesso",
+      "communicationSettingsUpdated": "Configurações de comunicação atualizadas com sucesso",
+      "configurationValid": "a configuração é válida"
+    },
+    "error": {
+      "loadSettings": "Falha ao carregar configurações do inquilino",
+      "updatePaymentSettings": "Falha ao atualizar configurações de pagamento",
+      "updateCommunicationSettings": "Falha ao atualizar configurações de comunicação"
+    }
+  }
+}

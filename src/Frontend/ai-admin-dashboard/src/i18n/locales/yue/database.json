@@ -1,0 +1,80 @@
+{
+  "titles": {
+    "main": "數據庫管理",
+    "databaseObjects": "數據庫對象",
+    "addRow": "新增行",
+    "editRow": "編輯行",
+    "truncateTable": "截斷表",
+    "dropTable": "刪除表"
+  },
+  "descriptions": {
+    "main": "超級管理員訪問數據庫表同操作",
+    "selectTable": "選擇一個表嚟查看數據",
+    "chooseFromList": "從左邊嘅列表度選擇"
+  },
+  "tabs": {
+    "data": "數據",
+    "schema": "模式",
+    "query": "查詢"
+  },
+  "connection": {
+    "connections": "連接"
+  },
+  "table": {
+    "tables": "表",
+    "views": "視圖",
+    "columns": "列",
+    "totalRows": "總行數"
+  },
+  "actions": {
+    "addRow": "新增行",
+    "add": "新增",
+    "truncate": "截斷",
+    "clear": "清除",
+    "dropView": "刪除視圖",
+    "dropTable": "刪除表",
+    "drop": "刪除",
+    "refresh": "重新整理",
+    "search": "搜尋",
+    "clearSearch": "清除搜尋",
+    "executeQuery": "執行查詢",
+    "cancel": "取消",
+    "updateRow": "更新行"
+  },
+  "placeholders": {
+    "filterTables": "過濾表同視圖...",
+    "searchTable": "搜尋表...",
+    "sqlQuery": "SQL 查詢（只限 SELECT）"
+  },
+  "schema": {
+    "columnName": "列名",
+    "dataType": "數據類型",
+    "nullable": "可空",
+    "default": "預設值",
+    "maxLength": "最大長度"
+  },
+  "pagination": {
+    "page": "頁",
+    "of": "共"
+  },
+  "messages": {
+    "noData": "喺呢個表度搵唔到數據",
+    "warningCannotUndo": "警告：呢個操作無法撤銷！",
+    "truncateWarning": "表 \"{table}\" 入面嘅所有數據都會被永久刪除。",
+    "dropWarning": "成個表 \"{table}\" 同埋佢所有嘅數據都會從數據庫度永久刪除。",
+    "type": "類型",
+    "actions": "操作"
+  },
+  "confirm": {
+    "deleteRow": "你確定要刪除呢行嗎？",
+    "truncateTable": "你確定要截斷表 {table} 嗎？呢個會刪除所有行！"
+  },
+  "errors": {
+    "addRow": "新增行失敗",
+    "updateRow": "更新行失敗",
+    "deleteRow": "刪除行失敗",
+    "truncateTable": "截斷表失敗",
+    "dropTable": "刪除表失敗",
+    "executeQuery": "執行查詢失敗"
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "titles": {
+    "main": "نقطة البيع",
+    "posSettings": "إعدادات POS",
+    "parkedSales": "المبيعات المعلقة",
+    "hardwareConfiguration": "تكوين الأجهزة",
+    "cashManagement": "إدارة النقد",
+    "discountsPromotions": "الخصومات والعروض"
+  },
+  "tabs": {
+    "newSale": "بيع جديد",
+    "parked": "معلقة",
+    "history": "السجل",
+    "settings": "الإعدادات"
+  },
+  "customer": {
+    "label": "العميل",
+    "select": "اختيار",
+    "change": "تغيير",
+    "returning": "عميل دائم",
+    "new": "جديد",
+    "anonymous": "مجهول",
+    "newCustomer": "عميل جديد",
+    "points": "النقاط:"
+  },
+  "cart": {
+    "empty": "السلة فارغة",
+    "batch": "الدفعة:",
+    "discount": "الخصم:",
+    "quantity": "الكمية"
+  },
+  "weight": {
+    "driedFlowerEquivalent": "Dried Flower Equivalent:",
+    "legalLimit": "/ 30g",
+    "exceedsLimit": "تجاوز الحد القانوني!"
+  },
+  "totals": {
+    "subtotal": "المجموع الفرعي",
+    "discount": "الخصم",
+    "discountApplied": "تم تطبيق الخصم",
+    "afterDiscount": "بعد الخصم",
+    "tax": "الضريبة (13%)",
+    "total": "الإجمالي"
+  },
+  "actions": {
+    "parkSale": "تعليق البيع",
+    "clear": "مسح",
+    "processPayment": "معالجة الدفع",
+    "resumeSale": "استئناف البيع",
+    "addPromotion": "إضافة عرض",
+    "detectScanners": "اكتشاف الماسحات",
+    "openRegister": "فتح الصندوق",
+    "cashCount": "عد النقد",
+    "endOfDay": "نهاية اليوم",
+    "printReport": "طباعة التقرير",
+    "test": "اختبار",
+    "active": "نشط"
+  },
+  "search": {
+    "placeholder": "البحث عن المنتجات أو مسح الباركود...",
+    "scanning": "المسح:",
+    "filterProducts": "تصفية المنتجات"
+  },
+  "products": {
+    "noProductsFound": "لم يتم العثور على منتجات",
+    "outOfStock": "غير متوفر",
+    "low": "منخفض",
+    "stock": "المخزون:",
+    "batch": "دفعة",
+    "batches": "دفعات"
+  },
+  "parked": {
+    "noParkedSales": "لا توجد مبيعات معلقة",
+    "items": "عناصر"
+  },
+  "scanner": {
+    "enabled": "الماسح مفعّل",
+    "disabled": "الماسح معطّل",
+    "noScannersDetected": "لم يتم اكتشاف ماسحات",
+    "connectScanner": "قم بتوصيل الماسح وانقر على \"اكتشاف الماسحات\"",
+    "barcodeScanners": "ماسحات الباركود",
+    "manageConnected": "إدارة الماسحات المتصلة"
+  },
+  "hardware": {
+    "paymentTerminal": "محطة الدفع",
+    "connectCardReader": "توصيل قارئ البطاقات",
+    "receiptPrinter": "طابعة الإيصالات",
+    "printReceipts": "طباعة الإيصالات",
+    "cashDrawer": "درج النقد",
+    "manageCash": "إدارة النقد",
+    "enabled": "مفعّل"
+  },
+  "validation": {
+    "validIdDate": "تاريخ الهوية الصالحة:",
+    "orEarlier": "أو قبل ذلك",
+    "validId": "الهوية الصالحة:"
+  },
+  "promotions": {
+    "seniorDiscount": "خصم كبار السن",
+    "seniorDescription": "خصم 10% لمن هم 65+",
+    "happyHour": "الساعة السعيدة",
+    "happyHourDescription": "خصم 15% من 4-6 مساءً"
+  },
+  "messages": {
+    "saleParkedSuccess": "تم تعليق البيع بنجاح!",
+    "saleParkedFailed": "فشل تعليق البيع. يرجى المحاولة مرة أخرى.",
+    "resumeFailed": "فشل استئناف البيع. يرجى المحاولة مرة أخرى.",
+    "paymentSuccess": "تم الدفع بنجاح!",
+    "receiptPrinted": "تم طباعة الإيصال.",
+    "transactionFailed": "فشلت معالجة العملية. يرجى المحاولة مرة أخرى.",
+    "productNotFound": "لم يتم العثور على المنتج للباركود:",
+    "scannerTestSuccess": "نجح اختبار الماسح! باركود الاختبار:",
+    "scannerTestFailed": "فشل اختبار الماسح",
+    "scannerTestError": "فشل اختبار الماسح"
+  },
+  "fullscreen": {
+    "enter": "تفعيل ملء الشاشة",
+    "exit": "إلغاء ملء الشاشة"
+  },
+  "labels": {
+    "confidence": {
+      "high": "✓ ماسح",
+      "medium": "ماسح محتمل",
+      "low": "ربما ماسح"
+    }
+  }
+}

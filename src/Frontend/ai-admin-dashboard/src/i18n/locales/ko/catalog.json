@@ -1,0 +1,75 @@
+{
+  "titles": {
+    "main": "주별 제품 카탈로그",
+    "mainVirtual": "주별 제품 카탈로그 (가상 스크롤)",
+    "uploadSection": "카탈로그 업로드",
+    "uploadInstructions": "업로드 지침",
+    "catalogProducts": "카탈로그 제품"
+  },
+  "descriptions": {
+    "main": "주별 대마초 유통업체의 제품 카탈로그를 보고 관리합니다.",
+    "mainVirtual": "주별 대마초 제품 카탈로그 관리 및 업로드",
+    "selectProvince": "주 선택",
+    "viewingProvince": "주 카탈로그 보기",
+    "scrollHint": "가로로 스크롤하여 모든 열 보기 →"
+  },
+  "provinces": {
+    "ontario": "Ontario (OCS)",
+    "bc": "British Columbia (곧 출시)",
+    "alberta": "Alberta (곧 출시)",
+    "quebec": "Quebec (곧 출시)"
+  },
+  "stats": {
+    "totalProducts": "총 제품 수",
+    "lastUpdated": "마지막 업데이트",
+    "categories": "카테고리",
+    "never": "없음",
+    "totalRecords": "총 레코드 수",
+    "inserted": "삽입됨",
+    "updated": "업데이트됨",
+    "errors": "오류",
+    "totalRecordsLabel": "총 레코드 수"
+  },
+  "upload": {
+    "selectFile": "새 카탈로그 업로드",
+    "chooseFile": "파일 선택",
+    "uploadButton": "업로드",
+    "uploadCatalog": "카탈로그 업로드",
+    "uploading": "업로드 중...",
+    "uploadFile": "파일 업로드",
+    "invalidFileType": "유효하지 않은 파일 유형입니다. CSV 또는 Excel 파일을 업로드하세요.",
+    "pleaseSelectFile": "업로드할 파일을 선택하세요.",
+    "processingFile": "카탈로그 파일 처리 중...",
+    "processingFileShort": "파일 처리 중...",
+    "uploadSuccess": "카탈로그가 성공적으로 업로드되었습니다!",
+    "uploadSuccessShort": "업로드 성공",
+    "uploadFailed": "카탈로그 업로드 실패",
+    "uploadFailedShort": "업로드 실패"
+  },
+  "search": {
+    "placeholder": "제품 검색...",
+    "allCategories": "모든 카테고리"
+  },
+  "buttons": {
+    "export": "내보내기",
+    "exportCsv": "CSV 내보내기",
+    "previous": "이전",
+    "next": "다음"
+  },
+  "table": {
+    "loadingCatalog": "카탈로그 로딩 중...",
+    "noProductsFound": "카탈로그에서 제품을 찾을 수 없습니다",
+    "noProductsUpload": "제품을 찾을 수 없습니다. 시작하려면 카탈로그를 업로드하세요.",
+    "showingPage": "결과의 {page}페이지 표시 중",
+    "itemsCount": "{count}개 항목"
+  },
+  "instructions": {
+    "line1": "OCS 카탈로그 파일에는 OCS 사양에 따라 필요한 모든 열이 포함되어야 합니다.",
+    "line2": "제품은 OCS 변형 번호를 고유 키로 사용하여 일치 및 업데이트됩니다.",
+    "line3": "새 제품은 삽입되고 기존 제품은 최신 정보로 업데이트됩니다.",
+    "line4": "평가 및 평가 수 필드는 업데이트 중에 보존됩니다."
+  },
+  "messages": {
+    "lastCatalogUpdate": "마지막 카탈로그 업데이트:"
+  }
+}

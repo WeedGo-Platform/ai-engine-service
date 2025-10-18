@@ -1,0 +1,75 @@
+{
+  "titles": {
+    "main": "קטלוג מוצרים פרובינציאלי",
+    "mainVirtual": "קטלוג מוצרים פרובינציאלי (גלילה וירטואלית)",
+    "uploadSection": "העלה קטלוג",
+    "uploadInstructions": "הוראות העלאה",
+    "catalogProducts": "מוצרי קטלוג"
+  },
+  "descriptions": {
+    "main": "צפה ונהל קטלוגי מוצרים ממפיצי קנאביס פרובינציאליים.",
+    "mainVirtual": "נהל והעלה קטלוגי מוצרי קנאביס פרובינציאליים",
+    "selectProvince": "בחר פרובינציה",
+    "viewingProvince": "צפייה בקטלוג פרובינציאלי",
+    "scrollHint": "גלול אופקית כדי לראות את כל העמודות ←"
+  },
+  "provinces": {
+    "ontario": "Ontario (OCS)",
+    "bc": "British Columbia (בקרוב)",
+    "alberta": "Alberta (בקרוב)",
+    "quebec": "Quebec (בקרוב)"
+  },
+  "stats": {
+    "totalProducts": "סך מוצרים",
+    "lastUpdated": "עודכן לאחרונה",
+    "categories": "קטגוריות",
+    "never": "אף פעם",
+    "totalRecords": "סך רשומות",
+    "inserted": "הוכנסו",
+    "updated": "עודכנו",
+    "errors": "שגיאות",
+    "totalRecordsLabel": "סך רשומות"
+  },
+  "upload": {
+    "selectFile": "העלה קטלוג חדש",
+    "chooseFile": "בחר קובץ",
+    "uploadButton": "העלה",
+    "uploadCatalog": "העלה קטלוג",
+    "uploading": "מעלה...",
+    "uploadFile": "העלה קובץ",
+    "invalidFileType": "סוג קובץ לא חוקי. אנא העלה קובץ CSV או Excel.",
+    "pleaseSelectFile": "אנא בחר קובץ להעלאה.",
+    "processingFile": "מעבד קובץ קטלוג...",
+    "processingFileShort": "מעבד קובץ...",
+    "uploadSuccess": "הקטלוג הועלה בהצלחה!",
+    "uploadSuccessShort": "העלאה הצליחה",
+    "uploadFailed": "העלאת הקטלוג נכשלה",
+    "uploadFailedShort": "העלאה נכשלה"
+  },
+  "search": {
+    "placeholder": "חפש מוצרים...",
+    "allCategories": "כל הקטגוריות"
+  },
+  "buttons": {
+    "export": "יצא",
+    "exportCsv": "יצא CSV",
+    "previous": "הקודם",
+    "next": "הבא"
+  },
+  "table": {
+    "loadingCatalog": "טוען קטלוג...",
+    "noProductsFound": "לא נמצאו מוצרים בקטלוג",
+    "noProductsUpload": "לא נמצאו מוצרים. העלה קטלוג כדי להתחיל.",
+    "showingPage": "מציג עמוד {page} של תוצאות",
+    "itemsCount": "{count} פריטים"
+  },
+  "instructions": {
+    "line1": "קובץ קטלוג OCS צריך להכיל את כל העמודות הנדרשות לפי מפרט OCS.",
+    "line2": "מוצרים מותאמים ומעודכנים באמצעות מספר הגרסה של OCS כמפתח ייחודי.",
+    "line3": "מוצרים חדשים יוכנסו, מוצרים קיימים יעודכנו עם המידע העדכני ביותר.",
+    "line4": "שדות הדירוג וספירת הדירוג יישמרו במהלך עדכונים."
+  },
+  "messages": {
+    "lastCatalogUpdate": "עדכון קטלוג אחרון:"
+  }
+}

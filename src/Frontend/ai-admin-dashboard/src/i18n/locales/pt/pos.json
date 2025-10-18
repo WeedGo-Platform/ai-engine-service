@@ -1,0 +1,127 @@
+{
+  "titles": {
+    "main": "Ponto de Venda",
+    "posSettings": "Configurações POS",
+    "parkedSales": "Vendas Estacionadas",
+    "hardwareConfiguration": "Configuração de Hardware",
+    "cashManagement": "Gestão de Caixa",
+    "discountsPromotions": "Descontos e Promoções"
+  },
+  "tabs": {
+    "newSale": "Nova Venda",
+    "parked": "Estacionadas",
+    "history": "Histórico",
+    "settings": "Configurações"
+  },
+  "customer": {
+    "label": "Cliente",
+    "select": "Selecionar",
+    "change": "Alterar",
+    "returning": "Recorrente",
+    "new": "Novo",
+    "anonymous": "Anônimo",
+    "newCustomer": "Novo Cliente",
+    "points": "Pontos:"
+  },
+  "cart": {
+    "empty": "O carrinho está vazio",
+    "batch": "Lote:",
+    "discount": "Desconto:",
+    "quantity": "Quantidade"
+  },
+  "weight": {
+    "driedFlowerEquivalent": "Dried Flower Equivalent:",
+    "legalLimit": "/ 30g",
+    "exceedsLimit": "Excede o limite legal!"
+  },
+  "totals": {
+    "subtotal": "Subtotal",
+    "discount": "Desconto",
+    "discountApplied": "Desconto aplicado",
+    "afterDiscount": "Após Desconto",
+    "tax": "Imposto (13%)",
+    "total": "Total"
+  },
+  "actions": {
+    "parkSale": "Estacionar Venda",
+    "clear": "Limpar",
+    "processPayment": "Processar Pagamento",
+    "resumeSale": "Retomar Venda",
+    "addPromotion": "Adicionar Promoção",
+    "detectScanners": "Detectar Scanners",
+    "openRegister": "Abrir Caixa",
+    "cashCount": "Contagem de Dinheiro",
+    "endOfDay": "Fim do Dia",
+    "printReport": "Imprimir Relatório",
+    "test": "Testar",
+    "active": "Ativo"
+  },
+  "search": {
+    "placeholder": "Pesquisar produtos ou escanear código de barras...",
+    "scanning": "Escaneando:",
+    "filterProducts": "Filtrar produtos"
+  },
+  "products": {
+    "noProductsFound": "Nenhum produto encontrado",
+    "outOfStock": "Esgotado",
+    "low": "Baixo",
+    "stock": "Estoque:",
+    "batch": "lote",
+    "batches": "lotes"
+  },
+  "parked": {
+    "noParkedSales": "Nenhuma venda estacionada",
+    "items": "itens"
+  },
+  "scanner": {
+    "enabled": "Scanner Ativado",
+    "disabled": "Scanner Desativado",
+    "noScannersDetected": "Nenhum scanner detectado",
+    "connectScanner": "Conecte um scanner e clique em \"Detectar Scanners\"",
+    "barcodeScanners": "Scanners de Código de Barras",
+    "manageConnected": "Gerenciar scanners conectados"
+  },
+  "hardware": {
+    "paymentTerminal": "Terminal de Pagamento",
+    "connectCardReader": "Conectar leitor de cartões",
+    "receiptPrinter": "Impressora de Recibos",
+    "printReceipts": "Imprimir recibos",
+    "cashDrawer": "Gaveta de Dinheiro",
+    "manageCash": "Gerenciar dinheiro",
+    "enabled": "Ativado"
+  },
+  "validation": {
+    "validIdDate": "Data de ID Válido:",
+    "orEarlier": "ou anterior",
+    "validId": "ID Válido:"
+  },
+  "promotions": {
+    "seniorDiscount": "Desconto para Idosos",
+    "seniorDescription": "10% de desconto para 65+",
+    "happyHour": "Happy Hour",
+    "happyHourDescription": "15% de desconto das 16h às 18h"
+  },
+  "messages": {
+    "saleParkedSuccess": "Venda estacionada com sucesso!",
+    "saleParkedFailed": "Falha ao estacionar venda. Por favor, tente novamente.",
+    "resumeFailed": "Falha ao retomar venda. Por favor, tente novamente.",
+    "paymentSuccess": "Pagamento bem-sucedido!",
+    "receiptPrinted": "Recibo impresso.",
+    "transactionFailed": "Falha ao processar transação. Por favor, tente novamente.",
+    "productNotFound": "Produto não encontrado para o código de barras:",
+    "scannerTestSuccess": "Teste do scanner bem-sucedido! Código de barras de teste:",
+    "scannerTestFailed": "Falha no teste do scanner",
+    "scannerTestError": "Falha ao testar scanner"
+  },
+  "fullscreen": {
+    "enter": "Entrar em tela cheia",
+    "exit": "Sair da tela cheia"
+  },
+  "labels": {
+    "confidence": {
+      "high": "✓ Scanner",
+      "medium": "Provável Scanner",
+      "low": "Possível Scanner"
+    }
+  }
+}

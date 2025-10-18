@@ -1,0 +1,75 @@
+{
+  "titles": {
+    "main": "Catalogul produselor provinciale",
+    "mainVirtual": "Catalogul produselor provinciale (Derulare virtuală)",
+    "uploadSection": "Încărcare catalog",
+    "uploadInstructions": "Instrucțiuni de încărcare",
+    "catalogProducts": "Produse catalog"
+  },
+  "descriptions": {
+    "main": "Vizualizați și gestionați cataloagele de produse de la distribuitorii provinciali de canabis.",
+    "mainVirtual": "Gestionați și încărcați cataloage de produse de canabis provinciale",
+    "selectProvince": "Selectați provincia",
+    "viewingProvince": "Vizualizare catalog provincial",
+    "scrollHint": "Derulați orizontal pentru a vedea toate coloanele →"
+  },
+  "provinces": {
+    "ontario": "Ontario (OCS)",
+    "bc": "British Columbia (În curând)",
+    "alberta": "Alberta (În curând)",
+    "quebec": "Quebec (În curând)"
+  },
+  "stats": {
+    "totalProducts": "Total produse",
+    "lastUpdated": "Ultima actualizare",
+    "categories": "Categorii",
+    "never": "Niciodată",
+    "totalRecords": "Total înregistrări",
+    "inserted": "Inserate",
+    "updated": "Actualizate",
+    "errors": "Erori",
+    "totalRecordsLabel": "Total înregistrări"
+  },
+  "upload": {
+    "selectFile": "Încărcați un catalog nou",
+    "chooseFile": "Alegeți fișier",
+    "uploadButton": "Încărcați",
+    "uploadCatalog": "Încărcați catalogul",
+    "uploading": "Se încarcă...",
+    "uploadFile": "Încărcați fișier",
+    "invalidFileType": "Tip de fișier invalid. Vă rugăm să încărcați un fișier CSV sau Excel.",
+    "pleaseSelectFile": "Vă rugăm să selectați un fișier pentru încărcare.",
+    "processingFile": "Se procesează fișierul catalog...",
+    "processingFileShort": "Se procesează fișierul...",
+    "uploadSuccess": "Catalogul a fost încărcat cu succes!",
+    "uploadSuccessShort": "Încărcare reușită",
+    "uploadFailed": "Încărcarea catalogului a eșuat",
+    "uploadFailedShort": "Încărcare eșuată"
+  },
+  "search": {
+    "placeholder": "Căutați produse...",
+    "allCategories": "Toate categoriile"
+  },
+  "buttons": {
+    "export": "Exportați",
+    "exportCsv": "Exportați CSV",
+    "previous": "Anterior",
+    "next": "Următorul"
+  },
+  "table": {
+    "loadingCatalog": "Se încarcă catalogul...",
+    "noProductsFound": "Nu s-au găsit produse în catalog",
+    "noProductsUpload": "Nu s-au găsit produse. Încărcați un catalog pentru a începe.",
+    "showingPage": "Se afișează pagina {page} din rezultate",
+    "itemsCount": "{count} articole"
+  },
+  "instructions": {
+    "line1": "Fișierul catalog OCS trebuie să conțină toate coloanele necesare conform specificației OCS.",
+    "line2": "Produsele sunt potrivite și actualizate folosind numărul variantei OCS ca cheie unică.",
+    "line3": "Produsele noi vor fi inserate, produsele existente vor fi actualizate cu cele mai recente informații.",
+    "line4": "Câmpurile de rating și număr de ratinguri vor fi păstrate în timpul actualizărilor."
+  },
+  "messages": {
+    "lastCatalogUpdate": "Ultima actualizare a catalogului:"
+  }
+}
