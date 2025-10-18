@@ -1,0 +1,89 @@
+{
+  "titles": {
+    "main": "સંચાર",
+    "overview": "ઝલક",
+    "campaigns": "ઝુંબેશ",
+    "templates": "ટેમ્પલેટ્સ",
+    "segments": "વિભાગો",
+    "analytics": "વિશ્લેષણ",
+    "broadcastCampaigns": "પ્રસારણ ઝુંબેશ",
+    "recentCampaigns": "તાજેતરની ઝુંબેશ",
+    "channelPerformance": "ચેનલ પ્રદર્શન"
+  },
+  "descriptions": {
+    "managingFor": "સંચાર વ્યવસ્થાપન માટે",
+    "segmentationComingSoon": "ગ્રાહક વિભાજન ટૂંક સમયમાં આવી રહ્યું છે...",
+    "noAnalytics": "કોઈ વિશ્લેષણ ડેટા ઉપલબ્ધ નથી",
+    "noStoreSelected": "કોઈ સ્ટોર પસંદ નથી",
+    "selectStore": "સંચાર વ્યવસ્થાપિત કરવા માટે કૃપા કરીને એક સ્ટોર પસંદ કરો"
+  },
+  "tabs": {
+    "overview": "ઝલક",
+    "campaigns": "ઝુંબેશ",
+    "templates": "ટેમ્પલેટ્સ",
+    "segments": "વિભાગો",
+    "analytics": "વિશ્લેષણ"
+  },
+  "stats": {
+    "totalCampaigns": "કુલ ઝુંબેશ",
+    "messagesSent": "મોકલેલા સંદેશા",
+    "successRate": "સફળતા દર",
+    "failed": "નિષ્ફળ"
+  },
+  "status": {
+    "draft": "draft",
+    "scheduled": "scheduled",
+    "sending": "sending",
+    "sent": "sent",
+    "paused": "paused",
+    "cancelled": "cancelled",
+    "failed": "failed"
+  },
+  "table": {
+    "campaign": "ઝુંબેશ",
+    "status": "સ્થિતિ",
+    "recipients": "પ્રાપ્તકર્તાઓ",
+    "successRate": "સફળતા દર",
+    "created": "બનાવ્યું",
+    "channels": "ચેનલો",
+    "scheduled": "સુનિશ્ચિત",
+    "actions": "ક્રિયાઓ",
+    "createdBy": "દ્વારા બનાવ્યું",
+    "sentCount": "sent"
+  },
+  "channels": {
+    "email": "email",
+    "sms": "sms",
+    "push": "push",
+    "campaigns": "ઝુંબેશ",
+    "messages": "સંદેશા",
+    "engagement": "જોડાણ"
+  },
+  "actions": {
+    "newCampaign": "નવી ઝુંબેશ",
+    "viewAll": "બધું જુઓ",
+    "viewDetails": "વિગતો જુઓ",
+    "edit": "સંપાદિત કરો",
+    "sendNow": "હવે મોકલો",
+    "cancel": "રદ કરો",
+    "pause": "થોભાવો",
+    "resume": "ફરી શરૂ કરો",
+    "refresh": "તાજું કરો",
+    "settings": "સેટિંગ્સ"
+  },
+  "messages": {
+    "success": {
+      "broadcastStarted": "પ્રસારણ અમલીકરણ શરૂ થયું",
+      "broadcastPaused": "પ્રસારણ થોભાવ્યું",
+      "broadcastResumed": "પ્રસારણ ફરી શરૂ થયું",
+      "broadcastCancelled": "પ્રસારણ રદ કર્યું"
+    },
+    "error": {
+      "fetchBroadcasts": "પ્રસારણ મેળવવામાં નિષ્ફળ",
+      "fetchAnalytics": "વિશ્લેષણ મેળવવામાં નિષ્ફળ"
+    }
+  },
+  "confirm": {
+    "cancelBroadcast": "શું તમે ખરેખર આ પ્રસારણ રદ કરવા માંગો છો?"
+  }
+}

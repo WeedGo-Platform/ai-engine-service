@@ -1,0 +1,127 @@
+{
+  "titles": {
+    "main": "Punkt Sprzedaży",
+    "posSettings": "Ustawienia POS",
+    "parkedSales": "Wstrzymane Sprzedaże",
+    "hardwareConfiguration": "Konfiguracja Sprzętu",
+    "cashManagement": "Zarządzanie Gotówką",
+    "discountsPromotions": "Rabaty i Promocje"
+  },
+  "tabs": {
+    "newSale": "Nowa Sprzedaż",
+    "parked": "Wstrzymane",
+    "history": "Historia",
+    "settings": "Ustawienia"
+  },
+  "customer": {
+    "label": "Klient",
+    "select": "Wybierz",
+    "change": "Zmień",
+    "returning": "Powracający",
+    "new": "Nowy",
+    "anonymous": "Anonimowy",
+    "newCustomer": "Nowy Klient",
+    "points": "Punkty:"
+  },
+  "cart": {
+    "empty": "Koszyk jest pusty",
+    "batch": "Partia:",
+    "discount": "Rabat:",
+    "quantity": "Ilość"
+  },
+  "weight": {
+    "driedFlowerEquivalent": "Dried Flower Equivalent:",
+    "legalLimit": "/ 30g",
+    "exceedsLimit": "Przekracza limit prawny!"
+  },
+  "totals": {
+    "subtotal": "Suma Częściowa",
+    "discount": "Rabat",
+    "discountApplied": "Rabat zastosowany",
+    "afterDiscount": "Po Rabacie",
+    "tax": "Podatek (13%)",
+    "total": "Suma"
+  },
+  "actions": {
+    "parkSale": "Wstrzymaj Sprzedaż",
+    "clear": "Wyczyść",
+    "processPayment": "Przetwórz Płatność",
+    "resumeSale": "Wznów Sprzedaż",
+    "addPromotion": "Dodaj Promocję",
+    "detectScanners": "Wykryj Skanery",
+    "openRegister": "Otwórz Kasę",
+    "cashCount": "Liczenie Gotówki",
+    "endOfDay": "Koniec Dnia",
+    "printReport": "Drukuj Raport",
+    "test": "Testuj",
+    "active": "Aktywny"
+  },
+  "search": {
+    "placeholder": "Szukaj produktów lub skanuj kod kreskowy...",
+    "scanning": "Skanowanie:",
+    "filterProducts": "Filtruj produkty"
+  },
+  "products": {
+    "noProductsFound": "Nie znaleziono produktów",
+    "outOfStock": "Brak w Magazynie",
+    "low": "Niski",
+    "stock": "Stan:",
+    "batch": "partia",
+    "batches": "partie"
+  },
+  "parked": {
+    "noParkedSales": "Brak wstrzymanych sprzedaży",
+    "items": "pozycje"
+  },
+  "scanner": {
+    "enabled": "Skaner Włączony",
+    "disabled": "Skaner Wyłączony",
+    "noScannersDetected": "Nie wykryto skanerów",
+    "connectScanner": "Podłącz skaner i kliknij \"Wykryj Skanery\"",
+    "barcodeScanners": "Skanery Kodów Kreskowych",
+    "manageConnected": "Zarządzaj podłączonymi skanerami"
+  },
+  "hardware": {
+    "paymentTerminal": "Terminal Płatniczy",
+    "connectCardReader": "Podłącz czytnik kart",
+    "receiptPrinter": "Drukarka Paragonów",
+    "printReceipts": "Drukuj paragony",
+    "cashDrawer": "Szuflada Kasowa",
+    "manageCash": "Zarządzaj gotówką",
+    "enabled": "Włączony"
+  },
+  "validation": {
+    "validIdDate": "Data Ważności Dokumentu:",
+    "orEarlier": "lub wcześniej",
+    "validId": "Ważny Dokument:"
+  },
+  "promotions": {
+    "seniorDiscount": "Rabat dla Seniorów",
+    "seniorDescription": "10% zniżki dla 65+",
+    "happyHour": "Happy Hour",
+    "happyHourDescription": "15% zniżki 16-18"
+  },
+  "messages": {
+    "saleParkedSuccess": "Sprzedaż wstrzymana pomyślnie!",
+    "saleParkedFailed": "Nie udało się wstrzymać sprzedaży. Spróbuj ponownie.",
+    "resumeFailed": "Nie udało się wznowić sprzedaży. Spróbuj ponownie.",
+    "paymentSuccess": "Płatność pomyślna!",
+    "receiptPrinted": "Paragon wydrukowany.",
+    "transactionFailed": "Nie udało się przetworzyć transakcji. Spróbuj ponownie.",
+    "productNotFound": "Nie znaleziono produktu dla kodu kreskowego:",
+    "scannerTestSuccess": "Test skanera pomyślny! Testowy kod kreskowy:",
+    "scannerTestFailed": "Test skanera nieudany",
+    "scannerTestError": "Nie udało się przetestować skanera"
+  },
+  "fullscreen": {
+    "enter": "Włącz pełny ekran",
+    "exit": "Wyłącz pełny ekran"
+  },
+  "labels": {
+    "confidence": {
+      "high": "✓ Skaner",
+      "medium": "Prawdopodobnie Skaner",
+      "low": "Możliwy Skaner"
+    }
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "titles": {
+    "main": "Punto de Venta",
+    "posSettings": "Configuración POS",
+    "parkedSales": "Ventas Pendientes",
+    "hardwareConfiguration": "Configuración de Hardware",
+    "cashManagement": "Gestión de Efectivo",
+    "discountsPromotions": "Descuentos y Promociones"
+  },
+  "tabs": {
+    "newSale": "Nueva Venta",
+    "parked": "Pendientes",
+    "history": "Historial",
+    "settings": "Configuración"
+  },
+  "customer": {
+    "label": "Cliente",
+    "select": "Seleccionar",
+    "change": "Cambiar",
+    "returning": "Recurrente",
+    "new": "Nuevo",
+    "anonymous": "Anónimo",
+    "newCustomer": "Nuevo Cliente",
+    "points": "Puntos:"
+  },
+  "cart": {
+    "empty": "El carrito está vacío",
+    "batch": "Lote:",
+    "discount": "Descuento:",
+    "quantity": "Cantidad"
+  },
+  "weight": {
+    "driedFlowerEquivalent": "Dried Flower Equivalent:",
+    "legalLimit": "/ 30g",
+    "exceedsLimit": "Excede el límite legal!"
+  },
+  "totals": {
+    "subtotal": "Subtotal",
+    "discount": "Descuento",
+    "discountApplied": "Descuento aplicado",
+    "afterDiscount": "Después del Descuento",
+    "tax": "Impuesto (13%)",
+    "total": "Total"
+  },
+  "actions": {
+    "parkSale": "Aparcar Venta",
+    "clear": "Limpiar",
+    "processPayment": "Procesar Pago",
+    "resumeSale": "Reanudar Venta",
+    "addPromotion": "Agregar Promoción",
+    "detectScanners": "Detectar Escáneres",
+    "openRegister": "Abrir Caja",
+    "cashCount": "Conteo de Efectivo",
+    "endOfDay": "Fin del Día",
+    "printReport": "Imprimir Informe",
+    "test": "Probar",
+    "active": "Activo"
+  },
+  "search": {
+    "placeholder": "Buscar productos o escanear código de barras...",
+    "scanning": "Escaneando:",
+    "filterProducts": "Filtrar productos"
+  },
+  "products": {
+    "noProductsFound": "No se encontraron productos",
+    "outOfStock": "Agotado",
+    "low": "Bajo",
+    "stock": "Existencias:",
+    "batch": "lote",
+    "batches": "lotes"
+  },
+  "parked": {
+    "noParkedSales": "No hay ventas aparcadas",
+    "items": "artículos"
+  },
+  "scanner": {
+    "enabled": "Escáner Activado",
+    "disabled": "Escáner Desactivado",
+    "noScannersDetected": "No se detectaron escáneres",
+    "connectScanner": "Conecte un escáner y haga clic en \"Detectar Escáneres\"",
+    "barcodeScanners": "Escáneres de Códigos de Barras",
+    "manageConnected": "Gestionar escáneres conectados"
+  },
+  "hardware": {
+    "paymentTerminal": "Terminal de Pago",
+    "connectCardReader": "Conectar lector de tarjetas",
+    "receiptPrinter": "Impresora de Recibos",
+    "printReceipts": "Imprimir recibos",
+    "cashDrawer": "Cajón de Efectivo",
+    "manageCash": "Gestionar efectivo",
+    "enabled": "Activado"
+  },
+  "validation": {
+    "validIdDate": "Fecha de Identificación Válida:",
+    "orEarlier": "o anterior",
+    "validId": "Identificación Válida:"
+  },
+  "promotions": {
+    "seniorDiscount": "Descuento para Mayores",
+    "seniorDescription": "10% de descuento para 65+",
+    "happyHour": "Happy Hour",
+    "happyHourDescription": "15% de descuento de 16h a 18h"
+  },
+  "messages": {
+    "saleParkedSuccess": "Venta aparcada exitosamente!",
+    "saleParkedFailed": "Error al aparcar la venta. Por favor, inténtelo de nuevo.",
+    "resumeFailed": "Error al reanudar la venta. Por favor, inténtelo de nuevo.",
+    "paymentSuccess": "Pago exitoso!",
+    "receiptPrinted": "Recibo impreso.",
+    "transactionFailed": "Error al procesar la transacción. Por favor, inténtelo de nuevo.",
+    "productNotFound": "Producto no encontrado para el código de barras:",
+    "scannerTestSuccess": "Prueba del escáner exitosa! Código de barras de prueba:",
+    "scannerTestFailed": "Prueba del escáner fallida",
+    "scannerTestError": "Error al probar el escáner"
+  },
+  "fullscreen": {
+    "enter": "Entrar en pantalla completa",
+    "exit": "Salir de pantalla completa"
+  },
+  "labels": {
+    "confidence": {
+      "high": "✓ Escáner",
+      "medium": "Probablemente Escáner",
+      "low": "Posible Escáner"
+    }
+  }
+}

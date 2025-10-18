@@ -1,0 +1,89 @@
+{
+  "titles": {
+    "main": "תקשורת",
+    "overview": "סקירה כללית",
+    "campaigns": "קמפיינים",
+    "templates": "תבניות",
+    "segments": "מקטעים",
+    "analytics": "אנליטיקה",
+    "broadcastCampaigns": "קמפייני שידור",
+    "recentCampaigns": "קמפיינים אחרונים",
+    "channelPerformance": "ביצועי ערוצים"
+  },
+  "descriptions": {
+    "managingFor": "ניהול תקשורת עבור",
+    "segmentationComingSoon": "פילוח לקוחות בקרוב...",
+    "noAnalytics": "אין נתוני אנליטיקה זמינים",
+    "noStoreSelected": "לא נבחרה חנות",
+    "selectStore": "אנא בחר חנות לניהול תקשורת"
+  },
+  "tabs": {
+    "overview": "סקירה כללית",
+    "campaigns": "קמפיינים",
+    "templates": "תבניות",
+    "segments": "מקטעים",
+    "analytics": "אנליטיקה"
+  },
+  "stats": {
+    "totalCampaigns": "סך הכל קמפיינים",
+    "messagesSent": "הודעות שנשלחו",
+    "successRate": "אחוז הצלחה",
+    "failed": "נכשל"
+  },
+  "status": {
+    "draft": "draft",
+    "scheduled": "scheduled",
+    "sending": "sending",
+    "sent": "sent",
+    "paused": "paused",
+    "cancelled": "cancelled",
+    "failed": "failed"
+  },
+  "table": {
+    "campaign": "קמפיין",
+    "status": "מצב",
+    "recipients": "נמענים",
+    "successRate": "אחוז הצלחה",
+    "created": "נוצר",
+    "channels": "ערוצים",
+    "scheduled": "מתוזמן",
+    "actions": "פעולות",
+    "createdBy": "נוצר על ידי",
+    "sentCount": "sent"
+  },
+  "channels": {
+    "email": "email",
+    "sms": "sms",
+    "push": "push",
+    "campaigns": "קמפיינים",
+    "messages": "הודעות",
+    "engagement": "מעורבות"
+  },
+  "actions": {
+    "newCampaign": "קמפיין חדש",
+    "viewAll": "הצג הכל",
+    "viewDetails": "הצג פרטים",
+    "edit": "ערוך",
+    "sendNow": "שלח עכשיו",
+    "cancel": "בטל",
+    "pause": "השהה",
+    "resume": "המשך",
+    "refresh": "רענן",
+    "settings": "הגדרות"
+  },
+  "messages": {
+    "success": {
+      "broadcastStarted": "ביצוע השידור החל",
+      "broadcastPaused": "השידור הושהה",
+      "broadcastResumed": "השידור חודש",
+      "broadcastCancelled": "השידור בוטל"
+    },
+    "error": {
+      "fetchBroadcasts": "כשל באחזור שידורים",
+      "fetchAnalytics": "כשל באחזור אנליטיקה"
+    }
+  },
+  "confirm": {
+    "cancelBroadcast": "האם אתה בטוח שברצונך לבטל את השידור הזה?"
+  }
+}

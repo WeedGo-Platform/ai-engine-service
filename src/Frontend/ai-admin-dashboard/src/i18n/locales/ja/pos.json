@@ -1,0 +1,127 @@
+{
+  "titles": {
+    "main": "販売時点情報管理",
+    "posSettings": "POS設定",
+    "parkedSales": "保留中の販売",
+    "hardwareConfiguration": "ハードウェア構成",
+    "cashManagement": "現金管理",
+    "discountsPromotions": "割引とプロモーション"
+  },
+  "tabs": {
+    "newSale": "新規販売",
+    "parked": "保留",
+    "history": "履歴",
+    "settings": "設定"
+  },
+  "customer": {
+    "label": "顧客",
+    "select": "選択",
+    "change": "変更",
+    "returning": "リピーター",
+    "new": "新規",
+    "anonymous": "匿名",
+    "newCustomer": "新規顧客",
+    "points": "ポイント:"
+  },
+  "cart": {
+    "empty": "カートが空です",
+    "batch": "バッチ:",
+    "discount": "割引:",
+    "quantity": "数量"
+  },
+  "weight": {
+    "driedFlowerEquivalent": "Dried Flower Equivalent:",
+    "legalLimit": "/ 30g",
+    "exceedsLimit": "法定制限を超えています!"
+  },
+  "totals": {
+    "subtotal": "小計",
+    "discount": "割引",
+    "discountApplied": "割引適用済み",
+    "afterDiscount": "割引後",
+    "tax": "税金 (13%)",
+    "total": "合計"
+  },
+  "actions": {
+    "parkSale": "販売を保留",
+    "clear": "クリア",
+    "processPayment": "支払い処理",
+    "resumeSale": "販売を再開",
+    "addPromotion": "プロモーション追加",
+    "detectScanners": "スキャナーを検出",
+    "openRegister": "レジを開く",
+    "cashCount": "現金カウント",
+    "endOfDay": "締め作業",
+    "printReport": "レポート印刷",
+    "test": "テスト",
+    "active": "アクティブ"
+  },
+  "search": {
+    "placeholder": "商品を検索またはバーコードをスキャン...",
+    "scanning": "スキャン中:",
+    "filterProducts": "商品をフィルター"
+  },
+  "products": {
+    "noProductsFound": "商品が見つかりません",
+    "outOfStock": "在庫切れ",
+    "low": "少ない",
+    "stock": "在庫:",
+    "batch": "バッチ",
+    "batches": "バッチ"
+  },
+  "parked": {
+    "noParkedSales": "保留中の販売はありません",
+    "items": "アイテム"
+  },
+  "scanner": {
+    "enabled": "スキャナー有効",
+    "disabled": "スキャナー無効",
+    "noScannersDetected": "スキャナーが検出されません",
+    "connectScanner": "スキャナーを接続して「スキャナーを検出」をクリック",
+    "barcodeScanners": "バーコードスキャナー",
+    "manageConnected": "接続されたスキャナーを管理"
+  },
+  "hardware": {
+    "paymentTerminal": "決済端末",
+    "connectCardReader": "カードリーダーを接続",
+    "receiptPrinter": "レシートプリンター",
+    "printReceipts": "レシートを印刷",
+    "cashDrawer": "キャッシュドロワー",
+    "manageCash": "現金を管理",
+    "enabled": "有効"
+  },
+  "validation": {
+    "validIdDate": "有効な身分証明書の日付:",
+    "orEarlier": "またはそれ以前",
+    "validId": "有効な身分証明書:"
+  },
+  "promotions": {
+    "seniorDiscount": "シニア割引",
+    "seniorDescription": "65歳以上10%オフ",
+    "happyHour": "ハッピーアワー",
+    "happyHourDescription": "午後4時から6時まで15%オフ"
+  },
+  "messages": {
+    "saleParkedSuccess": "販売を保留しました!",
+    "saleParkedFailed": "販売の保留に失敗しました。もう一度お試しください。",
+    "resumeFailed": "販売の再開に失敗しました。もう一度お試しください。",
+    "paymentSuccess": "支払いが完了しました!",
+    "receiptPrinted": "レシートを印刷しました。",
+    "transactionFailed": "取引の処理に失敗しました。もう一度お試しください。",
+    "productNotFound": "バーコードの商品が見つかりません:",
+    "scannerTestSuccess": "スキャナーテスト成功! テストバーコード:",
+    "scannerTestFailed": "スキャナーテスト失敗",
+    "scannerTestError": "スキャナーのテストに失敗しました"
+  },
+  "fullscreen": {
+    "enter": "全画面表示",
+    "exit": "全画面表示を終了"
+  },
+  "labels": {
+    "confidence": {
+      "high": "✓ スキャナー",
+      "medium": "スキャナーの可能性大",
+      "low": "スキャナーの可能性"
+    }
+  }
+}

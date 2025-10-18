@@ -1,0 +1,127 @@
+{
+  "titles": {
+    "main": "Punto ng Benta",
+    "posSettings": "POS Settings",
+    "parkedSales": "Nakahintong Benta",
+    "hardwareConfiguration": "Konpigu Rasyon ng Hardware",
+    "cashManagement": "Pamamahala ng Pera",
+    "discountsPromotions": "Diskwento at Promosyon"
+  },
+  "tabs": {
+    "newSale": "Bagong Benta",
+    "parked": "Nakahinto",
+    "history": "Kasaysayan",
+    "settings": "Settings"
+  },
+  "customer": {
+    "label": "Customer",
+    "select": "Pumili",
+    "change": "Baguhin",
+    "returning": "Bumabalik",
+    "new": "Bago",
+    "anonymous": "Hindi Kilala",
+    "newCustomer": "Bagong Customer",
+    "points": "Puntos:"
+  },
+  "cart": {
+    "empty": "Walang laman ang cart",
+    "batch": "Batch:",
+    "discount": "Diskwento:",
+    "quantity": "Dami"
+  },
+  "weight": {
+    "driedFlowerEquivalent": "Dried Flower Equivalent:",
+    "legalLimit": "/ 30g",
+    "exceedsLimit": "Lumagpas sa legal na limitasyon!"
+  },
+  "totals": {
+    "subtotal": "Subtotal",
+    "discount": "Diskwento",
+    "discountApplied": "Nag-apply ng diskwento",
+    "afterDiscount": "Pagkatapos ng Diskwento",
+    "tax": "Buwis (13%)",
+    "total": "Kabuuan"
+  },
+  "actions": {
+    "parkSale": "Ihinto ang Benta",
+    "clear": "Burahin",
+    "processPayment": "Proseso ng Bayad",
+    "resumeSale": "Ipagpatuloy ang Benta",
+    "addPromotion": "Magdagdag ng Promosyon",
+    "detectScanners": "Tuklasin ang mga Scanner",
+    "openRegister": "Buksan ang Rehistro",
+    "cashCount": "Bilang ng Pera",
+    "endOfDay": "Katapusan ng Araw",
+    "printReport": "I-print ang Ulat",
+    "test": "Subukan",
+    "active": "Aktibo"
+  },
+  "search": {
+    "placeholder": "Maghanap ng produkto o i-scan ang barcode...",
+    "scanning": "Nag-scan:",
+    "filterProducts": "I-filter ang mga produkto"
+  },
+  "products": {
+    "noProductsFound": "Walang produktong nahanap",
+    "outOfStock": "Ubos na",
+    "low": "Mababa",
+    "stock": "Stock:",
+    "batch": "batch",
+    "batches": "batches"
+  },
+  "parked": {
+    "noParkedSales": "Walang nakahintong benta",
+    "items": "items"
+  },
+  "scanner": {
+    "enabled": "Naka-enable ang Scanner",
+    "disabled": "Naka-disable ang Scanner",
+    "noScannersDetected": "Walang nakitang scanner",
+    "connectScanner": "Mag-connect ng scanner at i-click ang \"Tuklasin ang mga Scanner\"",
+    "barcodeScanners": "Mga Barcode Scanner",
+    "manageConnected": "Pamahalaan ang nakakonektang scanners"
+  },
+  "hardware": {
+    "paymentTerminal": "Payment Terminal",
+    "connectCardReader": "Ikonekta ang card reader",
+    "receiptPrinter": "Receipt Printer",
+    "printReceipts": "I-print ang mga resibo",
+    "cashDrawer": "Cash Drawer",
+    "manageCash": "Pamahalaan ang pera",
+    "enabled": "Naka-enable"
+  },
+  "validation": {
+    "validIdDate": "Wastong Petsa ng ID:",
+    "orEarlier": "o mas maaga",
+    "validId": "Wastong ID:"
+  },
+  "promotions": {
+    "seniorDiscount": "Diskwento sa Matatanda",
+    "seniorDescription": "10% diskwento para sa 65+",
+    "happyHour": "Happy Hour",
+    "happyHourDescription": "15% diskwento 4-6pm"
+  },
+  "messages": {
+    "saleParkedSuccess": "Matagumpay na nai-hinto ang benta!",
+    "saleParkedFailed": "Nabigo ang pag-hinto ng benta. Subukan muli.",
+    "resumeFailed": "Nabigo ang pagpapatuloy ng benta. Subukan muli.",
+    "paymentSuccess": "Matagumpay ang bayad!",
+    "receiptPrinted": "Na-print ang resibo.",
+    "transactionFailed": "Nabigo ang pagsasagawa ng transaksyon. Subukan muli.",
+    "productNotFound": "Hindi nahanap ang produkto para sa barcode:",
+    "scannerTestSuccess": "Matagumpay ang pagsubok ng scanner! Test barcode:",
+    "scannerTestFailed": "Nabigo ang pagsubok ng scanner",
+    "scannerTestError": "Nabigo ang pagsubok ng scanner"
+  },
+  "fullscreen": {
+    "enter": "Pumasok sa fullscreen",
+    "exit": "Lumabas sa fullscreen"
+  },
+  "labels": {
+    "confidence": {
+      "high": "✓ Scanner",
+      "medium": "Malamang Scanner",
+      "low": "Posibleng Scanner"
+    }
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "titles": {
+    "main": "Communications",
+    "overview": "Aperçu",
+    "campaigns": "Campagnes",
+    "templates": "Modèles",
+    "segments": "Segments",
+    "analytics": "Analyses",
+    "broadcastCampaigns": "Campagnes de Diffusion",
+    "recentCampaigns": "Campagnes Récentes",
+    "channelPerformance": "Performance des Canaux"
+  },
+  "descriptions": {
+    "managingFor": "Gestion des communications pour",
+    "segmentationComingSoon": "Segmentation des clients bientôt disponible...",
+    "noAnalytics": "Aucune donnée d'analyse disponible",
+    "noStoreSelected": "Aucun Magasin Sélectionné",
+    "selectStore": "Veuillez sélectionner un magasin pour gérer les communications"
+  },
+  "tabs": {
+    "overview": "Aperçu",
+    "campaigns": "Campagnes",
+    "templates": "Modèles",
+    "segments": "Segments",
+    "analytics": "Analyses"
+  },
+  "stats": {
+    "totalCampaigns": "Total des Campagnes",
+    "messagesSent": "Messages Envoyés",
+    "successRate": "Taux de Réussite",
+    "failed": "Échoué"
+  },
+  "status": {
+    "draft": "draft",
+    "scheduled": "scheduled",
+    "sending": "sending",
+    "sent": "sent",
+    "paused": "paused",
+    "cancelled": "cancelled",
+    "failed": "failed"
+  },
+  "table": {
+    "campaign": "Campagne",
+    "status": "Statut",
+    "recipients": "Destinataires",
+    "successRate": "Taux de Réussite",
+    "created": "Créé",
+    "channels": "Canaux",
+    "scheduled": "Programmé",
+    "actions": "Actions",
+    "createdBy": "Créé par",
+    "sentCount": "sent"
+  },
+  "channels": {
+    "email": "email",
+    "sms": "sms",
+    "push": "push",
+    "campaigns": "Campagnes",
+    "messages": "Messages",
+    "engagement": "Engagement"
+  },
+  "actions": {
+    "newCampaign": "Nouvelle Campagne",
+    "viewAll": "Voir Tout",
+    "viewDetails": "Voir les Détails",
+    "edit": "Modifier",
+    "sendNow": "Envoyer Maintenant",
+    "cancel": "Annuler",
+    "pause": "Pause",
+    "resume": "Reprendre",
+    "refresh": "Actualiser",
+    "settings": "Paramètres"
+  },
+  "messages": {
+    "success": {
+      "broadcastStarted": "Exécution de la diffusion démarrée",
+      "broadcastPaused": "Diffusion en pause",
+      "broadcastResumed": "Diffusion reprise",
+      "broadcastCancelled": "Diffusion annulée"
+    },
+    "error": {
+      "fetchBroadcasts": "Échec de la récupération des diffusions",
+      "fetchAnalytics": "Échec de la récupération des analyses"
+    }
+  },
+  "confirm": {
+    "cancelBroadcast": "Êtes-vous sûr de vouloir annuler cette diffusion ?"
+  }
+}

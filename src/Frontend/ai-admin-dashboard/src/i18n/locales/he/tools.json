@@ -1,0 +1,132 @@
+{
+  "voiceApi": {
+    "title": "Voice API Test",
+    "apiEndpoint": "API Endpoint",
+    "recording": {
+      "title": "1. Audio Recording",
+      "start": "Start Recording",
+      "stop": "Stop Recording",
+      "play": "Play Recording",
+      "inProgress": "Recording in progress...",
+      "ready": "Audio recorded and ready for transcription"
+    },
+    "transcription": {
+      "title": "2. Test Transcription",
+      "button": "Transcribe Audio",
+      "buttonLoading": "Transcribing...",
+      "result": "Transcription Result:",
+      "noAudio": "No audio recorded. Please record audio first.",
+      "noTranscription": "No transcription available",
+      "success": "Transcription completed successfully"
+    },
+    "synthesis": {
+      "title": "3. Test Synthesis",
+      "textLabel": "Text to Synthesize",
+      "textPlaceholder": "Enter text to convert to speech...",
+      "voiceLabel": "Voice",
+      "button": "Synthesize Speech",
+      "buttonLoading": "Synthesizing...",
+      "play": "Play Synthesized",
+      "noText": "Please enter text to synthesize",
+      "success": "Synthesis completed successfully",
+      "failed": "Synthesis failed"
+    },
+    "debug": {
+      "title": "Debug Info",
+      "endpoint": "Endpoint",
+      "transcription": "Transcription",
+      "synthesis": "Synthesis",
+      "voices": "Voices"
+    },
+    "messages": {
+      "voicesFetched": "Voices fetched successfully",
+      "voicesFailed": "Failed to fetch voices",
+      "recordingFailed": "Failed to start recording",
+      "recordingSaved": "Recording saved",
+      "transcriptionError": "Transcription error",
+      "synthesisError": "Synthesis error"
+    }
+  },
+  "logs": {
+    "title": "System Logs",
+    "description": "View and search application logs from Elasticsearch",
+    "filters": {
+      "search": "Search Logs",
+      "searchPlaceholder": "Search message, logger, module...",
+      "logLevel": "Log Level",
+      "allLevels": "All Levels",
+      "error": "Error",
+      "warning": "Warning",
+      "info": "Info",
+      "debug": "Debug",
+      "timeRange": "Time Range",
+      "advancedFilters": "Advanced Filters",
+      "correlationId": "Correlation ID",
+      "correlationIdPlaceholder": "Filter by correlation ID",
+      "tenantId": "Tenant ID",
+      "tenantIdPlaceholder": "Filter by tenant",
+      "storeId": "Store ID",
+      "storeIdPlaceholder": "Filter by store",
+      "userId": "User ID",
+      "userIdPlaceholder": "Filter by user",
+      "sessionId": "Session ID",
+      "sessionIdPlaceholder": "Filter by session",
+      "service": "Service",
+      "servicePlaceholder": "Filter by service",
+      "endDate": "End Date",
+      "clearAll": "Clear All Filters"
+    },
+    "actions": {
+      "refresh": "Refresh",
+      "export": "Export",
+      "autoRefresh": "Auto-refresh every",
+      "details": "Details",
+      "close": "Close"
+    },
+    "table": {
+      "timestamp": "Timestamp",
+      "level": "Level",
+      "serviceLogger": "Service / Logger",
+      "message": "Message",
+      "correlationId": "Correlation ID",
+      "actions": "Actions",
+      "noLogs": "No logs found",
+      "totalLogs": "total logs"
+    },
+    "pagination": {
+      "showing": "Showing {{from}} to {{to}} of {{total}}",
+      "perPage": "per page",
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {{current}} of {{total}}"
+    },
+    "details": {
+      "title": "Log Details",
+      "summary": "Summary",
+      "metadata": "Metadata",
+      "correlationId": "Correlation ID",
+      "sessionId": "Session ID",
+      "tenantId": "Tenant ID",
+      "storeId": "Store ID",
+      "userId": "User ID",
+      "service": "Service",
+      "environment": "Environment",
+      "logger": "Logger",
+      "module": "Module",
+      "function": "Function",
+      "lineNumber": "Line Number",
+      "duration": "Duration",
+      "statusCode": "Status Code",
+      "method": "Method",
+      "path": "Path",
+      "clientHost": "Client Host",
+      "exception": "Exception",
+      "viewRawJson": "View Raw JSON"
+    },
+    "messages": {
+      "fetchFailed": "Failed to fetch logs from Elasticsearch",
+      "exportSuccess": "Logs exported successfully",
+      "logExported": "Log exported"
+    }
+  }
+}

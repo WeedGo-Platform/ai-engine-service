@@ -1,0 +1,75 @@
+{
+  "titles": {
+    "main": "Catalogo prodotti provinciali",
+    "mainVirtual": "Catalogo prodotti provinciali (Scorrimento virtuale)",
+    "uploadSection": "Carica catalogo",
+    "uploadInstructions": "Istruzioni di caricamento",
+    "catalogProducts": "Prodotti del catalogo"
+  },
+  "descriptions": {
+    "main": "Visualizza e gestisci i cataloghi di prodotti dei distributori provinciali di cannabis.",
+    "mainVirtual": "Gestisci e carica i cataloghi di prodotti di cannabis provinciali",
+    "selectProvince": "Seleziona provincia",
+    "viewingProvince": "Visualizzazione catalogo provinciale",
+    "scrollHint": "Scorri orizzontalmente per visualizzare tutte le colonne →"
+  },
+  "provinces": {
+    "ontario": "Ontario (OCS)",
+    "bc": "British Columbia (Prossimamente)",
+    "alberta": "Alberta (Prossimamente)",
+    "quebec": "Quebec (Prossimamente)"
+  },
+  "stats": {
+    "totalProducts": "Prodotti totali",
+    "lastUpdated": "Ultimo aggiornamento",
+    "categories": "Categorie",
+    "never": "Mai",
+    "totalRecords": "Record totali",
+    "inserted": "Inseriti",
+    "updated": "Aggiornati",
+    "errors": "Errori",
+    "totalRecordsLabel": "Record totali"
+  },
+  "upload": {
+    "selectFile": "Carica nuovo catalogo",
+    "chooseFile": "Scegli file",
+    "uploadButton": "Carica",
+    "uploadCatalog": "Carica catalogo",
+    "uploading": "Caricamento in corso...",
+    "uploadFile": "Carica file",
+    "invalidFileType": "Tipo di file non valido. Carica un file CSV o Excel.",
+    "pleaseSelectFile": "Seleziona un file da caricare.",
+    "processingFile": "Elaborazione file catalogo...",
+    "processingFileShort": "Elaborazione file...",
+    "uploadSuccess": "Catalogo caricato con successo!",
+    "uploadSuccessShort": "Caricamento riuscito",
+    "uploadFailed": "Caricamento catalogo non riuscito",
+    "uploadFailedShort": "Caricamento fallito"
+  },
+  "search": {
+    "placeholder": "Cerca prodotti...",
+    "allCategories": "Tutte le categorie"
+  },
+  "buttons": {
+    "export": "Esporta",
+    "exportCsv": "Esporta CSV",
+    "previous": "Precedente",
+    "next": "Successivo"
+  },
+  "table": {
+    "loadingCatalog": "Caricamento catalogo...",
+    "noProductsFound": "Nessun prodotto trovato nel catalogo",
+    "noProductsUpload": "Nessun prodotto trovato. Carica un catalogo per iniziare.",
+    "showingPage": "Visualizzazione pagina {page} dei risultati",
+    "itemsCount": "{count} articoli"
+  },
+  "instructions": {
+    "line1": "Il file catalogo OCS deve contenere tutte le colonne richieste secondo le specifiche OCS.",
+    "line2": "I prodotti vengono abbinati e aggiornati utilizzando il numero variante OCS come chiave univoca.",
+    "line3": "I nuovi prodotti verranno inseriti, i prodotti esistenti verranno aggiornati con le informazioni più recenti.",
+    "line4": "I campi di valutazione e conteggio valutazioni verranno preservati durante gli aggiornamenti."
+  },
+  "messages": {
+    "lastCatalogUpdate": "Ultimo aggiornamento catalogo:"
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "titles": {
+    "main": "通讯",
+    "overview": "概览",
+    "campaigns": "活动",
+    "templates": "模板",
+    "segments": "细分",
+    "analytics": "分析",
+    "broadcastCampaigns": "广播活动",
+    "recentCampaigns": "最近活动",
+    "channelPerformance": "渠道表现"
+  },
+  "descriptions": {
+    "managingFor": "管理通讯",
+    "segmentationComingSoon": "客户细分即将推出...",
+    "noAnalytics": "无可用分析数据",
+    "noStoreSelected": "未选择商店",
+    "selectStore": "请选择一家商店以管理通讯"
+  },
+  "tabs": {
+    "overview": "概览",
+    "campaigns": "活动",
+    "templates": "模板",
+    "segments": "细分",
+    "analytics": "分析"
+  },
+  "stats": {
+    "totalCampaigns": "总活动数",
+    "messagesSent": "已发送消息",
+    "successRate": "成功率",
+    "failed": "失败"
+  },
+  "status": {
+    "draft": "draft",
+    "scheduled": "scheduled",
+    "sending": "sending",
+    "sent": "sent",
+    "paused": "paused",
+    "cancelled": "cancelled",
+    "failed": "failed"
+  },
+  "table": {
+    "campaign": "活动",
+    "status": "状态",
+    "recipients": "收件人",
+    "successRate": "成功率",
+    "created": "创建时间",
+    "channels": "渠道",
+    "scheduled": "已排期",
+    "actions": "操作",
+    "createdBy": "创建者",
+    "sentCount": "sent"
+  },
+  "channels": {
+    "email": "email",
+    "sms": "sms",
+    "push": "push",
+    "campaigns": "活动",
+    "messages": "消息",
+    "engagement": "参与度"
+  },
+  "actions": {
+    "newCampaign": "新建活动",
+    "viewAll": "查看全部",
+    "viewDetails": "查看详情",
+    "edit": "编辑",
+    "sendNow": "立即发送",
+    "cancel": "取消",
+    "pause": "暂停",
+    "resume": "恢复",
+    "refresh": "刷新",
+    "settings": "设置"
+  },
+  "messages": {
+    "success": {
+      "broadcastStarted": "广播执行已开始",
+      "broadcastPaused": "广播已暂停",
+      "broadcastResumed": "广播已恢复",
+      "broadcastCancelled": "广播已取消"
+    },
+    "error": {
+      "fetchBroadcasts": "获取广播失败",
+      "fetchAnalytics": "获取分析失败"
+    }
+  },
+  "confirm": {
+    "cancelBroadcast": "您确定要取消此广播吗？"
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "titles": {
+    "main": "مواصلات",
+    "overview": "جائزہ",
+    "campaigns": "مہمات",
+    "templates": "سانچے",
+    "segments": "حصے",
+    "analytics": "تجزیات",
+    "broadcastCampaigns": "نشریاتی مہمات",
+    "recentCampaigns": "حالیہ مہمات",
+    "channelPerformance": "چینل کارکردگی"
+  },
+  "descriptions": {
+    "managingFor": "مواصلات کا انتظام برائے",
+    "segmentationComingSoon": "گاہک کی تقسیم جلد آرہی ہے...",
+    "noAnalytics": "کوئی تجزیاتی ڈیٹا دستیاب نہیں",
+    "noStoreSelected": "کوئی اسٹور منتخب نہیں",
+    "selectStore": "مواصلات کا انتظام کرنے کے لیے براہ کرم ایک اسٹور منتخب کریں"
+  },
+  "tabs": {
+    "overview": "جائزہ",
+    "campaigns": "مہمات",
+    "templates": "سانچے",
+    "segments": "حصے",
+    "analytics": "تجزیات"
+  },
+  "stats": {
+    "totalCampaigns": "کل مہمات",
+    "messagesSent": "بھیجے گئے پیغامات",
+    "successRate": "کامیابی کی شرح",
+    "failed": "ناکام"
+  },
+  "status": {
+    "draft": "draft",
+    "scheduled": "scheduled",
+    "sending": "sending",
+    "sent": "sent",
+    "paused": "paused",
+    "cancelled": "cancelled",
+    "failed": "failed"
+  },
+  "table": {
+    "campaign": "مہم",
+    "status": "حالت",
+    "recipients": "وصول کنندگان",
+    "successRate": "کامیابی کی شرح",
+    "created": "تخلیق کردہ",
+    "channels": "چینلز",
+    "scheduled": "طے شدہ",
+    "actions": "اقدامات",
+    "createdBy": "تخلیق کردہ بذریعہ",
+    "sentCount": "sent"
+  },
+  "channels": {
+    "email": "email",
+    "sms": "sms",
+    "push": "push",
+    "campaigns": "مہمات",
+    "messages": "پیغامات",
+    "engagement": "شمولیت"
+  },
+  "actions": {
+    "newCampaign": "نئی مہم",
+    "viewAll": "سب دیکھیں",
+    "viewDetails": "تفصیلات دیکھیں",
+    "edit": "ترمیم کریں",
+    "sendNow": "ابھی بھیجیں",
+    "cancel": "منسوخ کریں",
+    "pause": "روکیں",
+    "resume": "دوبارہ شروع کریں",
+    "refresh": "تازہ کریں",
+    "settings": "ترتیبات"
+  },
+  "messages": {
+    "success": {
+      "broadcastStarted": "نشریات کا عمل شروع ہوگیا",
+      "broadcastPaused": "نشریات رک گئی",
+      "broadcastResumed": "نشریات دوبارہ شروع ہوگئی",
+      "broadcastCancelled": "نشریات منسوخ کردی گئی"
+    },
+    "error": {
+      "fetchBroadcasts": "نشریات حاصل کرنے میں ناکامی",
+      "fetchAnalytics": "تجزیات حاصل کرنے میں ناکامی"
+    }
+  },
+  "confirm": {
+    "cancelBroadcast": "کیا آپ واقعی اس نشریات کو منسوخ کرنا چاہتے ہیں؟"
+  }
+}

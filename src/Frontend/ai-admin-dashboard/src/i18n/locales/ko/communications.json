@@ -1,0 +1,89 @@
+{
+  "titles": {
+    "main": "커뮤니케이션",
+    "overview": "개요",
+    "campaigns": "캠페인",
+    "templates": "템플릿",
+    "segments": "세그먼트",
+    "analytics": "분석",
+    "broadcastCampaigns": "브로드캐스트 캠페인",
+    "recentCampaigns": "최근 캠페인",
+    "channelPerformance": "채널 성과"
+  },
+  "descriptions": {
+    "managingFor": "커뮤니케이션 관리 대상",
+    "segmentationComingSoon": "고객 세그먼테이션 곧 출시...",
+    "noAnalytics": "사용 가능한 분석 데이터가 없습니다",
+    "noStoreSelected": "선택된 스토어 없음",
+    "selectStore": "커뮤니케이션을 관리하려면 스토어를 선택하세요"
+  },
+  "tabs": {
+    "overview": "개요",
+    "campaigns": "캠페인",
+    "templates": "템플릿",
+    "segments": "세그먼트",
+    "analytics": "분석"
+  },
+  "stats": {
+    "totalCampaigns": "총 캠페인",
+    "messagesSent": "전송된 메시지",
+    "successRate": "성공률",
+    "failed": "실패"
+  },
+  "status": {
+    "draft": "draft",
+    "scheduled": "scheduled",
+    "sending": "sending",
+    "sent": "sent",
+    "paused": "paused",
+    "cancelled": "cancelled",
+    "failed": "failed"
+  },
+  "table": {
+    "campaign": "캠페인",
+    "status": "상태",
+    "recipients": "수신자",
+    "successRate": "성공률",
+    "created": "생성일",
+    "channels": "채널",
+    "scheduled": "예약됨",
+    "actions": "작업",
+    "createdBy": "생성자",
+    "sentCount": "sent"
+  },
+  "channels": {
+    "email": "email",
+    "sms": "sms",
+    "push": "push",
+    "campaigns": "캠페인",
+    "messages": "메시지",
+    "engagement": "참여도"
+  },
+  "actions": {
+    "newCampaign": "새 캠페인",
+    "viewAll": "모두 보기",
+    "viewDetails": "세부정보 보기",
+    "edit": "편집",
+    "sendNow": "지금 전송",
+    "cancel": "취소",
+    "pause": "일시중지",
+    "resume": "재개",
+    "refresh": "새로고침",
+    "settings": "설정"
+  },
+  "messages": {
+    "success": {
+      "broadcastStarted": "브로드캐스트 실행이 시작되었습니다",
+      "broadcastPaused": "브로드캐스트가 일시중지되었습니다",
+      "broadcastResumed": "브로드캐스트가 재개되었습니다",
+      "broadcastCancelled": "브로드캐스트가 취소되었습니다"
+    },
+    "error": {
+      "fetchBroadcasts": "브로드캐스트를 가져오지 못했습니다",
+      "fetchAnalytics": "분석을 가져오지 못했습니다"
+    }
+  },
+  "confirm": {
+    "cancelBroadcast": "이 브로드캐스트를 취소하시겠습니까?"
+  }
+}

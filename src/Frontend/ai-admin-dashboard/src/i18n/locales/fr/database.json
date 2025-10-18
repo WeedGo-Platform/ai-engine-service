@@ -1,0 +1,80 @@
+{
+  "titles": {
+    "main": "Gestion de la base de données",
+    "databaseObjects": "Objets de la base de données",
+    "addRow": "Ajouter une nouvelle ligne",
+    "editRow": "Modifier la ligne",
+    "truncateTable": "Tronquer la table",
+    "dropTable": "Supprimer la table"
+  },
+  "descriptions": {
+    "main": "Accès super administrateur aux tables et opérations de la base de données",
+    "selectTable": "Sélectionnez une table pour afficher les données",
+    "chooseFromList": "Choisissez dans la liste à gauche"
+  },
+  "tabs": {
+    "data": "Données",
+    "schema": "Schéma",
+    "query": "Requête"
+  },
+  "connection": {
+    "connections": "connexions"
+  },
+  "table": {
+    "tables": "tables",
+    "views": "vues",
+    "columns": "colonnes",
+    "totalRows": "lignes totales"
+  },
+  "actions": {
+    "addRow": "Ajouter une ligne",
+    "add": "Ajouter",
+    "truncate": "Tronquer",
+    "clear": "Effacer",
+    "dropView": "Supprimer la vue",
+    "dropTable": "Supprimer la table",
+    "drop": "Supprimer",
+    "refresh": "Actualiser",
+    "search": "Rechercher",
+    "clearSearch": "Effacer la recherche",
+    "executeQuery": "Exécuter la requête",
+    "cancel": "Annuler",
+    "updateRow": "Mettre à jour la ligne"
+  },
+  "placeholders": {
+    "filterTables": "Filtrer les tables et les vues...",
+    "searchTable": "Rechercher dans la table...",
+    "sqlQuery": "Requête SQL (SELECT uniquement)"
+  },
+  "schema": {
+    "columnName": "Nom de la colonne",
+    "dataType": "Type de données",
+    "nullable": "Nullable",
+    "default": "Par défaut",
+    "maxLength": "Longueur maximale"
+  },
+  "pagination": {
+    "page": "Page",
+    "of": "sur"
+  },
+  "messages": {
+    "noData": "Aucune donnée trouvée dans cette table",
+    "warningCannotUndo": "Attention : Cette action ne peut pas être annulée !",
+    "truncateWarning": "Toutes les données de la table \"{table}\" seront définitivement supprimées.",
+    "dropWarning": "La table entière \"{table}\" et toutes ses données seront définitivement supprimées de la base de données.",
+    "type": "Type",
+    "actions": "Actions"
+  },
+  "confirm": {
+    "deleteRow": "Êtes-vous sûr de vouloir supprimer cette ligne ?",
+    "truncateTable": "Êtes-vous sûr de vouloir TRONQUER la table {table} ? Cela supprimera TOUTES les lignes !"
+  },
+  "errors": {
+    "addRow": "Échec de l'ajout de la ligne",
+    "updateRow": "Échec de la mise à jour de la ligne",
+    "deleteRow": "Échec de la suppression de la ligne",
+    "truncateTable": "Échec de la troncature de la table",
+    "dropTable": "Échec de la suppression de la table",
+    "executeQuery": "Échec de l'exécution de la requête"
+  }
+}

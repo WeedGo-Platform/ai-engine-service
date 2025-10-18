@@ -1,0 +1,127 @@
+{
+  "titles": {
+    "main": "판매 시점",
+    "posSettings": "POS 설정",
+    "parkedSales": "보류된 판매",
+    "hardwareConfiguration": "하드웨어 구성",
+    "cashManagement": "현금 관리",
+    "discountsPromotions": "할인 및 프로모션"
+  },
+  "tabs": {
+    "newSale": "신규 판매",
+    "parked": "보류",
+    "history": "기록",
+    "settings": "설정"
+  },
+  "customer": {
+    "label": "고객",
+    "select": "선택",
+    "change": "변경",
+    "returning": "재방문",
+    "new": "신규",
+    "anonymous": "익명",
+    "newCustomer": "신규 고객",
+    "points": "포인트:"
+  },
+  "cart": {
+    "empty": "장바구니가 비어 있습니다",
+    "batch": "배치:",
+    "discount": "할인:",
+    "quantity": "수량"
+  },
+  "weight": {
+    "driedFlowerEquivalent": "Dried Flower Equivalent:",
+    "legalLimit": "/ 30g",
+    "exceedsLimit": "법적 한도 초과!"
+  },
+  "totals": {
+    "subtotal": "소계",
+    "discount": "할인",
+    "discountApplied": "할인 적용됨",
+    "afterDiscount": "할인 후",
+    "tax": "세금 (13%)",
+    "total": "합계"
+  },
+  "actions": {
+    "parkSale": "판매 보류",
+    "clear": "지우기",
+    "processPayment": "결제 처리",
+    "resumeSale": "판매 재개",
+    "addPromotion": "프로모션 추가",
+    "detectScanners": "스캐너 감지",
+    "openRegister": "계산대 열기",
+    "cashCount": "현금 계산",
+    "endOfDay": "영업 종료",
+    "printReport": "보고서 인쇄",
+    "test": "테스트",
+    "active": "활성"
+  },
+  "search": {
+    "placeholder": "제품 검색 또는 바코드 스캔...",
+    "scanning": "스캔 중:",
+    "filterProducts": "제품 필터"
+  },
+  "products": {
+    "noProductsFound": "제품을 찾을 수 없습니다",
+    "outOfStock": "품절",
+    "low": "낮음",
+    "stock": "재고:",
+    "batch": "배치",
+    "batches": "배치"
+  },
+  "parked": {
+    "noParkedSales": "보류된 판매 없음",
+    "items": "항목"
+  },
+  "scanner": {
+    "enabled": "스캐너 활성화",
+    "disabled": "스캐너 비활성화",
+    "noScannersDetected": "스캐너가 감지되지 않음",
+    "connectScanner": "스캐너를 연결하고 \"스캐너 감지\"를 클릭하세요",
+    "barcodeScanners": "바코드 스캐너",
+    "manageConnected": "연결된 스캐너 관리"
+  },
+  "hardware": {
+    "paymentTerminal": "결제 단말기",
+    "connectCardReader": "카드 리더 연결",
+    "receiptPrinter": "영수증 프린터",
+    "printReceipts": "영수증 인쇄",
+    "cashDrawer": "현금 서랍",
+    "manageCash": "현금 관리",
+    "enabled": "활성화"
+  },
+  "validation": {
+    "validIdDate": "유효한 신분증 날짜:",
+    "orEarlier": "또는 그 이전",
+    "validId": "유효한 신분증:"
+  },
+  "promotions": {
+    "seniorDiscount": "시니어 할인",
+    "seniorDescription": "65세 이상 10% 할인",
+    "happyHour": "해피아워",
+    "happyHourDescription": "오후 4-6시 15% 할인"
+  },
+  "messages": {
+    "saleParkedSuccess": "판매가 보류되었습니다!",
+    "saleParkedFailed": "판매 보류에 실패했습니다. 다시 시도하세요.",
+    "resumeFailed": "판매 재개에 실패했습니다. 다시 시도하세요.",
+    "paymentSuccess": "결제 성공!",
+    "receiptPrinted": "영수증이 인쇄되었습니다.",
+    "transactionFailed": "거래 처리에 실패했습니다. 다시 시도하세요.",
+    "productNotFound": "바코드에 대한 제품을 찾을 수 없습니다:",
+    "scannerTestSuccess": "스캐너 테스트 성공! 테스트 바코드:",
+    "scannerTestFailed": "스캐너 테스트 실패",
+    "scannerTestError": "스캐너 테스트에 실패했습니다"
+  },
+  "fullscreen": {
+    "enter": "전체 화면 진입",
+    "exit": "전체 화면 종료"
+  },
+  "labels": {
+    "confidence": {
+      "high": "✓ 스캐너",
+      "medium": "스캐너일 가능성 높음",
+      "low": "스캐너일 가능성 있음"
+    }
+  }
+}

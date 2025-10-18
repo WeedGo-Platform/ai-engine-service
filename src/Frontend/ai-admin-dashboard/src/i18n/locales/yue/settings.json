@@ -1,0 +1,43 @@
+{
+  "titles": {
+    "tenantSettings": "設定",
+    "generalInformation": "一般資訊"
+  },
+  "descriptions": {
+    "tenantManagement": "管理租戶配置同付款設定"
+  },
+  "tabs": {
+    "general": "一般設定",
+    "payment": "付款設定",
+    "communication": "通訊設定"
+  },
+  "fields": {
+    "tenantName": "租戶名稱",
+    "tenantCode": "租戶代碼",
+    "companyName": "公司名稱",
+    "businessNumber": "商業號碼",
+    "contactEmail": "聯絡電郵",
+    "contactPhone": "聯絡電話",
+    "status": "狀態",
+    "subscriptionTier": "訂閱級別",
+    "address": "地址"
+  },
+  "actions": {
+    "backToTenants": "返回租戶列表"
+  },
+  "messages": {
+    "notSpecified": "未指定",
+    "loading": "載入中...",
+    "tenantNotFound": "搵唔到租戶",
+    "success": {
+      "paymentSettingsUpdated": "付款設定更新成功",
+      "communicationSettingsUpdated": "通訊設定更新成功",
+      "configurationValid": "配置有效"
+    },
+    "error": {
+      "loadSettings": "載入租戶設定失敗",
+      "updatePaymentSettings": "更新付款設定失敗",
+      "updateCommunicationSettings": "更新通訊設定失敗"
+    }
+  }
+}

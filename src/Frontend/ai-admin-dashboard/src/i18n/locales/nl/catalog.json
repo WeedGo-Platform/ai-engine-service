@@ -1,0 +1,75 @@
+{
+  "titles": {
+    "main": "Provinciale productcatalogus",
+    "mainVirtual": "Provinciale productcatalogus (Virtueel scrollen)",
+    "uploadSection": "Catalogus uploaden",
+    "uploadInstructions": "Upload-instructies",
+    "catalogProducts": "Catalogusproducten"
+  },
+  "descriptions": {
+    "main": "Bekijk en beheer productcatalogi van provinciale cannabisdistributeurs.",
+    "mainVirtual": "Beheer en upload provinciale cannabisproductcatalogi",
+    "selectProvince": "Selecteer provincie",
+    "viewingProvince": "Provinciale catalogus bekijken",
+    "scrollHint": "Scroll horizontaal om alle kolommen te bekijken →"
+  },
+  "provinces": {
+    "ontario": "Ontario (OCS)",
+    "bc": "British Columbia (Binnenkort)",
+    "alberta": "Alberta (Binnenkort)",
+    "quebec": "Quebec (Binnenkort)"
+  },
+  "stats": {
+    "totalProducts": "Totaal producten",
+    "lastUpdated": "Laatst bijgewerkt",
+    "categories": "Categorieën",
+    "never": "Nooit",
+    "totalRecords": "Totaal records",
+    "inserted": "Ingevoegd",
+    "updated": "Bijgewerkt",
+    "errors": "Fouten",
+    "totalRecordsLabel": "Totaal records"
+  },
+  "upload": {
+    "selectFile": "Nieuwe catalogus uploaden",
+    "chooseFile": "Bestand kiezen",
+    "uploadButton": "Uploaden",
+    "uploadCatalog": "Catalogus uploaden",
+    "uploading": "Bezig met uploaden...",
+    "uploadFile": "Bestand uploaden",
+    "invalidFileType": "Ongeldig bestandstype. Upload een CSV- of Excel-bestand.",
+    "pleaseSelectFile": "Selecteer een bestand om te uploaden.",
+    "processingFile": "Catalogusbestand verwerken...",
+    "processingFileShort": "Bestand verwerken...",
+    "uploadSuccess": "Catalogus succesvol geüpload!",
+    "uploadSuccessShort": "Upload geslaagd",
+    "uploadFailed": "Catalogus uploaden mislukt",
+    "uploadFailedShort": "Upload mislukt"
+  },
+  "search": {
+    "placeholder": "Producten zoeken...",
+    "allCategories": "Alle categorieën"
+  },
+  "buttons": {
+    "export": "Exporteren",
+    "exportCsv": "CSV exporteren",
+    "previous": "Vorige",
+    "next": "Volgende"
+  },
+  "table": {
+    "loadingCatalog": "Catalogus laden...",
+    "noProductsFound": "Geen producten gevonden in catalogus",
+    "noProductsUpload": "Geen producten gevonden. Upload een catalogus om te beginnen.",
+    "showingPage": "Pagina {page} van resultaten weergeven",
+    "itemsCount": "{count} items"
+  },
+  "instructions": {
+    "line1": "Het OCS-catalogusbestand moet alle vereiste kolommen bevatten volgens de OCS-specificatie.",
+    "line2": "Producten worden gematcht en bijgewerkt met behulp van het OCS-variantnummer als unieke sleutel.",
+    "line3": "Nieuwe producten worden ingevoegd, bestaande producten worden bijgewerkt met de nieuwste informatie.",
+    "line4": "Beoordelings- en beoordelingsaantalvelden worden behouden tijdens updates."
+  },
+  "messages": {
+    "lastCatalogUpdate": "Laatste catalogusupdate:"
+  }
+}

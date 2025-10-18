@@ -1,0 +1,43 @@
+{
+  "titles": {
+    "tenantSettings": "Настройки",
+    "generalInformation": "Общая Информация"
+  },
+  "descriptions": {
+    "tenantManagement": "Управление конфигурацией арендатора и настройками платежей"
+  },
+  "tabs": {
+    "general": "Общие Настройки",
+    "payment": "Настройки Платежей",
+    "communication": "Настройки Связи"
+  },
+  "fields": {
+    "tenantName": "Имя Арендатора",
+    "tenantCode": "Код Арендатора",
+    "companyName": "Название Компании",
+    "businessNumber": "Номер Предприятия",
+    "contactEmail": "Контактный Email",
+    "contactPhone": "Контактный Телефон",
+    "status": "Статус",
+    "subscriptionTier": "Уровень Подписки",
+    "address": "Адрес"
+  },
+  "actions": {
+    "backToTenants": "Вернуться к Арендаторам"
+  },
+  "messages": {
+    "notSpecified": "Не указано",
+    "loading": "Загрузка...",
+    "tenantNotFound": "Арендатор не найден",
+    "success": {
+      "paymentSettingsUpdated": "Настройки платежей успешно обновлены",
+      "communicationSettingsUpdated": "Настройки связи успешно обновлены",
+      "configurationValid": "конфигурация действительна"
+    },
+    "error": {
+      "loadSettings": "Не удалось загрузить настройки арендатора",
+      "updatePaymentSettings": "Не удалось обновить настройки платежей",
+      "updateCommunicationSettings": "Не удалось обновить настройки связи"
+    }
+  }
+}

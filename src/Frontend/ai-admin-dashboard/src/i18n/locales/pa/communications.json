@@ -1,0 +1,89 @@
+{
+  "titles": {
+    "main": "ਸੰਚਾਰ",
+    "overview": "ਸੰਖੇਪ",
+    "campaigns": "ਮੁਹਿੰਮਾਂ",
+    "templates": "ਟੈਂਪਲੇਟ",
+    "segments": "ਖੰਡ",
+    "analytics": "ਵਿਸ਼ਲੇਸ਼ਣ",
+    "broadcastCampaigns": "ਪ੍ਰਸਾਰਣ ਮੁਹਿੰਮਾਂ",
+    "recentCampaigns": "ਤਾਜ਼ਾ ਮੁਹਿੰਮਾਂ",
+    "channelPerformance": "ਚੈਨਲ ਪ੍ਰਦਰਸ਼ਨ"
+  },
+  "descriptions": {
+    "managingFor": "ਲਈ ਸੰਚਾਰ ਪ੍ਰਬੰਧਨ",
+    "segmentationComingSoon": "ਗਾਹਕ ਵਿਭਾਜਨ ਜਲਦੀ ਆ ਰਿਹਾ ਹੈ...",
+    "noAnalytics": "ਕੋਈ ਵਿਸ਼ਲੇਸ਼ਣ ਡੇਟਾ ਉਪਲਬਧ ਨਹੀਂ",
+    "noStoreSelected": "ਕੋਈ ਸਟੋਰ ਚੁਣਿਆ ਨਹੀਂ ਗਿਆ",
+    "selectStore": "ਸੰਚਾਰ ਪ੍ਰਬੰਧਨ ਕਰਨ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਸਟੋਰ ਚੁਣੋ"
+  },
+  "tabs": {
+    "overview": "ਸੰਖੇਪ",
+    "campaigns": "ਮੁਹਿੰਮਾਂ",
+    "templates": "ਟੈਂਪਲੇਟ",
+    "segments": "ਖੰਡ",
+    "analytics": "ਵਿਸ਼ਲੇਸ਼ਣ"
+  },
+  "stats": {
+    "totalCampaigns": "ਕੁੱਲ ਮੁਹਿੰਮਾਂ",
+    "messagesSent": "ਭੇਜੇ ਗਏ ਸੁਨੇਹੇ",
+    "successRate": "ਸਫਲਤਾ ਦਰ",
+    "failed": "ਅਸਫਲ"
+  },
+  "status": {
+    "draft": "draft",
+    "scheduled": "scheduled",
+    "sending": "sending",
+    "sent": "sent",
+    "paused": "paused",
+    "cancelled": "cancelled",
+    "failed": "failed"
+  },
+  "table": {
+    "campaign": "ਮੁਹਿੰਮ",
+    "status": "ਸਥਿਤੀ",
+    "recipients": "ਪ੍ਰਾਪਤਕਰਤਾ",
+    "successRate": "ਸਫਲਤਾ ਦਰ",
+    "created": "ਬਣਾਇਆ ਗਿਆ",
+    "channels": "ਚੈਨਲ",
+    "scheduled": "ਅਨੁਸੂਚਿਤ",
+    "actions": "ਕਾਰਵਾਈਆਂ",
+    "createdBy": "ਦੁਆਰਾ ਬਣਾਇਆ ਗਿਆ",
+    "sentCount": "sent"
+  },
+  "channels": {
+    "email": "email",
+    "sms": "sms",
+    "push": "push",
+    "campaigns": "ਮੁਹਿੰਮਾਂ",
+    "messages": "ਸੁਨੇਹੇ",
+    "engagement": "ਸ਼ਮੂਲੀਅਤ"
+  },
+  "actions": {
+    "newCampaign": "ਨਵੀਂ ਮੁਹਿੰਮ",
+    "viewAll": "ਸਭ ਦੇਖੋ",
+    "viewDetails": "ਵੇਰਵੇ ਦੇਖੋ",
+    "edit": "ਸੰਪਾਦਿਤ ਕਰੋ",
+    "sendNow": "ਹੁਣ ਭੇਜੋ",
+    "cancel": "ਰੱਦ ਕਰੋ",
+    "pause": "ਰੋਕੋ",
+    "resume": "ਮੁੜ ਸ਼ੁਰੂ ਕਰੋ",
+    "refresh": "ਤਾਜ਼ਾ ਕਰੋ",
+    "settings": "ਸੈਟਿੰਗਾਂ"
+  },
+  "messages": {
+    "success": {
+      "broadcastStarted": "ਪ੍ਰਸਾਰਣ ਨਿਰਮਾਣ ਸ਼ੁਰੂ ਹੋਇਆ",
+      "broadcastPaused": "ਪ੍ਰਸਾਰਣ ਰੋਕਿਆ ਗਿਆ",
+      "broadcastResumed": "ਪ੍ਰਸਾਰਣ ਮੁੜ ਸ਼ੁਰੂ ਕੀਤਾ ਗਿਆ",
+      "broadcastCancelled": "ਪ੍ਰਸਾਰਣ ਰੱਦ ਕੀਤਾ ਗਿਆ"
+    },
+    "error": {
+      "fetchBroadcasts": "ਪ੍ਰਸਾਰਣ ਪ੍ਰਾਪਤ ਕਰਨ ਵਿੱਚ ਅਸਫਲ",
+      "fetchAnalytics": "ਵਿਸ਼ਲੇਸ਼ਣ ਪ੍ਰਾਪਤ ਕਰਨ ਵਿੱਚ ਅਸਫਲ"
+    }
+  },
+  "confirm": {
+    "cancelBroadcast": "ਕੀ ਤੁਸੀਂ ਯਕੀਨੀ ਤੌਰ 'ਤੇ ਇਸ ਪ੍ਰਸਾਰਣ ਨੂੰ ਰੱਦ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?"
+  }
+}

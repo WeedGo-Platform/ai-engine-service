@@ -1,0 +1,89 @@
+{
+  "titles": {
+    "main": "Comunicazioni",
+    "overview": "Panoramica",
+    "campaigns": "Campagne",
+    "templates": "Modelli",
+    "segments": "Segmenti",
+    "analytics": "Analitiche",
+    "broadcastCampaigns": "Campagne di Trasmissione",
+    "recentCampaigns": "Campagne Recenti",
+    "channelPerformance": "Prestazioni dei Canali"
+  },
+  "descriptions": {
+    "managingFor": "Gestione comunicazioni per",
+    "segmentationComingSoon": "Segmentazione clienti in arrivo...",
+    "noAnalytics": "Nessun dato analitico disponibile",
+    "noStoreSelected": "Nessun Negozio Selezionato",
+    "selectStore": "Si prega di selezionare un negozio per gestire le comunicazioni"
+  },
+  "tabs": {
+    "overview": "Panoramica",
+    "campaigns": "Campagne",
+    "templates": "Modelli",
+    "segments": "Segmenti",
+    "analytics": "Analitiche"
+  },
+  "stats": {
+    "totalCampaigns": "Campagne Totali",
+    "messagesSent": "Messaggi Inviati",
+    "successRate": "Tasso di Successo",
+    "failed": "Fallito"
+  },
+  "status": {
+    "draft": "draft",
+    "scheduled": "scheduled",
+    "sending": "sending",
+    "sent": "sent",
+    "paused": "paused",
+    "cancelled": "cancelled",
+    "failed": "failed"
+  },
+  "table": {
+    "campaign": "Campagna",
+    "status": "Stato",
+    "recipients": "Destinatari",
+    "successRate": "Tasso di Successo",
+    "created": "Creato",
+    "channels": "Canali",
+    "scheduled": "Programmato",
+    "actions": "Azioni",
+    "createdBy": "Creato da",
+    "sentCount": "sent"
+  },
+  "channels": {
+    "email": "email",
+    "sms": "sms",
+    "push": "push",
+    "campaigns": "Campagne",
+    "messages": "Messaggi",
+    "engagement": "Coinvolgimento"
+  },
+  "actions": {
+    "newCampaign": "Nuova Campagna",
+    "viewAll": "Visualizza Tutto",
+    "viewDetails": "Visualizza Dettagli",
+    "edit": "Modifica",
+    "sendNow": "Invia Ora",
+    "cancel": "Annulla",
+    "pause": "Pausa",
+    "resume": "Riprendi",
+    "refresh": "Aggiorna",
+    "settings": "Impostazioni"
+  },
+  "messages": {
+    "success": {
+      "broadcastStarted": "Esecuzione trasmissione avviata",
+      "broadcastPaused": "Trasmissione in pausa",
+      "broadcastResumed": "Trasmissione ripresa",
+      "broadcastCancelled": "Trasmissione annullata"
+    },
+    "error": {
+      "fetchBroadcasts": "Impossibile recuperare le trasmissioni",
+      "fetchAnalytics": "Impossibile recuperare le analitiche"
+    }
+  },
+  "confirm": {
+    "cancelBroadcast": "Sei sicuro di voler annullare questa trasmissione?"
+  }
+}

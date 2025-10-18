@@ -1,0 +1,89 @@
+{
+  "titles": {
+    "main": "Comunicações",
+    "overview": "Visão Geral",
+    "campaigns": "Campanhas",
+    "templates": "Modelos",
+    "segments": "Segmentos",
+    "analytics": "Análises",
+    "broadcastCampaigns": "Campanhas de Transmissão",
+    "recentCampaigns": "Campanhas Recentes",
+    "channelPerformance": "Desempenho dos Canais"
+  },
+  "descriptions": {
+    "managingFor": "Gerenciando comunicações para",
+    "segmentationComingSoon": "Segmentação de clientes em breve...",
+    "noAnalytics": "Nenhum dado de análise disponível",
+    "noStoreSelected": "Nenhuma Loja Selecionada",
+    "selectStore": "Por favor, selecione uma loja para gerenciar comunicações"
+  },
+  "tabs": {
+    "overview": "Visão Geral",
+    "campaigns": "Campanhas",
+    "templates": "Modelos",
+    "segments": "Segmentos",
+    "analytics": "Análises"
+  },
+  "stats": {
+    "totalCampaigns": "Total de Campanhas",
+    "messagesSent": "Mensagens Enviadas",
+    "successRate": "Taxa de Sucesso",
+    "failed": "Falhou"
+  },
+  "status": {
+    "draft": "draft",
+    "scheduled": "scheduled",
+    "sending": "sending",
+    "sent": "sent",
+    "paused": "paused",
+    "cancelled": "cancelled",
+    "failed": "failed"
+  },
+  "table": {
+    "campaign": "Campanha",
+    "status": "Estado",
+    "recipients": "Destinatários",
+    "successRate": "Taxa de Sucesso",
+    "created": "Criado",
+    "channels": "Canais",
+    "scheduled": "Agendado",
+    "actions": "Ações",
+    "createdBy": "Criado por",
+    "sentCount": "sent"
+  },
+  "channels": {
+    "email": "email",
+    "sms": "sms",
+    "push": "push",
+    "campaigns": "Campanhas",
+    "messages": "Mensagens",
+    "engagement": "Engajamento"
+  },
+  "actions": {
+    "newCampaign": "Nova Campanha",
+    "viewAll": "Ver Tudo",
+    "viewDetails": "Ver Detalhes",
+    "edit": "Editar",
+    "sendNow": "Enviar Agora",
+    "cancel": "Cancelar",
+    "pause": "Pausar",
+    "resume": "Retomar",
+    "refresh": "Atualizar",
+    "settings": "Configurações"
+  },
+  "messages": {
+    "success": {
+      "broadcastStarted": "Execução de transmissão iniciada",
+      "broadcastPaused": "Transmissão pausada",
+      "broadcastResumed": "Transmissão retomada",
+      "broadcastCancelled": "Transmissão cancelada"
+    },
+    "error": {
+      "fetchBroadcasts": "Falha ao buscar transmissões",
+      "fetchAnalytics": "Falha ao buscar análises"
+    }
+  },
+  "confirm": {
+    "cancelBroadcast": "Tem certeza de que deseja cancelar esta transmissão?"
+  }
+}

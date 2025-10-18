@@ -1,0 +1,80 @@
+{
+  "titles": {
+    "main": "Database Management",
+    "databaseObjects": "Database Objects",
+    "addRow": "Add New Row",
+    "editRow": "Edit Row",
+    "truncateTable": "Truncate Table",
+    "dropTable": "Drop Table"
+  },
+  "descriptions": {
+    "main": "Super admin access to database tables and operations",
+    "selectTable": "Select a table to view data",
+    "chooseFromList": "Choose from the list on the left"
+  },
+  "tabs": {
+    "data": "Data",
+    "schema": "Schema",
+    "query": "Query"
+  },
+  "connection": {
+    "connections": "connections"
+  },
+  "table": {
+    "tables": "tables",
+    "views": "views",
+    "columns": "columns",
+    "totalRows": "total rows"
+  },
+  "actions": {
+    "addRow": "Add Row",
+    "add": "Add",
+    "truncate": "Truncate",
+    "clear": "Clear",
+    "dropView": "Drop View",
+    "dropTable": "Drop Table",
+    "drop": "Drop",
+    "refresh": "Refresh",
+    "search": "Search",
+    "clearSearch": "Clear search",
+    "executeQuery": "Execute Query",
+    "cancel": "Cancel",
+    "updateRow": "Update Row"
+  },
+  "placeholders": {
+    "filterTables": "Filter tables and views...",
+    "searchTable": "Search table...",
+    "sqlQuery": "SQL Query (SELECT only)"
+  },
+  "schema": {
+    "columnName": "Column Name",
+    "dataType": "Data Type",
+    "nullable": "Nullable",
+    "default": "Default",
+    "maxLength": "Max Length"
+  },
+  "pagination": {
+    "page": "Page",
+    "of": "of"
+  },
+  "messages": {
+    "noData": "No data found in this table",
+    "warningCannotUndo": "Warning: This action cannot be undone!",
+    "truncateWarning": "All data in table \"{table}\" will be permanently deleted.",
+    "dropWarning": "The entire table \"{table}\" and all its data will be permanently removed from the database.",
+    "type": "Type",
+    "actions": "Actions"
+  },
+  "confirm": {
+    "deleteRow": "Are you sure you want to delete this row?",
+    "truncateTable": "Are you sure you want to TRUNCATE table {table}? This will delete ALL rows!"
+  },
+  "errors": {
+    "addRow": "Failed to add row",
+    "updateRow": "Failed to update row",
+    "deleteRow": "Failed to delete row",
+    "truncateTable": "Failed to truncate table",
+    "dropTable": "Failed to drop table",
+    "executeQuery": "Failed to execute query"
+  }
+}

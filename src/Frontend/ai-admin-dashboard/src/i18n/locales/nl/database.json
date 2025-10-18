@@ -1,0 +1,80 @@
+{
+  "titles": {
+    "main": "Databasebeheer",
+    "databaseObjects": "Database-objecten",
+    "addRow": "Nieuwe rij toevoegen",
+    "editRow": "Rij bewerken",
+    "truncateTable": "Tabel afkappen",
+    "dropTable": "Tabel verwijderen"
+  },
+  "descriptions": {
+    "main": "Superbeheerderstoegang tot databasetabellen en bewerkingen",
+    "selectTable": "Selecteer een tabel om gegevens te bekijken",
+    "chooseFromList": "Kies uit de lijst aan de linkerkant"
+  },
+  "tabs": {
+    "data": "Gegevens",
+    "schema": "Schema",
+    "query": "Query"
+  },
+  "connection": {
+    "connections": "verbindingen"
+  },
+  "table": {
+    "tables": "tabellen",
+    "views": "weergaven",
+    "columns": "kolommen",
+    "totalRows": "totaal aantal rijen"
+  },
+  "actions": {
+    "addRow": "Rij toevoegen",
+    "add": "Toevoegen",
+    "truncate": "Afkappen",
+    "clear": "Wissen",
+    "dropView": "Weergave verwijderen",
+    "dropTable": "Tabel verwijderen",
+    "drop": "Verwijderen",
+    "refresh": "Vernieuwen",
+    "search": "Zoeken",
+    "clearSearch": "Zoekopdracht wissen",
+    "executeQuery": "Query uitvoeren",
+    "cancel": "Annuleren",
+    "updateRow": "Rij bijwerken"
+  },
+  "placeholders": {
+    "filterTables": "Tabellen en weergaven filteren...",
+    "searchTable": "Tabel doorzoeken...",
+    "sqlQuery": "SQL-query (alleen SELECT)"
+  },
+  "schema": {
+    "columnName": "Kolomnaam",
+    "dataType": "Gegevenstype",
+    "nullable": "Kan NULL zijn",
+    "default": "Standaard",
+    "maxLength": "Max. lengte"
+  },
+  "pagination": {
+    "page": "Pagina",
+    "of": "van"
+  },
+  "messages": {
+    "noData": "Geen gegevens gevonden in deze tabel",
+    "warningCannotUndo": "Waarschuwing: Deze actie kan niet ongedaan worden gemaakt!",
+    "truncateWarning": "Alle gegevens in tabel \"{table}\" worden permanent verwijderd.",
+    "dropWarning": "De gehele tabel \"{table}\" en alle gegevens worden permanent uit de database verwijderd.",
+    "type": "Type",
+    "actions": "Acties"
+  },
+  "confirm": {
+    "deleteRow": "Weet u zeker dat u deze rij wilt verwijderen?",
+    "truncateTable": "Weet u zeker dat u tabel {table} wilt AFKAPPEN? Dit verwijdert ALLE rijen!"
+  },
+  "errors": {
+    "addRow": "Rij toevoegen mislukt",
+    "updateRow": "Rij bijwerken mislukt",
+    "deleteRow": "Rij verwijderen mislukt",
+    "truncateTable": "Tabel afkappen mislukt",
+    "dropTable": "Tabel verwijderen mislukt",
+    "executeQuery": "Query uitvoeren mislukt"
+  }
+}

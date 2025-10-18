@@ -1,0 +1,132 @@
+{
+  "voiceApi": {
+    "title": "语音API测试",
+    "apiEndpoint": "API端点",
+    "recording": {
+      "title": "1. 音频录制",
+      "start": "开始录制",
+      "stop": "停止录制",
+      "play": "播放录音",
+      "inProgress": "正在录制...",
+      "ready": "音频已录制完成并准备转录"
+    },
+    "transcription": {
+      "title": "2. 测试转录",
+      "button": "转录音频",
+      "buttonLoading": "转录中...",
+      "result": "转录结果：",
+      "noAudio": "未录制音频。请先录制音频。",
+      "noTranscription": "无可用转录",
+      "success": "转录成功完成"
+    },
+    "synthesis": {
+      "title": "3. 测试合成",
+      "textLabel": "要合成的文本",
+      "textPlaceholder": "输入要转换为语音的文本...",
+      "voiceLabel": "语音",
+      "button": "合成语音",
+      "buttonLoading": "合成中...",
+      "play": "播放合成",
+      "noText": "请输入要合成的文本",
+      "success": "合成成功完成",
+      "failed": "合成失败"
+    },
+    "debug": {
+      "title": "调试信息",
+      "endpoint": "端点",
+      "transcription": "转录",
+      "synthesis": "合成",
+      "voices": "语音"
+    },
+    "messages": {
+      "voicesFetched": "成功获取语音",
+      "voicesFailed": "获取语音失败",
+      "recordingFailed": "启动录制失败",
+      "recordingSaved": "录音已保存",
+      "transcriptionError": "转录错误",
+      "synthesisError": "合成错误"
+    }
+  },
+  "logs": {
+    "title": "系统日志",
+    "description": "从Elasticsearch查看和搜索应用程序日志",
+    "filters": {
+      "search": "搜索日志",
+      "searchPlaceholder": "搜索消息、日志记录器、模块...",
+      "logLevel": "日志级别",
+      "allLevels": "所有级别",
+      "error": "错误",
+      "warning": "警告",
+      "info": "信息",
+      "debug": "调试",
+      "timeRange": "时间范围",
+      "advancedFilters": "高级筛选",
+      "correlationId": "关联ID",
+      "correlationIdPlaceholder": "按关联ID筛选",
+      "tenantId": "租户ID",
+      "tenantIdPlaceholder": "按租户筛选",
+      "storeId": "商店ID",
+      "storeIdPlaceholder": "按商店筛选",
+      "userId": "用户ID",
+      "userIdPlaceholder": "按用户筛选",
+      "sessionId": "会话ID",
+      "sessionIdPlaceholder": "按会话筛选",
+      "service": "服务",
+      "servicePlaceholder": "按服务筛选",
+      "endDate": "结束日期",
+      "clearAll": "清除所有筛选"
+    },
+    "actions": {
+      "refresh": "刷新",
+      "export": "导出",
+      "autoRefresh": "自动刷新间隔",
+      "details": "详情",
+      "close": "关闭"
+    },
+    "table": {
+      "timestamp": "时间戳",
+      "level": "级别",
+      "serviceLogger": "服务 / 日志记录器",
+      "message": "消息",
+      "correlationId": "关联ID",
+      "actions": "操作",
+      "noLogs": "未找到日志",
+      "totalLogs": "条日志"
+    },
+    "pagination": {
+      "showing": "显示第 {{from}} 到 {{to}} 条，共 {{total}} 条",
+      "perPage": "每页",
+      "previous": "上一页",
+      "next": "下一页",
+      "page": "第 {{current}} 页，共 {{total}} 页"
+    },
+    "details": {
+      "title": "日志详情",
+      "summary": "摘要",
+      "metadata": "元数据",
+      "correlationId": "关联ID",
+      "sessionId": "会话ID",
+      "tenantId": "租户ID",
+      "storeId": "商店ID",
+      "userId": "用户ID",
+      "service": "服务",
+      "environment": "环境",
+      "logger": "日志记录器",
+      "module": "模块",
+      "function": "函数",
+      "lineNumber": "行号",
+      "duration": "持续时间",
+      "statusCode": "状态码",
+      "method": "方法",
+      "path": "路径",
+      "clientHost": "客户端主机",
+      "exception": "异常",
+      "viewRawJson": "查看原始JSON"
+    },
+    "messages": {
+      "fetchFailed": "从Elasticsearch获取日志失败",
+      "exportSuccess": "日志导出成功",
+      "logExported": "日志已导出"
+    }
+  }
+}

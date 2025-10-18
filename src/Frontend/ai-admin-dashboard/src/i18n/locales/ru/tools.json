@@ -1,0 +1,132 @@
+{
+  "voiceApi": {
+    "title": "Тест Голосового API",
+    "apiEndpoint": "Конечная точка API",
+    "recording": {
+      "title": "1. Запись Аудио",
+      "start": "Начать Запись",
+      "stop": "Остановить Запись",
+      "play": "Воспроизвести Запись",
+      "inProgress": "Запись в процессе...",
+      "ready": "Аудио записано и готово к транскрипции"
+    },
+    "transcription": {
+      "title": "2. Тест Транскрипции",
+      "button": "Транскрибировать Аудио",
+      "buttonLoading": "Транскрипция...",
+      "result": "Результат Транскрипции:",
+      "noAudio": "Аудио не записано. Сначала запишите аудио.",
+      "noTranscription": "Транскрипция недоступна",
+      "success": "Транскрипция успешно завершена"
+    },
+    "synthesis": {
+      "title": "3. Тест Синтеза",
+      "textLabel": "Текст для Синтеза",
+      "textPlaceholder": "Введите текст для преобразования в речь...",
+      "voiceLabel": "Голос",
+      "button": "Синтезировать Речь",
+      "buttonLoading": "Синтез...",
+      "play": "Воспроизвести Синтез",
+      "noText": "Пожалуйста, введите текст для синтеза",
+      "success": "Синтез успешно завершен",
+      "failed": "Синтез не удался"
+    },
+    "debug": {
+      "title": "Отладочная Информация",
+      "endpoint": "Конечная точка",
+      "transcription": "Транскрипция",
+      "synthesis": "Синтез",
+      "voices": "Голоса"
+    },
+    "messages": {
+      "voicesFetched": "Голоса успешно получены",
+      "voicesFailed": "Не удалось получить голоса",
+      "recordingFailed": "Не удалось начать запись",
+      "recordingSaved": "Запись сохранена",
+      "transcriptionError": "Ошибка транскрипции",
+      "synthesisError": "Ошибка синтеза"
+    }
+  },
+  "logs": {
+    "title": "Системные Журналы",
+    "description": "Просмотр и поиск журналов приложения из Elasticsearch",
+    "filters": {
+      "search": "Поиск Журналов",
+      "searchPlaceholder": "Поиск сообщения, логгера, модуля...",
+      "logLevel": "Уровень Журнала",
+      "allLevels": "Все Уровни",
+      "error": "Ошибка",
+      "warning": "Предупреждение",
+      "info": "Инфо",
+      "debug": "Отладка",
+      "timeRange": "Временной Диапазон",
+      "advancedFilters": "Расширенные Фильтры",
+      "correlationId": "ID Корреляции",
+      "correlationIdPlaceholder": "Фильтр по ID корреляции",
+      "tenantId": "ID Арендатора",
+      "tenantIdPlaceholder": "Фильтр по арендатору",
+      "storeId": "ID Магазина",
+      "storeIdPlaceholder": "Фильтр по магазину",
+      "userId": "ID Пользователя",
+      "userIdPlaceholder": "Фильтр по пользователю",
+      "sessionId": "ID Сеанса",
+      "sessionIdPlaceholder": "Фильтр по сеансу",
+      "service": "Сервис",
+      "servicePlaceholder": "Фильтр по сервису",
+      "endDate": "Дата Окончания",
+      "clearAll": "Очистить Все Фильтры"
+    },
+    "actions": {
+      "refresh": "Обновить",
+      "export": "Экспортировать",
+      "autoRefresh": "Автообновление каждые",
+      "details": "Подробности",
+      "close": "Закрыть"
+    },
+    "table": {
+      "timestamp": "Временная Метка",
+      "level": "Уровень",
+      "serviceLogger": "Сервис / Логгер",
+      "message": "Сообщение",
+      "correlationId": "ID Корреляции",
+      "actions": "Действия",
+      "noLogs": "Журналы не найдены",
+      "totalLogs": "всего журналов"
+    },
+    "pagination": {
+      "showing": "Показано с {{from}} по {{to}} из {{total}}",
+      "perPage": "на странице",
+      "previous": "Предыдущая",
+      "next": "Следующая",
+      "page": "Страница {{current}} из {{total}}"
+    },
+    "details": {
+      "title": "Детали Журнала",
+      "summary": "Сводка",
+      "metadata": "Метаданные",
+      "correlationId": "ID Корреляции",
+      "sessionId": "ID Сеанса",
+      "tenantId": "ID Арендатора",
+      "storeId": "ID Магазина",
+      "userId": "ID Пользователя",
+      "service": "Сервис",
+      "environment": "Среда",
+      "logger": "Логгер",
+      "module": "Модуль",
+      "function": "Функция",
+      "lineNumber": "Номер Строки",
+      "duration": "Длительность",
+      "statusCode": "Код Статуса",
+      "method": "Метод",
+      "path": "Путь",
+      "clientHost": "Хост Клиента",
+      "exception": "Исключение",
+      "viewRawJson": "Просмотреть Необработанный JSON"
+    },
+    "messages": {
+      "fetchFailed": "Не удалось получить журналы из Elasticsearch",
+      "exportSuccess": "Журналы успешно экспортированы",
+      "logExported": "Журнал экспортирован"
+    }
+  }
+}

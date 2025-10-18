@@ -1,0 +1,43 @@
+{
+  "titles": {
+    "tenantSettings": "সেটিংস",
+    "generalInformation": "সাধারণ তথ্য"
+  },
+  "descriptions": {
+    "tenantManagement": "ভাড়াটে কনফিগারেশন এবং পেমেন্ট সেটিংস পরিচালনা করুন"
+  },
+  "tabs": {
+    "general": "সাধারণ সেটিংস",
+    "payment": "পেমেন্ট সেটিংস",
+    "communication": "যোগাযোগ সেটিংস"
+  },
+  "fields": {
+    "tenantName": "ভাড়াটের নাম",
+    "tenantCode": "ভাড়াটে কোড",
+    "companyName": "কোম্পানির নাম",
+    "businessNumber": "ব্যবসা নম্বর",
+    "contactEmail": "যোগাযোগের ইমেল",
+    "contactPhone": "যোগাযোগের ফোন",
+    "status": "অবস্থা",
+    "subscriptionTier": "সাবস্ক্রিপশন স্তর",
+    "address": "ঠিকানা"
+  },
+  "actions": {
+    "backToTenants": "ভাড়াটেদের কাছে ফিরে যান"
+  },
+  "messages": {
+    "notSpecified": "নির্দিষ্ট নয়",
+    "loading": "লোড হচ্ছে...",
+    "tenantNotFound": "ভাড়াটে খুঁজে পাওয়া যায়নি",
+    "success": {
+      "paymentSettingsUpdated": "পেমেন্ট সেটিংস সফলভাবে আপডেট করা হয়েছে",
+      "communicationSettingsUpdated": "যোগাযোগ সেটিংস সফলভাবে আপডেট করা হয়েছে",
+      "configurationValid": "কনফিগারেশন বৈধ"
+    },
+    "error": {
+      "loadSettings": "ভাড়াটে সেটিংস লোড করতে ব্যর্থ",
+      "updatePaymentSettings": "পেমেন্ট সেটিংস আপডেট করতে ব্যর্থ",
+      "updateCommunicationSettings": "যোগাযোগ সেটিংস আপডেট করতে ব্যর্থ"
+    }
+  }
+}

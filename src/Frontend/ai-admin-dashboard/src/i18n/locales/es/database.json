@@ -1,0 +1,80 @@
+{
+  "titles": {
+    "main": "Gestión de base de datos",
+    "databaseObjects": "Objetos de base de datos",
+    "addRow": "Agregar nueva fila",
+    "editRow": "Editar fila",
+    "truncateTable": "Truncar tabla",
+    "dropTable": "Eliminar tabla"
+  },
+  "descriptions": {
+    "main": "Acceso de superadministrador a tablas y operaciones de base de datos",
+    "selectTable": "Seleccione una tabla para ver los datos",
+    "chooseFromList": "Elija de la lista a la izquierda"
+  },
+  "tabs": {
+    "data": "Datos",
+    "schema": "Esquema",
+    "query": "Consulta"
+  },
+  "connection": {
+    "connections": "conexiones"
+  },
+  "table": {
+    "tables": "tablas",
+    "views": "vistas",
+    "columns": "columnas",
+    "totalRows": "filas totales"
+  },
+  "actions": {
+    "addRow": "Agregar fila",
+    "add": "Agregar",
+    "truncate": "Truncar",
+    "clear": "Limpiar",
+    "dropView": "Eliminar vista",
+    "dropTable": "Eliminar tabla",
+    "drop": "Eliminar",
+    "refresh": "Actualizar",
+    "search": "Buscar",
+    "clearSearch": "Limpiar búsqueda",
+    "executeQuery": "Ejecutar consulta",
+    "cancel": "Cancelar",
+    "updateRow": "Actualizar fila"
+  },
+  "placeholders": {
+    "filterTables": "Filtrar tablas y vistas...",
+    "searchTable": "Buscar en tabla...",
+    "sqlQuery": "Consulta SQL (solo SELECT)"
+  },
+  "schema": {
+    "columnName": "Nombre de columna",
+    "dataType": "Tipo de datos",
+    "nullable": "Anulable",
+    "default": "Predeterminado",
+    "maxLength": "Longitud máxima"
+  },
+  "pagination": {
+    "page": "Página",
+    "of": "de"
+  },
+  "messages": {
+    "noData": "No se encontraron datos en esta tabla",
+    "warningCannotUndo": "Advertencia: ¡Esta acción no se puede deshacer!",
+    "truncateWarning": "Todos los datos de la tabla \"{table}\" se eliminarán permanentemente.",
+    "dropWarning": "La tabla completa \"{table}\" y todos sus datos se eliminarán permanentemente de la base de datos.",
+    "type": "Tipo",
+    "actions": "Acciones"
+  },
+  "confirm": {
+    "deleteRow": "¿Está seguro de que desea eliminar esta fila?",
+    "truncateTable": "¿Está seguro de que desea TRUNCAR la tabla {table}? ¡Esto eliminará TODAS las filas!"
+  },
+  "errors": {
+    "addRow": "Error al agregar fila",
+    "updateRow": "Error al actualizar fila",
+    "deleteRow": "Error al eliminar fila",
+    "truncateTable": "Error al truncar tabla",
+    "dropTable": "Error al eliminar tabla",
+    "executeQuery": "Error al ejecutar consulta"
+  }
+}

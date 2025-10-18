@@ -1,0 +1,89 @@
+{
+  "titles": {
+    "main": "コミュニケーション",
+    "overview": "概要",
+    "campaigns": "キャンペーン",
+    "templates": "テンプレート",
+    "segments": "セグメント",
+    "analytics": "分析",
+    "broadcastCampaigns": "ブロードキャストキャンペーン",
+    "recentCampaigns": "最近のキャンペーン",
+    "channelPerformance": "チャネルパフォーマンス"
+  },
+  "descriptions": {
+    "managingFor": "コミュニケーション管理対象",
+    "segmentationComingSoon": "顧客セグメンテーション近日公開...",
+    "noAnalytics": "分析データがありません",
+    "noStoreSelected": "店舗が選択されていません",
+    "selectStore": "コミュニケーションを管理するには店舗を選択してください"
+  },
+  "tabs": {
+    "overview": "概要",
+    "campaigns": "キャンペーン",
+    "templates": "テンプレート",
+    "segments": "セグメント",
+    "analytics": "分析"
+  },
+  "stats": {
+    "totalCampaigns": "総キャンペーン数",
+    "messagesSent": "送信済みメッセージ",
+    "successRate": "成功率",
+    "failed": "失敗"
+  },
+  "status": {
+    "draft": "draft",
+    "scheduled": "scheduled",
+    "sending": "sending",
+    "sent": "sent",
+    "paused": "paused",
+    "cancelled": "cancelled",
+    "failed": "failed"
+  },
+  "table": {
+    "campaign": "キャンペーン",
+    "status": "ステータス",
+    "recipients": "受信者",
+    "successRate": "成功率",
+    "created": "作成日",
+    "channels": "チャネル",
+    "scheduled": "予定済み",
+    "actions": "アクション",
+    "createdBy": "作成者",
+    "sentCount": "sent"
+  },
+  "channels": {
+    "email": "email",
+    "sms": "sms",
+    "push": "push",
+    "campaigns": "キャンペーン",
+    "messages": "メッセージ",
+    "engagement": "エンゲージメント"
+  },
+  "actions": {
+    "newCampaign": "新規キャンペーン",
+    "viewAll": "すべて表示",
+    "viewDetails": "詳細を表示",
+    "edit": "編集",
+    "sendNow": "今すぐ送信",
+    "cancel": "キャンセル",
+    "pause": "一時停止",
+    "resume": "再開",
+    "refresh": "更新",
+    "settings": "設定"
+  },
+  "messages": {
+    "success": {
+      "broadcastStarted": "ブロードキャスト実行を開始しました",
+      "broadcastPaused": "ブロードキャストを一時停止しました",
+      "broadcastResumed": "ブロードキャストを再開しました",
+      "broadcastCancelled": "ブロードキャストをキャンセルしました"
+    },
+    "error": {
+      "fetchBroadcasts": "ブロードキャストの取得に失敗しました",
+      "fetchAnalytics": "分析の取得に失敗しました"
+    }
+  },
+  "confirm": {
+    "cancelBroadcast": "このブロードキャストをキャンセルしてもよろしいですか？"
+  }
+}

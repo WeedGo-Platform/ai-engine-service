@@ -1,0 +1,80 @@
+{
+  "titles": {
+    "main": "ڈیٹا بیس کا انتظام",
+    "databaseObjects": "ڈیٹا بیس آبجیکٹس",
+    "addRow": "نئی قطار شامل کریں",
+    "editRow": "قطار میں ترمیم کریں",
+    "truncateTable": "ٹیبل کو کاٹیں",
+    "dropTable": "ٹیبل حذف کریں"
+  },
+  "descriptions": {
+    "main": "ڈیٹا بیس ٹیبلز اور آپریشنز تک سپر ایڈمن رسائی",
+    "selectTable": "ڈیٹا دیکھنے کے لیے ایک ٹیبل منتخب کریں",
+    "chooseFromList": "بائیں طرف کی فہرست سے منتخب کریں"
+  },
+  "tabs": {
+    "data": "ڈیٹا",
+    "schema": "اسکیما",
+    "query": "کوئری"
+  },
+  "connection": {
+    "connections": "کنکشنز"
+  },
+  "table": {
+    "tables": "ٹیبلز",
+    "views": "نظارے",
+    "columns": "کالم",
+    "totalRows": "کل قطاریں"
+  },
+  "actions": {
+    "addRow": "قطار شامل کریں",
+    "add": "شامل کریں",
+    "truncate": "کاٹیں",
+    "clear": "صاف کریں",
+    "dropView": "نظارہ حذف کریں",
+    "dropTable": "ٹیبل حذف کریں",
+    "drop": "حذف کریں",
+    "refresh": "تازہ کریں",
+    "search": "تلاش کریں",
+    "clearSearch": "تلاش صاف کریں",
+    "executeQuery": "کوئری چلائیں",
+    "cancel": "منسوخ کریں",
+    "updateRow": "قطار اپ ڈیٹ کریں"
+  },
+  "placeholders": {
+    "filterTables": "ٹیبلز اور نظاروں کو فلٹر کریں...",
+    "searchTable": "ٹیبل میں تلاش کریں...",
+    "sqlQuery": "SQL کوئری (صرف SELECT)"
+  },
+  "schema": {
+    "columnName": "کالم کا نام",
+    "dataType": "ڈیٹا کی قسم",
+    "nullable": "خالی ہو سکتا ہے",
+    "default": "ڈیفالٹ",
+    "maxLength": "زیادہ سے زیادہ لمبائی"
+  },
+  "pagination": {
+    "page": "صفحہ",
+    "of": "کا"
+  },
+  "messages": {
+    "noData": "اس ٹیبل میں کوئی ڈیٹا نہیں ملا",
+    "warningCannotUndo": "انتباہ: اس عمل کو واپس نہیں کیا جا سکتا!",
+    "truncateWarning": "ٹیبل \"{table}\" میں موجود تمام ڈیٹا مستقل طور پر حذف ہو جائے گا۔",
+    "dropWarning": "پوری ٹیبل \"{table}\" اور اس کا تمام ڈیٹا ڈیٹا بیس سے مستقل طور پر ہٹا دیا جائے گا۔",
+    "type": "قسم",
+    "actions": "اعمال"
+  },
+  "confirm": {
+    "deleteRow": "کیا آپ واقعی اس قطار کو حذف کرنا چاہتے ہیں؟",
+    "truncateTable": "کیا آپ واقعی ٹیبل {table} کو کاٹنا چاہتے ہیں؟ یہ تمام قطاریں حذف کر دے گا!"
+  },
+  "errors": {
+    "addRow": "قطار شامل کرنے میں ناکام",
+    "updateRow": "قطار اپ ڈیٹ کرنے میں ناکام",
+    "deleteRow": "قطار حذف کرنے میں ناکام",
+    "truncateTable": "ٹیبل کاٹنے میں ناکام",
+    "dropTable": "ٹیبل حذف کرنے میں ناکام",
+    "executeQuery": "کوئری چلانے میں ناکام"
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "titles": {
+    "main": "Gestionarea bazei de date",
+    "databaseObjects": "Obiecte ale bazei de date",
+    "addRow": "Adăugați rând nou",
+    "editRow": "Editați rândul",
+    "truncateTable": "Trunchiați tabelul",
+    "dropTable": "Ștergeți tabelul"
+  },
+  "descriptions": {
+    "main": "Acces super-administrator la tabele și operațiuni ale bazei de date",
+    "selectTable": "Selectați un tabel pentru a vizualiza datele",
+    "chooseFromList": "Alegeți din lista din stânga"
+  },
+  "tabs": {
+    "data": "Date",
+    "schema": "Schemă",
+    "query": "Interogare"
+  },
+  "connection": {
+    "connections": "conexiuni"
+  },
+  "table": {
+    "tables": "tabele",
+    "views": "vizualizări",
+    "columns": "coloane",
+    "totalRows": "total rânduri"
+  },
+  "actions": {
+    "addRow": "Adăugați rând",
+    "add": "Adăugați",
+    "truncate": "Trunchiați",
+    "clear": "Ștergeți",
+    "dropView": "Ștergeți vizualizarea",
+    "dropTable": "Ștergeți tabelul",
+    "drop": "Ștergeți",
+    "refresh": "Actualizați",
+    "search": "Căutați",
+    "clearSearch": "Ștergeți căutarea",
+    "executeQuery": "Executați interogarea",
+    "cancel": "Anulați",
+    "updateRow": "Actualizați rândul"
+  },
+  "placeholders": {
+    "filterTables": "Filtrați tabele și vizualizări...",
+    "searchTable": "Căutați în tabel...",
+    "sqlQuery": "Interogare SQL (doar SELECT)"
+  },
+  "schema": {
+    "columnName": "Nume coloană",
+    "dataType": "Tip de date",
+    "nullable": "Permite NULL",
+    "default": "Implicit",
+    "maxLength": "Lungime maximă"
+  },
+  "pagination": {
+    "page": "Pagina",
+    "of": "din"
+  },
+  "messages": {
+    "noData": "Nu s-au găsit date în acest tabel",
+    "warningCannotUndo": "Avertisment: Această acțiune nu poate fi anulată!",
+    "truncateWarning": "Toate datele din tabelul \"{table}\" vor fi șterse definitiv.",
+    "dropWarning": "Întregul tabel \"{table}\" și toate datele sale vor fi eliminate definitiv din baza de date.",
+    "type": "Tip",
+    "actions": "Acțiuni"
+  },
+  "confirm": {
+    "deleteRow": "Sunteți sigur că doriți să ștergeți acest rând?",
+    "truncateTable": "Sunteți sigur că doriți să TRUNCHIAȚI tabelul {table}? Aceasta va șterge TOATE rândurile!"
+  },
+  "errors": {
+    "addRow": "Eșec la adăugarea rândului",
+    "updateRow": "Eșec la actualizarea rândului",
+    "deleteRow": "Eșec la ștergerea rândului",
+    "truncateTable": "Eșec la trunchierea tabelului",
+    "dropTable": "Eșec la ștergerea tabelului",
+    "executeQuery": "Eșec la executarea interogării"
+  }
+}

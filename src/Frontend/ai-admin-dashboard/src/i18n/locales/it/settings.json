@@ -1,0 +1,43 @@
+{
+  "titles": {
+    "tenantSettings": "Impostazioni",
+    "generalInformation": "Informazioni Generali"
+  },
+  "descriptions": {
+    "tenantManagement": "Gestisci la configurazione del tenant e le impostazioni di pagamento"
+  },
+  "tabs": {
+    "general": "Impostazioni Generali",
+    "payment": "Impostazioni di Pagamento",
+    "communication": "Impostazioni di Comunicazione"
+  },
+  "fields": {
+    "tenantName": "Nome del Tenant",
+    "tenantCode": "Codice del Tenant",
+    "companyName": "Nome dell'Azienda",
+    "businessNumber": "Numero di Partita IVA",
+    "contactEmail": "Email di Contatto",
+    "contactPhone": "Telefono di Contatto",
+    "status": "Stato",
+    "subscriptionTier": "Livello di Abbonamento",
+    "address": "Indirizzo"
+  },
+  "actions": {
+    "backToTenants": "Torna ai Tenant"
+  },
+  "messages": {
+    "notSpecified": "Non specificato",
+    "loading": "Caricamento...",
+    "tenantNotFound": "Tenant non trovato",
+    "success": {
+      "paymentSettingsUpdated": "Impostazioni di pagamento aggiornate con successo",
+      "communicationSettingsUpdated": "Impostazioni di comunicazione aggiornate con successo",
+      "configurationValid": "la configurazione è valida"
+    },
+    "error": {
+      "loadSettings": "Impossibile caricare le impostazioni del tenant",
+      "updatePaymentSettings": "Impossibile aggiornare le impostazioni di pagamento",
+      "updateCommunicationSettings": "Impossibile aggiornare le impostazioni di comunicazione"
+    }
+  }
+}

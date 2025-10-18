@@ -1,0 +1,89 @@
+{
+  "titles": {
+    "main": "ارتباطات",
+    "overview": "نمای کلی",
+    "campaigns": "کمپین‌ها",
+    "templates": "قالب‌ها",
+    "segments": "بخش‌ها",
+    "analytics": "تحلیل‌ها",
+    "broadcastCampaigns": "کمپین‌های پخش",
+    "recentCampaigns": "کمپین‌های اخیر",
+    "channelPerformance": "عملکرد کانال‌ها"
+  },
+  "descriptions": {
+    "managingFor": "مدیریت ارتباطات برای",
+    "segmentationComingSoon": "بخش‌بندی مشتریان به زودی...",
+    "noAnalytics": "داده‌های تحلیلی موجود نیست",
+    "noStoreSelected": "فروشگاهی انتخاب نشده است",
+    "selectStore": "لطفاً برای مدیریت ارتباطات یک فروشگاه انتخاب کنید"
+  },
+  "tabs": {
+    "overview": "نمای کلی",
+    "campaigns": "کمپین‌ها",
+    "templates": "قالب‌ها",
+    "segments": "بخش‌ها",
+    "analytics": "تحلیل‌ها"
+  },
+  "stats": {
+    "totalCampaigns": "کل کمپین‌ها",
+    "messagesSent": "پیام‌های ارسال شده",
+    "successRate": "نرخ موفقیت",
+    "failed": "ناموفق"
+  },
+  "status": {
+    "draft": "draft",
+    "scheduled": "scheduled",
+    "sending": "sending",
+    "sent": "sent",
+    "paused": "paused",
+    "cancelled": "cancelled",
+    "failed": "failed"
+  },
+  "table": {
+    "campaign": "کمپین",
+    "status": "وضعیت",
+    "recipients": "دریافت‌کنندگان",
+    "successRate": "نرخ موفقیت",
+    "created": "ایجاد شده",
+    "channels": "کانال‌ها",
+    "scheduled": "برنامه‌ریزی شده",
+    "actions": "اقدامات",
+    "createdBy": "ایجاد شده توسط",
+    "sentCount": "sent"
+  },
+  "channels": {
+    "email": "email",
+    "sms": "sms",
+    "push": "push",
+    "campaigns": "کمپین‌ها",
+    "messages": "پیام‌ها",
+    "engagement": "تعامل"
+  },
+  "actions": {
+    "newCampaign": "کمپین جدید",
+    "viewAll": "مشاهده همه",
+    "viewDetails": "مشاهده جزئیات",
+    "edit": "ویرایش",
+    "sendNow": "ارسال فوری",
+    "cancel": "لغو",
+    "pause": "توقف",
+    "resume": "ادامه",
+    "refresh": "بازخوانی",
+    "settings": "تنظیمات"
+  },
+  "messages": {
+    "success": {
+      "broadcastStarted": "اجرای پخش آغاز شد",
+      "broadcastPaused": "پخش متوقف شد",
+      "broadcastResumed": "پخش از سر گرفته شد",
+      "broadcastCancelled": "پخش لغو شد"
+    },
+    "error": {
+      "fetchBroadcasts": "دریافت پخش‌ها ناموفق بود",
+      "fetchAnalytics": "دریافت تحلیل‌ها ناموفق بود"
+    }
+  },
+  "confirm": {
+    "cancelBroadcast": "آیا مطمئن هستید که می‌خواهید این پخش را لغو کنید؟"
+  }
+}

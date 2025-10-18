@@ -1,0 +1,80 @@
+{
+  "titles": {
+    "main": "Gerenciamento de banco de dados",
+    "databaseObjects": "Objetos do banco de dados",
+    "addRow": "Adicionar nova linha",
+    "editRow": "Editar linha",
+    "truncateTable": "Truncar tabela",
+    "dropTable": "Excluir tabela"
+  },
+  "descriptions": {
+    "main": "Acesso de superadministrador a tabelas e operações de banco de dados",
+    "selectTable": "Selecione uma tabela para visualizar os dados",
+    "chooseFromList": "Escolha da lista à esquerda"
+  },
+  "tabs": {
+    "data": "Dados",
+    "schema": "Esquema",
+    "query": "Consulta"
+  },
+  "connection": {
+    "connections": "conexões"
+  },
+  "table": {
+    "tables": "tabelas",
+    "views": "visualizações",
+    "columns": "colunas",
+    "totalRows": "linhas totais"
+  },
+  "actions": {
+    "addRow": "Adicionar linha",
+    "add": "Adicionar",
+    "truncate": "Truncar",
+    "clear": "Limpar",
+    "dropView": "Excluir visualização",
+    "dropTable": "Excluir tabela",
+    "drop": "Excluir",
+    "refresh": "Atualizar",
+    "search": "Pesquisar",
+    "clearSearch": "Limpar pesquisa",
+    "executeQuery": "Executar consulta",
+    "cancel": "Cancelar",
+    "updateRow": "Atualizar linha"
+  },
+  "placeholders": {
+    "filterTables": "Filtrar tabelas e visualizações...",
+    "searchTable": "Pesquisar na tabela...",
+    "sqlQuery": "Consulta SQL (somente SELECT)"
+  },
+  "schema": {
+    "columnName": "Nome da coluna",
+    "dataType": "Tipo de dados",
+    "nullable": "Anulável",
+    "default": "Padrão",
+    "maxLength": "Comprimento máximo"
+  },
+  "pagination": {
+    "page": "Página",
+    "of": "de"
+  },
+  "messages": {
+    "noData": "Nenhum dado encontrado nesta tabela",
+    "warningCannotUndo": "Aviso: Esta ação não pode ser desfeita!",
+    "truncateWarning": "Todos os dados na tabela \"{table}\" serão excluídos permanentemente.",
+    "dropWarning": "A tabela inteira \"{table}\" e todos os seus dados serão removidos permanentemente do banco de dados.",
+    "type": "Tipo",
+    "actions": "Ações"
+  },
+  "confirm": {
+    "deleteRow": "Tem certeza de que deseja excluir esta linha?",
+    "truncateTable": "Tem certeza de que deseja TRUNCAR a tabela {table}? Isso excluirá TODAS as linhas!"
+  },
+  "errors": {
+    "addRow": "Falha ao adicionar linha",
+    "updateRow": "Falha ao atualizar linha",
+    "deleteRow": "Falha ao excluir linha",
+    "truncateTable": "Falha ao truncar tabela",
+    "dropTable": "Falha ao excluir tabela",
+    "executeQuery": "Falha ao executar consulta"
+  }
+}

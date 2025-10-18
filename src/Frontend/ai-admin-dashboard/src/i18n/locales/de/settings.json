@@ -1,0 +1,43 @@
+{
+  "titles": {
+    "tenantSettings": "Einstellungen",
+    "generalInformation": "Allgemeine Informationen"
+  },
+  "descriptions": {
+    "tenantManagement": "Mandantenkonfiguration und Zahlungseinstellungen verwalten"
+  },
+  "tabs": {
+    "general": "Allgemeine Einstellungen",
+    "payment": "Zahlungseinstellungen",
+    "communication": "Kommunikationseinstellungen"
+  },
+  "fields": {
+    "tenantName": "Mandantenname",
+    "tenantCode": "Mandantencode",
+    "companyName": "Firmenname",
+    "businessNumber": "Geschäftsnummer",
+    "contactEmail": "Kontakt-E-Mail",
+    "contactPhone": "Kontakttelefon",
+    "status": "Status",
+    "subscriptionTier": "Abonnementstufe",
+    "address": "Adresse"
+  },
+  "actions": {
+    "backToTenants": "Zurück zu Mandanten"
+  },
+  "messages": {
+    "notSpecified": "Nicht angegeben",
+    "loading": "Wird geladen...",
+    "tenantNotFound": "Mandant nicht gefunden",
+    "success": {
+      "paymentSettingsUpdated": "Zahlungseinstellungen erfolgreich aktualisiert",
+      "communicationSettingsUpdated": "Kommunikationseinstellungen erfolgreich aktualisiert",
+      "configurationValid": "Konfiguration ist gültig"
+    },
+    "error": {
+      "loadSettings": "Fehler beim Laden der Mandanteneinstellungen",
+      "updatePaymentSettings": "Fehler beim Aktualisieren der Zahlungseinstellungen",
+      "updateCommunicationSettings": "Fehler beim Aktualisieren der Kommunikationseinstellungen"
+    }
+  }
+}

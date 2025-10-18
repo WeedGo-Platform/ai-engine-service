@@ -1,0 +1,75 @@
+{
+  "titles": {
+    "main": "Danh mục sản phẩm theo tỉnh",
+    "mainVirtual": "Danh mục sản phẩm theo tỉnh (Cuộn ảo)",
+    "uploadSection": "Tải lên danh mục",
+    "uploadInstructions": "Hướng dẫn tải lên",
+    "catalogProducts": "Sản phẩm danh mục"
+  },
+  "descriptions": {
+    "main": "Xem và quản lý danh mục sản phẩm từ các nhà phân phối cần sa cấp tỉnh.",
+    "mainVirtual": "Quản lý và tải lên danh mục sản phẩm cần sa cấp tỉnh",
+    "selectProvince": "Chọn tỉnh",
+    "viewingProvince": "Xem danh mục tỉnh",
+    "scrollHint": "Cuộn ngang để xem tất cả các cột →"
+  },
+  "provinces": {
+    "ontario": "Ontario (OCS)",
+    "bc": "British Columbia (Sắp ra mắt)",
+    "alberta": "Alberta (Sắp ra mắt)",
+    "quebec": "Quebec (Sắp ra mắt)"
+  },
+  "stats": {
+    "totalProducts": "Tổng số sản phẩm",
+    "lastUpdated": "Cập nhật lần cuối",
+    "categories": "Danh mục",
+    "never": "Chưa bao giờ",
+    "totalRecords": "Tổng số bản ghi",
+    "inserted": "Đã chèn",
+    "updated": "Đã cập nhật",
+    "errors": "Lỗi",
+    "totalRecordsLabel": "Tổng số bản ghi"
+  },
+  "upload": {
+    "selectFile": "Tải lên danh mục mới",
+    "chooseFile": "Chọn tệp",
+    "uploadButton": "Tải lên",
+    "uploadCatalog": "Tải lên danh mục",
+    "uploading": "Đang tải lên...",
+    "uploadFile": "Tải lên tệp",
+    "invalidFileType": "Loại tệp không hợp lệ. Vui lòng tải lên tệp CSV hoặc Excel.",
+    "pleaseSelectFile": "Vui lòng chọn một tệp để tải lên.",
+    "processingFile": "Đang xử lý tệp danh mục...",
+    "processingFileShort": "Đang xử lý tệp...",
+    "uploadSuccess": "Tải lên danh mục thành công!",
+    "uploadSuccessShort": "Tải lên thành công",
+    "uploadFailed": "Không thể tải lên danh mục",
+    "uploadFailedShort": "Tải lên thất bại"
+  },
+  "search": {
+    "placeholder": "Tìm kiếm sản phẩm...",
+    "allCategories": "Tất cả danh mục"
+  },
+  "buttons": {
+    "export": "Xuất",
+    "exportCsv": "Xuất CSV",
+    "previous": "Trước",
+    "next": "Tiếp"
+  },
+  "table": {
+    "loadingCatalog": "Đang tải danh mục...",
+    "noProductsFound": "Không tìm thấy sản phẩm trong danh mục",
+    "noProductsUpload": "Không tìm thấy sản phẩm. Tải lên danh mục để bắt đầu.",
+    "showingPage": "Hiển thị trang {page} kết quả",
+    "itemsCount": "{count} mục"
+  },
+  "instructions": {
+    "line1": "Tệp danh mục OCS phải chứa tất cả các cột bắt buộc theo thông số kỹ thuật OCS.",
+    "line2": "Sản phẩm được khớp và cập nhật bằng cách sử dụng số biến thể OCS làm khóa duy nhất.",
+    "line3": "Sản phẩm mới sẽ được chèn, sản phẩm hiện có sẽ được cập nhật với thông tin mới nhất.",
+    "line4": "Các trường đánh giá và số lượng đánh giá sẽ được bảo toàn trong quá trình cập nhật."
+  },
+  "messages": {
+    "lastCatalogUpdate": "Cập nhật danh mục lần cuối:"
+  }
+}

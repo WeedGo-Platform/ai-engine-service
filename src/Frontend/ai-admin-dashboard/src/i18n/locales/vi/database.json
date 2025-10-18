@@ -1,0 +1,80 @@
+{
+  "titles": {
+    "main": "Quản lý cơ sở dữ liệu",
+    "databaseObjects": "Đối tượng cơ sở dữ liệu",
+    "addRow": "Thêm hàng mới",
+    "editRow": "Chỉnh sửa hàng",
+    "truncateTable": "Xóa rỗng bảng",
+    "dropTable": "Xóa bảng"
+  },
+  "descriptions": {
+    "main": "Truy cập siêu quản trị viên vào các bảng và thao tác cơ sở dữ liệu",
+    "selectTable": "Chọn một bảng để xem dữ liệu",
+    "chooseFromList": "Chọn từ danh sách bên trái"
+  },
+  "tabs": {
+    "data": "Dữ liệu",
+    "schema": "Lược đồ",
+    "query": "Truy vấn"
+  },
+  "connection": {
+    "connections": "kết nối"
+  },
+  "table": {
+    "tables": "bảng",
+    "views": "khung nhìn",
+    "columns": "cột",
+    "totalRows": "tổng số hàng"
+  },
+  "actions": {
+    "addRow": "Thêm hàng",
+    "add": "Thêm",
+    "truncate": "Xóa rỗng",
+    "clear": "Xóa",
+    "dropView": "Xóa khung nhìn",
+    "dropTable": "Xóa bảng",
+    "drop": "Xóa",
+    "refresh": "Làm mới",
+    "search": "Tìm kiếm",
+    "clearSearch": "Xóa tìm kiếm",
+    "executeQuery": "Thực thi truy vấn",
+    "cancel": "Hủy",
+    "updateRow": "Cập nhật hàng"
+  },
+  "placeholders": {
+    "filterTables": "Lọc bảng và khung nhìn...",
+    "searchTable": "Tìm kiếm trong bảng...",
+    "sqlQuery": "Truy vấn SQL (chỉ SELECT)"
+  },
+  "schema": {
+    "columnName": "Tên cột",
+    "dataType": "Kiểu dữ liệu",
+    "nullable": "Cho phép null",
+    "default": "Mặc định",
+    "maxLength": "Độ dài tối đa"
+  },
+  "pagination": {
+    "page": "Trang",
+    "of": "của"
+  },
+  "messages": {
+    "noData": "Không tìm thấy dữ liệu trong bảng này",
+    "warningCannotUndo": "Cảnh báo: Không thể hoàn tác hành động này!",
+    "truncateWarning": "Tất cả dữ liệu trong bảng \"{table}\" sẽ bị xóa vĩnh viễn.",
+    "dropWarning": "Toàn bộ bảng \"{table}\" và tất cả dữ liệu của nó sẽ bị xóa vĩnh viễn khỏi cơ sở dữ liệu.",
+    "type": "Loại",
+    "actions": "Hành động"
+  },
+  "confirm": {
+    "deleteRow": "Bạn có chắc chắn muốn xóa hàng này không?",
+    "truncateTable": "Bạn có chắc chắn muốn XÓA RỖNG bảng {table} không? Điều này sẽ xóa TẤT CẢ các hàng!"
+  },
+  "errors": {
+    "addRow": "Không thêm được hàng",
+    "updateRow": "Không cập nhật được hàng",
+    "deleteRow": "Không xóa được hàng",
+    "truncateTable": "Không xóa rỗng được bảng",
+    "dropTable": "Không xóa được bảng",
+    "executeQuery": "Không thực thi được truy vấn"
+  }
+}

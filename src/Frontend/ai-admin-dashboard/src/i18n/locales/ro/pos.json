@@ -1,0 +1,127 @@
+{
+  "titles": {
+    "main": "Punct de Vânzare",
+    "posSettings": "Setări POS",
+    "parkedSales": "Vânzări Parcate",
+    "hardwareConfiguration": "Configurare Hardware",
+    "cashManagement": "Gestionare Numerar",
+    "discountsPromotions": "Reduceri și Promoții"
+  },
+  "tabs": {
+    "newSale": "Vânzare Nouă",
+    "parked": "Parcate",
+    "history": "Istoric",
+    "settings": "Setări"
+  },
+  "customer": {
+    "label": "Client",
+    "select": "Selectare",
+    "change": "Schimbare",
+    "returning": "Revine",
+    "new": "Nou",
+    "anonymous": "Anonim",
+    "newCustomer": "Client Nou",
+    "points": "Puncte:"
+  },
+  "cart": {
+    "empty": "Coșul este gol",
+    "batch": "Lot:",
+    "discount": "Reducere:",
+    "quantity": "Cantitate"
+  },
+  "weight": {
+    "driedFlowerEquivalent": "Dried Flower Equivalent:",
+    "legalLimit": "/ 30g",
+    "exceedsLimit": "Depășește limita legală!"
+  },
+  "totals": {
+    "subtotal": "Subtotal",
+    "discount": "Reducere",
+    "discountApplied": "Reducere aplicată",
+    "afterDiscount": "După Reducere",
+    "tax": "Taxă (13%)",
+    "total": "Total"
+  },
+  "actions": {
+    "parkSale": "Parcează Vânzarea",
+    "clear": "Șterge",
+    "processPayment": "Procesează Plata",
+    "resumeSale": "Reia Vânzarea",
+    "addPromotion": "Adaugă Promoție",
+    "detectScanners": "Detectează Scanere",
+    "openRegister": "Deschide Casa",
+    "cashCount": "Numărare Numerar",
+    "endOfDay": "Sfârșit de Zi",
+    "printReport": "Imprimă Raport",
+    "test": "Test",
+    "active": "Activ"
+  },
+  "search": {
+    "placeholder": "Caută produse sau scanează codul de bare...",
+    "scanning": "Se scanează:",
+    "filterProducts": "Filtrare produse"
+  },
+  "products": {
+    "noProductsFound": "Niciun produs găsit",
+    "outOfStock": "Stoc Epuizat",
+    "low": "Scăzut",
+    "stock": "Stoc:",
+    "batch": "lot",
+    "batches": "loturi"
+  },
+  "parked": {
+    "noParkedSales": "Nicio vânzare parcată",
+    "items": "articole"
+  },
+  "scanner": {
+    "enabled": "Scaner Activat",
+    "disabled": "Scaner Dezactivat",
+    "noScannersDetected": "Niciun scaner detectat",
+    "connectScanner": "Conectați un scaner și faceți clic pe \"Detectează Scanere\"",
+    "barcodeScanners": "Scanere de Coduri de Bare",
+    "manageConnected": "Gestionare scanere conectate"
+  },
+  "hardware": {
+    "paymentTerminal": "Terminal de Plată",
+    "connectCardReader": "Conectare cititor de carduri",
+    "receiptPrinter": "Imprimantă de Chitanțe",
+    "printReceipts": "Imprimare chitanțe",
+    "cashDrawer": "Sertar de Numerar",
+    "manageCash": "Gestionare numerar",
+    "enabled": "Activat"
+  },
+  "validation": {
+    "validIdDate": "Dată ID Valabil:",
+    "orEarlier": "sau mai devreme",
+    "validId": "ID Valabil:"
+  },
+  "promotions": {
+    "seniorDiscount": "Reducere Seniori",
+    "seniorDescription": "10% reducere pentru 65+",
+    "happyHour": "Happy Hour",
+    "happyHourDescription": "15% reducere 16-18"
+  },
+  "messages": {
+    "saleParkedSuccess": "Vânzare parcată cu succes!",
+    "saleParkedFailed": "Eșec la parcarea vânzării. Vă rugăm încercați din nou.",
+    "resumeFailed": "Eșec la reluarea vânzării. Vă rugăm încercați din nou.",
+    "paymentSuccess": "Plată reușită!",
+    "receiptPrinted": "Chitanță imprimată.",
+    "transactionFailed": "Eșec la procesarea tranzacției. Vă rugăm încercați din nou.",
+    "productNotFound": "Produs negăsit pentru codul de bare:",
+    "scannerTestSuccess": "Test scaner reușit! Cod de bare de test:",
+    "scannerTestFailed": "Test scaner eșuat",
+    "scannerTestError": "Eșec la testarea scanerului"
+  },
+  "fullscreen": {
+    "enter": "Intrare în ecran complet",
+    "exit": "Ieșire din ecran complet"
+  },
+  "labels": {
+    "confidence": {
+      "high": "✓ Scaner",
+      "medium": "Probabil Scaner",
+      "low": "Posibil Scaner"
+    }
+  }
+}

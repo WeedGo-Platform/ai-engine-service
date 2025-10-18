@@ -1,0 +1,132 @@
+{
+  "voiceApi": {
+    "title": "اختبار API الصوتي",
+    "apiEndpoint": "نقطة نهاية API",
+    "recording": {
+      "title": "1. تسجيل الصوت",
+      "start": "بدء التسجيل",
+      "stop": "إيقاف التسجيل",
+      "play": "تشغيل التسجيل",
+      "inProgress": "التسجيل قيد التقدم...",
+      "ready": "تم تسجيل الصوت وهو جاهز للنسخ"
+    },
+    "transcription": {
+      "title": "2. اختبار النسخ",
+      "button": "نسخ الصوت",
+      "buttonLoading": "جارٍ النسخ...",
+      "result": "نتيجة النسخ:",
+      "noAudio": "لم يتم تسجيل صوت. يرجى تسجيل الصوت أولاً.",
+      "noTranscription": "لا يوجد نسخ متاح",
+      "success": "تم إكمال النسخ بنجاح"
+    },
+    "synthesis": {
+      "title": "3. اختبار التوليف",
+      "textLabel": "النص المراد توليفه",
+      "textPlaceholder": "أدخل النص لتحويله إلى كلام...",
+      "voiceLabel": "الصوت",
+      "button": "توليف الكلام",
+      "buttonLoading": "جارٍ التوليف...",
+      "play": "تشغيل التوليف",
+      "noText": "يرجى إدخال نص للتوليف",
+      "success": "تم إكمال التوليف بنجاح",
+      "failed": "فشل التوليف"
+    },
+    "debug": {
+      "title": "معلومات التصحيح",
+      "endpoint": "نقطة النهاية",
+      "transcription": "النسخ",
+      "synthesis": "التوليف",
+      "voices": "الأصوات"
+    },
+    "messages": {
+      "voicesFetched": "تم جلب الأصوات بنجاح",
+      "voicesFailed": "فشل جلب الأصوات",
+      "recordingFailed": "فشل بدء التسجيل",
+      "recordingSaved": "تم حفظ التسجيل",
+      "transcriptionError": "خطأ في النسخ",
+      "synthesisError": "خطأ في التوليف"
+    }
+  },
+  "logs": {
+    "title": "سجلات النظام",
+    "description": "عرض والبحث في سجلات التطبيق من Elasticsearch",
+    "filters": {
+      "search": "البحث في السجلات",
+      "searchPlaceholder": "البحث في الرسالة، المسجل، الوحدة...",
+      "logLevel": "مستوى السجل",
+      "allLevels": "جميع المستويات",
+      "error": "خطأ",
+      "warning": "تحذير",
+      "info": "معلومات",
+      "debug": "تصحيح",
+      "timeRange": "النطاق الزمني",
+      "advancedFilters": "فلاتر متقدمة",
+      "correlationId": "معرف الارتباط",
+      "correlationIdPlaceholder": "التصفية حسب معرف الارتباط",
+      "tenantId": "معرف المستأجر",
+      "tenantIdPlaceholder": "التصفية حسب المستأجر",
+      "storeId": "معرف المتجر",
+      "storeIdPlaceholder": "التصفية حسب المتجر",
+      "userId": "معرف المستخدم",
+      "userIdPlaceholder": "التصفية حسب المستخدم",
+      "sessionId": "معرف الجلسة",
+      "sessionIdPlaceholder": "التصفية حسب الجلسة",
+      "service": "الخدمة",
+      "servicePlaceholder": "التصفية حسب الخدمة",
+      "endDate": "تاريخ الانتهاء",
+      "clearAll": "مسح جميع الفلاتر"
+    },
+    "actions": {
+      "refresh": "تحديث",
+      "export": "تصدير",
+      "autoRefresh": "التحديث التلقائي كل",
+      "details": "التفاصيل",
+      "close": "إغلاق"
+    },
+    "table": {
+      "timestamp": "الطابع الزمني",
+      "level": "المستوى",
+      "serviceLogger": "الخدمة / المسجل",
+      "message": "الرسالة",
+      "correlationId": "معرف الارتباط",
+      "actions": "الإجراءات",
+      "noLogs": "لم يتم العثور على سجلات",
+      "totalLogs": "إجمالي السجلات"
+    },
+    "pagination": {
+      "showing": "عرض {{from}} إلى {{to}} من {{total}}",
+      "perPage": "لكل صفحة",
+      "previous": "السابق",
+      "next": "التالي",
+      "page": "الصفحة {{current}} من {{total}}"
+    },
+    "details": {
+      "title": "تفاصيل السجل",
+      "summary": "ملخص",
+      "metadata": "البيانات الوصفية",
+      "correlationId": "معرف الارتباط",
+      "sessionId": "معرف الجلسة",
+      "tenantId": "معرف المستأجر",
+      "storeId": "معرف المتجر",
+      "userId": "معرف المستخدم",
+      "service": "الخدمة",
+      "environment": "البيئة",
+      "logger": "المسجل",
+      "module": "الوحدة",
+      "function": "الوظيفة",
+      "lineNumber": "رقم السطر",
+      "duration": "المدة",
+      "statusCode": "رمز الحالة",
+      "method": "الطريقة",
+      "path": "المسار",
+      "clientHost": "مضيف العميل",
+      "exception": "الاستثناء",
+      "viewRawJson": "عرض JSON الخام"
+    },
+    "messages": {
+      "fetchFailed": "فشل جلب السجلات من Elasticsearch",
+      "exportSuccess": "تم تصدير السجلات بنجاح",
+      "logExported": "تم تصدير السجل"
+    }
+  }
+}

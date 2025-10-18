@@ -1,5 +1,5 @@
 {
-  "title": "ダッシュボード",
+  "title": "Dashboard",
   "systemDashboard": "システムダッシュボード",
   "systemOverview": "システム全体の概要",
   "tenantOverview": "テナント概要",
@@ -13,8 +13,8 @@
   "inventoryItems": "在庫アイテム",
   "lowStock": "在庫不足アイテム",
   "lowStockCount": "在庫不足",
-  "newThisWeek": "今週新規",
-  "vsLastWeek": "対先週",
+  "newThisWeek": "今週の新規",
+  "vsLastWeek": "先週比",
   "selectStoreMessage": "詳細な指標を表示するには、上のドロップダウンから店舗を選択してください。",
   "revenue": "収益",
   "revenueTrend": "収益トレンド",
@@ -24,8 +24,8 @@
   "storePerformance": "店舗パフォーマンス",
   "recentOrders": "最近の注文",
   "lowStockAlerts": "在庫不足アラート",
-  "noRecentOrders": "最近の注文なし",
-  "noLowStockItems": "在庫不足アイテムなし",
+  "noRecentOrders": "最近の注文はありません",
+  "noLowStockItems": "在庫不足アイテムはありません",
   "orders": "注文",
   "noData": "データなし",
   "left": "残り",
@@ -35,6 +35,6 @@
     "processing": "処理中",
     "shipped": "出荷済み",
     "pending": "保留中",
-    "cancelled": "キャンセル"
+    "cancelled": "キャンセル済み"
   }
 }

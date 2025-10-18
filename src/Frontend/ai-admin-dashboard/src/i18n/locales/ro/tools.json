@@ -1,0 +1,132 @@
+{
+  "voiceApi": {
+    "title": "Test API Voce",
+    "apiEndpoint": "Punct Final API",
+    "recording": {
+      "title": "1. Înregistrare Audio",
+      "start": "Începe Înregistrarea",
+      "stop": "Oprește Înregistrarea",
+      "play": "Redă Înregistrarea",
+      "inProgress": "Înregistrare în curs...",
+      "ready": "Audio înregistrat și pregătit pentru transcriere"
+    },
+    "transcription": {
+      "title": "2. Test Transcriere",
+      "button": "Transcrie Audio",
+      "buttonLoading": "Se transcrie...",
+      "result": "Rezultat Transcriere:",
+      "noAudio": "Niciun audio înregistrat. Vă rugăm să înregistrați mai întâi audio.",
+      "noTranscription": "Nicio transcriere disponibilă",
+      "success": "Transcriere finalizată cu succes"
+    },
+    "synthesis": {
+      "title": "3. Test Sinteză",
+      "textLabel": "Text de Sintetizat",
+      "textPlaceholder": "Introduceți text pentru a converti în vorbire...",
+      "voiceLabel": "Voce",
+      "button": "Sintetizează Vorbirea",
+      "buttonLoading": "Se sintetizează...",
+      "play": "Redă Sintetizat",
+      "noText": "Vă rugăm să introduceți text pentru sintetizare",
+      "success": "Sinteză finalizată cu succes",
+      "failed": "Sinteza a eșuat"
+    },
+    "debug": {
+      "title": "Informații de Depanare",
+      "endpoint": "Punct final",
+      "transcription": "Transcriere",
+      "synthesis": "Sinteză",
+      "voices": "Voci"
+    },
+    "messages": {
+      "voicesFetched": "Voci preluate cu succes",
+      "voicesFailed": "Preluarea vocilor a eșuat",
+      "recordingFailed": "Pornirea înregistrării a eșuat",
+      "recordingSaved": "Înregistrare salvată",
+      "transcriptionError": "Eroare de transcriere",
+      "synthesisError": "Eroare de sinteză"
+    }
+  },
+  "logs": {
+    "title": "Jurnale Sistem",
+    "description": "Vizualizați și căutați jurnalele aplicației din Elasticsearch",
+    "filters": {
+      "search": "Căutare Jurnale",
+      "searchPlaceholder": "Căutați mesaj, logger, modul...",
+      "logLevel": "Nivel Jurnal",
+      "allLevels": "Toate Nivelurile",
+      "error": "Eroare",
+      "warning": "Avertizare",
+      "info": "Info",
+      "debug": "Depanare",
+      "timeRange": "Interval de Timp",
+      "advancedFilters": "Filtre Avansate",
+      "correlationId": "ID Corelare",
+      "correlationIdPlaceholder": "Filtrați după ID corelare",
+      "tenantId": "ID Chiriaș",
+      "tenantIdPlaceholder": "Filtrați după chiriaș",
+      "storeId": "ID Magazin",
+      "storeIdPlaceholder": "Filtrați după magazin",
+      "userId": "ID Utilizator",
+      "userIdPlaceholder": "Filtrați după utilizator",
+      "sessionId": "ID Sesiune",
+      "sessionIdPlaceholder": "Filtrați după sesiune",
+      "service": "Serviciu",
+      "servicePlaceholder": "Filtrați după serviciu",
+      "endDate": "Data Sfârșit",
+      "clearAll": "Șterge Toate Filtrele"
+    },
+    "actions": {
+      "refresh": "Reîmprospătare",
+      "export": "Export",
+      "autoRefresh": "Reîmprospătare automată la fiecare",
+      "details": "Detalii",
+      "close": "Închide"
+    },
+    "table": {
+      "timestamp": "Marcaj Temporal",
+      "level": "Nivel",
+      "serviceLogger": "Serviciu / Logger",
+      "message": "Mesaj",
+      "correlationId": "ID Corelare",
+      "actions": "Acțiuni",
+      "noLogs": "Niciun jurnal găsit",
+      "totalLogs": "jurnale în total"
+    },
+    "pagination": {
+      "showing": "Afișare {{from}} până la {{to}} din {{total}}",
+      "perPage": "pe pagină",
+      "previous": "Anterior",
+      "next": "Următor",
+      "page": "Pagina {{current}} din {{total}}"
+    },
+    "details": {
+      "title": "Detalii Jurnal",
+      "summary": "Rezumat",
+      "metadata": "Metadate",
+      "correlationId": "ID Corelare",
+      "sessionId": "ID Sesiune",
+      "tenantId": "ID Chiriaș",
+      "storeId": "ID Magazin",
+      "userId": "ID Utilizator",
+      "service": "Serviciu",
+      "environment": "Mediu",
+      "logger": "Logger",
+      "module": "Modul",
+      "function": "Funcție",
+      "lineNumber": "Număr Linie",
+      "duration": "Durată",
+      "statusCode": "Cod Stare",
+      "method": "Metodă",
+      "path": "Cale",
+      "clientHost": "Gazdă Client",
+      "exception": "Excepție",
+      "viewRawJson": "Vizualizare JSON Brut"
+    },
+    "messages": {
+      "fetchFailed": "Preluarea jurnalelor din Elasticsearch a eșuat",
+      "exportSuccess": "Jurnale exportate cu succes",
+      "logExported": "Jurnal exportat"
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "titles": {
+    "main": "データベース管理",
+    "databaseObjects": "データベースオブジェクト",
+    "addRow": "新しい行を追加",
+    "editRow": "行を編集",
+    "truncateTable": "テーブルを切り詰める",
+    "dropTable": "テーブルを削除"
+  },
+  "descriptions": {
+    "main": "データベーステーブルと操作へのスーパー管理者アクセス",
+    "selectTable": "データを表示するテーブルを選択してください",
+    "chooseFromList": "左側のリストから選択してください"
+  },
+  "tabs": {
+    "data": "データ",
+    "schema": "スキーマ",
+    "query": "クエリ"
+  },
+  "connection": {
+    "connections": "接続"
+  },
+  "table": {
+    "tables": "テーブル",
+    "views": "ビュー",
+    "columns": "列",
+    "totalRows": "総行数"
+  },
+  "actions": {
+    "addRow": "行を追加",
+    "add": "追加",
+    "truncate": "切り詰める",
+    "clear": "クリア",
+    "dropView": "ビューを削除",
+    "dropTable": "テーブルを削除",
+    "drop": "削除",
+    "refresh": "更新",
+    "search": "検索",
+    "clearSearch": "検索をクリア",
+    "executeQuery": "クエリを実行",
+    "cancel": "キャンセル",
+    "updateRow": "行を更新"
+  },
+  "placeholders": {
+    "filterTables": "テーブルとビューをフィルタリング...",
+    "searchTable": "テーブルを検索...",
+    "sqlQuery": "SQLクエリ（SELECTのみ）"
+  },
+  "schema": {
+    "columnName": "列名",
+    "dataType": "データ型",
+    "nullable": "NULL許可",
+    "default": "デフォルト",
+    "maxLength": "最大長"
+  },
+  "pagination": {
+    "page": "ページ",
+    "of": "/"
+  },
+  "messages": {
+    "noData": "このテーブルにデータが見つかりません",
+    "warningCannotUndo": "警告：この操作は元に戻せません！",
+    "truncateWarning": "テーブル \"{table}\" のすべてのデータが完全に削除されます。",
+    "dropWarning": "テーブル \"{table}\" 全体とそのすべてのデータがデータベースから完全に削除されます。",
+    "type": "タイプ",
+    "actions": "アクション"
+  },
+  "confirm": {
+    "deleteRow": "この行を削除してもよろしいですか？",
+    "truncateTable": "テーブル {table} を切り詰めてもよろしいですか？これによりすべての行が削除されます！"
+  },
+  "errors": {
+    "addRow": "行の追加に失敗しました",
+    "updateRow": "行の更新に失敗しました",
+    "deleteRow": "行の削除に失敗しました",
+    "truncateTable": "テーブルの切り詰めに失敗しました",
+    "dropTable": "テーブルの削除に失敗しました",
+    "executeQuery": "クエリの実行に失敗しました"
+  }
+}

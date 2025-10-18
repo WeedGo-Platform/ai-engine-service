@@ -1,0 +1,89 @@
+{
+  "titles": {
+    "main": "Komunikasyon",
+    "overview": "Pangkalahatang-tanaw",
+    "campaigns": "Mga Kampanya",
+    "templates": "Mga Template",
+    "segments": "Mga Segmento",
+    "analytics": "Analytics",
+    "broadcastCampaigns": "Mga Broadcast na Kampanya",
+    "recentCampaigns": "Kamakailang Kampanya",
+    "channelPerformance": "Pagganap ng Channel"
+  },
+  "descriptions": {
+    "managingFor": "Pamamahala ng komunikasyon para sa",
+    "segmentationComingSoon": "Segmentasyon ng customer ay paparating na...",
+    "noAnalytics": "Walang available na analytics data",
+    "noStoreSelected": "Walang Napiling Tindahan",
+    "selectStore": "Mangyaring pumili ng tindahan upang pamahalaan ang komunikasyon"
+  },
+  "tabs": {
+    "overview": "Pangkalahatang-tanaw",
+    "campaigns": "Mga Kampanya",
+    "templates": "Mga Template",
+    "segments": "Mga Segmento",
+    "analytics": "Analytics"
+  },
+  "stats": {
+    "totalCampaigns": "Kabuuang Kampanya",
+    "messagesSent": "Mga Mensaheng Naipadala",
+    "successRate": "Rate ng Tagumpay",
+    "failed": "Nabigo"
+  },
+  "status": {
+    "draft": "draft",
+    "scheduled": "scheduled",
+    "sending": "sending",
+    "sent": "sent",
+    "paused": "paused",
+    "cancelled": "cancelled",
+    "failed": "failed"
+  },
+  "table": {
+    "campaign": "Kampanya",
+    "status": "Katayuan",
+    "recipients": "Mga Tatanggap",
+    "successRate": "Rate ng Tagumpay",
+    "created": "Nilikha",
+    "channels": "Mga Channel",
+    "scheduled": "Naka-iskedyul",
+    "actions": "Mga Aksyon",
+    "createdBy": "Nilikha ng",
+    "sentCount": "sent"
+  },
+  "channels": {
+    "email": "email",
+    "sms": "sms",
+    "push": "push",
+    "campaigns": "Mga Kampanya",
+    "messages": "Mga Mensahe",
+    "engagement": "Pakikipag-ugnayan"
+  },
+  "actions": {
+    "newCampaign": "Bagong Kampanya",
+    "viewAll": "Tingnan Lahat",
+    "viewDetails": "Tingnan ang Detalye",
+    "edit": "I-edit",
+    "sendNow": "Ipadala Ngayon",
+    "cancel": "Kanselahin",
+    "pause": "I-pause",
+    "resume": "Ipagpatuloy",
+    "refresh": "I-refresh",
+    "settings": "Mga Setting"
+  },
+  "messages": {
+    "success": {
+      "broadcastStarted": "Nagsimula ang pagpapatupad ng broadcast",
+      "broadcastPaused": "Na-pause ang broadcast",
+      "broadcastResumed": "Ipinagpatuloy ang broadcast",
+      "broadcastCancelled": "Kinansela ang broadcast"
+    },
+    "error": {
+      "fetchBroadcasts": "Nabigong kunin ang mga broadcast",
+      "fetchAnalytics": "Nabigong kunin ang analytics"
+    }
+  },
+  "confirm": {
+    "cancelBroadcast": "Sigurado ka bang gusto mong kanselahin ang broadcast na ito?"
+  }
+}

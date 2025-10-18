@@ -1,0 +1,127 @@
+{
+  "titles": {
+    "main": "نقطه فروش",
+    "posSettings": "تنظیمات POS",
+    "parkedSales": "فروش‌های متوقف",
+    "hardwareConfiguration": "پیکربندی سخت‌افزار",
+    "cashManagement": "مدیریت نقدینگی",
+    "discountsPromotions": "تخفیف‌ها و تبلیغات"
+  },
+  "tabs": {
+    "newSale": "فروش جدید",
+    "parked": "متوقف",
+    "history": "تاریخچه",
+    "settings": "تنظیمات"
+  },
+  "customer": {
+    "label": "مشتری",
+    "select": "انتخاب",
+    "change": "تغییر",
+    "returning": "بازگشتی",
+    "new": "جدید",
+    "anonymous": "ناشناس",
+    "newCustomer": "مشتری جدید",
+    "points": "امتیاز:"
+  },
+  "cart": {
+    "empty": "سبد خرید خالی است",
+    "batch": "دسته:",
+    "discount": "تخفیف:",
+    "quantity": "تعداد"
+  },
+  "weight": {
+    "driedFlowerEquivalent": "Dried Flower Equivalent:",
+    "legalLimit": "/ 30g",
+    "exceedsLimit": "از حد قانونی بیشتر است!"
+  },
+  "totals": {
+    "subtotal": "جمع جزء",
+    "discount": "تخفیف",
+    "discountApplied": "تخفیف اعمال شد",
+    "afterDiscount": "بعد از تخفیف",
+    "tax": "مالیات (13%)",
+    "total": "جمع کل"
+  },
+  "actions": {
+    "parkSale": "توقف فروش",
+    "clear": "پاک کردن",
+    "processPayment": "پردازش پرداخت",
+    "resumeSale": "ادامه فروش",
+    "addPromotion": "افزودن تبلیغ",
+    "detectScanners": "شناسایی اسکنرها",
+    "openRegister": "باز کردن صندوق",
+    "cashCount": "شمارش نقدی",
+    "endOfDay": "پایان روز",
+    "printReport": "چاپ گزارش",
+    "test": "آزمایش",
+    "active": "فعال"
+  },
+  "search": {
+    "placeholder": "جستجوی محصولات یا اسکن بارکد...",
+    "scanning": "در حال اسکن:",
+    "filterProducts": "فیلتر محصولات"
+  },
+  "products": {
+    "noProductsFound": "محصولی یافت نشد",
+    "outOfStock": "ناموجود",
+    "low": "کم",
+    "stock": "موجودی:",
+    "batch": "دسته",
+    "batches": "دسته‌ها"
+  },
+  "parked": {
+    "noParkedSales": "فروش متوقفی وجود ندارد",
+    "items": "اقلام"
+  },
+  "scanner": {
+    "enabled": "اسکنر فعال",
+    "disabled": "اسکنر غیرفعال",
+    "noScannersDetected": "اسکنری شناسایی نشد",
+    "connectScanner": "اسکنر را وصل کنید و \"شناسایی اسکنرها\" را کلیک کنید",
+    "barcodeScanners": "اسکنرهای بارکد",
+    "manageConnected": "مدیریت اسکنرهای متصل"
+  },
+  "hardware": {
+    "paymentTerminal": "ترمینال پرداخت",
+    "connectCardReader": "اتصال کارتخوان",
+    "receiptPrinter": "چاپگر رسید",
+    "printReceipts": "چاپ رسیدها",
+    "cashDrawer": "کشوی نقدی",
+    "manageCash": "مدیریت نقدینگی",
+    "enabled": "فعال"
+  },
+  "validation": {
+    "validIdDate": "تاریخ شناسنامه معتبر:",
+    "orEarlier": "یا قبل‌تر",
+    "validId": "شناسنامه معتبر:"
+  },
+  "promotions": {
+    "seniorDiscount": "تخفیف سالمندان",
+    "seniorDescription": "10% تخفیف برای 65+",
+    "happyHour": "ساعت شاد",
+    "happyHourDescription": "15% تخفیف 16-18"
+  },
+  "messages": {
+    "saleParkedSuccess": "فروش با موفقیت متوقف شد!",
+    "saleParkedFailed": "متوقف کردن فروش ناموفق بود. لطفاً دوباره امتحان کنید.",
+    "resumeFailed": "ادامه فروش ناموفق بود. لطفاً دوباره امتحان کنید.",
+    "paymentSuccess": "پرداخت موفق!",
+    "receiptPrinted": "رسید چاپ شد.",
+    "transactionFailed": "پردازش تراکنش ناموفق بود. لطفاً دوباره امتحان کنید.",
+    "productNotFound": "محصول برای بارکد یافت نشد:",
+    "scannerTestSuccess": "آزمایش اسکنر موفق! بارکد آزمایشی:",
+    "scannerTestFailed": "آزمایش اسکنر ناموفق",
+    "scannerTestError": "آزمایش اسکنر ناموفق بود"
+  },
+  "fullscreen": {
+    "enter": "ورود به تمام صفحه",
+    "exit": "خروج از تمام صفحه"
+  },
+  "labels": {
+    "confidence": {
+      "high": "✓ اسکنر",
+      "medium": "احتمالاً اسکنر",
+      "low": "ممکن اسکنر"
+    }
+  }
+}

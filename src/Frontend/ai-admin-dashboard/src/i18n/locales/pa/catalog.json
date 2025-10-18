@@ -1,0 +1,75 @@
+{
+  "titles": {
+    "main": "ਪ੍ਰਾਂਤਕ ਉਤਪਾਦ ਕੈਟਾਲਾਗ",
+    "mainVirtual": "ਪ੍ਰਾਂਤਕ ਉਤਪਾਦ ਕੈਟਾਲਾਗ (ਵਰਚੁਅਲ ਸਕ੍ਰੋਲ)",
+    "uploadSection": "ਕੈਟਾਲਾਗ ਅੱਪਲੋਡ ਕਰੋ",
+    "uploadInstructions": "ਅੱਪਲੋਡ ਨਿਰਦੇਸ਼",
+    "catalogProducts": "ਕੈਟਾਲਾਗ ਉਤਪਾਦ"
+  },
+  "descriptions": {
+    "main": "ਪ੍ਰਾਂਤਕ ਭੰਗ ਵਿਤਰਕਾਂ ਤੋਂ ਉਤਪਾਦ ਕੈਟਾਲਾਗ ਦੇਖੋ ਅਤੇ ਪ੍ਰਬੰਧਿਤ ਕਰੋ।",
+    "mainVirtual": "ਪ੍ਰਾਂਤਕ ਭੰਗ ਉਤਪਾਦ ਕੈਟਾਲਾਗ ਪ੍ਰਬੰਧਿਤ ਅਤੇ ਅੱਪਲੋਡ ਕਰੋ",
+    "selectProvince": "ਪ੍ਰਾਂਤ ਚੁਣੋ",
+    "viewingProvince": "ਪ੍ਰਾਂਤਕ ਕੈਟਾਲਾਗ ਦੇਖਿਆ ਜਾ ਰਿਹਾ ਹੈ",
+    "scrollHint": "ਸਾਰੇ ਕਾਲਮ ਦੇਖਣ ਲਈ ਖਿਤਿਜੀ ਸਕ੍ਰੋਲ ਕਰੋ →"
+  },
+  "provinces": {
+    "ontario": "Ontario (OCS)",
+    "bc": "British Columbia (ਜਲਦੀ ਆ ਰਿਹਾ ਹੈ)",
+    "alberta": "Alberta (ਜਲਦੀ ਆ ਰਿਹਾ ਹੈ)",
+    "quebec": "Quebec (ਜਲਦੀ ਆ ਰਿਹਾ ਹੈ)"
+  },
+  "stats": {
+    "totalProducts": "ਕੁੱਲ ਉਤਪਾਦ",
+    "lastUpdated": "ਆਖਰੀ ਅੱਪਡੇਟ",
+    "categories": "ਸ਼੍ਰੇਣੀਆਂ",
+    "never": "ਕਦੇ ਨਹੀਂ",
+    "totalRecords": "ਕੁੱਲ ਰਿਕਾਰਡ",
+    "inserted": "ਸ਼ਾਮਲ ਕੀਤੇ ਗਏ",
+    "updated": "ਅੱਪਡੇਟ ਕੀਤੇ ਗਏ",
+    "errors": "ਗਲਤੀਆਂ",
+    "totalRecordsLabel": "ਕੁੱਲ ਰਿਕਾਰਡ"
+  },
+  "upload": {
+    "selectFile": "ਨਵਾਂ ਕੈਟਾਲਾਗ ਅੱਪਲੋਡ ਕਰੋ",
+    "chooseFile": "ਫਾਈਲ ਚੁਣੋ",
+    "uploadButton": "ਅੱਪਲੋਡ ਕਰੋ",
+    "uploadCatalog": "ਕੈਟਾਲਾਗ ਅੱਪਲੋਡ ਕਰੋ",
+    "uploading": "ਅੱਪਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...",
+    "uploadFile": "ਫਾਈਲ ਅੱਪਲੋਡ ਕਰੋ",
+    "invalidFileType": "ਅਵੈਧ ਫਾਈਲ ਕਿਸਮ। ਕਿਰਪਾ ਕਰਕੇ CSV ਜਾਂ Excel ਫਾਈਲ ਅੱਪਲੋਡ ਕਰੋ।",
+    "pleaseSelectFile": "ਕਿਰਪਾ ਕਰਕੇ ਅੱਪਲੋਡ ਕਰਨ ਲਈ ਇੱਕ ਫਾਈਲ ਚੁਣੋ।",
+    "processingFile": "ਕੈਟਾਲਾਗ ਫਾਈਲ ਪ੍ਰੋਸੈਸ ਹੋ ਰਹੀ ਹੈ...",
+    "processingFileShort": "ਫਾਈਲ ਪ੍ਰੋਸੈਸ ਹੋ ਰਹੀ ਹੈ...",
+    "uploadSuccess": "ਕੈਟਾਲਾਗ ਸਫਲਤਾਪੂਰਵਕ ਅੱਪਲੋਡ ਹੋ ਗਿਆ!",
+    "uploadSuccessShort": "ਅੱਪਲੋਡ ਸਫਲ",
+    "uploadFailed": "ਕੈਟਾਲਾਗ ਅੱਪਲੋਡ ਕਰਨ ਵਿੱਚ ਅਸਫਲ",
+    "uploadFailedShort": "ਅੱਪਲੋਡ ਅਸਫਲ"
+  },
+  "search": {
+    "placeholder": "ਉਤਪਾਦ ਖੋਜੋ...",
+    "allCategories": "ਸਾਰੀਆਂ ਸ਼੍ਰੇਣੀਆਂ"
+  },
+  "buttons": {
+    "export": "ਨਿਰਯਾਤ ਕਰੋ",
+    "exportCsv": "CSV ਨਿਰਯਾਤ ਕਰੋ",
+    "previous": "ਪਿਛਲਾ",
+    "next": "ਅਗਲਾ"
+  },
+  "table": {
+    "loadingCatalog": "ਕੈਟਾਲਾਗ ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...",
+    "noProductsFound": "ਕੈਟਾਲਾਗ ਵਿੱਚ ਕੋਈ ਉਤਪਾਦ ਨਹੀਂ ਮਿਲਿਆ",
+    "noProductsUpload": "ਕੋਈ ਉਤਪਾਦ ਨਹੀਂ ਮਿਲਿਆ। ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਇੱਕ ਕੈਟਾਲਾਗ ਅੱਪਲੋਡ ਕਰੋ।",
+    "showingPage": "ਨਤੀਜਿਆਂ ਦਾ ਪੰਨਾ {page} ਦਿਖਾਇਆ ਜਾ ਰਿਹਾ ਹੈ",
+    "itemsCount": "{count} ਆਈਟਮਾਂ"
+  },
+  "instructions": {
+    "line1": "OCS ਕੈਟਾਲਾਗ ਫਾਈਲ ਵਿੱਚ OCS ਵਿਸ਼ੇਸ਼ਤਾ ਦੇ ਅਨੁਸਾਰ ਸਾਰੇ ਲੋੜੀਂਦੇ ਕਾਲਮ ਹੋਣੇ ਚਾਹੀਦੇ ਹਨ।",
+    "line2": "ਉਤਪਾਦਾਂ ਨੂੰ OCS ਵੇਰੀਐਂਟ ਨੰਬਰ ਨੂੰ ਵਿਲੱਖਣ ਕੁੰਜੀ ਵਜੋਂ ਵਰਤ ਕੇ ਮੇਲ ਅਤੇ ਅੱਪਡੇਟ ਕੀਤਾ ਜਾਂਦਾ ਹੈ।",
+    "line3": "ਨਵੇਂ ਉਤਪਾਦ ਸ਼ਾਮਲ ਕੀਤੇ ਜਾਣਗੇ, ਮੌਜੂਦਾ ਉਤਪਾਦਾਂ ਨੂੰ ਨਵੀਨਤਮ ਜਾਣਕਾਰੀ ਨਾਲ ਅੱਪਡੇਟ ਕੀਤਾ ਜਾਵੇਗਾ।",
+    "line4": "ਰੇਟਿੰਗ ਅਤੇ ਰੇਟਿੰਗ ਗਿਣਤੀ ਖੇਤਰਾਂ ਨੂੰ ਅੱਪਡੇਟਾਂ ਦੌਰਾਨ ਸੁਰੱਖਿਅਤ ਰੱਖਿਆ ਜਾਵੇਗਾ।"
+  },
+  "messages": {
+    "lastCatalogUpdate": "ਆਖਰੀ ਕੈਟਾਲਾਗ ਅੱਪਡੇਟ:"
+  }
+}

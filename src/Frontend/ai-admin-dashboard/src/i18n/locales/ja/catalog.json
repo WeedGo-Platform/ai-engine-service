@@ -1,0 +1,75 @@
+{
+  "titles": {
+    "main": "州別製品カタログ",
+    "mainVirtual": "州別製品カタログ（仮想スクロール）",
+    "uploadSection": "カタログをアップロード",
+    "uploadInstructions": "アップロード手順",
+    "catalogProducts": "カタログ製品"
+  },
+  "descriptions": {
+    "main": "州の大麻販売業者の製品カタログを表示および管理します。",
+    "mainVirtual": "州の大麻製品カタログを管理およびアップロード",
+    "selectProvince": "州を選択",
+    "viewingProvince": "州カタログの表示",
+    "scrollHint": "水平スクロールしてすべての列を表示 →"
+  },
+  "provinces": {
+    "ontario": "Ontario (OCS)",
+    "bc": "British Columbia（近日公開）",
+    "alberta": "Alberta（近日公開）",
+    "quebec": "Quebec（近日公開）"
+  },
+  "stats": {
+    "totalProducts": "合計製品数",
+    "lastUpdated": "最終更新日",
+    "categories": "カテゴリー",
+    "never": "なし",
+    "totalRecords": "合計レコード数",
+    "inserted": "挿入済み",
+    "updated": "更新済み",
+    "errors": "エラー",
+    "totalRecordsLabel": "合計レコード数"
+  },
+  "upload": {
+    "selectFile": "新しいカタログをアップロード",
+    "chooseFile": "ファイルを選択",
+    "uploadButton": "アップロード",
+    "uploadCatalog": "カタログをアップロード",
+    "uploading": "アップロード中...",
+    "uploadFile": "ファイルをアップロード",
+    "invalidFileType": "無効なファイルタイプです。CSVまたはExcelファイルをアップロードしてください。",
+    "pleaseSelectFile": "アップロードするファイルを選択してください。",
+    "processingFile": "カタログファイルを処理中...",
+    "processingFileShort": "ファイルを処理中...",
+    "uploadSuccess": "カタログが正常にアップロードされました！",
+    "uploadSuccessShort": "アップロード成功",
+    "uploadFailed": "カタログのアップロードに失敗しました",
+    "uploadFailedShort": "アップロード失敗"
+  },
+  "search": {
+    "placeholder": "製品を検索...",
+    "allCategories": "すべてのカテゴリー"
+  },
+  "buttons": {
+    "export": "エクスポート",
+    "exportCsv": "CSVをエクスポート",
+    "previous": "前へ",
+    "next": "次へ"
+  },
+  "table": {
+    "loadingCatalog": "カタログを読み込み中...",
+    "noProductsFound": "カタログに製品が見つかりません",
+    "noProductsUpload": "製品が見つかりません。カタログをアップロードして開始してください。",
+    "showingPage": "結果の{page}ページを表示中",
+    "itemsCount": "{count}アイテム"
+  },
+  "instructions": {
+    "line1": "OCSカタログファイルには、OCS仕様に従ってすべての必須列が含まれている必要があります。",
+    "line2": "製品は、OCSバリアント番号を一意のキーとして使用して照合および更新されます。",
+    "line3": "新しい製品は挿入され、既存の製品は最新の情報で更新されます。",
+    "line4": "評価と評価数のフィールドは、更新中に保持されます。"
+  },
+  "messages": {
+    "lastCatalogUpdate": "最終カタログ更新："
+  }
+}

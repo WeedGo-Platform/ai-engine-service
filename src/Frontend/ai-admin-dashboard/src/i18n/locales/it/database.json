@@ -1,0 +1,80 @@
+{
+  "titles": {
+    "main": "Gestione del database",
+    "databaseObjects": "Oggetti del database",
+    "addRow": "Aggiungi nuova riga",
+    "editRow": "Modifica riga",
+    "truncateTable": "Tronca tabella",
+    "dropTable": "Elimina tabella"
+  },
+  "descriptions": {
+    "main": "Accesso super amministratore alle tabelle e alle operazioni del database",
+    "selectTable": "Seleziona una tabella per visualizzare i dati",
+    "chooseFromList": "Scegli dall'elenco a sinistra"
+  },
+  "tabs": {
+    "data": "Dati",
+    "schema": "Schema",
+    "query": "Query"
+  },
+  "connection": {
+    "connections": "connessioni"
+  },
+  "table": {
+    "tables": "tabelle",
+    "views": "viste",
+    "columns": "colonne",
+    "totalRows": "righe totali"
+  },
+  "actions": {
+    "addRow": "Aggiungi riga",
+    "add": "Aggiungi",
+    "truncate": "Tronca",
+    "clear": "Cancella",
+    "dropView": "Elimina vista",
+    "dropTable": "Elimina tabella",
+    "drop": "Elimina",
+    "refresh": "Aggiorna",
+    "search": "Cerca",
+    "clearSearch": "Cancella ricerca",
+    "executeQuery": "Esegui query",
+    "cancel": "Annulla",
+    "updateRow": "Aggiorna riga"
+  },
+  "placeholders": {
+    "filterTables": "Filtra tabelle e viste...",
+    "searchTable": "Cerca nella tabella...",
+    "sqlQuery": "Query SQL (solo SELECT)"
+  },
+  "schema": {
+    "columnName": "Nome colonna",
+    "dataType": "Tipo di dati",
+    "nullable": "Nullable",
+    "default": "Predefinito",
+    "maxLength": "Lunghezza massima"
+  },
+  "pagination": {
+    "page": "Pagina",
+    "of": "di"
+  },
+  "messages": {
+    "noData": "Nessun dato trovato in questa tabella",
+    "warningCannotUndo": "Attenzione: questa azione non può essere annullata!",
+    "truncateWarning": "Tutti i dati nella tabella \"{table}\" verranno eliminati definitivamente.",
+    "dropWarning": "L'intera tabella \"{table}\" e tutti i suoi dati verranno rimossi definitivamente dal database.",
+    "type": "Tipo",
+    "actions": "Azioni"
+  },
+  "confirm": {
+    "deleteRow": "Sei sicuro di voler eliminare questa riga?",
+    "truncateTable": "Sei sicuro di voler TRONCARE la tabella {table}? Questo eliminerà TUTTE le righe!"
+  },
+  "errors": {
+    "addRow": "Impossibile aggiungere la riga",
+    "updateRow": "Impossibile aggiornare la riga",
+    "deleteRow": "Impossibile eliminare la riga",
+    "truncateTable": "Impossibile troncare la tabella",
+    "dropTable": "Impossibile eliminare la tabella",
+    "executeQuery": "Impossibile eseguire la query"
+  }
+}

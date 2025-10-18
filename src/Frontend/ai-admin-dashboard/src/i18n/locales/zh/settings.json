@@ -1,0 +1,43 @@
+{
+  "titles": {
+    "tenantSettings": "设置",
+    "generalInformation": "常规信息"
+  },
+  "descriptions": {
+    "tenantManagement": "管理租户配置和支付设置"
+  },
+  "tabs": {
+    "general": "常规设置",
+    "payment": "支付设置",
+    "communication": "通信设置"
+  },
+  "fields": {
+    "tenantName": "租户名称",
+    "tenantCode": "租户代码",
+    "companyName": "公司名称",
+    "businessNumber": "营业号码",
+    "contactEmail": "联系邮箱",
+    "contactPhone": "联系电话",
+    "status": "状态",
+    "subscriptionTier": "订阅层级",
+    "address": "地址"
+  },
+  "actions": {
+    "backToTenants": "返回租户列表"
+  },
+  "messages": {
+    "notSpecified": "未指定",
+    "loading": "加载中...",
+    "tenantNotFound": "未找到租户",
+    "success": {
+      "paymentSettingsUpdated": "支付设置更新成功",
+      "communicationSettingsUpdated": "通信设置更新成功",
+      "configurationValid": "配置有效"
+    },
+    "error": {
+      "loadSettings": "加载租户设置失败",
+      "updatePaymentSettings": "更新支付设置失败",
+      "updateCommunicationSettings": "更新通信设置失败"
+    }
+  }
+}

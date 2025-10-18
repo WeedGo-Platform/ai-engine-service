@@ -1,0 +1,132 @@
+{
+  "voiceApi": {
+    "title": "Test API Vocale",
+    "apiEndpoint": "Endpoint API",
+    "recording": {
+      "title": "1. Registrazione Audio",
+      "start": "Avvia Registrazione",
+      "stop": "Interrompi Registrazione",
+      "play": "Riproduci Registrazione",
+      "inProgress": "Registrazione in corso...",
+      "ready": "Audio registrato e pronto per la trascrizione"
+    },
+    "transcription": {
+      "title": "2. Test Trascrizione",
+      "button": "Trascrivi Audio",
+      "buttonLoading": "Trascrizione in corso...",
+      "result": "Risultato della Trascrizione:",
+      "noAudio": "Nessun audio registrato. Registrare prima l'audio.",
+      "noTranscription": "Nessuna trascrizione disponibile",
+      "success": "Trascrizione completata con successo"
+    },
+    "synthesis": {
+      "title": "3. Test Sintesi",
+      "textLabel": "Testo da Sintetizzare",
+      "textPlaceholder": "Inserisci il testo da convertire in voce...",
+      "voiceLabel": "Voce",
+      "button": "Sintetizza Voce",
+      "buttonLoading": "Sintesi in corso...",
+      "play": "Riproduci Sintesi",
+      "noText": "Inserire il testo da sintetizzare",
+      "success": "Sintesi completata con successo",
+      "failed": "Sintesi fallita"
+    },
+    "debug": {
+      "title": "Informazioni di Debug",
+      "endpoint": "Endpoint",
+      "transcription": "Trascrizione",
+      "synthesis": "Sintesi",
+      "voices": "Voci"
+    },
+    "messages": {
+      "voicesFetched": "Voci recuperate con successo",
+      "voicesFailed": "Impossibile recuperare le voci",
+      "recordingFailed": "Impossibile avviare la registrazione",
+      "recordingSaved": "Registrazione salvata",
+      "transcriptionError": "Errore di trascrizione",
+      "synthesisError": "Errore di sintesi"
+    }
+  },
+  "logs": {
+    "title": "Log di Sistema",
+    "description": "Visualizza e cerca i log dell'applicazione da Elasticsearch",
+    "filters": {
+      "search": "Cerca Log",
+      "searchPlaceholder": "Cerca messaggio, logger, modulo...",
+      "logLevel": "Livello di Log",
+      "allLevels": "Tutti i Livelli",
+      "error": "Errore",
+      "warning": "Avviso",
+      "info": "Info",
+      "debug": "Debug",
+      "timeRange": "Intervallo Temporale",
+      "advancedFilters": "Filtri Avanzati",
+      "correlationId": "ID di Correlazione",
+      "correlationIdPlaceholder": "Filtra per ID di correlazione",
+      "tenantId": "ID Tenant",
+      "tenantIdPlaceholder": "Filtra per tenant",
+      "storeId": "ID Negozio",
+      "storeIdPlaceholder": "Filtra per negozio",
+      "userId": "ID Utente",
+      "userIdPlaceholder": "Filtra per utente",
+      "sessionId": "ID Sessione",
+      "sessionIdPlaceholder": "Filtra per sessione",
+      "service": "Servizio",
+      "servicePlaceholder": "Filtra per servizio",
+      "endDate": "Data di Fine",
+      "clearAll": "Cancella Tutti i Filtri"
+    },
+    "actions": {
+      "refresh": "Aggiorna",
+      "export": "Esporta",
+      "autoRefresh": "Aggiornamento automatico ogni",
+      "details": "Dettagli",
+      "close": "Chiudi"
+    },
+    "table": {
+      "timestamp": "Timestamp",
+      "level": "Livello",
+      "serviceLogger": "Servizio / Logger",
+      "message": "Messaggio",
+      "correlationId": "ID di Correlazione",
+      "actions": "Azioni",
+      "noLogs": "Nessun log trovato",
+      "totalLogs": "log totali"
+    },
+    "pagination": {
+      "showing": "Visualizzazione da {{from}} a {{to}} di {{total}}",
+      "perPage": "per pagina",
+      "previous": "Precedente",
+      "next": "Successivo",
+      "page": "Pagina {{current}} di {{total}}"
+    },
+    "details": {
+      "title": "Dettagli del Log",
+      "summary": "Riepilogo",
+      "metadata": "Metadati",
+      "correlationId": "ID di Correlazione",
+      "sessionId": "ID Sessione",
+      "tenantId": "ID Tenant",
+      "storeId": "ID Negozio",
+      "userId": "ID Utente",
+      "service": "Servizio",
+      "environment": "Ambiente",
+      "logger": "Logger",
+      "module": "Modulo",
+      "function": "Funzione",
+      "lineNumber": "Numero di Riga",
+      "duration": "Durata",
+      "statusCode": "Codice di Stato",
+      "method": "Metodo",
+      "path": "Percorso",
+      "clientHost": "Host Client",
+      "exception": "Eccezione",
+      "viewRawJson": "Visualizza JSON Grezzo"
+    },
+    "messages": {
+      "fetchFailed": "Impossibile recuperare i log da Elasticsearch",
+      "exportSuccess": "Log esportati con successo",
+      "logExported": "Log esportato"
+    }
+  }
+}

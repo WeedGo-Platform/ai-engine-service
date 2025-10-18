@@ -1,0 +1,89 @@
+{
+  "titles": {
+    "main": "Liên Lạc",
+    "overview": "Tổng Quan",
+    "campaigns": "Chiến Dịch",
+    "templates": "Mẫu",
+    "segments": "Phân Đoạn",
+    "analytics": "Phân Tích",
+    "broadcastCampaigns": "Chiến Dịch Phát Sóng",
+    "recentCampaigns": "Chiến Dịch Gần Đây",
+    "channelPerformance": "Hiệu Suất Kênh"
+  },
+  "descriptions": {
+    "managingFor": "Quản lý liên lạc cho",
+    "segmentationComingSoon": "Phân đoạn khách hàng sắp ra mắt...",
+    "noAnalytics": "Không có dữ liệu phân tích",
+    "noStoreSelected": "Chưa Chọn Cửa Hàng",
+    "selectStore": "Vui lòng chọn cửa hàng để quản lý liên lạc"
+  },
+  "tabs": {
+    "overview": "Tổng Quan",
+    "campaigns": "Chiến Dịch",
+    "templates": "Mẫu",
+    "segments": "Phân Đoạn",
+    "analytics": "Phân Tích"
+  },
+  "stats": {
+    "totalCampaigns": "Tổng Chiến Dịch",
+    "messagesSent": "Tin Nhắn Đã Gửi",
+    "successRate": "Tỷ Lệ Thành Công",
+    "failed": "Thất Bại"
+  },
+  "status": {
+    "draft": "draft",
+    "scheduled": "scheduled",
+    "sending": "sending",
+    "sent": "sent",
+    "paused": "paused",
+    "cancelled": "cancelled",
+    "failed": "failed"
+  },
+  "table": {
+    "campaign": "Chiến Dịch",
+    "status": "Trạng Thái",
+    "recipients": "Người Nhận",
+    "successRate": "Tỷ Lệ Thành Công",
+    "created": "Đã Tạo",
+    "channels": "Kênh",
+    "scheduled": "Đã Lên Lịch",
+    "actions": "Hành Động",
+    "createdBy": "Được tạo bởi",
+    "sentCount": "sent"
+  },
+  "channels": {
+    "email": "email",
+    "sms": "sms",
+    "push": "push",
+    "campaigns": "Chiến Dịch",
+    "messages": "Tin Nhắn",
+    "engagement": "Tương Tác"
+  },
+  "actions": {
+    "newCampaign": "Chiến Dịch Mới",
+    "viewAll": "Xem Tất Cả",
+    "viewDetails": "Xem Chi Tiết",
+    "edit": "Chỉnh Sửa",
+    "sendNow": "Gửi Ngay",
+    "cancel": "Hủy",
+    "pause": "Tạm Dừng",
+    "resume": "Tiếp Tục",
+    "refresh": "Làm Mới",
+    "settings": "Cài Đặt"
+  },
+  "messages": {
+    "success": {
+      "broadcastStarted": "Đã bắt đầu thực thi phát sóng",
+      "broadcastPaused": "Đã tạm dừng phát sóng",
+      "broadcastResumed": "Đã tiếp tục phát sóng",
+      "broadcastCancelled": "Đã hủy phát sóng"
+    },
+    "error": {
+      "fetchBroadcasts": "Không thể lấy danh sách phát sóng",
+      "fetchAnalytics": "Không thể lấy dữ liệu phân tích"
+    }
+  },
+  "confirm": {
+    "cancelBroadcast": "Bạn có chắc chắn muốn hủy phát sóng này không?"
+  }
+}

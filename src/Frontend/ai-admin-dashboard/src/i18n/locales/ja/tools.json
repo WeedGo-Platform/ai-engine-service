@@ -1,0 +1,132 @@
+{
+  "voiceApi": {
+    "title": "音声APIテスト",
+    "apiEndpoint": "APIエンドポイント",
+    "recording": {
+      "title": "1. オーディオ録音",
+      "start": "録音開始",
+      "stop": "録音停止",
+      "play": "録音再生",
+      "inProgress": "録音中...",
+      "ready": "オーディオが録音され、文字起こしの準備ができました"
+    },
+    "transcription": {
+      "title": "2. 文字起こしテスト",
+      "button": "オーディオを文字起こし",
+      "buttonLoading": "文字起こし中...",
+      "result": "文字起こし結果：",
+      "noAudio": "オーディオが録音されていません。最初にオーディオを録音してください。",
+      "noTranscription": "利用可能な文字起こしがありません",
+      "success": "文字起こしが正常に完了しました"
+    },
+    "synthesis": {
+      "title": "3. 音声合成テスト",
+      "textLabel": "合成するテキスト",
+      "textPlaceholder": "音声に変換するテキストを入力してください...",
+      "voiceLabel": "音声",
+      "button": "音声を合成",
+      "buttonLoading": "合成中...",
+      "play": "合成音声を再生",
+      "noText": "合成するテキストを入力してください",
+      "success": "合成が正常に完了しました",
+      "failed": "合成に失敗しました"
+    },
+    "debug": {
+      "title": "デバッグ情報",
+      "endpoint": "エンドポイント",
+      "transcription": "文字起こし",
+      "synthesis": "合成",
+      "voices": "音声"
+    },
+    "messages": {
+      "voicesFetched": "音声の取得に成功しました",
+      "voicesFailed": "音声の取得に失敗しました",
+      "recordingFailed": "録音の開始に失敗しました",
+      "recordingSaved": "録音が保存されました",
+      "transcriptionError": "文字起こしエラー",
+      "synthesisError": "合成エラー"
+    }
+  },
+  "logs": {
+    "title": "システムログ",
+    "description": "Elasticsearchからアプリケーションログを表示および検索",
+    "filters": {
+      "search": "ログを検索",
+      "searchPlaceholder": "メッセージ、ロガー、モジュールを検索...",
+      "logLevel": "ログレベル",
+      "allLevels": "すべてのレベル",
+      "error": "エラー",
+      "warning": "警告",
+      "info": "情報",
+      "debug": "デバッグ",
+      "timeRange": "時間範囲",
+      "advancedFilters": "詳細フィルター",
+      "correlationId": "相関ID",
+      "correlationIdPlaceholder": "相関IDでフィルター",
+      "tenantId": "テナントID",
+      "tenantIdPlaceholder": "テナントでフィルター",
+      "storeId": "ストアID",
+      "storeIdPlaceholder": "ストアでフィルター",
+      "userId": "ユーザーID",
+      "userIdPlaceholder": "ユーザーでフィルター",
+      "sessionId": "セッションID",
+      "sessionIdPlaceholder": "セッションでフィルター",
+      "service": "サービス",
+      "servicePlaceholder": "サービスでフィルター",
+      "endDate": "終了日",
+      "clearAll": "すべてのフィルターをクリア"
+    },
+    "actions": {
+      "refresh": "更新",
+      "export": "エクスポート",
+      "autoRefresh": "自動更新間隔",
+      "details": "詳細",
+      "close": "閉じる"
+    },
+    "table": {
+      "timestamp": "タイムスタンプ",
+      "level": "レベル",
+      "serviceLogger": "サービス / ロガー",
+      "message": "メッセージ",
+      "correlationId": "相関ID",
+      "actions": "アクション",
+      "noLogs": "ログが見つかりません",
+      "totalLogs": "合計ログ数"
+    },
+    "pagination": {
+      "showing": "{{total}}件中{{from}}〜{{to}}件を表示",
+      "perPage": "ページあたり",
+      "previous": "前へ",
+      "next": "次へ",
+      "page": "ページ{{current}}/{{total}}"
+    },
+    "details": {
+      "title": "ログの詳細",
+      "summary": "概要",
+      "metadata": "メタデータ",
+      "correlationId": "相関ID",
+      "sessionId": "セッションID",
+      "tenantId": "テナントID",
+      "storeId": "ストアID",
+      "userId": "ユーザーID",
+      "service": "サービス",
+      "environment": "環境",
+      "logger": "ロガー",
+      "module": "モジュール",
+      "function": "関数",
+      "lineNumber": "行番号",
+      "duration": "期間",
+      "statusCode": "ステータスコード",
+      "method": "メソッド",
+      "path": "パス",
+      "clientHost": "クライアントホスト",
+      "exception": "例外",
+      "viewRawJson": "生のJSONを表示"
+    },
+    "messages": {
+      "fetchFailed": "Elasticsearchからのログの取得に失敗しました",
+      "exportSuccess": "ログが正常にエクスポートされました",
+      "logExported": "ログがエクスポートされました"
+    }
+  }
+}

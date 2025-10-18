@@ -1,0 +1,75 @@
+{
+  "titles": {
+    "main": "Katalogo ng Produkto ng Probinsya",
+    "mainVirtual": "Katalogo ng Produkto ng Probinsya (Virtual Scroll)",
+    "uploadSection": "Mag-upload ng Katalogo",
+    "uploadInstructions": "Mga Tagubilin sa Pag-upload",
+    "catalogProducts": "Mga Produkto ng Katalogo"
+  },
+  "descriptions": {
+    "main": "Tingnan at pamahalaan ang mga katalogo ng produkto mula sa mga probinsyal na tagapamahagi ng cannabis.",
+    "mainVirtual": "Pamahalaan at mag-upload ng mga probinsyal na katalogo ng produkto ng cannabis",
+    "selectProvince": "Pumili ng Probinsya",
+    "viewingProvince": "Pagtingin sa Katalogo ng Probinsya",
+    "scrollHint": "Mag-scroll nang pahalang upang makita ang lahat ng column →"
+  },
+  "provinces": {
+    "ontario": "Ontario (OCS)",
+    "bc": "British Columbia (Paparating na)",
+    "alberta": "Alberta (Paparating na)",
+    "quebec": "Quebec (Paparating na)"
+  },
+  "stats": {
+    "totalProducts": "Kabuuang Mga Produkto",
+    "lastUpdated": "Huling Na-update",
+    "categories": "Mga Kategorya",
+    "never": "Hindi kailanman",
+    "totalRecords": "Kabuuang Mga Rekord",
+    "inserted": "Nailagay",
+    "updated": "Na-update",
+    "errors": "Mga Error",
+    "totalRecordsLabel": "Kabuuang mga rekord"
+  },
+  "upload": {
+    "selectFile": "Mag-upload ng Bagong Katalogo",
+    "chooseFile": "Pumili ng File",
+    "uploadButton": "Mag-upload",
+    "uploadCatalog": "Mag-upload ng Katalogo",
+    "uploading": "Nag-uupload...",
+    "uploadFile": "Mag-upload ng File",
+    "invalidFileType": "Di-wastong uri ng file. Mangyaring mag-upload ng CSV o Excel file.",
+    "pleaseSelectFile": "Mangyaring pumili ng file na i-uupload.",
+    "processingFile": "Pinoproseso ang file ng katalogo...",
+    "processingFileShort": "Pinoproseso ang file...",
+    "uploadSuccess": "Matagumpay na na-upload ang katalogo!",
+    "uploadSuccessShort": "Matagumpay ang pag-upload",
+    "uploadFailed": "Nabigo ang pag-upload ng katalogo",
+    "uploadFailedShort": "Nabigo ang pag-upload"
+  },
+  "search": {
+    "placeholder": "Maghanap ng mga produkto...",
+    "allCategories": "Lahat ng Kategorya"
+  },
+  "buttons": {
+    "export": "I-export",
+    "exportCsv": "I-export ang CSV",
+    "previous": "Nakaraan",
+    "next": "Susunod"
+  },
+  "table": {
+    "loadingCatalog": "Nilo-load ang katalogo...",
+    "noProductsFound": "Walang nahanap na produkto sa katalogo",
+    "noProductsUpload": "Walang nahanap na produkto. Mag-upload ng katalogo upang magsimula.",
+    "showingPage": "Ipinapakita ang pahina {page} ng mga resulta",
+    "itemsCount": "{count} mga item"
+  },
+  "instructions": {
+    "line1": "Ang file ng katalogo ng OCS ay dapat maglaman ng lahat ng kinakailangang column ayon sa OCS specification.",
+    "line2": "Ang mga produkto ay itutugma at ia-update gamit ang OCS Variant Number bilang natatanging susi.",
+    "line3": "Ang mga bagong produkto ay ilalagay, ang mga umiiral na produkto ay ia-update gamit ang pinakabagong impormasyon.",
+    "line4": "Ang mga field ng rating at rating count ay mapapanatili sa panahon ng mga update."
+  },
+  "messages": {
+    "lastCatalogUpdate": "Huling update ng katalogo:"
+  }
+}

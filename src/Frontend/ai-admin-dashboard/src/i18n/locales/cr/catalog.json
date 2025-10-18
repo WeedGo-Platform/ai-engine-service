@@ -1,0 +1,75 @@
+{
+  "titles": {
+    "main": "ᑭᒋᐅᑭᒫᐤ ᐅᑎᐹᒋᒧᐎᓂᐤ ᐅᐱᒧᒋᑲᓀᐤ",
+    "mainVirtual": "ᑭᒋᐅᑭᒫᐤ ᐅᑎᐹᒋᒧᐎᓂᐤ ᐅᐱᒧᒋᑲᓀᐤ (Virtual Scroll)",
+    "uploadSection": "ᐅᐱᒧᒋᑲᓀᐤ ᐊᐸᒋᑕᐤ",
+    "uploadInstructions": "ᐊᐸᒋᑕᐤ ᑭᑭᓄᐦᐊᒪᑫᐎᓇ",
+    "catalogProducts": "ᐅᐱᒧᒋᑲᓀᐤ ᐅᑎᐹᒋᒧᐎᓇ"
+  },
+  "descriptions": {
+    "main": "ᐙᐸᐦᑕᒼ ᒥᓇ ᑲᓇᐙᐸᐦᒋᑲᑌᐠ ᐅᑎᐹᒋᒧᐎᓂᐤ ᐅᐱᒧᒋᑲᓀᐤ ᑭᒋᐅᑭᒫᐤ cannabis ᐊᑎᐦᑕᒫᑫᐎᓂᐤ ᐅᐦᒋ.",
+    "mainVirtual": "ᑲᓇᐙᐸᐦᒋᑲᑌᐠ ᒥᓇ ᐊᐸᒋᑕᐤ ᑭᒋᐅᑭᒫᐤ cannabis ᐅᑎᐹᒋᒧᐎᓂᐤ ᐅᐱᒧᒋᑲᓀᐤ",
+    "selectProvince": "ᐅᐦᒋ ᓇᑕᐙ ᑭᒋᐅᑭᒫᐤ",
+    "viewingProvince": "ᐙᐸᐦᑕᒼ ᑭᒋᐅᑭᒫᐤ ᐅᐱᒧᒋᑲᓀᐤ",
+    "scrollHint": "ᑭᐦᒋᐙᐸᐦᑕᒼ ᑭᑭᓄᐦᐊᒪᑫᐎᓇ ᒫᑲ ᐊᑎᐦᑕᐤ →"
+  },
+  "provinces": {
+    "ontario": "Ontario (OCS)",
+    "bc": "British Columbia (ᐌᓴ ᑭᐙᐸᒥᑎᓀ)",
+    "alberta": "Alberta (ᐌᓴ ᑭᐙᐸᒥᑎᓀ)",
+    "quebec": "Quebec (ᐌᓴ ᑭᐙᐸᒥᑎᓀ)"
+  },
+  "stats": {
+    "totalProducts": "ᑎᐹᒋᒧᐎᓇ ᒫᑲ",
+    "lastUpdated": "ᐃᐦᑖᐌ ᐅᔑᑕᐤ",
+    "categories": "ᐅᑎᐹᐦᒋᑲᓀᐤ",
+    "never": "ᓇᒪ ᑳ ᐃᐦᑖᐌ",
+    "totalRecords": "ᐅᔑᐦᒋᑲᑌᐎᓇ ᒫᑲ",
+    "inserted": "ᐱᒋᐱᐦᑖᐤ",
+    "updated": "ᐅᔑᑕᐤ",
+    "errors": "ᐸᔮᑎᓯᐎᓇ",
+    "totalRecordsLabel": "ᐅᔑᐦᒋᑲᑌᐎᓇ ᒫᑲ"
+  },
+  "upload": {
+    "selectFile": "ᐊᐸᒋᑕᐤ ᐅᔑᑭ ᐅᐱᒧᒋᑲᓀᐤ",
+    "chooseFile": "ᐅᐦᒋ ᓇᑕᐙ ᒫᓯᓇᐦᐃᑲᓀ",
+    "uploadButton": "ᐊᐸᒋᑕᐤ",
+    "uploadCatalog": "ᐊᐸᒋᑕᐤ ᐅᐱᒧᒋᑲᓀᐤ",
+    "uploading": "ᐊᐸᒋᑕᒼ...",
+    "uploadFile": "ᐊᐸᒋᑕᐤ ᒫᓯᓇᐦᐃᑲᓀ",
+    "invalidFileType": "ᒫᓯᓇᐦᐃᑲᓀ ᐊᔮᐎᐤ ᓇᒪᐙᒋ. CSV ᒫᑲ Excel ᐊᐸᒋᑕᐤ.",
+    "pleaseSelectFile": "ᐅᐦᒋ ᓇᑕᐙ ᒫᓯᓇᐦᐃᑲᓀ ᑳ ᐊᐸᒋᑕᒥᐦᒡ.",
+    "processingFile": "ᐊᑕᐙᑫᐤ ᐅᐱᒧᒋᑲᓀᐤ ᒫᓯᓇᐦᐃᑲᓀ...",
+    "processingFileShort": "ᐊᑕᐙᑫᐤ ᒫᓯᓇᐦᐃᑲᓀ...",
+    "uploadSuccess": "ᐅᐱᒧᒋᑲᓀᐤ ᒦᓚᐙᒋ ᐊᐸᒋᑕᐤ!",
+    "uploadSuccessShort": "ᐊᐸᒋᑕᐤ ᒦᓚᐙᒋ",
+    "uploadFailed": "ᐅᐱᒧᒋᑲᓀᐤ ᐊᐸᒋᑕᐤ ᐸᔮᑎᓯᐤ",
+    "uploadFailedShort": "ᐊᐸᒋᑕᐤ ᐸᔮᑎᓯᐤ"
+  },
+  "search": {
+    "placeholder": "ᓇᑕᐙ ᐅᑎᐹᒋᒧᐎᓇ...",
+    "allCategories": "ᒫᑲ ᐅᑎᐹᐦᒋᑲᓀᐤ"
+  },
+  "buttons": {
+    "export": "ᑭᐦᒋᐅᔑᑕᐤ",
+    "exportCsv": "ᑭᐦᒋᐅᔑᑕᐤ CSV",
+    "previous": "ᐊᔮᒥᐦᐋ",
+    "next": "ᑭᐙᐦᐋ"
+  },
+  "table": {
+    "loadingCatalog": "ᐅᐱᒧᒋᑲᓀᐤ ᐅᑎᓀᐤ...",
+    "noProductsFound": "ᓇᒪ ᐅᑎᐹᒋᒧᐎᓇ ᒥᑲᐤ",
+    "noProductsUpload": "ᓇᒪ ᐅᑎᐹᒋᒧᐎᓇ ᒥᑲᐤ. ᐊᐸᒋᑕᐤ ᐅᐱᒧᒋᑲᓀᐤ ᑳ ᒪᒋᐦᐋᔭᐦᒃ.",
+    "showingPage": "ᐙᐸᐦᑕᒼ {page} ᒫᓯᓇᐦᐃᑲᓀ",
+    "itemsCount": "{count} ᐊᔮᐎᓇ"
+  },
+  "instructions": {
+    "line1": "OCS ᐅᐱᒧᒋᑲᓀᐤ ᒫᓯᓇᐦᐃᑲᓀ ᐅᑎᓇᐤ ᒫᑲ ᑭᑭᓄᐦᐊᒪᑫᐎᓇ OCS ᐃᑖᑭᐦᐋᐎᓇ ᐅᐦᒋ.",
+    "line2": "ᐅᑎᐹᒋᒧᐎᓇ OCS ᐅᑎᐹᐦᒋᑲᓀᐤ ᓇᒪᐱᒡ ᐅᐦᒋ ᐱᔮᐦᑕᒧᐙᐤ ᒥᓇ ᐅᔑᑕᐤ.",
+    "line3": "ᐅᔑᑭ ᐅᑎᐹᒋᒧᐎᓇ ᐱᒋᐱᐦᑖᐤ, ᐊᔮᒥᐦᐋ ᐅᑎᐹᒋᒧᐎᓇ ᐅᔑᑕᐤ ᐅᔑᑭ ᑭᑭᓄᐦᐊᒪᑫᐎᓇ ᐅᐦᒋ.",
+    "line4": "ᐃᑎᑕᑯᓭᐎᓇ ᐃᑎᐦᑕᑯᓭᐎᓇ ᒥᓇ ᑲᓇᐙᐸᐦᑕᒧᐙᐤ ᐅᔑᑕᒥᐦᒃ ᐱᑯ."
+  },
+  "messages": {
+    "lastCatalogUpdate": "ᐃᐦᑖᐌ ᐅᐱᒧᒋᑲᓀᐤ ᐅᔑᑕᐤ:"
+  }
+}

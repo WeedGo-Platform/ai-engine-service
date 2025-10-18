@@ -1,0 +1,127 @@
+{
+  "titles": {
+    "main": "Point of Sale",
+    "posSettings": "POS Settings",
+    "parkedSales": "Parked Sales",
+    "hardwareConfiguration": "Hardware Configuration",
+    "cashManagement": "Cash Management",
+    "discountsPromotions": "Discounts & Promotions"
+  },
+  "tabs": {
+    "newSale": "New Sale",
+    "parked": "Parked",
+    "history": "History",
+    "settings": "Settings"
+  },
+  "customer": {
+    "label": "Customer",
+    "select": "Select",
+    "change": "Change",
+    "returning": "Returning",
+    "new": "New",
+    "anonymous": "Anonymous",
+    "newCustomer": "New Customer",
+    "points": "Points:"
+  },
+  "cart": {
+    "empty": "Cart is empty",
+    "batch": "Batch:",
+    "discount": "Discount:",
+    "quantity": "Quantity"
+  },
+  "weight": {
+    "driedFlowerEquivalent": "Dried Flower Equivalent:",
+    "legalLimit": "/ 30g",
+    "exceedsLimit": "Exceeds legal limit!"
+  },
+  "totals": {
+    "subtotal": "Subtotal",
+    "discount": "Discount",
+    "discountApplied": "Discount applied",
+    "afterDiscount": "After Discount",
+    "tax": "Tax (13%)",
+    "total": "Total"
+  },
+  "actions": {
+    "parkSale": "Park Sale",
+    "clear": "Clear",
+    "processPayment": "Process Payment",
+    "resumeSale": "Resume Sale",
+    "addPromotion": "Add Promotion",
+    "detectScanners": "Detect Scanners",
+    "openRegister": "Open Register",
+    "cashCount": "Cash Count",
+    "endOfDay": "End of Day",
+    "printReport": "Print Report",
+    "test": "Test",
+    "active": "Active"
+  },
+  "search": {
+    "placeholder": "Search products or scan barcode...",
+    "scanning": "Scanning:",
+    "filterProducts": "Filter products"
+  },
+  "products": {
+    "noProductsFound": "No products found",
+    "outOfStock": "Out of Stock",
+    "low": "Low",
+    "stock": "Stock:",
+    "batch": "batch",
+    "batches": "batches"
+  },
+  "parked": {
+    "noParkedSales": "No parked sales",
+    "items": "items"
+  },
+  "scanner": {
+    "enabled": "Scanner Enabled",
+    "disabled": "Scanner Disabled",
+    "noScannersDetected": "No scanners detected",
+    "connectScanner": "Connect a scanner and click \"Detect Scanners\"",
+    "barcodeScanners": "Barcode Scanners",
+    "manageConnected": "Manage connected scanners"
+  },
+  "hardware": {
+    "paymentTerminal": "Payment Terminal",
+    "connectCardReader": "Connect card reader",
+    "receiptPrinter": "Receipt Printer",
+    "printReceipts": "Print receipts",
+    "cashDrawer": "Cash Drawer",
+    "manageCash": "Manage cash",
+    "enabled": "Enabled"
+  },
+  "validation": {
+    "validIdDate": "Valid ID Date:",
+    "orEarlier": "or earlier",
+    "validId": "Valid ID:"
+  },
+  "promotions": {
+    "seniorDiscount": "Senior Discount",
+    "seniorDescription": "10% off for 65+",
+    "happyHour": "Happy Hour",
+    "happyHourDescription": "15% off 4-6pm"
+  },
+  "messages": {
+    "saleParkedSuccess": "Sale parked successfully!",
+    "saleParkedFailed": "Failed to park sale. Please try again.",
+    "resumeFailed": "Failed to resume sale. Please try again.",
+    "paymentSuccess": "Payment successful!",
+    "receiptPrinted": "Receipt printed.",
+    "transactionFailed": "Failed to process transaction. Please try again.",
+    "productNotFound": "Product not found for barcode:",
+    "scannerTestSuccess": "Scanner test successful! Test barcode:",
+    "scannerTestFailed": "Scanner test failed",
+    "scannerTestError": "Failed to test scanner"
+  },
+  "fullscreen": {
+    "enter": "Enter fullscreen",
+    "exit": "Exit fullscreen"
+  },
+  "labels": {
+    "confidence": {
+      "high": "✓ Scanner",
+      "medium": "Likely Scanner",
+      "low": "Possible Scanner"
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "titles": {
+    "main": "Katalog produktów prowincjonalnych",
+    "mainVirtual": "Katalog produktów prowincjonalnych (Wirtualne przewijanie)",
+    "uploadSection": "Prześlij katalog",
+    "uploadInstructions": "Instrukcje przesyłania",
+    "catalogProducts": "Produkty katalogu"
+  },
+  "descriptions": {
+    "main": "Przeglądaj i zarządzaj katalogami produktów prowincjonalnych dystrybutorów konopi.",
+    "mainVirtual": "Zarządzaj i przesyłaj prowincjonalne katalogi produktów konopi",
+    "selectProvince": "Wybierz prowincję",
+    "viewingProvince": "Przeglądanie katalogu prowincjonalnego",
+    "scrollHint": "Przewiń poziomo, aby zobaczyć wszystkie kolumny →"
+  },
+  "provinces": {
+    "ontario": "Ontario (OCS)",
+    "bc": "British Columbia (Wkrótce)",
+    "alberta": "Alberta (Wkrótce)",
+    "quebec": "Quebec (Wkrótce)"
+  },
+  "stats": {
+    "totalProducts": "Łączna liczba produktów",
+    "lastUpdated": "Ostatnia aktualizacja",
+    "categories": "Kategorie",
+    "never": "Nigdy",
+    "totalRecords": "Łączna liczba rekordów",
+    "inserted": "Wstawione",
+    "updated": "Zaktualizowane",
+    "errors": "Błędy",
+    "totalRecordsLabel": "Łączna liczba rekordów"
+  },
+  "upload": {
+    "selectFile": "Prześlij nowy katalog",
+    "chooseFile": "Wybierz plik",
+    "uploadButton": "Prześlij",
+    "uploadCatalog": "Prześlij katalog",
+    "uploading": "Przesyłanie...",
+    "uploadFile": "Prześlij plik",
+    "invalidFileType": "Nieprawidłowy typ pliku. Prześlij plik CSV lub Excel.",
+    "pleaseSelectFile": "Wybierz plik do przesłania.",
+    "processingFile": "Przetwarzanie pliku katalogu...",
+    "processingFileShort": "Przetwarzanie pliku...",
+    "uploadSuccess": "Katalog przesłany pomyślnie!",
+    "uploadSuccessShort": "Przesyłanie zakończone sukcesem",
+    "uploadFailed": "Nie udało się przesłać katalogu",
+    "uploadFailedShort": "Przesyłanie nieudane"
+  },
+  "search": {
+    "placeholder": "Szukaj produktów...",
+    "allCategories": "Wszystkie kategorie"
+  },
+  "buttons": {
+    "export": "Eksportuj",
+    "exportCsv": "Eksportuj CSV",
+    "previous": "Poprzedni",
+    "next": "Następny"
+  },
+  "table": {
+    "loadingCatalog": "Ładowanie katalogu...",
+    "noProductsFound": "Nie znaleziono produktów w katalogu",
+    "noProductsUpload": "Nie znaleziono produktów. Prześlij katalog, aby rozpocząć.",
+    "showingPage": "Wyświetlanie strony {page} wyników",
+    "itemsCount": "{count} elementów"
+  },
+  "instructions": {
+    "line1": "Plik katalogu OCS powinien zawierać wszystkie wymagane kolumny zgodnie ze specyfikacją OCS.",
+    "line2": "Produkty są dopasowywane i aktualizowane przy użyciu numeru wariantu OCS jako unikalnego klucza.",
+    "line3": "Nowe produkty zostaną wstawione, istniejące produkty zostaną zaktualizowane najnowszymi informacjami.",
+    "line4": "Pola oceny i liczby ocen zostaną zachowane podczas aktualizacji."
+  },
+  "messages": {
+    "lastCatalogUpdate": "Ostatnia aktualizacja katalogu:"
+  }
+}

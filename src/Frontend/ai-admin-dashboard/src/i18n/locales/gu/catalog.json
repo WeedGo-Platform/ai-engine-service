@@ -1,0 +1,75 @@
+{
+  "titles": {
+    "main": "પ્રાંતીય ઉત્પાદન કેટલોગ",
+    "mainVirtual": "પ્રાંતીય ઉત્પાદન કેટલોગ (વર્ચ્યુઅલ સ્ક્રોલ)",
+    "uploadSection": "કેટલોગ અપલોડ કરો",
+    "uploadInstructions": "અપલોડ સૂચનાઓ",
+    "catalogProducts": "કેટલોગ ઉત્પાદનો"
+  },
+  "descriptions": {
+    "main": "પ્રાંતીય કેનાબિસ વિતરકો પાસેથી ઉત્પાદન કેટલોગ જુઓ અને સંચાલિત કરો.",
+    "mainVirtual": "પ્રાંતીય કેનાબિસ ઉત્પાદન કેટલોગ સંચાલિત અને અપલોડ કરો",
+    "selectProvince": "પ્રાંત પસંદ કરો",
+    "viewingProvince": "પ્રાંતીય કેટલોગ જોવાય છે",
+    "scrollHint": "બધા કૉલમ જોવા માટે આડા સ્ક્રોલ કરો →"
+  },
+  "provinces": {
+    "ontario": "Ontario (OCS)",
+    "bc": "British Columbia (જલદી આવી રહ્યું છે)",
+    "alberta": "Alberta (જલદી આવી રહ્યું છે)",
+    "quebec": "Quebec (જલદી આવી રહ્યું છે)"
+  },
+  "stats": {
+    "totalProducts": "કુલ ઉત્પાદનો",
+    "lastUpdated": "છેલ્લું અપડેટ",
+    "categories": "શ્રેણીઓ",
+    "never": "ક્યારેય નહીં",
+    "totalRecords": "કુલ રેકોર્ડ્સ",
+    "inserted": "દાખલ કરેલ",
+    "updated": "અપડેટ કરેલ",
+    "errors": "ભૂલો",
+    "totalRecordsLabel": "કુલ રેકોર્ડ્સ"
+  },
+  "upload": {
+    "selectFile": "નવો કેટલોગ અપલોડ કરો",
+    "chooseFile": "ફાઇલ પસંદ કરો",
+    "uploadButton": "અપલોડ કરો",
+    "uploadCatalog": "કેટલોગ અપલોડ કરો",
+    "uploading": "અપલોડ થઈ રહ્યું છે...",
+    "uploadFile": "ફાઇલ અપલોડ કરો",
+    "invalidFileType": "અમાન્ય ફાઇલ પ્રકાર. કૃપા કરીને CSV અથવા Excel ફાઇલ અપલોડ કરો.",
+    "pleaseSelectFile": "કૃપા કરીને અપલોડ કરવા માટે ફાઇલ પસંદ કરો.",
+    "processingFile": "કેટલોગ ફાઇલ પ્રક્રિયા થઈ રહી છે...",
+    "processingFileShort": "ફાઇલ પ્રક્રિયા થઈ રહી છે...",
+    "uploadSuccess": "કેટલોગ સફળતાપૂર્વક અપલોડ થયો!",
+    "uploadSuccessShort": "અપલોડ સફળ",
+    "uploadFailed": "કેટલોગ અપલોડ નિષ્ફળ",
+    "uploadFailedShort": "અપલોડ નિષ્ફળ"
+  },
+  "search": {
+    "placeholder": "ઉત્પાદનો શોધો...",
+    "allCategories": "બધી શ્રેણીઓ"
+  },
+  "buttons": {
+    "export": "નિકાસ કરો",
+    "exportCsv": "CSV નિકાસ કરો",
+    "previous": "પાછલું",
+    "next": "આગળ"
+  },
+  "table": {
+    "loadingCatalog": "કેટલોગ લોડ થઈ રહી છે...",
+    "noProductsFound": "કેટલોગમાં કોઈ ઉત્પાદનો મળ્યા નથી",
+    "noProductsUpload": "કોઈ ઉત્પાદનો મળ્યા નથી. શરૂ કરવા માટે કેટલોગ અપલોડ કરો.",
+    "showingPage": "પરિણામોનું {page} પેજ બતાવી રહ્યું છે",
+    "itemsCount": "{count} આઇટમ્સ"
+  },
+  "instructions": {
+    "line1": "OCS કેટલોગ ફાઇલમાં OCS સ્પેસિફિકેશન મુજબ તમામ આવશ્યક કૉલમ હોવા જોઈએ.",
+    "line2": "ઉત્પાદનો OCS વેરિઅન્ટ નંબરનો ઉપયોગ અનન્ય કી તરીકે કરીને મેચ અને અપડેટ કરવામાં આવે છે.",
+    "line3": "નવા ઉત્પાદનો દાખલ કરવામાં આવશે, અસ્તિત્વમાં રહેલા ઉત્પાદનો નવીનતમ માહિતી સાથે અપડેટ કરવામાં આવશે.",
+    "line4": "રેટિંગ અને રેટિંગ કાઉન્ટ ફીલ્ડ્સ અપડેટ્સ દરમિયાન સાચવવામાં આવશે."
+  },
+  "messages": {
+    "lastCatalogUpdate": "છેલ્લું કેટલોગ અપડેટ:"
+  }
+}

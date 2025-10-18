@@ -1,0 +1,80 @@
+{
+  "titles": {
+    "main": "ניהול מסד נתונים",
+    "databaseObjects": "אובייקטי מסד נתונים",
+    "addRow": "הוסף שורה חדשה",
+    "editRow": "ערוך שורה",
+    "truncateTable": "נקה טבלה",
+    "dropTable": "מחק טבלה"
+  },
+  "descriptions": {
+    "main": "גישת מנהל על לטבלאות מסד נתונים ופעולות",
+    "selectTable": "בחר טבלה כדי לצפות בנתונים",
+    "chooseFromList": "בחר מהרשימה בצד שמאל"
+  },
+  "tabs": {
+    "data": "נתונים",
+    "schema": "סכמה",
+    "query": "שאילתה"
+  },
+  "connection": {
+    "connections": "חיבורים"
+  },
+  "table": {
+    "tables": "טבלאות",
+    "views": "תצוגות",
+    "columns": "עמודות",
+    "totalRows": "סה\"כ שורות"
+  },
+  "actions": {
+    "addRow": "הוסף שורה",
+    "add": "הוסף",
+    "truncate": "נקה",
+    "clear": "נקה",
+    "dropView": "מחק תצוגה",
+    "dropTable": "מחק טבלה",
+    "drop": "מחק",
+    "refresh": "רענן",
+    "search": "חפש",
+    "clearSearch": "נקה חיפוש",
+    "executeQuery": "הפעל שאילתה",
+    "cancel": "ביטול",
+    "updateRow": "עדכן שורה"
+  },
+  "placeholders": {
+    "filterTables": "סנן טבלאות ותצוגות...",
+    "searchTable": "חפש בטבלה...",
+    "sqlQuery": "שאילתת SQL (SELECT בלבד)"
+  },
+  "schema": {
+    "columnName": "שם עמודה",
+    "dataType": "סוג נתונים",
+    "nullable": "ניתן להיות NULL",
+    "default": "ברירת מחדל",
+    "maxLength": "אורך מקסימלי"
+  },
+  "pagination": {
+    "page": "עמוד",
+    "of": "מתוך"
+  },
+  "messages": {
+    "noData": "לא נמצאו נתונים בטבלה זו",
+    "warningCannotUndo": "אזהרה: פעולה זו לא ניתנת לביטול!",
+    "truncateWarning": "כל הנתונים בטבלה \"{table}\" יימחקו לצמיתות.",
+    "dropWarning": "הטבלה כולה \"{table}\" וכל הנתונים שלה יוסרו לצמיתות ממסד הנתונים.",
+    "type": "סוג",
+    "actions": "פעולות"
+  },
+  "confirm": {
+    "deleteRow": "האם אתה בטוח שברצונך למחוק שורה זו?",
+    "truncateTable": "האם אתה בטוח שברצונך לנקות את הטבלה {table}? פעולה זו תמחק את כל השורות!"
+  },
+  "errors": {
+    "addRow": "נכשל בהוספת שורה",
+    "updateRow": "נכשל בעדכון שורה",
+    "deleteRow": "נכשל במחיקת שורה",
+    "truncateTable": "נכשל בניקוי טבלה",
+    "dropTable": "נכשל במחיקת טבלה",
+    "executeQuery": "נכשל בהפעלת שאילתה"
+  }
+}

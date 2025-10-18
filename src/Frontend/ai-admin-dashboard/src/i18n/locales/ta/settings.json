@@ -1,0 +1,43 @@
+{
+  "titles": {
+    "tenantSettings": "அமைப்புகள்",
+    "generalInformation": "பொதுவான தகவல்"
+  },
+  "descriptions": {
+    "tenantManagement": "குத்தகைதாரர் உள்ளமைவு மற்றும் கட்டண அமைப்புகளை நிர்வகிக்கவும்"
+  },
+  "tabs": {
+    "general": "பொதுவான அமைப்புகள்",
+    "payment": "கட்டண அமைப்புகள்",
+    "communication": "தொடர்பு அமைப்புகள்"
+  },
+  "fields": {
+    "tenantName": "குத்தகைதாரர் பெயர்",
+    "tenantCode": "குத்தகைதாரர் குறியீடு",
+    "companyName": "நிறுவனத்தின் பெயர்",
+    "businessNumber": "வணிக எண்",
+    "contactEmail": "தொடர்பு மின்னஞ்சல்",
+    "contactPhone": "தொடர்பு தொலைபேசி",
+    "status": "நிலை",
+    "subscriptionTier": "சந்தா நிலை",
+    "address": "முகவரி"
+  },
+  "actions": {
+    "backToTenants": "குத்தகைதாரர்களுக்குத் திரும்பு"
+  },
+  "messages": {
+    "notSpecified": "குறிப்பிடப்படவில்லை",
+    "loading": "ஏற்றுகிறது...",
+    "tenantNotFound": "குத்தகைதாரர் கிடைக்கவில்லை",
+    "success": {
+      "paymentSettingsUpdated": "கட்டண அமைப்புகள் வெற்றிகரமாக புதுப்பிக்கப்பட்டன",
+      "communicationSettingsUpdated": "தொடர்பு அமைப்புகள் வெற்றிகரமாக புதுப்பிக்கப்பட்டன",
+      "configurationValid": "உள்ளமைவு சரியானது"
+    },
+    "error": {
+      "loadSettings": "குத்தகைதாரர் அமைப்புகளை ஏற்ற முடியவில்லை",
+      "updatePaymentSettings": "கட்டண அமைப்புகளை புதுப்பிக்க முடியவில்லை",
+      "updateCommunicationSettings": "தொடர்பு அமைப்புகளை புதுப்பிக்க முடியவில்லை"
+    }
+  }
+}

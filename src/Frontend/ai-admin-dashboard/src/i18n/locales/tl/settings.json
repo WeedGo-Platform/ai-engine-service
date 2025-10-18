@@ -1,0 +1,43 @@
+{
+  "titles": {
+    "tenantSettings": "Mga Setting",
+    "generalInformation": "Pangkalahatang Impormasyon"
+  },
+  "descriptions": {
+    "tenantManagement": "Pamahalaan ang configuration ng tenant at mga setting ng pagbabayad"
+  },
+  "tabs": {
+    "general": "Pangkalahatang Mga Setting",
+    "payment": "Mga Setting ng Pagbabayad",
+    "communication": "Mga Setting ng Komunikasyon"
+  },
+  "fields": {
+    "tenantName": "Pangalan ng Tenant",
+    "tenantCode": "Code ng Tenant",
+    "companyName": "Pangalan ng Kumpanya",
+    "businessNumber": "Numero ng Negosyo",
+    "contactEmail": "Email ng Pakikipag-ugnayan",
+    "contactPhone": "Telepono ng Pakikipag-ugnayan",
+    "status": "Katayuan",
+    "subscriptionTier": "Antas ng Subscription",
+    "address": "Address"
+  },
+  "actions": {
+    "backToTenants": "Bumalik sa mga Tenant"
+  },
+  "messages": {
+    "notSpecified": "Hindi tinukoy",
+    "loading": "Naglo-load...",
+    "tenantNotFound": "Hindi natagpuan ang tenant",
+    "success": {
+      "paymentSettingsUpdated": "Matagumpay na na-update ang mga setting ng pagbabayad",
+      "communicationSettingsUpdated": "Matagumpay na na-update ang mga setting ng komunikasyon",
+      "configurationValid": "ang configuration ay valid"
+    },
+    "error": {
+      "loadSettings": "Nabigong mag-load ng mga setting ng tenant",
+      "updatePaymentSettings": "Nabigong i-update ang mga setting ng pagbabayad",
+      "updateCommunicationSettings": "Nabigong i-update ang mga setting ng komunikasyon"
+    }
+  }
+}

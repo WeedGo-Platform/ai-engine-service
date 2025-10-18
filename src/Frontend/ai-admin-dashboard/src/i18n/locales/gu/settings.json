@@ -1,0 +1,43 @@
+{
+  "titles": {
+    "tenantSettings": "સેટિંગ્સ",
+    "generalInformation": "સામાન્ય માહિતી"
+  },
+  "descriptions": {
+    "tenantManagement": "ભાડૂત રૂપરેખાંકન અને ચુકવણી સેટિંગ્સ સંચાલિત કરો"
+  },
+  "tabs": {
+    "general": "સામાન્ય સેટિંગ્સ",
+    "payment": "ચુકવણી સેટિંગ્સ",
+    "communication": "સંચાર સેટિંગ્સ"
+  },
+  "fields": {
+    "tenantName": "ભાડૂતનું નામ",
+    "tenantCode": "ભાડૂત કોડ",
+    "companyName": "કંપનીનું નામ",
+    "businessNumber": "વ્યવસાય નંબર",
+    "contactEmail": "સંપર્ક ઈમેલ",
+    "contactPhone": "સંપર્ક ફોન",
+    "status": "સ્થિતિ",
+    "subscriptionTier": "સબ્સ્ક્રિપ્શન સ્તર",
+    "address": "સરનામું"
+  },
+  "actions": {
+    "backToTenants": "ભાડૂતો પર પાછા જાઓ"
+  },
+  "messages": {
+    "notSpecified": "ઉલ્લેખિત નથી",
+    "loading": "લોડ થઈ રહ્યું છે...",
+    "tenantNotFound": "ભાડૂત મળ્યું નથી",
+    "success": {
+      "paymentSettingsUpdated": "ચુકવણી સેટિંગ્સ સફળતાપૂર્વક અપડેટ થઈ",
+      "communicationSettingsUpdated": "સંચાર સેટિંગ્સ સફળતાપૂર્વક અપડેટ થઈ",
+      "configurationValid": "રૂપરેખાંકન માન્ય છે"
+    },
+    "error": {
+      "loadSettings": "ભાડૂત સેટિંગ્સ લોડ કરવામાં નિષ્ફળ",
+      "updatePaymentSettings": "ચુકવણી સેટિંગ્સ અપડેટ કરવામાં નિષ્ફળ",
+      "updateCommunicationSettings": "સંચાર સેટિંગ્સ અપડેટ કરવામાં નિષ્ફળ"
+    }
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "titles": {
+    "main": "销售点",
+    "posSettings": "POS 设置",
+    "parkedSales": "暂存销售",
+    "hardwareConfiguration": "硬件配置",
+    "cashManagement": "现金管理",
+    "discountsPromotions": "折扣与促销"
+  },
+  "tabs": {
+    "newSale": "新销售",
+    "parked": "暂存",
+    "history": "历史",
+    "settings": "设置"
+  },
+  "customer": {
+    "label": "顾客",
+    "select": "选择",
+    "change": "更改",
+    "returning": "回头客",
+    "new": "新客",
+    "anonymous": "匿名",
+    "newCustomer": "新顾客",
+    "points": "积分:"
+  },
+  "cart": {
+    "empty": "购物车为空",
+    "batch": "批次:",
+    "discount": "折扣:",
+    "quantity": "数量"
+  },
+  "weight": {
+    "driedFlowerEquivalent": "Dried Flower Equivalent:",
+    "legalLimit": "/ 30g",
+    "exceedsLimit": "超过法定限额!"
+  },
+  "totals": {
+    "subtotal": "小计",
+    "discount": "折扣",
+    "discountApplied": "已应用折扣",
+    "afterDiscount": "折后价",
+    "tax": "税费 (13%)",
+    "total": "总计"
+  },
+  "actions": {
+    "parkSale": "暂存销售",
+    "clear": "清除",
+    "processPayment": "处理付款",
+    "resumeSale": "恢复销售",
+    "addPromotion": "添加促销",
+    "detectScanners": "检测扫描器",
+    "openRegister": "打开收银机",
+    "cashCount": "现金盘点",
+    "endOfDay": "日终结算",
+    "printReport": "打印报告",
+    "test": "测试",
+    "active": "活跃"
+  },
+  "search": {
+    "placeholder": "搜索产品或扫描条形码...",
+    "scanning": "扫描中:",
+    "filterProducts": "筛选产品"
+  },
+  "products": {
+    "noProductsFound": "未找到产品",
+    "outOfStock": "缺货",
+    "low": "低库存",
+    "stock": "库存:",
+    "batch": "批次",
+    "batches": "批次"
+  },
+  "parked": {
+    "noParkedSales": "没有暂存销售",
+    "items": "项"
+  },
+  "scanner": {
+    "enabled": "扫描器已启用",
+    "disabled": "扫描器已禁用",
+    "noScannersDetected": "未检测到扫描器",
+    "connectScanner": "连接扫描器并点击\"检测扫描器\"",
+    "barcodeScanners": "条形码扫描器",
+    "manageConnected": "管理已连接的扫描器"
+  },
+  "hardware": {
+    "paymentTerminal": "支付终端",
+    "connectCardReader": "连接读卡器",
+    "receiptPrinter": "收据打印机",
+    "printReceipts": "打印收据",
+    "cashDrawer": "现金抽屉",
+    "manageCash": "管理现金",
+    "enabled": "已启用"
+  },
+  "validation": {
+    "validIdDate": "有效身份证日期:",
+    "orEarlier": "或更早",
+    "validId": "有效身份证:"
+  },
+  "promotions": {
+    "seniorDiscount": "老年折扣",
+    "seniorDescription": "65岁以上享10%折扣",
+    "happyHour": "欢乐时光",
+    "happyHourDescription": "下午4-6点享15%折扣"
+  },
+  "messages": {
+    "saleParkedSuccess": "销售暂存成功!",
+    "saleParkedFailed": "暂存销售失败。请重试。",
+    "resumeFailed": "恢复销售失败。请重试。",
+    "paymentSuccess": "付款成功!",
+    "receiptPrinted": "收据已打印。",
+    "transactionFailed": "处理交易失败。请重试。",
+    "productNotFound": "未找到该条形码的产品:",
+    "scannerTestSuccess": "扫描器测试成功! 测试条形码:",
+    "scannerTestFailed": "扫描器测试失败",
+    "scannerTestError": "扫描器测试失败"
+  },
+  "fullscreen": {
+    "enter": "进入全屏",
+    "exit": "退出全屏"
+  },
+  "labels": {
+    "confidence": {
+      "high": "✓ 扫描器",
+      "medium": "可能是扫描器",
+      "low": "也许是扫描器"
+    }
+  }
+}

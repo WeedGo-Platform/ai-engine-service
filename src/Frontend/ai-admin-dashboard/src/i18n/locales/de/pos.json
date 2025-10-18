@@ -1,0 +1,127 @@
+{
+  "titles": {
+    "main": "Verkaufsstelle",
+    "posSettings": "POS Einstellungen",
+    "parkedSales": "Geparkte Verkäufe",
+    "hardwareConfiguration": "Hardware-Konfiguration",
+    "cashManagement": "Kassenverwaltung",
+    "discountsPromotions": "Rabatte & Aktionen"
+  },
+  "tabs": {
+    "newSale": "Neuer Verkauf",
+    "parked": "Geparkt",
+    "history": "Verlauf",
+    "settings": "Einstellungen"
+  },
+  "customer": {
+    "label": "Kunde",
+    "select": "Auswählen",
+    "change": "Ändern",
+    "returning": "Stammkunde",
+    "new": "Neu",
+    "anonymous": "Anonym",
+    "newCustomer": "Neuer Kunde",
+    "points": "Punkte:"
+  },
+  "cart": {
+    "empty": "Warenkorb ist leer",
+    "batch": "Charge:",
+    "discount": "Rabatt:",
+    "quantity": "Menge"
+  },
+  "weight": {
+    "driedFlowerEquivalent": "Dried Flower Equivalent:",
+    "legalLimit": "/ 30g",
+    "exceedsLimit": "Überschreitet gesetzliches Limit!"
+  },
+  "totals": {
+    "subtotal": "Zwischensumme",
+    "discount": "Rabatt",
+    "discountApplied": "Rabatt angewendet",
+    "afterDiscount": "Nach Rabatt",
+    "tax": "Steuer (13%)",
+    "total": "Gesamt"
+  },
+  "actions": {
+    "parkSale": "Verkauf Parken",
+    "clear": "Löschen",
+    "processPayment": "Zahlung Verarbeiten",
+    "resumeSale": "Verkauf Fortsetzen",
+    "addPromotion": "Aktion Hinzufügen",
+    "detectScanners": "Scanner Erkennen",
+    "openRegister": "Kasse Öffnen",
+    "cashCount": "Kassenabrechnung",
+    "endOfDay": "Tagesabschluss",
+    "printReport": "Bericht Drucken",
+    "test": "Testen",
+    "active": "Aktiv"
+  },
+  "search": {
+    "placeholder": "Produkte suchen oder Barcode scannen...",
+    "scanning": "Scanne:",
+    "filterProducts": "Produkte filtern"
+  },
+  "products": {
+    "noProductsFound": "Keine Produkte gefunden",
+    "outOfStock": "Nicht auf Lager",
+    "low": "Niedrig",
+    "stock": "Lager:",
+    "batch": "Charge",
+    "batches": "Chargen"
+  },
+  "parked": {
+    "noParkedSales": "Keine geparkten Verkäufe",
+    "items": "Artikel"
+  },
+  "scanner": {
+    "enabled": "Scanner Aktiviert",
+    "disabled": "Scanner Deaktiviert",
+    "noScannersDetected": "Keine Scanner erkannt",
+    "connectScanner": "Scanner anschließen und auf \"Scanner Erkennen\" klicken",
+    "barcodeScanners": "Barcode-Scanner",
+    "manageConnected": "Verbundene Scanner verwalten"
+  },
+  "hardware": {
+    "paymentTerminal": "Zahlungsterminal",
+    "connectCardReader": "Kartenlesegerät anschließen",
+    "receiptPrinter": "Bondrucker",
+    "printReceipts": "Belege drucken",
+    "cashDrawer": "Geldlade",
+    "manageCash": "Bargeld verwalten",
+    "enabled": "Aktiviert"
+  },
+  "validation": {
+    "validIdDate": "Gültiges Ausweis-Datum:",
+    "orEarlier": "oder früher",
+    "validId": "Gültiger Ausweis:"
+  },
+  "promotions": {
+    "seniorDiscount": "Seniorenrabatt",
+    "seniorDescription": "10% Rabatt für 65+",
+    "happyHour": "Happy Hour",
+    "happyHourDescription": "15% Rabatt von 16-18 Uhr"
+  },
+  "messages": {
+    "saleParkedSuccess": "Verkauf erfolgreich geparkt!",
+    "saleParkedFailed": "Parken des Verkaufs fehlgeschlagen. Bitte erneut versuchen.",
+    "resumeFailed": "Fortsetzen des Verkaufs fehlgeschlagen. Bitte erneut versuchen.",
+    "paymentSuccess": "Zahlung erfolgreich!",
+    "receiptPrinted": "Beleg gedruckt.",
+    "transactionFailed": "Verarbeitung der Transaktion fehlgeschlagen. Bitte erneut versuchen.",
+    "productNotFound": "Produkt für Barcode nicht gefunden:",
+    "scannerTestSuccess": "Scanner-Test erfolgreich! Test-Barcode:",
+    "scannerTestFailed": "Scanner-Test fehlgeschlagen",
+    "scannerTestError": "Scanner-Test fehlgeschlagen"
+  },
+  "fullscreen": {
+    "enter": "Vollbild aktivieren",
+    "exit": "Vollbild verlassen"
+  },
+  "labels": {
+    "confidence": {
+      "high": "✓ Scanner",
+      "medium": "Wahrscheinlich Scanner",
+      "low": "Möglicherweise Scanner"
+    }
+  }
+}

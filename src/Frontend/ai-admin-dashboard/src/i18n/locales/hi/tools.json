@@ -1,0 +1,132 @@
+{
+  "voiceApi": {
+    "title": "वॉयस API परीक्षण",
+    "apiEndpoint": "API एंडपॉइंट",
+    "recording": {
+      "title": "1. ऑडियो रिकॉर्डिंग",
+      "start": "रिकॉर्डिंग शुरू करें",
+      "stop": "रिकॉर्डिंग रोकें",
+      "play": "रिकॉर्डिंग चलाएं",
+      "inProgress": "रिकॉर्डिंग जारी है...",
+      "ready": "ऑडियो रिकॉर्ड किया गया और प्रतिलेखन के लिए तैयार है"
+    },
+    "transcription": {
+      "title": "2. प्रतिलेखन परीक्षण",
+      "button": "ऑडियो प्रतिलेखन करें",
+      "buttonLoading": "प्रतिलेखन हो रहा है...",
+      "result": "प्रतिलेखन परिणाम:",
+      "noAudio": "कोई ऑडियो रिकॉर्ड नहीं किया गया। कृपया पहले ऑडियो रिकॉर्ड करें।",
+      "noTranscription": "कोई प्रतिलेखन उपलब्ध नहीं है",
+      "success": "प्रतिलेखन सफलतापूर्वक पूर्ण हुआ"
+    },
+    "synthesis": {
+      "title": "3. संश्लेषण परीक्षण",
+      "textLabel": "संश्लेषित करने के लिए पाठ",
+      "textPlaceholder": "भाषण में बदलने के लिए पाठ दर्ज करें...",
+      "voiceLabel": "आवाज़",
+      "button": "भाषण संश्लेषित करें",
+      "buttonLoading": "संश्लेषण हो रहा है...",
+      "play": "संश्लेषित चलाएं",
+      "noText": "कृपया संश्लेषित करने के लिए पाठ दर्ज करें",
+      "success": "संश्लेषण सफलतापूर्वक पूर्ण हुआ",
+      "failed": "संश्लेषण विफल रहा"
+    },
+    "debug": {
+      "title": "डिबग जानकारी",
+      "endpoint": "एंडपॉइंट",
+      "transcription": "प्रतिलेखन",
+      "synthesis": "संश्लेषण",
+      "voices": "आवाज़ें"
+    },
+    "messages": {
+      "voicesFetched": "आवाज़ें सफलतापूर्वक प्राप्त की गईं",
+      "voicesFailed": "आवाज़ें प्राप्त करने में विफल",
+      "recordingFailed": "रिकॉर्डिंग शुरू करने में विफल",
+      "recordingSaved": "रिकॉर्डिंग सहेजी गई",
+      "transcriptionError": "प्रतिलेखन त्रुटि",
+      "synthesisError": "संश्लेषण त्रुटि"
+    }
+  },
+  "logs": {
+    "title": "सिस्टम लॉग",
+    "description": "Elasticsearch से एप्लिकेशन लॉग देखें और खोजें",
+    "filters": {
+      "search": "लॉग खोजें",
+      "searchPlaceholder": "संदेश, लॉगर, मॉड्यूल खोजें...",
+      "logLevel": "लॉग स्तर",
+      "allLevels": "सभी स्तर",
+      "error": "त्रुटि",
+      "warning": "चेतावनी",
+      "info": "जानकारी",
+      "debug": "डिबग",
+      "timeRange": "समय सीमा",
+      "advancedFilters": "उन्नत फ़िल्टर",
+      "correlationId": "सहसंबंध ID",
+      "correlationIdPlaceholder": "सहसंबंध ID द्वारा फ़िल्टर करें",
+      "tenantId": "किरायेदार ID",
+      "tenantIdPlaceholder": "किरायेदार द्वारा फ़िल्टर करें",
+      "storeId": "स्टोर ID",
+      "storeIdPlaceholder": "स्टोर द्वारा फ़िल्टर करें",
+      "userId": "उपयोगकर्ता ID",
+      "userIdPlaceholder": "उपयोगकर्ता द्वारा फ़िल्टर करें",
+      "sessionId": "सत्र ID",
+      "sessionIdPlaceholder": "सत्र द्वारा फ़िल्टर करें",
+      "service": "सेवा",
+      "servicePlaceholder": "सेवा द्वारा फ़िल्टर करें",
+      "endDate": "समाप्ति तिथि",
+      "clearAll": "सभी फ़िल्टर साफ़ करें"
+    },
+    "actions": {
+      "refresh": "ताज़ा करें",
+      "export": "निर्यात करें",
+      "autoRefresh": "स्वतः ताज़ा प्रत्येक",
+      "details": "विवरण",
+      "close": "बंद करें"
+    },
+    "table": {
+      "timestamp": "टाइमस्टैम्प",
+      "level": "स्तर",
+      "serviceLogger": "सेवा / लॉगर",
+      "message": "संदेश",
+      "correlationId": "सहसंबंध ID",
+      "actions": "क्रियाएं",
+      "noLogs": "कोई लॉग नहीं मिला",
+      "totalLogs": "कुल लॉग"
+    },
+    "pagination": {
+      "showing": "{{total}} में से {{from}} से {{to}} दिखा रहे हैं",
+      "perPage": "प्रति पृष्ठ",
+      "previous": "पिछला",
+      "next": "अगला",
+      "page": "पृष्ठ {{current}} / {{total}}"
+    },
+    "details": {
+      "title": "लॉग विवरण",
+      "summary": "सारांश",
+      "metadata": "मेटाडेटा",
+      "correlationId": "सहसंबंध ID",
+      "sessionId": "सत्र ID",
+      "tenantId": "किरायेदार ID",
+      "storeId": "स्टोर ID",
+      "userId": "उपयोगकर्ता ID",
+      "service": "सेवा",
+      "environment": "वातावरण",
+      "logger": "लॉगर",
+      "module": "मॉड्यूल",
+      "function": "फ़ंक्शन",
+      "lineNumber": "पंक्ति संख्या",
+      "duration": "अवधि",
+      "statusCode": "स्थिति कोड",
+      "method": "विधि",
+      "path": "पथ",
+      "clientHost": "क्लाइंट होस्ट",
+      "exception": "अपवाद",
+      "viewRawJson": "कच्चा JSON देखें"
+    },
+    "messages": {
+      "fetchFailed": "Elasticsearch से लॉग प्राप्त करने में विफल",
+      "exportSuccess": "लॉग सफलतापूर्वक निर्यात किए गए",
+      "logExported": "लॉग निर्यात किया गया"
+    }
+  }
+}

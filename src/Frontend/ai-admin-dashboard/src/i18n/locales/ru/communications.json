@@ -1,0 +1,89 @@
+{
+  "titles": {
+    "main": "Коммуникации",
+    "overview": "Обзор",
+    "campaigns": "Кампании",
+    "templates": "Шаблоны",
+    "segments": "Сегменты",
+    "analytics": "Аналитика",
+    "broadcastCampaigns": "Рассылочные Кампании",
+    "recentCampaigns": "Последние Кампании",
+    "channelPerformance": "Эффективность Каналов"
+  },
+  "descriptions": {
+    "managingFor": "Управление коммуникациями для",
+    "segmentationComingSoon": "Сегментация клиентов скоро появится...",
+    "noAnalytics": "Данные аналитики недоступны",
+    "noStoreSelected": "Магазин Не Выбран",
+    "selectStore": "Пожалуйста, выберите магазин для управления коммуникациями"
+  },
+  "tabs": {
+    "overview": "Обзор",
+    "campaigns": "Кампании",
+    "templates": "Шаблоны",
+    "segments": "Сегменты",
+    "analytics": "Аналитика"
+  },
+  "stats": {
+    "totalCampaigns": "Всего Кампаний",
+    "messagesSent": "Отправлено Сообщений",
+    "successRate": "Процент Успеха",
+    "failed": "Неудачно"
+  },
+  "status": {
+    "draft": "draft",
+    "scheduled": "scheduled",
+    "sending": "sending",
+    "sent": "sent",
+    "paused": "paused",
+    "cancelled": "cancelled",
+    "failed": "failed"
+  },
+  "table": {
+    "campaign": "Кампания",
+    "status": "Статус",
+    "recipients": "Получатели",
+    "successRate": "Процент Успеха",
+    "created": "Создано",
+    "channels": "Каналы",
+    "scheduled": "Запланировано",
+    "actions": "Действия",
+    "createdBy": "Создано",
+    "sentCount": "sent"
+  },
+  "channels": {
+    "email": "email",
+    "sms": "sms",
+    "push": "push",
+    "campaigns": "Кампании",
+    "messages": "Сообщения",
+    "engagement": "Вовлечённость"
+  },
+  "actions": {
+    "newCampaign": "Новая Кампания",
+    "viewAll": "Посмотреть Все",
+    "viewDetails": "Посмотреть Детали",
+    "edit": "Редактировать",
+    "sendNow": "Отправить Сейчас",
+    "cancel": "Отменить",
+    "pause": "Приостановить",
+    "resume": "Возобновить",
+    "refresh": "Обновить",
+    "settings": "Настройки"
+  },
+  "messages": {
+    "success": {
+      "broadcastStarted": "Начато выполнение рассылки",
+      "broadcastPaused": "Рассылка приостановлена",
+      "broadcastResumed": "Рассылка возобновлена",
+      "broadcastCancelled": "Рассылка отменена"
+    },
+    "error": {
+      "fetchBroadcasts": "Не удалось получить рассылки",
+      "fetchAnalytics": "Не удалось получить аналитику"
+    }
+  },
+  "confirm": {
+    "cancelBroadcast": "Вы уверены, что хотите отменить эту рассылку?"
+  }
+}

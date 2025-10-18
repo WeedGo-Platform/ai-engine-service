@@ -1,0 +1,75 @@
+{
+  "titles": {
+    "main": "प्रांतीय उत्पाद कैटलॉग",
+    "mainVirtual": "प्रांतीय उत्पाद कैटलॉग (वर्चुअल स्क्रॉल)",
+    "uploadSection": "कैटलॉग अपलोड करें",
+    "uploadInstructions": "अपलोड निर्देश",
+    "catalogProducts": "कैटलॉग उत्पाद"
+  },
+  "descriptions": {
+    "main": "प्रांतीय भांग वितरकों से उत्पाद कैटलॉग देखें और प्रबंधित करें।",
+    "mainVirtual": "प्रांतीय भांग उत्पाद कैटलॉग प्रबंधित और अपलोड करें",
+    "selectProvince": "प्रांत चुनें",
+    "viewingProvince": "प्रांतीय कैटलॉग देख रहे हैं",
+    "scrollHint": "सभी कॉलम देखने के लिए क्षैतिज रूप से स्क्रॉल करें →"
+  },
+  "provinces": {
+    "ontario": "Ontario (OCS)",
+    "bc": "British Columbia (जल्द आ रहा है)",
+    "alberta": "Alberta (जल्द आ रहा है)",
+    "quebec": "Quebec (जल्द आ रहा है)"
+  },
+  "stats": {
+    "totalProducts": "कुल उत्पाद",
+    "lastUpdated": "अंतिम अपडेट",
+    "categories": "श्रेणियाँ",
+    "never": "कभी नहीं",
+    "totalRecords": "कुल रिकॉर्ड",
+    "inserted": "डाले गए",
+    "updated": "अपडेट किए गए",
+    "errors": "त्रुटियाँ",
+    "totalRecordsLabel": "कुल रिकॉर्ड"
+  },
+  "upload": {
+    "selectFile": "नया कैटलॉग अपलोड करें",
+    "chooseFile": "फ़ाइल चुनें",
+    "uploadButton": "अपलोड करें",
+    "uploadCatalog": "कैटलॉग अपलोड करें",
+    "uploading": "अपलोड हो रहा है...",
+    "uploadFile": "फ़ाइल अपलोड करें",
+    "invalidFileType": "अमान्य फ़ाइल प्रकार। कृपया CSV या Excel फ़ाइल अपलोड करें।",
+    "pleaseSelectFile": "कृपया अपलोड करने के लिए एक फ़ाइल चुनें।",
+    "processingFile": "कैटलॉग फ़ाइल प्रोसेस हो रही है...",
+    "processingFileShort": "फ़ाइल प्रोसेस हो रही है...",
+    "uploadSuccess": "कैटलॉग सफलतापूर्वक अपलोड किया गया!",
+    "uploadSuccessShort": "अपलोड सफल",
+    "uploadFailed": "कैटलॉग अपलोड करने में विफल",
+    "uploadFailedShort": "अपलोड विफल"
+  },
+  "search": {
+    "placeholder": "उत्पाद खोजें...",
+    "allCategories": "सभी श्रेणियाँ"
+  },
+  "buttons": {
+    "export": "निर्यात करें",
+    "exportCsv": "CSV निर्यात करें",
+    "previous": "पिछला",
+    "next": "अगला"
+  },
+  "table": {
+    "loadingCatalog": "कैटलॉग लोड हो रहा है...",
+    "noProductsFound": "कैटलॉग में कोई उत्पाद नहीं मिला",
+    "noProductsUpload": "कोई उत्पाद नहीं मिला। शुरू करने के लिए एक कैटलॉग अपलोड करें।",
+    "showingPage": "परिणामों का पृष्ठ {page} दिखा रहे हैं",
+    "itemsCount": "{count} आइटम"
+  },
+  "instructions": {
+    "line1": "OCS कैटलॉग फ़ाइल में OCS विशिष्टता के अनुसार सभी आवश्यक कॉलम होने चाहिए।",
+    "line2": "उत्पादों को OCS वैरिएंट नंबर को यूनीक की के रूप में उपयोग करके मिलान और अपडेट किया जाता है।",
+    "line3": "नए उत्पाद डाले जाएंगे, मौजूदा उत्पादों को नवीनतम जानकारी के साथ अपडेट किया जाएगा।",
+    "line4": "रेटिंग और रेटिंग गिनती फ़ील्ड को अपडेट के दौरान संरक्षित किया जाएगा।"
+  },
+  "messages": {
+    "lastCatalogUpdate": "अंतिम कैटलॉग अपडेट:"
+  }
+}

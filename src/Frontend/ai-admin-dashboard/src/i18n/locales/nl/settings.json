@@ -1,0 +1,43 @@
+{
+  "titles": {
+    "tenantSettings": "Instellingen",
+    "generalInformation": "Algemene Informatie"
+  },
+  "descriptions": {
+    "tenantManagement": "Beheer tenantconfiguratie en betalingsinstellingen"
+  },
+  "tabs": {
+    "general": "Algemene Instellingen",
+    "payment": "Betalingsinstellingen",
+    "communication": "Communicatie-instellingen"
+  },
+  "fields": {
+    "tenantName": "Tenantnaam",
+    "tenantCode": "Tenantcode",
+    "companyName": "Bedrijfsnaam",
+    "businessNumber": "Bedrijfsnummer",
+    "contactEmail": "Contact E-mail",
+    "contactPhone": "Contact Telefoon",
+    "status": "Status",
+    "subscriptionTier": "Abonnementsniveau",
+    "address": "Adres"
+  },
+  "actions": {
+    "backToTenants": "Terug naar Tenants"
+  },
+  "messages": {
+    "notSpecified": "Niet gespecificeerd",
+    "loading": "Laden...",
+    "tenantNotFound": "Tenant niet gevonden",
+    "success": {
+      "paymentSettingsUpdated": "Betalingsinstellingen succesvol bijgewerkt",
+      "communicationSettingsUpdated": "Communicatie-instellingen succesvol bijgewerkt",
+      "configurationValid": "configuratie is geldig"
+    },
+    "error": {
+      "loadSettings": "Laden van tenantinstellingen mislukt",
+      "updatePaymentSettings": "Bijwerken van betalingsinstellingen mislukt",
+      "updateCommunicationSettings": "Bijwerken van communicatie-instellingen mislukt"
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "titles": {
+    "tenantSettings": "सेटिंग्स",
+    "generalInformation": "सामान्य जानकारी"
+  },
+  "descriptions": {
+    "tenantManagement": "किरायेदार कॉन्फ़िगरेशन और भुगतान सेटिंग्स प्रबंधित करें"
+  },
+  "tabs": {
+    "general": "सामान्य सेटिंग्स",
+    "payment": "भुगतान सेटिंग्स",
+    "communication": "संचार सेटिंग्स"
+  },
+  "fields": {
+    "tenantName": "किरायेदार का नाम",
+    "tenantCode": "किरायेदार कोड",
+    "companyName": "कंपनी का नाम",
+    "businessNumber": "व्यवसाय संख्या",
+    "contactEmail": "संपर्क ईमेल",
+    "contactPhone": "संपर्क फोन",
+    "status": "स्थिति",
+    "subscriptionTier": "सदस्यता स्तर",
+    "address": "पता"
+  },
+  "actions": {
+    "backToTenants": "किरायेदारों पर वापस जाएं"
+  },
+  "messages": {
+    "notSpecified": "निर्दिष्ट नहीं",
+    "loading": "लोड हो रहा है...",
+    "tenantNotFound": "किरायेदार नहीं मिला",
+    "success": {
+      "paymentSettingsUpdated": "भुगतान सेटिंग्स सफलतापूर्वक अपडेट की गईं",
+      "communicationSettingsUpdated": "संचार सेटिंग्स सफलतापूर्वक अपडेट की गईं",
+      "configurationValid": "कॉन्फ़िगरेशन मान्य है"
+    },
+    "error": {
+      "loadSettings": "किरायेदार सेटिंग्स लोड करने में विफल",
+      "updatePaymentSettings": "भुगतान सेटिंग्स अपडेट करने में विफल",
+      "updateCommunicationSettings": "संचार सेटिंग्स अपडेट करने में विफल"
+    }
+  }
+}
