@@ -16,7 +16,8 @@ import {
   Barcode,
   Info,
   Box,
-  Building2
+  Building2,
+  RefreshCw
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { api } from '../services/api';
@@ -124,9 +125,17 @@ const Inventory: React.FC = () => {
           'X-Store-ID': currentStore.id
         }
       });
-      
+
       if (!response.ok) throw new Error('Failed to fetch inventory');
       const data = await response.json();
+
+      // Debug: Log first item to see what batch_lot looks like
+      if (data.items && data.items.length > 0) {
+        console.log('First inventory item:', data.items[0]);
+        console.log('batch_lot value:', data.items[0].batch_lot);
+        console.log('batch_details:', data.items[0].batch_details);
+      }
+
       return data.items || [];
     },
     enabled: !!currentStore
@@ -220,13 +229,23 @@ const Inventory: React.FC = () => {
       {/* Header */}
       <div className="flex justify-between items-center flex-shrink-0">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('inventory:titles.management')}</h1>
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 transition-colors"
-        >
-          <Plus className="w-5 h-5" />
-          {t('inventory:actions.addItem')}
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => queryClient.invalidateQueries({ queryKey: ['inventory'] })}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            title="Force refresh inventory data"
+          >
+            <RefreshCw className="w-5 h-5" />
+            Refresh Data
+          </button>
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 transition-colors"
+          >
+            <Plus className="w-5 h-5" />
+            {t('inventory:actions.addItem')}
+          </button>
+        </div>
       </div>
 
       {/* Stats Cards */}
@@ -420,13 +439,16 @@ const Inventory: React.FC = () => {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <button
                           onClick={() => item.batch_lot && toggleRowExpanded(item.id)}
-                          className="flex items-center gap-1 text-sm text-accent-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                          className="flex items-center gap-1 text-sm text-accent-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-bold"
                           disabled={!item.batch_lot}
+                          title={`Batch: ${item.batch_lot || 'N/A'} (DEBUG: type=${typeof item.batch_lot})`}
                         >
-                          {item.batch_lot || 'N/A'}
+                          <span className="text-gray-900 dark:text-white bg-yellow-200 dark:bg-yellow-800 px-2 py-1 rounded">
+                            {item.batch_lot || 'N/A'}
+                          </span>
                           {item.batch_lot && (
-                            expandedRows.has(item.id) ? 
-                              <ChevronUp className="h-4 w-4" /> : 
+                            expandedRows.has(item.id) ?
+                              <ChevronUp className="h-4 w-4" /> :
                               <ChevronDown className="h-4 w-4" />
                           )}
                         </button>
