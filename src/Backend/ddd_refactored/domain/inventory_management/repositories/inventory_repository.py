@@ -208,12 +208,17 @@ class AsyncPGInventoryRepository(IInventoryRepository):
         """
         Map database record to Inventory entity
         """
+        quantity_on_hand = row['quantity_on_hand']
+        quantity_reserved = row.get('quantity_reserved', 0)
+        quantity_available = quantity_on_hand - quantity_reserved  # Calculate from DB values
+
         return Inventory(
             id=row['id'],
             store_id=row['store_id'],
             sku=row['sku'],
-            quantity_on_hand=row['quantity_on_hand'],
-            quantity_reserved=row.get('quantity_reserved', 0),
+            quantity_on_hand=quantity_on_hand,
+            quantity_reserved=quantity_reserved,
+            quantity_available=quantity_available,  # Explicitly set calculated value
             reorder_point=row.get('reorder_point', 0),
             reorder_quantity=row.get('reorder_quantity', 0),
             last_restocked=row.get('last_restocked'),

@@ -47,7 +47,8 @@ class InventoryManagementService:
         case_gtin: Optional[str] = None,
         gtin_barcode: Optional[str] = None,
         each_gtin: Optional[str] = None,
-        packaged_on_date: Optional[datetime] = None
+        packaged_on_date: Optional[datetime] = None,
+        product_name: Optional[str] = None
     ) -> Dict[str, Any]:
         """
         Receive inventory from purchase order
@@ -68,6 +69,7 @@ class InventoryManagementService:
             gtin_barcode: Optional barcode GTIN
             each_gtin: Optional GTIN for each unit
             packaged_on_date: Optional packaging date
+            product_name: Optional product name
 
         Returns:
             Dict with inventory_id, batch_id, and new quantities
@@ -76,10 +78,14 @@ class InventoryManagementService:
             # Get or create inventory record
             inventory = await self.inventory_repo.find_by_sku(store_id, sku)
             if not inventory:
-                inventory = Inventory.create(store_id=store_id, sku=sku)
+                inventory = Inventory.create(
+                    store_id=store_id,
+                    sku=sku,
+                    product_name=product_name or sku  # Use SKU as fallback if no product name
+                )
 
             # Increase inventory quantity
-            inventory.receive(quantity)
+            inventory.receive_stock(quantity=quantity, unit_cost=unit_cost, purchase_order_id=purchase_order_id)
 
             # Get existing batch (if any)
             batch = await self.batch_repo.find_by_lot(batch_lot, store_id)

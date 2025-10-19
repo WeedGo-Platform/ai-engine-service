@@ -23,7 +23,7 @@ Migration path:
 
 from fastapi import APIRouter, HTTPException, Depends, Query, Header
 from typing import List, Dict, Optional, Any
-from datetime import date
+from datetime import date, datetime
 from decimal import Decimal
 from uuid import UUID
 from pydantic import BaseModel, Field
@@ -108,6 +108,7 @@ class ReceivePurchaseOrderItem(BaseModel):
     each_gtin: str  # Required
     vendor: str  # Required
     brand: str  # Required
+    item_name: Optional[str] = None  # Optional - product name
 
 
 class ReceivePurchaseOrderRequest(BaseModel):
@@ -291,6 +292,9 @@ async def receive_purchase_order(
             )
 
             # Use InventoryManagementService to handle both inventory and batch updates
+            # Convert date to datetime for the service (which expects Optional[datetime])
+            packaged_datetime = datetime.combine(item.packaged_on_date, datetime.min.time()) if item.packaged_on_date else None
+
             inv_result = await inv_service.receive_inventory(
                 store_id=store_id,
                 sku=item.sku,
@@ -301,7 +305,8 @@ async def receive_purchase_order(
                 case_gtin=item.case_gtin,
                 gtin_barcode=item.gtin_barcode,
                 each_gtin=item.each_gtin,
-                packaged_on_date=item.packaged_on_date
+                packaged_on_date=packaged_datetime,
+                product_name=item.item_name  # Pass item_name as product_name
             )
 
             batch_results.append({
