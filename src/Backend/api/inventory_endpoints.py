@@ -619,6 +619,7 @@ async def get_purchase_order_details(
             SELECT
                 poi.id,
                 poi.sku,
+                poi.item_name,
                 poi.quantity_ordered,
                 poi.quantity_received,
                 poi.unit_cost,
@@ -633,19 +634,29 @@ async def get_purchase_order_details(
                 poi.shipped_qty,
                 poi.uom,
                 poi.uom_conversion,
-                poi.uom_conversion_qty,
-                opc.product_name as product_name
+                poi.uom_conversion_qty
             FROM purchase_order_items poi
-            LEFT JOIN ocs_product_catalog opc ON poi.sku = opc.ocs_variant_number
             WHERE poi.purchase_order_id = $1
         """
         
         items_rows = await conn.fetch(items_query, po_id)
-        
+
         # Format the response
         po_data = dict(po_row)
         po_data['items'] = [dict(item) for item in items_rows]
-        
+
+        # Parse JSONB charges field if present (asyncpg returns it as JSON string)
+        if po_data.get('charges'):
+            import json
+            try:
+                if isinstance(po_data['charges'], str):
+                    po_data['charges'] = json.loads(po_data['charges'])
+            except (json.JSONDecodeError, TypeError):
+                logger.warning(f"Failed to parse charges for PO {po_id}")
+                po_data['charges'] = []
+        else:
+            po_data['charges'] = []
+
         return po_data
         
     except HTTPException:
@@ -731,10 +742,26 @@ async def get_purchase_orders(
         params.append(limit)
         
         results = await conn.fetch(query, *params)
-        
+
+        # Parse JSONB charges field for each PO (asyncpg returns it as JSON string)
+        import json
+        purchase_orders = []
+        for row in results:
+            po_dict = dict(row)
+            if po_dict.get('charges'):
+                try:
+                    if isinstance(po_dict['charges'], str):
+                        po_dict['charges'] = json.loads(po_dict['charges'])
+                except (json.JSONDecodeError, TypeError):
+                    logger.warning(f"Failed to parse charges for PO {po_dict.get('id')}")
+                    po_dict['charges'] = []
+            else:
+                po_dict['charges'] = []
+            purchase_orders.append(po_dict)
+
         return {
             "count": len(results),
-            "purchase_orders": [dict(row) for row in results]
+            "purchase_orders": purchase_orders
         }
     except Exception as e:
         logger.error(f"Error getting purchase orders: {str(e)}")

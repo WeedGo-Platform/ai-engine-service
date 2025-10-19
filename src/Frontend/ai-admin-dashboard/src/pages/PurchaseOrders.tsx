@@ -73,37 +73,7 @@ const PurchaseOrders: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ['purchase-orders'] });
     },
   });
-
-  const getProductNameBySku = (sku: string): string => {
-    // Parse SKU to generate a product name
-    if (!sku) return 'Unknown Product';
-    
-    // Example SKU patterns:
-    // 102779_10X0.5G___ -> 10x 0.5g Pre-Rolls
-    // 103719_2X1G___ -> 2x 1g Pre-Rolls
-    // 101557_28G___ -> 28g Flower
-    
-    const parts = sku.split('_');
-    if (parts.length < 2) return sku;
-    
-    const productCode = parts[0];
-    const sizeInfo = parts[1];
-    
-    // Parse size information
-    if (sizeInfo.includes('X')) {
-      const [quantity, size] = sizeInfo.split('X');
-      if (size.includes('G')) {
-        const grams = size.replace('G', '');
-        return `${quantity}x ${grams}g Pre-Rolls - ${productCode}`;
-      }
-    } else if (sizeInfo.includes('G')) {
-      const grams = sizeInfo.replace('G', '');
-      return `${grams}g Flower - ${productCode}`;
-    }
-    
-    return `Product ${productCode}`;
-  };
-
+  
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'draft':
@@ -153,13 +123,29 @@ const PurchaseOrders: React.FC = () => {
           'X-Store-ID': currentStore?.id || '',
         },
       });
-      
+
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.detail || 'Failed to fetch order details');
       }
-      
+
       const orderDetails = await response.json();
+
+      // Parse charges if it's a JSON string (from JSONB column)
+      if (orderDetails.charges && typeof orderDetails.charges === 'string') {
+        try {
+          orderDetails.charges = JSON.parse(orderDetails.charges);
+        } catch (e) {
+          console.warn('Failed to parse charges:', e);
+          orderDetails.charges = [];
+        }
+      }
+
+      // Ensure charges is always an array
+      if (!Array.isArray(orderDetails.charges)) {
+        orderDetails.charges = [];
+      }
+
       setSelectedOrder(orderDetails);
     } catch (error) {
       toast.error(`Error fetching order details: ${(error as Error).message}`);
@@ -614,7 +600,7 @@ const PurchaseOrders: React.FC = () => {
                     <thead className="bg-gray-50 dark:bg-gray-900">
                       <tr>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">SKU</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Product Name</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Item Name</th>
                         <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Quantity</th>
                         <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Unit Cost</th>
                         <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Total</th>
@@ -627,7 +613,7 @@ const PurchaseOrders: React.FC = () => {
                           <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                             <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-gray-200">{item.sku || 'Unknown'}</td>
                             <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-200">
-                              {item.product_name || getProductNameBySku(item.sku)}
+                              {item.item_name}
                             </td>
                             <td className="px-4 py-3 text-sm text-center text-gray-900 dark:text-gray-200">{item.quantity_ordered || 0}</td>
                             <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-gray-200">${(item.unit_cost || 0).toFixed(2)}</td>
@@ -751,9 +737,9 @@ const PurchaseOrders: React.FC = () => {
                       <td className="py-2.5 px-4 text-gray-900 dark:text-gray-200">{selectedItem.sku || 'N/A'}</td>
                     </tr>
                     <tr>
-                      <td className="py-2.5 px-4 font-medium text-gray-600 dark:text-gray-400">Product Name:</td>
+                      <td className="py-2.5 px-4 font-medium text-gray-600 dark:text-gray-400">Item Name:</td>
                       <td className="py-2.5 px-4 text-gray-900 dark:text-gray-200">
-                        {selectedItem.product_name || getProductNameBySku(selectedItem.sku)}
+                        {selectedItem.item_name || 'N/A'}
                       </td>
                     </tr>
                     <tr>
