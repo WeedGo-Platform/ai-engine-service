@@ -594,9 +594,14 @@ async def get_purchase_order_details(
                 po.received_date,
                 po.status,
                 po.total_amount,
+                po.subtotal,
+                po.tax_amount,
                 po.notes,
                 po.shipment_id,
                 po.container_id,
+                po.charges,
+                po.paid,
+                po.created_by,
                 po.received_by,
                 po.approved_by
             FROM purchase_orders po
@@ -681,7 +686,14 @@ async def get_purchase_orders(
                 po.received_date,
                 po.status,
                 po.total_amount,
+                po.subtotal,
+                po.tax_amount,
                 po.notes,
+                po.charges,
+                po.paid,
+                po.created_by,
+                po.received_by,
+                po.approved_by,
                 COUNT(poi.id) as item_count
             FROM purchase_orders po
             JOIN provincial_suppliers s ON po.supplier_id = s.id
@@ -709,9 +721,10 @@ async def get_purchase_orders(
             params.append(supplier_id)
         
         query += f"""
-            GROUP BY po.id, po.po_number, po.supplier_id, s.name, 
+            GROUP BY po.id, po.po_number, po.supplier_id, s.name,
                      po.order_date, po.expected_date, po.received_date,
-                     po.status, po.total_amount, po.notes
+                     po.status, po.total_amount, po.subtotal, po.tax_amount, po.notes,
+                     po.charges, po.paid, po.created_by, po.received_by, po.approved_by
             ORDER BY po.order_date DESC
             LIMIT ${param_count + 1}
         """

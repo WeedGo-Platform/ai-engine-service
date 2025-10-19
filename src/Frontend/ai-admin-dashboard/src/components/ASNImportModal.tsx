@@ -617,10 +617,8 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
         console.warn(`Missing packaged_on_date for ${itemsWithoutPackagedDate.length} items. Using today's date as fallback.`);
       }
 
-      // Calculate totals
-      const subtotal = poItems.reduce((sum, item) => sum + (item.shipped_qty * item.unit_cost), 0);
-      const totalAmount = subtotal + charges - discount;
-      
+      // Note: Total amount is calculated by the backend based on items, charges, and tax
+
       // Determine supplier based on province
       let finalSupplierId = supplierId;
       if (!finalSupplierId) {
@@ -829,23 +827,23 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
   if (!currentStore) {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-6 z-50">
-        <div className="bg-white rounded-lg max-w-md w-full">
-          <div className="flex items-center justify-between p-6 border-b">
-            <h2 className="text-xl font-bold text-red-600">Store Required</h2>
-            <button onClick={handleClose} className="text-gray-500 hover:text-gray-700">
+        <div className="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full">
+          <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+            <h2 className="text-xl font-bold text-red-600 dark:text-red-400">Store Required</h2>
+            <button onClick={handleClose} className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
               <X className="h-6 w-6" />
             </button>
           </div>
           <div className="p-6">
             <div className="flex items-center gap-3 mb-4">
-              <AlertCircle className="h-8 w-8 text-red-500" />
-              <p className="text-gray-700">
+              <AlertCircle className="h-8 w-8 text-red-500 dark:text-red-400" />
+              <p className="text-gray-700 dark:text-gray-300">
                 Please select a store before importing inventory. You cannot create purchase orders or import ASN files without a store context.
               </p>
             </div>
             <button
               onClick={handleClose}
-              className="w-full px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700"
+              className="w-full px-4 py-2 bg-primary-600 dark:bg-primary-700 text-white rounded-md hover:bg-primary-700 dark:hover:bg-primary-600"
             >
               Close
             </button>
@@ -857,22 +855,22 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-6 z-50">
-      <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden">
-        <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-xl font-bold flex items-center gap-2">
-            <TruckIcon className="h-6 w-6 text-primary-600" />
+      <div className="bg-white dark:bg-gray-800 rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-xl font-bold flex items-center gap-2 text-gray-900 dark:text-white">
+            <TruckIcon className="h-6 w-6 text-primary-600 dark:text-primary-400" />
             Import ASN (Advance Shipping Notice) - {currentStore.name}
           </h2>
-          <button onClick={handleClose} className="text-gray-500 hover:text-gray-700">
+          <button onClick={handleClose} className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
             <X className="h-6 w-6" />
           </button>
         </div>
 
         <div className="p-6 overflow-y-auto" style={{ maxHeight: 'calc(90vh - 200px)' }}>
           {error && (
-            <div className="mb-4 p-6 bg-danger-50 border border-red-200 rounded-lg flex items-center gap-2">
-              <AlertCircle className="h-5 w-5 text-danger-600" />
-              <span className="text-red-700">{error}</span>
+            <div className="mb-4 p-6 bg-danger-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-center gap-2">
+              <AlertCircle className="h-5 w-5 text-danger-600 dark:text-danger-400" />
+              <span className="text-red-700 dark:text-red-400">{error}</span>
             </div>
           )}
 
@@ -1361,7 +1359,7 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
                         />
                         <input
                           type="number"
-                          value={Math.abs(charge.amount)}
+                          value={Math.abs(charge.amount || 0)}
                           onChange={(e) => updateCharge(charge.id, 'amount', e.target.value)}
                           placeholder="0.00"
                           step="0.01"
