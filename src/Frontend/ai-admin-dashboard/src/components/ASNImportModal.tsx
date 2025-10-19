@@ -9,6 +9,14 @@ import { getApiEndpoint } from '../config/app.config';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
+interface ChargeItem {
+  id: string;
+  description: string;
+  amount: number;
+  taxable: boolean;  // Whether this charge is subject to tax
+  isCredit: boolean;  // true = charge (+), false = discount (-)
+}
+
 interface ASNItem {
   shipment_id?: string;
   container_id?: string;
@@ -59,12 +67,33 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
   const [poNumber, setPoNumber] = useState('');
   const [supplierId, setSupplierId] = useState('');
   const [notes, setNotes] = useState('');
-  const [charges, setCharges] = useState(0);
-  const [discount, setDiscount] = useState(0);
-  const [paidInFull, setPaidInFull] = useState(false);
-  
+  const [chargesArray, setChargesArray] = useState<ChargeItem[]>([]);
+  const [paidInFull, setPaidInFull] = useState(true); // Default to checked
+  const [provincialTaxRate, setProvincialTaxRate] = useState<number>(0);
+
   const [error, setError] = useState<string | null>(null);
   const [storeDefaultMarkup, setStoreDefaultMarkup] = useState<number>(25); // Default 25% if not configured
+
+  // Charge management functions
+  const addCharge = () => {
+    setChargesArray([...chargesArray, {
+      id: Date.now().toString(),
+      description: '',
+      amount: 0,
+      taxable: true,  // Default to taxable
+      isCredit: true  // Default to charge (+)
+    }]);
+  };
+
+  const removeCharge = (id: string) => {
+    setChargesArray(chargesArray.filter(c => c.id !== id));
+  };
+
+  const updateCharge = (id: string, field: 'description' | 'amount' | 'taxable' | 'isCredit', value: any) => {
+    setChargesArray(chargesArray.map(c =>
+      c.id === id ? {...c, [field]: field === 'amount' ? parseFloat(value) || 0 : value} : c
+    ));
+  };
 
   // Fetch store pricing settings including default markup
   const { data: pricingSettings } = useQuery({
@@ -92,6 +121,31 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
     }
   }, [pricingSettings]);
 
+  // Fetch provincial tax rate for the current store
+  useEffect(() => {
+    const fetchProvincialTax = async () => {
+      if (currentStore?.id) {
+        try {
+          const response = await axios.get(
+            getApiEndpoint(`/stores/${currentStore.id}/province-tax`),
+            {
+              headers: {
+                ...(user?.token && { 'Authorization': `Bearer ${user.token}` })
+              }
+            }
+          );
+          setProvincialTaxRate(response.data.tax_rate || 0);
+        } catch (error) {
+          console.error('Failed to fetch provincial tax rate:', error);
+          setProvincialTaxRate(0);
+        }
+      }
+    };
+    if (isOpen) {
+      fetchProvincialTax();
+    }
+  }, [currentStore?.id, isOpen, user?.token]);
+
   // Auto-select provincial supplier based on store's province
   useEffect(() => {
     const fetchProvincialSupplier = async () => {
@@ -109,22 +163,11 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
             const provincialSupplier = await response.json();
             setSupplierId(provincialSupplier.id);
             console.log(`Auto-selected provincial supplier:`, provincialSupplier.name);
-          } else {
-            // Log error - this should never happen if store/supplier data is correct
-            console.error(`Failed to fetch provincial supplier for store ${currentStore.id}:`, response.status);
-            // Fallback to first supplier if available
-            if (suppliers?.length > 0) {
-              setSupplierId(suppliers[0].id);
-              console.log('Using fallback supplier:', suppliers[0].name);
-            }
-          }
+          } 
+          
         } catch (error) {
           console.error('Error fetching provincial supplier:', error);
-          // Fallback to first supplier if available
-          if (suppliers?.length > 0) {
-            setSupplierId(suppliers[0].id);
-            console.log('Using fallback supplier due to error:', suppliers[0].name);
-          }
+          
         }
       } else if (isOpen && suppliers?.length > 0 && !currentStore) {
         // If no store selected, use first supplier
@@ -304,7 +347,7 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
       // Don't retry on 429 errors to avoid making rate limiting worse
       // Only retry on other errors if we have retries left
       if (retryCount > 0 && !errorMessage.includes('429') && !errorMessage.includes('Too Many Requests')) {
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1s before retry
+        await new Promise(resolve => setTimeout(resolve, 100)); // Wait 1s before retry
         return getProductImage(sku, retryCount - 1);
       }
       return { image_url: null, product_name: sku, retail_price: undefined, override_price: undefined };
@@ -373,13 +416,6 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
       const firstRow = jsonData[0] as any;
       const excelColumns = Object.keys(firstRow);
 
-      // Log all Excel column names for debugging
-      console.log('=== EXCEL COLUMN NAMES DEBUG ===');
-      console.log('Found columns:', excelColumns);
-      console.log('Total columns:', excelColumns.length);
-      console.log('Column details:', excelColumns.map((col, idx) => `${idx + 1}. "${col}"`).join('\n'));
-      console.log('================================');
-
       const requiredColumns = ['SKU', 'Shipped_Qty'];
       const missingColumns: string[] = [];
 
@@ -403,14 +439,14 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
       for (let i = 0; i < jsonData.length; i++) {
         // Add delay between items to avoid 429 rate limit errors (500ms per item)
         if (i > 0) {
-          await delay(500);
+          await delay(250);
         }
         const row = jsonData[i] as any;
         setProcessingProgress(Math.round(((i + 1) / totalRows) * 100));
 
         // Extract using exact column names
-        const sku = String(row['SKU'] || '');
-        const batchLot = String(row['BatchLot'] || '');
+        const sku = String(row['SKU']);
+        const batchLot = String(row['BatchLot']);
 
         // Check if this SKU + BatchLot exists in inventory
         const inventoryCheck = await checkInventoryExists(sku, batchLot);
@@ -451,46 +487,33 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
         // Parse unit price from the row (Excel has "UnitPrice" not "UnitCost")
         const unitPrice = parseFloat(row['UnitPrice'] || '0');
 
-        // Debug log for first item to see what's being extracted
-        if (i === 0) {
-          console.log('=== FIRST ROW DATA EXTRACTION DEBUG ===');
-          console.log('Raw row data:', row);
-          console.log('Extracted values:');
-          console.log('  SKU:', sku);
-          console.log('  UnitPrice (row["UnitPrice"]):', row['UnitPrice'], '=> unitPrice:', unitPrice);
-          console.log('  Vendor (row["Vendor"]):', row['Vendor']);
-          console.log('  ItemName (row["ItemName"]):', row['ItemName']);
-          console.log('  ShipmentID (row["ShipmentID"]):', row['ShipmentID']);
-          console.log('  ContainerID (row["ContainerID"]):', row['ContainerID']);
-          console.log('  BatchLot (row["BatchLot"]):', row['BatchLot']);
-          console.log('=======================================');
-        }
+        
 
         // Get comprehensive pricing info (inventory override > category rules > store default)
         const pricingInfo = await getPricingInfo(sku, unitPrice);
 
         // Parse the row data using exact column names
         const item: ASNItem = {
-          shipment_id: String(row['ShipmentID'] || ''),
-          container_id: String(row['ContainerID'] || ''),
+          shipment_id: String(row['ShipmentID']),
+          container_id: String(row['ContainerID']),
           sku: sku,
-          item_name: String(row['ItemName'] || ''),
+          item_name: String(row['ItemName']),
           unit_price: unitPrice,
-          vendor: String(row['Vendor'] || ''),
-          brand: String(row['Brand'] || ''),
-          case_gtin: String(row['CaseGTIN'] || ''),
+          vendor: String(row['Vendor']),
+          brand: String(row['Brand']),
+          case_gtin: String(row['CaseGTIN']),
           packaged_on_date: formattedPackagedOnDate,
           batch_lot: batchLot,
-          gtin_barcode: String(row['GTINBarCode'] || ''), // Excel has "GTINBarCode" with capital C
-          each_gtin: String(row['EachGTIN'] || ''),
-          shipped_qty: parseInt(row['Shipped_Qty'] || '0'),
+          gtin_barcode: String(row['GTINBarCode']), // Excel has "GTINBarCode" with capital C
+          each_gtin: String(row['EachGTIN']),
+          shipped_qty: parseInt(row['Shipped_Qty']),
           received_qty: parseInt(row['Shipped_Qty'] || '0'), // Default to shipped quantity
           retail_price: pricingInfo.retail_price,
           markup_percentage: pricingInfo.markup_percentage,
           price_source: pricingInfo.price_source,
           uom: String(row['UOM'] || 'EACH'),
-          uom_conversion: parseFloat(row['UOMCONVERSION'] || '1'), // Excel has "UOMCONVERSION" all caps
-          uom_conversion_qty: parseInt(row['UOMCONVERSIONQTY'] || '1'), // Excel has "UOMCONVERSIONQTY" all caps
+          uom_conversion: parseFloat(row['UOMCONVERSION']), // Excel has "UOMCONVERSION" all caps
+          uom_conversion_qty: parseInt(row['UOMCONVERSIONQTY']), // Excel has "UOMCONVERSIONQTY" all caps
           exists_in_inventory: inventoryCheck.exists,
           is_new_batch: inventoryCheck.isNewBatch,
           image_url: productInfo.image_url,
@@ -567,22 +590,14 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
 
       // Prepare purchase order items from ASN data
       const poItems = asnItems.map((item, index) => {
-        // Debug log for problematic item
-        if (item.sku === '200643_10 PACK___' || index === 9) {
-          console.log(`=== PO Item Mapping Debug for item ${index} (${item.sku}) ===`);
-          console.log('Original ASN item batch_lot:', item.batch_lot);
-          console.log('Type of batch_lot:', typeof item.batch_lot);
-          console.log('Full ASN item:', item);
-        }
-
-        return {
+          return {
           sku: item.sku,
           batch_lot: item.batch_lot,
           quantity_ordered: item.shipped_qty,
           unit_cost: item.unit_price,
           retail_price: item.retail_price, // Include retail price for inventory creation
           item_name: item.item_name,
-          vendor: item.vendor || vendorName,  // Use determined vendor
+          vendor: item.vendor,  // Use determined vendor
           brand: item.brand,
           case_gtin: item.case_gtin,
           packaged_on_date: item.packaged_on_date,
@@ -657,7 +672,7 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
         store_id: currentStore?.id || undefined, // Include store_id in the request body
         shipment_id: shipmentId,  // From ASN Excel
         container_id: containerId,  // From ASN Excel
-        vendor: commonVendor,  // From ASN Excel or determined
+        // Note: vendor removed from PO level - it belongs at item level only
         ocs_order_number: ocsOrderNumber,  // Extracted from filename
         tenant_id: currentStore?.tenant_id || undefined,  // From current store
         created_by: user?.id,  // Track who created the PO
@@ -678,35 +693,38 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
             sku: item.sku,
             quantity: item.shipped_qty,  // Use shipped_qty as the quantity
             unit_cost: item.unit_cost,
-            batch_lot: item.batch_lot || '',  // Ensure batch_lot is always a string, even if empty
+            batch_lot: item.batch_lot,  // Ensure batch_lot is always a string, even if empty
             case_gtin: item.case_gtin,
-            packaged_on_date: item.packaged_on_date || new Date().toISOString().split('T')[0],  // Use today if missing
+            packaged_on_date: item.packaged_on_date,  // Use today if missing
             gtin_barcode: item.gtin_barcode,  // Required field
             each_gtin: item.each_gtin,
             vendor: item.vendor,  // Use vendor from above logic
-            brand: item.brand || item.item_name || 'Unknown',  // Required
+            brand: item.brand,
+            item_name: item.item_name,
             shipped_qty: item.shipped_qty,  // Required
-            uom: item.uom || 'EACH',  // Required with default
-            uom_conversion: item.uom_conversion || 1,  // Required with default
-            uom_conversion_qty: item.uom_conversion_qty || 1  // Required with default
+            uom: item.uom,  // Required with default
+            uom_conversion: item.uom_conversion,  // Required with default
+            uom_conversion_qty: item.uom_conversion_qty  // Required with default
           }
         }),
         expected_date: new Date().toISOString().split('T')[0], // Use today's date
         excel_filename: uploadedFileName || poNumber,  // Required for PO number generation
-        notes: `PO Number: ${poNumber}
-${notes ? `Notes: ${notes}` : ''}
-Additional Charges: $${charges.toFixed(2)}
-Discount: $${discount.toFixed(2)}
-Total: $${totalAmount.toFixed(2)}
-Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all financial details in notes
+        charges: chargesArray.map(c => ({
+          description: c.description,
+          amount: c.isCredit ? Math.abs(c.amount) : -Math.abs(c.amount),  // Apply sign based on isCredit
+          taxable: c.taxable
+        })),
+        paid: paidInFull,
+        notes: notes ? `${notes}` : undefined
       };
 
       const response = await fetch(getApiEndpoint('/inventory/purchase-orders'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Store-ID': currentStore?.id || '',  // Ensure store ID is in header
-          'X-Tenant-ID': currentStore?.tenant_id || ''
+          'X-Store-ID': currentStore.id,  // Ensure store ID is in header
+          'X-Tenant-ID': currentStore.tenant_id,
+          'X-User-ID': user?.user_id || ''  // Pass authenticated user for created_by
         },
         body: JSON.stringify(purchaseOrder),
       });
@@ -1211,7 +1229,7 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
                               {item.image_url && item.image_url !== 'null' && item.image_url !== 'undefined' ? (
                                 <img 
                                   src={item.image_url} 
-                                  alt={item.item_name || 'Product'}
+                                  alt={item.item_name}
                                   className="h-10 w-10 object-cover rounded"
                                   loading="eager"
                                   onError={(e) => {
@@ -1301,37 +1319,77 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
                 </div>
               </div>
 
-              {/* Charges Section */}
-              <div className="bg-warning-50 border border-yellow-200 rounded-lg p-6">
-                <h4 className="font-medium mb-3 text-yellow-900">Charges</h4>
-                <div className="grid grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Additional Charges (e.g., shipping)
-                    </label>
-                    <input
-                      type="number"
-                      value={charges}
-                      onChange={(e) => setCharges(parseFloat(e.target.value) || 0)}
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-yellow-500"
-                      placeholder="0.00"
-                      step="0.01"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Discount
-                    </label>
-                    <input
-                      type="number"
-                      value={discount}
-                      onChange={(e) => setDiscount(parseFloat(e.target.value) || 0)}
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-yellow-500"
-                      placeholder="0.00"
-                      step="0.01"
-                    />
-                  </div>
+              {/* Charges Section - Dynamic */}
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h4 className="font-medium text-yellow-900">Additional Charges</h4>
+                  <button
+                    type="button"
+                    onClick={addCharge}
+                    className="px-3 py-1 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 text-sm font-medium"
+                  >
+                    + Add Charge
+                  </button>
                 </div>
+
+                {chargesArray.length === 0 ? (
+                  <p className="text-sm text-gray-500 italic">No additional charges. Click "Add Charge" to add shipping, discounts, etc.</p>
+                ) : (
+                  <div className="space-y-3">
+                    {chargesArray.map((charge) => (
+                      <div key={charge.id} className="flex gap-3 items-center bg-white p-3 rounded-lg border border-gray-200">
+                        {/* +/- Toggle Button */}
+                        <button
+                          type="button"
+                          onClick={() => updateCharge(charge.id, 'isCredit', !charge.isCredit)}
+                          className={`px-3 py-2 rounded-lg font-bold text-lg transition-colors ${
+                            charge.isCredit
+                              ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                              : 'bg-red-100 text-red-700 hover:bg-red-200'
+                          }`}
+                          title={charge.isCredit ? 'Charge (adds to total)' : 'Discount (subtracts from total)'}
+                        >
+                          {charge.isCredit ? '+' : '−'}
+                        </button>
+
+                        <input
+                          type="text"
+                          value={charge.description}
+                          onChange={(e) => updateCharge(charge.id, 'description', e.target.value)}
+                          placeholder="Description (e.g., Shipping, Discount)"
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500"
+                        />
+                        <input
+                          type="number"
+                          value={Math.abs(charge.amount)}
+                          onChange={(e) => updateCharge(charge.id, 'amount', e.target.value)}
+                          placeholder="0.00"
+                          step="0.01"
+                          min="0"
+                          className="w-32 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 text-right"
+                        />
+                        <label className="flex items-center gap-2 px-2 whitespace-nowrap">
+                          <input
+                            type="checkbox"
+                            checked={charge.taxable}
+                            onChange={(e) => updateCharge(charge.id, 'taxable', e.target.checked)}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                          <span className="text-sm text-gray-700">Taxable</span>
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => removeCharge(charge.id)}
+                          className="px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200"
+                          title="Remove charge"
+                        >
+                          <X size={16} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <p className="text-xs text-gray-600 mt-3">💡 Click +/− button to toggle between charges (adds) and discounts (subtracts)</p>
               </div>
 
               {/* Summary Section */}
@@ -1354,25 +1412,72 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
                       ${asnItems.reduce((sum, item) => sum + (item.shipped_qty * item.unit_price), 0).toFixed(2)}
                     </span>
                   </div>
-                  {charges > 0 && (
-                    <div className="flex justify-between text-yellow-700">
-                      <span>Additional Charges:</span>
-                      <span className="font-medium">+${charges.toFixed(2)}</span>
+
+                  {/* Show each charge */}
+                  {chargesArray.length > 0 && (
+                    <>
+                      {chargesArray.map((charge) => {
+                        const signedAmount = charge.isCredit ? Math.abs(charge.amount) : -Math.abs(charge.amount);
+                        return (
+                          <div key={charge.id} className={`flex justify-between ${charge.isCredit ? 'text-yellow-700' : 'text-green-700'}`}>
+                            <span>{charge.description || 'Charge'}:</span>
+                            <span className="font-medium">
+                              {charge.isCredit ? '+' : '−'}${Math.abs(charge.amount).toFixed(2)}
+                            </span>
+                          </div>
+                        );
+                      })}
+                      <div className="flex justify-between text-gray-600 text-xs italic">
+                        <span>Total Additional Charges:</span>
+                        <span>
+                          {(() => {
+                            const total = chargesArray.reduce((sum, c) => {
+                              const signedAmount = c.isCredit ? Math.abs(c.amount) : -Math.abs(c.amount);
+                              return sum + signedAmount;
+                            }, 0);
+                            return `${total >= 0 ? '+' : ''}$${total.toFixed(2)}`;
+                          })()}
+                        </span>
+                      </div>
+                    </>
+                  )}
+
+                  {/* Tax - calculated on subtotal + taxable charges only */}
+                  {provincialTaxRate > 0 && (
+                    <div className="flex justify-between text-blue-700">
+                      <span>Tax ({provincialTaxRate}%):</span>
+                      <span className="font-medium">
+                        +${(
+                          (asnItems.reduce((sum, item) => sum + (item.shipped_qty * item.unit_price), 0) +
+                          chargesArray.filter(c => c.taxable).reduce((sum, c) => {
+                            const signedAmount = c.isCredit ? Math.abs(c.amount) : -Math.abs(c.amount);
+                            return sum + signedAmount;
+                          }, 0)) *
+                          (provincialTaxRate / 100)
+                        ).toFixed(2)}
+                      </span>
                     </div>
                   )}
-                  {discount > 0 && (
-                    <div className="flex justify-between text-primary-700">
-                      <span>Discount:</span>
-                      <span className="font-medium">-${discount.toFixed(2)}</span>
-                    </div>
-                  )}
+
                   <div className="border-t pt-2 flex justify-between font-bold text-base">
                     <span>Total:</span>
                     <span>
-                      ${(asnItems.reduce((sum, item) => sum + (item.shipped_qty * item.unit_price), 0) + charges - discount).toFixed(2)}
+                      ${(() => {
+                        const subtotal = asnItems.reduce((sum, item) => sum + (item.shipped_qty * item.unit_price), 0);
+                        const taxableCharges = chargesArray.filter(c => c.taxable).reduce((sum, c) => {
+                          const signedAmount = c.isCredit ? Math.abs(c.amount) : -Math.abs(c.amount);
+                          return sum + signedAmount;
+                        }, 0);
+                        const nonTaxableCharges = chargesArray.filter(c => !c.taxable).reduce((sum, c) => {
+                          const signedAmount = c.isCredit ? Math.abs(c.amount) : -Math.abs(c.amount);
+                          return sum + signedAmount;
+                        }, 0);
+                        const taxAmount = (subtotal + taxableCharges) * (provincialTaxRate / 100);
+                        return (subtotal + taxableCharges + nonTaxableCharges + taxAmount).toFixed(2);
+                      })()}
                     </span>
                   </div>
-                  
+
                   {/* Paid in Full Checkbox */}
                   <div className="border-t pt-3 mt-3">
                     <label className="flex items-center space-x-2 cursor-pointer">

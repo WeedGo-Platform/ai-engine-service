@@ -1406,3 +1406,52 @@ async def get_store_inventory_stats(store_id: UUID):
     except Exception as e:
         logger.error(f"Error fetching inventory stats for store {store_id}: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/{store_id}/province-tax")
+async def get_store_province_tax(
+    store_id: UUID,
+    db_pool: asyncpg.Pool = Depends(get_db_pool)
+):
+    """
+    Get the provincial tax rate for a store based on its province
+
+    Returns the tax_rate from the provinces_territories table for the store's province.
+    Used for calculating tax on purchase orders.
+    """
+    try:
+        async with db_pool.acquire() as conn:
+            # Query to get store's province tax rate
+            query = """
+                SELECT
+                    pt.tax_rate,
+                    pt.code as province_code,
+                    pt.name as province_name
+                FROM stores s
+                JOIN provinces_territories pt ON s.province_territory_id = pt.id
+                WHERE s.id = $1
+            """
+
+            row = await conn.fetchrow(query, store_id)
+
+            if not row:
+                raise HTTPException(
+                    status_code=404,
+                    detail=f"Store {store_id} not found or has no province assigned"
+                )
+
+            tax_rate = float(row['tax_rate']) if row['tax_rate'] else 0.0
+
+            return {
+                "store_id": str(store_id),
+                "province_code": row['province_code'],
+                "province_name": row['province_name'],
+                "tax_rate": tax_rate,
+                "tax_percentage": tax_rate  # Same as tax_rate for clarity
+            }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching province tax for store {store_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))

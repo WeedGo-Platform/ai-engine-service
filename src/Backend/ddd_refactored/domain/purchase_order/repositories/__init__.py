@@ -160,13 +160,17 @@ class AsyncPGPurchaseOrderRepository(IPurchaseOrderRepository):
         query = """
             INSERT INTO purchase_orders (
                 id, po_number, supplier_id, order_date, expected_date, status,
-                total_amount, subtotal, tax_amount, notes, store_id, shipment_id, container_id, vendor,
-                created_by, created_at, updated_at
-            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+                total_amount, subtotal, tax_amount, notes, store_id, shipment_id, container_id,
+                charges, paid, created_by, created_at, updated_at
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
         """
 
         # Map domain status to database status using Anti-Corruption Layer
         db_status = self._map_status_to_db(po.status)
+
+        # Convert charges to JSON if present
+        import json
+        charges_json = json.dumps(po.metadata.get('charges', [])) if po.metadata.get('charges') else None
 
         await conn.execute(
             query,
@@ -177,13 +181,14 @@ class AsyncPGPurchaseOrderRepository(IPurchaseOrderRepository):
             po.expected_delivery_date,
             db_status,  # Use mapped database status
             po.total_amount,
-            po.subtotal,  # Add subtotal
-            po.tax_amount,  # Add tax_amount
+            po.subtotal,
+            po.tax_amount,
             po.internal_notes,
             po.store_id,
             po.metadata.get('shipment_id'),
             po.metadata.get('container_id'),
-            po.supplier_name,  # Store supplier name in vendor field
+            charges_json,  # JSONB charges
+            po.metadata.get('paid', False),  # Boolean paid status
             po.created_by,
             po.created_at,
             po.updated_at
@@ -197,7 +202,10 @@ class AsyncPGPurchaseOrderRepository(IPurchaseOrderRepository):
                 total_amount = $3,
                 notes = $4,
                 expected_date = $5,
-                updated_at = $6
+                received_date = $6,
+                received_by = $7,
+                approved_by = $8,
+                updated_at = $9
             WHERE id = $1
         """
 
@@ -211,6 +219,9 @@ class AsyncPGPurchaseOrderRepository(IPurchaseOrderRepository):
             po.total_amount,
             po.internal_notes,
             po.expected_delivery_date,
+            po.received_at,  # Maps to received_date in DB
+            po.received_by,
+            po.approved_by,
             datetime.utcnow()
         )
 
@@ -372,7 +383,7 @@ class AsyncPGPurchaseOrderRepository(IPurchaseOrderRepository):
             store_id=row['store_id'],
             tenant_id=row.get('tenant_id'),  # May not exist in current schema
             supplier_id=row['supplier_id'],
-            supplier_name=row.get('vendor', ''),
+            supplier_name='',  # Supplier name retrieved from suppliers table if needed
             order_number=row['po_number'],
             status=domain_status,  # Use mapped domain status
             order_date=row['order_date'],
@@ -383,6 +394,11 @@ class AsyncPGPurchaseOrderRepository(IPurchaseOrderRepository):
             created_at=row.get('created_at', datetime.utcnow()),
             updated_at=row.get('updated_at', datetime.utcnow()),
         )
+
+        # Set audit fields (received/approved tracking)
+        po.received_at = row.get('received_date')  # DB column: received_date
+        po.received_by = row.get('received_by')
+        po.approved_by = row.get('approved_by')
 
         # Store additional metadata
         po.metadata['shipment_id'] = row.get('shipment_id')

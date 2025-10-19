@@ -42,9 +42,11 @@ class PurchaseOrderApplicationService:
         notes: Optional[str] = None,
         shipment_id: Optional[str] = None,
         container_id: Optional[str] = None,
-        vendor: Optional[str] = None,
         tenant_id: Optional[UUID] = None,
-        created_by: Optional[UUID] = None
+        created_by: Optional[UUID] = None,
+        charges: Optional[List[Dict[str, Any]]] = None,
+        paid: bool = True,
+        tax_rate: Optional[float] = None
     ) -> Dict[str, Any]:
         """
         Create purchase order from ASN (Advance Shipping Notice) import
@@ -54,14 +56,13 @@ class PurchaseOrderApplicationService:
 
         Args:
             supplier_id: Supplier UUID
-            items: List of ASN items with SKU, quantity, cost, batch info
+            items: List of ASN items with SKU, quantity, cost, batch info (each item has vendor field)
             expected_date: Expected delivery date
             excel_filename: ASN Excel filename for PO number generation
             store_id: Store UUID
             notes: Optional internal notes
             shipment_id: Optional shipment ID from ASN
             container_id: Optional container ID from ASN
-            vendor: Vendor name from ASN
             tenant_id: Optional tenant ID
             created_by: Optional user ID who created PO
 
@@ -70,6 +71,8 @@ class PurchaseOrderApplicationService:
 
         Raises:
             ValueError: If PO already exists for this filename or validation fails
+
+        Note: vendor field removed from PO level - it belongs at item level (purchase_order_items.vendor)
         """
         try:
             # 1. Generate PO number (same logic as legacy service)
@@ -83,35 +86,59 @@ class PurchaseOrderApplicationService:
                     f"This file has already been imported."
                 )
 
-            # 3. Calculate total amount
+            # 3. Calculate subtotal (items only)
             # Frontend sends 'quantity_ordered' (mapped from Excel shipped_qty)
-            total_amount = sum(
+            subtotal = sum(
                 Decimal(str(item.get('quantity_ordered') or item.get('quantity'))) *
                 Decimal(str(item['unit_cost']))
                 for item in items
             )
 
-            # 4. Create PurchaseOrder aggregate using domain factory method
+            # 4. Calculate charges total (all charges, both taxable and non-taxable)
+            charges_total = Decimal('0')
+            taxable_charges = Decimal('0')
+            if charges:
+                for charge in charges:
+                    charge_amount = Decimal(str(charge.get('amount', 0)))
+                    charges_total += charge_amount
+                    # Separate taxable charges for tax calculation
+                    if charge.get('taxable', True):  # Default to taxable if not specified
+                        taxable_charges += charge_amount
+
+            # 5. Calculate tax amount (on subtotal + taxable charges only)
+            tax_amount = Decimal('0')
+            if tax_rate and tax_rate > 0:
+                # Tax is calculated on subtotal + taxable charges only
+                taxable_amount = subtotal + taxable_charges
+                tax_amount = (taxable_amount * Decimal(str(tax_rate)) / Decimal('100')).quantize(Decimal('0.01'))
+
+            # 6. Calculate total amount (subtotal + all charges + tax)
+            total_amount = subtotal + charges_total + tax_amount
+
+            # 7. Create PurchaseOrder aggregate using domain factory method
             purchase_order = PurchaseOrder.create(
                 store_id=store_id,
                 tenant_id=tenant_id or store_id,  # Default to store_id if not provided
                 supplier_id=supplier_id,
-                supplier_name=vendor or "Unknown Supplier",
+                supplier_name="",  # Supplier name retrieved from suppliers table if needed
                 created_by=created_by
             )
 
-            # 4b. Override auto-generated order_number with ASN-based number
+            # 7b. Override auto-generated order_number with ASN-based number
             purchase_order.order_number = po_number
 
-            # 4c. Set additional properties not available in create() method
+            # 7c. Set additional properties not available in create() method
             purchase_order.expected_delivery_date = datetime.combine(expected_date, datetime.min.time())
-            purchase_order.total_amount = total_amount
-            purchase_order.subtotal = total_amount  # ASN imports don't have tax breakdown
+            purchase_order.subtotal = subtotal  # Items only
+            purchase_order.tax_amount = tax_amount  # Calculated tax
+            purchase_order.total_amount = total_amount  # Subtotal + charges + tax
             purchase_order.internal_notes = notes
 
-            # 5. Store additional metadata from ASN
+            # 8. Store additional metadata from ASN
             purchase_order.metadata['shipment_id'] = shipment_id
             purchase_order.metadata['container_id'] = container_id
+            purchase_order.metadata['charges'] = charges or []  # Store charges array
+            purchase_order.metadata['paid'] = paid  # Store paid status
             purchase_order.metadata['excel_filename'] = excel_filename
             purchase_order.metadata['item_count'] = len(items)
 

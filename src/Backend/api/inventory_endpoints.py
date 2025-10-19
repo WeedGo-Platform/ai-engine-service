@@ -75,10 +75,18 @@ class PurchaseOrderItem(BaseModel):
     each_gtin: str  # Required
     vendor: str  # Required
     brand: str  # Required
+    item_name: str  # Required - Product name from Excel
     shipped_qty: int = Field(gt=0)  # Required
     uom: str  # Required
     uom_conversion: float = Field(gt=0)  # Required
     uom_conversion_qty: float = Field(gt=0)  # Required
+
+
+class ChargeItem(BaseModel):
+    """Individual charge item (shipping, discount, express, etc.)"""
+    description: str  # e.g., "Shipping", "Discount", "Express Delivery"
+    amount: float  # Positive for charges, negative for discounts
+    taxable: bool = True  # Whether this charge is subject to tax (default: True)
 
 
 class CreatePurchaseOrderRequest(BaseModel):
@@ -90,11 +98,13 @@ class CreatePurchaseOrderRequest(BaseModel):
     store_id: Optional[UUID] = None  # Can be provided in body or header
     shipment_id: Optional[str] = None  # From ASN Excel
     container_id: Optional[str] = None  # From ASN Excel
-    vendor: Optional[str] = None  # From ASN Excel
     ocs_order_number: Optional[str] = None  # Extracted from filename
     tenant_id: Optional[UUID] = None  # From store/context
     created_by: Optional[UUID] = None  # User ID from context
-    shipment_date: Optional[date] = None # From ASN Excel
+    shipment_date: Optional[date] = None  # From ASN Excel
+    charges: Optional[List[ChargeItem]] = []  # Multiple charges (shipping, discount, etc.)
+    paid: bool = True  # Paid in full (default True)
+    # Note: vendor field removed - it belongs at the item level (PurchaseOrderItem.vendor)
 
 
 class ReceivePurchaseOrderItem(BaseModel):
@@ -179,6 +189,7 @@ async def update_inventory(
 @router.post("/purchase-orders")
 async def create_purchase_order(
     request: CreatePurchaseOrderRequest,
+    x_user_id: Optional[str] = Header(None, alias="X-User-ID"),
     x_store_id: Optional[str] = Header(None, alias="X-Store-ID"),
     po_service: PurchaseOrderApplicationService = Depends(get_purchase_order_service)
 ):
@@ -191,6 +202,9 @@ async def create_purchase_order(
     - Business logic encapsulated in domain model
     """
     try:
+        # Get user_id from header (authenticated user)
+        user_id = UUID(x_user_id) if x_user_id else None
+
         # Get store_id from request body or header
         store_id = request.store_id
         if not store_id and x_store_id and x_store_id.strip():
@@ -202,6 +216,30 @@ async def create_purchase_order(
         if not store_id:
             raise HTTPException(status_code=400, detail="Store ID is required - please select a store")
 
+        # Fetch provincial tax rate for the store
+        tax_rate = None
+        try:
+            from api.store_endpoints import get_db_pool
+            db_pool = await get_db_pool()
+            async with db_pool.acquire() as conn:
+                tax_row = await conn.fetchrow(
+                    """
+                    SELECT pt.tax_rate
+                    FROM stores s
+                    JOIN provinces_territories pt ON s.province_territory_id = pt.id
+                    WHERE s.id = $1
+                    """,
+                    store_id
+                )
+                if tax_row and tax_row['tax_rate']:
+                    tax_rate = float(tax_row['tax_rate'])
+        except Exception as e:
+            logger.warning(f"Could not fetch tax rate for store {store_id}: {e}")
+            # Continue without tax if fetching fails
+
+        # Convert charges from Pydantic models to dicts
+        charges_data = [charge.dict() for charge in request.charges] if request.charges else []
+
         # Call DDD application service (same contract as legacy service)
         result = await po_service.create_from_asn(
             supplier_id=request.supplier_id,
@@ -212,9 +250,11 @@ async def create_purchase_order(
             notes=request.notes,
             shipment_id=request.shipment_id,
             container_id=request.container_id,
-            vendor=request.vendor,
             tenant_id=request.tenant_id,
-            created_by=request.created_by
+            created_by=user_id,  # Use authenticated user from header
+            charges=charges_data,  # Pass charges array
+            paid=request.paid,  # Pass paid status
+            tax_rate=tax_rate  # Pass provincial tax rate
         )
 
         # Return same response format as legacy service for API compatibility
@@ -544,7 +584,7 @@ async def get_purchase_order_details(
         
         # Get purchase order details
         po_query = """
-            SELECT 
+            SELECT
                 po.id,
                 po.po_number,
                 po.supplier_id,
@@ -557,7 +597,8 @@ async def get_purchase_order_details(
                 po.notes,
                 po.shipment_id,
                 po.container_id,
-                po.vendor
+                po.received_by,
+                po.approved_by
             FROM purchase_orders po
             JOIN provincial_suppliers s ON po.supplier_id = s.id
             WHERE po.id = $1
