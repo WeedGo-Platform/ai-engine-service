@@ -67,7 +67,8 @@ class Inventory(AggregateRoot):
     - min_stock_level → low stock threshold (may consolidate with reorder_point in DB)
     - reorder_point → 'reorder_point' in DB (when to trigger purchase order)
     """
-    # Identifiers
+    # Identifiers (id inherited from AggregateRoot, but added as field for dataclass compatibility)
+    id: UUID = field(default_factory=uuid4)
     store_id: UUID = field(default_factory=uuid4)
     sku: str = ""  # Product SKU
 
@@ -96,6 +97,7 @@ class Inventory(AggregateRoot):
     # Status
     is_available: bool = True
     last_restock_date: Optional[datetime] = None
+    last_restocked: Optional[datetime] = None  # Alias for compatibility
     last_sale_date: Optional[datetime] = None
     last_count_date: Optional[datetime] = None
 
@@ -108,8 +110,15 @@ class Inventory(AggregateRoot):
     metadata: Dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self):
-        """Initialize stock level value object"""
-        super().__post_init__()
+        """Initialize stock level value object and domain events"""
+        # Initialize domain events list (normally done in Entity.__init__)
+        if not hasattr(self, '_domain_events'):
+            self._domain_events = []
+        # Ensure last_restocked is synced with last_restock_date
+        if self.last_restock_date and not self.last_restocked:
+            self.last_restocked = self.last_restock_date
+        elif self.last_restocked and not self.last_restock_date:
+            self.last_restock_date = self.last_restocked
         self._update_stock_level()
 
     def _update_stock_level(self):
