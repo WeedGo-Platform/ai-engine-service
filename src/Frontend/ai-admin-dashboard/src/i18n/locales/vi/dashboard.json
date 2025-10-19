@@ -36,5 +36,8 @@
     "shipped": "Đã Giao",
     "pending": "Chờ Xử Lý",
     "cancelled": "Đã Hủy"
+  },
+  "charts": {
+    "revenueLabel": "Doanh thu"
   }
 }

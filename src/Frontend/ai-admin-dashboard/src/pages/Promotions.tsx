@@ -1221,7 +1221,7 @@ function PricingConfiguration() {
                   selectedCategory ? 'this category' :
                   'ALL products in the store';
 
-    if (window.confirm(t('promotions:confirm.resetOverrides', { scope }))) {
+    if (confirmToastAsync(t('promotions:confirm.resetOverrides', { scope }))) {
       resetOverrides.mutate(resetData);
     }
   };
@@ -1248,7 +1248,7 @@ function PricingConfiguration() {
 
     if (!selectedCategory && !selectedSubCategory && !selectedSubSubCategory && !selectedProduct) {
       // Apply to all products - show confirmation
-      if (window.confirm(t('promotions:confirm.applyAllProducts', { markup: markupValue }))) {
+      if (confirmToastAsync(t('promotions:confirm.applyAllProducts', { markup: markupValue }))) {
         updatePricing.mutate(updateData);
       }
     } else {

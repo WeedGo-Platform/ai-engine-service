@@ -143,18 +143,47 @@ class BasePaymentProvider(ABC):
         self.logger = logging.getLogger(f"{__name__}.{self.provider_name}")
     
     @abstractmethod
-    async def charge(self, request: PaymentRequest) -> PaymentResponse:
-        """Process a payment charge"""
+    async def charge(
+        self,
+        amount: float,
+        currency: str = "CAD",
+        payment_method_token: str = None,
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
+        """
+        Process a payment charge.
+
+        Args:
+            amount: Payment amount (as float)
+            currency: Currency code (default: CAD)
+            payment_method_token: Tokenized payment method
+            metadata: Additional metadata
+
+        Returns:
+            Dict with transaction_id, status, and provider response
+        """
         pass
-    
+
     @abstractmethod
     async def refund(
-        self, 
-        transaction_id: str, 
-        amount: Optional[Decimal] = None,
+        self,
+        transaction_id: str,
+        amount: float,
+        currency: str = "CAD",
         reason: Optional[str] = None
-    ) -> PaymentResponse:
-        """Process a refund (full or partial)"""
+    ) -> Dict[str, Any]:
+        """
+        Process a refund (full or partial).
+
+        Args:
+            transaction_id: Provider's original transaction ID
+            amount: Refund amount (as float)
+            currency: Currency code (default: CAD)
+            reason: Reason for refund
+
+        Returns:
+            Dict with refund_id, status, and provider response
+        """
         pass
     
     @abstractmethod

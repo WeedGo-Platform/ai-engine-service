@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { useStoreContext } from '../../contexts/StoreContext';
 import posService from '../../services/posService';
+import toast from 'react-hot-toast';
 
 interface Transaction {
   id: string;
@@ -43,17 +44,17 @@ const RefundModal: React.FC<RefundModalProps> = ({ transaction, onClose, onRefun
 
   const handleRefund = async () => {
     if (!refundReason.trim()) {
-      alert('Please provide a reason for the refund');
+      toast.error('Please provide a reason for the refund');
       return;
     }
 
     if (refundType === 'partial' && (refundAmount <= 0 || refundAmount > maxRefundable)) {
-      alert(`Refund amount must be between $0.01 and $${maxRefundable.toFixed(2)}`);
+      toast.error(`Refund amount must be between $0.01 and $${maxRefundable.toFixed(2)}`);
       return;
     }
 
     if (refundType === 'items' && selectedItems.length === 0) {
-      alert('Please select items to refund');
+      toast.error('Please select items to refund');
       return;
     }
 
@@ -72,7 +73,7 @@ const RefundModal: React.FC<RefundModalProps> = ({ transaction, onClose, onRefun
       onClose();
     } catch (error) {
       console.error('Refund failed:', error);
-      alert('Failed to process refund. Please try again.');
+      toast.error('Failed to process refund. Please try again.');
     } finally {
       setProcessing(false);
     }
@@ -377,7 +378,7 @@ export default function TransactionHistory() {
       await fetchTransactions();
       setShowRefundModal(false);
       setSelectedTransaction(null);
-      alert('Refund processed successfully');
+      toast.success('Refund processed successfully');
     } catch (error) {
       console.error('Failed to process refund:', error);
       throw error;

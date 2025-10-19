@@ -363,6 +363,101 @@ async def get_provinces():
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to fetch provinces")
 
 
+class ProvinceSupplierResponse(BaseModel):
+    """Provincial supplier response for a store"""
+    id: UUID
+    name: str
+    contact_person: Optional[str] = None
+    email: Optional[str] = None
+    phone: Optional[str] = None
+    address: Optional[str] = None
+    payment_terms: Optional[str] = None
+    is_active: bool
+    provinces_territories_id: UUID
+    province_code: str
+    province_name: str
+    is_provincial_supplier: bool
+
+
+@router.get("/{store_id}/province-supplier", response_model=ProvinceSupplierResponse)
+async def get_store_province_supplier(
+    store_id: UUID,
+    service: StoreService = Depends(get_store_service)
+):
+    """
+    Get the provincial supplier for a store based on its province
+
+    This endpoint simplifies the frontend logic by directly returning the
+    appropriate provincial supplier for a given store.
+    """
+    try:
+        # Get the store
+        store = await service.get_store(store_id)
+        if not store:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Store with ID {store_id} not found"
+            )
+
+        # Get the provincial supplier for the store's province
+        pool = await get_db_pool()
+        async with pool.acquire() as conn:
+            query = """
+                SELECT
+                    ps.id,
+                    ps.name,
+                    ps.contact_person,
+                    ps.email,
+                    ps.phone,
+                    ps.address,
+                    ps.payment_terms,
+                    ps.is_active,
+                    ps.provinces_territories_id,
+                    pt.code as province_code,
+                    pt.name as province_name,
+                    ps.is_provincial_supplier
+                FROM provincial_suppliers ps
+                INNER JOIN provinces_territories pt ON ps.provinces_territories_id = pt.id
+                WHERE ps.provinces_territories_id = $1
+                AND ps.is_provincial_supplier = true
+                AND ps.is_active = true
+                LIMIT 1
+            """
+
+            row = await conn.fetchrow(query, store.province_territory_id)
+
+            if not row:
+                # This is a critical error - every store should have a provincial supplier
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail=f"No provincial supplier found for store's province. Store: {store.name}, Province ID: {store.province_territory_id}"
+                )
+
+            return ProvinceSupplierResponse(
+                id=row['id'],
+                name=row['name'],
+                contact_person=row['contact_person'],
+                email=row['email'],
+                phone=row['phone'],
+                address=row['address'],
+                payment_terms=row['payment_terms'],
+                is_active=row['is_active'],
+                provinces_territories_id=row['provinces_territories_id'],
+                province_code=row['province_code'],
+                province_name=row['province_name'],
+                is_provincial_supplier=row['is_provincial_supplier']
+            )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting province supplier for store {store_id}: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get provincial supplier: {str(e)}"
+        )
+
+
 @router.get("/{store_id}", response_model=StoreResponse)
 async def get_store(
     store_id: UUID,

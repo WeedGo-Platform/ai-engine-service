@@ -197,5 +197,32 @@
       "securityNotice": "לאחר שינוי הסיסמה שלך, תנותק ותצטרך להתחבר שוב עם האישורים החדשים שלך.",
       "changing": "משנה..."
     }
+  },
+  "navigation": {
+    "dashboard": "לוח בקרה",
+    "apps": "אפליקציות",
+    "organization": "ארגון",
+    "tenants": "דיירים",
+    "products": "מוצרים",
+    "inventory": "מלאי",
+    "accessories": "אביזרים",
+    "orders": "הזמנות",
+    "customers": "לקוחות",
+    "purchaseOrders": "הזמנות רכש",
+    "promotions": "מבצעים",
+    "recommendations": "המלצות",
+    "communications": "תקשורת",
+    "deliveries": "משלוחים",
+    "aiConfiguration": "תצורת AI",
+    "provincialCatalog": "קטלוג מחוזי",
+    "database": "מסד נתונים",
+    "systemLogs": "יומני מערכת"
+  },
+  "roles": {
+    "superAdmin": "מנהל על",
+    "tenantAdmin": "מנהל דייר",
+    "storeManager": "מנהל חנות",
+    "staff": "צוות",
+    "user": "משתמש"
   }
 }

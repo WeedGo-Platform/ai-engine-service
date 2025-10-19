@@ -197,5 +197,32 @@
       "securityNotice": "Na het wijzigen van uw wachtwoord wordt u uitgelogd en moet u opnieuw inloggen met uw nieuwe inloggegevens.",
       "changing": "Wijzigen..."
     }
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "apps": "Apps",
+    "organization": "Organisatie",
+    "tenants": "Huurders",
+    "products": "Producten",
+    "inventory": "Voorraad",
+    "accessories": "Accessoires",
+    "orders": "Bestellingen",
+    "customers": "Klanten",
+    "purchaseOrders": "Inkooporders",
+    "promotions": "Promoties",
+    "recommendations": "Aanbevelingen",
+    "communications": "Communicatie",
+    "deliveries": "Leveringen",
+    "aiConfiguration": "AI-configuratie",
+    "provincialCatalog": "Provinciale catalogus",
+    "database": "Database",
+    "systemLogs": "Systeemlogs"
+  },
+  "roles": {
+    "superAdmin": "Superbeheerder",
+    "tenantAdmin": "Huurderbeheerder",
+    "storeManager": "Winkelmanager",
+    "staff": "Personeel",
+    "user": "Gebruiker"
   }
 }

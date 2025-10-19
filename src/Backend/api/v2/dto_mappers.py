@@ -4,9 +4,10 @@ Converts Domain objects to Data Transfer Objects (API responses)
 """
 
 from typing import List, Optional, Dict, Any
-from datetime import datetime
+from datetime import datetime, date
 from pydantic import BaseModel, Field
 from decimal import Decimal
+from uuid import UUID
 
 
 # Payment DTOs
@@ -6138,11 +6139,8 @@ class ConfirmBySupplierRequest(BaseModel):
     supplier_order_number: Optional[str] = Field(None, description="Supplier's order reference")
 
 
-class ReceiveItemsRequest(BaseModel):
-    """Request to receive items"""
-    quantity_received: int = Field(..., gt=0, description="Quantity received")
-    notes: Optional[str] = Field(None, description="Receiving notes")
-
+# NOTE: V2 receive endpoint DTOs removed - use V1 /api/inventory/purchase-orders/{po_id}/receive
+# V1 already uses full DDD implementation, no need for duplicate V2 DTOs
 
 class CancelPurchaseOrderRequest(BaseModel):
     """Request to cancel purchase order"""

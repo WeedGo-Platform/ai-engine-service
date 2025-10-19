@@ -130,7 +130,7 @@ const Dashboard: React.FC = () => {
     }),
     datasets: [
       {
-        label: 'Revenue',
+        label: t('dashboard:charts.revenueLabel'),
         data: revenueChartData.slice(-7).map((d: any) => d.revenue || 0),
         borderColor: 'rgb(34, 197, 94)',
         backgroundColor: 'rgba(34, 197, 94, 0.1)',
@@ -144,7 +144,7 @@ const Dashboard: React.FC = () => {
   const salesByCategory = stats?.sales_by_category || {};
   const hasCategories = Object.keys(salesByCategory).length > 0;
   const categoryData = {
-    labels: hasCategories ? Object.keys(salesByCategory) : ['No Data'],
+    labels: hasCategories ? Object.keys(salesByCategory) : [t('common:messages.noData')],
     datasets: [
       {
         data: hasCategories ? Object.values(salesByCategory) : [100],
@@ -204,7 +204,7 @@ const Dashboard: React.FC = () => {
             </div>
           )}
           <div className="text-right">
-            <p className="text-sm text-gray-500 dark:text-gray-400">{t('common:today')}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{t('common:common.today')}</p>
             <p className="text-lg font-semibold text-gray-900 dark:text-white">{new Date().toLocaleDateString()}</p>
           </div>
         </div>

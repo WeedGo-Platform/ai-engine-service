@@ -38,12 +38,23 @@ async def get_db_pool():
 
 
 # Pydantic Models for POS
+class BatchInfo(BaseModel):
+    """Batch/lot information for inventory tracking"""
+    batch_lot: str
+    quantity_remaining: Optional[int] = None
+    case_gtin: Optional[str] = None
+    each_gtin: Optional[str] = None
+    packaged_on_date: Optional[str] = None
+    location_code: Optional[str] = None
+
+
 class POSCartItem(BaseModel):
     product: Dict[str, Any]
     quantity: int
     discount: Optional[float] = 0
     discount_type: Optional[str] = 'percentage'
     promotion: Optional[str] = None
+    batch: Optional[BatchInfo] = None  # Batch tracking support
 
 
 class POSPaymentDetails(BaseModel):
@@ -180,7 +191,170 @@ async def create_pos_transaction(transaction: POSTransactionCreate):
                 'timestamp': row['timestamp'].isoformat()
             }
 
-            # Update customer loyalty points if applicable
+            # STEP 1: Validate inventory availability BEFORE processing (Strict Mode)
+            inventory_validation_failures = []
+
+            for item in transaction.items:
+                sku = item.product.get('sku') or item.product.get('id')
+                batch_lot = item.batch.batch_lot if item.batch else None
+
+                if not sku:
+                    inventory_validation_failures.append({
+                        'product': item.product.get('name', 'Unknown'),
+                        'reason': 'Missing SKU in product data'
+                    })
+                    continue
+
+                # Check if inventory record exists with sufficient quantity
+                check_query = """
+                    SELECT id, sku, batch_lot, quantity_available, quantity_on_hand
+                    FROM ocs_inventory
+                    WHERE store_id = $1 AND sku = $2
+                """
+                check_params = [store_uuid, sku]
+
+                # Add batch filter if batch data provided (required per user spec)
+                if batch_lot:
+                    check_query += " AND batch_lot = $3"
+                    check_params.append(batch_lot)
+                else:
+                    # No batch specified - allow NULL batch for backward compatibility with unbatched inventory
+                    check_query += " AND (batch_lot IS NULL OR batch_lot = '')"
+
+                inventory_record = await conn.fetchrow(check_query, *check_params)
+
+                if not inventory_record:
+                    inventory_validation_failures.append({
+                        'sku': sku,
+                        'batch': batch_lot or 'unbatched',
+                        'quantity_requested': item.quantity,
+                        'reason': 'Inventory record not found for this SKU/batch combination'
+                    })
+                elif inventory_record['quantity_available'] < item.quantity:
+                    inventory_validation_failures.append({
+                        'sku': sku,
+                        'batch': batch_lot or 'unbatched',
+                        'quantity_requested': item.quantity,
+                        'quantity_available': inventory_record['quantity_available'],
+                        'reason': f'Insufficient stock (requested {item.quantity}, available {inventory_record["quantity_available"]})'
+                    })
+
+            # STRICT MODE: Fail transaction if ANY inventory validation fails
+            if inventory_validation_failures:
+                logger.error(f"Transaction validation failed for {transaction.receipt_number}: {inventory_validation_failures}")
+                raise HTTPException(
+                    status_code=400,
+                    detail={
+                        'error': 'Insufficient inventory',
+                        'validation_failures': inventory_validation_failures,
+                        'message': f'{len(inventory_validation_failures)} item(s) have insufficient stock or missing inventory records'
+                    }
+                )
+
+            # STEP 2: Update inventory for each item with batch tracking
+            inventory_updates_successful = []
+            inventory_update_failures = []
+            order_id = uuid.UUID(row['id'])
+
+            for item in transaction.items:
+                sku = item.product.get('sku') or item.product.get('id')
+                batch_lot = item.batch.batch_lot if item.batch else None
+
+                if not sku:
+                    continue  # Already caught in validation
+
+                try:
+                    # Build WHERE clause for batch-aware update
+                    where_conditions = ["store_id = $1", "sku = $2", "quantity_available >= $3"]
+                    params = [store_uuid, sku, item.quantity]
+                    param_count = 3
+
+                    # Add batch filter
+                    if batch_lot:
+                        param_count += 1
+                        where_conditions.append(f"batch_lot = ${param_count}")
+                        params.append(batch_lot)
+                    else:
+                        where_conditions.append("(batch_lot IS NULL OR batch_lot = '')")
+
+                    where_clause = " AND ".join(where_conditions)
+
+                    # Update inventory with batch awareness
+                    update_query = f"""
+                        UPDATE ocs_inventory
+                        SET quantity_available = quantity_available - $3,
+                            quantity_on_hand = quantity_on_hand - $3,
+                            last_sold = CURRENT_TIMESTAMP,
+                            updated_at = CURRENT_TIMESTAMP
+                        WHERE {where_clause}
+                        RETURNING id, sku, batch_lot, quantity_available, quantity_on_hand
+                    """
+
+                    result_row = await conn.fetchrow(update_query, *params)
+
+                    if result_row:
+                        # Success - log the inventory transaction
+                        await conn.execute(
+                            """
+                            INSERT INTO ocs_inventory_transactions (
+                                store_id, sku, transaction_type, quantity, batch_lot,
+                                reference_id, reference_type, notes, created_at
+                            ) VALUES ($1, $2, 'sale', $3, $4, $5, 'pos_transaction', $6, CURRENT_TIMESTAMP)
+                            """,
+                            store_uuid,
+                            sku,
+                            -item.quantity,  # Negative for deduction
+                            batch_lot,
+                            order_id,
+                            f"POS sale - Receipt: {transaction.receipt_number}"
+                        )
+
+                        inventory_updates_successful.append({
+                            'sku': sku,
+                            'batch': batch_lot or 'unbatched',
+                            'quantity_deducted': item.quantity,
+                            'quantity_remaining': result_row['quantity_available']
+                        })
+
+                        logger.info(
+                            f"✅ Inventory updated: SKU={sku}, Batch={batch_lot or 'unbatched'}, "
+                            f"Deducted={item.quantity}, Remaining={result_row['quantity_available']}"
+                        )
+                    else:
+                        # This should not happen due to validation, but handle it anyway
+                        error_msg = f"Inventory update returned no rows for SKU={sku}, Batch={batch_lot}"
+                        logger.error(error_msg)
+                        inventory_update_failures.append({
+                            'sku': sku,
+                            'batch': batch_lot,
+                            'reason': 'Update returned no rows (insufficient stock or concurrent update)'
+                        })
+
+                except Exception as e:
+                    logger.error(f"❌ Failed to update inventory for SKU={sku}, Batch={batch_lot}: {e}")
+                    inventory_update_failures.append({
+                        'sku': sku,
+                        'batch': batch_lot,
+                        'error': str(e)
+                    })
+
+            # STRICT MODE: Fail entire transaction if ANY inventory update failed
+            if inventory_update_failures:
+                logger.critical(
+                    f"CRITICAL: Inventory update failed for transaction {order_id}. "
+                    f"Failures: {inventory_update_failures}. Rolling back transaction."
+                )
+                # Rollback by raising exception (transaction will be aborted)
+                raise HTTPException(
+                    status_code=500,
+                    detail={
+                        'error': 'Inventory update failed',
+                        'failures': inventory_update_failures,
+                        'message': 'Transaction aborted due to inventory update failure'
+                    }
+                )
+
+            # STEP 3: Update customer loyalty points AFTER successful inventory update
             if user_id:
                 try:
                     points_earned = int(transaction.total)  # 1 point per dollar
@@ -189,26 +363,22 @@ async def create_pos_transaction(transaction: POSTransactionCreate):
                         points_earned,
                         user_id
                     )
+                    logger.info(f"Loyalty points awarded: {points_earned} points to user {user_id}")
                 except Exception as e:
                     logger.warning(f"Failed to update loyalty points: {e}")
-            
-            # Update inventory for each item
-            for item in transaction.items:
-                product_id = item.product.get('id')
-                if product_id:
-                    try:
-                        await conn.execute(
-                            """
-                            UPDATE products 
-                            SET available_quantity = GREATEST(0, available_quantity - $1)
-                            WHERE id = $2::uuid
-                            """,
-                            item.quantity,
-                            product_id
-                        )
-                    except Exception as e:
-                        logger.warning(f"Failed to update inventory for product {product_id}: {e}")
-            
+
+            # Add inventory update status to response
+            result['inventory_updates'] = {
+                'successful': inventory_updates_successful,
+                'total_items': len(transaction.items),
+                'updated_count': len(inventory_updates_successful)
+            }
+
+            logger.info(
+                f"✅ Transaction {order_id} completed successfully. "
+                f"Inventory updates: {len(inventory_updates_successful)}/{len(transaction.items)}"
+            )
+
             return result
     except Exception as e:
         logger.error(f"Error creating POS transaction: {str(e)}")

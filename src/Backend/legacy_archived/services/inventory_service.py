@@ -271,7 +271,8 @@ class InventoryService:
         return None
 
     async def receive_purchase_order(self, po_id: UUID,
-                                    received_items: List[Dict[str, Any]]) -> bool:
+                                    received_items: List[Dict[str, Any]],
+                                    received_by: Optional[UUID] = None) -> bool:
         """Process receipt of purchase order items"""
         try:
             # Get store_id from purchase order (before transaction)
@@ -347,15 +348,17 @@ class InventoryService:
 
             # All items have pricing configuration - proceed with transaction
             async with self.db.transaction():
-                # Update PO status
+                # Update PO status - also set received_by and approved_by (auto-approve)
                 status_query = """
                     UPDATE purchase_orders
                     SET status = 'received',
                         received_date = CURRENT_TIMESTAMP,
+                        received_by = $2,
+                        approved_by = $2,
                         updated_at = CURRENT_TIMESTAMP
                     WHERE id = $1
                 """
-                await self.db.execute(status_query, po_id)
+                await self.db.execute(status_query, po_id, received_by)
 
                 # Process each received item
                 for item in received_items:
@@ -420,46 +423,58 @@ class InventoryService:
                         calculated_retail_price  # Calculated using markup rules
                     )
                     
-                    # Record inventory transaction
+                    # Record inventory transaction with audit trail
+                    # Calculate before/after quantities for legacy columns
+                    quantity_received = item['quantity_received']
+                    quantity_after = new_balance  # Balance after adding items
+                    quantity_before = quantity_after - quantity_received  # Balance before adding
+
                     trans_query = """
                         INSERT INTO ocs_inventory_transactions
-                        (sku, transaction_type, reference_id, reference_type, 
+                        (store_id, sku, transaction_type, reference_id, reference_type,
+                         quantity_change, quantity_before, quantity_after,
                          batch_lot, quantity, unit_cost, running_balance)
-                        VALUES ($1, 'purchase', $2, 'purchase_order', $3, $4, $5, $6)
+                        VALUES ($1, $2, 'purchase', $3, 'purchase_order', $4, $5, $6, $7, $8, $9, $10)
                     """
-                    
+
                     await self.db.execute(
                         trans_query,
+                        store_id,
                         item['sku'],
                         po_id,
+                        quantity_received,  # quantity_change (positive delta)
+                        quantity_before,    # inventory level before
+                        quantity_after,     # inventory level after
                         item.get('batch_lot'),
-                        item['quantity_received'],
+                        quantity_received,  # quantity (duplicate for compatibility)
                         Decimal(str(item['unit_cost'])),
-                        new_balance
+                        new_balance         # running_balance (duplicate for compatibility)
                     )
                     
                     # Track batch (with optional GTIN fields)
                     batch_query = """
                             INSERT INTO batch_tracking
-                            (batch_lot, sku, purchase_order_id, quantity_received,
-                             quantity_remaining, unit_cost,
+                            (store_id, batch_number, batch_lot, sku, purchase_order_id, quantity_received,
+                             quantity_remaining, unit_cost, received_date,
                              case_gtin, packaged_on_date, gtin_barcode, each_gtin)
-                            VALUES ($1, $2, $3, $4, $4, $5, $6, $7, $8, $9)
+                            VALUES ($1, $2, $3, $4, $5, $6, $6, $7, CURRENT_DATE, $8, $9, $10, $11)
                             ON CONFLICT (batch_lot) DO UPDATE
-                            SET quantity_received = batch_tracking.quantity_received + $4,
-                                quantity_remaining = batch_tracking.quantity_remaining + $4,
+                            SET quantity_received = batch_tracking.quantity_received + $6,
+                                quantity_remaining = batch_tracking.quantity_remaining + $6,
                                 unit_cost = ((batch_tracking.quantity_remaining * batch_tracking.unit_cost) +
-                                            ($4 * $5)) / (batch_tracking.quantity_remaining + $4),
-                                case_gtin = COALESCE(NULLIF($6, ''), batch_tracking.case_gtin),
-                                packaged_on_date = COALESCE($7, batch_tracking.packaged_on_date),
-                                gtin_barcode = COALESCE(NULLIF($8, ''), batch_tracking.gtin_barcode),
-                                each_gtin = COALESCE(NULLIF($9, ''), batch_tracking.each_gtin)
+                                            ($6 * $7)) / (batch_tracking.quantity_remaining + $6),
+                                case_gtin = COALESCE(NULLIF($8, ''), batch_tracking.case_gtin),
+                                packaged_on_date = COALESCE($9, batch_tracking.packaged_on_date),
+                                gtin_barcode = COALESCE(NULLIF($10, ''), batch_tracking.gtin_barcode),
+                                each_gtin = COALESCE(NULLIF($11, ''), batch_tracking.each_gtin)
                         """
 
                     await self.db.execute(
                         batch_query,
-                        item['batch_lot'],  # Required from Excel
-                        item['sku'],
+                        store_id,  # Store ID from purchase order
+                        item['batch_lot'],  # batch_number (mapped from batch_lot)
+                        item['batch_lot'],  # batch_lot from Excel
+                        item['sku'],  # SKU (ocs_sku column removed)
                         po_id,
                         item['quantity_received'],
                         Decimal(str(item['unit_cost'])),

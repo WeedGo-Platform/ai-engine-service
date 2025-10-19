@@ -36,5 +36,8 @@
     "shipped": "Verzonden",
     "pending": "In Afwachting",
     "cancelled": "Geannuleerd"
+  },
+  "charts": {
+    "revenueLabel": "Omzet"
   }
 }

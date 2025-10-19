@@ -36,5 +36,8 @@
     "shipped": "已发货",
     "pending": "待处理",
     "cancelled": "已取消"
+  },
+  "charts": {
+    "revenueLabel": "收入"
   }
 }

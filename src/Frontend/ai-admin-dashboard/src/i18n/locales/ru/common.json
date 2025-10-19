@@ -197,5 +197,32 @@
       "securityNotice": "После изменения пароля вы будете выведены из системы и вам потребуется войти снова с новыми учетными данными.",
       "changing": "Изменение..."
     }
+  },
+  "navigation": {
+    "dashboard": "Панель",
+    "apps": "Приложения",
+    "organization": "Организация",
+    "tenants": "Арендаторы",
+    "products": "Продукты",
+    "inventory": "Инвентарь",
+    "accessories": "Аксессуары",
+    "orders": "Заказы",
+    "customers": "Клиенты",
+    "purchaseOrders": "Заказы на покупку",
+    "promotions": "Акции",
+    "recommendations": "Рекомендации",
+    "communications": "Коммуникации",
+    "deliveries": "Доставки",
+    "aiConfiguration": "Настройка ИИ",
+    "provincialCatalog": "Провинциальный каталог",
+    "database": "База данных",
+    "systemLogs": "Системные журналы"
+  },
+  "roles": {
+    "superAdmin": "Суперадминистратор",
+    "tenantAdmin": "Администратор арендатора",
+    "storeManager": "Менеджер магазина",
+    "staff": "Персонал",
+    "user": "Пользователь"
   }
 }

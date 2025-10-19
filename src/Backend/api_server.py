@@ -51,8 +51,10 @@ from api.ontario_crsa_endpoints import router as crsa_router
 from api.store_endpoints import router as store_router
 from api.store_hours_endpoints import router as store_hours_router
 from api.store_inventory_endpoints import router as store_inventory_router
-from api.payment_settings_endpoints import router as payment_settings_router
-from api.payment_provider_endpoints import router as payment_provider_router
+
+# V1 Payment endpoints removed - migrated to V2 DDD implementation
+# See: api/v2/payments/payment_endpoints.py for new implementation
+# Deprecated files archived in: _deprecated_v1_payments/
 
 # Import kiosk endpoints
 try:
@@ -62,9 +64,6 @@ except ImportError as e:
     print(f"ERROR: Failed to import kiosk endpoints: {e}")
     KIOSK_ENABLED = False
     kiosk_router = None
-from api.client_payment_endpoints import router as client_payment_router
-from api.store_payment_endpoints import router as store_payment_router
-from api.payment_session_endpoints import router as payment_session_router
 from api.admin_auth import router as admin_auth_router
 
 # Configure logging
@@ -515,11 +514,11 @@ except Exception as e:
 app.include_router(store_hours_router)  # Store hours management endpoints (must be before store_router)
 app.include_router(store_router)   # Store management endpoints (includes inventory stats)
 app.include_router(store_inventory_router)  # Store inventory endpoints
-app.include_router(payment_settings_router)  # Payment settings endpoints
-app.include_router(payment_provider_router)  # Payment provider management endpoints
-app.include_router(client_payment_router)  # Client payment endpoints
-app.include_router(store_payment_router)  # Store payment terminal and device endpoints
-app.include_router(payment_session_router)  # Payment session endpoints for Clover integration
+
+# V1 Payment routers removed - migrated to V2 DDD implementation
+# Removed: payment_settings_router, payment_provider_router, client_payment_router,
+#          store_payment_router, payment_session_router
+# New V2 implementation: api/v2/payments/payment_endpoints.py
 
 # Kiosk endpoints
 if KIOSK_ENABLED and kiosk_router:
@@ -760,6 +759,14 @@ try:
     logger.info("Pricing & Promotions V2 endpoints (DDD) loaded successfully")
 except Exception as e:
     logger.warning(f"Failed to load pricing & promotions V2 endpoints: {e}")
+
+# Import and include payment V2 endpoints (DDD)
+try:
+    from api.v2.payments import router as payments_v2_router
+    app.include_router(payments_v2_router)
+    logger.info("Payment V2 endpoints (DDD) loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load payment V2 endpoints: {e}")
 
 # Import and include SEO/Sitemap endpoints
 try:

@@ -197,5 +197,32 @@
       "securityNotice": "Після зміни пароля ви будете виведені з системи і вам потрібно буде увійти знову з новими обліковими даними.",
       "changing": "Зміна..."
     }
+  },
+  "navigation": {
+    "dashboard": "Панель",
+    "apps": "Додатки",
+    "organization": "Організація",
+    "tenants": "Орендарі",
+    "products": "Продукти",
+    "inventory": "Інвентар",
+    "accessories": "Аксесуари",
+    "orders": "Замовлення",
+    "customers": "Клієнти",
+    "purchaseOrders": "Замовлення на купівлю",
+    "promotions": "Акції",
+    "recommendations": "Рекомендації",
+    "communications": "Комунікації",
+    "deliveries": "Доставки",
+    "aiConfiguration": "Налаштування ШІ",
+    "provincialCatalog": "Провінційний каталог",
+    "database": "База даних",
+    "systemLogs": "Системні журнали"
+  },
+  "roles": {
+    "superAdmin": "Супер адміністратор",
+    "tenantAdmin": "Адміністратор орендаря",
+    "storeManager": "Менеджер магазину",
+    "staff": "Персонал",
+    "user": "Користувач"
   }
 }

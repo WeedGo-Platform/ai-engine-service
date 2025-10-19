@@ -197,5 +197,32 @@
       "securityNotice": "اپنا پاس ورڈ تبدیل کرنے کے بعد، آپ لاگ آؤٹ ہو جائیں گے اور آپ کو اپنی نئی اسناد کے ساتھ دوبارہ لاگ ان کرنا ہوگا۔",
       "changing": "تبدیل ہو رہا ہے..."
     }
+  },
+  "navigation": {
+    "dashboard": "ڈیش بورڈ",
+    "apps": "ایپس",
+    "organization": "تنظیم",
+    "tenants": "کرایہ دار",
+    "products": "مصنوعات",
+    "inventory": "انوینٹری",
+    "accessories": "لوازمات",
+    "orders": "آرڈرز",
+    "customers": "صارفین",
+    "purchaseOrders": "خریداری کے آرڈرز",
+    "promotions": "پروموشنز",
+    "recommendations": "سفارشات",
+    "communications": "مواصلات",
+    "deliveries": "ڈیلیوری",
+    "aiConfiguration": "AI کنفیگریشن",
+    "provincialCatalog": "صوبائی کیٹلاگ",
+    "database": "ڈیٹا بیس",
+    "systemLogs": "سسٹم لاگز"
+  },
+  "roles": {
+    "superAdmin": "سپر ایڈمن",
+    "tenantAdmin": "ٹینینٹ ایڈمن",
+    "storeManager": "اسٹور مینیجر",
+    "staff": "عملہ",
+    "user": "صارف"
   }
 }

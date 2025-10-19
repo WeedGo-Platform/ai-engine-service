@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useStoreContext } from '../contexts/StoreContext';
 import { getApiEndpoint } from '../config/app.config';
 import StoreSelector from './StoreSelector';
+import toast from 'react-hot-toast';
 
 interface POItem {
   sku: string;
@@ -222,7 +223,7 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['purchase-orders'] });
-      alert(`Purchase Order created successfully!`);
+      toast.success(`Purchase Order created successfully!`);
       handleClose();
     },
     onError: (error: Error) => {

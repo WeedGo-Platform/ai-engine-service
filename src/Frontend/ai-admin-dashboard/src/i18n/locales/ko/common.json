@@ -197,5 +197,32 @@
       "securityNotice": "비밀번호를 변경하면 로그아웃됩니다. 새 자격 증명으로 다시 로그인해야 합니다.",
       "changing": "변경 중..."
     }
+  },
+  "navigation": {
+    "dashboard": "대시보드",
+    "apps": "앱",
+    "organization": "조직",
+    "tenants": "세입자",
+    "products": "제품",
+    "inventory": "재고",
+    "accessories": "액세서리",
+    "orders": "주문",
+    "customers": "고객",
+    "purchaseOrders": "구매 주문",
+    "promotions": "프로모션",
+    "recommendations": "추천",
+    "communications": "통신",
+    "deliveries": "배송",
+    "aiConfiguration": "AI 구성",
+    "provincialCatalog": "지방 카탈로그",
+    "database": "데이터베이스",
+    "systemLogs": "시스템 로그"
+  },
+  "roles": {
+    "superAdmin": "슈퍼 관리자",
+    "tenantAdmin": "테넌트 관리자",
+    "storeManager": "스토어 매니저",
+    "staff": "직원",
+    "user": "사용자"
   }
 }

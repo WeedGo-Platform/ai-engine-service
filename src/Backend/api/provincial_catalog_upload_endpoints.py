@@ -275,9 +275,20 @@ async def upload_provincial_catalog(
                             else:
                                 continue # Skip invalid boolean-like values
                         
-                        elif db_col == 'ocs_variant_number' or db_col == 'gtin':
+                        elif db_col == 'ocs_variant_number':
+                            # OCS Variant Number is always a string
                             value = str(value).strip() if not pd.isna(value) else None
                             if value is None:
+                                continue
+
+                        elif db_col == 'gtin':
+                            # GTIN must be bigint in database
+                            try:
+                                value = int(float(value)) if not pd.isna(value) else None
+                                if value is None:
+                                    continue
+                            except (ValueError, TypeError):
+                                # Skip rows with invalid GTIN
                                 continue
 
                         elif db_col in ['ocs_item_number', 'pack_size', 'number_of_items_in_retail_pack', 'eaches_per_inner_pack', 'eaches_per_master_case']:

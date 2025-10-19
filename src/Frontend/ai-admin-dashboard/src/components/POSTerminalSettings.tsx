@@ -135,7 +135,7 @@ const POSTerminalSettingsComponent: React.FC<POSTerminalSettingsProps> = ({
   };
 
   const handleDeleteTerminal = (terminalId: string) => {
-    if (window.confirm(t('common:confirmations.deleteTerminal'))) {
+    if (confirmToastAsync(t('common:confirmations.deleteTerminal'))) {
       setSettings(prev => ({
         ...prev,
         terminals: prev.terminals.filter(t => t.id !== terminalId)

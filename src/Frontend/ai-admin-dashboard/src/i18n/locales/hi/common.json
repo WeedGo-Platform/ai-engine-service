@@ -197,5 +197,32 @@
       "securityNotice": "अपना पासवर्ड बदलने के बाद, आप लॉगआउट हो जाएंगे और आपको अपनी नई क्रेडेंशियल्स के साथ फिर से लॉगिन करना होगा।",
       "changing": "बदला जा रहा है..."
     }
+  },
+  "navigation": {
+    "dashboard": "डैशबोर्ड",
+    "apps": "ऐप्स",
+    "organization": "संगठन",
+    "tenants": "किरायेदार",
+    "products": "उत्पाद",
+    "inventory": "इन्वेंटरी",
+    "accessories": "एक्सेसरीज़",
+    "orders": "ऑर्डर",
+    "customers": "ग्राहक",
+    "purchaseOrders": "क्रय आदेश",
+    "promotions": "प्रचार",
+    "recommendations": "सिफारिशें",
+    "communications": "संचार",
+    "deliveries": "डिलीवरी",
+    "aiConfiguration": "AI कॉन्फ़िगरेशन",
+    "provincialCatalog": "प्रांतीय कैटलॉग",
+    "database": "डेटाबेस",
+    "systemLogs": "सिस्टम लॉग्स"
+  },
+  "roles": {
+    "superAdmin": "सुपर एडमिन",
+    "tenantAdmin": "किरायेदार एडमिन",
+    "storeManager": "स्टोर मैनेजर",
+    "staff": "कर्मचारी",
+    "user": "उपयोगकर्ता"
   }
 }

@@ -36,5 +36,8 @@
     "shipped": "Naipadala",
     "pending": "Nakabinbin",
     "cancelled": "Kinansela"
+  },
+  "charts": {
+    "revenueLabel": "Kita"
   }
 }

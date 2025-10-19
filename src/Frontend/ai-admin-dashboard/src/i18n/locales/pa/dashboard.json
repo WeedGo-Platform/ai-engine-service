@@ -36,5 +36,8 @@
     "shipped": "ਭੇਜਿਆ ਗਿਆ",
     "pending": "ਲੰਬਿਤ",
     "cancelled": "ਰੱਦ ਕੀਤਾ"
+  },
+  "charts": {
+    "revenueLabel": "ਆਮਦਨ"
   }
 }

@@ -150,7 +150,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
     setUserSuccess(null);
 
     // Show options dialog
-    const resetMethod = window.confirm(t('common:confirmations.passwordResetMethod'));
+    const resetMethod = confirmToastAsync(t('common:confirmations.passwordResetMethod'));
 
     try {
       const response = await fetch(getApiEndpoint(`/tenants/${tenant.id}/users/${userId}/reset-password`), {
@@ -225,7 +225,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
       return;
     }
 
-    if (!window.confirm(t('common:confirmations.deleteUserPermanent'))) return;
+    if (!confirmToastAsync(t('common:confirmations.deleteUserPermanent'))) return;
 
     setUserError(null);
     setUserSuccess(null);

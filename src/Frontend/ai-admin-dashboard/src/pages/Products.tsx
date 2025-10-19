@@ -3,6 +3,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../services/api';
 import { Product } from '../types';
 import { Leaf, Plus, Edit2, Trash2, Search, Filter } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { confirmToastAsync } from '../components/ConfirmToast';
 
 const Products: React.FC = () => {
   const queryClient = useQueryClient();
@@ -163,7 +165,7 @@ const Products: React.FC = () => {
                     </button>
                     <button
                       onClick={() => {
-                        if (confirm('Are you sure you want to delete this product?')) {
+                        if (confirmToastAsync('Are you sure you want to delete this product?')) {
                           deleteMutation.mutate(product.id);
                         }
                       }}

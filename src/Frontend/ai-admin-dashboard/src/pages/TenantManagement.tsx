@@ -190,7 +190,7 @@ const TenantManagement: React.FC = () => {
   };
 
   const handleSuspendTenant = async (id: string) => {
-    if (window.confirm(t('tenants:confirmations.suspendMessage'))) {
+    if (confirmToastAsync(t('tenants:confirmations.suspendMessage'))) {
       try {
         await tenantService.suspendTenant(id, 'Admin action');
         toast.success(t('tenants:messages.suspended'));
@@ -926,7 +926,7 @@ const TenantFormModal: React.FC<{
   const handleDeleteUser = async (userId: string, userEmail: string) => {
     if (!tenant?.id) return;
 
-    if (!window.confirm(t('common:confirmations.deleteUser', { email: userEmail }))) return;
+    if (!confirmToastAsync(t('common:confirmations.deleteUser', { email: userEmail }))) return;
 
     try {
       const response = await fetch(

@@ -247,102 +247,75 @@ class CloverProvider(BasePaymentProvider):
         
         return source
     
-    async def charge(self, request: PaymentRequest) -> PaymentResponse:
+    async def charge(
+        self,
+        amount: float,
+        currency: str = "CAD",
+        payment_method_token: str = None,
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
         """
-        Process a payment charge through Clover
+        Process a payment charge through Clover.
+
+        Args:
+            amount: Payment amount (as float)
+            currency: Currency code (default: CAD)
+            payment_method_token: Tokenized payment method
+            metadata: Additional metadata
+
+        Returns:
+            Dict with transaction_id, status, and provider response
         """
         try:
-            # Generate unique transaction ID
-            transaction_id = str(uuid4())
-            
+            amount_decimal = Decimal(str(amount))
+
             # Check transaction limits
-            if self.transaction_limit and request.amount > self.transaction_limit:
+            if self.transaction_limit and amount_decimal > self.transaction_limit:
                 raise PaymentError(
                     f"Transaction amount exceeds limit of {self.transaction_limit}",
                     error_code="TRANSACTION_LIMIT_EXCEEDED"
                 )
-            
-            # Calculate platform fees
-            platform_fee = self._calculate_platform_fee(request.amount)
-            
+
             # Prepare charge request
             charge_data = {
-                'amount': self.format_amount(request.amount),
-                'currency': request.currency.lower(),
-                'description': request.description or f"Order {request.order_id}",
+                'amount': self.format_amount(amount_decimal),
+                'currency': currency.lower(),
+                'description': metadata.get('description', 'Payment') if metadata else 'Payment',
                 'capture': True,  # Immediately capture the payment
-                'metadata': {
-                    'order_id': str(request.order_id) if request.order_id else None,
-                    'customer_id': str(request.customer_id) if request.customer_id else None,
-                    'transaction_id': transaction_id,
-                    'tenant_id': str(self.tenant_id) if self.tenant_id else None,
-                    'tenant_provider_id': str(self.tenant_provider_id) if self.tenant_provider_id else None,
-                    'platform_fee': str(platform_fee)
-                }
+                'metadata': metadata or {}
             }
-            
+
             # Add payment source
-            if request.payment_method_id:
-                # Fetch stored payment method token
-                charge_data['source'] = str(request.payment_method_id)
-            elif request.metadata and 'payment_data' in request.metadata:
-                # Parse payment data
-                charge_data['source'] = self._parse_card_source(request.metadata['payment_data'])
+            if payment_method_token:
+                charge_data['source'] = payment_method_token
             else:
                 raise PaymentError(
                     "No payment method provided",
                     error_code="MISSING_PAYMENT_METHOD"
                 )
-            
+
             # Add customer email if available
-            if request.metadata and 'customer_email' in request.metadata:
-                charge_data['receipt_email'] = request.metadata['customer_email']
-            
-            # Add billing address
-            if request.billing_address:
-                charge_data['billing_details'] = {
-                    'address': {
-                        'line1': request.billing_address.get('line1'),
-                        'line2': request.billing_address.get('line2'),
-                        'city': request.billing_address.get('city'),
-                        'state': request.billing_address.get('state'),
-                        'postal_code': request.billing_address.get('postal_code'),
-                        'country': request.billing_address.get('country', 'CA')
-                    }
-                }
-            
-            # Add 3D Secure if required
-            if request.metadata and request.metadata.get('require_3ds'):
-                charge_data['three_d_secure'] = {
-                    'required': True
-                }
-            
+            if metadata and 'customer_email' in metadata:
+                charge_data['receipt_email'] = metadata['customer_email']
+
             # Send charge request
             response = await self._send_request(
                 method='POST',
                 endpoint=CloverEndpoints.CHARGES,
                 data=charge_data
             )
-            
-            # Parse response
-            status = self._map_charge_status(response.get('status'))
-            
-            return PaymentResponse(
-                transaction_id=transaction_id,
-                status=status,
-                amount=request.amount,
-                currency=request.currency,
-                provider_transaction_id=response.get('id'),
-                error_code=response.get('failure_code'),
-                error_message=response.get('failure_message'),
-                metadata={
-                    'source': response.get('source', {}),
-                    'outcome': response.get('outcome', {}),
-                    'paid': response.get('paid', False),
-                    'captured': response.get('captured', False),
-                    'refunded': response.get('refunded', False)
-                }
-            )
+
+            # Return simplified response
+            return {
+                'transaction_id': response.get('id'),
+                'id': response.get('id'),
+                'status': response.get('status'),
+                'amount': amount,
+                'currency': currency,
+                'paid': response.get('paid', False),
+                'captured': response.get('captured', False),
+                'raw_response': response
+            }
             
         except PaymentError:
             raise
@@ -357,60 +330,52 @@ class CloverProvider(BasePaymentProvider):
     async def refund(
         self,
         transaction_id: str,
-        amount: Optional[Decimal] = None,
+        amount: float,
+        currency: str = "CAD",
         reason: Optional[str] = None
-    ) -> PaymentResponse:
+    ) -> Dict[str, Any]:
         """
-        Process a refund through Clover
+        Process a refund through Clover.
+
+        Args:
+            transaction_id: Provider's original transaction ID
+            amount: Refund amount (as float)
+            currency: Currency code (default: CAD)
+            reason: Reason for refund
+
+        Returns:
+            Dict with refund_id, status, and provider response
         """
         try:
-            # Get original transaction
-            original_transaction = await self.get_transaction(transaction_id)
-            
-            if not original_transaction:
-                raise PaymentError(
-                    "Transaction not found",
-                    error_code="TRANSACTION_NOT_FOUND"
-                )
-            
+            amount_decimal = Decimal(str(amount))
+
             # Prepare refund request
             refund_data = {
-                'charge': original_transaction.get('provider_transaction_id'),
+                'charge': transaction_id,  # This is the provider's transaction ID
+                'amount': self.format_amount(amount_decimal),
                 'reason': reason or 'requested_by_customer',
                 'metadata': {
-                    'original_transaction_id': transaction_id,
-                    'refund_reason': reason
+                    'refund_reason': reason or 'customer_request'
                 }
             }
-            
-            # Add refund amount if partial
-            if amount:
-                refund_data['amount'] = self.format_amount(amount)
-            
+
             # Send refund request
             response = await self._send_request(
                 method='POST',
                 endpoint=CloverEndpoints.REFUNDS,
                 data=refund_data
             )
-            
-            # Parse response
-            status = PaymentStatus.REFUNDED if response.get('status') == 'succeeded' else PaymentStatus.FAILED
-            
-            return PaymentResponse(
-                transaction_id=str(uuid4()),
-                status=status,
-                amount=self.parse_amount(response.get('amount', 0)),
-                currency=response.get('currency', 'CAD').upper(),
-                provider_transaction_id=response.get('id'),
-                error_code=response.get('failure_code'),
-                error_message=response.get('failure_message'),
-                metadata={
-                    'refund_id': response.get('id'),
-                    'original_charge': response.get('charge'),
-                    'reason': response.get('reason')
-                }
-            )
+
+            # Return simplified response
+            return {
+                'refund_id': response.get('id'),
+                'id': response.get('id'),
+                'status': response.get('status'),
+                'amount': amount,
+                'currency': currency,
+                'original_charge': response.get('charge'),
+                'raw_response': response
+            }
             
         except PaymentError:
             raise

@@ -10,6 +10,8 @@ import {
 import { useAuth } from '../contexts/AuthContext';
 import { getAuthStorage, getStorageKey } from '../config/auth.config';
 import { getApiEndpoint } from '../config/app.config';
+import toast from 'react-hot-toast';
+import { confirmToastAsync } from '../components/ConfirmToast';
 
 interface TableInfo {
   name: string;
@@ -225,7 +227,7 @@ export default function DatabaseManagement() {
         fetchTableData(selectedTable, currentPage);
       } else {
         const error = await response.json();
-        alert(`Error: ${error.detail}`);
+        toast.error(`Error: ${error.detail}`);
       }
     } catch (error) {
       console.error('Error adding row:', error);
@@ -269,7 +271,7 @@ export default function DatabaseManagement() {
         fetchTableData(selectedTable, currentPage);
       } else {
         const error = await response.json();
-        alert(`Error: ${error.detail}`);
+        toast.error(`Error: ${error.detail}`);
       }
     } catch (error) {
       console.error('Error updating row:', error);
@@ -280,7 +282,8 @@ export default function DatabaseManagement() {
   const handleDeleteRow = async (row: any) => {
     if (!selectedTable) return;
 
-    if (!confirm(t('database:confirm.deleteRow'))) return;
+    const confirmed = await confirmToastAsync(t('database:confirm.deleteRow'));
+    if (!confirmed) return;
 
     try {
       const whereConditions: Record<string, any> = {};
@@ -307,7 +310,7 @@ export default function DatabaseManagement() {
         fetchTableData(selectedTable, currentPage);
       } else {
         const error = await response.json();
-        alert(`Error: ${error.detail}`);
+        toast.error(`Error: ${error.detail}`);
       }
     } catch (error) {
       console.error('Error deleting row:', error);
@@ -318,7 +321,8 @@ export default function DatabaseManagement() {
   const handleTruncateTable = async () => {
     if (!selectedTable) return;
 
-    if (!confirm(t('database:confirm.truncateTable', { table: selectedTable }))) return;
+    const confirmed = await confirmToastAsync(t('database:confirm.truncateTable', { table: selectedTable }));
+    if (!confirmed) return;
 
     try {
       const response = await fetch(
@@ -339,7 +343,7 @@ export default function DatabaseManagement() {
         fetchTables();
       } else {
         const error = await response.json();
-        alert(`Error: ${error.detail}`);
+        toast.error(`Error: ${error.detail}`);
       }
     } catch (error) {
       console.error('Error truncating table:', error);
@@ -371,7 +375,7 @@ export default function DatabaseManagement() {
         fetchTables();
       } else {
         const error = await response.json();
-        alert(`Error: ${error.detail}`);
+        toast.error(`Error: ${error.detail}`);
       }
     } catch (error) {
       console.error('Error dropping table:', error);
@@ -401,7 +405,7 @@ export default function DatabaseManagement() {
         setQueryResult(data.data);
       } else {
         const error = await response.json();
-        alert(`Error: ${error.detail}`);
+        toast.error(`Error: ${error.detail}`);
       }
     } catch (error) {
       console.error('Error executing query:', error);

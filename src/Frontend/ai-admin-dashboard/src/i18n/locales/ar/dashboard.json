@@ -36,5 +36,8 @@
     "shipped": "تم الشحن",
     "pending": "قيد الانتظار",
     "cancelled": "ملغى"
+  },
+  "charts": {
+    "revenueLabel": "الإيرادات"
   }
 }

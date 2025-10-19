@@ -36,5 +36,8 @@
     "shipped": "נשלח",
     "pending": "ממתין",
     "cancelled": "בוטל"
+  },
+  "charts": {
+    "revenueLabel": "הכנסות"
   }
 }

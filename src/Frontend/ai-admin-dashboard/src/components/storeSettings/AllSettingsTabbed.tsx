@@ -5,6 +5,7 @@ import {
 import paymentService from '../../services/paymentService';
 import OnlinePaymentSettings from './OnlinePaymentSettings';
 import { api } from '../../services/api';
+import toast from 'react-hot-toast';
 
 interface AllSettingsTabbedProps {
   storeId: string;
@@ -388,7 +389,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
 
           // Only show error if it's not a 404 (empty store is fine)
           if (error.response?.status !== 404) {
-            alert('Failed to load devices. Please refresh the page.');
+            toast.error('Failed to load devices. Please refresh the page.');
           }
         }
       };
@@ -448,7 +449,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
 
           // Show success message with passcode (from user input, not backend)
           console.log('[Device Creation] Success!', response.data);
-          alert(`Device created successfully!\n\nDevice ID: ${createdDeviceId}\nPasscode: ${createdPasscode}\n\n⚠️ Save this passcode - it won't be shown again!`);
+          toast.success(`Device created successfully!\n\nDevice ID: ${createdDeviceId}\nPasscode: ${createdPasscode}\n\n⚠️ Save this passcode - it won't be shown again!`);
         } catch (error: any) {
           console.error('[Device Creation] Failed:', error);
           console.error('[Device Creation] Error details:', error.response?.data);
@@ -488,7 +489,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
           hasDeviceId: !!newDevice.deviceId,
           hasPasscode: !!newDevice.passcode
         });
-        alert('Please fill in all required fields: Device Name, Location, Device ID, and Passcode');
+        toast.error('Please fill in all required fields: Device Name, Location, Device ID, and Passcode');
       }
     };
 
