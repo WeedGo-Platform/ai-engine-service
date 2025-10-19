@@ -197,5 +197,32 @@
       "securityNotice": "După schimbarea parolei, veți fi deconectat și va trebui să vă autentificați din nou cu noile acreditări.",
       "changing": "Se schimbă..."
     }
+  },
+  "navigation": {
+    "dashboard": "Panou",
+    "apps": "Aplicații",
+    "organization": "Organizație",
+    "tenants": "Chiriași",
+    "products": "Produse",
+    "inventory": "Inventar",
+    "accessories": "Accesorii",
+    "orders": "Comenzi",
+    "customers": "Clienți",
+    "purchaseOrders": "Comenzi de achiziție",
+    "promotions": "Promoții",
+    "recommendations": "Recomandări",
+    "communications": "Comunicări",
+    "deliveries": "Livrări",
+    "aiConfiguration": "Configurare AI",
+    "provincialCatalog": "Catalog provincial",
+    "database": "Bază de date",
+    "systemLogs": "Jurnale de sistem"
+  },
+  "roles": {
+    "superAdmin": "Super administrator",
+    "tenantAdmin": "Administrator chiriaș",
+    "storeManager": "Manager magazin",
+    "staff": "Personal",
+    "user": "Utilizator"
   }
 }

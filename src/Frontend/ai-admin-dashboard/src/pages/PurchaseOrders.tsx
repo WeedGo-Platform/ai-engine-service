@@ -8,6 +8,7 @@ import { FileText, Plus, Eye, Clock, CheckCircle, XCircle, TruckIcon, FileSpread
 import ASNImportModal from '../components/ASNImportModal';
 import CreatePurchaseOrderModal from '../components/CreatePurchaseOrderModal';
 import { useStoreContext } from '../contexts/StoreContext';
+import toast from 'react-hot-toast';
 
 const PurchaseOrders: React.FC = () => {
   const navigate = useNavigate();
@@ -159,7 +160,7 @@ const PurchaseOrders: React.FC = () => {
       const orderDetails = await response.json();
       setSelectedOrder(orderDetails);
     } catch (error) {
-      alert(`Error fetching order details: ${(error as Error).message}`);
+      toast.error(`Error fetching order details: ${(error as Error).message}`);
     }
   };
 
@@ -184,7 +185,7 @@ const PurchaseOrders: React.FC = () => {
       // Refresh the purchase orders list
       queryClient.invalidateQueries({ queryKey: ['purchase-orders'] });
     } catch (error) {
-      alert(`Error updating status: ${(error as Error).message}`);
+      toast.error(`Error updating status: ${(error as Error).message}`);
     }
   };
 

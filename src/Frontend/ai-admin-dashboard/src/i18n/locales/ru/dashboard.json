@@ -36,5 +36,8 @@
     "shipped": "Отправлен",
     "pending": "В Ожидании",
     "cancelled": "Отменен"
+  },
+  "charts": {
+    "revenueLabel": "Доход"
   }
 }

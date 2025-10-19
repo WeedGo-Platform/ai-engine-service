@@ -20,6 +20,7 @@ import {
   Check,
   GripVertical
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 // Voice Visualization (optional - can be removed if not needed)
 // import VoiceVisualization from './chat/VoiceVisualization';
 import { useAuth } from '../contexts/AuthContext';
@@ -109,6 +110,9 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
 }) => {
   // Get user context from AuthContext
   const { user } = useAuth();
+
+  // Get translation function for chat namespace
+  const { t } = useTranslation('chat');
 
   // UI State
   const [isOpen, setIsOpen] = useState(defaultOpen);
@@ -682,7 +686,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
         setMessages([{
           id: Date.now().toString(),
           role: 'system',
-          content: 'Welcome! How can I assist you today? You can type or use voice input.',
+          content: t('assistant.greeting'),
           timestamp: new Date()
         }]);
         break;

@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { useStoreContext } from '../contexts/StoreContext';
 import toast from 'react-hot-toast';
+import { confirmToastAsync } from '../components/ConfirmToast';
 
 interface Template {
   id: string;
@@ -180,7 +181,7 @@ const TemplateManager: React.FC<TemplateManagerProps> = ({ onSelectTemplate, sel
   };
 
   const handleDeleteTemplate = async (templateId: string) => {
-    if (!confirm('Are you sure you want to delete this template?')) return;
+    if (!(await confirmToastAsync('Are you sure you want to delete this template?'))) return;
 
     try {
       const token = localStorage.getItem('token');

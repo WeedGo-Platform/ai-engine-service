@@ -83,6 +83,54 @@ class AsyncPGPurchaseOrderRepository(IPurchaseOrderRepository):
     def __init__(self, db_pool: asyncpg.Pool):
         self.db_pool = db_pool
 
+    def _map_status_to_db(self, domain_status: PurchaseOrderStatus) -> str:
+        """
+        Map domain status to database status (Anti-Corruption Layer)
+
+        Database constraint only allows: 'pending', 'partial', 'received', 'cancelled'
+        Domain model has richer status values for business logic
+
+        Args:
+            domain_status: Rich domain status from PurchaseOrderStatus enum
+
+        Returns:
+            Database-compatible status string
+        """
+        status_mapping = {
+            PurchaseOrderStatus.DRAFT: "pending",
+            PurchaseOrderStatus.SUBMITTED: "pending",
+            PurchaseOrderStatus.APPROVED: "pending",
+            PurchaseOrderStatus.SENT_TO_SUPPLIER: "pending",
+            PurchaseOrderStatus.CONFIRMED: "pending",
+            PurchaseOrderStatus.PARTIALLY_RECEIVED: "partial",
+            PurchaseOrderStatus.FULLY_RECEIVED: "received",
+            PurchaseOrderStatus.CLOSED: "received",
+            PurchaseOrderStatus.CANCELLED: "cancelled"
+        }
+
+        db_status = status_mapping.get(domain_status, "pending")
+        logger.debug(f"Mapping domain status {domain_status.value} to database status {db_status}")
+        return db_status
+
+    def _map_status_from_db(self, db_status: str) -> PurchaseOrderStatus:
+        """
+        Map database status to domain status
+
+        Args:
+            db_status: Database status string
+
+        Returns:
+            Domain PurchaseOrderStatus enum
+        """
+        status_mapping = {
+            "pending": PurchaseOrderStatus.DRAFT,
+            "partial": PurchaseOrderStatus.PARTIALLY_RECEIVED,
+            "received": PurchaseOrderStatus.FULLY_RECEIVED,
+            "cancelled": PurchaseOrderStatus.CANCELLED
+        }
+
+        return status_mapping.get(db_status, PurchaseOrderStatus.DRAFT)
+
     async def save(self, purchase_order: PurchaseOrder) -> UUID:
         """
         Save purchase order aggregate to database
@@ -112,10 +160,13 @@ class AsyncPGPurchaseOrderRepository(IPurchaseOrderRepository):
         query = """
             INSERT INTO purchase_orders (
                 id, po_number, supplier_id, order_date, expected_date, status,
-                total_amount, notes, store_id, shipment_id, container_id, vendor,
+                total_amount, subtotal, tax_amount, notes, store_id, shipment_id, container_id, vendor,
                 created_by, created_at, updated_at
-            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
         """
+
+        # Map domain status to database status using Anti-Corruption Layer
+        db_status = self._map_status_to_db(po.status)
 
         await conn.execute(
             query,
@@ -124,8 +175,10 @@ class AsyncPGPurchaseOrderRepository(IPurchaseOrderRepository):
             po.supplier_id,
             po.order_date,
             po.expected_delivery_date,
-            po.status.value if hasattr(po.status, 'value') else str(po.status),
+            db_status,  # Use mapped database status
             po.total_amount,
+            po.subtotal,  # Add subtotal
+            po.tax_amount,  # Add tax_amount
             po.internal_notes,
             po.store_id,
             po.metadata.get('shipment_id'),
@@ -148,10 +201,13 @@ class AsyncPGPurchaseOrderRepository(IPurchaseOrderRepository):
             WHERE id = $1
         """
 
+        # Map domain status to database status using Anti-Corruption Layer
+        db_status = self._map_status_to_db(po.status)
+
         await conn.execute(
             query,
             po.id,
-            po.status.value if hasattr(po.status, 'value') else str(po.status),
+            db_status,  # Use mapped database status
             po.total_amount,
             po.internal_notes,
             po.expected_delivery_date,
@@ -205,7 +261,9 @@ class AsyncPGPurchaseOrderRepository(IPurchaseOrderRepository):
             query += f" AND supplier_id = ${len(params)}"
 
         if status:
-            params.append(status.value if hasattr(status, 'value') else str(status))
+            # Map domain status to database status for filtering
+            db_status = self._map_status_to_db(status)
+            params.append(db_status)
             query += f" AND status = ${len(params)}"
 
         params.append(limit)
@@ -249,19 +307,26 @@ class AsyncPGPurchaseOrderRepository(IPurchaseOrderRepository):
                 items_saved = 0
 
                 for item in items:
-                    # Use exact same INSERT logic as legacy service
+                    # Insert line item with only sku column (ocs_sku has been removed)
                     item_query = """
                         INSERT INTO purchase_order_items
                         (purchase_order_id, sku, item_name, batch_lot, quantity_ordered,
-                         unit_cost, case_gtin, gtin_barcode, each_gtin,
+                         unit_cost, total_cost, case_gtin, gtin_barcode, each_gtin,
                          vendor, brand, packaged_on_date,
                          shipped_qty, uom, uom_conversion, uom_conversion_qty)
-                        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+                        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
                     """
 
+                    sku_value = item['sku']
                     gtin_barcode_value = item.get('gtin_barcode')
+                    unit_cost = Decimal(str(item['unit_cost']))
+                    # Frontend sends 'quantity_ordered' (mapped from Excel shipped_qty)
+                    quantity = item.get('quantity_ordered') or item.get('quantity')
+                    total_cost = unit_cost * Decimal(str(quantity))
+
                     logger.info(
-                        f"Saving line item {item['sku']}: "
+                        f"Saving line item {sku_value}: "
+                        f"qty={quantity}, unit_cost={unit_cost}, total_cost={total_cost}, "
                         f"gtin_barcode={gtin_barcode_value}, "
                         f"case_gtin={item.get('case_gtin')}"
                     )
@@ -269,11 +334,12 @@ class AsyncPGPurchaseOrderRepository(IPurchaseOrderRepository):
                     await conn.execute(
                         item_query,
                         po_id,
-                        item['sku'],
+                        sku_value,  # sku column
                         item.get('item_name'),
                         item['batch_lot'],
-                        item['quantity'],
-                        Decimal(str(item['unit_cost'])),
+                        quantity,
+                        unit_cost,
+                        total_cost,  # quantity_ordered * unit_cost
                         item['case_gtin'],
                         gtin_barcode_value,
                         item['each_gtin'],
@@ -297,6 +363,9 @@ class AsyncPGPurchaseOrderRepository(IPurchaseOrderRepository):
 
         Reconstructs the aggregate from database tables
         """
+        # Map database status back to domain status using Anti-Corruption Layer
+        domain_status = self._map_status_from_db(row['status']) if row['status'] else PurchaseOrderStatus.DRAFT
+
         # Create PurchaseOrder instance from database data
         po = PurchaseOrder(
             id=row['id'],
@@ -305,7 +374,7 @@ class AsyncPGPurchaseOrderRepository(IPurchaseOrderRepository):
             supplier_id=row['supplier_id'],
             supplier_name=row.get('vendor', ''),
             order_number=row['po_number'],
-            status=PurchaseOrderStatus(row['status']) if row['status'] else PurchaseOrderStatus.DRAFT,
+            status=domain_status,  # Use mapped domain status
             order_date=row['order_date'],
             expected_delivery_date=row.get('expected_date'),
             total_amount=Decimal(str(row['total_amount'])) if row['total_amount'] else Decimal('0'),

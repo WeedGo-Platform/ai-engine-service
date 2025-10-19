@@ -36,5 +36,8 @@
     "shipped": "배송됨",
     "pending": "대기 중",
     "cancelled": "취소됨"
+  },
+  "charts": {
+    "revenueLabel": "수익"
   }
 }

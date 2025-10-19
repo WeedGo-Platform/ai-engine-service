@@ -36,5 +36,8 @@
     "shipped": "Enviado",
     "pending": "Pendiente",
     "cancelled": "Cancelado"
+  },
+  "charts": {
+    "revenueLabel": "Ingresos"
   }
 }

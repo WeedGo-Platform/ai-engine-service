@@ -84,8 +84,10 @@ class PurchaseOrderApplicationService:
                 )
 
             # 3. Calculate total amount
+            # Frontend sends 'quantity_ordered' (mapped from Excel shipped_qty)
             total_amount = sum(
-                Decimal(str(item['quantity'])) * Decimal(str(item['unit_cost']))
+                Decimal(str(item.get('quantity_ordered') or item.get('quantity'))) *
+                Decimal(str(item['unit_cost']))
                 for item in items
             )
 
@@ -95,12 +97,17 @@ class PurchaseOrderApplicationService:
                 tenant_id=tenant_id or store_id,  # Default to store_id if not provided
                 supplier_id=supplier_id,
                 supplier_name=vendor or "Unknown Supplier",
-                order_number=po_number,
-                expected_delivery_date=expected_date,
-                total_amount=total_amount,
-                internal_notes=notes,
                 created_by=created_by
             )
+
+            # 4b. Override auto-generated order_number with ASN-based number
+            purchase_order.order_number = po_number
+
+            # 4c. Set additional properties not available in create() method
+            purchase_order.expected_delivery_date = datetime.combine(expected_date, datetime.min.time())
+            purchase_order.total_amount = total_amount
+            purchase_order.subtotal = total_amount  # ASN imports don't have tax breakdown
+            purchase_order.internal_notes = notes
 
             # 5. Store additional metadata from ASN
             purchase_order.metadata['shipment_id'] = shipment_id
@@ -228,6 +235,72 @@ class PurchaseOrderApplicationService:
         TODO: Refactor to use PurchaseOrderLineItem value objects within aggregate
         """
         return await self.repository.save_line_items(po_id, items)
+
+    async def receive_purchase_order(
+        self,
+        po_id: UUID,
+        received_items: List[Dict[str, Any]],
+        received_by: Optional[UUID] = None,
+        auto_approve: bool = True
+    ) -> Dict[str, Any]:
+        """
+        Receive purchase order items
+
+        This method orchestrates the receiving process:
+        1. Load PO aggregate
+        2. Call PO.receive() domain method (updates status, sets received_by, auto-approves)
+        3. Save PO
+        4. Return receiving details
+
+        NOTE: This does NOT handle inventory/batch updates. That's done separately
+        by InventoryManagementService when called from the API endpoint.
+
+        Args:
+            po_id: Purchase order UUID
+            received_items: List of items with quantities received
+            received_by: User who received the items
+            auto_approve: Whether to auto-approve (default: True)
+
+        Returns:
+            Dict with receiving details
+
+        Raises:
+            ValueError: If PO not found or validation fails
+        """
+        try:
+            # Load PO aggregate
+            po = await self.repository.find_by_id(po_id)
+            if not po:
+                raise ValueError(f"Purchase order {po_id} not found")
+
+            # Use domain method to receive
+            receiving_details = po.receive(
+                received_items=received_items,
+                received_by=received_by,
+                auto_approve=auto_approve
+            )
+
+            # Save PO with updated status
+            await self.repository.save(po)
+
+            logger.info(
+                f"Received purchase order {po.order_number}: "
+                f"{receiving_details['total_received']} units, "
+                f"Status: {receiving_details['status']}"
+            )
+
+            return {
+                'id': str(po.id),
+                'order_number': po.order_number,
+                **receiving_details
+            }
+
+        except ValueError as ve:
+            logger.warning(f"Validation error receiving purchase order: {ve}")
+            raise
+        except Exception as e:
+            logger.error(f"Error receiving purchase order: {e}")
+            raise
 
     def _to_dto(self, po: PurchaseOrder) -> Dict[str, Any]:
         """

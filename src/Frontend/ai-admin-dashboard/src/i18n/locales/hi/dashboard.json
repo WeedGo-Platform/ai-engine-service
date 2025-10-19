@@ -36,5 +36,8 @@
     "shipped": "भेज दिया गया",
     "pending": "लंबित",
     "cancelled": "रद्द"
+  },
+  "charts": {
+    "revenueLabel": "राजस्व"
   }
 }

@@ -36,5 +36,8 @@
     "shipped": "بھیج دیا گیا",
     "pending": "زیر التواء",
     "cancelled": "منسوخ"
+  },
+  "charts": {
+    "revenueLabel": "آمدنی"
   }
 }

@@ -197,5 +197,32 @@
       "securityNotice": "Sau khi thay đổi mật khẩu, bạn sẽ được đăng xuất và cần đăng nhập lại với thông tin xác thực mới.",
       "changing": "Đang thay đổi..."
     }
+  },
+  "navigation": {
+    "dashboard": "Bảng điều khiển",
+    "apps": "Ứng dụng",
+    "organization": "Tổ chức",
+    "tenants": "Người thuê",
+    "products": "Sản phẩm",
+    "inventory": "Kho hàng",
+    "accessories": "Phụ kiện",
+    "orders": "Đơn hàng",
+    "customers": "Khách hàng",
+    "purchaseOrders": "Đơn đặt hàng",
+    "promotions": "Khuyến mãi",
+    "recommendations": "Đề xuất",
+    "communications": "Truyền thông",
+    "deliveries": "Giao hàng",
+    "aiConfiguration": "Cấu hình AI",
+    "provincialCatalog": "Danh mục tỉnh",
+    "database": "Cơ sở dữ liệu",
+    "systemLogs": "Nhật ký hệ thống"
+  },
+  "roles": {
+    "superAdmin": "Quản trị viên cấp cao",
+    "tenantAdmin": "Quản trị viên người thuê",
+    "storeManager": "Quản lý cửa hàng",
+    "staff": "Nhân viên",
+    "user": "Người dùng"
   }
 }

@@ -1,0 +1,414 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - img [ref=e8]
+          - generic [ref=e11]: WeedGo
+        - navigation [ref=e12]:
+          - link "Features" [ref=e13] [cursor=pointer]:
+            - /url: "#features"
+          - link "Pricing" [ref=e14] [cursor=pointer]:
+            - /url: "#pricing"
+          - link "Testimonials" [ref=e15] [cursor=pointer]:
+            - /url: "#testimonials"
+          - link "Login" [ref=e16] [cursor=pointer]:
+            - /url: /login
+          - button "Select Language" [ref=e18] [cursor=pointer]:
+            - img [ref=e19]
+            - generic [ref=e22]: 🇺🇸
+        - link "Get Started" [ref=e23] [cursor=pointer]:
+          - /url: /signup
+    - generic [ref=e26]:
+      - heading "The Complete Cannabis Business Platform" [level=1] [ref=e27]:
+        - text: The Complete Cannabis
+        - generic [ref=e28]: Business Platform
+      - paragraph [ref=e29]: Power your dispensary with AI-driven e-commerce, multi-language support, fraud protection, and complete business management—all in one platform.
+      - generic [ref=e30]:
+        - link "Start Free Trial" [ref=e31] [cursor=pointer]:
+          - /url: /signup
+          - text: Start Free Trial
+          - img [ref=e32]
+        - link "Learn More" [ref=e34] [cursor=pointer]:
+          - /url: "#features"
+    - generic [ref=e37]:
+      - generic [ref=e38]:
+        - generic [ref=e39]: 5,540+
+        - generic [ref=e40]: Products
+      - generic [ref=e41]:
+        - generic [ref=e42]: 25+
+        - generic [ref=e43]: Languages
+      - generic [ref=e44]:
+        - generic [ref=e45]: 99.9%
+        - generic [ref=e46]: Uptime
+      - generic [ref=e47]:
+        - generic [ref=e48]: 24/7
+        - generic [ref=e49]: Support
+    - generic [ref=e51]:
+      - generic [ref=e52]:
+        - heading "Everything You Need to Dominate Your Market" [level=2] [ref=e53]
+        - paragraph [ref=e54]:
+          - text: Built exclusively for cannabis retailers, WeedGo combines cutting-edge AI, enterprise-grade infrastructure, and industry-specific tools to help you
+          - strong [ref=e55]: sell more, serve better, and scale faster
+          - text: .
+      - generic [ref=e56]:
+        - generic [ref=e57]:
+          - img [ref=e58]
+          - heading "AI Budtender 24/7" [level=3] [ref=e61]
+          - paragraph [ref=e62]: Never miss a sale. Your AI assistant handles customer questions instantly in any language, recommends products, and even verifies age automatically.
+        - generic [ref=e63]:
+          - img [ref=e64]
+          - heading "Voice Shopping" [level=3] [ref=e67]
+          - paragraph [ref=e68]: Accessibility meets convenience. Customers can browse, search, and order hands-free—perfect for in-store kiosks and mobile shoppers.
+        - generic [ref=e69]:
+          - img [ref=e70]
+          - heading "Predictive Intelligence" [level=3] [ref=e73]
+          - paragraph [ref=e74]: Know what sells before it happens. AI predicts demand, optimizes inventory levels, and alerts you to reorder at the perfect time.
+        - generic [ref=e75]:
+          - img [ref=e76]
+          - heading "Smart Recommendations" [level=3] [ref=e80]
+          - paragraph [ref=e81]: Boost average order value by 40%. Machine learning suggests complementary products based on purchase patterns and customer preferences.
+        - generic [ref=e82]:
+          - img [ref=e83]
+          - heading "Unified Commerce Platform" [level=3] [ref=e85]
+          - paragraph [ref=e86]: One system for everything—web storefront, in-store POS, kiosk, mobile app, and TV menu displays. Your inventory syncs in real-time across all channels.
+        - generic [ref=e87]:
+          - img [ref=e88]
+          - heading "Branded Mobile Apps" [level=3] [ref=e90]
+          - paragraph [ref=e91]: Your customers download YOUR app (iOS & Android). Build loyalty with push notifications, exclusive deals, and seamless mobile ordering.
+        - generic [ref=e92]:
+          - img [ref=e93]
+          - heading "Self-Service Kiosks" [level=3] [ref=e95]
+          - paragraph [ref=e96]: Reduce wait times and labor costs. Customers browse, order, and pay on tablets—your staff focuses on high-value interactions.
+        - generic [ref=e97]:
+          - img [ref=e98]
+          - heading "Delivery Ecosystem" [level=3] [ref=e103]
+          - paragraph [ref=e104]: Complete delivery management with driver apps, real-time GPS tracking, customer notifications, and route optimization. Compete with the big players.
+        - generic [ref=e105]:
+          - img [ref=e106]
+          - heading "25+ Languages, Zero Barriers" [level=3] [ref=e110]
+          - paragraph [ref=e111]: Serve every customer in their native language. Auto-detection, real-time translation, and localized content—expand into any market instantly.
+        - generic [ref=e112]:
+          - img [ref=e113]
+          - heading "SEO That Actually Works" [level=3] [ref=e116]
+          - paragraph [ref=e117]: Dynamic, AI-powered SEO optimization. Your product pages rank higher on Google automatically—no SEO agency required.
+        - generic [ref=e118]:
+          - img [ref=e119]
+          - heading "Fraud Protection Suite" [level=3] [ref=e121]
+          - paragraph [ref=e122]: Stop chargebacks before they happen. AI detects suspicious patterns, blacklists fraudulent cards, and captures signatures for every transaction.
+        - generic [ref=e123]:
+          - img [ref=e124]
+          - heading "Compliance Autopilot" [level=3] [ref=e127]
+          - paragraph [ref=e128]: Stay compliant without the headache. Automatic age verification, CannSell tracking, OCS integration, and audit-ready reports at your fingertips.
+        - generic [ref=e129]:
+          - img [ref=e130]
+          - heading "Multi-Layer Age Verification" [level=3] [ref=e133]
+          - paragraph [ref=e134]: Voice recognition, ID scanning, facial matching, and manual override—verify customers' age through multiple methods for complete regulatory confidence.
+        - generic [ref=e135]:
+          - img [ref=e136]
+          - heading "Real-Time Business Intelligence" [level=3] [ref=e138]
+          - paragraph [ref=e139]: See everything in one dashboard—sales trends, top products, customer behavior, staff performance, and profit margins updated every second.
+        - generic [ref=e140]:
+          - img [ref=e141]
+          - heading "Multi-Location Command Center" [level=3] [ref=e146]
+          - paragraph [ref=e147]: Manage unlimited stores from one dashboard. Transfer inventory between locations, compare performance, and maintain consistent branding effortlessly.
+        - generic [ref=e148]:
+          - img [ref=e149]
+          - heading "Customer Loyalty Engine" [level=3] [ref=e154]
+          - paragraph [ref=e155]: Turn first-time buyers into regulars. Points programs, VIP tiers, birthday rewards, and referral bonuses—all automated and customizable.
+        - generic [ref=e156]:
+          - img [ref=e157]
+          - heading "Your Brand, Your Way" [level=3] [ref=e163]
+          - paragraph [ref=e164]: Complete white-label customization. Choose from premium templates or go fully custom—logos, colors, fonts, and layouts that scream YOU.
+        - generic [ref=e165]:
+          - img [ref=e166]
+          - heading "No-Code Customization" [level=3] [ref=e169]
+          - paragraph [ref=e170]: Change anything without a developer. Drag-and-drop page builder, custom forms, promotional banners—update your store in minutes, not weeks.
+        - generic [ref=e171]:
+          - img [ref=e172]
+          - heading "99.9% Uptime Guarantee" [level=3] [ref=e174]
+          - paragraph [ref=e175]: Enterprise cloud infrastructure that scales automatically. Lightning-fast load times, global CDN, and redundant backups—your store never goes down.
+        - generic [ref=e176]:
+          - img [ref=e177]
+          - heading "API-First Architecture" [level=3] [ref=e181]
+          - paragraph [ref=e182]: Integrate with anything. Full REST API access lets you connect accounting software, marketing tools, or custom applications seamlessly.
+      - generic [ref=e184]:
+        - heading "Ready to See What WeedGo Can Do for Your Business?" [level=3] [ref=e185]
+        - paragraph [ref=e186]:
+          - text: Join hundreds of cannabis retailers who've already made the switch.
+          - strong [ref=e187]: Start free, scale unlimited, and transform your business
+          - text: with the only platform built specifically for you.
+        - generic [ref=e188]:
+          - link "Start Free Trial" [ref=e189] [cursor=pointer]:
+            - /url: /signup
+            - text: Start Free Trial
+            - img [ref=e190]
+          - link "View Pricing Plans" [ref=e192] [cursor=pointer]:
+            - /url: "#pricing"
+            - text: View Pricing Plans
+            - img [ref=e193]
+    - generic [ref=e196]:
+      - generic [ref=e197]:
+        - heading "Simple, Transparent Pricing" [level=2] [ref=e198]
+        - paragraph [ref=e199]: Choose the plan that fits your business needs
+      - generic [ref=e200]:
+        - generic [ref=e201]:
+          - generic [ref=e202]:
+            - heading "Community and New Business" [level=3] [ref=e203]
+            - generic [ref=e204]: FREE
+            - generic [ref=e205]: forever
+            - link "Get Started" [ref=e206] [cursor=pointer]:
+              - /url: /signup?plan=community_and_new_business
+          - list [ref=e207]:
+            - listitem [ref=e208]:
+              - img [ref=e209]
+              - generic [ref=e212]: Unlimited store locations to scale at your pace
+            - listitem [ref=e213]:
+              - img [ref=e214]
+              - generic [ref=e217]: Bilingual support (English & French)
+            - listitem [ref=e218]:
+              - img [ref=e219]
+              - generic [ref=e222]: AI-powered budtender personality
+            - listitem [ref=e223]:
+              - img [ref=e224]
+              - generic [ref=e227]: Complete POS & kiosk system
+            - listitem [ref=e228]:
+              - img [ref=e229]
+              - generic [ref=e232]: Customizable e-commerce storefront
+            - listitem [ref=e233]:
+              - img [ref=e234]
+              - generic [ref=e237]: Digital menu display system
+            - listitem [ref=e238]:
+              - img [ref=e239]
+              - generic [ref=e242]: Built-in delivery management
+            - listitem [ref=e243]:
+              - img [ref=e244]
+              - generic [ref=e247]: Advanced fraud protection & age verification
+            - listitem [ref=e248]:
+              - img [ref=e249]
+              - generic [ref=e252]: Community support
+        - generic [ref=e253]:
+          - generic [ref=e254]:
+            - heading "Small Business" [level=3] [ref=e255]
+            - generic [ref=e256]: $99
+            - generic [ref=e257]: /month
+            - link "Get Started" [ref=e258] [cursor=pointer]:
+              - /url: /signup?plan=small_business
+          - paragraph [ref=e260]: "Everything in Free, plus:"
+          - list [ref=e261]:
+            - listitem [ref=e262]:
+              - img [ref=e263]
+              - generic [ref=e266]: Expand to 5 languages for diverse markets
+            - listitem [ref=e267]:
+              - img [ref=e268]
+              - generic [ref=e271]: 2 AI personalities to match your brand voice
+            - listitem [ref=e272]:
+              - img [ref=e273]
+              - generic [ref=e276]: Professional-grade POS with advanced features
+            - listitem [ref=e277]:
+              - img [ref=e278]
+              - generic [ref=e281]: Dedicated tablet kiosk application
+            - listitem [ref=e282]:
+              - img [ref=e283]
+              - generic [ref=e286]: Premium e-commerce templates
+            - listitem [ref=e287]:
+              - img [ref=e288]
+              - generic [ref=e291]: TV-ready menu display for in-store marketing
+            - listitem [ref=e292]:
+              - img [ref=e293]
+              - generic [ref=e296]: Priority support when you need it
+        - generic [ref=e297]:
+          - generic [ref=e298]: Most Popular
+          - generic [ref=e299]:
+            - heading "Professional and Growing Business" [level=3] [ref=e300]
+            - generic [ref=e301]: $149
+            - generic [ref=e302]: /month
+            - link "Get Started" [ref=e303] [cursor=pointer]:
+              - /url: /signup?plan=professional_and_growing_business
+          - paragraph [ref=e305]: "Everything in Small Business, plus:"
+          - list [ref=e306]:
+            - listitem [ref=e307]:
+              - img [ref=e308]
+              - generic [ref=e311]: Reach global markets with 10 languages
+            - listitem [ref=e312]:
+              - img [ref=e313]
+              - generic [ref=e316]: 3 AI personalities for personalized experiences
+            - listitem [ref=e317]:
+              - img [ref=e318]
+              - generic [ref=e321]: Unlock all platform features & integrations
+            - listitem [ref=e322]:
+              - img [ref=e323]
+              - generic [ref=e326]: Custom e-commerce design ($5,000 value)
+            - listitem [ref=e327]:
+              - img [ref=e328]
+              - generic [ref=e331]: Branded mobile app for iOS & Android
+            - listitem [ref=e332]:
+              - img [ref=e333]
+              - generic [ref=e336]: Live delivery tracking for customers
+            - listitem [ref=e337]:
+              - img [ref=e338]
+              - generic [ref=e341]: Driver app for seamless operations
+            - listitem [ref=e342]:
+              - img [ref=e343]
+              - generic [ref=e346]: Complete API access for custom integrations
+            - listitem [ref=e347]:
+              - img [ref=e348]
+              - generic [ref=e351]: Professional SEO optimization & content rewrite
+        - generic [ref=e352]:
+          - generic [ref=e353]:
+            - heading "Enterprise" [level=3] [ref=e354]
+            - generic [ref=e355]: $299
+            - generic [ref=e356]: /month
+            - link "Contact Sales" [ref=e357] [cursor=pointer]:
+              - /url: /signup?plan=enterprise
+          - paragraph [ref=e359]: "Everything in Professional, plus:"
+          - list [ref=e360]:
+            - listitem [ref=e361]:
+              - img [ref=e362]
+              - generic [ref=e365]: 25+ languages for true global reach
+            - listitem [ref=e366]:
+              - img [ref=e367]
+              - generic [ref=e370]: 5 AI personalities to serve every customer segment
+            - listitem [ref=e371]:
+              - img [ref=e372]
+              - generic [ref=e375]: White-label platform - fully rebrand as your own
+            - listitem [ref=e376]:
+              - img [ref=e377]
+              - generic [ref=e380]: Dedicated MVP server for maximum performance
+            - listitem [ref=e381]:
+              - img [ref=e382]
+              - generic [ref=e385]: AI-powered marketing automation suite
+            - listitem [ref=e386]:
+              - img [ref=e387]
+              - generic [ref=e390]: Dynamic SEO rewriting to dominate search rankings
+            - listitem [ref=e391]:
+              - img [ref=e392]
+              - generic [ref=e395]: AI-optimized promotional ads targeted to your customers
+            - listitem [ref=e396]:
+              - img [ref=e397]
+              - generic [ref=e400]: Custom feature development tailored to your needs
+            - listitem [ref=e401]:
+              - img [ref=e402]
+              - generic [ref=e405]: Direct access to support engineers
+            - listitem [ref=e406]:
+              - img [ref=e407]
+              - generic [ref=e410]: Priority custom integrations with your systems
+            - listitem [ref=e411]:
+              - img [ref=e412]
+              - generic [ref=e415]: 24/7 dedicated account manager
+    - generic [ref=e417]:
+      - generic [ref=e418]:
+        - heading "Trusted by Cannabis Businesses Worldwide" [level=2] [ref=e419]
+        - paragraph [ref=e420]: See what our customers are saying about WeedGo
+      - generic [ref=e421]:
+        - generic [ref=e422]:
+          - generic [ref=e423]:
+            - img [ref=e424]
+            - img [ref=e426]
+            - img [ref=e428]
+            - img [ref=e430]
+            - img [ref=e432]
+          - paragraph [ref=e434]: WeedGo transformed our business. The AI assistant has increased our sales by 40% and the multi-language support helps us serve our diverse customer base.
+          - generic [ref=e435]:
+            - img "Sarah Johnson" [ref=e436]
+            - generic [ref=e437]:
+              - paragraph [ref=e438]: Sarah Johnson
+              - paragraph [ref=e439]: Owner, Green Valley Dispensary
+        - generic [ref=e440]:
+          - generic [ref=e441]:
+            - img [ref=e442]
+            - img [ref=e444]
+            - img [ref=e446]
+            - img [ref=e448]
+            - img [ref=e450]
+          - paragraph [ref=e452]: The fraud protection and compliance features are game-changers. We've prevented thousands in fraudulent transactions and stay compliant effortlessly.
+          - generic [ref=e453]:
+            - img "Mike Chen" [ref=e454]
+            - generic [ref=e455]:
+              - paragraph [ref=e456]: Mike Chen
+              - paragraph [ref=e457]: Manager, Urban Leaf Co.
+        - generic [ref=e458]:
+          - generic [ref=e459]:
+            - img [ref=e460]
+            - img [ref=e462]
+            - img [ref=e464]
+            - img [ref=e466]
+            - img [ref=e468]
+          - paragraph [ref=e470]: Scaling from 1 to 8 locations was seamless with WeedGo. The multi-tenant architecture and centralized management tools are exactly what we needed.
+          - generic [ref=e471]:
+            - img "Lisa Rodriguez" [ref=e472]
+            - generic [ref=e473]:
+              - paragraph [ref=e474]: Lisa Rodriguez
+              - paragraph [ref=e475]: CEO, Cannabis Collective
+    - generic [ref=e477]:
+      - heading "Ready to Transform Your Cannabis Business?" [level=2] [ref=e478]
+      - paragraph [ref=e479]: Join thousands of dispensaries already using WeedGo to increase sales, improve compliance, and deliver exceptional customer experiences.
+      - link "Start Your Free Trial" [ref=e480] [cursor=pointer]:
+        - /url: /signup
+        - text: Start Your Free Trial
+        - img [ref=e481]
+    - contentinfo [ref=e483]:
+      - generic [ref=e484]:
+        - generic [ref=e485]:
+          - generic [ref=e486]:
+            - generic [ref=e487]:
+              - img [ref=e488]
+              - generic [ref=e491]: WeedGo
+            - paragraph [ref=e492]: The complete cannabis business platform powered by AI.
+          - generic [ref=e493]:
+            - heading "Product" [level=3] [ref=e494]
+            - list [ref=e495]:
+              - listitem [ref=e496]:
+                - link "Features" [ref=e497] [cursor=pointer]:
+                  - /url: "#features"
+              - listitem [ref=e498]:
+                - link "Pricing" [ref=e499] [cursor=pointer]:
+                  - /url: "#pricing"
+              - listitem [ref=e500]:
+                - link "API" [ref=e501] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e502]:
+                - link "Integrations" [ref=e503] [cursor=pointer]:
+                  - /url: "#"
+          - generic [ref=e504]:
+            - heading "Company" [level=3] [ref=e505]
+            - list [ref=e506]:
+              - listitem [ref=e507]:
+                - link "About" [ref=e508] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e509]:
+                - link "Careers" [ref=e510] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e511]:
+                - link "Contact" [ref=e512] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e513]:
+                - link "Blog" [ref=e514] [cursor=pointer]:
+                  - /url: "#"
+          - generic [ref=e515]:
+            - heading "Support" [level=3] [ref=e516]
+            - list [ref=e517]:
+              - listitem [ref=e518]:
+                - link "Help Center" [ref=e519] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e520]:
+                - link "Documentation" [ref=e521] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e522]:
+                - link "Status" [ref=e523] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=e524]:
+                - link "Security" [ref=e525] [cursor=pointer]:
+                  - /url: "#"
+        - paragraph [ref=e527]: © 2025 WeedGo. All rights reserved.
+    - button "Open sales chat" [ref=e528] [cursor=pointer]:
+      - img [ref=e529]
+      - generic [ref=e531]: Questions?
+  - generic [ref=e532]:
+    - img [ref=e534]
+    - button "Open Tanstack query devtools" [ref=e582] [cursor=pointer]:
+      - img [ref=e583]
+```

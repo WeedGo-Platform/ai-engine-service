@@ -109,12 +109,9 @@ class PaymentService:
         from uuid import UUID, uuid4
         from decimal import Decimal
         from ddd_refactored.domain.payment_processing.entities.payment_transaction import PaymentTransaction
-        from ddd_refactored.domain.payment_processing.value_objects.payment_types import (
-            Money,
-            PaymentMethod as PMEnum,
-            PaymentProvider,
-            PaymentMethodDetails
-        )
+        # Updated to use NEW simplified value objects
+        from ddd_refactored.domain.payment_processing.value_objects.money import Money
+        from ddd_refactored.domain.payment_processing.value_objects.payment_status import PaymentStatus
 
         # Create domain objects
         payment_amount = Money(
@@ -122,24 +119,22 @@ class PaymentService:
             currency=currency
         )
 
-        payment_method_enum = PMEnum(payment_method.lower())
+        # TODO: Update this to use NEW PaymentService instead of old PaymentTransaction.create()
+        # This is a placeholder stub that needs migration to use:
+        # - PaymentService.process_payment()
+        # - Store-level provider configuration
+        # - New simplified domain model
+        # For now, return mock response
+        payment = {
+            'id': str(uuid4()),
+            'amount': amount,
+            'currency': currency,
+            'status': 'pending',
+            'order_id': order_id,
+            'store_id': store_id
+        }
 
-        payment_method_details = PaymentMethodDetails(
-            payment_method=payment_method_enum,
-            provider=PaymentProvider.STRIPE  # Default to Stripe for now
-        )
-
-        # Create payment transaction using DDD aggregate
-        payment = PaymentTransaction.create(
-            order_id=UUID(order_id) if isinstance(order_id, str) else order_id,
-            store_id=UUID(store_id) if isinstance(store_id, str) else store_id,
-            tenant_id=UUID(tenant_id) if isinstance(tenant_id, str) else tenant_id,
-            payment_amount=payment_amount,
-            payment_method_details=payment_method_details,
-            customer_id=UUID(customer_id) if customer_id else None
-        )
-
-        # In real implementation, would save via repository
+        # In real implementation, would use PaymentService via repository
         # For now, return the created payment
         return {
             "id": str(payment.id),
@@ -244,6 +239,62 @@ async def get_purchase_order_service() -> PurchaseOrderApplicationService:
     """Get purchase order application service instance"""
     repository = await get_purchase_order_repository()
     return PurchaseOrderApplicationService(repository)
+
+
+# Inventory Management Repository Dependencies
+from ddd_refactored.domain.inventory_management.repositories import (
+    IInventoryRepository,
+    IBatchTrackingRepository,
+    AsyncPGInventoryRepository,
+    AsyncPGBatchTrackingRepository
+)
+from ddd_refactored.application.services.inventory_management_service import (
+    InventoryManagementService
+)
+from ddd_refactored.application.services.batch_tracking_service import (
+    BatchTrackingService
+)
+
+
+async def get_inventory_repository() -> IInventoryRepository:
+    """Get inventory repository instance"""
+    pool = await get_db_pool()
+    return AsyncPGInventoryRepository(pool)
+
+
+async def get_batch_tracking_repository() -> IBatchTrackingRepository:
+    """Get batch tracking repository instance"""
+    pool = await get_db_pool()
+    return AsyncPGBatchTrackingRepository(pool)
+
+
+async def get_inventory_management_service() -> InventoryManagementService:
+    """
+    Get inventory management application service instance
+
+    This service orchestrates:
+    - Inventory receiving from purchase orders
+    - FIFO consumption for sales
+    - Batch creation and updates
+    - Inventory adjustments
+    """
+    inventory_repo = await get_inventory_repository()
+    batch_repo = await get_batch_tracking_repository()
+    return InventoryManagementService(inventory_repo, batch_repo)
+
+
+async def get_batch_tracking_service() -> BatchTrackingService:
+    """
+    Get batch tracking application service instance
+
+    This service handles:
+    - Batch location management
+    - Quality control workflows
+    - Quarantine operations
+    - Batch analytics
+    """
+    batch_repo = await get_batch_tracking_repository()
+    return BatchTrackingService(batch_repo)
 
 
 # Authentication dependencies

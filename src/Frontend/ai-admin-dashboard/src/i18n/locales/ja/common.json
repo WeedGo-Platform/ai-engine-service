@@ -197,5 +197,32 @@
       "securityNotice": "パスワードを変更すると、ログアウトされます。新しい資格情報で再度ログインする必要があります。",
       "changing": "変更中..."
     }
+  },
+  "navigation": {
+    "dashboard": "ダッシュボード",
+    "apps": "アプリ",
+    "organization": "組織",
+    "tenants": "テナント",
+    "products": "製品",
+    "inventory": "在庫",
+    "accessories": "アクセサリー",
+    "orders": "注文",
+    "customers": "顧客",
+    "purchaseOrders": "発注書",
+    "promotions": "プロモーション",
+    "recommendations": "おすすめ",
+    "communications": "コミュニケーション",
+    "deliveries": "配達",
+    "aiConfiguration": "AI設定",
+    "provincialCatalog": "州のカタログ",
+    "database": "データベース",
+    "systemLogs": "システムログ"
+  },
+  "roles": {
+    "superAdmin": "スーパー管理者",
+    "tenantAdmin": "テナント管理者",
+    "storeManager": "店舗マネージャー",
+    "staff": "スタッフ",
+    "user": "ユーザー"
   }
 }

@@ -39,7 +39,7 @@ export const SUPPORTED_LANGUAGES = [
 export type SupportedLanguage = typeof SUPPORTED_LANGUAGES[number]['code'];
 
 // All available namespaces
-const namespaces = ['common', 'auth', 'dashboard', 'landing', 'forms', 'errors', 'modals', 'tenants', 'stores', 'inventory', 'orders', 'pos', 'payments', 'settings', 'communications', 'database', 'promotions', 'catalog', 'apps', 'tools', 'signup'];
+const namespaces = ['common', 'auth', 'dashboard', 'landing', 'forms', 'errors', 'modals', 'tenants', 'stores', 'inventory', 'orders', 'pos', 'payments', 'settings', 'communications', 'database', 'promotions', 'catalog', 'apps', 'tools', 'signup', 'chat'];
 
 // Dynamically load resources for all languages and namespaces using Vite's import.meta.glob
 const loadResources = () => {

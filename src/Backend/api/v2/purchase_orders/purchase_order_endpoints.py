@@ -6,11 +6,12 @@ DDD-powered supplier ordering and receiving management using the Purchase Order 
 All endpoints use domain-driven design with aggregates, value objects, and domain events.
 """
 
-from fastapi import APIRouter, HTTPException, Query, Depends
+from fastapi import APIRouter, HTTPException, Query, Depends, Header
 from typing import List, Optional
 from datetime import datetime
 from decimal import Decimal
 from uuid import UUID, uuid4
+import logging
 
 from api.v2.dto_mappers import (
     # Response DTOs
@@ -28,13 +29,17 @@ from api.v2.dto_mappers import (
     RejectPurchaseOrderRequest,
     SendToSupplierRequest,
     ConfirmBySupplierRequest,
-    ReceiveItemsRequest,
     CancelPurchaseOrderRequest,
     AddTrackingInfoRequest,
 
     # Mappers
     map_purchase_order_to_dto,
 )
+
+from api.v2.dependencies import (
+    get_purchase_order_service,
+)
+from ddd_refactored.application.services.purchase_order_service import PurchaseOrderApplicationService
 
 from ddd_refactored.domain.purchase_order.entities.purchase_order import PurchaseOrder
 from ddd_refactored.domain.purchase_order.value_objects.order_status import (
@@ -43,6 +48,8 @@ from ddd_refactored.domain.purchase_order.value_objects.order_status import (
     DeliverySchedule,
 )
 from ddd_refactored.shared.domain_base import BusinessRuleViolation
+
+logger = logging.getLogger(__name__)
 
 # Temporary auth dependency (replace with actual auth)
 async def get_current_user():
@@ -574,49 +581,9 @@ async def add_tracking_info(
 # ============================================================================
 # Receiving Endpoints
 # ============================================================================
-
-@router.post("/{po_id}/receive", response_model=PurchaseOrderDTO)
-async def receive_items(
-    po_id: str,
-    request: ReceiveItemsRequest,
-    tenant_id: str = Query(..., description="Tenant ID"),
-    current_user: dict = Depends(get_current_user),
-):
-    """
-    Receive items from purchase order.
-
-    **Business Rules:**
-    - Must be in CONFIRMED or PARTIALLY_RECEIVED status
-    - Quantity must be positive
-    - Automatically transitions status:
-      - First receive: CONFIRMED → PARTIALLY_RECEIVED
-      - Full receive: → FULLY_RECEIVED
-    - Tracks received_by and received_at
-
-    **Domain Events Generated:**
-    - PurchaseOrderReceived
-    """
-    try:
-        # TODO: Load from database
-        # po = await po_repository.find_by_id(UUID(po_id))
-        # if not po:
-        #     raise HTTPException(status_code=404, detail="Purchase order not found")
-
-        # po.receive_items(
-        #     quantity_received=request.quantity_received,
-        #     received_by=UUID(current_user["id"]),
-        #     notes=request.notes
-        # )
-
-        # await po_repository.save(po)
-
-        # return map_purchase_order_to_dto(po)
-
-        raise HTTPException(status_code=404, detail="Purchase order not found")
-
-    except BusinessRuleViolation as e:
-        raise HTTPException(status_code=422, detail=str(e))
-
+# NOTE: Receive endpoint removed - use V1 /api/inventory/purchase-orders/{po_id}/receive
+# V1 already uses full DDD implementation with PurchaseOrderApplicationService + InventoryManagementService
+# No need for duplicate V2 endpoint.
 
 @router.post("/{po_id}/close", response_model=PurchaseOrderDTO)
 async def close_purchase_order(

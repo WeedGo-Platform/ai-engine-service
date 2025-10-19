@@ -197,5 +197,32 @@
       "securityNotice": "Após alterar sua senha, você será desconectado e precisará fazer login novamente com suas novas credenciais.",
       "changing": "Alterando..."
     }
+  },
+  "navigation": {
+    "dashboard": "Painel",
+    "apps": "Aplicativos",
+    "organization": "Organização",
+    "tenants": "Inquilinos",
+    "products": "Produtos",
+    "inventory": "Inventário",
+    "accessories": "Acessórios",
+    "orders": "Pedidos",
+    "customers": "Clientes",
+    "purchaseOrders": "Ordens de Compra",
+    "promotions": "Promoções",
+    "recommendations": "Recomendações",
+    "communications": "Comunicações",
+    "deliveries": "Entregas",
+    "aiConfiguration": "Configuração de IA",
+    "provincialCatalog": "Catálogo Provincial",
+    "database": "Banco de Dados",
+    "systemLogs": "Logs do Sistema"
+  },
+  "roles": {
+    "superAdmin": "Super Administrador",
+    "tenantAdmin": "Administrador de Inquilino",
+    "storeManager": "Gerente de Loja",
+    "staff": "Equipe",
+    "user": "Usuário"
   }
 }

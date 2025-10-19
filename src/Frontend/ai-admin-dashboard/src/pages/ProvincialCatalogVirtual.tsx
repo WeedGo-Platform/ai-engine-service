@@ -384,6 +384,20 @@ const ProvincialCatalogVirtual: React.FC = () => {
                         {uploadStatus.stats.errors > 0 && (
                           <p className="text-danger-600">{t('catalog:stats.errors')}: {uploadStatus.stats.errors}</p>
                         )}
+
+                        {/* Display detailed error messages */}
+                        {uploadStatus.stats.error_details && uploadStatus.stats.error_details.length > 0 && (
+                          <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200">
+                            <h4 className="font-medium text-red-800 dark:text-red-200 mb-2">
+                              Error Details (showing first {uploadStatus.stats.error_details.length}):
+                            </h4>
+                            <ul className="list-disc list-inside text-sm text-red-700 dark:text-red-300 space-y-1 max-h-60 overflow-y-auto">
+                              {uploadStatus.stats.error_details.map((error, i) => (
+                                <li key={i} className="break-words">{error}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>

@@ -9,6 +9,8 @@ import storeService from '../services/storeService';
 import storeHoursService from '../services/storeHoursService';
 import { useStoreContext } from '../contexts/StoreContext';
 import { useAuth } from '../contexts/AuthContext';
+import toast from 'react-hot-toast';
+import { confirmToastAsync } from '../components/ConfirmToast';
 
 // Import types from service
 import type {
@@ -631,7 +633,7 @@ export default function StoreHoursManagement() {
                           </button>
                           <button 
                             onClick={async () => {
-                              if (holiday.id && confirm('Delete this holiday configuration?')) {
+                              if (holiday.id && confirmToastAsync('Delete this holiday configuration?')) {
                                 try {
                                   await storeHoursService.deleteHolidayHours(storeId, holiday.id);
                                   await loadStoreData();
@@ -701,7 +703,7 @@ export default function StoreHoursManagement() {
                           </button>
                           <button 
                             onClick={async () => {
-                              if (special.id && confirm('Delete this special hours entry?')) {
+                              if (special.id && confirmToastAsync('Delete this special hours entry?')) {
                                 try {
                                   await storeHoursService.deleteSpecialHours(storeId, special.id);
                                   await loadStoreData();

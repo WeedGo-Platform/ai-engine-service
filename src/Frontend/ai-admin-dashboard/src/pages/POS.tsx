@@ -18,6 +18,7 @@ import TransactionHistory from '../components/pos/TransactionHistory';
 import posService from '../services/posService';
 import { useStoreContext } from '../contexts/StoreContext';
 import ProductDetailsModal from '../components/ProductDetailsModal';
+import toast from 'react-hot-toast';
 
 interface Batch {
   batch_lot: string;
@@ -490,7 +491,7 @@ export default function POS({
     try {
       const response = await axios.get(getApiEndpoint(`/hardware/scanners/${scannerId}/test`));
       if (response.data.success) {
-        alert(`${t('pos:messages.scannerTestSuccess')} ${response.data.test_barcode}`);
+        toast.success(`${t('pos:messages.scannerTestSuccess')} ${response.data.test_barcode}`);
       } else {
         alert(t('pos:messages.scannerTestFailed'));
       }
@@ -596,11 +597,11 @@ export default function POS({
             // Clear search term after barcode scan
             setSearchTerm('');
           } else {
-            alert(`${t('pos:messages.productNotFound')} ${barcodeInput}`);
+            toast(`${t('pos:messages.productNotFound')} ${barcodeInput}`);
           }
         } catch (error) {
           console.error('Error searching for product:', error);
-          alert(`${t('pos:messages.productNotFound')} ${barcodeInput}`);
+          toast(`${t('pos:messages.productNotFound')} ${barcodeInput}`);
         } finally {
           setBarcodeInput('');
         }
@@ -1908,7 +1909,7 @@ export default function POS({
               setCustomer(null);
 
               // Show success message
-              alert(`${t('pos:messages.paymentSuccess')} ${payment.printReceipt ? t('pos:messages.receiptPrinted') : ''}`);
+              toast.success(`${t('pos:messages.paymentSuccess')} ${payment.printReceipt ? t('pos:messages.receiptPrinted') : ''}`);
             } catch (error) {
               console.error('Failed to create transaction:', error);
               alert(t('pos:messages.transactionFailed'));

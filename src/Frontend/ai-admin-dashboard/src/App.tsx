@@ -16,6 +16,7 @@ import ChatWidget from './components/ChatWidget';
 import ChangePasswordModal from './components/ChangePasswordModal';
 import LanguageSelector from './components/LanguageSelector';
 import './i18n/config'; // Initialize i18n
+import { useTranslation } from 'react-i18next';
 
 // Import pages
 import Login from './pages/Login';
@@ -64,6 +65,7 @@ const queryClient = new QueryClient({
 
 // Layout component
 function Layout() {
+  const { t } = useTranslation('common');
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
   const [showStoreModal, setShowStoreModal] = React.useState(false);
@@ -102,38 +104,38 @@ function Layout() {
     let items = [];
     if (isStoreManager() && !isTenantAdmin() && !isSuperAdmin()) {
       items = [
-        { name: 'Dashboard', href: '/dashboard', icon: Home, permission: 'all' },
-        { name: 'Apps', href: '/dashboard/apps', icon: AppWindow, permission: 'store' },
-        { name: 'Organization', href: '/dashboard/tenants', icon: Building2, permission: 'store_manager' },
-        { name: 'Inventory', href: '/dashboard/inventory', icon: Package, permission: 'store' },
-        { name: 'Accessories', href: '/dashboard/accessories', icon: Package, permission: 'store' },
-        { name: 'Orders', href: '/dashboard/orders', icon: ShoppingCart, permission: 'store' },
-        { name: 'Customers', href: '/dashboard/customers', icon: Users, permission: 'store' },
-        { name: 'Purchase Orders', href: '/dashboard/purchase-orders', icon: FileText, permission: 'store' },
-        { name: 'Promotions', href: '/dashboard/promotions', icon: Tag, permission: 'store' },
-        { name: 'Recommendations', href: '/dashboard/recommendations', icon: Sparkles, permission: 'store' },
-        { name: 'Communications', href: '/dashboard/communications', icon: MessageSquare, permission: 'store' },
+        { name: t('navigation.dashboard'), href: '/dashboard', icon: Home, permission: 'all' },
+        { name: t('navigation.apps'), href: '/dashboard/apps', icon: AppWindow, permission: 'store' },
+        { name: t('navigation.organization'), href: '/dashboard/tenants', icon: Building2, permission: 'store_manager' },
+        { name: t('navigation.inventory'), href: '/dashboard/inventory', icon: Package, permission: 'store' },
+        { name: t('navigation.accessories'), href: '/dashboard/accessories', icon: Package, permission: 'store' },
+        { name: t('navigation.orders'), href: '/dashboard/orders', icon: ShoppingCart, permission: 'store' },
+        { name: t('navigation.customers'), href: '/dashboard/customers', icon: Users, permission: 'store' },
+        { name: t('navigation.purchaseOrders'), href: '/dashboard/purchase-orders', icon: FileText, permission: 'store' },
+        { name: t('navigation.promotions'), href: '/dashboard/promotions', icon: Tag, permission: 'store' },
+        { name: t('navigation.recommendations'), href: '/dashboard/recommendations', icon: Sparkles, permission: 'store' },
+        { name: t('navigation.communications'), href: '/dashboard/communications', icon: MessageSquare, permission: 'store' },
       ];
     } else {
       // For admins (tenant admin and super admin), show all applicable items
       items = [
-        { name: 'Dashboard', href: '/dashboard', icon: Home, permission: 'all' },
-        { name: 'Apps', href: '/dashboard/apps', icon: AppWindow, permission: 'store' },
-        { name: isTenantAdmin() && !isSuperAdmin() ? 'Organization' : 'Tenants', href: '/dashboard/tenants', icon: Building2, permission: 'admin' },
-        { name: 'Products', href: '/dashboard/products', icon: Leaf, permission: 'store' },
-        { name: 'Inventory', href: '/dashboard/inventory', icon: Package, permission: 'store' },
-        { name: 'Accessories', href: '/dashboard/accessories', icon: Package, permission: 'store' },
-        { name: 'Orders', href: '/dashboard/orders', icon: ShoppingCart, permission: 'store' },
-        { name: 'Customers', href: '/dashboard/customers', icon: Users, permission: 'store' },
-        { name: 'Purchase Orders', href: '/dashboard/purchase-orders', icon: FileText, permission: 'store' },
-        { name: 'Promotions', href: '/dashboard/promotions', icon: Tag, permission: 'store' },
-        { name: 'Recommendations', href: '/dashboard/recommendations', icon: Sparkles, permission: 'store' },
-        { name: 'Communications', href: '/dashboard/communications', icon: MessageSquare, permission: 'store' },
-        { name: 'Deliveries', href: '/dashboard/deliveries', icon: Truck, permission: 'store' },
-        { name: 'AI Configuration', href: '/dashboard/ai', icon: Settings, permission: 'all' },
-        { name: 'Provincial Catalog', href: '/dashboard/provincial-catalog', icon: Upload, permission: 'super_admin' },
-        { name: 'Database', href: '/dashboard/database', icon: Database, permission: 'super_admin' },
-        { name: 'System Logs', href: '/dashboard/logs', icon: ScrollText, permission: 'super_admin' },
+        { name: t('navigation.dashboard'), href: '/dashboard', icon: Home, permission: 'all' },
+        { name: t('navigation.apps'), href: '/dashboard/apps', icon: AppWindow, permission: 'store' },
+        { name: isTenantAdmin() && !isSuperAdmin() ? t('navigation.organization') : t('navigation.tenants'), href: '/dashboard/tenants', icon: Building2, permission: 'admin' },
+        { name: t('navigation.products'), href: '/dashboard/products', icon: Leaf, permission: 'store' },
+        { name: t('navigation.inventory'), href: '/dashboard/inventory', icon: Package, permission: 'store' },
+        { name: t('navigation.accessories'), href: '/dashboard/accessories', icon: Package, permission: 'store' },
+        { name: t('navigation.orders'), href: '/dashboard/orders', icon: ShoppingCart, permission: 'store' },
+        { name: t('navigation.customers'), href: '/dashboard/customers', icon: Users, permission: 'store' },
+        { name: t('navigation.purchaseOrders'), href: '/dashboard/purchase-orders', icon: FileText, permission: 'store' },
+        { name: t('navigation.promotions'), href: '/dashboard/promotions', icon: Tag, permission: 'store' },
+        { name: t('navigation.recommendations'), href: '/dashboard/recommendations', icon: Sparkles, permission: 'store' },
+        { name: t('navigation.communications'), href: '/dashboard/communications', icon: MessageSquare, permission: 'store' },
+        { name: t('navigation.deliveries'), href: '/dashboard/deliveries', icon: Truck, permission: 'store' },
+        { name: t('navigation.aiConfiguration'), href: '/dashboard/ai', icon: Settings, permission: 'all' },
+        { name: t('navigation.provincialCatalog'), href: '/dashboard/provincial-catalog', icon: Upload, permission: 'super_admin' },
+        { name: t('navigation.database'), href: '/dashboard/database', icon: Database, permission: 'super_admin' },
+        { name: t('navigation.systemLogs'), href: '/dashboard/logs', icon: ScrollText, permission: 'super_admin' },
       ];
     }
 
@@ -147,7 +149,7 @@ function Layout() {
       if (item.permission === 'store_manager') return isStoreManager();
       return true;
     });
-  }, [isSuperAdmin, isTenantAdmin, isStoreManager]);
+  }, [isSuperAdmin, isTenantAdmin, isStoreManager, t]);
 
   // Loading state is now handled by ProtectedRoute
   // Authentication check is also handled by ProtectedRoute
@@ -249,10 +251,10 @@ function Layout() {
                   <p className="text-xs font-medium text-primary-600 dark:text-primary-400 capitalize">
                     {(() => {
                       if (!user) return 'No Active Session';
-                      if (isSuperAdmin()) return 'Super Admin';
-                      if (isTenantAdmin()) return 'Tenant Admin';
-                      if (isStoreManager()) return 'Store Manager';
-                      return user?.role?.replace('_', ' ') || 'User';
+                      if (isSuperAdmin()) return t('roles.superAdmin');
+                      if (isTenantAdmin()) return t('roles.tenantAdmin');
+                      if (isStoreManager()) return t('roles.storeManager');
+                      return t('roles.user');
                     })()}
                   </p>
                 </div>
@@ -302,7 +304,7 @@ function Layout() {
                         onClick={() => setShowStoreModal(true)}
                         className="ml-2 text-accent-600 dark:text-accent-400 hover:text-accent-700 dark:hover:text-accent-300 text-xs font-medium"
                       >
-                        Change
+                        {t('buttons.change')}
                       </button>
                     </div>
                   )}

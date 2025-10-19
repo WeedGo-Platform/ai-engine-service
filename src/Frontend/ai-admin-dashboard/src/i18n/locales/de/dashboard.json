@@ -36,5 +36,8 @@
     "shipped": "Versendet",
     "pending": "Ausstehend",
     "cancelled": "Storniert"
+  },
+  "charts": {
+    "revenueLabel": "Umsatz"
   }
 }

@@ -36,5 +36,8 @@
     "shipped": "Expediat",
     "pending": "În Așteptare",
     "cancelled": "Anulat"
+  },
+  "charts": {
+    "revenueLabel": "Venit"
   }
 }

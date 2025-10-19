@@ -8,8 +8,11 @@ from datetime import datetime, date, timedelta
 from decimal import Decimal
 from typing import Optional, List, Dict, Any
 from uuid import UUID, uuid4
+import logging
 
 from ....shared.domain_base import AggregateRoot, DomainEvent, BusinessRuleViolation
+
+logger = logging.getLogger(__name__)
 from ..value_objects import (
     PurchaseOrderStatus,
     ApprovalStatus,
@@ -22,43 +25,99 @@ from ..value_objects import (
 
 class PurchaseOrderCreated(DomainEvent):
     """Event raised when purchase order is created"""
-    purchase_order_id: UUID
-    order_number: str
-    supplier_id: UUID
-    store_id: UUID
+    def __init__(self, purchase_order_id: UUID, order_number: str, supplier_id: UUID, store_id: UUID):
+        super().__init__(purchase_order_id)
+        self.purchase_order_id = purchase_order_id
+        self.order_number = order_number
+        self.supplier_id = supplier_id
+        self.store_id = store_id
+
+    def to_dict(self) -> Dict[str, Any]:
+        base = super().to_dict()
+        base.update({
+            'order_number': self.order_number,
+            'supplier_id': str(self.supplier_id),
+            'store_id': str(self.store_id)
+        })
+        return base
 
 
 class PurchaseOrderSubmitted(DomainEvent):
     """Event raised when purchase order is submitted for approval"""
-    purchase_order_id: UUID
-    order_number: str
-    submitted_by: UUID
-    total_amount: Decimal
+    def __init__(self, purchase_order_id: UUID, order_number: str, submitted_by: UUID, total_amount: Decimal):
+        super().__init__(purchase_order_id)
+        self.purchase_order_id = purchase_order_id
+        self.order_number = order_number
+        self.submitted_by = submitted_by
+        self.total_amount = total_amount
+
+    def to_dict(self) -> Dict[str, Any]:
+        base = super().to_dict()
+        base.update({
+            'order_number': self.order_number,
+            'submitted_by': str(self.submitted_by),
+            'total_amount': float(self.total_amount)
+        })
+        return base
 
 
 class PurchaseOrderApproved(DomainEvent):
     """Event raised when purchase order is approved"""
-    purchase_order_id: UUID
-    order_number: str
-    approved_by: UUID
-    approved_at: datetime
+    def __init__(self, purchase_order_id: UUID, order_number: str, approved_by: UUID, approved_at: datetime):
+        super().__init__(purchase_order_id)
+        self.purchase_order_id = purchase_order_id
+        self.order_number = order_number
+        self.approved_by = approved_by
+        self.approved_at = approved_at
+
+    def to_dict(self) -> Dict[str, Any]:
+        base = super().to_dict()
+        base.update({
+            'order_number': self.order_number,
+            'approved_by': str(self.approved_by),
+            'approved_at': self.approved_at.isoformat()
+        })
+        return base
 
 
 class PurchaseOrderSentToSupplier(DomainEvent):
     """Event raised when PO is sent to supplier"""
-    purchase_order_id: UUID
-    order_number: str
-    supplier_id: UUID
-    sent_at: datetime
+    def __init__(self, purchase_order_id: UUID, order_number: str, supplier_id: UUID, sent_at: datetime):
+        super().__init__(purchase_order_id)
+        self.purchase_order_id = purchase_order_id
+        self.order_number = order_number
+        self.supplier_id = supplier_id
+        self.sent_at = sent_at
+
+    def to_dict(self) -> Dict[str, Any]:
+        base = super().to_dict()
+        base.update({
+            'order_number': self.order_number,
+            'supplier_id': str(self.supplier_id),
+            'sent_at': self.sent_at.isoformat()
+        })
+        return base
 
 
 class PurchaseOrderReceived(DomainEvent):
     """Event raised when goods are received"""
-    purchase_order_id: UUID
-    order_number: str
-    received_quantity: int
-    received_by: UUID
-    is_fully_received: bool
+    def __init__(self, purchase_order_id: UUID, order_number: str, received_quantity: int, received_by: UUID, is_fully_received: bool):
+        super().__init__(purchase_order_id)
+        self.purchase_order_id = purchase_order_id
+        self.order_number = order_number
+        self.received_quantity = received_quantity
+        self.received_by = received_by
+        self.is_fully_received = is_fully_received
+
+    def to_dict(self) -> Dict[str, Any]:
+        base = super().to_dict()
+        base.update({
+            'order_number': self.order_number,
+            'received_quantity': self.received_quantity,
+            'received_by': str(self.received_by),
+            'is_fully_received': self.is_fully_received
+        })
+        return base
 
 
 @dataclass
@@ -67,6 +126,15 @@ class PurchaseOrder(AggregateRoot):
     PurchaseOrder Aggregate Root - Manages supplier orders
     As defined in DDD_ARCHITECTURE_REFACTORING.md Section 2.5
     """
+    # Primary Identifier (required for Entity base class)
+    id: UUID = field(default_factory=uuid4)
+
+    # Entity/AggregateRoot base class fields (must be explicit in dataclass)
+    created_at: datetime = field(default_factory=datetime.utcnow)
+    updated_at: datetime = field(default_factory=datetime.utcnow)
+    _domain_events: List[DomainEvent] = field(default_factory=list, init=False, repr=False)
+    _version: int = field(default=0, init=False, repr=False)
+
     # Identifiers
     store_id: UUID = field(default_factory=uuid4)
     tenant_id: UUID = field(default_factory=uuid4)
@@ -145,8 +213,6 @@ class PurchaseOrder(AggregateRoot):
     status_history: List[OrderStatusTransition] = field(default_factory=list)
 
     # Metadata
-    created_at: datetime = field(default_factory=datetime.utcnow)
-    updated_at: datetime = field(default_factory=datetime.utcnow)
     metadata: Dict[str, Any] = field(default_factory=dict)
 
     @classmethod
@@ -517,6 +583,135 @@ class PurchaseOrder(AggregateRoot):
         # Business rule: Orders over $5000 require approval
         approval_threshold = Decimal("5000")
         return self.total_amount > approval_threshold
+
+    def receive(
+        self,
+        received_items: List[Dict[str, Any]],
+        received_by: UUID,
+        auto_approve: bool = True
+    ) -> Dict[str, Any]:
+        """
+        Receive purchase order items
+
+        Business Rules:
+        - Can only receive if status is APPROVED, SENT_TO_SUPPLIER, or CONFIRMED
+        - Updates status to PARTIALLY_RECEIVED or FULLY_RECEIVED
+        - Auto-approves by default (received_by becomes approved_by)
+        - Raises PurchaseOrderReceived domain event
+
+        Args:
+            received_items: List of items with quantities received
+            received_by: User who received the items
+            auto_approve: Whether to auto-approve (default: True)
+
+        Returns:
+            Dict with receiving details
+
+        Raises:
+            BusinessRuleViolation: If PO cannot be received in current status
+        """
+        # Validate status
+        if self.status not in [
+            PurchaseOrderStatus.APPROVED,
+            PurchaseOrderStatus.SENT_TO_SUPPLIER,
+            PurchaseOrderStatus.CONFIRMED,
+            PurchaseOrderStatus.DRAFT  # Allow receiving from DRAFT for ASN imports
+        ]:
+            raise BusinessRuleViolation(
+                f"Cannot receive PO in status {self.status.value}"
+            )
+
+        # Calculate total units received
+        total_received = sum(
+            item.get('quantity_received', item.get('quantity_ordered', item.get('quantity', 0)))
+            for item in received_items
+        )
+
+        # Update units received
+        self.total_units_received += total_received
+
+        # Update status based on completion
+        if self.total_units_ordered > 0:
+            received_pct = (self.total_units_received / self.total_units_ordered) * 100
+            if received_pct >= 100:
+                self.status = PurchaseOrderStatus.FULLY_RECEIVED
+            elif received_pct > 0:
+                self.status = PurchaseOrderStatus.PARTIALLY_RECEIVED
+        else:
+            # If no ordered quantity (ASN import), mark as fully received
+            self.status = PurchaseOrderStatus.FULLY_RECEIVED
+
+        # Set received metadata
+        self.received_by = received_by
+        self.received_at = datetime.utcnow()
+
+        # Auto-approve if requested
+        if auto_approve:
+            self.approved_by = received_by
+            self.approved_at = datetime.utcnow()
+            self.approval_status = ApprovalStatus.APPROVED
+
+        self.mark_as_modified()
+
+        # Raise domain event
+        self.add_domain_event(PurchaseOrderReceived(
+            purchase_order_id=self.id,
+            order_number=self.order_number,
+            received_quantity=total_received,
+            received_by=received_by,
+            is_fully_received=(self.status == PurchaseOrderStatus.FULLY_RECEIVED)
+        ))
+
+        logger.info(
+            f"Received PO {self.order_number}: {total_received} units, "
+            f"Status: {self.status.value}, Auto-approved: {auto_approve}"
+        )
+
+        return {
+            'total_received': total_received,
+            'status': self.status.value,
+            'received_by': str(received_by),
+            'received_at': self.received_at.isoformat(),
+            'is_fully_received': self.status == PurchaseOrderStatus.FULLY_RECEIVED,
+            'approved_by': str(self.approved_by) if self.approved_by else None
+        }
+
+    def approve(self, approved_by: UUID) -> None:
+        """
+        Approve purchase order
+
+        Business Rules:
+        - Can only approve if status is SUBMITTED or DRAFT
+        - Updates approval_status to APPROVED
+        - Updates status to APPROVED
+
+        Args:
+            approved_by: User who approved the PO
+
+        Raises:
+            BusinessRuleViolation: If PO cannot be approved in current status
+        """
+        if self.status not in [PurchaseOrderStatus.SUBMITTED, PurchaseOrderStatus.DRAFT]:
+            raise BusinessRuleViolation(
+                f"Cannot approve PO in status {self.status.value}"
+            )
+
+        self.approval_status = ApprovalStatus.APPROVED
+        self.status = PurchaseOrderStatus.APPROVED
+        self.approved_by = approved_by
+        self.approved_at = datetime.utcnow()
+
+        self.mark_as_modified()
+
+        # Raise domain event
+        self.add_domain_event(PurchaseOrderApproved(
+            purchase_order_id=self.id,
+            order_number=self.order_number,
+            approved_by=approved_by,
+            approved_at=self.approved_at
+        ))
+
+        logger.info(f"Approved PO {self.order_number} by user {approved_by}")
 
     def validate(self) -> List[str]:
         """Validate purchase order data"""

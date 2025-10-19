@@ -197,5 +197,32 @@
       "securityNotice": "Po zmianie hasła zostaniesz wylogowany i będziesz musiał zalogować się ponownie przy użyciu nowych danych logowania.",
       "changing": "Zmiana..."
     }
+  },
+  "navigation": {
+    "dashboard": "Panel",
+    "apps": "Aplikacje",
+    "organization": "Organizacja",
+    "tenants": "Najemcy",
+    "products": "Produkty",
+    "inventory": "Inwentarz",
+    "accessories": "Akcesoria",
+    "orders": "Zamówienia",
+    "customers": "Klienci",
+    "purchaseOrders": "Zamówienia zakupu",
+    "promotions": "Promocje",
+    "recommendations": "Rekomendacje",
+    "communications": "Komunikacja",
+    "deliveries": "Dostawy",
+    "aiConfiguration": "Konfiguracja AI",
+    "provincialCatalog": "Katalog wojewódzki",
+    "database": "Baza danych",
+    "systemLogs": "Logi systemowe"
+  },
+  "roles": {
+    "superAdmin": "Super administrator",
+    "tenantAdmin": "Administrator najemcy",
+    "storeManager": "Kierownik sklepu",
+    "staff": "Personel",
+    "user": "Użytkownik"
   }
 }

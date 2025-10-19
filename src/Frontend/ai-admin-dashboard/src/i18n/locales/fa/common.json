@@ -197,5 +197,32 @@
       "securityNotice": "پس از تغییر رمز عبور، از سیستم خارج می‌شوید و باید با اطلاعات جدید خود دوباره وارد شوید.",
       "changing": "در حال تغییر..."
     }
+  },
+  "navigation": {
+    "dashboard": "داشبورد",
+    "apps": "برنامه‌ها",
+    "organization": "سازمان",
+    "tenants": "مستأجران",
+    "products": "محصولات",
+    "inventory": "موجودی",
+    "accessories": "لوازم جانبی",
+    "orders": "سفارشات",
+    "customers": "مشتریان",
+    "purchaseOrders": "سفارشات خرید",
+    "promotions": "تبلیغات",
+    "recommendations": "توصیه‌ها",
+    "communications": "ارتباطات",
+    "deliveries": "تحویل‌ها",
+    "aiConfiguration": "پیکربندی هوش مصنوعی",
+    "provincialCatalog": "کاتالوگ استانی",
+    "database": "پایگاه داده",
+    "systemLogs": "گزارش‌های سیستم"
+  },
+  "roles": {
+    "superAdmin": "مدیر ارشد",
+    "tenantAdmin": "مدیر مستأجر",
+    "storeManager": "مدیر فروشگاه",
+    "staff": "کارکنان",
+    "user": "کاربر"
   }
 }

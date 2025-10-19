@@ -197,5 +197,32 @@
       "securityNotice": "Dopo aver modificato la password, verrai disconnesso e dovrai effettuare nuovamente l'accesso con le tue nuove credenziali.",
       "changing": "Modifica in corso..."
     }
+  },
+  "navigation": {
+    "dashboard": "Cruscotto",
+    "apps": "App",
+    "organization": "Organizzazione",
+    "tenants": "Inquilini",
+    "products": "Prodotti",
+    "inventory": "Inventario",
+    "accessories": "Accessori",
+    "orders": "Ordini",
+    "customers": "Clienti",
+    "purchaseOrders": "Ordini di Acquisto",
+    "promotions": "Promozioni",
+    "recommendations": "Raccomandazioni",
+    "communications": "Comunicazioni",
+    "deliveries": "Consegne",
+    "aiConfiguration": "Configurazione IA",
+    "provincialCatalog": "Catalogo Provinciale",
+    "database": "Database",
+    "systemLogs": "Log di Sistema"
+  },
+  "roles": {
+    "superAdmin": "Super Amministratore",
+    "tenantAdmin": "Amministratore Inquilino",
+    "storeManager": "Responsabile Negozio",
+    "staff": "Personale",
+    "user": "Utente"
   }
 }

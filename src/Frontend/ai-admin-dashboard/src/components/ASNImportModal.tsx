@@ -7,6 +7,7 @@ import { useAuth } from '../contexts/AuthContext';
 import StoreSelector from './StoreSelector';
 import { getApiEndpoint } from '../config/app.config';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 interface ASNItem {
   shipment_id?: string;
@@ -94,79 +95,36 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
   // Auto-select provincial supplier based on store's province
   useEffect(() => {
     const fetchProvincialSupplier = async () => {
-      if (isOpen && currentStore) {
-        // Check if store has province_territory_id
-        if (currentStore.province_territory_id) {
-          try {
-            // Fetch the provincial supplier for the store's province/territory ID
-            const response = await fetch(getApiEndpoint(`/suppliers/by-province-territory-id/${currentStore.province_territory_id}`), {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            });
+      if (isOpen && currentStore?.id) {
+        try {
+          // Use the new unified endpoint to get the store's provincial supplier
+          const response = await fetch(getApiEndpoint(`/stores/${currentStore.id}/province-supplier`), {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
 
-            if (response.ok) {
-              const provincialSupplier = await response.json();
-              setSupplierId(provincialSupplier.id);
-              console.log(`Auto-selected provincial supplier by territory ID:`, provincialSupplier.name);
-              return; // Exit if we found the supplier
-            }
-          } catch (error) {
-            console.error('Error fetching provincial supplier by territory ID:', error);
-          }
-        }
-
-        // Fallback to province_code if province_territory_id is not available
-        if (currentStore.province_code) {
-          try {
-            const response = await fetch(getApiEndpoint(`/suppliers/by-province/${currentStore.province_code}`), {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            });
-
-            if (response.ok) {
-              const provincialSupplier = await response.json();
-              setSupplierId(provincialSupplier.id);
-              console.log(`Auto-selected provincial supplier by province code:`, provincialSupplier.name);
-              return;
-            }
-          } catch (error) {
-            console.error('Error fetching provincial supplier by province code:', error);
-          }
-        }
-
-        // Fallback to finding supplier in the suppliers list
-        if (suppliers?.length > 0) {
-          // First try to match by provinces_territories_id
-          if (currentStore.province_territory_id) {
-            const provincialSupplier = suppliers.find((s: any) =>
-              s.provinces_territories_id === currentStore.province_territory_id
-            );
-            if (provincialSupplier) {
-              setSupplierId(provincialSupplier.id);
-              console.log('Found provincial supplier in list by territory ID:', provincialSupplier.name);
-              return;
+          if (response.ok) {
+            const provincialSupplier = await response.json();
+            setSupplierId(provincialSupplier.id);
+            console.log(`Auto-selected provincial supplier:`, provincialSupplier.name);
+          } else {
+            // Log error - this should never happen if store/supplier data is correct
+            console.error(`Failed to fetch provincial supplier for store ${currentStore.id}:`, response.status);
+            // Fallback to first supplier if available
+            if (suppliers?.length > 0) {
+              setSupplierId(suppliers[0].id);
+              console.log('Using fallback supplier:', suppliers[0].name);
             }
           }
-
-          // Then try to match by province_code
-          if (currentStore.province_code) {
-            const provincialSupplier = suppliers.find((s: any) =>
-              s.province_code === currentStore.province_code
-            );
-            if (provincialSupplier) {
-              setSupplierId(provincialSupplier.id);
-              console.log('Found provincial supplier in list by province code:', provincialSupplier.name);
-              return;
-            }
+        } catch (error) {
+          console.error('Error fetching provincial supplier:', error);
+          // Fallback to first supplier if available
+          if (suppliers?.length > 0) {
+            setSupplierId(suppliers[0].id);
+            console.log('Using fallback supplier due to error:', suppliers[0].name);
           }
-
-          // Default to first supplier if no match found
-          setSupplierId(suppliers[0].id);
-          console.log('Using default supplier:', suppliers[0].name);
         }
       } else if (isOpen && suppliers?.length > 0 && !currentStore) {
         // If no store selected, use first supplier
@@ -243,7 +201,7 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
     try {
       if (!currentStore?.id) {
         return {
-          retail_price: unitCost * (1 + storeDefaultMarkup / 100),
+          retail_price: parseFloat((unitCost * (1 + storeDefaultMarkup / 100)).toFixed(2)),
           markup_percentage: storeDefaultMarkup,
           price_source: 'store_default'
         };
@@ -267,7 +225,7 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
         if (data.override_price) {
           const markup = ((data.override_price - unitCost) / unitCost) * 100;
           return {
-            retail_price: data.override_price,
+            retail_price: parseFloat(data.override_price.toFixed(2)),
             markup_percentage: markup,
             price_source: 'inventory_override'
           };
@@ -279,19 +237,19 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
           // Check sub-sub-category first, then sub-category, then category
           if (catPricing.sub_sub_category_markup !== null) {
             return {
-              retail_price: unitCost * (1 + catPricing.sub_sub_category_markup / 100),
+              retail_price: parseFloat((unitCost * (1 + catPricing.sub_sub_category_markup / 100)).toFixed(2)),
               markup_percentage: catPricing.sub_sub_category_markup,
               price_source: 'category_rule'
             };
           } else if (catPricing.sub_category_markup !== null) {
             return {
-              retail_price: unitCost * (1 + catPricing.sub_category_markup / 100),
+              retail_price: parseFloat((unitCost * (1 + catPricing.sub_category_markup / 100)).toFixed(2)),
               markup_percentage: catPricing.sub_category_markup,
               price_source: 'category_rule'
             };
           } else if (catPricing.category_markup !== null) {
             return {
-              retail_price: unitCost * (1 + catPricing.category_markup / 100),
+              retail_price: parseFloat((unitCost * (1 + catPricing.category_markup / 100)).toFixed(2)),
               markup_percentage: catPricing.category_markup,
               price_source: 'category_rule'
             };
@@ -304,7 +262,7 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
 
     // Priority 3: Store default markup
     return {
-      retail_price: unitCost * (1 + storeDefaultMarkup / 100),
+      retail_price: parseFloat((unitCost * (1 + storeDefaultMarkup / 100)).toFixed(2)),
       markup_percentage: storeDefaultMarkup,
       price_source: 'store_default'
     };
@@ -702,6 +660,7 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
         vendor: commonVendor,  // From ASN Excel or determined
         ocs_order_number: ocsOrderNumber,  // Extracted from filename
         tenant_id: currentStore?.tenant_id || undefined,  // From current store
+        created_by: user?.id,  // Track who created the PO
         items: poItems.map((item, index) => {
           // Debug: Log the gtin_barcode and batch_lot being sent
           console.log(`Sending item ${index} ${item.sku}: batch_lot=${item.batch_lot}, gtin_barcode=${item.gtin_barcode}, case_gtin=${item.case_gtin}`);
@@ -772,7 +731,7 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
         await markFileAsImported(uploadedFileName);
       }
       queryClient.invalidateQueries({ queryKey: ['purchase-orders'] });
-      alert(`Purchase Order ${poNumber} created successfully!`);
+      toast.success(`Purchase Order ${poNumber} created successfully!`);
       handleClose();
     },
     onError: (error: Error) => {
@@ -1147,9 +1106,9 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
           {step === 'create' && (
             <div className="space-y-6">
               <h3 className="text-lg font-medium">Create Purchase Order</h3>
-              
-              {/* Store Selector - Show selector for non-store managers, show store name for store managers */}
-              <div className="mb-6">
+
+              {/* Store Selector - HIDDEN (Store already selected in header, value still used in backend) */}
+              <div className="mb-6 hidden">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Store *
                 </label>
@@ -1172,9 +1131,10 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
                   <p className="mt-1 text-sm text-danger-600">Please select a store</p>
                 )}
               </div>
-              
+
               <div className="space-y-4">
-                <div>
+                {/* Supplier dropdown - HIDDEN (Auto-selected by province, value still used in backend) */}
+                <div className="hidden">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Supplier *
                   </label>
@@ -1200,7 +1160,8 @@ Payment Status: ${paidInFull ? 'Paid in Full' : 'Pending'}`  // Include all fina
                   )}
                 </div>
 
-                <div>
+                {/* PO Number - HIDDEN (Auto-generated from filename, value still used in backend) */}
+                <div className="hidden">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     PO Number *
                   </label>

@@ -28,6 +28,9 @@
   "noLowStockItems": "No low stock items",
   "orders": "Orders",
   "noData": "No Data",
+  "charts": {
+    "revenueLabel": "Revenue"
+  },
   "left": "left",
   "reorder": "Reorder",
   "orderStatuses": {

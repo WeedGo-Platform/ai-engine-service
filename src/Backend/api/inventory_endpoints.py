@@ -30,8 +30,14 @@ from pydantic import BaseModel, Field
 import logging
 
 from services.inventory_service import InventoryService
-from api.v2.dependencies import get_purchase_order_service
+from api.v2.dependencies import (
+    get_purchase_order_service,
+    get_inventory_management_service,
+    get_batch_tracking_service
+)
 from ddd_refactored.application.services.purchase_order_service import PurchaseOrderApplicationService
+from ddd_refactored.application.services.inventory_management_service import InventoryManagementService
+from ddd_refactored.application.services.batch_tracking_service import BatchTrackingService
 import asyncpg
 import os
 
@@ -229,27 +235,108 @@ async def create_purchase_order(
 async def receive_purchase_order(
     po_id: UUID,
     request: ReceivePurchaseOrderRequest,
-    service: InventoryService = Depends(get_inventory_service)
+    x_user_id: Optional[str] = Header(None, alias="X-User-ID"),
+    x_store_id: Optional[str] = Header(None, alias="X-Store-ID"),
+    po_service: PurchaseOrderApplicationService = Depends(get_purchase_order_service),
+    inv_service: InventoryManagementService = Depends(get_inventory_management_service)
 ):
-    """Process receipt of purchase order items"""
+    """
+    Process receipt of purchase order items
+
+    DDD Implementation:
+    1. Updates PO status via PurchaseOrderApplicationService.receive_purchase_order()
+    2. Updates inventory & batches via InventoryManagementService.receive_inventory()
+
+    Orchestrates:
+    - PurchaseOrder aggregate (domain model)
+    - Inventory & BatchTracking aggregates
+    - FIFO batch creation with weighted average cost
+    - Auto-approval on receiving
+    """
     try:
-        success = await service.receive_purchase_order(
-            po_id,
-            [item.dict() for item in request.items]
-        )
-        
-        if not success:
+        logger.info(f"[DDD] Receiving PO {po_id} with {len(request.items)} items")
+
+        # Parse headers
+        user_id = UUID(x_user_id) if x_user_id else None
+        store_id = UUID(x_store_id) if x_store_id else None
+
+        if not store_id:
             raise HTTPException(
                 status_code=400,
-                detail="Failed to receive purchase order"
+                detail="Store ID (X-Store-ID header) is required for receiving"
             )
-        
+
+        # Convert Pydantic models to dict for application service
+        received_items = [item.dict() for item in request.items]
+
+        # 1. Update PO status (via domain method PurchaseOrder.receive())
+        po_result = await po_service.receive_purchase_order(
+            po_id=po_id,
+            received_items=received_items,
+            received_by=user_id,
+            auto_approve=True  # Auto-approve on receive (business rule)
+        )
+
+        logger.info(
+            f"[DDD] PO {po_result['order_number']} received: "
+            f"{po_result['total_received']} units, status: {po_result['status']}"
+        )
+
+        # 2. Update inventory & batches for each item
+        batch_results = []
+        for item in request.items:
+            logger.debug(
+                f"[DDD] Receiving inventory: SKU={item.sku}, "
+                f"batch_lot={item.batch_lot}, qty={item.quantity_received}"
+            )
+
+            # Use InventoryManagementService to handle both inventory and batch updates
+            inv_result = await inv_service.receive_inventory(
+                store_id=store_id,
+                sku=item.sku,
+                batch_lot=item.batch_lot,
+                quantity=item.quantity_received,
+                unit_cost=Decimal(str(item.unit_cost)),
+                purchase_order_id=po_id,
+                case_gtin=item.case_gtin,
+                gtin_barcode=item.gtin_barcode,
+                each_gtin=item.each_gtin,
+                packaged_on_date=item.packaged_on_date
+            )
+
+            batch_results.append({
+                'sku': item.sku,
+                'batch_lot': item.batch_lot,
+                'quantity_received': item.quantity_received,
+                'batch_id': inv_result.get('batch_id')
+            })
+
+        logger.info(
+            f"[DDD] Successfully received PO {po_id}: "
+            f"{len(batch_results)} batches created/updated"
+        )
+
         return {
-            "success": True,
-            "message": f"Received {len(request.items)} items for PO {po_id}"
+            'success': True,
+            'message': f"Received {len(request.items)} items for PO {po_id}",
+            'po_details': {
+                'id': po_result['id'],
+                'order_number': po_result['order_number'],
+                'total_received': po_result['total_received'],
+                'status': po_result['status'],
+                'is_fully_received': po_result.get('is_fully_received', False),
+                'received_by': str(user_id) if user_id else None,
+                'received_at': po_result.get('received_at')
+            },
+            'batches': batch_results
         }
+
+    except ValueError as ve:
+        # Domain validation errors
+        logger.warning(f"[DDD] Validation error receiving PO {po_id}: {ve}")
+        raise HTTPException(status_code=400, detail=str(ve))
     except Exception as e:
-        logger.error(f"Error receiving purchase order: {str(e)}")
+        logger.error(f"[DDD] Error receiving PO {po_id}: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -363,21 +450,19 @@ async def get_batch_details(
     try:
         conn = service.db
         query = """
-            SELECT 
+            SELECT
                 bt.*,
-                pc.product_name,
-                s.name as supplier_name
+                pc.product_name
             FROM batch_tracking bt
             LEFT JOIN product_catalog pc ON bt.sku = pc.sku
-            LEFT JOIN provincial_suppliers s ON bt.supplier_id = s.id
             WHERE bt.batch_lot = $1
         """
-        
+
         result = await conn.fetchrow(query, batch_lot)
-        
+
         if not result:
             raise HTTPException(status_code=404, detail=f"Batch {batch_lot} not found")
-        
+
         return dict(result)
     except HTTPException:
         raise
@@ -480,13 +565,13 @@ async def get_purchase_order_details(
         
         # Get purchase order items
         items_query = """
-            SELECT 
+            SELECT
                 poi.id,
                 poi.sku,
                 poi.quantity_ordered,
                 poi.quantity_received,
                 poi.unit_cost,
-                poi.line_total as total_cost,
+                poi.total_cost,
                 poi.batch_lot,
                 poi.case_gtin,
                 poi.gtin_barcode,

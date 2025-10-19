@@ -217,7 +217,7 @@ const StoreManagement: React.FC = () => {
   };
 
   const handleSuspendStore = async (id: string) => {
-    if (window.confirm(t('stores:confirmations.suspendStore'))) {
+    if (confirmToastAsync(t('stores:confirmations.suspendStore'))) {
       try {
         await tenantService.suspendStore(id, 'Admin action');
         loadTenantAndStores();
@@ -239,7 +239,7 @@ const StoreManagement: React.FC = () => {
   };
 
   const handleCloseStore = async (id: string) => {
-    if (window.confirm(t('stores:confirmations.closeStore'))) {
+    if (confirmToastAsync(t('stores:confirmations.closeStore'))) {
       try {
         await tenantService.closeStore(id);
         loadTenantAndStores();

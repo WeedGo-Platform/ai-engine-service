@@ -36,5 +36,8 @@
     "shipped": "ᑭ ᒪᓯᓇᐦᐃᑲᓇ",
     "pending": "ᐹᑯ ᓇᑕᐎ",
     "cancelled": "ᑭ ᓇᑲᑕᐌᓇᒃ"
+  },
+  "charts": {
+    "revenueLabel": "ᑭᒋ ᐱᒥᐯᐦᐄᑫᐎᓇ"
   }
 }

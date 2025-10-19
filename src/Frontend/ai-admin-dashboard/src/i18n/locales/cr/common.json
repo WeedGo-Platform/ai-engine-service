@@ -197,5 +197,32 @@
       "securityNotice": "Kî masinipayiwin kîmowin, sipwêhtêh mîna âhkami itâpiscikewin.",
       "changing": "Masinipayiwin..."
     }
+  },
+  "navigation": {
+    "dashboard": "ᑕᐸᒋᑫᐎᐣ ᑕᐱᐸᐦᐋᑲᐣ",
+    "apps": "ᐊᐱᔑᒧᐃᐧᓇ",
+    "organization": "ᐁᑲᐧ ᐃᑐᒋᑫᐎᐣ",
+    "tenants": "ᑭᑭᐸᒋᐦᐅᑲᑌᒃ",
+    "products": "ᑭᒋᐸᒋᑫᐎᓇ",
+    "inventory": "ᑭᒋ ᑕᐱᔑᓇᐦᐄᑫᐎᓇ",
+    "accessories": "ᑭᒋ ᐃᔑᓇᐦᐄᑫᐎᓇ",
+    "orders": "ᑭᐸᒋᐦᐅᐎᓇ",
+    "customers": "ᑭᑮ ᑭᔑᐱᓂᒃ",
+    "purchaseOrders": "ᑭᐸᒋᐦᐅᐎᓇ ᑭᔑᐱᓇᒃ",
+    "promotions": "ᑭᒋ ᐃᔑᓇᐦᐄᑫᐎᓇ",
+    "recommendations": "ᑭᒋ ᐃᔑᓇᐦᐄᑫᐎᓇ",
+    "communications": "ᑭᑮ ᑕᐱᐸᐦᐋᑲᓂᐎᓇ",
+    "deliveries": "ᑭᒋ ᐱᒥᐯᐦᐄᑫᐎᓇ",
+    "aiConfiguration": "AI ᑭᒋ ᐃᔑᓇᐦᐄᑫᐎᓇ",
+    "provincialCatalog": "ᑭᒋ ᑕᐱᔑᓇᐦᐄᑫᐎᓇ",
+    "database": "ᑭᒋ ᑕᐱᐸᐦᐋᑲᓂᐎᓇ",
+    "systemLogs": "ᑭᒋ ᑕᐱᐸᐦᐋᑲᓂᐎᓇ"
+  },
+  "roles": {
+    "superAdmin": "ᑭᒋ ᐅᑭᒪᐎᐣ",
+    "tenantAdmin": "ᑭᑮ ᐅᑭᒪᐎᐣ",
+    "storeManager": "ᑭᒋ ᑕᐸᒋᑫᐎᐣ",
+    "staff": "ᐊᓂᔑᓂᓂᐎᐊᒃ",
+    "user": "ᐊᐸᒋᐦᑕᐎᐣ"
   }
 }

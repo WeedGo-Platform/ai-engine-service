@@ -1,451 +1,497 @@
 """
 PaymentTransaction Aggregate Root
-Following DDD Architecture Document Section 2.9
+
+The core entity in the payment processing domain.
+Enforces business rules and maintains transactional consistency.
+
+Refactored for store-level payment providers and simplified architecture.
 """
 
 from dataclasses import dataclass, field
 from datetime import datetime
-from decimal import Decimal
 from typing import Optional, List, Dict, Any
 from uuid import UUID, uuid4
 
-from ....shared.domain_base import AggregateRoot, DomainEvent, BusinessRuleViolation
-from ..value_objects.payment_types import (
-    PaymentMethod,
-    PaymentStatus,
-    PaymentProvider,
-    RefundReason,
-    Money,
-    CardDetails,
-    PaymentGatewayResponse,
-    RefundDetails,
-    PaymentMethodDetails,
-    SplitPayment
+from ..value_objects import Money, PaymentStatus, TransactionReference
+from ..events import (
+    PaymentCreated,
+    PaymentProcessing,
+    PaymentCompleted,
+    PaymentFailed,
+    PaymentVoided,
+    RefundRequested,
+)
+from ..exceptions import (
+    InvalidTransactionStateError,
+    RefundAmountExceededError,
+    RefundNotAllowedError,
+    VoidNotAllowedError,
+    InvalidAmountError,
 )
 
 
-# Domain Events
-class PaymentInitiated(DomainEvent):
-    payment_id: UUID
-    order_id: UUID
-    amount: Decimal
-    payment_method: PaymentMethod
-
-
-class PaymentAuthorized(DomainEvent):
-    payment_id: UUID
-    order_id: UUID
-    amount: Decimal
-    authorization_code: str
-    authorized_at: datetime
-
-
-class PaymentCaptured(DomainEvent):
-    payment_id: UUID
-    order_id: UUID
-    amount: Decimal
-    captured_at: datetime
-
-
-class PaymentFailed(DomainEvent):
-    payment_id: UUID
-    order_id: UUID
-    failure_reason: str
-    failed_at: datetime
-
-
-class PaymentCancelled(DomainEvent):
-    payment_id: UUID
-    order_id: UUID
-    cancelled_at: datetime
-    reason: str
-
-
-class RefundIssued(DomainEvent):
-    payment_id: UUID
-    order_id: UUID
-    refund_amount: Decimal
-    refund_reason: RefundReason
-    refunded_at: datetime
-
-
-class RefundCompleted(DomainEvent):
-    payment_id: UUID
-    refund_id: UUID
-    refund_amount: Decimal
-    completed_at: datetime
-
-
 @dataclass
-class Refund:
-    """Refund entity within PaymentTransaction aggregate"""
+class PaymentTransaction:
+    """
+    Aggregate Root for payment transactions.
+
+    Responsibilities:
+    - Enforce payment business rules
+    - Manage transaction lifecycle
+    - Publish domain events
+    - Ensure data consistency
+
+    Business Invariants:
+    - Transaction reference must be unique
+    - Amount must be positive
+    - Cannot refund more than transaction amount
+    - Cannot void a completed transaction
+    - Cannot complete a failed transaction
+    - Status transitions must follow valid paths
+    """
+
+    # Identity
     id: UUID = field(default_factory=uuid4)
-    refund_amount: Money = None
-    refund_reason: RefundReason = RefundReason.CUSTOMER_REQUEST
-    refund_notes: Optional[str] = None
+    transaction_reference: TransactionReference = field(default_factory=TransactionReference.generate)
 
-    # Status
-    status: str = "pending"  # pending, processing, completed, failed
+    # Relationships (required)
+    store_id: UUID = field(default=None)
+    provider_id: UUID = field(default=None)
+    store_provider_id: UUID = field(default=None)
 
-    # Gateway details
-    gateway_refund_id: Optional[str] = None
-    gateway_response: Optional[PaymentGatewayResponse] = None
+    # Relationships (optional)
+    order_id: Optional[UUID] = None
+    user_id: Optional[UUID] = None
+    payment_method_id: Optional[UUID] = None
 
-    # Timestamps
-    requested_at: datetime = field(default_factory=datetime.utcnow)
-    processed_at: Optional[datetime] = None
-    completed_at: Optional[datetime] = None
+    # Transaction details
+    transaction_type: str = 'charge'  # 'charge', 'authorize', 'capture', 'void'
+    amount: Money = field(default=None)
+    status: PaymentStatus = PaymentStatus.PENDING
 
-    # Who requested
-    requested_by: Optional[UUID] = None
+    # Provider details
+    provider_transaction_id: Optional[str] = None
+    provider_response: Optional[Dict[str, Any]] = None
+    error_code: Optional[str] = None
+    error_message: Optional[str] = None
 
-    def complete(self, gateway_response: PaymentGatewayResponse):
-        """Mark refund as completed"""
-        if self.status == "completed":
-            raise BusinessRuleViolation("Refund already completed")
-
-        self.status = "completed"
-        self.gateway_response = gateway_response
-        self.gateway_refund_id = gateway_response.gateway_transaction_id
-        self.completed_at = datetime.utcnow()
-
-    def fail(self, reason: str):
-        """Mark refund as failed"""
-        if self.status == "completed":
-            raise BusinessRuleViolation("Cannot fail completed refund")
-
-        self.status = "failed"
-        self.refund_notes = f"{self.refund_notes or ''} | Failed: {reason}".strip()
-        self.processed_at = datetime.utcnow()
-
-
-@dataclass
-class PaymentTransaction(AggregateRoot):
-    """
-    PaymentTransaction Aggregate Root - Payment processing
-    As defined in DDD_ARCHITECTURE_REFACTORING.md Section 2.9
-    """
-    # Identifiers
-    order_id: UUID = field(default_factory=uuid4)
-    store_id: UUID = field(default_factory=uuid4)
-    tenant_id: UUID = field(default_factory=uuid4)
-    customer_id: Optional[UUID] = None
-
-    # Payment details
-    payment_amount: Money = None
-    payment_status: PaymentStatus = PaymentStatus.PENDING
-
-    # Payment method
-    payment_method_details: Optional[PaymentMethodDetails] = None
-
-    # Split payments (for orders paid with multiple methods)
-    split_payments: List[SplitPayment] = field(default_factory=list)
-    is_split_payment: bool = False
-
-    # Gateway integration
-    payment_provider: PaymentProvider = PaymentProvider.STRIPE
-    gateway_transaction_id: Optional[str] = None
-    authorization_code: Optional[str] = None
-
-    # Gateway responses
-    gateway_responses: List[PaymentGatewayResponse] = field(default_factory=list)
-
-    # Refunds
-    refunds: List[Refund] = field(default_factory=list)
-    refunded_amount: Money = None
-
-    # Timestamps
-    created_at: datetime = field(default_factory=datetime.utcnow)
-    updated_at: datetime = field(default_factory=datetime.utcnow)
-    authorized_at: Optional[datetime] = None
-    captured_at: Optional[datetime] = None
-    failed_at: Optional[datetime] = None
-    cancelled_at: Optional[datetime] = None
-
-    # Failure details
-    failure_reason: Optional[str] = None
-    retry_count: int = 0
+    # Security
+    idempotency_key: Optional[str] = None
+    ip_address: Optional[str] = None
 
     # Metadata
     metadata: Dict[str, Any] = field(default_factory=dict)
 
+    # Timestamps
+    created_at: datetime = field(default_factory=datetime.utcnow)
+    updated_at: datetime = field(default_factory=datetime.utcnow)
+    completed_at: Optional[datetime] = None
+
+    # Domain events (not persisted)
+    _domain_events: List = field(default_factory=list, init=False, repr=False)
+
     def __post_init__(self):
-        """Initialize default values"""
-        super().__post_init__()
-        if self.refunded_amount is None:
-            self.refunded_amount = Money(amount=Decimal("0"), currency="CAD")
+        """Validate invariants after initialization."""
+        # Validate required fields
+        if self.store_id is None:
+            raise ValueError("store_id is required")
+        if self.provider_id is None:
+            raise ValueError("provider_id is required")
+        if self.store_provider_id is None:
+            raise ValueError("store_provider_id is required")
+        if self.amount is None:
+            raise ValueError("amount is required")
 
-    @classmethod
-    def create(
-        cls,
-        order_id: UUID,
-        store_id: UUID,
-        tenant_id: UUID,
-        payment_amount: Money,
-        payment_method_details: PaymentMethodDetails,
-        customer_id: Optional[UUID] = None
-    ) -> 'PaymentTransaction':
-        """Factory method to create new payment transaction"""
-        if not payment_amount.is_positive():
-            raise BusinessRuleViolation("Payment amount must be positive")
-
-        payment = cls(
-            order_id=order_id,
-            store_id=store_id,
-            tenant_id=tenant_id,
-            customer_id=customer_id,
-            payment_amount=payment_amount,
-            payment_method_details=payment_method_details,
-            payment_provider=payment_method_details.provider,
-            payment_status=PaymentStatus.PENDING
-        )
-
-        # Raise creation event
-        payment.add_domain_event(PaymentInitiated(
-            payment_id=payment.id,
-            order_id=order_id,
-            amount=payment_amount.amount,
-            payment_method=payment_method_details.payment_method
-        ))
-
-        return payment
-
-    def authorize(
-        self,
-        authorization_code: str,
-        gateway_response: PaymentGatewayResponse
-    ):
-        """Authorize the payment (pre-authorization)"""
-        if self.payment_status != PaymentStatus.PENDING:
-            raise BusinessRuleViolation(f"Cannot authorize {self.payment_status} payment")
-
-        if not gateway_response.is_success:
-            raise BusinessRuleViolation("Cannot authorize with failed gateway response")
-
-        self.payment_status = PaymentStatus.AUTHORIZED
-        self.authorization_code = authorization_code
-        self.gateway_transaction_id = gateway_response.gateway_transaction_id
-        self.authorized_at = datetime.utcnow()
-        self.gateway_responses.append(gateway_response)
-
-        # Raise event
-        self.add_domain_event(PaymentAuthorized(
-            payment_id=self.id,
-            order_id=self.order_id,
-            amount=self.payment_amount.amount,
-            authorization_code=authorization_code,
-            authorized_at=self.authorized_at
-        ))
-
-        self.mark_as_modified()
-
-    def capture(self, gateway_response: PaymentGatewayResponse):
-        """Capture the payment (complete the transaction)"""
-        if self.payment_status not in [PaymentStatus.PENDING, PaymentStatus.AUTHORIZED]:
-            raise BusinessRuleViolation(f"Cannot capture {self.payment_status} payment")
-
-        if not gateway_response.is_success:
-            raise BusinessRuleViolation("Cannot capture with failed gateway response")
-
-        self.payment_status = PaymentStatus.CAPTURED
-        self.gateway_transaction_id = gateway_response.gateway_transaction_id
-        self.captured_at = datetime.utcnow()
-        self.gateway_responses.append(gateway_response)
-
-        # Raise event
-        self.add_domain_event(PaymentCaptured(
-            payment_id=self.id,
-            order_id=self.order_id,
-            amount=self.payment_amount.amount,
-            captured_at=self.captured_at
-        ))
-
-        self.mark_as_modified()
-
-    def fail(self, failure_reason: str):
-        """Mark payment as failed"""
-        if self.payment_status in [PaymentStatus.CAPTURED, PaymentStatus.REFUNDED]:
-            raise BusinessRuleViolation(f"Cannot fail {self.payment_status} payment")
-
-        self.payment_status = PaymentStatus.FAILED
-        self.failure_reason = failure_reason
-        self.failed_at = datetime.utcnow()
-        self.retry_count += 1
-
-        # Raise event
-        self.add_domain_event(PaymentFailed(
-            payment_id=self.id,
-            order_id=self.order_id,
-            failure_reason=failure_reason,
-            failed_at=self.failed_at
-        ))
-
-        self.mark_as_modified()
-
-    def cancel(self, reason: str = ""):
-        """Cancel the payment"""
-        if self.payment_status in [PaymentStatus.CAPTURED, PaymentStatus.REFUNDED]:
-            raise BusinessRuleViolation(f"Cannot cancel {self.payment_status} payment")
-
-        self.payment_status = PaymentStatus.CANCELLED
-        self.cancelled_at = datetime.utcnow()
-
-        # Raise event
-        self.add_domain_event(PaymentCancelled(
-            payment_id=self.id,
-            order_id=self.order_id,
-            cancelled_at=self.cancelled_at,
-            reason=reason
-        ))
-
-        self.mark_as_modified()
-
-    def initiate_refund(
-        self,
-        refund_amount: Money,
-        refund_reason: RefundReason,
-        refund_notes: Optional[str] = None,
-        requested_by: Optional[UUID] = None
-    ) -> UUID:
-        """Initiate a refund"""
-        if self.payment_status != PaymentStatus.CAPTURED:
-            raise BusinessRuleViolation("Can only refund captured payments")
-
-        # Validate refund amount
-        total_refunded = self.get_total_refunded()
-        remaining_amount = self.payment_amount.subtract(total_refunded)
-
-        if refund_amount.amount > remaining_amount.amount:
-            raise BusinessRuleViolation(
-                f"Refund amount {refund_amount} exceeds remaining amount {remaining_amount}"
+        # Validate amount
+        if self.amount.amount <= 0:
+            raise InvalidAmountError(
+                f"Transaction amount must be positive, got: {self.amount}",
+                amount=float(self.amount.amount)
             )
 
-        # Create refund
-        refund = Refund(
-            refund_amount=refund_amount,
-            refund_reason=refund_reason,
-            refund_notes=refund_notes,
-            requested_by=requested_by,
-            status="pending"
+        # Validate transaction type
+        valid_types = ['charge', 'authorize', 'capture', 'void']
+        if self.transaction_type not in valid_types:
+            raise ValueError(
+                f"Invalid transaction type: {self.transaction_type}. "
+                f"Must be one of: {valid_types}"
+            )
+
+        # Raise creation event
+        self._raise_event(
+            PaymentCreated(
+                transaction_id=self.id,
+                transaction_reference=str(self.transaction_reference),
+                store_id=self.store_id,
+                amount=self.amount,
+                order_id=self.order_id,
+                user_id=self.user_id,
+                provider_type=None  # Set by application layer
+            )
         )
 
-        self.refunds.append(refund)
+    def begin_processing(self, provider_type: str) -> None:
+        """
+        Mark transaction as processing (submitted to payment processor).
 
-        # Raise event
-        self.add_domain_event(RefundIssued(
-            payment_id=self.id,
-            order_id=self.order_id,
-            refund_amount=refund_amount.amount,
-            refund_reason=refund_reason,
-            refunded_at=datetime.utcnow()
-        ))
+        Args:
+            provider_type: Payment provider type (clover, moneris, interac)
 
-        self.mark_as_modified()
-        return refund.id
+        Raises:
+            InvalidTransactionStateError: If transaction not in valid state
+        """
+        if not self.status.can_transition_to(PaymentStatus.PROCESSING):
+            raise InvalidTransactionStateError(
+                f"Cannot begin processing transaction in {self.status} status",
+                current_state=self.status.value,
+                attempted_state=PaymentStatus.PROCESSING.value
+            )
 
-    def complete_refund(
+        self.status = PaymentStatus.PROCESSING
+        self.updated_at = datetime.utcnow()
+
+        self._raise_event(
+            PaymentProcessing(
+                transaction_id=self.id,
+                provider_type=provider_type,
+                provider_transaction_id=self.provider_transaction_id
+            )
+        )
+
+    def complete(
         self,
-        refund_id: UUID,
-        gateway_response: PaymentGatewayResponse
+        provider_transaction_id: str,
+        provider_response: Optional[Dict[str, Any]] = None
+    ) -> None:
+        """
+        Mark transaction as successfully completed.
+
+        Business rules:
+        - Can only complete pending/processing transactions
+        - Provider transaction ID is required
+        - Sets completed_at timestamp
+
+        Args:
+            provider_transaction_id: Provider's transaction identifier
+            provider_response: Full provider response for debugging
+
+        Raises:
+            InvalidTransactionStateError: If transaction cannot be completed
+            ValueError: If provider_transaction_id is missing
+        """
+        if not provider_transaction_id:
+            raise ValueError("provider_transaction_id is required to complete transaction")
+
+        if not self.status.can_transition_to(PaymentStatus.COMPLETED):
+            raise InvalidTransactionStateError(
+                f"Cannot complete transaction in {self.status} status. "
+                f"Only pending/processing transactions can be completed.",
+                current_state=self.status.value,
+                attempted_state=PaymentStatus.COMPLETED.value
+            )
+
+        # Update transaction state
+        self.status = PaymentStatus.COMPLETED
+        self.provider_transaction_id = provider_transaction_id
+        self.provider_response = provider_response or {}
+        self.completed_at = datetime.utcnow()
+        self.updated_at = self.completed_at
+
+        # Clear any previous error state
+        self.error_code = None
+        self.error_message = None
+
+        # Raise domain event
+        self._raise_event(
+            PaymentCompleted(
+                transaction_id=self.id,
+                transaction_reference=str(self.transaction_reference),
+                provider_transaction_id=provider_transaction_id,
+                amount=self.amount,
+                store_id=self.store_id,
+                order_id=self.order_id,
+                completed_at=self.completed_at
+            )
+        )
+
+    def fail(
+        self,
+        error_code: str,
+        error_message: str,
+        provider_response: Optional[Dict[str, Any]] = None,
+        is_retryable: bool = False
+    ) -> None:
+        """
+        Mark transaction as failed.
+
+        Business rules:
+        - Cannot fail an already completed transaction
+        - Error code and message are required
+
+        Args:
+            error_code: Machine-readable error code
+            error_message: Human-readable error message
+            provider_response: Full provider response for debugging
+            is_retryable: Whether this failure can be retried
+
+        Raises:
+            InvalidTransactionStateError: If transaction cannot be failed
+            ValueError: If error_code or error_message is missing
+        """
+        if not error_code:
+            raise ValueError("error_code is required")
+        if not error_message:
+            raise ValueError("error_message is required")
+
+        if not self.status.can_transition_to(PaymentStatus.FAILED):
+            raise InvalidTransactionStateError(
+                f"Cannot fail transaction in {self.status} status. "
+                f"Already completed transactions cannot be marked as failed.",
+                current_state=self.status.value,
+                attempted_state=PaymentStatus.FAILED.value
+            )
+
+        # Update transaction state
+        self.status = PaymentStatus.FAILED
+        self.error_code = error_code
+        self.error_message = error_message
+        self.provider_response = provider_response or {}
+        self.updated_at = datetime.utcnow()
+
+        # Raise domain event
+        self._raise_event(
+            PaymentFailed(
+                transaction_id=self.id,
+                transaction_reference=str(self.transaction_reference),
+                error_code=error_code,
+                error_message=error_message,
+                amount=self.amount,
+                store_id=self.store_id,
+                order_id=self.order_id,
+                failed_at=self.updated_at,
+                is_retryable=is_retryable
+            )
+        )
+
+    def void(self, voided_by: Optional[UUID] = None, reason: Optional[str] = None) -> None:
+        """
+        Void (cancel) the transaction before completion.
+
+        Business rules:
+        - Can only void pending/processing transactions
+        - Cannot void completed or failed transactions
+        - Voiding is different from refunding (refund happens after completion)
+
+        Args:
+            voided_by: User who voided the transaction
+            reason: Reason for voiding
+
+        Raises:
+            VoidNotAllowedError: If transaction cannot be voided
+        """
+        if not self.status.can_void():
+            raise VoidNotAllowedError(
+                f"Cannot void transaction in {self.status} status. "
+                f"Only pending/processing transactions can be voided.",
+                transaction_id=self.id
+            )
+
+        # Update transaction state
+        self.status = PaymentStatus.VOIDED
+        self.updated_at = datetime.utcnow()
+
+        # Raise domain event
+        self._raise_event(
+            PaymentVoided(
+                transaction_id=self.id,
+                transaction_reference=str(self.transaction_reference),
+                amount=self.amount,
+                store_id=self.store_id,
+                voided_by=voided_by,
+                voided_at=self.updated_at,
+                reason=reason
+            )
+        )
+
+    def request_refund(
+        self,
+        refund_amount: Money,
+        reason: Optional[str] = None,
+        requested_by: Optional[UUID] = None
     ):
-        """Complete a refund"""
-        refund = self.get_refund(refund_id)
-        if not refund:
-            raise BusinessRuleViolation(f"Refund {refund_id} not found")
+        """
+        Create a refund request for this transaction.
 
-        if not gateway_response.is_success:
-            refund.fail(gateway_response.status_message)
-            self.mark_as_modified()
-            return
+        Business rules:
+        - Can only refund completed transactions
+        - Refund amount cannot exceed transaction amount
+        - Partial refunds are allowed
+        - Full refund changes transaction status to REFUNDED
 
-        refund.complete(gateway_response)
+        Args:
+            refund_amount: Amount to refund
+            reason: Reason for refund
+            requested_by: User requesting the refund
 
-        # Update refunded amount
-        self.refunded_amount = self.refunded_amount.add(refund.refund_amount)
+        Returns:
+            PaymentRefund entity (imported at runtime to avoid circular dependency)
 
-        # Update payment status
-        if self.refunded_amount.amount >= self.payment_amount.amount:
-            self.payment_status = PaymentStatus.REFUNDED
-        else:
-            self.payment_status = PaymentStatus.PARTIALLY_REFUNDED
+        Raises:
+            RefundNotAllowedError: If refund is not allowed
+            RefundAmountExceededError: If refund amount exceeds transaction amount
+        """
+        # Validate refund is allowed
+        if not self.status.can_refund():
+            raise RefundNotAllowedError(
+                f"Cannot refund transaction in {self.status} status. "
+                f"Only completed transactions can be refunded.",
+                transaction_id=self.id
+            )
 
-        # Raise event
-        self.add_domain_event(RefundCompleted(
-            payment_id=self.id,
-            refund_id=refund_id,
-            refund_amount=refund.refund_amount.amount,
-            completed_at=refund.completed_at
-        ))
+        # Validate refund amount
+        if refund_amount > self.amount:
+            raise RefundAmountExceededError(
+                refund_amount=float(refund_amount.amount),
+                transaction_amount=float(self.amount.amount)
+            )
 
-        self.mark_as_modified()
+        # Import here to avoid circular dependency
+        from .payment_refund import PaymentRefund
 
-    def add_split_payment(self, split_payment: SplitPayment):
-        """Add a split payment"""
-        if not self.is_split_payment:
-            self.is_split_payment = True
+        # Create refund entity
+        refund = PaymentRefund(
+            transaction_id=self.id,
+            amount=refund_amount,
+            reason=reason,
+            created_by=requested_by
+        )
 
-        self.split_payments.append(split_payment)
-        self.mark_as_modified()
+        # Raise domain event
+        self._raise_event(
+            RefundRequested(
+                refund_id=refund.id,
+                transaction_id=self.id,
+                amount=refund_amount,
+                reason=reason,
+                requested_by=requested_by
+            )
+        )
 
-    def get_refund(self, refund_id: UUID) -> Optional[Refund]:
-        """Get refund by ID"""
-        return next((r for r in self.refunds if r.id == refund_id), None)
+        return refund
 
-    def get_total_refunded(self) -> Money:
-        """Get total amount refunded"""
-        return self.refunded_amount
+    def mark_as_refunded(self) -> None:
+        """
+        Mark transaction as fully refunded.
 
-    def get_remaining_amount(self) -> Money:
-        """Get remaining amount after refunds"""
-        return self.payment_amount.subtract(self.refunded_amount)
+        This is called by the application layer after all refunds are processed.
+        """
+        if self.status != PaymentStatus.COMPLETED:
+            raise InvalidTransactionStateError(
+                f"Can only mark completed transactions as refunded, current status: {self.status}"
+            )
 
-    def is_fully_refunded(self) -> bool:
-        """Check if payment is fully refunded"""
-        return self.payment_status == PaymentStatus.REFUNDED
+        self.status = PaymentStatus.REFUNDED
+        self.updated_at = datetime.utcnow()
 
-    def is_partially_refunded(self) -> bool:
-        """Check if payment is partially refunded"""
-        return self.payment_status == PaymentStatus.PARTIALLY_REFUNDED
+    def update_metadata(self, key: str, value: Any) -> None:
+        """
+        Update transaction metadata.
 
+        Metadata can store arbitrary data like:
+        - Customer notes
+        - Internal references
+        - Custom fields
+
+        Args:
+            key: Metadata key
+            value: Metadata value (must be JSON-serializable)
+        """
+        self.metadata[key] = value
+        self.updated_at = datetime.utcnow()
+
+    def _raise_event(self, event) -> None:
+        """Add domain event to internal event list."""
+        self._domain_events.append(event)
+
+    @property
+    def domain_events(self) -> List:
+        """
+        Get domain events for this aggregate.
+
+        Returns:
+            Copy of domain events list
+        """
+        return self._domain_events.copy()
+
+    def clear_events(self) -> None:
+        """Clear domain events after they've been published."""
+        self._domain_events.clear()
+
+    @property
+    def is_successful(self) -> bool:
+        """Check if transaction was successful."""
+        return self.status.is_successful()
+
+    @property
+    def is_in_progress(self) -> bool:
+        """Check if transaction is still being processed."""
+        return self.status.is_in_progress()
+
+    @property
     def can_be_refunded(self) -> bool:
-        """Check if payment can be refunded"""
-        if self.payment_status != PaymentStatus.CAPTURED:
-            return False
+        """Check if transaction can be refunded."""
+        return self.status.can_refund()
 
-        remaining = self.get_remaining_amount()
-        return remaining.is_positive()
+    @property
+    def can_be_voided(self) -> bool:
+        """Check if transaction can be voided."""
+        return self.status.can_void()
 
-    def validate(self) -> List[str]:
-        """Validate payment transaction"""
-        errors = []
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        Convert to dictionary for serialization.
 
-        if not self.order_id:
-            errors.append("Order ID is required")
+        Returns:
+            Dictionary representation suitable for JSON serialization
+        """
+        return {
+            'id': str(self.id),
+            'transaction_reference': str(self.transaction_reference),
+            'store_id': str(self.store_id),
+            'provider_id': str(self.provider_id),
+            'store_provider_id': str(self.store_provider_id),
+            'order_id': str(self.order_id) if self.order_id else None,
+            'user_id': str(self.user_id) if self.user_id else None,
+            'payment_method_id': str(self.payment_method_id) if self.payment_method_id else None,
+            'transaction_type': self.transaction_type,
+            'amount': self.amount.to_dict(),
+            'status': self.status.value,
+            'provider_transaction_id': self.provider_transaction_id,
+            'provider_response': self.provider_response,
+            'error_code': self.error_code,
+            'error_message': self.error_message,
+            'idempotency_key': self.idempotency_key,
+            'ip_address': str(self.ip_address) if self.ip_address else None,
+            'metadata': self.metadata,
+            'created_at': self.created_at.isoformat(),
+            'updated_at': self.updated_at.isoformat(),
+            'completed_at': self.completed_at.isoformat() if self.completed_at else None,
+        }
 
-        if not self.store_id:
-            errors.append("Store ID is required")
+    def __str__(self) -> str:
+        """Human-readable string representation."""
+        return (
+            f"PaymentTransaction({self.transaction_reference}, "
+            f"{self.amount}, {self.status})"
+        )
 
-        if not self.tenant_id:
-            errors.append("Tenant ID is required")
-
-        if not self.payment_amount or not self.payment_amount.is_positive():
-            errors.append("Payment amount must be positive")
-
-        if not self.payment_method_details:
-            errors.append("Payment method details are required")
-
-        # Validate split payments sum to total
-        if self.is_split_payment:
-            total_split = Money(amount=Decimal("0"), currency=self.payment_amount.currency)
-            for split in self.split_payments:
-                total_split = total_split.add(split.amount)
-
-            if total_split.amount != self.payment_amount.amount:
-                errors.append("Split payments must sum to total payment amount")
-
-        # Validate refunds
-        total_refunded = self.get_total_refunded()
-        if total_refunded.amount > self.payment_amount.amount:
-            errors.append("Total refunded exceeds payment amount")
-
-        return errors
+    def __repr__(self) -> str:
+        """Developer-friendly representation."""
+        return (
+            f"PaymentTransaction("
+            f"id={self.id}, "
+            f"reference={self.transaction_reference}, "
+            f"amount={self.amount}, "
+            f"status={self.status}"
+            f")"
+        )

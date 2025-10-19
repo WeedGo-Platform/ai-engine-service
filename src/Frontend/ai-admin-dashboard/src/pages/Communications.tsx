@@ -270,7 +270,7 @@ const Communications: React.FC = () => {
   };
 
   const handleCancelBroadcast = async (broadcastId: string) => {
-    if (!confirm(t('communications:confirm.cancelBroadcast'))) return;
+    if (!confirmToastAsync(t('communications:confirm.cancelBroadcast'))) return;
 
     try {
       const token = localStorage.getItem('weedgo_auth_access_token');

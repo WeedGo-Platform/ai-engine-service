@@ -36,5 +36,8 @@
     "shipped": "ارسال شده",
     "pending": "در انتظار",
     "cancelled": "لغو شده"
+  },
+  "charts": {
+    "revenueLabel": "درآمد"
   }
 }
