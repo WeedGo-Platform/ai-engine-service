@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 import {
   Card,
   CardContent,
@@ -76,6 +77,14 @@ import {
 } from 'lucide-react';
 import { DateRangePicker } from '@/components/date-range-picker';
 import { format } from 'date-fns';
+import { paymentService } from '../services/paymentServiceV2';
+import type {
+  PaymentTransactionDTO,
+  TransactionFilters,
+  PaymentMetrics as V2PaymentMetrics,
+  CreateRefundRequest,
+} from '../types/payment';
+import { ApiError, NetworkError, AuthenticationError } from '../utils/api-error-handler';
 
 interface Transaction {
   id: string;
@@ -117,6 +126,10 @@ interface PaymentMetrics {
 
 const PaymentsPage: React.FC = () => {
   const { t } = useTranslation(['payments', 'common', 'errors']);
+  const { tenantCode } = useParams<{ tenantCode: string }>();
+
+  // TODO: Get actual tenantId from tenantCode - for now using tenantCode as placeholder
+  const tenantId = tenantCode || 'default-tenant';
 
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [providers, setProviders] = useState<PaymentProvider[]>([]);
@@ -140,23 +153,45 @@ const PaymentsPage: React.FC = () => {
 
   const fetchTransactions = async () => {
     try {
-      const params = new URLSearchParams({
+      setIsLoading(true);
+
+      const filters: TransactionFilters = {
         start_date: format(dateRange.from, 'yyyy-MM-dd'),
         end_date: format(dateRange.to, 'yyyy-MM-dd'),
-        status: statusFilter,
-        provider: providerFilter,
-      });
+        status: statusFilter !== 'all' ? statusFilter : undefined,
+        // provider: providerFilter !== 'all' ? providerFilter : undefined,
+        limit: 100,
+        offset: 0,
+      };
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/payments/transactions?${params}`);
-      const data = await response.json();
-      setTransactions(data.transactions || []);
+      const response = await paymentService.getTransactions(tenantId, filters);
+      setTransactions(response.transactions);
     } catch (error) {
-      console.error('Error fetching transactions:', error);
-      toast({
-        title: t('payments:messages.error.title'),
-        description: t('payments:messages.error.fetchTransactions'),
-        variant: 'destructive',
-      });
+      if (error instanceof AuthenticationError) {
+        toast({
+          variant: 'destructive',
+          title: t('common:errors.authentication'),
+          description: t('common:errors.authenticationDescription'),
+        });
+      } else if (error instanceof NetworkError) {
+        toast({
+          variant: 'destructive',
+          title: t('common:errors.network'),
+          description: t('common:errors.networkDescription'),
+        });
+      } else if (error instanceof ApiError) {
+        toast({
+          variant: 'destructive',
+          title: t('payments:messages.error.fetchTransactions'),
+          description: error.getUserMessage(),
+        });
+      } else {
+        toast({
+          variant: 'destructive',
+          title: t('payments:messages.error.fetchTransactions'),
+          description: t('common:errors.generic'),
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -164,26 +199,51 @@ const PaymentsPage: React.FC = () => {
 
   const fetchProviders = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/payments/providers`);
-      const data = await response.json();
-      setProviders(data.providers || []);
+      const response = await paymentService.getProviders(tenantId, {
+        is_active: true, // Only fetch active providers for the dropdown
+      });
+
+      // Map V2 provider response to component interface
+      const mappedProviders: PaymentProvider[] = response.providers.map(p => ({
+        id: p.id,
+        name: p.display_name,
+        provider_type: p.provider_type,
+        is_active: p.is_active,
+        is_default: p.is_default || false,
+        supported_currencies: p.supported_currencies || [],
+        capabilities: p.capabilities || {},
+        fee_structure: p.fee_structure || {},
+      }));
+
+      setProviders(mappedProviders);
     } catch (error) {
       console.error('Error fetching providers:', error);
+      // Non-critical error - just log it
     }
   };
 
   const fetchMetrics = async () => {
     try {
-      const params = new URLSearchParams({
-        start_date: format(dateRange.from, 'yyyy-MM-dd'),
-        end_date: format(dateRange.to, 'yyyy-MM-dd'),
+      const metricsData = await paymentService.getPaymentStats(tenantId, {
+        start: format(dateRange.from, 'yyyy-MM-dd'),
+        end: format(dateRange.to, 'yyyy-MM-dd'),
       });
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/payments/metrics?${params}`);
-      const data = await response.json();
-      setMetrics(data);
+      // Map V2 metrics to component interface
+      setMetrics({
+        total_transactions: metricsData.total_transactions,
+        successful_transactions: metricsData.successful_transactions,
+        failed_transactions: metricsData.failed_transactions,
+        total_amount: metricsData.total_volume,
+        total_fees: metricsData.total_fees || 0,
+        total_refunds: metricsData.total_refunds || 0,
+        success_rate: metricsData.success_rate,
+        avg_transaction_time: metricsData.average_transaction_time || 0,
+      });
     } catch (error) {
       console.error('Error fetching metrics:', error);
+      // Non-critical - set null to hide metrics cards
+      setMetrics(null);
     }
   };
 
@@ -191,65 +251,81 @@ const PaymentsPage: React.FC = () => {
     if (!selectedTransaction) return;
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/payments/refund`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          transaction_id: selectedTransaction.id,
-          amount: refundAmount ? parseFloat(refundAmount) : undefined,
-          reason: refundReason,
+      const refundRequest: CreateRefundRequest = {
+        amount: refundAmount ? parseFloat(refundAmount) : selectedTransaction.amount,
+        currency: selectedTransaction.currency,
+        reason: refundReason || 'Customer requested refund',
+        tenant_id: tenantId,
+      };
+
+      // Idempotency automatically applied by paymentService.refundTransaction()
+      const refund = await paymentService.refundTransaction(
+        selectedTransaction.id,
+        refundRequest
+      );
+
+      toast({
+        title: t('common:messages.success'),
+        description: t('payments:messages.success.refundProcessed', {
+          amount: refundRequest.amount.toFixed(2),
+          transactionId: refund.id,
         }),
       });
 
-      const result = await response.json();
+      setIsRefundDialogOpen(false);
+      setRefundAmount('');
+      setRefundReason('');
 
-      if (result.success) {
+      // Refresh data
+      await Promise.all([
+        fetchTransactions(),
+        fetchMetrics(),
+      ]);
+    } catch (error) {
+      if (error instanceof ApiError) {
         toast({
-          title: t('common:messages.success'),
-          description: t('payments:messages.success.refundProcessed'),
+          variant: 'destructive',
+          title: t('payments:messages.error.processRefund'),
+          description: error.getUserMessage(),
         });
-        setIsRefundDialogOpen(false);
-        fetchTransactions();
-        fetchMetrics();
       } else {
         toast({
-          title: t('payments:messages.error.title'),
-          description: result.error || t('payments:messages.error.processRefund'),
           variant: 'destructive',
+          title: t('payments:messages.error.processRefund'),
+          description: t('common:errors.generic'),
         });
       }
-    } catch (error) {
-      console.error('Error processing refund:', error);
-      toast({
-        title: t('payments:messages.error.title'),
-        description: t('payments:messages.error.processRefund'),
-        variant: 'destructive',
-      });
     }
   };
 
   const toggleProviderStatus = async (providerId: string, isActive: boolean) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/payments/providers/${providerId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ is_active: !isActive }),
+      await paymentService.updateProvider(tenantId, providerId, {
+        is_active: !isActive,
       });
 
-      if (response.ok) {
-        toast({
-          title: t('common:messages.success'),
-          description: isActive ? t('payments:messages.success.providerDisabled') : t('payments:messages.success.providerEnabled'),
-        });
-        fetchProviders();
-      }
-    } catch (error) {
-      console.error('Error updating provider:', error);
       toast({
-        title: t('payments:messages.error.title'),
-        description: t('payments:messages.error.updateProvider'),
-        variant: 'destructive',
+        title: t('common:messages.success'),
+        description: isActive
+          ? t('payments:messages.success.providerDisabled')
+          : t('payments:messages.success.providerEnabled'),
       });
+
+      fetchProviders();
+    } catch (error) {
+      if (error instanceof ApiError) {
+        toast({
+          variant: 'destructive',
+          title: t('payments:messages.error.updateProvider'),
+          description: error.getUserMessage(),
+        });
+      } else {
+        toast({
+          variant: 'destructive',
+          title: t('payments:messages.error.updateProvider'),
+          description: t('common:errors.generic'),
+        });
+      }
     }
   };
 
