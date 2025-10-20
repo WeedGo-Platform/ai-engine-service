@@ -22,7 +22,6 @@ DROP TABLE IF EXISTS payment_webhooks CASCADE;
 DROP TABLE IF EXISTS tenant_payment_providers CASCADE;
 DROP TABLE IF EXISTS payment_providers CASCADE;
 
-RAISE NOTICE 'Dropped existing payment tables';
 
 -- ============================================================================
 -- TABLE 1: payment_providers (Global Provider Registry)
@@ -61,7 +60,6 @@ CREATE TABLE payment_providers (
 
 CREATE INDEX idx_payment_providers_active ON payment_providers(is_active, priority);
 
-RAISE NOTICE 'Created payment_providers table (12 columns)';
 
 -- ============================================================================
 -- TABLE 2: store_payment_providers (Store-Level Provider Configuration)
@@ -102,7 +100,6 @@ CREATE INDEX idx_store_providers_active ON store_payment_providers(store_id, is_
 CREATE INDEX idx_store_providers_default ON store_payment_providers(is_default) WHERE is_default = true;
 CREATE INDEX idx_store_providers_store ON store_payment_providers(store_id);
 
-RAISE NOTICE 'Created store_payment_providers table (store-level, replaces tenant_payment_providers)';
 
 -- ============================================================================
 -- TABLE 3: payment_transactions (Core Transaction Log)
@@ -156,7 +153,6 @@ CREATE INDEX idx_payment_transactions_provider_ref ON payment_transactions(provi
 CREATE INDEX idx_payment_transactions_idempotency ON payment_transactions(idempotency_key) WHERE idempotency_key IS NOT NULL;
 CREATE INDEX idx_payment_transactions_user ON payment_transactions(user_id);
 
-RAISE NOTICE 'Created payment_transactions table (17 columns, down from 38)';
 
 -- ============================================================================
 -- TABLE 4: payment_methods (Tokenized Customer Payment Methods)
@@ -205,7 +201,6 @@ CREATE INDEX idx_payment_methods_user ON payment_methods(user_id);
 CREATE INDEX idx_payment_methods_default ON payment_methods(user_id, is_default);
 CREATE UNIQUE INDEX idx_payment_methods_token ON payment_methods(store_id, payment_token, provider_id) WHERE store_id IS NOT NULL;
 
-RAISE NOTICE 'Created payment_methods table (14 columns)';
 
 -- ============================================================================
 -- TABLE 5: payment_refunds (Refund Tracking)
@@ -244,7 +239,6 @@ CREATE INDEX idx_payment_refunds_transaction ON payment_refunds(transaction_id);
 CREATE INDEX idx_payment_refunds_status ON payment_refunds(status);
 CREATE INDEX idx_payment_refunds_created ON payment_refunds(created_at DESC);
 
-RAISE NOTICE 'Created payment_refunds table (12 columns)';
 
 -- ============================================================================
 -- TABLE 6: payment_webhooks (Webhook Event Log)
@@ -282,7 +276,6 @@ CREATE INDEX idx_payment_webhooks_provider ON payment_webhooks(provider_id, rece
 CREATE INDEX idx_payment_webhooks_processed ON payment_webhooks(is_processed, received_at);
 CREATE INDEX idx_payment_webhooks_type ON payment_webhooks(event_type);
 
-RAISE NOTICE 'Created payment_webhooks table (11 columns)';
 
 -- ============================================================================
 -- TRIGGERS: Auto-update updated_at timestamps
@@ -316,7 +309,6 @@ CREATE TRIGGER update_payment_methods_updated_at
     FOR EACH ROW
     EXECUTE FUNCTION update_payment_updated_at();
 
-RAISE NOTICE 'Created updated_at triggers';
 
 -- ============================================================================
 -- LOG MIGRATION

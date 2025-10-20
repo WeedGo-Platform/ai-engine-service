@@ -421,7 +421,7 @@ const PurchaseOrders: React.FC = () => {
           </table>
         </div>
 
-        {(!orders?.data || orders.data.length === 0) && (
+        {(!orders?.purchase_orders || orders.purchase_orders.length === 0) && (
           <div className="text-center py-12">
             <FileText className="mx-auto h-12 w-12 text-gray-400" />
             <h3 className="mt-2 text-sm font-medium text-gray-900">No purchase orders</h3>
@@ -439,7 +439,7 @@ const PurchaseOrders: React.FC = () => {
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Pending Orders</p>
               <p className="text-2xl font-bold text-warning-600 dark:text-warning-400">
-                {orders?.data?.filter((o: PurchaseOrder) => o.status === 'pending').length || 0}
+                {orders?.stats?.pending_orders || 0}
               </p>
             </div>
             <Clock className="h-8 w-8 text-warning-600 dark:text-warning-400" />
@@ -451,7 +451,7 @@ const PurchaseOrders: React.FC = () => {
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">In Transit</p>
               <p className="text-2xl font-bold text-accent-600 dark:text-accent-400">
-                {orders?.data?.filter((o: PurchaseOrder) => o.status === 'shipped').length || 0}
+                {orders?.stats?.in_transit || 0}
               </p>
             </div>
             <TruckIcon className="h-8 w-8 text-accent-600 dark:text-accent-400" />
@@ -463,12 +463,7 @@ const PurchaseOrders: React.FC = () => {
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">This Month</p>
               <p className="text-2xl font-bold text-primary-600 dark:text-primary-400">
-                {orders?.data?.filter((o: PurchaseOrder) => {
-                  const orderDate = new Date(o.order_date);
-                  const now = new Date();
-                  return orderDate.getMonth() === now.getMonth() &&
-                         orderDate.getFullYear() === now.getFullYear();
-                }).length || 0}
+                {orders?.stats?.this_month || 0}
               </p>
             </div>
             <CheckCircle className="h-8 w-8 text-primary-600 dark:text-primary-400" />
@@ -480,9 +475,7 @@ const PurchaseOrders: React.FC = () => {
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Value</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                ${orders?.data?.reduce((sum: number, o: PurchaseOrder) =>
-                  sum + (o.total_amount || 0), 0
-                ).toFixed(2) || '0.00'}
+                ${orders?.stats?.total_value?.toFixed(2) || '0.00'}
               </p>
             </div>
             <FileText className="h-8 w-8 text-gray-600 dark:text-gray-400" />

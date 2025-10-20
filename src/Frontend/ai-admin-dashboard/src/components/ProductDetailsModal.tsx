@@ -51,14 +51,14 @@ const ProductDetailsModal: React.FC<ProductDetailsModalProps> = ({
 
     return (
       <div className="space-y-3">
-        <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">{title}</h3>
+        <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700 pb-2">{title}</h3>
         <div className={includeImage && imageUrl ? "grid grid-cols-1 md:grid-cols-3 gap-6" : "grid grid-cols-1 md:grid-cols-2 gap-4"}>
           {includeImage && imageUrl && (
             <div className="md:col-span-1">
               <img
                 src={imageUrl}
                 alt={data.product_name || 'Product'}
-                className="w-full h-auto rounded-lg border border-gray-200 object-contain bg-gray-50"
+                className="w-full h-auto rounded-lg border border-gray-200 dark:border-gray-700 object-contain bg-gray-50 dark:bg-gray-900"
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none';
                 }}
@@ -71,8 +71,8 @@ const ProductDetailsModal: React.FC<ProductDetailsModalProps> = ({
               const displayKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
               return (
                 <div key={key} className="flex flex-col">
-                  <span className="text-sm font-medium text-gray-600">{displayKey}:</span>
-                  <span className="text-sm text-gray-900 break-words">
+                  <span className="text-sm font-medium text-gray-600 dark:text-gray-400">{displayKey}:</span>
+                  <span className="text-sm text-gray-900 dark:text-gray-200 break-words">
                     {renderFieldValue(value)}
                   </span>
                 </div>
@@ -97,15 +97,15 @@ const ProductDetailsModal: React.FC<ProductDetailsModalProps> = ({
 
               return batchData && batchData.length > 0 ? (
                 <>
-                  <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">
+                  <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700 pb-2">
                     Active Batches ({batchCount})
                   </h3>
                   {batchData.map((batch: any, index: number) => (
-                    <div key={index} className="border rounded-lg p-6 space-y-2">
+                    <div key={index} className="border border-gray-200 dark:border-gray-700 rounded-lg p-6 space-y-2 bg-white dark:bg-gray-800">
                       <div className="flex justify-between items-start">
                         <div className="flex-1">
-                          <p className="font-semibold">Batch/Lot: {batch.batch_lot}</p>
-                          <p className="text-sm text-gray-600">Quantity Remaining: {batch.quantity_remaining}</p>
+                          <p className="font-semibold text-gray-900 dark:text-white">Batch/Lot: {batch.batch_lot}</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">Quantity Remaining: {batch.quantity_remaining}</p>
                         </div>
                         <div className="flex items-center gap-2">
                           {onAddBatchToCart && (
@@ -124,13 +124,13 @@ const ProductDetailsModal: React.FC<ProductDetailsModalProps> = ({
                                 onAddBatchToCart(cartProduct, batch);
                                 onClose();
                               }}
-                              className="p-2 bg-blue-100 hover:bg-blue-200 text-accent-700 rounded-lg transition-colors"
+                              className="p-2 bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800 text-accent-700 dark:text-accent-300 rounded-lg transition-colors"
                               title="Add to Cart"
                             >
                               <ShoppingCart className="w-4 h-4" />
                             </button>
                           )}
-                          <span className="px-2 py-1 rounded text-xs bg-primary-100 text-primary-700">
+                          <span className="px-2 py-1 rounded text-xs bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300">
                             Active
                           </span>
                         </div>
@@ -138,31 +138,31 @@ const ProductDetailsModal: React.FC<ProductDetailsModalProps> = ({
 
                       {batch.packaged_on_date && (
                         <div className="text-sm">
-                          <span className="text-gray-500">Packaged On:</span>
-                          <p className="font-medium">{new Date(batch.packaged_on_date).toLocaleDateString()}</p>
+                          <span className="text-gray-500 dark:text-gray-400">Packaged On:</span>
+                          <p className="font-medium text-gray-900 dark:text-gray-200">{new Date(batch.packaged_on_date).toLocaleDateString()}</p>
                         </div>
                       )}
 
                       {batch.location_code && (
                         <div className="text-sm flex items-center gap-1">
-                          <MapPin className="w-3 h-3 text-gray-500" />
-                          <span className="text-gray-500">Location:</span>
-                          <p className="font-medium">{batch.location_code}</p>
+                          <MapPin className="w-3 h-3 text-gray-500 dark:text-gray-400" />
+                          <span className="text-gray-500 dark:text-gray-400">Location:</span>
+                          <p className="font-medium text-gray-900 dark:text-gray-200">{batch.location_code}</p>
                         </div>
                       )}
 
                       {(batch.case_gtin || batch.each_gtin) && (
-                        <div className="border-t pt-2 mt-2">
-                          <p className="text-sm font-medium text-gray-700 mb-1">Barcodes:</p>
+                        <div className="border-t border-gray-200 dark:border-gray-700 pt-2 mt-2">
+                          <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Barcodes:</p>
                           <div className="space-y-1">
                             {batch.case_gtin && (
-                              <p className="text-xs">
-                                <span className="text-gray-500">Case GTIN:</span> {batch.case_gtin}
+                              <p className="text-xs text-gray-700 dark:text-gray-300">
+                                <span className="text-gray-500 dark:text-gray-400">Case GTIN:</span> {batch.case_gtin}
                               </p>
                             )}
                             {batch.each_gtin && (
-                              <p className="text-xs">
-                                <span className="text-gray-500">Each GTIN:</span> {batch.each_gtin}
+                              <p className="text-xs text-gray-700 dark:text-gray-300">
+                                <span className="text-gray-500 dark:text-gray-400">Each GTIN:</span> {batch.each_gtin}
                               </p>
                             )}
                           </div>
@@ -172,8 +172,8 @@ const ProductDetailsModal: React.FC<ProductDetailsModalProps> = ({
                   ))}
                 </>
               ) : (
-                <div className="text-center py-8 text-gray-500">
-                  <Package className="w-12 h-12 mx-auto mb-2 text-gray-300" />
+                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                  <Package className="w-12 h-12 mx-auto mb-2 text-gray-300 dark:text-gray-600" />
                   <p>No batch information available</p>
                 </div>
               );
@@ -214,22 +214,22 @@ const ProductDetailsModal: React.FC<ProductDetailsModalProps> = ({
       case 'raw':
         return (
           <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">All Product Fields (97 columns)</h3>
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700 pb-2">All Product Fields (97 columns)</h3>
             <div className="max-h-[500px] overflow-y-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50 sticky top-0">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead className="bg-gray-50 dark:bg-gray-900 sticky top-0">
                   <tr>
-                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Field</th>
-                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Field</th>
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Value</th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                   {data.raw_data && Object.entries(data.raw_data).map(([key, value]) => (
-                    <tr key={key} className="hover:bg-gray-50">
-                      <td className="px-4 py-2 text-sm font-medium text-gray-900">
+                    <tr key={key} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                      <td className="px-4 py-2 text-sm font-medium text-gray-900 dark:text-gray-200">
                         {key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                       </td>
-                      <td className="px-4 py-2 text-sm text-gray-600 break-words max-w-md">
+                      <td className="px-4 py-2 text-sm text-gray-600 dark:text-gray-400 break-words max-w-md">
                         {renderFieldValue(value)}
                       </td>
                     </tr>
@@ -246,30 +246,30 @@ const ProductDetailsModal: React.FC<ProductDetailsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-6">
-      <div className="bg-white rounded-lg border border-gray-200 max-w-7xl w-full max-h-[90vh] flex flex-col">
+    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 max-w-7xl w-full max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="flex justify-between items-center p-6 border-b">
+        <div className="flex justify-between items-center p-6 border-b border-gray-200 dark:border-gray-700">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
               {batches ? 'Product & Batch Information' : 'Product Details'}
             </h2>
             {productDetails?.basic_info && (
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                 {productDetails.basic_info.product_name} - {productDetails.basic_info.brand}
               </p>
             )}
           </div>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 transition-colors"
+            className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
           >
             <X className="h-6 w-6" />
           </button>
         </div>
 
         {/* Tabs */}
-        <div className="border-b">
+        <div className="border-b border-gray-200 dark:border-gray-700">
           <div className="flex overflow-x-auto px-6">
             {tabs.map((tab) => (
               <button
@@ -278,8 +278,8 @@ const ProductDetailsModal: React.FC<ProductDetailsModalProps> = ({
                 className={`
                   px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors
                   ${activeTab === tab.id
-                    ? 'border-primary-600 text-primary-600'
-                    : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-200'
+                    ? 'border-primary-600 text-primary-600 dark:border-primary-500 dark:text-primary-400'
+                    : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:border-gray-200 dark:hover:border-gray-600'
                   }
                 `}
               >
@@ -295,14 +295,14 @@ const ProductDetailsModal: React.FC<ProductDetailsModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="border-t p-6 flex justify-between items-center">
-          <div className="text-sm text-gray-600">
+        <div className="border-t border-gray-200 dark:border-gray-700 p-6 flex justify-between items-center">
+          <div className="text-sm text-gray-600 dark:text-gray-400">
             {productDetails?.inventory?.in_stock ? (
-              <span className="text-primary-600 font-medium">
+              <span className="text-primary-600 dark:text-primary-400 font-medium">
                 In Stock: {productDetails.inventory.quantity_available} units
               </span>
             ) : (
-              <span className="text-danger-600 font-medium">Out of Stock</span>
+              <span className="text-danger-600 dark:text-danger-400 font-medium">Out of Stock</span>
             )}
           </div>
           <div className="flex gap-4">
@@ -322,14 +322,14 @@ const ProductDetailsModal: React.FC<ProductDetailsModalProps> = ({
                   onAddToCart(cartProduct);
                   onClose();
                 }}
-                className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                className="px-4 py-2 bg-primary-600 dark:bg-primary-700 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 transition-colors"
               >
                 Add to Cart
               </button>
             )}
             <button
               onClick={onClose}
-              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+              className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
             >
               Close
             </button>

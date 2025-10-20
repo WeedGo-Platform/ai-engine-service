@@ -707,12 +707,135 @@ async def test_terminal(terminal_id: str):
 # Product barcode lookup
 @router.get("/products/barcode/{barcode}")
 async def get_product_by_barcode(barcode: str):
-    """Get product by barcode"""
+    """
+    Get product by barcode - supports GS1-128 barcodes
+
+    Searches in order:
+    1. batch_tracking: gtin_barcode (exact match)
+    2. batch_tracking: case_gtin (extracted from GS1-128)
+    3. batch_tracking: each_gtin (extracted from GS1-128)
+    4. products: sku or metadata->>'barcode'
+    """
     try:
         pool = await get_db_pool()
         async with pool.acquire() as conn:
-            query = """
-                SELECT 
+            # Extract GTIN and batch_lot from GS1-128 barcode if present
+            # GS1-128 format: 01{GTIN-14}13{YYMMDD}10{batch_lot} or other AI combinations
+            extracted_gtin = None
+            extracted_batch_lot = None
+
+            if barcode.startswith('01') and len(barcode) >= 16:
+                # Extract GTIN-14 (14 digits after '01')
+                extracted_gtin = barcode[2:16]
+                logger.info(f"Extracted GTIN from GS1-128 barcode: {extracted_gtin}")
+
+                # Try to extract batch_lot (AI 10) if present
+                # Format: ...10{batch_lot} - batch_lot continues until next AI or end
+                remaining = barcode[16:]
+                batch_ai_pos = remaining.find('10')
+                if batch_ai_pos >= 0:
+                    # Batch lot starts 2 chars after AI '10' and continues to end or next AI
+                    batch_start = batch_ai_pos + 2
+                    # Common AIs that might follow: 17 (expiry), 13 (packaging date), 21 (serial)
+                    # For simplicity, take until end or look for known 2-digit AI patterns
+                    batch_lot_portion = remaining[batch_start:]
+                    # Batch lots are typically alphanumeric, stop at next potential AI (2 digits)
+                    # For now, take the whole remaining string as many batches are at the end
+                    extracted_batch_lot = batch_lot_portion
+                    logger.info(f"Extracted batch_lot from GS1-128 barcode: {extracted_batch_lot}")
+
+            # Try to find product via batch_tracking GTINs or batch_lot first
+            # This allows exact batch matching for scanned items
+            # Search priority: exact GTIN match > batch_lot match > GTIN variant match
+            batch_query = """
+                SELECT
+                    bt.sku,
+                    bt.batch_lot,
+                    bt.quantity_remaining,
+                    bt.case_gtin,
+                    bt.gtin_barcode,
+                    bt.each_gtin,
+                    bt.unit_cost,
+                    bt.packaged_on_date,
+                    CASE
+                        WHEN bt.gtin_barcode = $1 OR bt.case_gtin = $1 OR bt.each_gtin = $1 THEN 1
+                        WHEN bt.batch_lot = $3 THEN 2
+                        ELSE 3
+                    END as match_priority
+                FROM batch_tracking bt
+                WHERE bt.is_active = TRUE
+                  AND bt.quantity_remaining > 0
+                  AND (
+                    -- Exact barcode match on any GTIN field
+                    bt.gtin_barcode = $1
+                    OR bt.case_gtin = $1
+                    OR bt.each_gtin = $1
+                    -- Extracted GTIN match (handles GTIN-14 from GS1-128)
+                    OR ($2 IS NOT NULL AND bt.case_gtin = $2)
+                    OR ($2 IS NOT NULL AND bt.each_gtin = $2)
+                    OR ($2 IS NOT NULL AND bt.gtin_barcode = $2)
+                    -- Batch lot match (from AI 10 in GS1-128)
+                    OR ($3 IS NOT NULL AND bt.batch_lot = $3)
+                  )
+                ORDER BY match_priority
+                LIMIT 1
+            """
+
+            batch_row = await conn.fetchrow(batch_query, barcode, extracted_gtin, extracted_batch_lot)
+
+            if batch_row:
+                # Found via GTIN or batch_lot - now get product details and inventory
+                sku = batch_row['sku']
+
+                # Determine how the match was made for logging
+                match_method = "unknown"
+                if batch_row['gtin_barcode'] == barcode or batch_row['case_gtin'] == barcode or batch_row['each_gtin'] == barcode:
+                    match_method = "exact GTIN match"
+                elif extracted_gtin and (batch_row['case_gtin'] == extracted_gtin or batch_row['each_gtin'] == extracted_gtin or batch_row['gtin_barcode'] == extracted_gtin):
+                    match_method = "extracted GTIN match"
+                elif extracted_batch_lot and batch_row['batch_lot'] == extracted_batch_lot:
+                    match_method = "batch_lot match"
+
+                logger.info(f"Found product via {match_method}: SKU={sku}, Batch={batch_row['batch_lot']}, Barcode={barcode}")
+
+                product_query = """
+                    SELECT
+                        p.ocs_item_number::text as id,
+                        p.ocs_variant_number as sku,
+                        p.product_name as name,
+                        p.brand,
+                        p.category,
+                        p.sub_category,
+                        p.thc_max as thc_content,
+                        p.cbd_max as cbd_content,
+                        i.retail_price as price,
+                        i.quantity_available,
+                        p.equivalency_factor as dried_flower_equivalent
+                    FROM inventory_products_view p
+                    LEFT JOIN ocs_inventory i ON LOWER(TRIM(p.ocs_variant_number)) = LOWER(TRIM(i.sku))
+                    WHERE LOWER(TRIM(p.ocs_variant_number)) = LOWER(TRIM($1))
+                    LIMIT 1
+                """
+
+                product_row = await conn.fetchrow(product_query, sku)
+
+                if product_row:
+                    product = dict(product_row)
+                    # Add batch information
+                    product['batch'] = {
+                        'batch_lot': batch_row['batch_lot'],
+                        'quantity_remaining': batch_row['quantity_remaining'],
+                        'case_gtin': batch_row['case_gtin'],
+                        'gtin_barcode': batch_row['gtin_barcode'],
+                        'each_gtin': batch_row['each_gtin'],
+                        'unit_cost': float(batch_row['unit_cost']) if batch_row['unit_cost'] else None,
+                        'packaged_on_date': batch_row['packaged_on_date'].isoformat() if batch_row['packaged_on_date'] else None
+                    }
+                    return product
+
+            # Fallback: Try direct SKU/barcode match in products table
+            fallback_query = """
+                SELECT
                     id::text as id,
                     sku,
                     name,
@@ -730,11 +853,14 @@ async def get_product_by_barcode(barcode: str):
                 WHERE sku = $1 OR metadata->>'barcode' = $1
                 LIMIT 1
             """
-            
-            row = await conn.fetchrow(query, barcode)
+
+            row = await conn.fetchrow(fallback_query, barcode)
             if not row:
-                raise HTTPException(status_code=404, detail="Product not found")
-            
+                raise HTTPException(
+                    status_code=404,
+                    detail=f"Product not found for barcode: {barcode} (extracted GTIN: {extracted_gtin}, batch_lot: {extracted_batch_lot})"
+                )
+
             return dict(row)
     except HTTPException:
         raise

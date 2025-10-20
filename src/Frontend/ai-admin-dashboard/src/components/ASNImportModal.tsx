@@ -804,8 +804,7 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
     setPoNumber('');
     setSupplierId(''); // Clear supplier selection
     setNotes('');
-    setCharges(0);
-    setDiscount(0);
+    setChargesArray([]); // Reset charges array
     setPaidInFull(false);
     setError(null);
     setIsProcessing(false);

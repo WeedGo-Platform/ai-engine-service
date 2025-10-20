@@ -74,32 +74,34 @@ const Customers: React.FC = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active':
-        return 'bg-primary-100 text-primary-800';
+        return 'bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-300';
       case 'inactive':
-        return 'bg-gray-50 text-gray-800';
+        return 'bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-300';
       case 'banned':
-        return 'bg-danger-100 text-danger-800';
+        return 'bg-danger-100 dark:bg-red-900/30 text-danger-800 dark:text-red-300';
       default:
-        return 'bg-gray-50 text-gray-800';
+        return 'bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-300';
     }
   };
 
   const getTypeColor = (type: string) => {
-    return type === 'medical' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800';
+    return type === 'medical'
+      ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300'
+      : 'bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300';
   };
 
   // Show "No Store Selected" UI if no store is selected
   if (!currentStore) {
     return (
-      <div className="h-full flex items-center justify-center bg-gray-50">
+      <div className="h-full flex items-center justify-center bg-gray-50 dark:bg-gray-900">
         <div className="text-center">
           <div className="mb-4">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-full">
-              <Users className="w-8 h-8 text-primary-600" />
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 dark:bg-primary-900/30 rounded-full">
+              <Users className="w-8 h-8 text-primary-600 dark:text-primary-400" />
             </div>
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No Store Selected</h3>
-          <p className="text-gray-500">Please select a store to manage customers</p>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">No Store Selected</h3>
+          <p className="text-gray-500 dark:text-gray-400">Please select a store to manage customers</p>
         </div>
       </div>
     );
@@ -108,14 +110,14 @@ const Customers: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 dark:border-primary-400"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="bg-danger-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+      <div className="bg-danger-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded">
         Error loading customers: {(error as Error).message}
       </div>
     );
@@ -125,33 +127,33 @@ const Customers: React.FC = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Customer Management</h1>
-          <p className="text-sm text-gray-500 mt-1">Managing customers for {currentStore.name}</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Customer Management</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Managing customers for {currentStore.name}</p>
         </div>
-        <button className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 flex items-center gap-2">
+        <button className="bg-primary-600 dark:bg-primary-700 text-white px-4 py-2 rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 flex items-center gap-2">
           <UserPlus className="h-5 w-5" />
           Add Customer
         </button>
       </div>
 
-      <div className="bg-white rounded-lg  p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg p-6">
         <div className="flex gap-6 mb-6">
           <div className="flex-1">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5" />
               <input
                 type="text"
                 placeholder="Search customers..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
               />
             </div>
           </div>
           <select
             value={selectedType}
             onChange={(e) => setSelectedType(e.target.value)}
-            className="px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500"
+            className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           >
             <option value="all">All Types</option>
             <option value="recreational">Recreational</option>
@@ -160,61 +162,61 @@ const Customers: React.FC = () => {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   Customer
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   Contact
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   Type
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   Loyalty Points
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   Total Spent
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   Orders
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
               {customers?.map((customer: any) => (
-                <tr key={customer.id} className="hover:bg-gray-50">
+                <tr key={customer.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
-                      <div className="flex-shrink-0 h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center">
-                        <Users className="h-5 w-5 text-gray-600" />
+                      <div className="flex-shrink-0 h-10 w-10 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+                        <Users className="h-5 w-5 text-gray-600 dark:text-gray-400" />
                       </div>
                       <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">
+                        <div className="text-sm font-medium text-gray-900 dark:text-white">
                           {customer.name || 'Unknown Customer'}
                         </div>
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
                           ID: {customer.id.slice(0, 8)}
                         </div>
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900 flex items-center gap-1">
-                      <Mail className="h-4 w-4 text-gray-400" />
+                    <div className="text-sm text-gray-900 dark:text-white flex items-center gap-1">
+                      <Mail className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                       {customer.email}
                     </div>
                     {customer.phone && (
-                      <div className="text-sm text-gray-500 flex items-center gap-1">
-                        <Phone className="h-4 w-4 text-gray-400" />
+                      <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                        <Phone className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                         {customer.phone}
                       </div>
                     )}
@@ -224,7 +226,7 @@ const Customers: React.FC = () => {
                       {customer.customer_type || 'regular'}
                     </span>
                     {customer.medical_license && (
-                      <div className="text-xs text-gray-500 mt-1">
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         Lic: {customer.medical_license}
                       </div>
                     )}
@@ -232,27 +234,27 @@ const Customers: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <Star className="h-4 w-4 text-yellow-400 mr-1" />
-                      <span className="text-sm text-gray-900">{customer.loyalty_points || 0}</span>
+                      <span className="text-sm text-gray-900 dark:text-white">{customer.loyalty_points || 0}</span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                     ${(parseFloat(customer.total_spent) || 0).toFixed(2)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
-                      <ShoppingBag className="h-4 w-4 text-gray-400 mr-1" />
-                      <span className="text-sm text-gray-900">{customer.order_count || 0}</span>
+                      <ShoppingBag className="h-4 w-4 text-gray-400 dark:text-gray-500 mr-1" />
+                      <span className="text-sm text-gray-900 dark:text-white">{customer.order_count || 0}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${customer.is_verified ? 'bg-primary-100 text-primary-800' : 'bg-gray-50 text-gray-800'}`}>
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${customer.is_verified ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-300' : 'bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-300'}`}>
                       {customer.is_verified ? 'Verified' : 'Unverified'}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button
                       onClick={() => setSelectedCustomer(customer)}
-                      className="text-indigo-600 hover:text-indigo-900"
+                      className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300"
                     >
                       View
                     </button>
@@ -265,9 +267,9 @@ const Customers: React.FC = () => {
 
         {(!customers || customers.length === 0) && (
           <div className="text-center py-12">
-            <Users className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No customers found</h3>
-            <p className="mt-1 text-sm text-gray-500">
+            <Users className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600" />
+            <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">No customers found</h3>
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
               Get started by adding a new customer.
             </p>
           </div>
@@ -276,68 +278,68 @@ const Customers: React.FC = () => {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg  p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Customers</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Customers</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {customers?.length || 0}
               </p>
             </div>
-            <Users className="h-8 w-8 text-primary-600" />
+            <Users className="h-8 w-8 text-primary-600 dark:text-primary-400" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg  p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Medical Patients</p>
-              <p className="text-2xl font-bold text-accent-600">
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Medical Patients</p>
+              <p className="text-2xl font-bold text-accent-600 dark:text-accent-400">
                 {customers?.filter((c: any) => c.customer_type === 'medical').length || 0}
               </p>
             </div>
-            <Users className="h-8 w-8 text-accent-600" />
+            <Users className="h-8 w-8 text-accent-600 dark:text-accent-400" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg  p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Avg Spent</p>
-              <p className="text-2xl font-bold text-gray-900">
-                ${customers?.length ? 
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Avg Spent</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                ${customers?.length ?
                   (customers.reduce((sum: number, c: any) => sum + (parseFloat(c.total_spent) || 0), 0) / customers.length).toFixed(2)
                   : '0.00'
                 }
               </p>
             </div>
-            <ShoppingBag className="h-8 w-8 text-purple-600" />
+            <ShoppingBag className="h-8 w-8 text-purple-600 dark:text-purple-400" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg  p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Points</p>
-              <p className="text-2xl font-bold text-warning-600">
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Points</p>
+              <p className="text-2xl font-bold text-warning-600 dark:text-warning-400">
                 {customers?.reduce((sum: number, c: any) => sum + (c.loyalty_points || 0), 0) || 0}
               </p>
             </div>
-            <Star className="h-8 w-8 text-warning-600" />
+            <Star className="h-8 w-8 text-warning-600 dark:text-warning-400" />
           </div>
         </div>
       </div>
 
       {/* Customer Details Modal */}
       {selectedCustomer && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200">
+        <div className="fixed inset-0 bg-gray-500 dark:bg-black bg-opacity-75 dark:bg-opacity-70 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-lg max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
               <div className="flex justify-between items-center">
-                <h2 className="text-xl font-semibold text-gray-900">Customer Details</h2>
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Customer Details</h2>
                 <button
                   onClick={() => setSelectedCustomer(null)}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
                 >
                   <X className="h-6 w-6" />
                 </button>
@@ -347,8 +349,8 @@ const Customers: React.FC = () => {
             <div className="p-6 space-y-6">
               {/* Customer Header */}
               <div className="flex items-center space-x-4">
-                <div className="h-16 w-16 bg-primary-100 rounded-full flex items-center justify-center">
-                  <Users className="h-8 w-8 text-primary-600" />
+                <div className="h-16 w-16 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center">
+                  <Users className="h-8 w-8 text-primary-600 dark:text-primary-400" />
                 </div>
                 <div className="flex-1">
                   {isEditMode ? (
@@ -356,54 +358,54 @@ const Customers: React.FC = () => {
                       type="text"
                       value={editedCustomer?.name || ''}
                       onChange={(e) => handleFieldChange('name', e.target.value)}
-                      className="text-lg font-semibold text-gray-900 border border-gray-300 rounded px-2 py-1 w-full"
+                      className="text-lg font-semibold text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded px-2 py-1 w-full bg-white dark:bg-gray-700"
                       placeholder="Customer Name"
                     />
                   ) : (
-                    <h3 className="text-lg font-semibold text-gray-900">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                       {selectedCustomer.name || 'Unknown Customer'}
                     </h3>
                   )}
-                  <p className="text-sm text-gray-500">Customer ID: {selectedCustomer.id}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Customer ID: {selectedCustomer.id}</p>
                 </div>
               </div>
 
               {/* Contact Information */}
               <div>
-                <h4 className="text-sm font-medium text-gray-700 mb-3">Contact Information</h4>
-                <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+                <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Contact Information</h4>
+                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 space-y-3">
                   <div className="flex items-center space-x-2">
-                    <Mail className="h-4 w-4 text-gray-400" />
+                    <Mail className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                     {isEditMode ? (
                       <input
                         type="email"
                         value={editedCustomer?.email || ''}
                         onChange={(e) => handleFieldChange('email', e.target.value)}
-                        className="text-sm text-gray-900 border border-gray-300 rounded px-2 py-1 flex-1"
+                        className="text-sm text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded px-2 py-1 flex-1 bg-white dark:bg-gray-600"
                         placeholder="Email Address"
                       />
                     ) : (
-                      <span className="text-sm text-gray-900">{selectedCustomer.email}</span>
+                      <span className="text-sm text-gray-900 dark:text-white">{selectedCustomer.email}</span>
                     )}
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Phone className="h-4 w-4 text-gray-400" />
+                    <Phone className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                     {isEditMode ? (
                       <input
                         type="tel"
                         value={editedCustomer?.phone || ''}
                         onChange={(e) => handleFieldChange('phone', e.target.value)}
-                        className="text-sm text-gray-900 border border-gray-300 rounded px-2 py-1 flex-1"
+                        className="text-sm text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded px-2 py-1 flex-1 bg-white dark:bg-gray-600"
                         placeholder="Phone Number"
                       />
                     ) : (
-                      <span className="text-sm text-gray-900">{selectedCustomer.phone || 'No phone'}</span>
+                      <span className="text-sm text-gray-900 dark:text-white">{selectedCustomer.phone || 'No phone'}</span>
                     )}
                   </div>
                   {selectedCustomer.birth_date && (
                     <div className="flex items-center space-x-2">
-                      <Calendar className="h-4 w-4 text-gray-400" />
-                      <span className="text-sm text-gray-900">Born: {selectedCustomer.birth_date}</span>
+                      <Calendar className="h-4 w-4 text-gray-400 dark:text-gray-500" />
+                      <span className="text-sm text-gray-900 dark:text-white">Born: {selectedCustomer.birth_date}</span>
                     </div>
                   )}
                 </div>
@@ -411,51 +413,51 @@ const Customers: React.FC = () => {
 
               {/* Customer Stats */}
               <div>
-                <h4 className="text-sm font-medium text-gray-700 mb-3">Customer Statistics</h4>
+                <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Customer Statistics</h4>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                     <div className="flex items-center space-x-2 mb-1">
                       <Star className="h-4 w-4 text-yellow-500" />
-                      <span className="text-xs text-gray-600">Loyalty Points</span>
+                      <span className="text-xs text-gray-600 dark:text-gray-400">Loyalty Points</span>
                     </div>
                     {isEditMode ? (
                       <input
                         type="number"
                         value={editedCustomer?.loyalty_points || 0}
                         onChange={(e) => handleFieldChange('loyalty_points', parseInt(e.target.value) || 0)}
-                        className="text-lg font-semibold text-gray-900 border border-gray-300 rounded px-2 py-1 w-full"
+                        className="text-lg font-semibold text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded px-2 py-1 w-full bg-white dark:bg-gray-600"
                         min="0"
                       />
                     ) : (
-                      <p className="text-lg font-semibold text-gray-900">
+                      <p className="text-lg font-semibold text-gray-900 dark:text-white">
                         {selectedCustomer.loyalty_points || 0}
                       </p>
                     )}
                   </div>
-                  <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                     <div className="flex items-center space-x-2 mb-1">
                       <CreditCard className="h-4 w-4 text-green-500" />
-                      <span className="text-xs text-gray-600">Total Spent</span>
+                      <span className="text-xs text-gray-600 dark:text-gray-400">Total Spent</span>
                     </div>
-                    <p className="text-lg font-semibold text-gray-900">
+                    <p className="text-lg font-semibold text-gray-900 dark:text-white">
                       ${parseFloat(selectedCustomer.total_spent || '0').toFixed(2)}
                     </p>
                   </div>
-                  <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                     <div className="flex items-center space-x-2 mb-1">
                       <Package className="h-4 w-4 text-blue-500" />
-                      <span className="text-xs text-gray-600">Total Orders</span>
+                      <span className="text-xs text-gray-600 dark:text-gray-400">Total Orders</span>
                     </div>
-                    <p className="text-lg font-semibold text-gray-900">
+                    <p className="text-lg font-semibold text-gray-900 dark:text-white">
                       {selectedCustomer.order_count || 0}
                     </p>
                   </div>
-                  <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                     <div className="flex items-center space-x-2 mb-1">
                       <Clock className="h-4 w-4 text-purple-500" />
-                      <span className="text-xs text-gray-600">Status</span>
+                      <span className="text-xs text-gray-600 dark:text-gray-400">Status</span>
                     </div>
-                    <p className="text-lg font-semibold text-gray-900">
+                    <p className="text-lg font-semibold text-gray-900 dark:text-white">
                       {selectedCustomer.is_verified ? 'Verified' : 'Unverified'}
                     </p>
                   </div>
@@ -464,31 +466,31 @@ const Customers: React.FC = () => {
 
               {/* Additional Info */}
               <div>
-                <h4 className="text-sm font-medium text-gray-700 mb-3">Additional Information</h4>
-                <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+                <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Additional Information</h4>
+                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Customer Type</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Customer Type</span>
                     <span className={`px-2 py-1 text-xs rounded-full ${getTypeColor(selectedCustomer.customer_type || 'regular')}`}>
                       {selectedCustomer.customer_type || 'regular'}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Age Verified</span>
-                    <span className="text-sm font-medium text-gray-900">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Age Verified</span>
+                    <span className="text-sm font-medium text-gray-900 dark:text-white">
                       {selectedCustomer.is_verified ? 'Yes' : 'No'}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Marketing Consent</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Marketing Consent</span>
                     {isEditMode ? (
                       <input
                         type="checkbox"
                         checked={editedCustomer?.marketing_consent || false}
                         onChange={(e) => handleFieldChange('marketing_consent', e.target.checked)}
-                        className="h-4 w-4 text-primary-600 rounded"
+                        className="h-4 w-4 text-primary-600 dark:text-primary-400 rounded"
                       />
                     ) : (
-                      <span className="text-sm font-medium text-gray-900">
+                      <span className="text-sm font-medium text-gray-900 dark:text-white">
                         {selectedCustomer.marketing_consent ? 'Yes' : 'No'}
                       </span>
                     )}
@@ -498,9 +500,9 @@ const Customers: React.FC = () => {
 
               {/* Recent Orders Section (placeholder) */}
               <div>
-                <h4 className="text-sm font-medium text-gray-700 mb-3">Recent Orders</h4>
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <p className="text-sm text-gray-500 text-center">
+                <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Recent Orders</h4>
+                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
                     Order history will be displayed here
                   </p>
                 </div>
@@ -508,20 +510,20 @@ const Customers: React.FC = () => {
             </div>
 
             {/* Modal Footer */}
-            <div className="p-6 border-t border-gray-200 bg-gray-50">
+            <div className="p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
               <div className="flex justify-end space-x-3">
                 {isEditMode ? (
                   <>
                     <button
                       onClick={handleCancelEdit}
-                      className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100"
+                      className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={handleSaveEdit}
                       disabled={updateMutation.isPending}
-                      className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="px-4 py-2 bg-primary-600 dark:bg-primary-700 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
                     </button>
@@ -534,13 +536,13 @@ const Customers: React.FC = () => {
                         setIsEditMode(false);
                         setEditedCustomer(null);
                       }}
-                      className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100"
+                      className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
                     >
                       Close
                     </button>
                     <button
                       onClick={handleEditClick}
-                      className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+                      className="px-4 py-2 bg-primary-600 dark:bg-primary-700 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600"
                     >
                       Edit Customer
                     </button>

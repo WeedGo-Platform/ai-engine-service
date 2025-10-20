@@ -15,43 +15,109 @@ from ..value_objects import StockLevel, StockStatus, GTIN
 
 class StockAdjusted(DomainEvent):
     """Event raised when stock is adjusted"""
-    inventory_id: UUID
-    sku: str
-    adjustment: int
-    new_quantity: int
-    reason: str
+
+    def __init__(self, inventory_id: UUID, sku: str, adjustment: int, new_quantity: int, reason: str):
+        super().__init__(aggregate_id=inventory_id)
+        self.inventory_id = inventory_id
+        self.sku = sku
+        self.adjustment = adjustment
+        self.new_quantity = new_quantity
+        self.reason = reason
+
+    def to_dict(self) -> Dict[str, Any]:
+        base = super().to_dict()
+        base.update({
+            'inventory_id': str(self.inventory_id),
+            'sku': self.sku,
+            'adjustment': self.adjustment,
+            'new_quantity': self.new_quantity,
+            'reason': self.reason
+        })
+        return base
 
 
 class StockReserved(DomainEvent):
     """Event raised when stock is reserved"""
-    inventory_id: UUID
-    sku: str
-    quantity: int
-    reservation_id: UUID
+
+    def __init__(self, inventory_id: UUID, sku: str, quantity: int, reservation_id: UUID):
+        super().__init__(aggregate_id=inventory_id)
+        self.inventory_id = inventory_id
+        self.sku = sku
+        self.quantity = quantity
+        self.reservation_id = reservation_id
+
+    def to_dict(self) -> Dict[str, Any]:
+        base = super().to_dict()
+        base.update({
+            'inventory_id': str(self.inventory_id),
+            'sku': self.sku,
+            'quantity': self.quantity,
+            'reservation_id': str(self.reservation_id)
+        })
+        return base
 
 
 class StockReleased(DomainEvent):
     """Event raised when reserved stock is released"""
-    inventory_id: UUID
-    sku: str
-    quantity: int
-    reservation_id: UUID
+
+    def __init__(self, inventory_id: UUID, sku: str, quantity: int, reservation_id: UUID):
+        super().__init__(aggregate_id=inventory_id)
+        self.inventory_id = inventory_id
+        self.sku = sku
+        self.quantity = quantity
+        self.reservation_id = reservation_id
+
+    def to_dict(self) -> Dict[str, Any]:
+        base = super().to_dict()
+        base.update({
+            'inventory_id': str(self.inventory_id),
+            'sku': self.sku,
+            'quantity': self.quantity,
+            'reservation_id': str(self.reservation_id)
+        })
+        return base
 
 
 class LowStockAlert(DomainEvent):
     """Event raised when stock reaches low level"""
-    inventory_id: UUID
-    sku: str
-    current_quantity: int
-    reorder_point: int
+
+    def __init__(self, inventory_id: UUID, sku: str, current_quantity: int, reorder_point: int):
+        super().__init__(aggregate_id=inventory_id)
+        self.inventory_id = inventory_id
+        self.sku = sku
+        self.current_quantity = current_quantity
+        self.reorder_point = reorder_point
+
+    def to_dict(self) -> Dict[str, Any]:
+        base = super().to_dict()
+        base.update({
+            'inventory_id': str(self.inventory_id),
+            'sku': self.sku,
+            'current_quantity': self.current_quantity,
+            'reorder_point': self.reorder_point
+        })
+        return base
 
 
 class StockReceived(DomainEvent):
     """Event raised when stock is received"""
-    inventory_id: UUID
-    sku: str
-    quantity: int
-    purchase_order_id: Optional[UUID]
+
+    def __init__(self, inventory_id: UUID, sku: str, quantity: int, purchase_order_id: Optional[UUID] = None):
+        super().__init__(aggregate_id=inventory_id)
+        self.inventory_id = inventory_id
+        self.sku = sku
+        self.quantity = quantity
+        self.purchase_order_id = purchase_order_id
+
+    def to_dict(self) -> Dict[str, Any]:
+        base = super().to_dict()
+        base.update({
+            'inventory_id': str(self.inventory_id),
+            'sku': self.sku,
+            'quantity': self.quantity,
+            'purchase_order_id': str(self.purchase_order_id) if self.purchase_order_id else None
+        })
+        return base
 
 
 @dataclass
@@ -97,7 +163,7 @@ class Inventory(AggregateRoot):
     # Status
     is_available: bool = True
     last_restock_date: Optional[datetime] = None
-    last_restocked: Optional[datetime] = None  # Alias for compatibility
+    last_received: Optional[datetime] = None  # When last received from PO
     last_sale_date: Optional[datetime] = None
     last_count_date: Optional[datetime] = None
 
@@ -114,11 +180,6 @@ class Inventory(AggregateRoot):
         # Initialize domain events list (normally done in Entity.__init__)
         if not hasattr(self, '_domain_events'):
             self._domain_events = []
-        # Ensure last_restocked is synced with last_restock_date
-        if self.last_restock_date and not self.last_restocked:
-            self.last_restocked = self.last_restock_date
-        elif self.last_restocked and not self.last_restock_date:
-            self.last_restock_date = self.last_restocked
         self._update_stock_level()
 
     def _update_stock_level(self):
@@ -201,7 +262,8 @@ class Inventory(AggregateRoot):
         self,
         quantity: int,
         unit_cost: Optional[Decimal] = None,
-        purchase_order_id: Optional[UUID] = None
+        purchase_order_id: Optional[UUID] = None,
+        retail_price: Optional[Decimal] = None
     ):
         """Receive stock from purchase order"""
         if quantity <= 0:
@@ -222,7 +284,15 @@ class Inventory(AggregateRoot):
             total_value = (self.unit_cost * Decimal(self.quantity_on_hand - quantity)) + (unit_cost * Decimal(quantity))
             self.unit_cost = total_value / Decimal(self.quantity_on_hand)
 
+        # Update retail price if provided (from pricing rules)
+        if retail_price is not None:
+            if retail_price < 0:
+                raise BusinessRuleViolation("Retail price cannot be negative")
+            self.retail_price = retail_price
+
+        # Update both timestamps
         self.last_restock_date = datetime.utcnow()
+        self.last_received = datetime.utcnow()
 
         # Raise event
         self.add_domain_event(StockReceived(

@@ -121,16 +121,16 @@ export default function CustomerModal({ isOpen, onClose, onSelect }: CustomerMod
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg border border-gray-200 w-full max-w-2xl">
+    <div className="fixed inset-0 bg-black dark:bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 transition-colors duration-200">
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 w-full max-w-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-2xl font-bold">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
             {showNewCustomerForm ? 'New Customer' : 'Select Customer'}
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
           >
             <X className="w-6 h-6" />
           </button>
@@ -143,13 +143,13 @@ export default function CustomerModal({ isOpen, onClose, onSelect }: CustomerMod
               {/* Search */}
               <div className="mb-6">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-5 h-5" />
                   <input
                     type="text"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Search by name, email, or phone..."
-                    className="w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
                     autoFocus
                   />
                 </div>
@@ -160,7 +160,7 @@ export default function CustomerModal({ isOpen, onClose, onSelect }: CustomerMod
                 {loading ? (
                   <div className="text-center py-8">
                     <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2" />
-                    <p className="text-gray-500">Searching...</p>
+                    <p className="text-gray-500 dark:text-gray-400">Searching...</p>
                   </div>
                 ) : customers.length > 0 ? (
                   customers.map(customer => (
@@ -170,39 +170,39 @@ export default function CustomerModal({ isOpen, onClose, onSelect }: CustomerMod
                         onSelect(customer);
                         onClose();
                       }}
-                      className="w-full p-6 bg-gray-50 hover:bg-gray-50 rounded-lg text-left transition-colors"
+                      className="w-full p-6 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg text-left transition-colors border border-transparent dark:border-gray-600"
                     >
                       <div className="flex items-start justify-between">
                         <div>
                           <div className="flex items-center gap-2">
-                            <p className="font-medium">{customer.name}</p>
+                            <p className="font-medium text-gray-900 dark:text-white">{customer.name}</p>
                             {customer.is_verified && (
                               <CheckCircle className="w-4 h-4 text-primary-500" />
                             )}
                           </div>
                           {customer.email && (
-                            <p className="text-sm text-gray-600">{customer.email}</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-300">{customer.email}</p>
                           )}
                           {customer.phone && (
-                            <p className="text-sm text-gray-600">{customer.phone}</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-300">{customer.phone}</p>
                           )}
                           {customer.birth_date && (
-                            <p className="text-sm text-gray-500">
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
                               Age: {calculateAge(customer.birth_date)} years
                             </p>
                           )}
                         </div>
                         {customer.loyalty_points && (
                           <div className="text-right">
-                            <p className="text-sm text-gray-500">Points</p>
-                            <p className="font-medium text-primary-600">{customer.loyalty_points}</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">Points</p>
+                            <p className="font-medium text-primary-600 dark:text-primary-400">{customer.loyalty_points}</p>
                           </div>
                         )}
                       </div>
                     </button>
                   ))
                 ) : searchTerm ? (
-                  <div className="text-center py-8 text-gray-500">
+                  <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                     <User className="w-12 h-12 mx-auto mb-2" />
                     <p>No customers found</p>
                     <button
@@ -210,14 +210,14 @@ export default function CustomerModal({ isOpen, onClose, onSelect }: CustomerMod
                         setShowNewCustomerForm(true);
                         setNewCustomer({ ...newCustomer, name: searchTerm });
                       }}
-                      className="mt-4 px-4 py-2 bg-accent-500 text-white rounded-lg hover:bg-accent-600"
+                      className="mt-4 px-4 py-2 bg-accent-500 dark:bg-accent-600 text-white rounded-lg hover:bg-accent-600 dark:hover:bg-accent-700 transition-colors"
                     >
                       <UserPlus className="w-4 h-4 inline mr-2" />
                       Create New Customer
                     </button>
                   </div>
                 ) : (
-                  <div className="text-center py-8 text-gray-400">
+                  <div className="text-center py-8 text-gray-400 dark:text-gray-500">
                     <p>Enter a search term to find customers</p>
                   </div>
                 )}
@@ -227,7 +227,7 @@ export default function CustomerModal({ isOpen, onClose, onSelect }: CustomerMod
               <div className="mt-6 flex gap-4">
                 <button
                   onClick={() => setShowNewCustomerForm(true)}
-                  className="flex-1 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600"
+                  className="flex-1 px-4 py-2 bg-primary-500 dark:bg-primary-600 text-white rounded-lg hover:bg-primary-600 dark:hover:bg-primary-700 transition-colors"
                 >
                   <UserPlus className="w-4 h-4 inline mr-2" />
                   New Customer
@@ -241,7 +241,7 @@ export default function CustomerModal({ isOpen, onClose, onSelect }: CustomerMod
                     });
                     onClose();
                   }}
-                  className="flex-1 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+                  className="flex-1 px-4 py-2 bg-gray-500 dark:bg-gray-600 text-white rounded-lg hover:bg-gray-600 dark:hover:bg-gray-700 transition-colors"
                 >
                   <User className="w-4 h-4 inline mr-2" />
                   Anonymous Sale
@@ -252,32 +252,32 @@ export default function CustomerModal({ isOpen, onClose, onSelect }: CustomerMod
             /* New Customer Form */
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Full Name *
                 </label>
                 <input
                   type="text"
                   value={newCustomer.name}
                   onChange={(e) => setNewCustomer({ ...newCustomer, name: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
                   placeholder="John Doe"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Birth Date * (for age verification)
                 </label>
                 <input
                   type="date"
                   value={newCustomer.birth_date}
                   onChange={(e) => setNewCustomer({ ...newCustomer, birth_date: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
                   max={new Date().toISOString().split('T')[0]}
                 />
                 {newCustomer.birth_date && (
                   <p className={`text-sm mt-1 ${
-                    calculateAge(newCustomer.birth_date) >= 19 ? 'text-primary-600' : 'text-danger-600'
+                    calculateAge(newCustomer.birth_date) >= 19 ? 'text-primary-600 dark:text-primary-400' : 'text-danger-600 dark:text-red-400'
                   }`}>
                     Age: {calculateAge(newCustomer.birth_date)} years
                     {calculateAge(newCustomer.birth_date) < 19 && ' (Must be 19+ to purchase)'}
@@ -286,36 +286,36 @@ export default function CustomerModal({ isOpen, onClose, onSelect }: CustomerMod
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Email
                 </label>
                 <input
                   type="email"
                   value={newCustomer.email}
                   onChange={(e) => setNewCustomer({ ...newCustomer, email: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
                   placeholder="john@example.com"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Phone
                 </label>
                 <input
                   type="tel"
                   value={newCustomer.phone}
                   onChange={(e) => setNewCustomer({ ...newCustomer, phone: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
                   placeholder="(555) 123-4567"
                 />
               </div>
 
               {/* Error Message */}
               {error && (
-                <div className="p-4 bg-danger-50 border border-red-200 rounded-lg flex items-center gap-2">
-                  <AlertCircle className="w-5 h-5 text-red-500" />
-                  <span className="text-sm text-red-700">{error}</span>
+                <div className="p-4 bg-danger-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-center gap-2 transition-colors">
+                  <AlertCircle className="w-5 h-5 text-red-500 dark:text-red-400" />
+                  <span className="text-sm text-red-700 dark:text-red-400">{error}</span>
                 </div>
               )}
 
@@ -327,14 +327,14 @@ export default function CustomerModal({ isOpen, onClose, onSelect }: CustomerMod
                     setNewCustomer({ name: '', email: '', phone: '', birth_date: '' });
                     setError(null);
                   }}
-                  className="flex-1 px-4 py-2 text-gray-700 bg-gray-50 rounded-lg hover:bg-gray-50"
+                  className="flex-1 px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-500 transition-colors"
                 >
                   Back
                 </button>
                 <button
                   onClick={handleCreateCustomer}
                   disabled={loading || !newCustomer.name || !newCustomer.birth_date}
-                  className="flex-1 px-4 py-2 bg-accent-500 text-white rounded-lg hover:bg-accent-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  className="flex-1 px-4 py-2 bg-accent-500 dark:bg-accent-600 text-white rounded-lg hover:bg-accent-600 dark:hover:bg-accent-700 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors"
                 >
                   {loading ? (
                     <>

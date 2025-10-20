@@ -114,22 +114,19 @@ class AsyncPGBatchTrackingRepository(IBatchTrackingRepository):
         """Insert new batch"""
         query = """
             INSERT INTO batch_tracking (
-                id, store_id, sku, batch_lot, quantity_received, quantity_remaining,
+                store_id, sku, batch_lot, quantity_received, quantity_remaining,
                 unit_cost, received_date, purchase_order_id, location_id,
                 case_gtin, packaged_on_date, gtin_barcode, each_gtin,
-                is_active, is_quarantined, quarantine_reason,
-                quality_check_status, quality_check_date, quality_check_by, quality_notes,
+                is_active,
                 created_at, updated_at
             ) VALUES (
-                $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17,
-                $18, $19, $20, $21, $22, $23
+                $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16
             )
             RETURNING id
         """
 
         batch_id = await conn.fetchval(
             query,
-            batch.id,
             batch.store_id,
             batch.sku,
             batch.batch_lot,
@@ -144,12 +141,6 @@ class AsyncPGBatchTrackingRepository(IBatchTrackingRepository):
             batch.gtin,  # Maps to gtin_barcode in DB
             batch.gtin,  # Maps to each_gtin in DB (simplified for now)
             batch.is_active,
-            batch.is_quarantined,
-            batch.quarantine_reason,
-            batch.quality_check_status,
-            batch.quality_check_date,
-            batch.quality_check_by,
-            batch.quality_notes,
             batch.created_at,
             batch.updated_at
         )
@@ -161,19 +152,13 @@ class AsyncPGBatchTrackingRepository(IBatchTrackingRepository):
         """Update existing batch"""
         query = """
             UPDATE batch_tracking
-            SET quantity_received = $2,
-                quantity_remaining = $3,
-                unit_cost = $4,
-                location_id = $5,
-                is_active = $6,
-                is_quarantined = $7,
-                quarantine_reason = $8,
-                quality_check_status = $9,
-                quality_check_date = $10,
-                quality_check_by = $11,
-                quality_notes = $12,
-                updated_at = $13
-            WHERE batch_lot = $14 AND store_id = $15
+            SET quantity_received = $1,
+                quantity_remaining = $2,
+                unit_cost = $3,
+                location_id = $4,
+                is_active = $5,
+                updated_at = $6
+            WHERE batch_lot = $7 AND store_id = $8
         """
 
         await conn.execute(
@@ -183,12 +168,6 @@ class AsyncPGBatchTrackingRepository(IBatchTrackingRepository):
             batch.unit_cost,
             batch.location_id,
             batch.is_active,
-            batch.is_quarantined,
-            batch.quarantine_reason,
-            batch.quality_check_status,
-            batch.quality_check_date,
-            batch.quality_check_by,
-            batch.quality_notes,
             datetime.utcnow(),
             batch.batch_lot,
             batch.store_id
@@ -244,7 +223,6 @@ class AsyncPGBatchTrackingRepository(IBatchTrackingRepository):
                 SELECT * FROM batch_tracking
                 WHERE store_id = $1 AND sku = $2
                       AND is_active = true AND quantity_remaining > 0
-                      AND is_quarantined = false
                 ORDER BY {order_by} ASC
             """
 
@@ -304,8 +282,7 @@ class AsyncPGBatchTrackingRepository(IBatchTrackingRepository):
 
         Handles field name differences between DB schema and entity
         """
-        return BatchTracking(
-            id=row['id'],
+        batch = BatchTracking(
             store_id=row['store_id'],
             sku=row['sku'],
             batch_lot=row['batch_lot'],
@@ -318,15 +295,12 @@ class AsyncPGBatchTrackingRepository(IBatchTrackingRepository):
             location_id=row.get('location_id'),
             packaged_date=row.get('packaged_on_date'),
             is_active=row.get('is_active', True),
-            is_quarantined=row.get('is_quarantined', False),
-            quarantine_reason=row.get('quarantine_reason'),
-            quality_check_status=row.get('quality_check_status', 'pending'),
-            quality_check_date=row.get('quality_check_date'),
-            quality_check_by=row.get('quality_check_by'),
-            quality_notes=row.get('quality_notes'),
             created_at=row.get('created_at', datetime.utcnow()),
             updated_at=row.get('updated_at', datetime.utcnow())
         )
+        # Set the id from database (managed by Entity base class)
+        batch.id = row['id']
+        return batch
 
 
 __all__ = [

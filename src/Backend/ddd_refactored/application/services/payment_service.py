@@ -23,7 +23,7 @@ from ...domain.payment_processing.exceptions import (
     DuplicateTransactionError,
     ProviderError
 )
-from ....services.payment.provider_factory import PaymentProviderFactory
+from services.payment.provider_factory import PaymentProviderFactory
 
 logger = logging.getLogger(__name__)
 

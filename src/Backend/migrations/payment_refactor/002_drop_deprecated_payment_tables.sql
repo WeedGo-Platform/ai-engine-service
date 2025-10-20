@@ -10,39 +10,25 @@ BEGIN;
 
 -- 1. Drop fee/settlement related tables
 DROP TABLE IF EXISTS payment_fee_splits CASCADE;
-RAISE NOTICE 'Dropped payment_fee_splits - fee structure removed (not needed for transaction processing)';
-
 DROP TABLE IF EXISTS payment_settlements CASCADE;
-RAISE NOTICE 'Dropped payment_settlements - settlements handled by payment processors';
 
 -- 2. Drop over-engineered monitoring tables
 DROP TABLE IF EXISTS payment_metrics CASCADE;
-RAISE NOTICE 'Dropped payment_metrics - can be calculated from payment_transactions via analytics queries';
-
 DROP TABLE IF EXISTS payment_provider_health_metrics CASCADE;
-RAISE NOTICE 'Dropped payment_provider_health_metrics - over-engineering for 3 providers, use manual monitoring';
 
 -- 3. Drop unused feature tables
 DROP TABLE IF EXISTS payment_subscriptions CASCADE;
-RAISE NOTICE 'Dropped payment_subscriptions - cannabis retail does not use subscription billing';
-
 DROP TABLE IF EXISTS payment_disputes CASCADE;
-RAISE NOTICE 'Dropped payment_disputes - can be handled via payment_transactions status field';
 
 -- 4. Drop redundant configuration tables
 DROP TABLE IF EXISTS payment_webhook_routes CASCADE;
-RAISE NOTICE 'Dropped payment_webhook_routes - routes can be stored in provider configuration JSONB';
 
 -- 5. Drop redundant tracking tables
 DROP TABLE IF EXISTS payment_idempotency_keys CASCADE;
-RAISE NOTICE 'Dropped payment_idempotency_keys - idempotency_key is already a column in payment_transactions';
-
 DROP TABLE IF EXISTS payment_audit_log CASCADE;
-RAISE NOTICE 'Dropped payment_audit_log - application logging + payment_transactions + payment_webhooks is sufficient';
 
 -- 6. Drop credentials table (will be merged into store_payment_providers)
 DROP TABLE IF EXISTS payment_credentials CASCADE;
-RAISE NOTICE 'Dropped payment_credentials - credentials will be merged into store_payment_providers table';
 
 -- Log migration
 INSERT INTO migration_log (migration_name, status, started_at, completed_at)

@@ -320,11 +320,24 @@ class WebhookReceived(DomainEvent):
     - Signature verification
     """
 
-    webhook_id: UUID
-    provider_type: str
-    event_type: str
-    payload: Dict[str, Any]
+    # Required fields must have defaults to avoid dataclass ordering issues
+    webhook_id: UUID = None  # type: ignore
+    provider_type: str = None  # type: ignore
+    event_type: str = None  # type: ignore
+    payload: Dict[str, Any] = None  # type: ignore
     signature: Optional[str] = None
+
+    def __post_init__(self):
+        """Validate required fields and set event_type."""
+        if not self.webhook_id:
+            raise ValueError("webhook_id is required")
+        if not self.provider_type:
+            raise ValueError("provider_type is required")
+        if not self.event_type:
+            raise ValueError("event_type is required")
+        if self.payload is None:
+            raise ValueError("payload is required")
+        super().__post_init__()
 
     def to_dict(self) -> Dict[str, Any]:
         base = super().to_dict()
@@ -348,9 +361,10 @@ class WebhookProcessed(DomainEvent):
     - Monitoring/alerting
     """
 
-    webhook_id: UUID
-    provider_type: str
-    event_type: str
+    # Required fields must have defaults to avoid dataclass ordering issues
+    webhook_id: UUID = None  # type: ignore
+    provider_type: str = None  # type: ignore
+    event_type: str = None  # type: ignore
     transaction_id: Optional[UUID] = None
     processed_at: datetime = field(default_factory=datetime.utcnow)
 
@@ -378,9 +392,10 @@ class PaymentMethodAdded(DomainEvent):
     - Analytics tracking
     """
 
-    payment_method_id: UUID
-    user_id: UUID
-    payment_type: str
+    # Required fields must have defaults to avoid dataclass ordering issues
+    payment_method_id: UUID = None  # type: ignore
+    user_id: UUID = None  # type: ignore
+    payment_type: str = None  # type: ignore
     is_default: bool = False
 
     def to_dict(self) -> Dict[str, Any]:
@@ -404,8 +419,9 @@ class PaymentMethodRemoved(DomainEvent):
     - Analytics tracking
     """
 
-    payment_method_id: UUID
-    user_id: UUID
+    # Required fields must have defaults to avoid dataclass ordering issues
+    payment_method_id: UUID = None  # type: ignore
+    user_id: UUID = None  # type: ignore
     removed_at: datetime = field(default_factory=datetime.utcnow)
 
     def to_dict(self) -> Dict[str, Any]:

@@ -32,12 +32,14 @@ import logging
 from services.inventory_service import InventoryService
 from api.v2.dependencies import (
     get_purchase_order_service,
+    get_purchase_order_repository,
     get_inventory_management_service,
     get_batch_tracking_service
 )
 from ddd_refactored.application.services.purchase_order_service import PurchaseOrderApplicationService
 from ddd_refactored.application.services.inventory_management_service import InventoryManagementService
 from ddd_refactored.application.services.batch_tracking_service import BatchTrackingService
+from ddd_refactored.domain.purchase_order.repositories import IPurchaseOrderRepository
 import asyncpg
 import os
 
@@ -279,7 +281,8 @@ async def receive_purchase_order(
     x_user_id: Optional[str] = Header(None, alias="X-User-ID"),
     x_store_id: Optional[str] = Header(None, alias="X-Store-ID"),
     po_service: PurchaseOrderApplicationService = Depends(get_purchase_order_service),
-    inv_service: InventoryManagementService = Depends(get_inventory_management_service)
+    inv_service: InventoryManagementService = Depends(get_inventory_management_service),
+    po_repo: IPurchaseOrderRepository = Depends(get_purchase_order_repository)
 ):
     """
     Process receipt of purchase order items
@@ -287,12 +290,14 @@ async def receive_purchase_order(
     DDD Implementation:
     1. Updates PO status via PurchaseOrderApplicationService.receive_purchase_order()
     2. Updates inventory & batches via InventoryManagementService.receive_inventory()
+    3. Updates purchase_order_items.quantity_received for audit trail
 
     Orchestrates:
     - PurchaseOrder aggregate (domain model)
     - Inventory & BatchTracking aggregates
     - FIFO batch creation with weighted average cost
     - Auto-approval on receiving
+    - Line item quantity tracking
     """
     try:
         logger.info(f"[DDD] Receiving PO {po_id} with {len(request.items)} items")
@@ -347,6 +352,14 @@ async def receive_purchase_order(
                 each_gtin=item.each_gtin,
                 packaged_on_date=packaged_datetime,
                 product_name=item.item_name  # Pass item_name as product_name
+            )
+
+            # 3. Update purchase_order_items.quantity_received for audit trail
+            await po_repo.update_item_quantity_received(
+                po_id=po_id,
+                sku=item.sku,
+                batch_lot=item.batch_lot,
+                quantity_received=item.quantity_received
             )
 
             batch_results.append({
@@ -675,7 +688,7 @@ async def get_purchase_orders(
     limit: int = Query(50, ge=1, le=200),
     service: InventoryService = Depends(get_inventory_service)
 ):
-    """Get list of purchase orders for a specific store"""
+    """Get list of purchase orders for a specific store with aggregated stats"""
     try:
         # Determine which store_id to use (query param takes precedence over header)
         effective_store_id = store_id
@@ -686,6 +699,28 @@ async def get_purchase_orders(
                 raise HTTPException(status_code=400, detail="Invalid X-Store-ID header format")
 
         conn = service.db
+
+        # Calculate stats for all orders in this store (ignoring filters for stats)
+        stats_query = """
+            SELECT
+                COUNT(*) FILTER (WHERE status = 'pending') as pending_count,
+                COUNT(*) FILTER (WHERE status = 'partial') as in_transit_count,
+                COUNT(*) FILTER (
+                    WHERE DATE_TRUNC('month', order_date) = DATE_TRUNC('month', CURRENT_DATE)
+                ) as this_month_count,
+                COALESCE(SUM(total_amount), 0) as total_value
+            FROM purchase_orders
+            WHERE 1=1
+        """
+
+        stats_params = []
+        if effective_store_id:
+            stats_query += " AND store_id = $1"
+            stats_params.append(effective_store_id)
+
+        stats_result = await conn.fetchrow(stats_query, *stats_params)
+
+        # Query for purchase orders list (with filters applied)
         query = """
             SELECT
                 po.id,
@@ -730,7 +765,7 @@ async def get_purchase_orders(
             param_count += 1
             query += f" AND po.supplier_id = ${param_count}"
             params.append(supplier_id)
-        
+
         query += f"""
             GROUP BY po.id, po.po_number, po.supplier_id, s.name,
                      po.order_date, po.expected_date, po.received_date,
@@ -740,7 +775,7 @@ async def get_purchase_orders(
             LIMIT ${param_count + 1}
         """
         params.append(limit)
-        
+
         results = await conn.fetch(query, *params)
 
         # Parse JSONB charges field for each PO (asyncpg returns it as JSON string)
@@ -761,7 +796,13 @@ async def get_purchase_orders(
 
         return {
             "count": len(results),
-            "purchase_orders": purchase_orders
+            "purchase_orders": purchase_orders,
+            "stats": {
+                "pending_orders": stats_result['pending_count'] or 0,
+                "in_transit": stats_result['in_transit_count'] or 0,
+                "this_month": stats_result['this_month_count'] or 0,
+                "total_value": float(stats_result['total_value']) if stats_result['total_value'] else 0.0
+            }
         }
     except Exception as e:
         logger.error(f"Error getting purchase orders: {str(e)}")

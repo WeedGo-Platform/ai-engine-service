@@ -120,15 +120,15 @@ export default function Recommendations() {
   // Show "No Store Selected" UI if no store is selected
   if (!currentStore) {
     return (
-      <div className="h-full flex items-center justify-center bg-gray-50">
+      <div className="h-full flex items-center justify-center bg-gray-50 dark:bg-gray-900 dark:bg-gray-900">
         <div className="text-center">
           <div className="mb-4">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-full">
-              <TrendingUp className="w-8 h-8 text-primary-600" />
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 dark:bg-primary-900 rounded-full">
+              <TrendingUp className="w-8 h-8 text-primary-600 dark:text-primary-400" />
             </div>
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No Store Selected</h3>
-          <p className="text-gray-500">Please select a store to manage product recommendations</p>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">No Store Selected</h3>
+          <p className="text-gray-500 dark:text-gray-400 dark:text-gray-400">Please select a store to manage product recommendations</p>
         </div>
       </div>
     );
@@ -139,8 +139,8 @@ export default function Recommendations() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Product Recommendations</h1>
-          <p className="text-sm text-gray-500 mt-1">Managing product recommendations for {currentStore.name}</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Product Recommendations</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Managing product recommendations for {currentStore.name}</p>
         </div>
         <button
           onClick={() => {
@@ -156,7 +156,7 @@ export default function Recommendations() {
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-gray-200">
+      <div className="border-b dark:border-gray-700 border-gray-200 dark:border-gray-700">
         <nav className="-mb-px flex space-x-8">
           <button
             onClick={() => setActiveTab('overview')}
@@ -196,11 +196,11 @@ export default function Recommendations() {
         <div className="space-y-6">
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="bg-white rounded-lg  p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg  p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Products with Recs</p>
-                  <p className="text-2xl font-bold text-gray-900">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Products with Recs</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
                     {analytics?.overall?.products_with_recommendations || 0}
                   </p>
                 </div>
@@ -208,11 +208,11 @@ export default function Recommendations() {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg  p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg  p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Avg CTR</p>
-                  <p className="text-2xl font-bold text-gray-900">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Avg CTR</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
                     {formatPercentage(analytics?.overall?.avg_ctr)}
                   </p>
                 </div>
@@ -220,11 +220,11 @@ export default function Recommendations() {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg  p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg  p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Avg Conversion</p>
-                  <p className="text-2xl font-bold text-gray-900">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Avg Conversion</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
                     {formatPercentage(analytics?.overall?.avg_conversion)}
                   </p>
                 </div>
@@ -232,11 +232,11 @@ export default function Recommendations() {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg  p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg  p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Revenue Impact</p>
-                  <p className="text-2xl font-bold text-gray-900">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Revenue Impact</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
                     {formatCurrency(analytics?.overall?.total_revenue_impact)}
                   </p>
                 </div>
@@ -246,26 +246,26 @@ export default function Recommendations() {
           </div>
 
           {/* Trending Products */}
-          <div className="bg-white rounded-lg ">
-            <div className="p-6 border-b">
-              <h3 className="text-lg font-semibold text-gray-900">Trending Products</h3>
+          <div className="bg-white dark:bg-gray-800 rounded-lg ">
+            <div className="p-6 border-b dark:border-gray-700">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Trending Products</h3>
             </div>
             <div className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {trendingProducts?.slice(0, 6).map((product: any) => (
-                  <div key={product.product_id} className="border rounded-lg p-6 hover:bg-gray-50">
+                  <div key={product.product_id} className="border dark:border-gray-700 rounded-lg p-6 hover:bg-gray-50 dark:hover:bg-gray-700">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <h4 className="font-medium text-gray-900 text-sm">
+                        <h4 className="font-medium text-gray-900 dark:text-white text-sm">
                           {product.product_name}
                         </h4>
-                        <p className="text-xs text-gray-500 mt-1">{product.brand}</p>
-                        <p className="text-xs text-gray-500">{product.category}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{product.brand}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">{product.category}</p>
                       </div>
                       <TrendingUp className="h-4 w-4 text-primary-500" />
                     </div>
                     <div className="mt-3 flex justify-between items-center">
-                      <span className="text-lg font-semibold text-gray-900">
+                      <span className="text-lg font-semibold text-gray-900 dark:text-white">
                         ${product.unit_price}
                       </span>
                       {product.thc_percentage && (
@@ -281,58 +281,58 @@ export default function Recommendations() {
           </div>
 
           {/* Recommendation Types Performance */}
-          <div className="bg-white rounded-lg ">
-            <div className="p-6 border-b">
-              <h3 className="text-lg font-semibold text-gray-900">Performance by Type</h3>
+          <div className="bg-white dark:bg-gray-800 rounded-lg ">
+            <div className="p-6 border-b dark:border-gray-700">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Performance by Type</h3>
             </div>
             <div className="overflow-hidden">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead className="bg-gray-50 dark:bg-gray-900">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       Type
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       Count
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       Avg Score
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       CTR
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       Conversion
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       Revenue Impact
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                   {analytics?.by_type?.map((type: RecommendationMetric) => (
-                    <tr key={type.recommendation_type} className="hover:bg-gray-50">
+                    <tr key={type.recommendation_type} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           {getTypeIcon(type.recommendation_type)}
-                          <span className="ml-2 text-sm font-medium text-gray-900 capitalize">
+                          <span className="ml-2 text-sm font-medium text-gray-900 dark:text-white capitalize">
                             {type.recommendation_type}
                           </span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                         {type.count}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                         {(type.avg_score * 100).toFixed(0)}%
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                         {formatPercentage(type.avg_ctr)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                         {formatPercentage(type.avg_conversion)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                         {formatCurrency(type.revenue_impact)}
                       </td>
                     </tr>
@@ -345,64 +345,64 @@ export default function Recommendations() {
       )}
 
       {activeTab === 'performance' && (
-        <div className="bg-white rounded-lg ">
-          <div className="p-6 border-b">
-            <h3 className="text-lg font-semibold text-gray-900">Top Performing Recommendations</h3>
+        <div className="bg-white dark:bg-gray-800 rounded-lg ">
+          <div className="p-6 border-b dark:border-gray-700">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Top Performing Recommendations</h3>
           </div>
           <div className="overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <thead className="bg-gray-50 dark:bg-gray-900">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Source Product
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Recommended
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Type
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     CTR
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Conversion
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Revenue
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 {analytics?.top_performers?.map((perf: TopPerformer, index: number) => (
-                  <tr key={index} className="hover:bg-gray-50">
+                  <tr key={index} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                     <td className="px-6 py-4">
-                      <div className="text-sm font-medium text-gray-900">
+                      <div className="text-sm font-medium text-gray-900 dark:text-white">
                         {perf.source_product}
                       </div>
-                      <div className="text-xs text-gray-500">{perf.product_id}</div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">{perf.product_id}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm font-medium text-gray-900">
+                      <div className="text-sm font-medium text-gray-900 dark:text-white">
                         {perf.recommended_product}
                       </div>
-                      <div className="text-xs text-gray-500">{perf.recommended_product_id}</div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">{perf.recommended_product_id}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         {getTypeIcon(perf.recommendation_type)}
-                        <span className="ml-2 text-sm text-gray-500 capitalize">
+                        <span className="ml-2 text-sm text-gray-500 dark:text-gray-400 capitalize">
                           {perf.recommendation_type}
                         </span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                       {formatPercentage(perf.click_through_rate)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                       {formatPercentage(perf.conversion_rate)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                       {formatCurrency(perf.revenue_impact)}
                     </td>
                   </tr>
@@ -416,10 +416,10 @@ export default function Recommendations() {
       {activeTab === 'test' && (
         <div className="space-y-6">
           {/* Product Selector */}
-          <div className="bg-white rounded-lg  p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Test Recommendations</h3>
+          <div className="bg-white dark:bg-gray-800 rounded-lg  p-6">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Test Recommendations</h3>
             <div className="max-w-md">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Enter Product ID (SKU)
               </label>
               <div className="flex space-x-2">
@@ -428,7 +428,7 @@ export default function Recommendations() {
                   value={selectedProduct}
                   onChange={(e) => setSelectedProduct(e.target.value)}
                   placeholder="e.g., 12345"
-                  className="flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="flex-1 px-3 py-2 border dark:border-gray-700 border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
                 <button
                   onClick={() => {
@@ -448,24 +448,24 @@ export default function Recommendations() {
           {selectedProduct && (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Similar Products */}
-              <div className="bg-white rounded-lg ">
-                <div className="p-6 border-b bg-gray-50">
-                  <h4 className="font-semibold text-gray-900 flex items-center">
+              <div className="bg-white dark:bg-gray-800 rounded-lg ">
+                <div className="p-6 border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+                  <h4 className="font-semibold text-gray-900 dark:text-white flex items-center">
                     <Package2 className="h-5 w-5 mr-2 text-primary-500" />
                     Similar Products
                   </h4>
                 </div>
                 <div className="p-6 space-y-3">
                   {similarProducts?.map((product: any) => (
-                    <div key={product.product_id} className="border rounded-lg p-4 hover:bg-gray-50">
-                      <div className="font-medium text-sm text-gray-900">
+                    <div key={product.product_id} className="border dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-700">
+                      <div className="font-medium text-sm text-gray-900 dark:text-white">
                         {product.product_name}
                       </div>
-                      <div className="text-xs text-gray-500 mt-1">
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         {product.brand} • {product.category}
                       </div>
                       <div className="flex justify-between items-center mt-2">
-                        <span className="font-semibold text-gray-900">${product.unit_price}</span>
+                        <span className="font-semibold text-gray-900 dark:text-white">${product.unit_price}</span>
                         {product.thc_percentage && (
                           <span className="text-xs bg-primary-100 text-primary-800 px-2 py-1 rounded">
                             THC: {product.thc_percentage}%
@@ -475,7 +475,7 @@ export default function Recommendations() {
                     </div>
                   ))}
                   {!similarProducts?.length && (
-                    <p className="text-sm text-gray-500 text-center py-4">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
                       No similar products found
                     </p>
                   )}
@@ -483,29 +483,29 @@ export default function Recommendations() {
               </div>
 
               {/* Complementary Products */}
-              <div className="bg-white rounded-lg ">
-                <div className="p-6 border-b bg-gray-50">
-                  <h4 className="font-semibold text-gray-900 flex items-center">
+              <div className="bg-white dark:bg-gray-800 rounded-lg ">
+                <div className="p-6 border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+                  <h4 className="font-semibold text-gray-900 dark:text-white flex items-center">
                     <ShoppingBag className="h-5 w-5 mr-2 text-accent-500" />
                     Complementary Products
                   </h4>
                 </div>
                 <div className="p-6 space-y-3">
                   {complementaryProducts?.map((product: any) => (
-                    <div key={product.product_id} className="border rounded-lg p-4 hover:bg-gray-50">
-                      <div className="font-medium text-sm text-gray-900">
+                    <div key={product.product_id} className="border dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-700">
+                      <div className="font-medium text-sm text-gray-900 dark:text-white">
                         {product.product_name}
                       </div>
-                      <div className="text-xs text-gray-500 mt-1">
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         {product.brand} • {product.category}
                       </div>
                       <div className="flex justify-between items-center mt-2">
-                        <span className="font-semibold text-gray-900">${product.unit_price}</span>
+                        <span className="font-semibold text-gray-900 dark:text-white">${product.unit_price}</span>
                       </div>
                     </div>
                   ))}
                   {!complementaryProducts?.length && (
-                    <p className="text-sm text-gray-500 text-center py-4">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
                       No complementary products found
                     </p>
                   )}
@@ -513,29 +513,29 @@ export default function Recommendations() {
               </div>
 
               {/* Frequently Bought Together */}
-              <div className="bg-white rounded-lg ">
-                <div className="p-6 border-b bg-gray-50">
-                  <h4 className="font-semibold text-gray-900 flex items-center">
+              <div className="bg-white dark:bg-gray-800 rounded-lg ">
+                <div className="p-6 border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+                  <h4 className="font-semibold text-gray-900 dark:text-white flex items-center">
                     <Zap className="h-5 w-5 mr-2 text-purple-500" />
                     Frequently Bought Together
                   </h4>
                 </div>
                 <div className="p-6 space-y-3">
                   {frequentlyBought?.map((product: any) => (
-                    <div key={product.product_id} className="border rounded-lg p-4 hover:bg-gray-50">
-                      <div className="font-medium text-sm text-gray-900">
+                    <div key={product.product_id} className="border dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-700">
+                      <div className="font-medium text-sm text-gray-900 dark:text-white">
                         {product.product_name}
                       </div>
-                      <div className="text-xs text-gray-500 mt-1">
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         {product.brand} • {product.category}
                       </div>
                       <div className="flex justify-between items-center mt-2">
-                        <span className="font-semibold text-gray-900">${product.unit_price}</span>
+                        <span className="font-semibold text-gray-900 dark:text-white">${product.unit_price}</span>
                       </div>
                     </div>
                   ))}
                   {!frequentlyBought?.length && (
-                    <p className="text-sm text-gray-500 text-center py-4">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
                       No frequently bought items found
                     </p>
                   )}

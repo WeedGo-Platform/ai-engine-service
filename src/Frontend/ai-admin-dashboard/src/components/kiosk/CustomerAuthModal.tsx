@@ -141,16 +141,16 @@ export default function CustomerAuthModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg m-4">
+    <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg m-4">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b">
-          <h3 className="text-2xl font-semibold">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+          <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">
             {showVerification ? t.verifyTitle : t.title}
           </h3>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors text-gray-600 dark:text-gray-400"
           >
             <X className="w-6 h-6" />
           </button>
@@ -166,8 +166,8 @@ export default function CustomerAuthModal({
                   onClick={() => setAuthMethod('phone')}
                   className={`flex-1 p-3 rounded-lg font-medium transition-all ${
                     authMethod === 'phone'
-                      ? 'bg-primary-100 text-primary-600 border-2 border-primary-500'
-                      : 'bg-gray-100 text-gray-600 border-2 border-transparent'
+                      ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 border-2 border-primary-500 dark:border-primary-600'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 border-2 border-transparent'
                   }`}
                 >
                   <Phone className="inline-block w-5 h-5 mr-2" />
@@ -177,8 +177,8 @@ export default function CustomerAuthModal({
                   onClick={() => setAuthMethod('email')}
                   className={`flex-1 p-3 rounded-lg font-medium transition-all ${
                     authMethod === 'email'
-                      ? 'bg-primary-100 text-primary-600 border-2 border-primary-500'
-                      : 'bg-gray-100 text-gray-600 border-2 border-transparent'
+                      ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 border-2 border-primary-500 dark:border-primary-600'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 border-2 border-transparent'
                   }`}
                 >
                   <Mail className="inline-block w-5 h-5 mr-2" />
@@ -194,7 +194,7 @@ export default function CustomerAuthModal({
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
                     placeholder={t.phonePlaceholder}
-                    className="w-full px-4 py-3 text-lg border-2 rounded-lg focus:outline-none focus:border-primary-500"
+                    className="w-full px-4 py-3 text-lg border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-primary-500 dark:focus:border-primary-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                     autoFocus
                   />
                 ) : (
@@ -203,7 +203,7 @@ export default function CustomerAuthModal({
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder={t.emailPlaceholder}
-                    className="w-full px-4 py-3 text-lg border-2 rounded-lg focus:outline-none focus:border-primary-500"
+                    className="w-full px-4 py-3 text-lg border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-primary-500 dark:focus:border-primary-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                     autoFocus
                   />
                 )}
@@ -211,7 +211,7 @@ export default function CustomerAuthModal({
 
               {/* Error Message */}
               {error && (
-                <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-lg">
+                <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg border border-red-200 dark:border-red-800">
                   {error}
                 </div>
               )}
@@ -223,7 +223,7 @@ export default function CustomerAuthModal({
                   isLoading ||
                   (authMethod === 'phone' ? !phoneNumber : !email)
                 }
-                className="w-full p-4 bg-primary-600 text-white rounded-lg font-semibold text-lg hover:bg-primary-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center"
+                className="w-full p-4 bg-primary-600 dark:bg-primary-700 text-white rounded-lg font-semibold text-lg hover:bg-primary-700 dark:hover:bg-primary-600 transition-colors disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:cursor-not-allowed flex items-center justify-center"
               >
                 {isLoading ? (
                   <Loader2 className="w-6 h-6 animate-spin" />
@@ -239,9 +239,9 @@ export default function CustomerAuthModal({
             <>
               {/* Verification Screen */}
               <div className="text-center mb-6">
-                <p className="text-gray-600">
+                <p className="text-gray-600 dark:text-gray-400">
                   {t.verifyText}{' '}
-                  <span className="font-semibold">
+                  <span className="font-semibold text-gray-900 dark:text-white">
                     {authMethod === 'phone' ? phoneNumber : email}
                   </span>
                 </p>
@@ -249,7 +249,7 @@ export default function CustomerAuthModal({
 
               {/* Verification Code Input */}
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t.codeLabel}
                 </label>
                 <input
@@ -257,7 +257,7 @@ export default function CustomerAuthModal({
                   value={verificationCode}
                   onChange={(e) => setVerificationCode(e.target.value)}
                   placeholder="000000"
-                  className="w-full px-4 py-3 text-2xl text-center tracking-widest border-2 rounded-lg focus:outline-none focus:border-primary-500"
+                  className="w-full px-4 py-3 text-2xl text-center tracking-widest border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-primary-500 dark:focus:border-primary-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                   maxLength={6}
                   autoFocus
                 />
@@ -265,7 +265,7 @@ export default function CustomerAuthModal({
 
               {/* Error Message */}
               {error && (
-                <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-lg">
+                <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg border border-red-200 dark:border-red-800">
                   {error}
                 </div>
               )}
@@ -275,7 +275,7 @@ export default function CustomerAuthModal({
                 <button
                   onClick={handleVerify}
                   disabled={isLoading || verificationCode.length < 6}
-                  className="w-full p-4 bg-primary-600 text-white rounded-lg font-semibold text-lg hover:bg-primary-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center"
+                  className="w-full p-4 bg-primary-600 dark:bg-primary-700 text-white rounded-lg font-semibold text-lg hover:bg-primary-700 dark:hover:bg-primary-600 transition-colors disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:cursor-not-allowed flex items-center justify-center"
                 >
                   {isLoading ? (
                     <Loader2 className="w-6 h-6 animate-spin" />
@@ -286,7 +286,7 @@ export default function CustomerAuthModal({
 
                 <button
                   onClick={handleResendCode}
-                  className="w-full p-3 text-primary-600 hover:bg-primary-50 rounded-lg font-medium transition-colors"
+                  className="w-full p-3 text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/30 rounded-lg font-medium transition-colors"
                 >
                   {t.resendCode}
                 </button>

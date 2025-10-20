@@ -89,18 +89,18 @@ export default function Checkout({ onBack, onComplete, currentStore }: CheckoutP
   };
 
   return (
-    <div className="h-full flex flex-col bg-gray-50">
+    <div className="h-full flex flex-col bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <div className="bg-white shadow-sm px-6 py-4">
+      <div className="bg-white dark:bg-gray-800 shadow-sm px-6 py-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center gap-4">
           <button
             onClick={onBack}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-gray-900 dark:text-white"
             disabled={isProcessing}
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
-          <h1 className="text-2xl font-bold text-gray-800">Complete Your Order</h1>
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Complete Your Order</h1>
         </div>
       </div>
 
@@ -109,18 +109,18 @@ export default function Checkout({ onBack, onComplete, currentStore }: CheckoutP
         <div className="max-w-2xl mx-auto space-y-6">
 
           {/* Order Summary */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold mb-4">Order Summary</h3>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Order Summary</h3>
 
             {/* Items */}
             <div className="space-y-3 mb-4">
               {cart.map(item => (
                 <div key={item.id} className="flex justify-between text-sm">
                   <div className="flex-1">
-                    <span>{item.name}</span>
-                    <span className="text-gray-500 ml-2">x{item.quantity}</span>
+                    <span className="text-gray-900 dark:text-white">{item.name}</span>
+                    <span className="text-gray-500 dark:text-gray-400 ml-2">x{item.quantity}</span>
                   </div>
-                  <span className="font-medium">
+                  <span className="font-medium text-gray-900 dark:text-white">
                     ${(item.price * item.quantity).toFixed(2)}
                   </span>
                 </div>
@@ -128,31 +128,31 @@ export default function Checkout({ onBack, onComplete, currentStore }: CheckoutP
             </div>
 
             {/* Totals */}
-            <div className="border-t pt-4 space-y-2">
-              <div className="flex justify-between text-gray-600">
+            <div className="border-t border-gray-200 dark:border-gray-700 pt-4 space-y-2">
+              <div className="flex justify-between text-gray-600 dark:text-gray-400">
                 <span>Subtotal</span>
                 <span>${subtotal.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between text-gray-600">
+              <div className="flex justify-between text-gray-600 dark:text-gray-400">
                 <span>Tax (HST 13%)</span>
                 <span>${tax.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between text-xl font-bold pt-2 border-t">
+              <div className="flex justify-between text-xl font-bold pt-2 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
                 <span>Total</span>
-                <span className="text-primary-600">${total.toFixed(2)}</span>
+                <span className="text-primary-600 dark:text-primary-400">${total.toFixed(2)}</span>
               </div>
             </div>
           </div>
 
           {/* Optional Customer Info */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold mb-2">Contact Information</h3>
-            <p className="text-sm text-gray-500 mb-4">Optional - Help us notify you when your order is ready</p>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Contact Information</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Optional - Help us notify you when your order is ready</p>
 
             <div className="space-y-4">
               {/* Name Field */}
               <div>
-                <label className="flex items-center text-sm font-medium text-gray-700 mb-1">
+                <label className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   <User className="w-4 h-4 mr-2" />
                   Name
                 </label>
@@ -161,14 +161,14 @@ export default function Checkout({ onBack, onComplete, currentStore }: CheckoutP
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
                   placeholder="Enter your name (optional)"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-primary-500 dark:focus:border-primary-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                   disabled={isProcessing}
                 />
               </div>
 
               {/* Email Field */}
               <div>
-                <label className="flex items-center text-sm font-medium text-gray-700 mb-1">
+                <label className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   <Mail className="w-4 h-4 mr-2" />
                   Email
                 </label>
@@ -177,14 +177,14 @@ export default function Checkout({ onBack, onComplete, currentStore }: CheckoutP
                   value={customerEmail}
                   onChange={(e) => setCustomerEmail(e.target.value)}
                   placeholder="Enter your email (optional)"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-primary-500 dark:focus:border-primary-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                   disabled={isProcessing}
                 />
               </div>
 
               {/* Phone Field */}
               <div>
-                <label className="flex items-center text-sm font-medium text-gray-700 mb-1">
+                <label className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   <Phone className="w-4 h-4 mr-2" />
                   Phone
                 </label>
@@ -193,7 +193,7 @@ export default function Checkout({ onBack, onComplete, currentStore }: CheckoutP
                   value={customerPhone}
                   onChange={(e) => setCustomerPhone(e.target.value)}
                   placeholder="Enter your phone number (optional)"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary-500"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-primary-500 dark:focus:border-primary-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                   disabled={isProcessing}
                 />
               </div>
@@ -201,20 +201,20 @@ export default function Checkout({ onBack, onComplete, currentStore }: CheckoutP
           </div>
 
           {/* Pickup Info & Payment Notice */}
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-            <h4 className="font-semibold text-green-800 mb-2">
+          <div className="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg p-4">
+            <h4 className="font-semibold text-green-800 dark:text-green-300 mb-2">
               <ShoppingBag className="inline w-5 h-5 mr-2" />
               Pay at Pickup
             </h4>
-            <p className="text-sm text-green-700">
+            <p className="text-sm text-green-700 dark:text-green-400">
               Your order will be ready for immediate pickup. Payment will be collected at:
             </p>
             {currentStore && (
               <>
-                <p className="text-sm font-medium text-green-800 mt-2">
+                <p className="text-sm font-medium text-green-800 dark:text-green-300 mt-2">
                   {currentStore.name}
                 </p>
-                <p className="text-sm text-green-600">
+                <p className="text-sm text-green-600 dark:text-green-400">
                   {typeof currentStore.address === 'string'
                     ? `${currentStore.address}, ${currentStore.city}`
                     : currentStore.address?.street
@@ -228,21 +228,21 @@ export default function Checkout({ onBack, onComplete, currentStore }: CheckoutP
 
           {/* Error Message */}
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-              <p className="text-red-800">{error}</p>
+            <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-4 flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+              <p className="text-red-800 dark:text-red-300">{error}</p>
             </div>
           )}
         </div>
       </div>
 
       {/* Footer - Single Action Button */}
-      <div className="bg-white border-t px-6 py-4">
+      <div className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-6 py-4">
         <div className="max-w-2xl mx-auto">
           <button
             onClick={handlePlaceOrder}
             disabled={isProcessing || cart.length === 0}
-            className="w-full py-4 bg-primary-600 text-white rounded-lg font-semibold text-lg hover:bg-primary-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full py-4 bg-primary-600 dark:bg-primary-700 text-white rounded-lg font-semibold text-lg hover:bg-primary-700 dark:hover:bg-primary-600 transition-colors disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {isProcessing ? (
               <>

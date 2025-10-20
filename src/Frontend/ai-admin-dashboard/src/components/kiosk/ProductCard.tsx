@@ -52,10 +52,10 @@ export default function ProductCard({ product, onAddToCart, onClick }: ProductCa
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer group">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg dark:hover:shadow-2xl transition-all duration-300 cursor-pointer group border border-gray-100 dark:border-gray-700">
       <div onClick={onClick} className="relative">
         {/* Product Image */}
-        <div className="relative overflow-hidden rounded-t-lg">
+        <div className="relative overflow-hidden rounded-t-lg bg-gray-100 dark:bg-gray-700">
           <img
             src={product.image_url || '/placeholder-product.jpg'}
             alt={product.name}
@@ -136,7 +136,7 @@ export default function ProductCard({ product, onAddToCart, onClick }: ProductCa
           {/* Category and Plant Type */}
           <div className="flex items-center gap-2 mb-2">
             {product.subcategory && (
-              <span className="text-xs text-gray-500 uppercase tracking-wider">
+              <span className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                 {product.subcategory}
               </span>
             )}
@@ -149,13 +149,13 @@ export default function ProductCard({ product, onAddToCart, onClick }: ProductCa
           </div>
 
           {/* Product Name */}
-          <h3 className="font-semibold text-gray-800 mb-1 line-clamp-2 group-hover:text-primary-600 transition-colors">
+          <h3 className="font-semibold text-gray-800 dark:text-white mb-1 line-clamp-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
             {product.name || product.product_name}
           </h3>
 
           {/* Brand */}
           {product.brand && (
-            <p className="text-sm text-gray-500 mb-2">{product.brand}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">{product.brand}</p>
           )}
 
           {/* Rating */}
@@ -168,12 +168,12 @@ export default function ProductCard({ product, onAddToCart, onClick }: ProductCa
                     className={`w-4 h-4 ${
                       i < Math.floor(product.rating || 0)
                         ? 'text-yellow-500 fill-current'
-                        : 'text-gray-300'
+                        : 'text-gray-300 dark:text-gray-600'
                     }`}
                   />
                 ))}
               </div>
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-gray-600 dark:text-gray-400">
                 {product.rating.toFixed(1)}
                 {product.review_count && ` (${product.review_count} reviews)`}
               </span>
@@ -184,15 +184,15 @@ export default function ProductCard({ product, onAddToCart, onClick }: ProductCa
           <div className="flex items-baseline gap-2">
             {product.is_sale && product.sale_price ? (
               <>
-                <span className="text-xl font-bold text-red-600">
+                <span className="text-xl font-bold text-red-600 dark:text-red-400">
                   ${product.sale_price.toFixed(2)}
                 </span>
-                <span className="text-sm text-gray-500 line-through">
+                <span className="text-sm text-gray-500 dark:text-gray-400 line-through">
                   ${(product.retail_price || product.price || 0).toFixed(2)}
                 </span>
               </>
             ) : (
-              <span className="text-xl font-bold text-primary-600">
+              <span className="text-xl font-bold text-primary-600 dark:text-primary-400">
                 ${(product.retail_price || product.price || 0).toFixed(2)}
               </span>
             )}
@@ -201,14 +201,14 @@ export default function ProductCard({ product, onAddToCart, onClick }: ProductCa
       </div>
 
       {/* Add to Cart Button */}
-      <div className="border-t px-4 py-3">
+      <div className="border-t border-gray-200 dark:border-gray-700 px-4 py-3">
         <button
           onClick={(e) => {
             e.stopPropagation();
             onAddToCart();
           }}
           disabled={product.quantity_available === 0}
-          className="w-full py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center gap-2 font-semibold"
+          className="w-full py-2 bg-primary-600 dark:bg-primary-700 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 transition-colors disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:cursor-not-allowed flex items-center justify-center gap-2 font-semibold"
         >
           <Plus className="w-5 h-5" />
           {product.quantity_available === 0 ? 'Out of Stock' : 'Add to Cart'}

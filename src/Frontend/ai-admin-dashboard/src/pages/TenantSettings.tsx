@@ -114,69 +114,69 @@ const TenantSettings: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      <div className="flex items-center justify-center h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 dark:border-primary-400"></div>
       </div>
     );
   }
 
   if (!tenant) {
     return (
-      <div className="p-6">
-        <div className="bg-danger-50 border border-red-200 rounded-lg p-6">
-          <p className="text-red-700">{t('settings:messages.tenantNotFound')}</p>
+      <div className="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
+        <div className="bg-danger-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-6">
+          <p className="text-red-700 dark:text-red-300">{t('settings:messages.tenantNotFound')}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
       {/* Header */}
       <div className="mb-6">
         <button
           onClick={() => navigate('/dashboard/tenants')}
-          className="mb-4 flex items-center gap-2 text-gray-600 hover:text-gray-900"
+          className="mb-4 flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
         >
           <ArrowLeft className="w-4 h-4" />
           {t('settings:actions.backToTenants')}
         </button>
-        
+
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold flex items-center gap-4">
+            <h1 className="text-3xl font-bold flex items-center gap-4 text-gray-900 dark:text-white">
               <Building2 className="w-8 h-8" />
               {tenant.name} {t('settings:titles.tenantSettings')}
             </h1>
-            <p className="text-gray-600 mt-1">{t('settings:descriptions.tenantManagement')}</p>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">{t('settings:descriptions.tenantManagement')}</p>
           </div>
         </div>
       </div>
 
       {/* Alerts */}
       {success && (
-        <div className="mb-4 p-6 bg-primary-50 border border-green-200 rounded-lg flex items-center gap-2">
-          <AlertCircle className="w-5 h-5 text-primary-500" />
-          <span className="text-primary-700">{success}</span>
+        <div className="mb-4 p-6 bg-primary-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg flex items-center gap-2">
+          <AlertCircle className="w-5 h-5 text-primary-500 dark:text-green-400" />
+          <span className="text-primary-700 dark:text-green-300">{success}</span>
         </div>
       )}
 
       {error && (
-        <div className="mb-4 p-6 bg-danger-50 border border-red-200 rounded-lg flex items-center gap-2">
-          <AlertCircle className="w-5 h-5 text-red-500" />
-          <span className="text-red-700">{error}</span>
+        <div className="mb-4 p-6 bg-danger-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg flex items-center gap-2">
+          <AlertCircle className="w-5 h-5 text-red-500 dark:text-red-400" />
+          <span className="text-red-700 dark:text-red-300">{error}</span>
         </div>
       )}
 
       {/* Tabs */}
-      <div className="mb-6 border-b">
+      <div className="mb-6 border-b border-gray-200 dark:border-gray-700">
         <nav className="-mb-px flex space-x-8">
           <button
             onClick={() => setActiveTab('general')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'general'
-                ? 'border-blue-500 text-accent-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
+                ? 'border-blue-500 dark:border-primary-400 text-accent-600 dark:text-primary-400'
+                : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-200 dark:hover:border-gray-600'
             }`}
           >
             {t('settings:tabs.general')}
@@ -185,8 +185,8 @@ const TenantSettings: React.FC = () => {
             onClick={() => setActiveTab('payment')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'payment'
-                ? 'border-blue-500 text-accent-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
+                ? 'border-blue-500 dark:border-primary-400 text-accent-600 dark:text-primary-400'
+                : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-200 dark:hover:border-gray-600'
             }`}
           >
             {t('settings:tabs.payment')}
@@ -195,8 +195,8 @@ const TenantSettings: React.FC = () => {
             onClick={() => setActiveTab('communication')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'communication'
-                ? 'border-blue-500 text-accent-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
+                ? 'border-blue-500 dark:border-primary-400 text-accent-600 dark:text-primary-400'
+                : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-200 dark:hover:border-gray-600'
             }`}
           >
             {t('settings:tabs.communication')}
@@ -206,81 +206,81 @@ const TenantSettings: React.FC = () => {
 
       {/* Tab Content */}
       {activeTab === 'general' && (
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h2 className="text-xl font-semibold mb-4">{t('settings:titles.generalInformation')}</h2>
-          
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+          <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">{t('settings:titles.generalInformation')}</h2>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {t('settings:fields.tenantName')}
               </label>
-              <p className="text-lg">{tenant.name}</p>
+              <p className="text-lg text-gray-900 dark:text-white">{tenant.name}</p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {t('settings:fields.tenantCode')}
               </label>
-              <p className="text-lg font-mono">{tenant.code}</p>
+              <p className="text-lg font-mono text-gray-900 dark:text-white">{tenant.code}</p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {t('settings:fields.companyName')}
               </label>
-              <p className="text-lg">{tenant.company_name || t('settings:messages.notSpecified')}</p>
+              <p className="text-lg text-gray-900 dark:text-white">{tenant.company_name || t('settings:messages.notSpecified')}</p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {t('settings:fields.businessNumber')}
               </label>
-              <p className="text-lg">{tenant.business_number || t('settings:messages.notSpecified')}</p>
+              <p className="text-lg text-gray-900 dark:text-white">{tenant.business_number || t('settings:messages.notSpecified')}</p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {t('settings:fields.contactEmail')}
               </label>
-              <p className="text-lg">{tenant.contact_email || t('settings:messages.notSpecified')}</p>
+              <p className="text-lg text-gray-900 dark:text-white">{tenant.contact_email || t('settings:messages.notSpecified')}</p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {t('settings:fields.contactPhone')}
               </label>
-              <p className="text-lg">{tenant.contact_phone || t('settings:messages.notSpecified')}</p>
+              <p className="text-lg text-gray-900 dark:text-white">{tenant.contact_phone || t('settings:messages.notSpecified')}</p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {t('settings:fields.status')}
               </label>
               <span className={`inline-flex px-2 py-1 rounded-full text-sm font-medium ${
                 tenant.status === 'active'
-                  ? 'bg-primary-100 text-primary-700'
-                  : 'bg-gray-50 text-gray-700'
+                  ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300'
+                  : 'bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
               }`}>
                 {tenant.status}
               </span>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {t('settings:fields.subscriptionTier')}
               </label>
-              <span className="inline-flex px-2 py-1 rounded-full text-sm font-medium bg-blue-100 text-accent-700">
+              <span className="inline-flex px-2 py-1 rounded-full text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-accent-700 dark:text-blue-300">
                 {tenant.subscription_tier}
               </span>
             </div>
           </div>
-          
+
           {tenant.address && (
             <div className="mt-6">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {t('settings:fields.address')}
               </label>
-              <p className="text-lg">
+              <p className="text-lg text-gray-900 dark:text-white">
                 {tenant.address.street}<br />
                 {tenant.address.city}, {tenant.address.province} {tenant.address.postal_code}<br />
                 {tenant.address.country}

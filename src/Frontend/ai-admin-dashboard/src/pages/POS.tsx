@@ -756,7 +756,8 @@ export default function POS({
           quantity: item.quantity,
           discount: item.discount || 0,
           discount_type: 'percentage',
-          promotion: item.promotion || null
+          promotion: item.promotion || null,
+          batch: item.batch  // Include batch information for tracking
         })),
         subtotal,
         discounts: cart.reduce((sum, item) => {
@@ -822,29 +823,29 @@ export default function POS({
   const driedFlowerEquivalent = calculateDriedFlowerEquivalent();
 
   return (
-    <div ref={posContainerRef} className="h-full flex flex-col bg-gray-50">
+    <div ref={posContainerRef} className="h-full flex flex-col bg-gray-50 dark:bg-gray-900">
       {/* Mobile Cart Backdrop */}
       {mobileCartOpen && (
         <div
-          className="fixed inset-0 z-40 bg-gray-600 bg-opacity-75 lg:hidden"
+          className="fixed inset-0 z-40 bg-gray-600 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-80 lg:hidden"
           onClick={() => setMobileCartOpen(false)}
         />
       )}
 
       {/* Header - Only show if not hidden */}
       {!hideHeader && (
-        <div className="bg-white  border-b">
+        <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
           <div className="px-3 sm:px-6 py-3 sm:py-4">
             <div className="flex items-center justify-between">
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6">
-                <h1 className="text-lg sm:text-2xl font-bold">{t('pos:titles.main')}</h1>
+                <h1 className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">{t('pos:titles.main')}</h1>
                 {currentStore && (
-                  <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 text-accent-700 rounded-lg">
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/30 text-accent-700 dark:text-accent-300 rounded-lg">
                     <Building2 className="w-4 h-4" />
                     <span className="text-sm font-medium">{currentStore.name}</span>
                   </div>
                 )}
-                <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-primary-50 text-primary-700 rounded-lg">
+                <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-primary-50 dark:bg-green-900/30 text-primary-700 dark:text-primary-300 rounded-lg">
                   <Calendar className="w-4 h-4" />
                   <span className="text-sm font-medium">{t('pos:validation.validIdDate')} {getValidAgeDate()} {t('pos:validation.orEarlier')}</span>
                 </div>
@@ -854,8 +855,8 @@ export default function POS({
                   onClick={() => setScannerEnabled(!scannerEnabled)}
                   className={`p-2 rounded-lg transition-colors ${
                     scannerEnabled
-                      ? 'bg-primary-100 text-primary-600 hover:bg-green-200'
-                      : 'hover:bg-gray-50'
+                      ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 hover:bg-green-200 dark:hover:bg-green-900/40'
+                      : 'hover:bg-gray-50 dark:hover:bg-gray-700'
                   }`}
                   title={scannerEnabled ? t('pos:scanner.enabled') : t('pos:scanner.disabled')}
                 >
@@ -865,13 +866,13 @@ export default function POS({
                 {onFullscreenToggle && (
                   <button
                     onClick={onFullscreenToggle}
-                    className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                    className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     title={isFullscreen ? t('pos:fullscreen.exit') : t('pos:fullscreen.enter')}
                   >
                     {isFullscreen ? (
-                      <Minimize2 className="w-5 h-5 text-gray-600" />
+                      <Minimize2 className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                     ) : (
-                      <Maximize2 className="w-5 h-5 text-gray-600" />
+                      <Maximize2 className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                     )}
                   </button>
                 )}
@@ -883,7 +884,7 @@ export default function POS({
               <button
                 onClick={() => setActiveTab('sale')}
                 className={`px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium whitespace-nowrap ${
-                  activeTab === 'sale' ? 'bg-accent-500 text-white' : 'text-gray-600 hover:bg-gray-50'
+                  activeTab === 'sale' ? 'bg-accent-500 dark:bg-accent-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                 }`}
               >
                 <ShoppingCart className="w-4 h-4 inline mr-1 sm:mr-2" />
@@ -892,7 +893,7 @@ export default function POS({
               <button
                 onClick={() => setActiveTab('parked')}
                 className={`px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium whitespace-nowrap ${
-                  activeTab === 'parked' ? 'bg-accent-500 text-white' : 'text-gray-600 hover:bg-gray-50'
+                  activeTab === 'parked' ? 'bg-accent-500 dark:bg-accent-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                 }`}
               >
                 <PauseCircle className="w-4 h-4 inline mr-1 sm:mr-2" />
@@ -901,7 +902,7 @@ export default function POS({
               <button
                 onClick={() => setActiveTab('history')}
                 className={`px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium whitespace-nowrap ${
-                  activeTab === 'history' ? 'bg-accent-500 text-white' : 'text-gray-600 hover:bg-gray-50'
+                  activeTab === 'history' ? 'bg-accent-500 dark:bg-accent-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                 }`}
               >
                 <History className="w-4 h-4 inline mr-1 sm:mr-2" />
@@ -910,7 +911,7 @@ export default function POS({
               <button
                 onClick={() => setActiveTab('settings')}
                 className={`px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium whitespace-nowrap ${
-                  activeTab === 'settings' ? 'bg-accent-500 text-white' : 'text-gray-600 hover:bg-gray-50'
+                  activeTab === 'settings' ? 'bg-accent-500 dark:bg-accent-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                 }`}
               >
                 <Settings className="w-4 h-4 inline mr-1 sm:mr-2" />
@@ -923,17 +924,17 @@ export default function POS({
 
       {/* Alternative compact header when embedded in Apps page */}
       {hideHeader && (
-        <div className="bg-white border-b">
+        <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
           <div className="px-3 sm:px-6 py-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 {currentStore && (
-                  <div className="flex items-center gap-2 px-2 py-1 bg-blue-50 text-accent-700 rounded text-sm">
+                  <div className="flex items-center gap-2 px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-accent-700 dark:text-accent-300 rounded text-sm">
                     <Building2 className="w-3.5 h-3.5" />
                     <span className="font-medium">{currentStore.name}</span>
                   </div>
                 )}
-                <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-primary-50 text-primary-700 rounded text-sm">
+                <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-primary-50 dark:bg-green-900/30 text-primary-700 dark:text-primary-300 rounded text-sm">
                   <Calendar className="w-3.5 h-3.5" />
                   <span>Valid ID: {getValidAgeDate()} or earlier</span>
                 </div>
@@ -943,7 +944,7 @@ export default function POS({
                   <button
                     onClick={() => setActiveTab('sale')}
                     className={`px-3 py-1 rounded text-sm font-medium ${
-                      activeTab === 'sale' ? 'bg-accent-500 text-white' : 'text-gray-600 hover:bg-gray-50'
+                      activeTab === 'sale' ? 'bg-accent-500 dark:bg-accent-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                     }`}
                   >
                     <ShoppingCart className="w-3.5 h-3.5 inline mr-1" />
@@ -952,7 +953,7 @@ export default function POS({
                   <button
                     onClick={() => setActiveTab('parked')}
                     className={`px-3 py-1 rounded text-sm font-medium ${
-                      activeTab === 'parked' ? 'bg-accent-500 text-white' : 'text-gray-600 hover:bg-gray-50'
+                      activeTab === 'parked' ? 'bg-accent-500 dark:bg-accent-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                     }`}
                   >
                     <PauseCircle className="w-3.5 h-3.5 inline mr-1" />
@@ -961,7 +962,7 @@ export default function POS({
                   <button
                     onClick={() => setActiveTab('history')}
                     className={`px-3 py-1 rounded text-sm font-medium ${
-                      activeTab === 'history' ? 'bg-accent-500 text-white' : 'text-gray-600 hover:bg-gray-50'
+                      activeTab === 'history' ? 'bg-accent-500 dark:bg-accent-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                     }`}
                   >
                     <History className="w-3.5 h-3.5 inline mr-1" />
@@ -970,7 +971,7 @@ export default function POS({
                   <button
                     onClick={() => setActiveTab('settings')}
                     className={`px-3 py-1 rounded text-sm font-medium ${
-                      activeTab === 'settings' ? 'bg-accent-500 text-white' : 'text-gray-600 hover:bg-gray-50'
+                      activeTab === 'settings' ? 'bg-accent-500 dark:bg-accent-600 text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                     }`}
                   >
                     <Settings className="w-3.5 h-3.5 inline mr-1" />
@@ -983,8 +984,8 @@ export default function POS({
                   onClick={() => setScannerEnabled(!scannerEnabled)}
                   className={`p-1.5 rounded-lg transition-colors ${
                     scannerEnabled
-                      ? 'bg-primary-100 text-primary-600 hover:bg-green-200'
-                      : 'hover:bg-gray-50'
+                      ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 hover:bg-green-200 dark:hover:bg-green-900/40'
+                      : 'hover:bg-gray-50 dark:hover:bg-gray-700'
                   }`}
                   title={scannerEnabled ? 'Scanner Enabled' : 'Scanner Disabled'}
                 >
@@ -994,13 +995,13 @@ export default function POS({
                 {onFullscreenToggle && (
                   <button
                     onClick={onFullscreenToggle}
-                    className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+                    className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     title={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
                   >
                     {isFullscreen ? (
-                      <Minimize2 className="w-4 h-4 text-gray-600" />
+                      <Minimize2 className="w-4 h-4 text-gray-600 dark:text-gray-300" />
                     ) : (
-                      <Maximize2 className="w-4 h-4 text-gray-600" />
+                      <Maximize2 className="w-4 h-4 text-gray-600 dark:text-gray-300" />
                     )}
                   </button>
                 )}
@@ -1016,11 +1017,11 @@ export default function POS({
           {/* Mobile Cart Button */}
           <button
             onClick={() => setMobileCartOpen(true)}
-            className="lg:hidden fixed bottom-4 right-4 z-30 bg-primary-500 text-white rounded-full p-6 border border-gray-200"
+            className="lg:hidden fixed bottom-4 right-4 z-30 bg-primary-500 dark:bg-primary-600 text-white rounded-full p-6 border border-gray-200 dark:border-gray-700 shadow-lg"
           >
             <ShoppingCart className="w-6 h-6" />
             {cart.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-danger-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">
+              <span className="absolute -top-2 -right-2 bg-danger-500 dark:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">
                 {cart.length}
               </span>
             )}
@@ -1031,7 +1032,7 @@ export default function POS({
             {/* Search and Filters */}
             <div className="mb-4 flex flex-col sm:flex-row gap-2 sm:gap-6">
               <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-5 h-5" />
                 <input
                   ref={searchInputRef}
                   type="text"
@@ -1120,11 +1121,11 @@ export default function POS({
                       }
                     }
                   }}
-                  className="w-full pl-10 pr-4 py-2 border rounded-lg text-sm sm:text-base"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg text-sm sm:text-base focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 dark:focus:border-primary-400"
                   autoFocus
                 />
                 {scannerEnabled && barcodeInput && (
-                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-gray-500">
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-gray-500 dark:text-gray-400">
                     {t('pos:search.scanning')} {barcodeInput}
                   </div>
                 )}
@@ -1132,7 +1133,7 @@ export default function POS({
               <button
                 onClick={() => setShowFilterPanel(!showFilterPanel)}
                 className={`p-2 border rounded-lg transition-colors relative ${
-                  showFilterPanel ? 'bg-blue-50 border-blue-300 text-accent-700' : 'hover:bg-gray-50'
+                  showFilterPanel ? 'bg-blue-50 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700 text-accent-700 dark:text-accent-300' : 'border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
                 }`}
                 title={t('pos:search.filterProducts')}
               >
@@ -1141,7 +1142,7 @@ export default function POS({
                   (selectedFilters.priceSort !== 'none' ? 1 : 0) +
                   (selectedFilters.thcSort !== 'none' ? 1 : 0) +
                   (selectedFilters.cbdSort !== 'none' ? 1 : 0)) > 0 && (
-                  <span className="absolute -top-1 -right-1 px-1.5 py-0.5 bg-accent-600 text-white text-xs rounded-full min-w-[18px] text-center">
+                  <span className="absolute -top-1 -right-1 px-1.5 py-0.5 bg-accent-600 dark:bg-accent-500 text-white text-xs rounded-full min-w-[18px] text-center">
                     {selectedFilters.subcategories.length + selectedFilters.plantTypes.length + selectedFilters.sizes.length +
                      (selectedFilters.priceSort !== 'none' ? 1 : 0) +
                      (selectedFilters.thcSort !== 'none' ? 1 : 0) +
@@ -1158,10 +1159,10 @@ export default function POS({
                 {/* Product Grid */}
                 {searchLoading ? (
                   <div className="flex items-center justify-center py-12">
-                    <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+                    <Loader2 className="w-8 h-8 animate-spin text-gray-400 dark:text-gray-500" />
                   </div>
                 ) : products.length === 0 ? (
-                  <div className="text-center py-12 text-gray-500">
+                  <div className="text-center py-12 text-gray-500 dark:text-gray-400">
                     <p>{t('pos:products.noProductsFound')}</p>
                   </div>
                 ) : (
@@ -1178,9 +1179,9 @@ export default function POS({
                           addToCart(product);
                         }
                       }}
-                      className={`bg-white p-6 rounded-lg  transition-all ${
+                      className={`bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700 transition-all ${
                         inStock
-                          ? 'hover:border border-gray-200 cursor-pointer hover:scale-[1.02]'
+                          ? 'hover:border-primary-500 dark:hover:border-primary-400 cursor-pointer hover:scale-[1.02] hover:shadow-lg'
                           : 'opacity-60 cursor-not-allowed'
                       }`}
                     >
@@ -1196,8 +1197,8 @@ export default function POS({
                             }}
                           />
                         ) : (
-                          <div className="w-full h-32 bg-gray-50 rounded flex items-center justify-center">
-                            <Package className="w-8 h-8 text-gray-400" />
+                          <div className="w-full h-32 bg-gray-50 dark:bg-gray-900 rounded flex items-center justify-center">
+                            <Package className="w-8 h-8 text-gray-400 dark:text-gray-500" />
                           </div>
                         )}
 
@@ -1236,30 +1237,30 @@ export default function POS({
                           </span>
                         )}
                       </div>
-                      <h3 className="font-semibold text-sm line-clamp-2">{product.name}</h3>
+                      <h3 className="font-semibold text-sm line-clamp-2 text-gray-900 dark:text-white">{product.name}</h3>
                       <div className="flex items-center justify-between mt-1">
                         <div>
-                          <p className="text-xs text-gray-500">{product.brand}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{product.brand}</p>
                           {(product.size || product.pack_size) && (
-                            <p className="text-sm font-medium text-gray-700 mt-1">
+                            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mt-1">
                               {product.size || product.pack_size}
                             </p>
                           )}
                         </div>
                       </div>
                       <div className="mt-2 flex items-center justify-between">
-                        <span className="text-lg font-bold">${product.price.toFixed(2)}</span>
+                        <span className="text-lg font-bold text-gray-900 dark:text-white">${product.price.toFixed(2)}</span>
                         <span className={`text-xs ${
-                          !inStock ? 'text-red-500 font-medium' :
-                          lowStock ? 'text-warning-600' :
-                          'text-gray-500'
+                          !inStock ? 'text-red-500 dark:text-red-400 font-medium' :
+                          lowStock ? 'text-warning-600 dark:text-yellow-500' :
+                          'text-gray-500 dark:text-gray-400'
                         }`}>
                           {!inStock ? t('pos:products.outOfStock') :
                            lowStock ? `${t('pos:products.low')} (${product.quantity_available})` :
                            `${t('pos:products.stock')} ${product.quantity_available}`}
                         </span>
                       </div>
-                      <div className="mt-2 text-xs text-gray-600">
+                      <div className="mt-2 text-xs text-gray-600 dark:text-gray-400">
                         THC: {product.thc_content?.toFixed(1) || 0}% | CBD: {product.cbd_content?.toFixed(1) || 0}%
                       </div>
                       {/* Batch tracking indicator */}
@@ -1273,7 +1274,7 @@ export default function POS({
                             setSelectedProductBatches(product);
                             setShowProductDetailsModal(true);
                           }}
-                          className="mt-2 flex items-center gap-1 text-xs text-accent-600 hover:text-accent-700"
+                          className="mt-2 flex items-center gap-1 text-xs text-accent-600 dark:text-accent-400 hover:text-accent-700 dark:hover:text-accent-300"
                         >
                           <Package className="w-3 h-3" />
                           <span>{product.batch_count} {product.batch_count > 1 ? t('pos:products.batches') : t('pos:products.batch')}</span>
@@ -1298,47 +1299,47 @@ export default function POS({
           </div>
 
           {/* Cart Sidebar - Fixed on mobile, static on desktop */}
-          <div className={`fixed inset-y-0 right-0 z-50 w-full sm:w-96 bg-white transform transition-transform duration-300 lg:static lg:translate-x-0 ${
+          <div className={`fixed inset-y-0 right-0 z-50 w-full sm:w-96 bg-white dark:bg-gray-800 transform transition-transform duration-300 lg:static lg:translate-x-0 ${
             mobileCartOpen ? 'translate-x-0' : 'translate-x-full'
-          } lg:border-l flex flex-col`}>
+          } lg:border-l border-gray-200 dark:border-gray-700 flex flex-col`}>
             {/* Customer Section */}
-            <div className="p-6 border-b">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="font-semibold">{t('pos:customer.label')}</h3>
+                <h3 className="font-semibold text-gray-900 dark:text-white">{t('pos:customer.label')}</h3>
                 <button
                   onClick={() => setShowCustomerModal(true)}
-                  className="text-accent-500 hover:text-accent-600"
+                  className="text-accent-500 dark:text-accent-400 hover:text-accent-600 dark:hover:text-accent-300"
                 >
                   {customer ? t('pos:customer.change') : t('pos:customer.select')}
                 </button>
               </div>
               {customer ? (
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <p className="font-medium">{customer.name}</p>
-                  <p className="text-sm text-gray-600">{customer.phone}</p>
+                <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                  <p className="font-medium text-gray-900 dark:text-white">{customer.name}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{customer.phone}</p>
                   {customer.loyalty_points && (
-                    <p className="text-sm text-primary-600">{t('pos:customer.points')} {customer.loyalty_points}</p>
+                    <p className="text-sm text-primary-600 dark:text-primary-400">{t('pos:customer.points')} {customer.loyalty_points}</p>
                   )}
                 </div>
               ) : (
                 <div className="flex gap-2">
                   <button
                     onClick={() => setShowCustomerModal(true)}
-                    className="flex-1 px-3 py-2 bg-blue-50 text-accent-600 rounded-lg hover:bg-blue-100"
+                    className="flex-1 px-3 py-2 bg-blue-50 dark:bg-blue-900/30 text-accent-600 dark:text-accent-400 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/50"
                   >
                     <Users className="w-4 h-4 inline mr-1" />
                     {t('pos:customer.returning')}
                   </button>
                   <button
                     onClick={() => setCustomer({ id: 'new', name: t('pos:customer.newCustomer'), is_verified: false })}
-                    className="flex-1 px-3 py-2 bg-primary-50 text-primary-600 rounded-lg hover:bg-primary-100"
+                    className="flex-1 px-3 py-2 bg-primary-50 dark:bg-green-900/30 text-primary-600 dark:text-primary-400 rounded-lg hover:bg-primary-100 dark:hover:bg-green-900/50"
                   >
                     <UserPlus className="w-4 h-4 inline mr-1" />
                     {t('pos:customer.new')}
                   </button>
                   <button
                     onClick={() => setCustomer({ id: 'anon', name: t('pos:customer.anonymous'), is_verified: true })}
-                    className="flex-1 px-3 py-2 bg-gray-50 text-gray-600 rounded-lg hover:bg-gray-50"
+                    className="flex-1 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600"
                   >
                     <User className="w-4 h-4 inline mr-1" />
                     {t('pos:customer.anonymous')}
@@ -1349,7 +1350,7 @@ export default function POS({
 
             {/* Weight Limit Warning */}
             {driedFlowerEquivalent > 0 && (
-              <div className={`px-4 py-3 ${driedFlowerEquivalent > 30 ? 'bg-danger-50 text-red-700' : 'bg-blue-50 text-accent-700'}`}>
+              <div className={`px-4 py-3 ${driedFlowerEquivalent > 30 ? 'bg-danger-50 dark:bg-red-900/30 text-red-700 dark:text-red-300' : 'bg-blue-50 dark:bg-blue-900/30 text-accent-700 dark:text-accent-300'}`}>
                 <div className="flex items-center gap-2">
                   <AlertCircle className="w-4 h-4" />
                   <span className="text-sm font-medium">
@@ -1365,27 +1366,27 @@ export default function POS({
             {/* Cart Items */}
             <div className="flex-1 overflow-y-auto p-6">
               {cart.length === 0 ? (
-                <div className="text-center text-gray-400 py-8">
+                <div className="text-center text-gray-400 dark:text-gray-500 py-8">
                   <ShoppingCart className="w-12 h-12 mx-auto mb-2" />
                   <p>{t('pos:cart.empty')}</p>
                 </div>
               ) : (
                 <div className="space-y-3">
                   {cart.map((item, index) => (
-                    <div key={`${item.product.id}_${item.batch?.batch_lot || 'no-batch'}_${index}`} className="bg-gray-50 p-4 rounded-lg">
+                    <div key={`${item.product.id}_${item.batch?.batch_lot || 'no-batch'}_${index}`} className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <h4 className="font-medium">{item.product.name}</h4>
-                          <p className="text-sm text-gray-600">
+                          <h4 className="font-medium text-gray-900 dark:text-white">{item.product.name}</h4>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
                             ${item.product.price.toFixed(2)} x {item.quantity}
                           </p>
                           {item.batch && (
-                            <p className="text-xs text-accent-600">
+                            <p className="text-xs text-accent-600 dark:text-accent-400">
                               {t('pos:cart.batch')} {item.batch.batch_lot}
                             </p>
                           )}
                           {item.discount && (
-                            <p className="text-sm text-primary-600">
+                            <p className="text-sm text-primary-600 dark:text-primary-400">
                               {t('pos:cart.discount')} {item.discount}%
                             </p>
                           )}
@@ -1398,7 +1399,7 @@ export default function POS({
                               removeFromCart(item.product.id);
                             }
                           }}
-                          className="text-red-500 hover:text-danger-600"
+                          className="text-red-500 dark:text-red-400 hover:text-danger-600 dark:hover:text-red-300"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -1412,11 +1413,11 @@ export default function POS({
                               updateQuantity(item.product.id, item.quantity - 1);
                             }
                           }}
-                          className="w-8 h-8 flex items-center justify-center bg-white rounded border hover:bg-gray-50"
+                          className="w-8 h-8 flex items-center justify-center bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700"
                         >
-                          <Minus className="w-4 h-4" />
+                          <Minus className="w-4 h-4 text-gray-700 dark:text-gray-300" />
                         </button>
-                        <span className="w-12 text-center">{item.quantity}</span>
+                        <span className="w-12 text-center text-gray-900 dark:text-white">{item.quantity}</span>
                         <button
                           onClick={() => {
                             if (item.batch) {
@@ -1425,16 +1426,16 @@ export default function POS({
                               updateQuantity(item.product.id, item.quantity + 1);
                             }
                           }}
-                          className="w-8 h-8 flex items-center justify-center bg-white rounded border hover:bg-gray-50"
+                          className="w-8 h-8 flex items-center justify-center bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700"
                         >
-                          <Plus className="w-4 h-4" />
+                          <Plus className="w-4 h-4 text-gray-700 dark:text-gray-300" />
                         </button>
                         <button
                           onClick={() => {
                             const discount = prompt('Enter discount percentage:');
                             if (discount) applyDiscount(item.product.id, parseFloat(discount));
                           }}
-                          className="ml-auto px-2 py-1 text-xs bg-warning-50 text-yellow-700 rounded hover:bg-warning-100"
+                          className="ml-auto px-2 py-1 text-xs bg-warning-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 rounded hover:bg-warning-100 dark:hover:bg-yellow-900/50"
                         >
                           <Tag className="w-3 h-3 inline mr-1" />
                           Discount
@@ -1447,16 +1448,16 @@ export default function POS({
             </div>
 
             {/* Totals */}
-            <div className="border-t p-6 space-y-2">
-              <div className="flex justify-between text-sm">
+            <div className="border-t border-gray-200 dark:border-gray-700 p-6 space-y-2">
+              <div className="flex justify-between text-sm text-gray-700 dark:text-gray-300">
                 <span>{t('pos:totals.subtotal')}</span>
                 <span>${subtotal.toFixed(2)}</span>
               </div>
 
               {/* Discount Section */}
-              <div className="border-t pt-2">
+              <div className="border-t border-gray-200 dark:border-gray-700 pt-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm">{t('pos:totals.discount')}</span>
+                  <span className="text-sm text-gray-700 dark:text-gray-300">{t('pos:totals.discount')}</span>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => {
@@ -1467,7 +1468,7 @@ export default function POS({
                         }
                       }}
                       className={`px-3 py-1 text-xs rounded ${
-                        discount.type === 'percentage' ? 'bg-primary-600 text-white' : 'bg-gray-50 text-gray-600 hover:bg-gray-50'
+                        discount.type === 'percentage' ? 'bg-primary-600 dark:bg-primary-700 text-white' : 'bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
                       }`}
                     >
                       %
@@ -1481,7 +1482,7 @@ export default function POS({
                         }
                       }}
                       className={`px-3 py-1 text-xs rounded ${
-                        discount.type === 'fixed' ? 'bg-primary-600 text-white' : 'bg-gray-50 text-gray-600 hover:bg-gray-50'
+                        discount.type === 'fixed' ? 'bg-primary-600 dark:bg-primary-700 text-white' : 'bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
                       }`}
                     >
                       $
@@ -1496,7 +1497,7 @@ export default function POS({
                             e.preventDefault();
                           }
                         }}
-                        className="w-20 px-2 py-1 border rounded text-sm text-right"
+                        className="w-20 px-2 py-1 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded text-sm text-right"
                         placeholder={discount.type === 'percentage' ? '0%' : '$0'}
                         min="0"
                         max={discount.type === 'percentage' ? '100' : undefined}
@@ -1505,7 +1506,7 @@ export default function POS({
                   </div>
                 </div>
                 {discountAmount > 0 && (
-                  <div className="flex justify-between text-sm text-primary-600 mt-1">
+                  <div className="flex justify-between text-sm text-primary-600 dark:text-primary-400 mt-1">
                     <span>{t('pos:totals.discountApplied')}</span>
                     <span>-${discountAmount.toFixed(2)}</span>
                   </div>
@@ -1513,35 +1514,35 @@ export default function POS({
               </div>
 
               {discountAmount > 0 && (
-                <div className="flex justify-between text-sm font-medium text-primary-600">
+                <div className="flex justify-between text-sm font-medium text-primary-600 dark:text-primary-400">
                   <span>{t('pos:totals.afterDiscount')}</span>
                   <span>${discountedSubtotal.toFixed(2)}</span>
                 </div>
               )}
 
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between text-sm text-gray-700 dark:text-gray-300">
                 <span>{t('pos:totals.tax')}</span>
                 <span>${tax.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between text-lg font-bold border-t pt-2">
+              <div className="flex justify-between text-lg font-bold border-t border-gray-200 dark:border-gray-700 pt-2 text-gray-900 dark:text-white">
                 <span>{t('pos:totals.total')}</span>
                 <span>${total.toFixed(2)}</span>
               </div>
             </div>
 
             {/* Action Buttons */}
-            <div className="p-6 border-t space-y-2">
+            <div className="p-6 border-t border-gray-200 dark:border-gray-700 space-y-2">
               <div className="grid grid-cols-2 gap-2">
                 <button
                   onClick={parkSale}
-                  className="px-4 py-2 bg-warning-500 text-white rounded-lg hover:bg-warning-600"
+                  className="px-4 py-2 bg-warning-500 dark:bg-yellow-600 text-white rounded-lg hover:bg-warning-600 dark:hover:bg-yellow-500"
                 >
                   <PauseCircle className="w-4 h-4 inline mr-1" />
                   {t('pos:actions.parkSale')}
                 </button>
                 <button
                   onClick={() => { setCart([]); setCustomer(null); }}
-                  className="px-4 py-2 bg-danger-500 text-white rounded-lg hover:bg-danger-600"
+                  className="px-4 py-2 bg-danger-500 dark:bg-red-600 text-white rounded-lg hover:bg-danger-600 dark:hover:bg-red-500"
                 >
                   <X className="w-4 h-4 inline mr-1" />
                   {t('pos:actions.clear')}
@@ -1550,7 +1551,7 @@ export default function POS({
               <button
                 onClick={() => setShowPaymentModal(true)}
                 disabled={cart.length === 0 || !customer || driedFlowerEquivalent > 30}
-                className="w-full px-4 py-3 bg-primary-500 text-white rounded-lg hover:bg-primary-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                className="w-full px-4 py-3 bg-primary-500 dark:bg-primary-600 text-white rounded-lg hover:bg-primary-600 dark:hover:bg-primary-500 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed"
               >
                 <CreditCard className="w-4 h-4 inline mr-2" />
                 {t('pos:actions.processPayment')}
@@ -1563,31 +1564,31 @@ export default function POS({
       {/* Parked Sales Tab */}
       {activeTab === 'parked' && (
         <div className="flex-1 p-4 sm:p-6 overflow-y-auto">
-          <h2 className="text-lg sm:text-xl font-bold mb-4">{t('pos:titles.parkedSales')}</h2>
+          <h2 className="text-lg sm:text-xl font-bold mb-4 text-gray-900 dark:text-white">{t('pos:titles.parkedSales')}</h2>
           {parkedSales.length === 0 ? (
-            <div className="text-center text-gray-400 py-12">
+            <div className="text-center text-gray-400 dark:text-gray-500 py-12">
               <PauseCircle className="w-12 h-12 mx-auto mb-2" />
               <p>{t('pos:parked.noParkedSales')}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {parkedSales.map(sale => (
-                <div key={sale.id} className="bg-white p-6 rounded-lg ">
+                <div key={sale.id} className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
                   <div className="flex justify-between items-start mb-2">
                     <div>
-                      <p className="font-semibold">#{sale.id.slice(-6)}</p>
-                      <p className="text-sm text-gray-500">
+                      <p className="font-semibold text-gray-900 dark:text-white">#{sale.id.slice(-6)}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
                         {new Date(sale.timestamp).toLocaleString()}
                       </p>
                     </div>
-                    <span className="text-lg font-bold">${sale.total.toFixed(2)}</span>
+                    <span className="text-lg font-bold text-gray-900 dark:text-white">${sale.total.toFixed(2)}</span>
                   </div>
-                  <p className="text-sm text-gray-600 mb-3">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
                     {sale.items.length} {t('pos:parked.items')}
                   </p>
                   <button
                     onClick={() => resumeParkedSale(sale)}
-                    className="w-full px-3 py-2 bg-accent-500 text-white rounded hover:bg-accent-600"
+                    className="w-full px-3 py-2 bg-accent-500 dark:bg-accent-600 text-white rounded hover:bg-accent-600 dark:hover:bg-accent-500"
                   >
                     {t('pos:actions.resumeSale')}
                   </button>
@@ -1606,20 +1607,20 @@ export default function POS({
       {/* Settings Tab */}
       {activeTab === 'settings' && (
         <div className="flex-1 p-4 sm:p-6 overflow-y-auto">
-          <h2 className="text-xl font-bold mb-6">{t('pos:titles.posSettings')}</h2>
+          <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white">{t('pos:titles.posSettings')}</h2>
 
           <div className="space-y-6">
             {/* Hardware Configuration */}
-            <div className="bg-white p-6 rounded-lg ">
-              <h3 className="text-lg font-semibold mb-4">{t('pos:titles.hardwareConfiguration')}</h3>
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
+              <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">{t('pos:titles.hardwareConfiguration')}</h3>
 
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <CreditCard className="w-5 h-5 text-gray-400" />
+                    <CreditCard className="w-5 h-5 text-gray-400 dark:text-gray-500" />
                     <div>
-                      <p className="font-medium">{t('pos:hardware.paymentTerminal')}</p>
-                      <p className="text-sm text-gray-500">{t('pos:hardware.connectCardReader')}</p>
+                      <p className="font-medium text-gray-900 dark:text-white">{t('pos:hardware.paymentTerminal')}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{t('pos:hardware.connectCardReader')}</p>
                     </div>
                   </div>
                   <label className="flex items-center gap-2">
@@ -1630,18 +1631,18 @@ export default function POS({
                         ...hardwareSettings,
                         terminal: { ...hardwareSettings.terminal, enabled: e.target.checked }
                       })}
-                      className="rounded"
+                      className="rounded text-accent-600 dark:text-accent-500"
                     />
-                    <span className="text-sm">{t('pos:hardware.enabled')}</span>
+                    <span className="text-sm text-gray-700 dark:text-gray-300">{t('pos:hardware.enabled')}</span>
                   </label>
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <Printer className="w-5 h-5 text-gray-400" />
+                    <Printer className="w-5 h-5 text-gray-400 dark:text-gray-500" />
                     <div>
-                      <p className="font-medium">{t('pos:hardware.receiptPrinter')}</p>
-                      <p className="text-sm text-gray-500">{t('pos:hardware.printReceipts')}</p>
+                      <p className="font-medium text-gray-900 dark:text-white">{t('pos:hardware.receiptPrinter')}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{t('pos:hardware.printReceipts')}</p>
                     </div>
                   </div>
                   <label className="flex items-center gap-2">
@@ -1652,26 +1653,26 @@ export default function POS({
                         ...hardwareSettings,
                         printer: { ...hardwareSettings.printer, enabled: e.target.checked }
                       })}
-                      className="rounded"
+                      className="rounded text-accent-600 dark:text-accent-500"
                     />
-                    <span className="text-sm">{t('pos:hardware.enabled')}</span>
+                    <span className="text-sm text-gray-700 dark:text-gray-300">{t('pos:hardware.enabled')}</span>
                   </label>
                 </div>
 
                 {/* Barcode Scanner Section */}
-                <div className="border-t pt-4">
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-4">
-                      <Scan className="w-5 h-5 text-gray-400" />
+                      <Scan className="w-5 h-5 text-gray-400 dark:text-gray-500" />
                       <div>
-                        <p className="font-medium">{t('pos:scanner.barcodeScanners')}</p>
-                        <p className="text-sm text-gray-500">{t('pos:scanner.manageConnected')}</p>
+                        <p className="font-medium text-gray-900 dark:text-white">{t('pos:scanner.barcodeScanners')}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{t('pos:scanner.manageConnected')}</p>
                       </div>
                     </div>
                     <button
                       onClick={detectScanners}
                       disabled={detectingHardware}
-                      className="px-3 py-1 bg-blue-50 text-accent-600 rounded-lg hover:bg-blue-100 flex items-center gap-2 text-sm"
+                      className="px-3 py-1 bg-blue-50 dark:bg-blue-900/30 text-accent-600 dark:text-accent-400 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/50 flex items-center gap-2 text-sm"
                     >
                       {detectingHardware ? (
                         <Loader2 className="w-4 h-4 animate-spin" />
@@ -1681,38 +1682,38 @@ export default function POS({
                       {t('pos:actions.detectScanners')}
                     </button>
                   </div>
-                  
+
                   {/* Scanner List */}
                   {detectedScanners.length > 0 ? (
                     <div className="space-y-3">
                       {detectedScanners.map((scanner) => (
-                        <div key={scanner.id} className="p-4 bg-gray-50 rounded-lg">
+                        <div key={scanner.id} className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
                           <div className="flex items-start justify-between">
                             <div className="flex items-start gap-4">
                               {/* Connection Type Icon */}
-                              {scanner.type === 'USB' && <Usb className="w-5 h-5 text-gray-500 mt-1" />}
-                              {scanner.type === 'Bluetooth' && <Bluetooth className="w-5 h-5 text-accent-500 mt-1" />}
-                              {scanner.type === 'Network' && <Network className="w-5 h-5 text-primary-500 mt-1" />}
-                              
+                              {scanner.type === 'USB' && <Usb className="w-5 h-5 text-gray-500 dark:text-gray-400 mt-1" />}
+                              {scanner.type === 'Bluetooth' && <Bluetooth className="w-5 h-5 text-accent-500 dark:text-accent-400 mt-1" />}
+                              {scanner.type === 'Network' && <Network className="w-5 h-5 text-primary-500 dark:text-primary-400 mt-1" />}
+
                               <div className="flex-1">
-                                <p className="font-medium text-sm">{scanner.name}</p>
-                                <p className="text-xs text-gray-500">
+                                <p className="font-medium text-sm text-gray-900 dark:text-white">{scanner.name}</p>
+                                <p className="text-xs text-gray-500 dark:text-gray-400">
                                   {scanner.manufacturer}
                                   {scanner.vendor_id && ` (${scanner.vendor_id}:${scanner.product_id})`}
                                 </p>
                                 <div className="flex items-center gap-2 mt-2">
                                   <span className={`text-xs px-2 py-1 rounded ${
-                                    scanner.status === 'connected' || scanner.status === 'paired' ? 
-                                    'bg-primary-100 text-primary-700' : 
-                                    'bg-gray-50 text-gray-600'
+                                    scanner.status === 'connected' || scanner.status === 'paired' ?
+                                    'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300' :
+                                    'bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
                                   }`}>
                                     {scanner.status}
                                   </span>
                                   {scanner.confidence && (
                                     <span className={`text-xs px-2 py-1 rounded ${
-                                      scanner.confidence === 'high' ? 'bg-blue-100 text-accent-700' :
-                                      scanner.confidence === 'medium' ? 'bg-warning-100 text-yellow-700' :
-                                      'bg-gray-50 text-gray-600'
+                                      scanner.confidence === 'high' ? 'bg-blue-100 dark:bg-blue-900/30 text-accent-700 dark:text-accent-300' :
+                                      scanner.confidence === 'medium' ? 'bg-warning-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400' :
+                                      'bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
                                     }`}>
                                       {scanner.confidence === 'high' ? t('pos:labels.confidence.high') :
                                        scanner.confidence === 'medium' ? t('pos:labels.confidence.medium') :
@@ -1720,19 +1721,19 @@ export default function POS({
                                     </span>
                                   )}
                                   {scanner.capabilities && (
-                                    <span className="text-xs text-gray-500">
+                                    <span className="text-xs text-gray-500 dark:text-gray-400">
                                       {scanner.capabilities.join(', ')}
                                     </span>
                                   )}
                                 </div>
                               </div>
                             </div>
-                            
+
                             <div className="flex items-center gap-2">
                               <button
                                 onClick={() => testScanner(scanner.id)}
                                 disabled={testingScanner === scanner.id}
-                                className="px-2 py-1 text-xs bg-blue-50 text-accent-600 rounded hover:bg-blue-100"
+                                className="px-2 py-1 text-xs bg-blue-50 dark:bg-blue-900/30 text-accent-600 dark:text-accent-400 rounded hover:bg-blue-100 dark:hover:bg-blue-900/50"
                               >
                                 {testingScanner === scanner.id ? (
                                   <Loader2 className="w-3 h-3 animate-spin" />
@@ -1753,9 +1754,9 @@ export default function POS({
                                       setScannerEnabled(false);
                                     }
                                   }}
-                                  className="rounded text-sm"
+                                  className="rounded text-sm text-accent-600 dark:text-accent-500"
                                 />
-                                <span className="text-xs">{t('pos:actions.active')}</span>
+                                <span className="text-xs text-gray-700 dark:text-gray-300">{t('pos:actions.active')}</span>
                               </label>
                             </div>
                           </div>
@@ -1763,8 +1764,8 @@ export default function POS({
                       ))}
                     </div>
                   ) : (
-                    <div className="text-center py-4 text-sm text-gray-500">
-                      <Scan className="w-8 h-8 mx-auto mb-2 text-gray-300" />
+                    <div className="text-center py-4 text-sm text-gray-500 dark:text-gray-400">
+                      <Scan className="w-8 h-8 mx-auto mb-2 text-gray-300 dark:text-gray-600" />
                       <p>{t('pos:scanner.noScannersDetected')}</p>
                       <p className="text-xs mt-1">{t('pos:scanner.connectScanner')}</p>
                     </div>
@@ -1773,10 +1774,10 @@ export default function POS({
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <DollarSign className="w-5 h-5 text-gray-400" />
+                    <DollarSign className="w-5 h-5 text-gray-400 dark:text-gray-500" />
                     <div>
-                      <p className="font-medium">{t('pos:hardware.cashDrawer')}</p>
-                      <p className="text-sm text-gray-500">{t('pos:hardware.manageCash')}</p>
+                      <p className="font-medium text-gray-900 dark:text-white">{t('pos:hardware.cashDrawer')}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{t('pos:hardware.manageCash')}</p>
                     </div>
                   </div>
                   <label className="flex items-center gap-2">
@@ -1787,31 +1788,31 @@ export default function POS({
                         ...hardwareSettings,
                         cash_drawer: { ...hardwareSettings.cash_drawer, enabled: e.target.checked }
                       })}
-                      className="rounded"
+                      className="rounded text-accent-600 dark:text-accent-500"
                     />
-                    <span className="text-sm">{t('pos:hardware.enabled')}</span>
+                    <span className="text-sm text-gray-700 dark:text-gray-300">{t('pos:hardware.enabled')}</span>
                   </label>
                 </div>
               </div>
             </div>
 
             {/* Cash Management */}
-            <div className="bg-white p-6 rounded-lg ">
-              <h3 className="text-lg font-semibold mb-4">{t('pos:titles.cashManagement')}</h3>
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
+              <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">{t('pos:titles.cashManagement')}</h3>
               <div className="grid grid-cols-2 gap-6">
-                <button className="px-4 py-2 bg-blue-50 text-accent-600 rounded-lg hover:bg-blue-100">
+                <button className="px-4 py-2 bg-blue-50 dark:bg-blue-900/30 text-accent-600 dark:text-accent-400 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/50">
                   <Calculator className="w-4 h-4 inline mr-2" />
                   {t('pos:actions.openRegister')}
                 </button>
-                <button className="px-4 py-2 bg-blue-50 text-accent-600 rounded-lg hover:bg-blue-100">
+                <button className="px-4 py-2 bg-blue-50 dark:bg-blue-900/30 text-accent-600 dark:text-accent-400 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/50">
                   <DollarSign className="w-4 h-4 inline mr-2" />
                   {t('pos:actions.cashCount')}
                 </button>
-                <button className="px-4 py-2 bg-blue-50 text-accent-600 rounded-lg hover:bg-blue-100">
+                <button className="px-4 py-2 bg-blue-50 dark:bg-blue-900/30 text-accent-600 dark:text-accent-400 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/50">
                   <Clock className="w-4 h-4 inline mr-2" />
                   {t('pos:actions.endOfDay')}
                 </button>
-                <button className="px-4 py-2 bg-blue-50 text-accent-600 rounded-lg hover:bg-blue-100">
+                <button className="px-4 py-2 bg-blue-50 dark:bg-blue-900/30 text-accent-600 dark:text-accent-400 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/50">
                   <Printer className="w-4 h-4 inline mr-2" />
                   {t('pos:actions.printReport')}
                 </button>
@@ -1819,24 +1820,24 @@ export default function POS({
             </div>
 
             {/* Discount Settings */}
-            <div className="bg-white p-6 rounded-lg ">
-              <h3 className="text-lg font-semibold mb-4">{t('pos:titles.discountsPromotions')}</h3>
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
+              <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">{t('pos:titles.discountsPromotions')}</h3>
               <div className="space-y-3">
-                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
                   <div>
-                    <p className="font-medium">{t('pos:promotions.seniorDiscount')}</p>
-                    <p className="text-sm text-gray-500">{t('pos:promotions.seniorDescription')}</p>
+                    <p className="font-medium text-gray-900 dark:text-white">{t('pos:promotions.seniorDiscount')}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{t('pos:promotions.seniorDescription')}</p>
                   </div>
-                  <span className="px-2 py-1 bg-primary-100 text-primary-700 rounded text-sm">{t('pos:actions.active')}</span>
+                  <span className="px-2 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded text-sm">{t('pos:actions.active')}</span>
                 </div>
-                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
                   <div>
-                    <p className="font-medium">{t('pos:promotions.happyHour')}</p>
-                    <p className="text-sm text-gray-500">{t('pos:promotions.happyHourDescription')}</p>
+                    <p className="font-medium text-gray-900 dark:text-white">{t('pos:promotions.happyHour')}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{t('pos:promotions.happyHourDescription')}</p>
                   </div>
-                  <span className="px-2 py-1 bg-primary-100 text-primary-700 rounded text-sm">{t('pos:actions.active')}</span>
+                  <span className="px-2 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded text-sm">{t('pos:actions.active')}</span>
                 </div>
-                <button className="w-full px-4 py-2 border-2 border-dashed border-gray-200 text-gray-500 rounded-lg hover:border-gray-300">
+                <button className="w-full px-4 py-2 border-2 border-dashed border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 rounded-lg hover:border-gray-300 dark:hover:border-gray-500">
                   <Plus className="w-4 h-4 inline mr-2" />
                   {t('pos:actions.addPromotion')}
                 </button>
@@ -1867,7 +1868,8 @@ export default function POS({
                   product: item.product,
                   quantity: item.quantity,
                   discount: item.discount,
-                  promotion: item.promotion
+                  promotion: item.promotion,
+                  batch: item.batch  // Include batch information for tracking
                 })),
                 subtotal,
                 discounts: cart.reduce((sum, item) => {

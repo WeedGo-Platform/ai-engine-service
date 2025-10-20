@@ -323,6 +323,7 @@ const AllSettingsTabbed: React.FC<AllSettingsTabbedProps> = ({
                 <OnlinePaymentSettings
                   storeId={storeId}
                   initialSettings={settings.onlinePayment || {}}
+                  store={store}
                   onSave={async (onlineSettings) => {
                     await handleSave('onlinePayment', onlineSettings);
                     setShowOnlinePaymentSettings(false);

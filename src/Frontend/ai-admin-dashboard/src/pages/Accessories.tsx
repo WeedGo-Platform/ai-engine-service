@@ -183,15 +183,15 @@ const Accessories: React.FC = () => {
   // Show message if no store is selected
   if (!currentStore) {
     return (
-      <div className="h-full flex items-center justify-center bg-gray-50">
+      <div className="h-full flex items-center justify-center bg-gray-50 dark:bg-gray-900">
         <div className="text-center">
           <div className="mb-4">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-full">
-              <Package className="w-8 h-8 text-primary-600" />
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 dark:bg-primary-900/30 rounded-full">
+              <Package className="w-8 h-8 text-primary-600 dark:text-primary-400" />
             </div>
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No Store Selected</h3>
-          <p className="text-gray-500">Please select a store to manage accessories inventory</p>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">No Store Selected</h3>
+          <p className="text-gray-500 dark:text-gray-400">Please select a store to manage accessories inventory</p>
         </div>
       </div>
     );
@@ -202,27 +202,27 @@ const Accessories: React.FC = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Accessories & Paraphernalia</h1>
-          <p className="text-gray-500">Manage non-cannabis inventory for {currentStore.name}</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Accessories & Paraphernalia</h1>
+          <p className="text-gray-500 dark:text-gray-400">Manage non-cannabis inventory for {currentStore.name}</p>
         </div>
         <div className="flex gap-4">
           <button
             onClick={exportInventory}
-            className="px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center gap-2"
+            className="px-4 py-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 flex items-center gap-2 text-gray-900 dark:text-white"
           >
             <Download className="w-4 h-4" />
             Export
           </button>
           <button
             onClick={() => setShowBarcodeIntake(true)}
-            className="px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 flex items-center gap-2"
+            className="px-4 py-2 bg-accent-600 dark:bg-accent-700 text-white rounded-lg hover:bg-accent-700 dark:hover:bg-accent-600 flex items-center gap-2"
           >
             <Scan className="w-4 h-4" />
             Scan Barcode
           </button>
           <button
             onClick={() => setShowQuickIntake(true)}
-            className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 flex items-center gap-2"
+            className="px-4 py-2 bg-primary-600 dark:bg-primary-700 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
             Quick Add
@@ -232,60 +232,60 @@ const Accessories: React.FC = () => {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white p-6 rounded-lg ">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500">Total Items</p>
-              <p className="text-2xl font-bold">{inventoryStats.total_items}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Total Items</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">{inventoryStats.total_items}</p>
             </div>
-            <Package className="w-8 h-8 text-accent-500" />
+            <Package className="w-8 h-8 text-accent-500 dark:text-accent-400" />
           </div>
         </div>
-        
-        <div className="bg-white p-6 rounded-lg ">
+
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500">Total Units</p>
-              <p className="text-2xl font-bold">{inventoryStats.total_units.toLocaleString()}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Total Units</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">{inventoryStats.total_units.toLocaleString()}</p>
             </div>
-            <Box className="w-8 h-8 text-primary-500" />
+            <Box className="w-8 h-8 text-primary-500 dark:text-primary-400" />
           </div>
         </div>
-        
-        <div className="bg-white p-6 rounded-lg ">
+
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500">Inventory Value</p>
-              <p className="text-2xl font-bold">${inventoryStats.total_value.toFixed(2)}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Inventory Value</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">${inventoryStats.total_value.toFixed(2)}</p>
             </div>
-            <DollarSign className="w-8 h-8 text-primary-600" />
+            <DollarSign className="w-8 h-8 text-primary-600 dark:text-primary-400" />
           </div>
         </div>
-        
-        <div className="bg-white p-6 rounded-lg ">
+
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500">Low Stock</p>
-              <p className="text-2xl font-bold text-danger-600">{inventoryStats.low_stock_count}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Low Stock</p>
+              <p className="text-2xl font-bold text-danger-600 dark:text-red-400">{inventoryStats.low_stock_count}</p>
             </div>
-            <AlertTriangle className="w-8 h-8 text-red-500" />
+            <AlertTriangle className="w-8 h-8 text-red-500 dark:text-red-400" />
           </div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white p-6 rounded-lg ">
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
         <div className="flex flex-wrap gap-6 items-center">
           {/* Search */}
           <div className="flex-1 min-w-[300px]">
             <div className="relative">
-              <Search className="absolute left-3 top-4 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 top-4 w-4 h-4 text-gray-400 dark:text-gray-500" />
               <input
                 type="text"
                 placeholder="Search by name, SKU, barcode..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-primary-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
               />
             </div>
           </div>
@@ -294,7 +294,7 @@ const Accessories: React.FC = () => {
           <select
             value={selectedCategory || ''}
             onChange={(e) => setSelectedCategory(e.target.value ? Number(e.target.value) : null)}
-            className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-primary-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           >
             <option value="">All Categories</option>
             {categories.map(cat => (
@@ -310,15 +310,15 @@ const Accessories: React.FC = () => {
               type="checkbox"
               checked={showLowStockOnly}
               onChange={(e) => setShowLowStockOnly(e.target.checked)}
-              className="rounded text-accent-600"
+              className="rounded text-accent-600 dark:text-accent-400"
             />
-            <span className="text-sm">Low Stock Only</span>
+            <span className="text-sm text-gray-900 dark:text-white">Low Stock Only</span>
           </label>
 
           {/* Refresh */}
           <button
             onClick={fetchAccessories}
-            className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+            className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg"
           >
             <RefreshCw className="w-4 h-4" />
           </button>
@@ -326,35 +326,35 @@ const Accessories: React.FC = () => {
       </div>
 
       {/* Inventory Table */}
-      <div className="bg-white rounded-lg  overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center h-64">
-            <Loader2 className="w-8 h-8 animate-spin text-accent-600" />
+            <Loader2 className="w-8 h-8 animate-spin text-accent-600 dark:text-accent-400" />
           </div>
         ) : filteredAccessories.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-64 text-gray-500">
+          <div className="flex flex-col items-center justify-center h-64 text-gray-500 dark:text-gray-400">
             <Package className="w-12 h-12 mb-4" />
             <p className="text-lg">No accessories found</p>
             <p className="text-sm">Try adjusting your filters or add new items</p>
           </div>
         ) : (
           <table className="w-full">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">SKU/Barcode</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
-                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Stock</th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Cost</th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Retail</th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Value</th>
-                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Location</th>
-                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Actions</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Product</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">SKU/Barcode</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Category</th>
+                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Stock</th>
+                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Cost</th>
+                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Retail</th>
+                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Value</th>
+                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Location</th>
+                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
               {filteredAccessories.map((item) => (
-                <tr key={item.id} className="hover:bg-gray-50">
+                <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-4">
                       {item.image_url ? (
@@ -364,58 +364,58 @@ const Accessories: React.FC = () => {
                           className="w-10 h-10 rounded object-cover"
                         />
                       ) : (
-                        <div className="w-10 h-10 bg-gray-100 rounded flex items-center justify-center">
-                          <Package className="w-5 h-5 text-gray-400" />
+                        <div className="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center">
+                          <Package className="w-5 h-5 text-gray-400 dark:text-gray-500" />
                         </div>
                       )}
                       <div>
-                        <p className="font-medium text-sm">{item.name}</p>
+                        <p className="font-medium text-sm text-gray-900 dark:text-white">{item.name}</p>
                         {item.brand && (
-                          <p className="text-xs text-gray-500">{item.brand}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{item.brand}</p>
                         )}
                       </div>
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    <p className="text-sm font-mono">{item.sku}</p>
+                    <p className="text-sm font-mono text-gray-900 dark:text-white">{item.sku}</p>
                     {item.barcode && (
-                      <p className="text-xs text-gray-500">{item.barcode}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{item.barcode}</p>
                     )}
                   </td>
                   <td className="px-4 py-3">
-                    <span className="text-sm">{item.category || 'Uncategorized'}</span>
+                    <span className="text-sm text-gray-900 dark:text-white">{item.category || 'Uncategorized'}</span>
                   </td>
                   <td className="px-4 py-3">
                     <div className="text-center">
                       <p className={`text-sm font-medium ${
-                        item.quantity <= item.min_stock ? 'text-danger-600' : 'text-gray-900'
+                        item.quantity <= item.min_stock ? 'text-danger-600 dark:text-red-400' : 'text-gray-900 dark:text-white'
                       }`}>
                         {item.quantity}
                       </p>
                       {item.quantity <= item.min_stock && (
-                        <p className="text-xs text-red-500">Low Stock</p>
+                        <p className="text-xs text-red-500 dark:text-red-400">Low Stock</p>
                       )}
                       {item.reserved > 0 && (
-                        <p className="text-xs text-gray-500">{item.reserved} reserved</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">{item.reserved} reserved</p>
                       )}
                     </div>
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <p className="text-sm">${item.cost_price.toFixed(2)}</p>
+                    <p className="text-sm text-gray-900 dark:text-white">${item.cost_price.toFixed(2)}</p>
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <p className="text-sm font-medium">${item.retail_price.toFixed(2)}</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">${item.retail_price.toFixed(2)}</p>
                     {item.sale_price && (
-                      <p className="text-xs text-primary-600">${item.sale_price.toFixed(2)}</p>
+                      <p className="text-xs text-primary-600 dark:text-primary-400">${item.sale_price.toFixed(2)}</p>
                     )}
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <p className="text-sm font-medium">
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">
                       ${(item.quantity * item.retail_price).toFixed(2)}
                     </p>
                   </td>
                   <td className="px-4 py-3 text-center">
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
                       {item.location || '-'}
                     </span>
                   </td>
@@ -426,14 +426,14 @@ const Accessories: React.FC = () => {
                           setSelectedAccessory(item);
                           setShowAdjustModal(true);
                         }}
-                        className="p-1 text-gray-600 hover:bg-gray-50 rounded"
+                        className="p-1 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded"
                         title="Adjust Stock"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => setSelectedAccessory(item)}
-                        className="p-1 text-gray-600 hover:bg-gray-50 rounded"
+                        className="p-1 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded"
                         title="View Details"
                       >
                         <Eye className="w-4 h-4" />

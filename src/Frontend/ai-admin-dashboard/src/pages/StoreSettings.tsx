@@ -51,27 +51,40 @@ const StoreSettings: React.FC = () => {
       setLoading(true);
       let storeData: Store | null = null;
 
+      // Guard: Don't attempt to fetch if storeCode is undefined/empty
+      if (!storeCode || storeCode === 'undefined') {
+        console.warn('StoreSettings: Invalid or missing storeCode in URL:', storeCode);
+
+        // Try to use currentStore from context as fallback
+        if (currentStore?.store_code) {
+          console.log('StoreSettings: Using store_code from context:', currentStore.store_code);
+          // Redirect to proper URL with store code
+          navigate(`/dashboard/stores/${currentStore.store_code}/settings`, { replace: true });
+          return;
+        }
+
+        setError('No store selected. Please select a store first.');
+        setLoading(false);
+        return;
+      }
+
       // Use store code from URL to fetch directly from API
       // This is simpler and more reliable than depending on context being populated
-      if (storeCode) {
-        try {
-          storeData = await storeService.getStoreByCode(storeCode);
+      try {
+        storeData = await storeService.getStoreByCode(storeCode);
 
-          // Update context with the found store for consistency
-          if (storeData && storeData.id !== currentStore?.id) {
-            await selectStore(storeData.id);
-          }
-        } catch (err: any) {
-          console.error('Error fetching store by code:', err);
-          // Check if it's a 404 or other error
-          if (err.response?.status === 404) {
-            setError(`Store with code "${storeCode}" not found`);
-          } else {
-            setError('Failed to load store data. Please try again.');
-          }
+        // Update context with the found store for consistency
+        if (storeData && storeData.id !== currentStore?.id) {
+          await selectStore(storeData.id);
         }
-      } else {
-        setError('No store code provided in URL');
+      } catch (err: any) {
+        console.error('Error fetching store by code:', err);
+        // Check if it's a 404 or other error
+        if (err.response?.status === 404) {
+          setError(`Store with code "${storeCode}" not found`);
+        } else {
+          setError('Failed to load store data. Please try again.');
+        }
       }
 
       if (storeData) {
@@ -122,24 +135,24 @@ const StoreSettings: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      <div className="flex items-center justify-center h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 dark:border-primary-400"></div>
       </div>
     );
   }
 
   if (!store) {
     return (
-      <div className="p-6">
-        <div className="bg-danger-50 border border-red-200 rounded-lg p-6">
-          <p className="text-red-700">Store not found</p>
+      <div className="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
+        <div className="bg-danger-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-6">
+          <p className="text-red-700 dark:text-red-300">Store not found</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
       {/* Header */}
       <div className="mb-6">
         <button
@@ -154,47 +167,47 @@ const StoreSettings: React.FC = () => {
               navigate(-1); // Go back if we don't have tenant info
             }
           }}
-          className="mb-4 flex items-center gap-2 text-gray-600 hover:text-gray-900"
+          className="mb-4 flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Stores
         </button>
-        
+
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold flex items-center gap-4">
+            <h1 className="text-3xl font-bold flex items-center gap-4 text-gray-900 dark:text-white">
               <StoreIcon className="w-8 h-8" />
               {store.name} Settings
             </h1>
-            <p className="text-gray-600 mt-1">Manage store configuration and POS settings</p>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">Manage store configuration and POS settings</p>
           </div>
         </div>
       </div>
 
       {/* Alerts */}
       {success && (
-        <div className="mb-4 p-6 bg-primary-50 border border-green-200 rounded-lg flex items-center gap-2">
-          <AlertCircle className="w-5 h-5 text-primary-500" />
-          <span className="text-primary-700">{success}</span>
+        <div className="mb-4 p-6 bg-primary-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg flex items-center gap-2">
+          <AlertCircle className="w-5 h-5 text-primary-500 dark:text-green-400" />
+          <span className="text-primary-700 dark:text-green-300">{success}</span>
         </div>
       )}
 
       {error && (
-        <div className="mb-4 p-6 bg-danger-50 border border-red-200 rounded-lg flex items-center gap-2">
-          <AlertCircle className="w-5 h-5 text-red-500" />
-          <span className="text-red-700">{error}</span>
+        <div className="mb-4 p-6 bg-danger-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg flex items-center gap-2">
+          <AlertCircle className="w-5 h-5 text-red-500 dark:text-red-400" />
+          <span className="text-red-700 dark:text-red-300">{error}</span>
         </div>
       )}
 
       {/* Tabs */}
-      <div className="mb-6 border-b">
+      <div className="mb-6 border-b border-gray-200 dark:border-gray-700">
         <nav className="-mb-px flex space-x-8">
           <button
             onClick={() => setActiveTab('general')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'general'
-                ? 'border-blue-500 text-accent-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
+                ? 'border-blue-500 dark:border-primary-400 text-accent-600 dark:text-primary-400'
+                : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-200 dark:hover:border-gray-600'
             }`}
           >
             General Information
@@ -203,8 +216,8 @@ const StoreSettings: React.FC = () => {
             onClick={() => setActiveTab('settings')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'settings'
-                ? 'border-blue-500 text-accent-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
+                ? 'border-blue-500 dark:border-primary-400 text-accent-600 dark:text-primary-400'
+                : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-200 dark:hover:border-gray-600'
             }`}
           >
             Store Configuration
@@ -214,158 +227,158 @@ const StoreSettings: React.FC = () => {
 
       {/* Tab Content */}
       {activeTab === 'general' && (
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h2 className="text-xl font-semibold mb-4">General Information</h2>
-          
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+          <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">General Information</h2>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Store Name
               </label>
-              <p className="text-lg">{store.name}</p>
+              <p className="text-lg text-gray-900 dark:text-white">{store.name}</p>
             </div>
-            
+
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Store Code
               </label>
-              <p className="text-lg font-mono">{store.store_code}</p>
+              <p className="text-lg font-mono text-gray-900 dark:text-white">{store.store_code}</p>
             </div>
-            
+
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 <Phone className="inline w-4 h-4 mr-1" />
                 Phone
               </label>
-              <p className="text-lg">{store.phone || 'Not specified'}</p>
+              <p className="text-lg text-gray-900 dark:text-white">{store.phone || 'Not specified'}</p>
             </div>
-            
+
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 <Mail className="inline w-4 h-4 mr-1" />
                 Email
               </label>
-              <p className="text-lg">{store.email || 'Not specified'}</p>
+              <p className="text-lg text-gray-900 dark:text-white">{store.email || 'Not specified'}</p>
             </div>
-            
+
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 License Number
               </label>
-              <p className="text-lg">{store.license_number || 'Not specified'}</p>
+              <p className="text-lg text-gray-900 dark:text-white">{store.license_number || 'Not specified'}</p>
             </div>
-            
+
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 License Expiry
               </label>
-              <p className="text-lg">
-                {store.license_expiry 
+              <p className="text-lg text-gray-900 dark:text-white">
+                {store.license_expiry
                   ? new Date(store.license_expiry).toLocaleDateString()
                   : 'Not specified'}
               </p>
             </div>
-            
+
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Tax Rate
               </label>
-              <p className="text-lg">{store.tax_rate}%</p>
+              <p className="text-lg text-gray-900 dark:text-white">{store.tax_rate}%</p>
             </div>
-            
+
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Timezone
               </label>
-              <p className="text-lg">{store.timezone}</p>
+              <p className="text-lg text-gray-900 dark:text-white">{store.timezone}</p>
             </div>
-            
+
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Status
               </label>
               <span className={`inline-flex px-2 py-1 rounded-full text-sm font-medium ${
-                store.status === 'active' 
-                  ? 'bg-primary-100 text-primary-700'
-                  : 'bg-gray-50 text-gray-700'
+                store.status === 'active'
+                  ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300'
+                  : 'bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
               }`}>
                 {store.status}
               </span>
             </div>
-            
+
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Delivery Radius
               </label>
-              <p className="text-lg">{store.delivery_radius_km} km</p>
+              <p className="text-lg text-gray-900 dark:text-white">{store.delivery_radius_km} km</p>
             </div>
           </div>
           
           {store.address && (
             <div className="mt-6">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 <MapPin className="inline w-4 h-4 mr-1" />
                 Address
               </label>
-              <p className="text-lg">
+              <p className="text-lg text-gray-900 dark:text-white">
                 {store.address.street}<br />
                 {store.address.city}, {store.address.province} {store.address.postal_code}<br />
                 {store.address.country}
               </p>
             </div>
           )}
-          
+
           <div className="mt-6">
-            <h3 className="text-lg font-semibold mb-3">Service Options</h3>
+            <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Service Options</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
                   checked={store.delivery_enabled}
                   disabled
-                  className="w-4 h-4 text-accent-600 rounded"
+                  className="w-4 h-4 text-accent-600 dark:text-accent-400 rounded"
                 />
-                <span className="text-sm">Delivery Enabled</span>
+                <span className="text-sm text-gray-900 dark:text-white">Delivery Enabled</span>
               </label>
-              
+
               <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
                   checked={store.pickup_enabled}
                   disabled
-                  className="w-4 h-4 text-accent-600 rounded"
+                  className="w-4 h-4 text-accent-600 dark:text-accent-400 rounded"
                 />
-                <span className="text-sm">Pickup Enabled</span>
+                <span className="text-sm text-gray-900 dark:text-white">Pickup Enabled</span>
               </label>
-              
+
               <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
                   checked={store.kiosk_enabled}
                   disabled
-                  className="w-4 h-4 text-accent-600 rounded"
+                  className="w-4 h-4 text-accent-600 dark:text-accent-400 rounded"
                 />
-                <span className="text-sm">Kiosk Enabled</span>
+                <span className="text-sm text-gray-900 dark:text-white">Kiosk Enabled</span>
               </label>
-              
+
               <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
                   checked={store.pos_enabled}
                   disabled
-                  className="w-4 h-4 text-accent-600 rounded"
+                  className="w-4 h-4 text-accent-600 dark:text-accent-400 rounded"
                 />
-                <span className="text-sm">POS Enabled</span>
+                <span className="text-sm text-gray-900 dark:text-white">POS Enabled</span>
               </label>
-              
+
               <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
                   checked={store.ecommerce_enabled}
                   disabled
-                  className="w-4 h-4 text-accent-600 rounded"
+                  className="w-4 h-4 text-accent-600 dark:text-accent-400 rounded"
                 />
-                <span className="text-sm">E-commerce Enabled</span>
+                <span className="text-sm text-gray-900 dark:text-white">E-commerce Enabled</span>
               </label>
             </div>
           </div>

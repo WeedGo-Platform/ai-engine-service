@@ -139,19 +139,19 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md mx-4">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-primary-100 rounded-lg">
-              <Lock className="h-5 w-5 text-primary-600" />
+            <div className="p-2 bg-primary-100 dark:bg-primary-900 rounded-lg">
+              <Lock className="h-5 w-5 text-primary-600 dark:text-primary-400" />
             </div>
-            <h2 className="text-xl font-semibold text-gray-900">{t('common:modals.changePassword.title')}</h2>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{t('common:modals.changePassword.title')}</h2>
           </div>
           <button
             onClick={handleClose}
             disabled={loading}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
           >
             <X className="h-5 w-5" />
           </button>
@@ -161,7 +161,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {/* Current Password */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               {t('common:modals.changePassword.currentPassword')}
             </label>
             <div className="relative">
@@ -171,14 +171,14 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 disabled={loading}
                 className={`w-full px-3 py-2 border ${
-                  errors.currentPassword ? 'border-red-300' : 'border-gray-300'
-                } rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 pr-10`}
+                  errors.currentPassword ? 'border-red-300 dark:border-red-600' : 'border-gray-300 dark:border-gray-600'
+                } rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 pr-10 bg-white dark:bg-gray-700 text-gray-900 dark:text-white dark:placeholder-gray-400`}
                 placeholder={t('common:modals.changePassword.placeholders.currentPassword')}
               />
               <button
                 type="button"
                 onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
               >
                 {showCurrentPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
               </button>
@@ -193,7 +193,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
 
           {/* New Password */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               {t('common:modals.changePassword.newPassword')}
             </label>
             <div className="relative">
@@ -203,14 +203,14 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
                 onChange={(e) => setNewPassword(e.target.value)}
                 disabled={loading}
                 className={`w-full px-3 py-2 border ${
-                  errors.newPassword ? 'border-red-300' : 'border-gray-300'
-                } rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 pr-10`}
+                  errors.newPassword ? 'border-red-300 dark:border-red-600' : 'border-gray-300 dark:border-gray-600'
+                } rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 pr-10 bg-white dark:bg-gray-700 text-gray-900 dark:text-white dark:placeholder-gray-400`}
                 placeholder={t('common:modals.changePassword.placeholders.newPassword')}
               />
               <button
                 type="button"
                 onClick={() => setShowNewPassword(!showNewPassword)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
               >
                 {showNewPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
               </button>
@@ -225,7 +225,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
             {/* Password strength requirements */}
             {newPassword && (
               <div className="mt-2 space-y-1">
-                <p className="text-xs font-medium text-gray-700">{t('common:modals.changePassword.requirements.title')}</p>
+                <p className="text-xs font-medium text-gray-700 dark:text-gray-300">{t('common:modals.changePassword.requirements.title')}</p>
                 {[
                   t('common:modals.changePassword.requirements.minLength'),
                   t('common:modals.changePassword.requirements.uppercase'),
@@ -236,11 +236,11 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
                   return (
                     <div key={index} className="flex items-center gap-1 text-xs">
                       {isMet ? (
-                        <CheckCircle className="h-3 w-3 text-green-500" />
+                        <CheckCircle className="h-3 w-3 text-green-500 dark:text-green-400" />
                       ) : (
-                        <AlertCircle className="h-3 w-3 text-gray-400" />
+                        <AlertCircle className="h-3 w-3 text-gray-400 dark:text-gray-500" />
                       )}
-                      <span className={isMet ? 'text-green-600' : 'text-gray-500'}>
+                      <span className={isMet ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}>
                         {requirement}
                       </span>
                     </div>
@@ -252,7 +252,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
 
           {/* Confirm Password */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               {t('common:modals.changePassword.confirmPassword')}
             </label>
             <div className="relative">
@@ -262,14 +262,14 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 disabled={loading}
                 className={`w-full px-3 py-2 border ${
-                  errors.confirmPassword ? 'border-red-300' : 'border-gray-300'
-                } rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 pr-10`}
+                  errors.confirmPassword ? 'border-red-300 dark:border-red-600' : 'border-gray-300 dark:border-gray-600'
+                } rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 pr-10 bg-white dark:bg-gray-700 text-gray-900 dark:text-white dark:placeholder-gray-400`}
                 placeholder={t('common:modals.changePassword.placeholders.confirmPassword')}
               />
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
               >
                 {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
               </button>
@@ -283,8 +283,8 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
           </div>
 
           {/* Security Notice */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-            <p className="text-xs text-blue-800">
+          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+            <p className="text-xs text-blue-800 dark:text-blue-300">
               <strong>Security Notice:</strong> {t('common:modals.changePassword.securityNotice')}
             </p>
           </div>
@@ -295,14 +295,14 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
               type="button"
               onClick={handleClose}
               disabled={loading}
-              className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {t('common:buttons.cancel')}
             </button>
             <button
               type="submit"
               disabled={loading || !currentPassword || !newPassword || !confirmPassword || !isPasswordValid}
-              className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="flex-1 px-4 py-2 bg-primary-600 dark:bg-primary-700 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>

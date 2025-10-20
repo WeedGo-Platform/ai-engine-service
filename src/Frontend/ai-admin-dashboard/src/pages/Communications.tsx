@@ -9,6 +9,8 @@ import TemplateManager from '../components/TemplateManager';
 import CommunicationsAnalytics from '../components/CommunicationsAnalytics';
 import { usePersistentTab, usePersistentState } from '../hooks/usePersistentState';
 import toast from 'react-hot-toast';
+import { confirmToastAsync } from '../components/ConfirmToast';
+import StoreSelectionModal from '../components/StoreSelectionModal';
 import {
   Send,
   Users,
@@ -295,42 +297,42 @@ const Communications: React.FC = () => {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'draft':
-        return <FileText className="w-4 h-4 text-gray-500" />;
+        return <FileText className="w-4 h-4 text-gray-500 dark:text-gray-400" />;
       case 'scheduled':
-        return <Clock className="w-4 h-4 text-blue-500" />;
+        return <Clock className="w-4 h-4 text-blue-500 dark:text-blue-400" />;
       case 'sending':
-        return <RefreshCw className="w-4 h-4 text-yellow-500 animate-spin" />;
+        return <RefreshCw className="w-4 h-4 text-yellow-500 dark:text-yellow-400 animate-spin" />;
       case 'sent':
-        return <CheckCircle2 className="w-4 h-4 text-green-500" />;
+        return <CheckCircle2 className="w-4 h-4 text-green-500 dark:text-green-400" />;
       case 'paused':
-        return <Pause className="w-4 h-4 text-orange-500" />;
+        return <Pause className="w-4 h-4 text-orange-500 dark:text-orange-400" />;
       case 'cancelled':
-        return <StopCircle className="w-4 h-4 text-red-500" />;
+        return <StopCircle className="w-4 h-4 text-red-500 dark:text-red-400" />;
       case 'failed':
-        return <XCircle className="w-4 h-4 text-red-500" />;
+        return <XCircle className="w-4 h-4 text-red-500 dark:text-red-400" />;
       default:
-        return <AlertCircle className="w-4 h-4 text-gray-500" />;
+        return <AlertCircle className="w-4 h-4 text-gray-500 dark:text-gray-400" />;
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'draft':
-        return 'bg-gray-100 text-gray-700';
+        return 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300';
       case 'scheduled':
-        return 'bg-blue-100 text-blue-700';
+        return 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300';
       case 'sending':
-        return 'bg-yellow-100 text-yellow-700';
+        return 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300';
       case 'sent':
-        return 'bg-green-100 text-green-700';
+        return 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300';
       case 'paused':
-        return 'bg-orange-100 text-orange-700';
+        return 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300';
       case 'cancelled':
-        return 'bg-red-100 text-red-700';
+        return 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300';
       case 'failed':
-        return 'bg-red-100 text-red-700';
+        return 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300';
       default:
-        return 'bg-gray-100 text-gray-700';
+        return 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300';
     }
   };
 
@@ -449,15 +451,15 @@ const Communications: React.FC = () => {
     if (analyticsLoading) {
       return (
         <div className="flex justify-center items-center h-64">
-          <RefreshCw className="w-8 h-8 text-purple-600 animate-spin" />
+          <RefreshCw className="w-8 h-8 text-purple-600 dark:text-purple-400 animate-spin" />
         </div>
       );
     }
 
     if (!analyticsData) {
       return (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <p className="text-gray-600">{t('communications:descriptions.noAnalytics')}</p>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+          <p className="text-gray-600 dark:text-gray-400">{t('communications:descriptions.noAnalytics')}</p>
         </div>
       );
     }
@@ -476,59 +478,59 @@ const Communications: React.FC = () => {
     <div className="space-y-6">
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">{t('communications:stats.totalCampaigns')}</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-sm text-gray-600 dark:text-gray-400">{t('communications:stats.totalCampaigns')}</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {stats?.total_campaigns || 0}
               </p>
             </div>
-            <Send className="w-8 h-8 text-purple-600" />
+            <Send className="w-8 h-8 text-purple-600 dark:text-purple-400" />
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">{t('communications:stats.messagesSent')}</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-sm text-gray-600 dark:text-gray-400">{t('communications:stats.messagesSent')}</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {stats?.total_sent || 0}
               </p>
             </div>
-            <Mail className="w-8 h-8 text-blue-600" />
+            <Mail className="w-8 h-8 text-blue-600 dark:text-blue-400" />
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">{t('communications:stats.successRate')}</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-sm text-gray-600 dark:text-gray-400">{t('communications:stats.successRate')}</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {stats?.avg_success_rate?.toFixed(1) || 0}%
               </p>
             </div>
-            <TrendingUp className="w-8 h-8 text-green-600" />
+            <TrendingUp className="w-8 h-8 text-green-600 dark:text-green-400" />
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">{t('communications:stats.failed')}</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-sm text-gray-600 dark:text-gray-400">{t('communications:stats.failed')}</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {stats?.total_failed || 0}
               </p>
             </div>
-            <XCircle className="w-8 h-8 text-red-600" />
+            <XCircle className="w-8 h-8 text-red-600 dark:text-red-400" />
           </div>
         </div>
       </div>
 
       {/* Channel Performance */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-        <div className="p-6 border-b border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900">{t('communications:titles.channelPerformance')}</h3>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t('communications:titles.channelPerformance')}</h3>
         </div>
         <div className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -537,30 +539,30 @@ const Communications: React.FC = () => {
               const Icon = channel === 'email' ? Mail : channel === 'sms' ? MessageSquare : Bell;
 
               return (
-                <div key={channel} className="border border-gray-200 rounded-lg p-4">
+                <div key={channel} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center space-x-2">
-                      <Icon className="w-5 h-5 text-gray-600" />
-                      <span className="font-medium capitalize">{channel}</span>
+                      <Icon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                      <span className="font-medium capitalize text-gray-900 dark:text-white">{channel}</span>
                     </div>
                   </div>
                   <div className="space-y-2">
                     <div className="flex justify-between">
-                      <span className="text-sm text-gray-600">{t('communications:channels.campaigns')}</span>
-                      <span className="text-sm font-medium">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">{t('communications:channels.campaigns')}</span>
+                      <span className="text-sm font-medium text-gray-900 dark:text-white">
                         {channelData?.campaigns_used || 0}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-sm text-gray-600">{t('communications:channels.messages')}</span>
-                      <span className="text-sm font-medium">
+                      <span className="text-sm text-gray-600 dark:text-gray-400">{t('communications:channels.messages')}</span>
+                      <span className="text-sm font-medium text-gray-900 dark:text-white">
                         {channelData?.messages_sent || 0}
                       </span>
                     </div>
                     {channel !== 'sms' && (
                       <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">{t('communications:channels.engagement')}</span>
-                        <span className="text-sm font-medium">
+                        <span className="text-sm text-gray-600 dark:text-gray-400">{t('communications:channels.engagement')}</span>
+                        <span className="text-sm font-medium text-gray-900 dark:text-white">
                           {channelData?.avg_engagement_rate?.toFixed(1) || 0}%
                         </span>
                       </div>
@@ -574,47 +576,47 @@ const Communications: React.FC = () => {
       </div>
 
       {/* Recent Campaigns */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-        <div className="p-6 border-b border-gray-200 flex justify-between items-center">
-          <h3 className="text-lg font-semibold text-gray-900">{t('communications:titles.recentCampaigns')}</h3>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t('communications:titles.recentCampaigns')}</h3>
           <button
             onClick={() => setActiveTab('campaigns')}
-            className="text-sm text-purple-600 hover:text-purple-700 font-medium"
+            className="text-sm text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium"
           >
             {t('communications:actions.viewAll')}
           </button>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   {t('communications:table.campaign')}
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   {t('communications:table.status')}
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   {t('communications:table.recipients')}
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   {t('communications:table.successRate')}
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                   {t('communications:table.created')}
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
               {broadcasts.slice(0, 5).map((broadcast) => (
-                <tr key={broadcast.id} className="hover:bg-gray-50">
+                <tr key={broadcast.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div>
-                      <div className="text-sm font-medium text-gray-900">
+                      <div className="text-sm font-medium text-gray-900 dark:text-white">
                         {broadcast.name}
                       </div>
                       {broadcast.description && (
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
                           {broadcast.description}
                         </div>
                       )}
@@ -626,15 +628,15 @@ const Communications: React.FC = () => {
                       <span className="capitalize">{t(`communications:status.${broadcast.status}`)}</span>
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                     {broadcast.total_recipients}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                     {broadcast.total_recipients > 0
                       ? `${((broadcast.successful_sends / broadcast.total_recipients) * 100).toFixed(1)}%`
                       : '-'}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                     {formatDate(broadcast.created_at)}
                   </td>
                 </tr>
@@ -647,12 +649,12 @@ const Communications: React.FC = () => {
   );
 
   const renderCampaigns = () => (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-      <div className="p-6 border-b border-gray-200 flex justify-between items-center">
-        <h3 className="text-lg font-semibold text-gray-900">{t('communications:titles.broadcastCampaigns')}</h3>
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+      <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t('communications:titles.broadcastCampaigns')}</h3>
         <button
           onClick={() => setShowCreateWizard(true)}
-          className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center space-x-2"
+          className="px-4 py-2 bg-purple-600 dark:bg-purple-700 text-white rounded-lg hover:bg-purple-700 dark:hover:bg-purple-600 flex items-center space-x-2"
         >
           <Plus className="w-4 h-4" />
           <span>{t('communications:actions.newCampaign')}</span>
@@ -660,42 +662,42 @@ const Communications: React.FC = () => {
       </div>
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-gray-50">
+          <thead className="bg-gray-50 dark:bg-gray-700">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                 {t('communications:table.campaign')}
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                 {t('communications:table.status')}
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                 {t('communications:table.channels')}
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                 {t('communications:table.recipients')}
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                 {t('communications:table.scheduled')}
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                 {t('communications:table.actions')}
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
             {broadcasts.map((broadcast) => (
-              <tr key={broadcast.id} className="hover:bg-gray-50">
+              <tr key={broadcast.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                 <td className="px-6 py-4">
                   <div>
-                    <div className="text-sm font-medium text-gray-900">
+                    <div className="text-sm font-medium text-gray-900 dark:text-white">
                       {broadcast.name}
                     </div>
                     {broadcast.description && (
-                      <div className="text-sm text-gray-500">
+                      <div className="text-sm text-gray-500 dark:text-gray-400">
                         {broadcast.description}
                       </div>
                     )}
-                    <div className="text-xs text-gray-400 mt-1">
+                    <div className="text-xs text-gray-400 dark:text-gray-500 mt-1">
                       {t('communications:table.createdBy')} {broadcast.created_by_name}
                     </div>
                   </div>
@@ -710,27 +712,27 @@ const Communications: React.FC = () => {
                   <div className="flex items-center space-x-1">
                     {broadcast.channel_count > 0 && (
                       <>
-                        <Mail className="w-4 h-4 text-gray-400" />
-                        <MessageSquare className="w-4 h-4 text-gray-400" />
-                        <Bell className="w-4 h-4 text-gray-400" />
+                        <Mail className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                        <MessageSquare className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+                        <Bell className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                       </>
                     )}
-                    <span className="text-sm text-gray-600">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">
                       ({broadcast.channel_count})
                     </span>
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">
+                  <div className="text-sm text-gray-900 dark:text-white">
                     {broadcast.total_recipients}
                   </div>
                   {broadcast.successful_sends > 0 && (
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
                       {broadcast.successful_sends} {t('communications:table.sentCount')}
                     </div>
                   )}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                   {formatDate(broadcast.scheduled_at)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -801,18 +803,24 @@ const Communications: React.FC = () => {
     </div>
   );
 
+  // Declare missing variable
+  const [showStoreSelectionModal, setShowStoreSelectionModal] = useState(false);
+  const handleStoreSelect = async (tenantId: string, storeId: string, storeName: string, tenantName?: string) => {
+    setShowStoreSelectionModal(false);
+  };
+
   // Show "No Store Selected" UI if no store is selected
   if (!currentStore) {
     return (
-      <div className="h-full flex items-center justify-center bg-gray-50">
+      <div className="h-full flex items-center justify-center bg-gray-50 dark:bg-gray-900">
         <div className="text-center">
           <div className="mb-4">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-full">
-              <Send className="w-8 h-8 text-primary-600" />
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 dark:bg-primary-900/30 rounded-full">
+              <Send className="w-8 h-8 text-primary-600 dark:text-primary-400" />
             </div>
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('communications:descriptions.noStoreSelected')}</h3>
-          <p className="text-gray-500">{t('communications:descriptions.selectStore')}</p>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{t('communications:descriptions.noStoreSelected')}</h3>
+          <p className="text-gray-500 dark:text-gray-400">{t('communications:descriptions.selectStore')}</p>
         </div>
       </div>
     );
@@ -822,7 +830,7 @@ const Communications: React.FC = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <RefreshCw className="w-8 h-8 text-purple-600 animate-spin" />
+        <RefreshCw className="w-8 h-8 text-purple-600 dark:text-purple-400 animate-spin" />
       </div>
     );
   }
@@ -831,22 +839,22 @@ const Communications: React.FC = () => {
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t('communications:titles.main')}</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('communications:titles.main')}</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             {t('communications:descriptions.managingFor')} {currentStore.name}
           </p>
         </div>
         <div className="flex items-center space-x-3">
           <button
             onClick={() => setRefreshKey(prev => prev + 1)}
-            className="p-2 text-gray-600 hover:text-gray-900"
+            className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
             title={t('communications:actions.refresh')}
           >
             <RefreshCw className="w-5 h-5" />
           </button>
           <button
             onClick={() => navigate('/dashboard/communications/settings')}
-            className="p-2 text-gray-600 hover:text-gray-900"
+            className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
             title={t('communications:actions.settings')}
           >
             <Settings className="w-5 h-5" />
@@ -855,7 +863,7 @@ const Communications: React.FC = () => {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="border-b border-gray-200">
+      <div className="border-b border-gray-200 dark:border-gray-700">
         <nav className="-mb-px flex space-x-8">
           {[
             { id: 'overview', label: t('communications:tabs.overview'), icon: BarChart3 },
@@ -869,8 +877,8 @@ const Communications: React.FC = () => {
               onClick={() => setActiveTab(tab.id as any)}
               className={`flex items-center space-x-2 py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === tab.id
-                  ? 'border-purple-500 text-purple-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-purple-500 dark:border-purple-400 text-purple-600 dark:text-purple-400'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
             >
               <tab.icon className="w-4 h-4" />
@@ -885,13 +893,13 @@ const Communications: React.FC = () => {
         {activeTab === 'overview' && renderOverview()}
         {activeTab === 'campaigns' && renderCampaigns()}
         {activeTab === 'templates' && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
             <TemplateManager />
           </div>
         )}
         {activeTab === 'segments' && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <p className="text-gray-600">{t('communications:descriptions.segmentationComingSoon')}</p>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <p className="text-gray-600 dark:text-gray-400">{t('communications:descriptions.segmentationComingSoon')}</p>
           </div>
         )}
         {activeTab === 'analytics' && renderAnalytics()}
