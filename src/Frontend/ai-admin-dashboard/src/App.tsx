@@ -5,15 +5,17 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Toaster } from 'react-hot-toast';
 import {
   Home, Package, ShoppingCart, Users, FileText, Leaf, Menu, X, LogOut, Settings,
-  Building2, Store, Tag, Sparkles, Upload, ChevronRight, PanelLeftClose, PanelLeft, Database, Truck, AppWindow, MessageSquare, ScrollText, Moon, Sun
+  Building2, Store, Tag, Sparkles, Upload, ChevronRight, PanelLeftClose, PanelLeft, Database, Truck, AppWindow, MessageSquare, ScrollText, Moon, Sun, CreditCard
 } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { StoreProvider, useStoreContext } from './contexts/StoreContext';
+import { PaymentProvider } from './contexts/PaymentContext';
 import { useTheme } from './hooks/useTheme';
 import ProtectedRoute from './components/ProtectedRoute';
 import StoreSelectionModal from './components/StoreSelectionModal';
 import ChatWidget from './components/ChatWidget';
 import ChangePasswordModal from './components/ChangePasswordModal';
+import PaymentErrorBoundary from './components/PaymentErrorBoundary';
 import LanguageSelector from './components/LanguageSelector';
 import './i18n/config'; // Initialize i18n
 import { useTranslation } from 'react-i18next';
@@ -51,6 +53,7 @@ import VoiceAPITest from './pages/VoiceAPITest';
 import Apps from './pages/Apps';
 import Communications from './pages/Communications';
 import LogViewer from './pages/LogViewer';
+import Payments from './pages/Payments';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -110,6 +113,7 @@ function Layout() {
         { name: t('navigation.inventory'), href: '/dashboard/inventory', icon: Package, permission: 'store' },
         { name: t('navigation.accessories'), href: '/dashboard/accessories', icon: Package, permission: 'store' },
         { name: t('navigation.orders'), href: '/dashboard/orders', icon: ShoppingCart, permission: 'store' },
+        { name: t('navigation.payments'), href: '/dashboard/payments', icon: CreditCard, permission: 'store' },
         { name: t('navigation.customers'), href: '/dashboard/customers', icon: Users, permission: 'store' },
         { name: t('navigation.purchaseOrders'), href: '/dashboard/purchase-orders', icon: FileText, permission: 'store' },
         { name: t('navigation.promotions'), href: '/dashboard/promotions', icon: Tag, permission: 'store' },
@@ -126,6 +130,7 @@ function Layout() {
         { name: t('navigation.inventory'), href: '/dashboard/inventory', icon: Package, permission: 'store' },
         { name: t('navigation.accessories'), href: '/dashboard/accessories', icon: Package, permission: 'store' },
         { name: t('navigation.orders'), href: '/dashboard/orders', icon: ShoppingCart, permission: 'store' },
+        { name: t('navigation.payments'), href: '/dashboard/payments', icon: CreditCard, permission: 'store' },
         { name: t('navigation.customers'), href: '/dashboard/customers', icon: Users, permission: 'store' },
         { name: t('navigation.purchaseOrders'), href: '/dashboard/purchase-orders', icon: FileText, permission: 'store' },
         { name: t('navigation.promotions'), href: '/dashboard/promotions', icon: Tag, permission: 'store' },
@@ -437,7 +442,16 @@ const router = createBrowserRouter([
       },
       { path: 'tenants/review', element: <TenantReview /> },
       { path: 'tenants/:tenantCode/settings', element: <TenantSettings /> },
-      { path: 'tenants/:tenantCode/payment-settings', element: <TenantPaymentSettings /> },
+      {
+        path: 'tenants/:tenantCode/payment-settings',
+        element: (
+          <PaymentErrorBoundary showDetails={process.env.NODE_ENV === 'development'}>
+            <PaymentProvider>
+              <TenantPaymentSettings />
+            </PaymentProvider>
+          </PaymentErrorBoundary>
+        )
+      },
       { path: 'tenants/:tenantCode/stores', element: <StoreManagement /> },
       { path: 'stores/:storeCode/settings', element: <StoreSettings /> },
       { path: 'stores/:storeCode/hours', element: <StoreHoursManagement /> },
@@ -445,6 +459,16 @@ const router = createBrowserRouter([
       { path: 'inventory', element: <Inventory /> },
       { path: 'accessories', element: <Accessories /> },
       { path: 'orders', element: <Orders /> },
+      {
+        path: 'payments',
+        element: (
+          <PaymentErrorBoundary showDetails={process.env.NODE_ENV === 'development'}>
+            <PaymentProvider>
+              <Payments />
+            </PaymentProvider>
+          </PaymentErrorBoundary>
+        )
+      },
       { path: 'customers', element: <Customers /> },
       { path: 'purchase-orders', element: <PurchaseOrders /> },
       { path: 'promotions', element: <Promotions /> },
