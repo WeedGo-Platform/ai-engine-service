@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Globe,
   Key,
@@ -10,11 +10,15 @@ import {
   Shield,
   Info
 } from 'lucide-react';
+import { paymentService } from '../../services/paymentServiceV2';
+import toast from 'react-hot-toast';
+import type { ProviderConfigDTO } from '../../types/payment';
 
 interface OnlinePaymentSettingsProps {
   storeId: string;
   initialSettings?: any;
   onSave?: (settings: any) => Promise<void>;
+  store?: any; // Store object with tenant_id
 }
 
 interface OnlinePaymentConfig {
@@ -52,7 +56,8 @@ const SUPPORTED_PROVIDERS = [
 const OnlinePaymentSettings: React.FC<OnlinePaymentSettingsProps> = ({
   storeId,
   initialSettings = {},
-  onSave
+  onSave,
+  store
 }) => {
   const [settings, setSettings] = useState<OnlinePaymentConfig>({
     enabled: false,
@@ -68,12 +73,59 @@ const OnlinePaymentSettings: React.FC<OnlinePaymentSettingsProps> = ({
     ...initialSettings
   });
 
+  const [existingProvider, setExistingProvider] = useState<ProviderConfigDTO | null>(null);
   const [showToken, setShowToken] = useState(false);
   const [saving, setSaving] = useState(false);
   const [testing, setTesting] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [testResult, setTestResult] = useState<{ success: boolean; message: string } | null>(null);
 
   const selectedProvider = SUPPORTED_PROVIDERS.find(p => p.id === settings.provider);
+  const tenantId = store?.tenant_id || 'default-tenant';
+
+  // Load existing provider configuration from V2 backend
+  useEffect(() => {
+    const loadExistingProvider = async () => {
+      if (!store?.tenant_id) {
+        console.warn('No tenant_id available, skipping provider load');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+
+        // Fetch all providers for this tenant
+        const providers = await paymentService.getProviders(tenantId);
+
+        // Find provider configured for this specific store
+        const storeProvider = providers.find((p: any) => p.store_id === storeId);
+
+        if (storeProvider) {
+          setExistingProvider(storeProvider);
+          setSettings({
+            enabled: storeProvider.is_active,
+            provider: storeProvider.provider_type,
+            merchantId: storeProvider.merchant_id || '',
+            environment: storeProvider.environment || 'sandbox',
+            accessToken: '', // Never populate encrypted credentials for security
+            webhookUrl: storeProvider.configuration?.webhook_url || '',
+            supportedCardTypes: storeProvider.configuration?.supported_card_types || ['visa', 'mastercard', 'amex'],
+            require3DS: storeProvider.configuration?.require_3ds || false,
+            platformFeePercentage: storeProvider.configuration?.platform_fee_percentage || 2.0,
+            platformFeeFixed: storeProvider.configuration?.platform_fee_fixed || 0.0
+          });
+        }
+      } catch (error: any) {
+        console.error('Failed to load provider configuration:', error);
+        // Don't show error toast - provider might not exist yet (first setup)
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadExistingProvider();
+  }, [storeId, store?.tenant_id, tenantId]);
 
   const handleProviderChange = (providerId: string) => {
     setSettings({
@@ -88,61 +140,127 @@ const OnlinePaymentSettings: React.FC<OnlinePaymentSettingsProps> = ({
   };
 
   const handleSave = async () => {
+    if (!store?.tenant_id) {
+      toast.error('Store tenant information missing. Please refresh the page.');
+      return;
+    }
+
+    if (!settings.accessToken && !existingProvider) {
+      toast.error('Access token is required for new provider configuration');
+      return;
+    }
+
     setSaving(true);
     try {
+      const providerConfig = {
+        provider_type: settings.provider,
+        environment: settings.environment,
+        merchant_id: settings.merchantId || '',
+        is_active: settings.enabled,
+        configuration: {
+          webhook_url: settings.webhookUrl || `https://api.weedgo.ca/webhooks/${settings.provider}/${storeId}`,
+          supported_card_types: settings.supportedCardTypes,
+          require_3ds: settings.require3DS,
+          platform_fee_percentage: settings.platformFeePercentage,
+          platform_fee_fixed: settings.platformFeeFixed
+        },
+        // Only include credentials if a new token was entered
+        ...(settings.accessToken ? {
+          credentials_encrypted: settings.accessToken,
+          encryption_metadata: {
+            algorithm: 'AES-256',
+            encrypted_at: new Date().toISOString()
+          }
+        } : {})
+      };
+
+      let savedProvider;
+      if (existingProvider) {
+        // Update existing provider
+        savedProvider = await paymentService.updateProvider(
+          tenantId,
+          existingProvider.id,
+          providerConfig
+        );
+        toast.success('Payment provider updated successfully');
+      } else {
+        // Create new provider
+        savedProvider = await paymentService.createProvider(tenantId, {
+          ...providerConfig,
+          store_id: storeId
+        });
+        toast.success('Payment provider created successfully');
+        setExistingProvider(savedProvider);
+      }
+
+      // Also call the original onSave if provided (for backwards compatibility)
       if (onSave) {
         await onSave(settings);
       }
-    } catch (error) {
-      console.error('Failed to save online payment settings:', error);
+
+      // Clear access token field after save (for security)
+      setSettings({ ...settings, accessToken: '' });
+
+    } catch (error: any) {
+      console.error('Failed to save payment provider:', error);
+      const errorMessage = error.message || 'Failed to save payment provider settings';
+      toast.error(errorMessage);
     } finally {
       setSaving(false);
     }
   };
 
   const testConnection = async () => {
+    if (!store?.tenant_id) {
+      toast.error('Store tenant information missing');
+      return;
+    }
+
     setTesting(true);
     setTestResult(null);
 
     try {
-      // Call backend API to test the payment provider connection
-      const response = await fetch(`/api/stores/${storeId}/payment/test`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          provider: settings.provider,
-          config: {
-            accessToken: settings.accessToken,
-            merchantId: settings.merchantId,
-            environment: settings.environment
-          }
-        })
+      // Prepare test config
+      const testConfig = {
+        provider_type: settings.provider,
+        merchant_id: settings.merchantId || '',
+        api_key: settings.accessToken || '',
+        environment: settings.environment
+      };
+
+      // Call V2 test endpoint
+      const result = await paymentService.testProviderConnection(
+        tenantId,
+        existingProvider?.id || 'test',
+        testConfig
+      );
+
+      setTestResult({
+        success: true,
+        message: 'Connection successful! Payment provider is configured correctly and reachable.'
       });
+      toast.success('Connection test passed!');
 
-      const result = await response.json();
-
-      if (response.ok) {
-        setTestResult({
-          success: true,
-          message: 'Connection successful! Payment provider is configured correctly.'
-        });
-      } else {
-        setTestResult({
-          success: false,
-          message: result.error || 'Connection failed. Please check your credentials.'
-        });
-      }
-    } catch (error) {
+    } catch (error: any) {
+      const errorMessage = error.message || 'Connection failed. Please check your credentials.';
       setTestResult({
         success: false,
-        message: 'Failed to test connection. Please check your network.'
+        message: errorMessage
       });
+      toast.error('Connection test failed');
     } finally {
       setTesting(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <RefreshCw className="w-8 h-8 text-primary-600 animate-spin" />
+        <span className="ml-3 text-gray-600">Loading payment configuration...</span>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -166,6 +284,25 @@ const OnlinePaymentSettings: React.FC<OnlinePaymentSettingsProps> = ({
             <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
           </label>
         </div>
+
+        {/* Show existing provider info if available */}
+        {existingProvider && (
+          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="flex items-start">
+              <Info className="w-5 h-5 text-blue-600 mt-0.5 mr-2 flex-shrink-0" />
+              <div className="text-sm text-blue-800">
+                <p className="font-medium">
+                  Provider Configured: {existingProvider.provider_type.charAt(0).toUpperCase() + existingProvider.provider_type.slice(1)}
+                </p>
+                <p className="text-xs text-blue-700 mt-1">
+                  Environment: {existingProvider.environment} |
+                  Merchant ID: {existingProvider.merchant_id || 'Not set'} |
+                  Status: {existingProvider.is_active ? '🟢 Active' : '🔴 Inactive'}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {settings.enabled && (
@@ -244,15 +381,15 @@ const OnlinePaymentSettings: React.FC<OnlinePaymentSettingsProps> = ({
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   <Key className="w-4 h-4 inline mr-1" />
-                  Access Token
-                  <span className="text-red-500 ml-1">*</span>
+                  Access Token / API Key
+                  {!existingProvider && <span className="text-red-500 ml-1">*</span>}
                 </label>
                 <div className="mt-1 relative">
                   <input
                     type={showToken ? "text" : "password"}
                     value={settings.accessToken}
                     onChange={(e) => setSettings({ ...settings, accessToken: e.target.value })}
-                    placeholder="Enter your provider access token"
+                    placeholder={existingProvider ? "Enter new token to update (leave empty to keep current)" : "Enter your provider access token"}
                     className="block w-full pr-10 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                   />
                   <button
@@ -268,7 +405,10 @@ const OnlinePaymentSettings: React.FC<OnlinePaymentSettingsProps> = ({
                   </button>
                 </div>
                 <p className="mt-1 text-xs text-gray-500">
-                  This token will be encrypted and stored securely
+                  {existingProvider
+                    ? '🔒 Current token is encrypted. Leave empty to keep existing, or enter new token to update.'
+                    : 'This token will be encrypted and stored securely using AES-256'
+                  }
                 </p>
               </div>
 
@@ -305,6 +445,7 @@ const OnlinePaymentSettings: React.FC<OnlinePaymentSettingsProps> = ({
                     type="button"
                     onClick={() => {
                       navigator.clipboard.writeText(`https://api.weedgo.ca/webhooks/${settings.provider}/${storeId}`);
+                      toast.success('Webhook URL copied to clipboard');
                     }}
                     className="ml-3 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
                   >
@@ -418,7 +559,7 @@ const OnlinePaymentSettings: React.FC<OnlinePaymentSettingsProps> = ({
               </div>
               <button
                 onClick={testConnection}
-                disabled={!settings.accessToken || testing}
+                disabled={(!settings.accessToken && !existingProvider) || testing}
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:bg-gray-300 disabled:cursor-not-allowed"
               >
                 {testing ? (
@@ -462,12 +603,13 @@ const OnlinePaymentSettings: React.FC<OnlinePaymentSettingsProps> = ({
             <div className="flex">
               <Info className="w-5 h-5 text-blue-600 mt-0.5 mr-2 flex-shrink-0" />
               <div className="text-sm text-blue-800">
-                <p className="font-semibold mb-1">Important Notes:</p>
+                <p className="font-semibold mb-1">🔐 V2 Payment System - Enhanced Security:</p>
                 <ul className="list-disc ml-5 space-y-1">
-                  <li>Ensure your {selectedProvider?.name} account is properly configured for Canadian payments</li>
+                  <li>Credentials stored in dedicated <code className="bg-blue-100 px-1 rounded">store_payment_providers</code> table</li>
+                  <li>All tokens encrypted with AES-256 before storage</li>
+                  <li>Automatic health monitoring and webhook support</li>
+                  <li>Integrated with transaction history and refund processing</li>
                   <li>Test your integration in sandbox mode before switching to production</li>
-                  <li>Platform fees will be automatically calculated on each transaction</li>
-                  <li>All payment data is encrypted and stored securely</li>
                 </ul>
               </div>
             </div>
@@ -477,10 +619,10 @@ const OnlinePaymentSettings: React.FC<OnlinePaymentSettingsProps> = ({
           <div className="flex justify-end space-x-3">
             <button
               onClick={handleSave}
-              disabled={saving || !settings.accessToken}
+              disabled={saving || (!settings.accessToken && !existingProvider)}
               className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
-              {saving ? 'Saving...' : 'Save Settings'}
+              {saving ? 'Saving...' : existingProvider ? 'Update Settings' : 'Save Settings'}
             </button>
           </div>
         </>

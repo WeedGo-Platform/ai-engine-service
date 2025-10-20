@@ -76,6 +76,28 @@ class IPurchaseOrderRepository(ABC):
         """
         pass
 
+    @abstractmethod
+    async def update_item_quantity_received(
+        self,
+        po_id: UUID,
+        sku: str,
+        batch_lot: str,
+        quantity_received: int
+    ) -> bool:
+        """
+        Update quantity_received for a specific line item
+
+        Args:
+            po_id: Purchase order UUID
+            sku: Product SKU
+            batch_lot: Batch lot number
+            quantity_received: Quantity received
+
+        Returns:
+            True if updated successfully
+        """
+        pass
+
 
 class AsyncPGPurchaseOrderRepository(IPurchaseOrderRepository):
     """AsyncPG implementation of purchase order repository"""
@@ -367,6 +389,49 @@ class AsyncPGPurchaseOrderRepository(IPurchaseOrderRepository):
 
                 logger.info(f"Saved {items_saved} line items for PO {po_id}")
                 return items_saved
+
+    async def update_item_quantity_received(
+        self,
+        po_id: UUID,
+        sku: str,
+        batch_lot: str,
+        quantity_received: int
+    ) -> bool:
+        """
+        Update quantity_received for a purchase order line item
+
+        This is called during PO receiving to track what was actually received
+        """
+        async with self.db_pool.acquire() as conn:
+            query = """
+                UPDATE purchase_order_items
+                SET quantity_received = quantity_received + $4
+                WHERE purchase_order_id = $1
+                  AND sku = $2
+                  AND batch_lot = $3
+            """
+
+            result = await conn.execute(
+                query,
+                po_id,
+                sku,
+                batch_lot,
+                quantity_received
+            )
+
+            updated = result == "UPDATE 1"
+            if updated:
+                logger.info(
+                    f"Updated quantity_received for PO {po_id}, "
+                    f"SKU {sku}, batch {batch_lot}: +{quantity_received}"
+                )
+            else:
+                logger.warning(
+                    f"Failed to update quantity_received for PO {po_id}, "
+                    f"SKU {sku}, batch {batch_lot} (item not found)"
+                )
+
+            return updated
 
     async def _map_to_aggregate(self, conn: asyncpg.Connection, row: asyncpg.Record) -> PurchaseOrder:
         """

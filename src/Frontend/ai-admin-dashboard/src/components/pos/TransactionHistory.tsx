@@ -80,16 +80,16 @@ const RefundModal: React.FC<RefundModalProps> = ({ transaction, onClose, onRefun
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded-lg border border-gray-200 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <div className="p-6 border-b">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black dark:bg-gray-900 bg-opacity-50 dark:bg-opacity-70">
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold">Process Refund</h2>
-            <button onClick={onClose} className="p-1 hover:bg-gray-50 rounded">
-              <X className="w-5 h-5" />
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Process Refund</h2>
+            <button onClick={onClose} className="p-1 hover:bg-gray-50 dark:hover:bg-gray-700 rounded">
+              <X className="w-5 h-5 text-gray-700 dark:text-gray-300" />
             </button>
           </div>
-          <div className="mt-2 text-sm text-gray-600">
+          <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
             Transaction: {transaction.receipt_number} |
             Total: ${transaction.total.toFixed(2)} |
             {(transaction.refunded_amount ?? 0) ? ` Previously refunded: $${(transaction.refunded_amount ?? 0).toFixed(2)}` : ''}
@@ -99,45 +99,45 @@ const RefundModal: React.FC<RefundModalProps> = ({ transaction, onClose, onRefun
         <div className="p-6">
           {/* Refund Type Selection */}
           <div className="mb-6">
-            <label className="block text-sm font-medium mb-3">Refund Type</label>
+            <label className="block text-sm font-medium mb-3 text-gray-900 dark:text-white">Refund Type</label>
             <div className="grid grid-cols-3 gap-4">
               <button
                 onClick={() => setRefundType('full')}
                 className={`p-4 rounded-lg border-2 transition-colors ${
                   refundType === 'full'
-                    ? 'border-blue-500 bg-blue-50 text-accent-700'
-                    : 'border-gray-200 hover:border-gray-200'
+                    ? 'border-blue-500 dark:border-blue-600 bg-blue-50 dark:bg-blue-900/30 text-accent-700 dark:text-accent-300'
+                    : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
                 }`}
               >
                 <Check className="w-5 h-5 mx-auto mb-1" />
                 <span className="text-sm">Full Refund</span>
-                <p className="text-xs text-gray-500 mt-1">${maxRefundable.toFixed(2)}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">${maxRefundable.toFixed(2)}</p>
               </button>
 
               <button
                 onClick={() => setRefundType('partial')}
                 className={`p-4 rounded-lg border-2 transition-colors ${
                   refundType === 'partial'
-                    ? 'border-blue-500 bg-blue-50 text-accent-700'
-                    : 'border-gray-200 hover:border-gray-200'
+                    ? 'border-blue-500 dark:border-blue-600 bg-blue-50 dark:bg-blue-900/30 text-accent-700 dark:text-accent-300'
+                    : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
                 }`}
               >
                 <DollarSign className="w-5 h-5 mx-auto mb-1" />
                 <span className="text-sm">Partial Refund</span>
-                <p className="text-xs text-gray-500 mt-1">Custom amount</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Custom amount</p>
               </button>
 
               <button
                 onClick={() => setRefundType('items')}
                 className={`p-4 rounded-lg border-2 transition-colors ${
                   refundType === 'items'
-                    ? 'border-blue-500 bg-blue-50 text-accent-700'
-                    : 'border-gray-200 hover:border-gray-200'
+                    ? 'border-blue-500 dark:border-blue-600 bg-blue-50 dark:bg-blue-900/30 text-accent-700 dark:text-accent-300'
+                    : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
                 }`}
               >
                 <FileText className="w-5 h-5 mx-auto mb-1" />
                 <span className="text-sm">Item Refund</span>
-                <p className="text-xs text-gray-500 mt-1">Select items</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Select items</p>
               </button>
             </div>
           </div>
@@ -145,9 +145,9 @@ const RefundModal: React.FC<RefundModalProps> = ({ transaction, onClose, onRefun
           {/* Partial Refund Amount */}
           {refundType === 'partial' && (
             <div className="mb-6">
-              <label className="block text-sm font-medium mb-2">Refund Amount</label>
+              <label className="block text-sm font-medium mb-2 text-gray-900 dark:text-white">Refund Amount</label>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400">$</span>
                 <input
                   type="number"
                   step="0.01"
@@ -155,10 +155,10 @@ const RefundModal: React.FC<RefundModalProps> = ({ transaction, onClose, onRefun
                   max={maxRefundable}
                   value={refundAmount}
                   onChange={(e) => setRefundAmount(parseFloat(e.target.value) || 0)}
-                  className="w-full pl-8 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full pl-8 pr-3 py-2 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
                 />
               </div>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 Maximum refundable: ${maxRefundable.toFixed(2)}
               </p>
             </div>
@@ -167,12 +167,12 @@ const RefundModal: React.FC<RefundModalProps> = ({ transaction, onClose, onRefun
           {/* Item Selection for Item Refund */}
           {refundType === 'items' && (
             <div className="mb-6">
-              <label className="block text-sm font-medium mb-2">Select Items to Refund</label>
-              <div className="border rounded-lg max-h-48 overflow-y-auto">
+              <label className="block text-sm font-medium mb-2 text-gray-900 dark:text-white">Select Items to Refund</label>
+              <div className="border border-gray-200 dark:border-gray-600 rounded-lg max-h-48 overflow-y-auto">
                 {transaction.items.map((item, index) => (
                   <label
                     key={index}
-                    className="flex items-center p-4 hover:bg-gray-50 cursor-pointer border-b last:border-b-0"
+                    className="flex items-center p-4 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer border-b border-gray-200 dark:border-gray-600 last:border-b-0"
                   >
                     <input
                       type="checkbox"
@@ -184,22 +184,22 @@ const RefundModal: React.FC<RefundModalProps> = ({ transaction, onClose, onRefun
                           setSelectedItems(selectedItems.filter(si => si.id !== item.product?.id));
                         }
                       }}
-                      className="mr-3"
+                      className="mr-3 text-accent-600 dark:text-accent-500"
                     />
                     <div className="flex-1">
-                      <p className="font-medium text-sm">{item.product?.name}</p>
-                      <p className="text-xs text-gray-500">
+                      <p className="font-medium text-sm text-gray-900 dark:text-white">{item.product?.name}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
                         Qty: {item.quantity} × ${item.product?.price?.toFixed(2)}
                       </p>
                     </div>
-                    <span className="font-medium">
+                    <span className="font-medium text-gray-900 dark:text-white">
                       ${((item.product?.price || 0) * item.quantity).toFixed(2)}
                     </span>
                   </label>
                 ))}
               </div>
               {selectedItems.length > 0 && (
-                <p className="text-sm text-accent-600 mt-2">
+                <p className="text-sm text-accent-600 dark:text-accent-400 mt-2">
                   Total to refund: ${selectedItems.reduce((sum, item) =>
                     sum + ((item.product?.price || 0) * item.quantity), 0
                   ).toFixed(2)}
@@ -210,23 +210,23 @@ const RefundModal: React.FC<RefundModalProps> = ({ transaction, onClose, onRefun
 
           {/* Refund Reason */}
           <div className="mb-6">
-            <label className="block text-sm font-medium mb-2">
-              Reason for Refund <span className="text-red-500">*</span>
+            <label className="block text-sm font-medium mb-2 text-gray-900 dark:text-white">
+              Reason for Refund <span className="text-red-500 dark:text-red-400">*</span>
             </label>
             <textarea
               value={refundReason}
               onChange={(e) => setRefundReason(e.target.value)}
               placeholder="Enter reason for refund..."
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
               rows={3}
               required
             />
           </div>
 
           {/* Warning */}
-          <div className="mb-6 p-4 bg-warning-50 border border-yellow-200 rounded-lg flex items-start gap-2">
-            <AlertCircle className="w-5 h-5 text-warning-600 mt-0.5" />
-            <div className="text-sm text-warning-800">
+          <div className="mb-6 p-4 bg-warning-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-800 rounded-lg flex items-start gap-2">
+            <AlertCircle className="w-5 h-5 text-warning-600 dark:text-yellow-500 mt-0.5" />
+            <div className="text-sm text-warning-800 dark:text-yellow-300">
               <p className="font-medium">Important:</p>
               <p>Refunds cannot be reversed. Please verify the refund details before proceeding.</p>
             </div>
@@ -236,14 +236,14 @@ const RefundModal: React.FC<RefundModalProps> = ({ transaction, onClose, onRefun
           <div className="flex justify-end gap-4">
             <button
               onClick={onClose}
-              className="px-4 py-2 border rounded-lg hover:bg-gray-50"
+              className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
             >
               Cancel
             </button>
             <button
               onClick={handleRefund}
               disabled={processing || !refundReason.trim()}
-              className="px-4 py-2 bg-danger-500 text-white rounded-lg hover:bg-danger-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="px-4 py-2 bg-danger-500 dark:bg-red-600 text-white rounded-lg hover:bg-danger-600 dark:hover:bg-red-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
               {processing ? (
                 <>
@@ -398,13 +398,13 @@ export default function TransactionHistory() {
 
   const getStatusBadge = (status: string) => {
     const styles = {
-      completed: 'bg-primary-100 text-primary-700',
-      parked: 'bg-warning-100 text-yellow-700',
-      cancelled: 'bg-gray-50 text-gray-700',
-      refunded: 'bg-danger-100 text-red-700',
-      partial_refund: 'bg-orange-100 text-orange-700'
+      completed: 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300',
+      parked: 'bg-warning-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400',
+      cancelled: 'bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300',
+      refunded: 'bg-danger-100 dark:bg-red-900/30 text-red-700 dark:text-red-300',
+      partial_refund: 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300'
     };
-    return styles[status] || 'bg-gray-50 text-gray-700';
+    return styles[status] || 'bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300';
   };
 
   const getPaymentMethodIcon = (method: string) => {
@@ -422,35 +422,35 @@ export default function TransactionHistory() {
   return (
     <div className="h-full flex flex-col">
       {/* Header with Search and Filters */}
-      <div className="bg-white p-6 border-b">
+      <div className="bg-white dark:bg-gray-800 p-6 border-b border-gray-200 dark:border-gray-700">
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Search */}
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-5 h-5" />
             <input
               type="text"
               placeholder="Search by receipt #, customer name, email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border rounded-lg"
+              className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
             />
           </div>
 
           {/* Date Range */}
           <div className="flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-gray-400" />
+            <Calendar className="w-5 h-5 text-gray-400 dark:text-gray-500" />
             <input
               type="date"
               value={dateRange.start}
               onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
-              className="px-3 py-2 border rounded-lg"
+              className="px-3 py-2 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg"
             />
-            <span className="text-gray-500">to</span>
+            <span className="text-gray-500 dark:text-gray-400">to</span>
             <input
               type="date"
               value={dateRange.end}
               onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
-              className="px-3 py-2 border rounded-lg"
+              className="px-3 py-2 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg"
             />
           </div>
 
@@ -458,14 +458,14 @@ export default function TransactionHistory() {
           <button
             onClick={() => setShowFilters(!showFilters)}
             className={`px-4 py-2 border rounded-lg flex items-center gap-2 ${
-              showFilters ? 'bg-blue-50 border-blue-300 text-accent-700' : 'hover:bg-gray-50'
+              showFilters ? 'bg-blue-50 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700 text-accent-700 dark:text-accent-300' : 'border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
             }`}
           >
             <Filter className="w-4 h-4" />
             Filters
             {(filters.status !== 'all' || filters.paymentMethod !== 'all' ||
               filters.minAmount || filters.maxAmount) && (
-              <span className="px-1.5 py-0.5 bg-accent-600 text-white text-xs rounded-full">
+              <span className="px-1.5 py-0.5 bg-accent-600 dark:bg-accent-500 text-white text-xs rounded-full">
                 {[filters.status !== 'all', filters.paymentMethod !== 'all',
                   !!filters.minAmount, !!filters.maxAmount].filter(Boolean).length}
               </span>
@@ -475,22 +475,22 @@ export default function TransactionHistory() {
           {/* Refresh */}
           <button
             onClick={fetchTransactions}
-            className="px-4 py-2 border rounded-lg hover:bg-gray-50"
+            className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
             disabled={loading}
           >
-            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-4 h-4 text-gray-700 dark:text-gray-300 ${loading ? 'animate-spin' : ''}`} />
           </button>
         </div>
 
         {/* Filter Panel */}
         {showFilters && (
-          <div className="mt-4 p-6 bg-gray-50 rounded-lg grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="mt-4 p-6 bg-gray-50 dark:bg-gray-900 rounded-lg grid grid-cols-1 md:grid-cols-4 gap-6">
             <div>
-              <label className="block text-sm font-medium mb-1">Status</label>
+              <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Status</label>
               <select
                 value={filters.status}
                 onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg"
+                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg"
               >
                 <option value="all">All Statuses</option>
                 <option value="completed">Completed</option>
@@ -501,11 +501,11 @@ export default function TransactionHistory() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">Payment Method</label>
+              <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Payment Method</label>
               <select
                 value={filters.paymentMethod}
                 onChange={(e) => setFilters({ ...filters, paymentMethod: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg"
+                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg"
               >
                 <option value="all">All Methods</option>
                 <option value="cash">Cash</option>
@@ -516,24 +516,24 @@ export default function TransactionHistory() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">Min Amount</label>
+              <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Min Amount</label>
               <input
                 type="number"
                 placeholder="0.00"
                 value={filters.minAmount}
                 onChange={(e) => setFilters({ ...filters, minAmount: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg"
+                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">Max Amount</label>
+              <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Max Amount</label>
               <input
                 type="number"
                 placeholder="999.99"
                 value={filters.maxAmount}
                 onChange={(e) => setFilters({ ...filters, maxAmount: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg"
+                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg"
               />
             </div>
           </div>
@@ -541,16 +541,16 @@ export default function TransactionHistory() {
       </div>
 
       {/* Summary Stats */}
-      <div className="bg-white px-4 py-3 border-b">
+      <div className="bg-white dark:bg-gray-800 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-600">
+          <span className="text-gray-600 dark:text-gray-400">
             Showing {filteredTransactions.length} of {transactions.length} transactions
           </span>
           <div className="flex items-center gap-6">
-            <span className="text-gray-600">
+            <span className="text-gray-600 dark:text-gray-400">
               Total: ${filteredTransactions.reduce((sum, t) => sum + t.total, 0).toFixed(2)}
             </span>
-            <span className="text-gray-600">
+            <span className="text-gray-600 dark:text-gray-400">
               Refunded: ${filteredTransactions.reduce((sum, t) => sum + (t.refunded_amount || 0), 0).toFixed(2)}
             </span>
           </div>
@@ -561,17 +561,17 @@ export default function TransactionHistory() {
       <div className="flex-1 overflow-auto">
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+            <Loader2 className="w-8 h-8 animate-spin text-gray-400 dark:text-gray-500" />
           </div>
         ) : filteredTransactions.length === 0 ? (
-          <div className="text-center py-12 text-gray-500">
-            <Receipt className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+          <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+            <Receipt className="w-12 h-12 mx-auto mb-3 text-gray-300 dark:text-gray-600" />
             <p>No transactions found</p>
             <p className="text-sm mt-1">Try adjusting your filters or date range</p>
           </div>
         ) : (
           <table className="w-full">
-            <thead className="bg-gray-50 sticky top-0">
+            <thead className="bg-gray-50 dark:bg-gray-900 sticky top-0">
               <tr>
                 <th className="px-4 py-3 text-left">
                   <button
@@ -579,84 +579,84 @@ export default function TransactionHistory() {
                       setSortBy('date');
                       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
                     }}
-                    className="flex items-center gap-1 font-medium text-sm text-gray-700 hover:text-gray-900"
+                    className="flex items-center gap-1 font-medium text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
                   >
                     Date/Time
                     <ArrowUpDown className="w-3 h-3" />
                   </button>
                 </th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Receipt #</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Receipt #</th>
                 <th className="px-4 py-3 text-left">
                   <button
                     onClick={() => {
                       setSortBy('customer');
                       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
                     }}
-                    className="flex items-center gap-1 font-medium text-sm text-gray-700 hover:text-gray-900"
+                    className="flex items-center gap-1 font-medium text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
                   >
                     Customer
                     <ArrowUpDown className="w-3 h-3" />
                   </button>
                 </th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Items</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Items</th>
                 <th className="px-4 py-3 text-left">
                   <button
                     onClick={() => {
                       setSortBy('amount');
                       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
                     }}
-                    className="flex items-center gap-1 font-medium text-sm text-gray-700 hover:text-gray-900"
+                    className="flex items-center gap-1 font-medium text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
                   >
                     Amount
                     <ArrowUpDown className="w-3 h-3" />
                   </button>
                 </th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Payment</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Status</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Actions</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Payment</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Status</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 dark:text-gray-300">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y">
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
               {filteredTransactions.map((transaction) => (
-                <tr key={transaction.id} className="hover:bg-gray-50">
+                <tr key={transaction.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                   <td className="px-4 py-3">
                     <div className="text-sm">
-                      <p className="font-medium">
+                      <p className="font-medium text-gray-900 dark:text-white">
                         {new Date(transaction.timestamp).toLocaleDateString()}
                       </p>
-                      <p className="text-gray-500 text-xs">
+                      <p className="text-gray-500 dark:text-gray-400 text-xs">
                         {new Date(transaction.timestamp).toLocaleTimeString()}
                       </p>
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-sm font-mono">
+                  <td className="px-4 py-3 text-sm font-mono text-gray-900 dark:text-white">
                     {transaction.receipt_number || `#${transaction.id.slice(-6)}`}
                   </td>
                   <td className="px-4 py-3">
                     <div className="text-sm">
-                      <p className="font-medium">
+                      <p className="font-medium text-gray-900 dark:text-white">
                         {transaction.customer_name || 'Guest'}
                       </p>
                       {transaction.customer_email && (
-                        <p className="text-gray-500 text-xs">{transaction.customer_email}</p>
+                        <p className="text-gray-500 dark:text-gray-400 text-xs">{transaction.customer_email}</p>
                       )}
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-sm">
+                  <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
                     {transaction.items?.length || 0}
                   </td>
                   <td className="px-4 py-3">
                     <div className="text-sm">
-                      <p className="font-medium">${transaction.total.toFixed(2)}</p>
+                      <p className="font-medium text-gray-900 dark:text-white">${transaction.total.toFixed(2)}</p>
                       {(transaction.refunded_amount ?? 0) > 0 && (
-                        <p className="text-danger-600 text-xs">
+                        <p className="text-danger-600 dark:text-red-400 text-xs">
                           -${(transaction.refunded_amount ?? 0).toFixed(2)}
                         </p>
                       )}
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    <div className="flex items-center gap-1 text-sm">
+                    <div className="flex items-center gap-1 text-sm text-gray-900 dark:text-white">
                       {getPaymentMethodIcon(transaction.payment_method)}
                       <span className="capitalize">{transaction.payment_method}</span>
                     </div>
@@ -670,17 +670,17 @@ export default function TransactionHistory() {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => setSelectedTransaction(transaction)}
-                        className="p-1 hover:bg-gray-50 rounded"
+                        className="p-1 hover:bg-gray-100 dark:hover:bg-gray-600 rounded"
                         title="View Details"
                       >
-                        <Eye className="w-4 h-4 text-gray-600" />
+                        <Eye className="w-4 h-4 text-gray-600 dark:text-gray-400" />
                       </button>
                       <button
                         onClick={() => posService.printReceipt(transaction.id)}
-                        className="p-1 hover:bg-gray-50 rounded"
+                        className="p-1 hover:bg-gray-100 dark:hover:bg-gray-600 rounded"
                         title="Print Receipt"
                       >
-                        <Receipt className="w-4 h-4 text-gray-600" />
+                        <Receipt className="w-4 h-4 text-gray-600 dark:text-gray-400" />
                       </button>
                       {transaction.status === 'completed' &&
                        transaction.total > ((transaction.refunded_amount ?? 0) || 0) && (
@@ -689,10 +689,10 @@ export default function TransactionHistory() {
                             setSelectedTransaction(transaction);
                             setShowRefundModal(true);
                           }}
-                          className="p-1 hover:bg-gray-50 rounded"
+                          className="p-1 hover:bg-gray-100 dark:hover:bg-gray-600 rounded"
                           title="Refund"
                         >
-                          <RefreshCw className="w-4 h-4 text-danger-600" />
+                          <RefreshCw className="w-4 h-4 text-danger-600 dark:text-red-400" />
                         </button>
                       )}
                     </div>
@@ -718,50 +718,50 @@ export default function TransactionHistory() {
 
       {/* Transaction Details Modal */}
       {selectedTransaction && !showRefundModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg border border-gray-200 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black dark:bg-gray-900 bg-opacity-50 dark:bg-opacity-70">
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-bold">Transaction Details</h2>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Transaction Details</h2>
                 <button
                   onClick={() => setSelectedTransaction(null)}
-                  className="p-1 hover:bg-gray-50 rounded"
+                  className="p-1 hover:bg-gray-50 dark:hover:bg-gray-700 rounded"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-5 h-5 text-gray-700 dark:text-gray-300" />
                 </button>
               </div>
             </div>
             <div className="p-6">
               <div className="grid grid-cols-2 gap-6 mb-6">
                 <div>
-                  <p className="text-sm text-gray-600">Receipt Number</p>
-                  <p className="font-medium">{selectedTransaction.receipt_number}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Receipt Number</p>
+                  <p className="font-medium text-gray-900 dark:text-white">{selectedTransaction.receipt_number}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Date & Time</p>
-                  <p className="font-medium">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Date & Time</p>
+                  <p className="font-medium text-gray-900 dark:text-white">
                     {new Date(selectedTransaction.timestamp).toLocaleString()}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Customer</p>
-                  <p className="font-medium">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Customer</p>
+                  <p className="font-medium text-gray-900 dark:text-white">
                     {selectedTransaction.customer_name || 'Guest'}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Cashier</p>
-                  <p className="font-medium">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Cashier</p>
+                  <p className="font-medium text-gray-900 dark:text-white">
                     {selectedTransaction.cashier_name || selectedTransaction.cashier_id}
                   </p>
                 </div>
               </div>
 
-              <div className="border-t pt-4">
-                <h3 className="font-medium mb-3">Items</h3>
+              <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+                <h3 className="font-medium mb-3 text-gray-900 dark:text-white">Items</h3>
                 <div className="space-y-2">
                   {selectedTransaction.items?.map((item, index) => (
-                    <div key={index} className="flex justify-between text-sm">
+                    <div key={index} className="flex justify-between text-sm text-gray-900 dark:text-white">
                       <span>{item.product?.name} × {item.quantity}</span>
                       <span>${((item.product?.price || 0) * item.quantity).toFixed(2)}</span>
                     </div>
@@ -769,21 +769,21 @@ export default function TransactionHistory() {
                 </div>
               </div>
 
-              <div className="border-t mt-4 pt-4 space-y-2">
-                <div className="flex justify-between text-sm">
+              <div className="border-t border-gray-200 dark:border-gray-700 mt-4 pt-4 space-y-2">
+                <div className="flex justify-between text-sm text-gray-700 dark:text-gray-300">
                   <span>Subtotal</span>
                   <span>${selectedTransaction.subtotal.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-sm">
+                <div className="flex justify-between text-sm text-gray-700 dark:text-gray-300">
                   <span>Tax</span>
                   <span>${selectedTransaction.tax.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between font-medium">
+                <div className="flex justify-between font-medium text-gray-900 dark:text-white">
                   <span>Total</span>
                   <span>${selectedTransaction.total.toFixed(2)}</span>
                 </div>
                 {selectedTransaction.refunded_amount > 0 && (
-                  <div className="flex justify-between text-sm text-danger-600">
+                  <div className="flex justify-between text-sm text-danger-600 dark:text-red-400">
                     <span>Refunded</span>
                     <span>-${selectedTransaction.refunded_amount.toFixed(2)}</span>
                   </div>

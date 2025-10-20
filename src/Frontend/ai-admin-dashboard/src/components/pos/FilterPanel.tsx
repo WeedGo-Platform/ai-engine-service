@@ -65,24 +65,24 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="w-80 bg-white border rounded-lg  h-fit sticky top-6">
-      <div className="p-6 border-b flex justify-between items-center">
-        <h3 className="font-semibold text-lg">Filters</h3>
+    <div className="w-80 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg h-fit sticky top-6 transition-colors duration-200">
+      <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+        <h3 className="font-semibold text-lg text-gray-900 dark:text-white">Filters</h3>
         <button
           onClick={onClose}
-          className="p-1 hover:bg-gray-50 rounded"
+          className="p-1 hover:bg-gray-50 dark:hover:bg-gray-700 rounded transition-colors"
         >
-          <X className="w-4 h-4" />
+          <X className="w-4 h-4 text-gray-900 dark:text-white" />
         </button>
       </div>
       <div className="p-6 space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto">
         {/* Subcategories */}
         {availableSubcategories.length > 0 && (
           <div>
-            <h4 className="font-semibold text-sm mb-2">Subcategories</h4>
+            <h4 className="font-semibold text-sm mb-2 text-gray-900 dark:text-white">Subcategories</h4>
             <div className="space-y-1 max-h-40 overflow-y-auto">
               {availableSubcategories.map(subcat => (
-                <label key={subcat} className="flex items-center gap-2 text-sm">
+                <label key={subcat} className="flex items-center gap-2 text-sm text-gray-900 dark:text-white">
                   <input
                     type="checkbox"
                     checked={selectedFilters.subcategories.includes(subcat)}
@@ -111,10 +111,10 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
         {/* Plant Types */}
         {availablePlantTypes.length > 0 && (
           <div>
-            <h4 className="font-semibold text-sm mb-2">Plant Type</h4>
+            <h4 className="font-semibold text-sm mb-2 text-gray-900 dark:text-white">Plant Type</h4>
             <div className="space-y-1">
               {availablePlantTypes.map(type => (
-                <label key={type} className="flex items-center gap-2 text-sm">
+                <label key={type} className="flex items-center gap-2 text-sm text-gray-900 dark:text-white">
                   <input
                     type="checkbox"
                     checked={selectedFilters.plantTypes.includes(type)}
@@ -143,10 +143,10 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
         {/* Sizes */}
         {availableSizes.length > 0 && (
           <div>
-            <h4 className="font-semibold text-sm mb-2">Size</h4>
+            <h4 className="font-semibold text-sm mb-2 text-gray-900 dark:text-white">Size</h4>
             <div className="space-y-1 max-h-40 overflow-y-auto">
               {availableSizes.map(size => (
-                <label key={size} className="flex items-center gap-2 text-sm">
+                <label key={size} className="flex items-center gap-2 text-sm text-gray-900 dark:text-white">
                   <input
                     type="checkbox"
                     checked={selectedFilters.sizes.includes(size)}
@@ -180,8 +180,8 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
               onClick={() => onFilterChange({ ...selectedFilters, priceSort: 'none' })}
               className={`px-3 py-1 text-sm rounded border ${
                 selectedFilters.priceSort === 'none'
-                  ? 'bg-blue-100 border-blue-300 text-accent-700'
-                  : 'bg-white hover:bg-gray-50'
+                  ? 'bg-blue-100 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700 text-accent-700 dark:text-blue-400'
+                  : 'bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white'
               }`}
             >
               <ArrowUpDown className="w-3 h-3 inline mr-1" />
@@ -191,8 +191,8 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
               onClick={() => onFilterChange({ ...selectedFilters, priceSort: 'asc' })}
               className={`px-3 py-1 text-sm rounded border ${
                 selectedFilters.priceSort === 'asc'
-                  ? 'bg-blue-100 border-blue-300 text-accent-700'
-                  : 'bg-white hover:bg-gray-50'
+                  ? 'bg-blue-100 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700 text-accent-700 dark:text-blue-400'
+                  : 'bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white'
               }`}
             >
               <ArrowUp className="w-3 h-3 inline mr-1" />
@@ -202,8 +202,8 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
               onClick={() => onFilterChange({ ...selectedFilters, priceSort: 'desc' })}
               className={`px-3 py-1 text-sm rounded border ${
                 selectedFilters.priceSort === 'desc'
-                  ? 'bg-blue-100 border-blue-300 text-accent-700'
-                  : 'bg-white hover:bg-gray-50'
+                  ? 'bg-blue-100 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700 text-accent-700 dark:text-blue-400'
+                  : 'bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white'
               }`}
             >
               <ArrowDown className="w-3 h-3 inline mr-1" />
@@ -220,8 +220,8 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
               onClick={() => onFilterChange({ ...selectedFilters, thcSort: 'none' })}
               className={`px-3 py-1 text-sm rounded border ${
                 selectedFilters.thcSort === 'none'
-                  ? 'bg-blue-100 border-blue-300 text-accent-700'
-                  : 'bg-white hover:bg-gray-50'
+                  ? 'bg-blue-100 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700 text-accent-700 dark:text-blue-400'
+                  : 'bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white'
               }`}
             >
               <ArrowUpDown className="w-3 h-3 inline mr-1" />
@@ -231,8 +231,8 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
               onClick={() => onFilterChange({ ...selectedFilters, thcSort: 'asc' })}
               className={`px-3 py-1 text-sm rounded border ${
                 selectedFilters.thcSort === 'asc'
-                  ? 'bg-blue-100 border-blue-300 text-accent-700'
-                  : 'bg-white hover:bg-gray-50'
+                  ? 'bg-blue-100 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700 text-accent-700 dark:text-blue-400'
+                  : 'bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white'
               }`}
             >
               <ArrowUp className="w-3 h-3 inline mr-1" />
@@ -242,8 +242,8 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
               onClick={() => onFilterChange({ ...selectedFilters, thcSort: 'desc' })}
               className={`px-3 py-1 text-sm rounded border ${
                 selectedFilters.thcSort === 'desc'
-                  ? 'bg-blue-100 border-blue-300 text-accent-700'
-                  : 'bg-white hover:bg-gray-50'
+                  ? 'bg-blue-100 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700 text-accent-700 dark:text-blue-400'
+                  : 'bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white'
               }`}
             >
               <ArrowDown className="w-3 h-3 inline mr-1" />
@@ -260,8 +260,8 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
               onClick={() => onFilterChange({ ...selectedFilters, cbdSort: 'none' })}
               className={`px-3 py-1 text-sm rounded border ${
                 selectedFilters.cbdSort === 'none'
-                  ? 'bg-blue-100 border-blue-300 text-accent-700'
-                  : 'bg-white hover:bg-gray-50'
+                  ? 'bg-blue-100 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700 text-accent-700 dark:text-blue-400'
+                  : 'bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white'
               }`}
             >
               <ArrowUpDown className="w-3 h-3 inline mr-1" />
@@ -271,8 +271,8 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
               onClick={() => onFilterChange({ ...selectedFilters, cbdSort: 'asc' })}
               className={`px-3 py-1 text-sm rounded border ${
                 selectedFilters.cbdSort === 'asc'
-                  ? 'bg-blue-100 border-blue-300 text-accent-700'
-                  : 'bg-white hover:bg-gray-50'
+                  ? 'bg-blue-100 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700 text-accent-700 dark:text-blue-400'
+                  : 'bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white'
               }`}
             >
               <ArrowUp className="w-3 h-3 inline mr-1" />
@@ -282,8 +282,8 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
               onClick={() => onFilterChange({ ...selectedFilters, cbdSort: 'desc' })}
               className={`px-3 py-1 text-sm rounded border ${
                 selectedFilters.cbdSort === 'desc'
-                  ? 'bg-blue-100 border-blue-300 text-accent-700'
-                  : 'bg-white hover:bg-gray-50'
+                  ? 'bg-blue-100 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700 text-accent-700 dark:text-blue-400'
+                  : 'bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white'
               }`}
             >
               <ArrowDown className="w-3 h-3 inline mr-1" />
@@ -295,7 +295,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
         {/* Stock Status */}
         <div>
           <h4 className="font-semibold text-sm mb-2">Stock</h4>
-          <label className="flex items-center gap-2 text-sm">
+          <label className="flex items-center gap-2 text-sm text-gray-900 dark:text-white">
             <input
               type="checkbox"
               checked={selectedFilters.inStockOnly}
@@ -303,7 +303,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
                 ...selectedFilters,
                 inStockOnly: e.target.checked
               })}
-              className="rounded"
+              className="rounded border-gray-300 dark:border-gray-600 dark:bg-gray-700"
             />
             In Stock Only
           </label>
@@ -311,7 +311,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
       </div>
 
       {/* Clear Filters */}
-      <div className="p-6 border-t">
+      <div className="p-6 border-t border-gray-200 dark:border-gray-700">
         <button
           onClick={() => onFilterChange({
             subcategories: [],
@@ -322,7 +322,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
             cbdSort: 'none',
             inStockOnly: false
           })}
-          className="w-full py-2 text-sm text-gray-600 hover:text-gray-900 border rounded hover:bg-gray-50"
+          className="w-full py-2 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white border border-gray-200 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
         >
           Clear All Filters
         </button>

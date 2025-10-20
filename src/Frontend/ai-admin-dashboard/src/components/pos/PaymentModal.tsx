@@ -139,14 +139,14 @@ export default function PaymentModal({ isOpen, onClose, total, onComplete }: Pay
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg border border-gray-200 w-full max-w-3xl">
+    <div className="fixed inset-0 bg-black dark:bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 transition-colors duration-200">
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 w-full max-w-3xl">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-2xl font-bold">Process Payment</h2>
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Process Payment</h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
           >
             <X className="w-6 h-6" />
           </button>
@@ -155,60 +155,60 @@ export default function PaymentModal({ isOpen, onClose, total, onComplete }: Pay
         {/* Content */}
         <div className="p-6">
           {/* Total Amount */}
-          <div className="bg-gray-50 rounded-lg p-6 mb-6">
+          <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 mb-6 transition-colors duration-200">
             <div className="text-center">
-              <p className="text-sm text-gray-600 mb-1">Total Amount Due</p>
-              <p className="text-4xl font-bold text-gray-900">${total.toFixed(2)}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">Total Amount Due</p>
+              <p className="text-4xl font-bold text-gray-900 dark:text-white">${total.toFixed(2)}</p>
             </div>
           </div>
 
           {/* Payment Method Selection */}
           <div className="mb-6">
-            <p className="text-sm font-medium text-gray-700 mb-3">Payment Method</p>
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Payment Method</p>
             <div className="grid grid-cols-4 gap-4">
               <button
                 onClick={() => setPaymentMethod('cash')}
                 className={`p-4 rounded-lg border-2 transition-colors ${
                   paymentMethod === 'cash'
-                    ? 'border-primary-500 bg-primary-50'
-                    : 'border-gray-200 hover:border-gray-200'
+                    ? 'border-primary-500 dark:border-primary-400 bg-primary-50 dark:bg-primary-900/30'
+                    : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
                 }`}
               >
                 <DollarSign className="w-6 h-6 mx-auto mb-1" />
-                <p className="text-sm font-medium">Cash</p>
+                <p className="text-sm font-medium text-gray-900 dark:text-white">Cash</p>
               </button>
               <button
                 onClick={() => setPaymentMethod('card')}
                 className={`p-4 rounded-lg border-2 transition-colors ${
                   paymentMethod === 'card'
-                    ? 'border-primary-500 bg-primary-50'
-                    : 'border-gray-200 hover:border-gray-200'
+                    ? 'border-primary-500 dark:border-primary-400 bg-primary-50 dark:bg-primary-900/30'
+                    : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
                 }`}
               >
                 <CreditCard className="w-6 h-6 mx-auto mb-1" />
-                <p className="text-sm font-medium">Credit</p>
+                <p className="text-sm font-medium text-gray-900 dark:text-white">Credit</p>
               </button>
               <button
                 onClick={() => setPaymentMethod('debit')}
                 className={`p-4 rounded-lg border-2 transition-colors ${
                   paymentMethod === 'debit'
-                    ? 'border-primary-500 bg-primary-50'
-                    : 'border-gray-200 hover:border-gray-200'
+                    ? 'border-primary-500 dark:border-primary-400 bg-primary-50 dark:bg-primary-900/30'
+                    : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
                 }`}
               >
                 <Smartphone className="w-6 h-6 mx-auto mb-1" />
-                <p className="text-sm font-medium">Debit</p>
+                <p className="text-sm font-medium text-gray-900 dark:text-white">Debit</p>
               </button>
               <button
                 onClick={() => setPaymentMethod('split')}
                 className={`p-4 rounded-lg border-2 transition-colors ${
                   paymentMethod === 'split'
-                    ? 'border-primary-500 bg-primary-50'
-                    : 'border-gray-200 hover:border-gray-200'
+                    ? 'border-primary-500 dark:border-primary-400 bg-primary-50 dark:bg-primary-900/30'
+                    : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
                 }`}
               >
                 <Calculator className="w-6 h-6 mx-auto mb-1" />
-                <p className="text-sm font-medium">Split</p>
+                <p className="text-sm font-medium text-gray-900 dark:text-white">Split</p>
               </button>
             </div>
           </div>
@@ -217,14 +217,14 @@ export default function PaymentModal({ isOpen, onClose, total, onComplete }: Pay
           {paymentMethod === 'cash' && (
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Cash Received
                 </label>
                 <input
                   type="number"
                   value={cashAmount}
                   onChange={(e) => setCashAmount(e.target.value)}
-                  className="w-full px-4 py-3 text-2xl font-bold border rounded-lg focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-4 py-3 text-2xl font-bold border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
                   placeholder="0.00"
                   step="0.01"
                 />
@@ -232,13 +232,13 @@ export default function PaymentModal({ isOpen, onClose, total, onComplete }: Pay
 
               {/* Quick Cash Buttons */}
               <div>
-                <p className="text-sm font-medium text-gray-700 mb-2">Quick Amount</p>
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Quick Amount</p>
                 <div className="grid grid-cols-6 gap-2">
                   {QUICK_AMOUNTS.map(amount => (
                     <button
                       key={amount}
                       onClick={() => handleQuickCash(amount)}
-                      className="px-3 py-2 bg-gray-50 hover:bg-gray-50 rounded text-sm font-medium"
+                      className="px-3 py-2 bg-gray-50 dark:bg-gray-600 hover:bg-gray-100 dark:hover:bg-gray-500 rounded text-sm font-medium text-gray-900 dark:text-white transition-colors"
                     >
                       ${amount}
                     </button>
@@ -248,13 +248,13 @@ export default function PaymentModal({ isOpen, onClose, total, onComplete }: Pay
 
               {/* Cash Denominations */}
               <div>
-                <p className="text-sm font-medium text-gray-700 mb-2">Add Bills</p>
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Add Bills</p>
                 <div className="flex gap-2">
                   {CASH_DENOMINATIONS.map(denom => (
                     <button
                       key={denom.value}
                       onClick={() => handleCashDenomination(denom.value)}
-                      className="flex-1 px-3 py-2 bg-primary-100 hover:bg-green-200 rounded text-sm font-medium"
+                      className="flex-1 px-3 py-2 bg-primary-100 dark:bg-primary-900/30 hover:bg-green-200 dark:hover:bg-primary-800/40 rounded text-sm font-medium text-gray-900 dark:text-white transition-colors"
                     >
                       {denom.label}
                     </button>
@@ -264,10 +264,10 @@ export default function PaymentModal({ isOpen, onClose, total, onComplete }: Pay
 
               {/* Change Display */}
               {change > 0 && (
-                <div className="bg-warning-50 border border-yellow-200 rounded-lg p-6">
+                <div className="bg-warning-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg p-6 transition-colors">
                   <div className="flex items-center justify-between">
-                    <span className="text-lg font-medium">Change Due:</span>
-                    <span className="text-2xl font-bold text-yellow-700">
+                    <span className="text-lg font-medium text-gray-900 dark:text-white">Change Due:</span>
+                    <span className="text-2xl font-bold text-yellow-700 dark:text-yellow-400">
                       ${change.toFixed(2)}
                     </span>
                   </div>
@@ -279,9 +279,9 @@ export default function PaymentModal({ isOpen, onClose, total, onComplete }: Pay
           {/* Card/Debit Payment */}
           {(paymentMethod === 'card' || paymentMethod === 'debit') && (
             <div className="text-center py-8">
-              <CreditCard className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-              <p className="text-lg font-medium mb-2">Insert or Tap Card</p>
-              <p className="text-sm text-gray-600">
+              <CreditCard className="w-16 h-16 mx-auto mb-4 text-gray-400 dark:text-gray-500" />
+              <p className="text-lg font-medium mb-2 text-gray-900 dark:text-white">Insert or Tap Card</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">
                 Waiting for {paymentMethod === 'card' ? 'credit' : 'debit'} card...
               </p>
               <p className="text-2xl font-bold mt-4">${total.toFixed(2)}</p>
@@ -293,48 +293,48 @@ export default function PaymentModal({ isOpen, onClose, total, onComplete }: Pay
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Cash Amount
                   </label>
                   <input
                     type="number"
                     value={cashAmount}
                     onChange={(e) => setCashAmount(e.target.value)}
-                    className="w-full px-4 py-2 border rounded-lg"
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors"
                     placeholder="0.00"
                     step="0.01"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Card Amount
                   </label>
                   <input
                     type="number"
                     value={cardAmount}
                     onChange={(e) => setCardAmount(e.target.value)}
-                    className="w-full px-4 py-2 border rounded-lg"
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors"
                     placeholder="0.00"
                     step="0.01"
                   />
                 </div>
               </div>
               
-              <div className="bg-gray-50 rounded-lg p-4">
-                <div className="flex justify-between text-sm">
+              <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 transition-colors">
+                <div className="flex justify-between text-sm text-gray-900 dark:text-white">
                   <span>Cash:</span>
                   <span>${parseFloat(cashAmount) || 0}</span>
                 </div>
-                <div className="flex justify-between text-sm">
+                <div className="flex justify-between text-sm text-gray-900 dark:text-white">
                   <span>Card:</span>
                   <span>${parseFloat(cardAmount) || 0}</span>
                 </div>
-                <div className="flex justify-between font-bold pt-2 border-t mt-2">
+                <div className="flex justify-between font-bold pt-2 border-t border-gray-200 dark:border-gray-600 mt-2 text-gray-900 dark:text-white">
                   <span>Total:</span>
                   <span>${((parseFloat(cashAmount) || 0) + (parseFloat(cardAmount) || 0)).toFixed(2)}</span>
                 </div>
                 {change > 0 && (
-                  <div className="flex justify-between text-sm text-warning-600 mt-2">
+                  <div className="flex justify-between text-sm text-warning-600 dark:text-yellow-400 mt-2">
                     <span>Change:</span>
                     <span>${change.toFixed(2)}</span>
                   </div>
@@ -344,10 +344,10 @@ export default function PaymentModal({ isOpen, onClose, total, onComplete }: Pay
           )}
 
           {/* Receipt Options */}
-          <div className="mt-6 pt-6 border-t">
-            <p className="text-sm font-medium text-gray-700 mb-3">Receipt Options</p>
+          <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Receipt Options</p>
             <div className="space-y-2">
-              <label className="flex items-center gap-2">
+              <label className="flex items-center gap-2 text-gray-900 dark:text-white">
                 <input
                   type="checkbox"
                   checked={printReceipt}
@@ -357,7 +357,7 @@ export default function PaymentModal({ isOpen, onClose, total, onComplete }: Pay
                 <Printer className="w-4 h-4" />
                 <span className="text-sm">Print Receipt</span>
               </label>
-              <label className="flex items-center gap-2">
+              <label className="flex items-center gap-2 text-gray-900 dark:text-white">
                 <input
                   type="checkbox"
                   checked={showEmailInput}
@@ -372,7 +372,7 @@ export default function PaymentModal({ isOpen, onClose, total, onComplete }: Pay
                   type="email"
                   value={emailReceipt}
                   onChange={(e) => setEmailReceipt(e.target.value)}
-                  className="w-full px-3 py-2 border rounded-lg text-sm"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm transition-colors"
                   placeholder="customer@email.com"
                 />
               )}
@@ -381,25 +381,25 @@ export default function PaymentModal({ isOpen, onClose, total, onComplete }: Pay
 
           {/* Error Message */}
           {error && (
-            <div className="mt-4 p-4 bg-danger-50 border border-red-200 rounded-lg flex items-center gap-2">
-              <AlertCircle className="w-5 h-5 text-red-500" />
-              <span className="text-sm text-red-700">{error}</span>
+            <div className="mt-4 p-4 bg-danger-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-center gap-2 transition-colors">
+              <AlertCircle className="w-5 h-5 text-red-500 dark:text-red-400" />
+              <span className="text-sm text-red-700 dark:text-red-400">{error}</span>
             </div>
           )}
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between p-6 border-t bg-gray-50">
+        <div className="flex items-center justify-between p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 transition-colors">
           <button
             onClick={onClose}
-            className="px-6 py-2 text-gray-700 hover:text-gray-900"
+            className="px-6 py-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={processPayment}
             disabled={processing || !canProcess()}
-            className="px-6 py-3 bg-primary-500 text-white rounded-lg hover:bg-primary-600 disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center gap-2"
+            className="px-6 py-3 bg-primary-500 dark:bg-primary-600 text-white rounded-lg hover:bg-primary-600 dark:hover:bg-primary-700 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed flex items-center gap-2 transition-colors"
           >
             {processing ? (
               <>

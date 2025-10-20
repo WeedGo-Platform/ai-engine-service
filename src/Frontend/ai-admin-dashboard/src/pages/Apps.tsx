@@ -47,16 +47,16 @@ function KioskApp({ currentStore }: { currentStore: { id: string; name: string }
   // Don't render if no store is selected
   if (!currentStore) {
     return (
-      <div className="h-full flex items-center justify-center bg-gray-50">
+      <div className="h-full flex items-center justify-center bg-gray-50 dark:bg-gray-900">
         <div className="text-center">
-          <p className="text-gray-500">{t('apps:storeSelection.pleaseSelect')}</p>
+          <p className="text-gray-500 dark:text-gray-400">{t('apps:storeSelection.pleaseSelect')}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="h-full bg-gray-50">
+    <div className="h-full bg-gray-50 dark:bg-gray-900">
       {currentScreen === 'welcome' && (
         <WelcomeScreen
           onContinue={handleWelcomeContinue}
@@ -188,13 +188,13 @@ export default function Apps() {
   }, []);
 
   return (
-    <div ref={containerRef} className="h-full flex flex-col bg-gray-50">
+    <div ref={containerRef} className="h-full flex flex-col bg-gray-50 dark:bg-gray-900">
       {/* Compact Header */}
-      <div className="bg-white border-b">
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
         <div className="px-4 sm:px-6 py-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <h1 className="text-lg sm:text-xl font-bold">{t('apps:title')}</h1>
+              <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">{t('apps:title')}</h1>
 
               {/* Tabs - more compact */}
               <div className="flex gap-1 sm:gap-2">
@@ -202,8 +202,8 @@ export default function Apps() {
                   onClick={() => setActiveTab('pos')}
                   className={`px-3 py-1.5 rounded-lg text-sm font-medium flex items-center gap-1.5 transition-colors ${
                     activeTab === 'pos'
-                      ? 'bg-accent-500 text-white'
-                      : 'text-gray-600 hover:bg-gray-50'
+                      ? 'bg-accent-500 dark:bg-accent-600 text-white'
+                      : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                   }`}
                 >
                   <ShoppingCart className="w-3.5 h-3.5" />
@@ -214,8 +214,8 @@ export default function Apps() {
                   onClick={() => setActiveTab('kiosk')}
                   className={`px-3 py-1.5 rounded-lg text-sm font-medium flex items-center gap-1.5 transition-colors ${
                     activeTab === 'kiosk'
-                      ? 'bg-accent-500 text-white'
-                      : 'text-gray-600 hover:bg-gray-50'
+                      ? 'bg-accent-500 dark:bg-accent-600 text-white'
+                      : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                   }`}
                 >
                   <Monitor className="w-3.5 h-3.5" />
@@ -226,8 +226,8 @@ export default function Apps() {
                   onClick={() => setActiveTab('menu-display')}
                   className={`px-3 py-1.5 rounded-lg text-sm font-medium flex items-center gap-1.5 transition-colors ${
                     activeTab === 'menu-display'
-                      ? 'bg-accent-500 text-white'
-                      : 'text-gray-600 hover:bg-gray-50'
+                      ? 'bg-accent-500 dark:bg-accent-600 text-white'
+                      : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                   }`}
                 >
                   <Menu className="w-3.5 h-3.5" />
@@ -241,13 +241,13 @@ export default function Apps() {
             {activeTab === 'kiosk' && (
               <button
                 onClick={handleKioskFullscreenToggle}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                 title={isKioskFullscreen ? t('apps:fullscreen.exit') : t('apps:fullscreen.enter')}
               >
                 {isKioskFullscreen ? (
-                  <Minimize className="w-5 h-5 text-gray-600" />
+                  <Minimize className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                 ) : (
-                  <Maximize className="w-5 h-5 text-gray-600" />
+                  <Maximize className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                 )}
               </button>
             )}
@@ -259,22 +259,22 @@ export default function Apps() {
       <div className="flex-1 overflow-hidden">
         {/* Show warning message for admin users without store selection */}
         {(isSuperAdmin() || isTenantAdminOnly()) && !currentStore && (
-          <div className="h-full flex items-center justify-center bg-gray-50">
+          <div className="h-full flex items-center justify-center bg-gray-50 dark:bg-gray-900">
             <div className="text-center">
               <div className="mb-4">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-warning-100 rounded-full">
-                  <Monitor className="w-8 h-8 text-warning-600" />
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-warning-100 dark:bg-warning-900/30 rounded-full">
+                  <Monitor className="w-8 h-8 text-warning-600 dark:text-warning-400" />
                 </div>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('apps:storeSelection.required')}</h3>
-              <p className="text-gray-500 mb-4">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{t('apps:storeSelection.required')}</h3>
+              <p className="text-gray-500 dark:text-gray-400 mb-4">
                 {t('apps:storeSelection.description', {
                   appName: activeTab === 'pos' ? t('apps:tabs.pos') : activeTab === 'kiosk' ? t('apps:tabs.kiosk') : t('apps:tabs.menuDisplay')
                 })}
               </p>
               <button
                 onClick={() => setShowStoreSelectionModal(true)}
-                className="px-4 py-2 bg-accent-500 text-white rounded-lg hover:bg-accent-600 transition-colors"
+                className="px-4 py-2 bg-accent-500 dark:bg-accent-600 text-white rounded-lg hover:bg-accent-600 dark:hover:bg-accent-500 transition-colors"
               >
                 {t('apps:storeSelection.selectButton')}
               </button>

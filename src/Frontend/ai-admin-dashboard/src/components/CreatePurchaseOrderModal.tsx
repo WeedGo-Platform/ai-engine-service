@@ -275,44 +275,44 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
   
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-6 z-50">
-      <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden">
-        <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-xl font-bold flex items-center gap-2">
-            <Package className="h-6 w-6 text-primary-600" />
+      <div className="bg-white dark:bg-gray-800 rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-xl font-bold flex items-center gap-2 text-gray-900 dark:text-white">
+            <Package className="h-6 w-6 text-primary-600 dark:text-primary-400" />
             Create Purchase Order
           </h2>
-          <button onClick={handleClose} className="text-gray-500 hover:text-gray-700">
+          <button onClick={handleClose} className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
             <X className="h-6 w-6" />
           </button>
         </div>
         
         <div className="p-6 overflow-y-auto" style={{ maxHeight: 'calc(90vh - 200px)' }}>
           {error && (
-            <div className="mb-4 p-6 bg-danger-50 border border-red-200 rounded-lg">
-              <span className="text-red-700">{error}</span>
+            <div className="mb-4 p-6 bg-danger-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+              <span className="text-red-700 dark:text-red-400">{error}</span>
             </div>
           )}
-          
+
           {/* Store Selector */}
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Store *
             </label>
             <StoreSelector className="w-full" showStats={false} />
             {!currentStore && (
-              <p className="mt-1 text-sm text-danger-600">Please select a store</p>
+              <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">Please select a store</p>
             )}
           </div>
           
           <div className="grid grid-cols-3 gap-6 mb-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Supplier *
               </label>
               <select
                 value={supplierId}
                 onChange={(e) => setSupplierId(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               >
                 <option value="">Select Supplier</option>
                 {suppliers?.map((supplier: any) => (
@@ -322,28 +322,28 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
                 ))}
               </select>
             </div>
-            
+
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Expected Date *
               </label>
               <input
                 type="date"
                 value={expectedDate}
                 onChange={(e) => setExpectedDate(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               />
             </div>
-            
+
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Notes
               </label>
               <input
                 type="text"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500"
+                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white dark:placeholder-gray-400"
                 placeholder="Optional notes..."
               />
             </div>
@@ -351,31 +351,31 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
           
           <div className="mb-4">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-medium">Order Items</h3>
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white">Order Items</h3>
               <button
                 onClick={addItem}
-                className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 flex items-center gap-2"
+                className="bg-primary-600 dark:bg-primary-700 text-white px-4 py-2 rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 flex items-center gap-2"
               >
                 <Plus className="h-4 w-4" />
                 Add Item
               </button>
             </div>
-            
+
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead className="bg-gray-50 dark:bg-gray-700">
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">SKU</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Batch Lot</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Order Qty</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Received Qty</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Unit Cost</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Retail Price</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">SKU</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Batch Lot</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Order Qty</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Received Qty</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Unit Cost</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Retail Price</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Total</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                   {items.map((item, index) => (
                     <tr key={index}>
                       <td className="px-4 py-3">
@@ -383,7 +383,7 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
                           type="text"
                           value={item.sku}
                           onChange={(e) => updateItem(index, 'sku', e.target.value)}
-                          className="w-full px-2 py-1 border border-gray-200 rounded"
+                          className="w-full px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white dark:placeholder-gray-400"
                           placeholder="Enter SKU"
                         />
                       </td>
@@ -392,7 +392,7 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
                           type="text"
                           value={item.batch_lot || ''}
                           onChange={(e) => updateItem(index, 'batch_lot', e.target.value)}
-                          className="w-full px-2 py-1 border border-gray-200 rounded"
+                          className="w-full px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white dark:placeholder-gray-400"
                           placeholder="Optional"
                         />
                       </td>
@@ -401,7 +401,7 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
                           type="number"
                           value={item.quantity}
                           onChange={(e) => updateItem(index, 'quantity', parseInt(e.target.value) || 0)}
-                          className="w-20 px-2 py-1 border border-gray-200 rounded"
+                          className="w-20 px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                           min="1"
                         />
                       </td>
@@ -410,7 +410,7 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
                           type="number"
                           value={item.received_quantity || 0}
                           onChange={(e) => updateItem(index, 'received_quantity', parseInt(e.target.value) || 0)}
-                          className="w-20 px-2 py-1 border border-gray-200 rounded"
+                          className="w-20 px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                           min="0"
                         />
                       </td>
@@ -419,7 +419,7 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
                           type="number"
                           value={item.unit_cost}
                           onChange={(e) => updateItem(index, 'unit_cost', parseFloat(e.target.value) || 0)}
-                          className="w-24 px-2 py-1 border border-gray-200 rounded"
+                          className="w-24 px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                           min="0"
                           step="0.01"
                         />
@@ -429,18 +429,18 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
                           type="number"
                           value={item.retail_price || 0}
                           onChange={(e) => updateItem(index, 'retail_price', parseFloat(e.target.value) || 0)}
-                          className="w-24 px-2 py-1 border border-gray-200 rounded"
+                          className="w-24 px-2 py-1 border border-gray-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                           min="0"
                           step="0.01"
                         />
                       </td>
-                      <td className="px-4 py-3 font-medium">
+                      <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">
                         ${(item.quantity * item.unit_cost).toFixed(2)}
                       </td>
                       <td className="px-4 py-3">
                         <button
                           onClick={() => removeItem(index)}
-                          className="text-danger-600 hover:text-danger-800"
+                          className="text-danger-600 dark:text-danger-400 hover:text-danger-800 dark:hover:text-danger-300"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -452,31 +452,31 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
             </div>
           </div>
           
-          <div className="bg-gray-50 rounded-lg p-6">
+          <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
             <div className="flex justify-between items-center">
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-gray-600 dark:text-gray-300">
                 <span>Total Items: {items.length}</span>
                 <span className="ml-4">Total Quantity: {items.reduce((sum, item) => sum + item.quantity, 0)}</span>
               </div>
               <div className="flex items-center gap-2">
-                <DollarSign className="h-5 w-5 text-gray-600" />
-                <span className="text-xl font-bold">Total: ${calculateTotal().toFixed(2)}</span>
+                <DollarSign className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                <span className="text-xl font-bold text-gray-900 dark:text-white">Total: ${calculateTotal().toFixed(2)}</span>
               </div>
             </div>
           </div>
         </div>
-        
-        <div className="flex justify-between p-6 border-t">
+
+        <div className="flex justify-between p-6 border-t border-gray-200 dark:border-gray-700">
           <button
             onClick={handleClose}
-            className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50"
+            className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
             disabled={createPOMutation.isPending}
-            className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 disabled:opacity-50"
+            className="bg-primary-600 dark:bg-primary-700 text-white px-6 py-2 rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 disabled:opacity-50"
           >
             {createPOMutation.isPending ? 'Creating...' : 'Create Purchase Order'}
           </button>

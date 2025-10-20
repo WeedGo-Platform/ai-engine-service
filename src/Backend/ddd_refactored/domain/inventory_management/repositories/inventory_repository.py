@@ -91,13 +91,14 @@ class AsyncPGInventoryRepository(IInventoryRepository):
                     return await self._insert_inventory(conn, inventory)
 
     async def _insert_inventory(self, conn: asyncpg.Connection, inventory: Inventory) -> UUID:
-        """Insert new inventory"""
+        """Insert new inventory with all columns"""
         query = """
             INSERT INTO ocs_inventory (
-                id, store_id, sku, quantity_on_hand, quantity_reserved,
-                reorder_point, reorder_quantity, last_restocked, running_balance,
+                id, store_id, sku, quantity_on_hand, quantity_reserved, quantity_available,
+                reorder_point, reorder_quantity, last_restock_date, last_received,
+                unit_cost, retail_price, retail_price_dynamic, override_price,
                 created_at, updated_at
-            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
             RETURNING id
         """
 
@@ -108,28 +109,41 @@ class AsyncPGInventoryRepository(IInventoryRepository):
             inventory.sku,
             inventory.quantity_on_hand,
             inventory.quantity_reserved,
+            inventory.quantity_available,
             inventory.reorder_point,
             inventory.reorder_quantity,
-            inventory.last_restocked,
-            inventory.quantity_on_hand,  # running_balance = quantity_on_hand initially
+            inventory.last_restock_date,
+            inventory.last_received,
+            inventory.unit_cost,
+            inventory.retail_price,
+            inventory.retail_price_dynamic,
+            inventory.override_price,
             inventory.created_at,
             inventory.updated_at
         )
 
-        logger.info(f"Inserted new inventory for SKU {inventory.sku} (ID: {inventory_id})")
+        logger.info(
+            f"Inserted new inventory for SKU {inventory.sku} (ID: {inventory_id}): "
+            f"qty={inventory.quantity_on_hand}, cost={inventory.unit_cost}, retail={inventory.retail_price}"
+        )
         return inventory_id
 
     async def _update_inventory(self, conn: asyncpg.Connection, inventory: Inventory) -> None:
-        """Update existing inventory"""
+        """Update existing inventory with all columns"""
         query = """
             UPDATE ocs_inventory
             SET quantity_on_hand = $3,
                 quantity_reserved = $4,
-                reorder_point = $5,
-                reorder_quantity = $6,
-                last_restocked = $7,
-                running_balance = $8,
-                updated_at = $9
+                quantity_available = $5,
+                reorder_point = $6,
+                reorder_quantity = $7,
+                last_restock_date = $8,
+                last_received = $9,
+                unit_cost = $10,
+                retail_price = $11,
+                retail_price_dynamic = $12,
+                override_price = $13,
+                updated_at = $14
             WHERE store_id = $1 AND sku = $2
         """
 
@@ -139,14 +153,23 @@ class AsyncPGInventoryRepository(IInventoryRepository):
             inventory.sku,
             inventory.quantity_on_hand,
             inventory.quantity_reserved,
+            inventory.quantity_available,  # Now explicitly updated
             inventory.reorder_point,
             inventory.reorder_quantity,
-            inventory.last_restocked,
-            inventory.quantity_on_hand,  # running_balance = quantity_on_hand
+            inventory.last_restock_date,
+            inventory.last_received,  # New: track when last received from PO
+            inventory.unit_cost,  # New: weighted average cost
+            inventory.retail_price,  # New: calculated from pricing rules
+            inventory.retail_price_dynamic,  # New: dynamic pricing if applicable
+            inventory.override_price,  # New: manual price override
             datetime.utcnow()
         )
 
-        logger.info(f"Updated inventory for SKU {inventory.sku}")
+        logger.info(
+            f"Updated inventory for SKU {inventory.sku}: "
+            f"qty={inventory.quantity_on_hand}, available={inventory.quantity_available}, "
+            f"cost={inventory.unit_cost}, retail={inventory.retail_price}"
+        )
 
     async def find_by_id(self, inventory_id: UUID) -> Optional[Inventory]:
         """Get inventory by ID"""
@@ -206,11 +229,12 @@ class AsyncPGInventoryRepository(IInventoryRepository):
 
     def _map_to_entity(self, row: asyncpg.Record) -> Inventory:
         """
-        Map database record to Inventory entity
+        Map database record to Inventory entity with all columns
         """
         quantity_on_hand = row['quantity_on_hand']
         quantity_reserved = row.get('quantity_reserved', 0)
-        quantity_available = quantity_on_hand - quantity_reserved  # Calculate from DB values
+        # Use DB quantity_available if present, otherwise calculate
+        quantity_available = row.get('quantity_available', quantity_on_hand - quantity_reserved)
 
         return Inventory(
             id=row['id'],
@@ -218,10 +242,15 @@ class AsyncPGInventoryRepository(IInventoryRepository):
             sku=row['sku'],
             quantity_on_hand=quantity_on_hand,
             quantity_reserved=quantity_reserved,
-            quantity_available=quantity_available,  # Explicitly set calculated value
+            quantity_available=quantity_available,
             reorder_point=row.get('reorder_point', 0),
             reorder_quantity=row.get('reorder_quantity', 0),
-            last_restocked=row.get('last_restocked'),
+            last_restock_date=row.get('last_restock_date'),
+            last_received=row.get('last_received'),  # New: when last received from PO
+            unit_cost=Decimal(str(row.get('unit_cost', 0))),  # New: weighted average cost
+            retail_price=Decimal(str(row.get('retail_price', 0))),  # New: calculated retail price
+            retail_price_dynamic=Decimal(str(row['retail_price_dynamic'])) if row.get('retail_price_dynamic') else None,
+            override_price=Decimal(str(row['override_price'])) if row.get('override_price') else None,
             created_at=row.get('created_at', datetime.utcnow()),
             updated_at=row.get('updated_at', datetime.utcnow())
         )

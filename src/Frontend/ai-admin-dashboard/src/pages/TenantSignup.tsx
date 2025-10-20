@@ -511,33 +511,33 @@ const TenantSignup = () => {
         return (
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t('signup:tenant.companyInfo.brandName')} *
               </label>
               <input
                 type="text"
                 value={formData.tenantName}
                 onChange={(e) => handleInputChange('tenantName', e.target.value)}
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                  errors.tenantName ? 'border-red-500' : 'border-gray-200'
+                className={`w-full px-4 py-3 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 transition-colors ${
+                  errors.tenantName ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
                 }`}
                 placeholder={t('signup:tenant.companyInfo.brandNamePlaceholder')}
               />
               {errors.tenantName && (
-                <p className="mt-1 text-sm text-danger-600">{errors.tenantName}</p>
+                <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.tenantName}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t('signup:tenant.companyInfo.website')} *
               </label>
               <input
                 type="text"
                 value={formData.website}
                 onChange={(e) => handleInputChange('website', e.target.value)}
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                  errors.website ? 'border-red-500' : 'border-gray-200'
+                className={`w-full px-4 py-3 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 transition-colors ${
+                  errors.website ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
                 }`}
                 placeholder={t('signup:tenant.companyInfo.websitePlaceholder')}
               />
@@ -545,12 +545,12 @@ const TenantSignup = () => {
                 {t('signup:tenant.companyInfo.websiteHelp')}
               </p>
               {errors.website && (
-                <p className="mt-1 text-sm text-danger-600">{errors.website}</p>
+                <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.website}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t('signup:tenant.companyInfo.brandCodeAuto')}
               </label>
               <input
@@ -564,31 +564,31 @@ const TenantSignup = () => {
                 {t('signup:tenant.companyInfo.brandCodeHelp', { code: formData.tenantCode.toLowerCase() || 'your-code' })}
               </p>
               {errors.tenantCode && (
-                <p className="mt-1 text-sm text-danger-600">{errors.tenantCode}</p>
+                <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.tenantCode}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t('signup:tenant.companyInfo.legalCompanyName')} *
               </label>
               <input
                 type="text"
                 value={formData.companyName}
                 onChange={(e) => handleInputChange('companyName', e.target.value)}
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                  errors.companyName ? 'border-red-500' : 'border-gray-200'
+                className={`w-full px-4 py-3 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 transition-colors ${
+                  errors.companyName ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
                 }`}
                 placeholder={t('signup:tenant.companyInfo.legalCompanyPlaceholder')}
               />
               {errors.companyName && (
-                <p className="mt-1 text-sm text-danger-600">{errors.companyName}</p>
+                <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.companyName}</p>
               )}
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('signup:tenant.companyInfo.businessNumber')} *
                 </label>
                 <input
@@ -596,20 +596,20 @@ const TenantSignup = () => {
                   value={formData.businessNumber}
                   onChange={(e) => handleInputChange('businessNumber', e.target.value)}
                   className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                    errors.businessNumber ? 'border-red-500' : 'border-gray-200'
+                    errors.businessNumber ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
                   }`}
                   placeholder={t('signup:tenant.companyInfo.businessNumberPlaceholder')}
                 />
-                <p className="mt-1 text-sm text-gray-500">
+                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                   {t('signup:tenant.companyInfo.businessNumberHelp')}
                 </p>
                 {errors.businessNumber && (
-                  <p className="mt-1 text-sm text-danger-600">{errors.businessNumber}</p>
+                  <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.businessNumber}</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('signup:tenant.companyInfo.gstHstNumber')} *
                 </label>
                 <input
@@ -617,22 +617,22 @@ const TenantSignup = () => {
                   value={formData.gstHstNumber}
                   onChange={(e) => handleInputChange('gstHstNumber', e.target.value)}
                   className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                    errors.gstHstNumber ? 'border-red-500' : 'border-gray-200'
+                    errors.gstHstNumber ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
                   }`}
                   placeholder={t('signup:tenant.companyInfo.gstHstPlaceholder')}
                 />
-                <p className="mt-1 text-sm text-gray-500">
+                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                   {t('signup:tenant.companyInfo.gstHstHelp')}
                 </p>
                 {errors.gstHstNumber && (
-                  <p className="mt-1 text-sm text-danger-600">{errors.gstHstNumber}</p>
+                  <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.gstHstNumber}</p>
                 )}
               </div>
             </div>
 
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t('signup:tenant.companyInfo.logoUpload')}
               </label>
               <div className="space-y-2">
@@ -674,7 +674,7 @@ const TenantSignup = () => {
           <div className="space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('signup:tenant.contactInfo.firstName')} *
                 </label>
                 <input
@@ -682,16 +682,16 @@ const TenantSignup = () => {
                   value={formData.firstName}
                   onChange={(e) => handleInputChange('firstName', e.target.value)}
                   className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                    errors.firstName ? 'border-red-500' : 'border-gray-200'
+                    errors.firstName ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
                   }`}
                 />
                 {errors.firstName && (
-                  <p className="mt-1 text-sm text-danger-600">{errors.firstName}</p>
+                  <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.firstName}</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('signup:tenant.contactInfo.lastName')} *
                 </label>
                 <input
@@ -699,18 +699,18 @@ const TenantSignup = () => {
                   value={formData.lastName}
                   onChange={(e) => handleInputChange('lastName', e.target.value)}
                   className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                    errors.lastName ? 'border-red-500' : 'border-gray-200'
+                    errors.lastName ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
                   }`}
                 />
                 {errors.lastName && (
-                  <p className="mt-1 text-sm text-danger-600">{errors.lastName}</p>
+                  <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.lastName}</p>
                 )}
               </div>
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('signup:tenant.contactInfo.email')} *
                 </label>
                 <input
@@ -718,48 +718,48 @@ const TenantSignup = () => {
                   value={formData.contactEmail}
                   onChange={(e) => handleInputChange('contactEmail', e.target.value)}
                   className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                    errors.contactEmail ? 'border-red-500' : 'border-gray-200'
+                    errors.contactEmail ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
                   }`}
                 />
                 {errors.contactEmail && (
-                  <p className="mt-1 text-sm text-danger-600">{errors.contactEmail}</p>
+                  <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.contactEmail}</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('signup:tenant.contactInfo.phone')}
                 </label>
                 <input
                   type="tel"
                   value={formData.contactPhone}
                   onChange={(e) => handleInputChange('contactPhone', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 transition-colors"
                   placeholder={t('signup:tenant.contactInfo.phonePlaceholder')}
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t('signup:tenant.contactInfo.street')} *
               </label>
               <input
                 type="text"
                 value={formData.street}
                 onChange={(e) => handleInputChange('street', e.target.value)}
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                  errors.street ? 'border-red-500' : 'border-gray-200'
+                className={`w-full px-4 py-3 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 transition-colors ${
+                  errors.street ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
                 }`}
               />
               {errors.street && (
-                <p className="mt-1 text-sm text-danger-600">{errors.street}</p>
+                <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.street}</p>
               )}
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('signup:tenant.contactInfo.city')} *
                 </label>
                 <input
@@ -767,22 +767,22 @@ const TenantSignup = () => {
                   value={formData.city}
                   onChange={(e) => handleInputChange('city', e.target.value)}
                   className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                    errors.city ? 'border-red-500' : 'border-gray-200'
+                    errors.city ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
                   }`}
                 />
                 {errors.city && (
-                  <p className="mt-1 text-sm text-danger-600">{errors.city}</p>
+                  <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.city}</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('signup:tenant.contactInfo.province')} *
                 </label>
                 <select
                   value={formData.province}
                   onChange={(e) => handleInputChange('province', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 transition-colors"
                 >
                   {provinces.map(province => (
                     <option key={province.code} value={province.code}>
@@ -793,7 +793,7 @@ const TenantSignup = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('signup:tenant.contactInfo.postalCode')} *
                 </label>
                 <input
@@ -801,12 +801,12 @@ const TenantSignup = () => {
                   value={formData.postalCode}
                   onChange={(e) => handleInputChange('postalCode', e.target.value)}
                   className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                    errors.postalCode ? 'border-red-500' : 'border-gray-200'
+                    errors.postalCode ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
                   }`}
                   placeholder={t('signup:tenant.contactInfo.postalCodePlaceholder')}
                 />
                 {errors.postalCode && (
-                  <p className="mt-1 text-sm text-danger-600">{errors.postalCode}</p>
+                  <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.postalCode}</p>
                 )}
               </div>
             </div>
@@ -817,7 +817,7 @@ const TenantSignup = () => {
         return (
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t('signup:tenant.accountSetup.password')} *
               </label>
               <div className="relative">
@@ -826,7 +826,7 @@ const TenantSignup = () => {
                   value={formData.password}
                   onChange={(e) => handleInputChange('password', e.target.value)}
                   className={`w-full px-4 py-3 pr-12 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                    errors.password ? 'border-red-500' : 'border-gray-200'
+                    errors.password ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
                   }`}
                 />
                 <button
@@ -869,12 +869,12 @@ const TenantSignup = () => {
                 {t('signup:tenant.accountSetup.passwordHelp')}
               </p>
               {errors.password && (
-                <p className="mt-1 text-sm text-danger-600">{errors.password}</p>
+                <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.password}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t('signup:tenant.accountSetup.confirmPassword')} *
               </label>
               <div className="relative">
@@ -883,7 +883,7 @@ const TenantSignup = () => {
                   value={formData.confirmPassword}
                   onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
                   className={`w-full px-4 py-3 pr-12 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                    errors.confirmPassword ? 'border-red-500' : 'border-gray-200'
+                    errors.confirmPassword ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
                   }`}
                 />
                 <button
@@ -895,7 +895,7 @@ const TenantSignup = () => {
                 </button>
               </div>
               {errors.confirmPassword && (
-                <p className="mt-1 text-sm text-danger-600">{errors.confirmPassword}</p>
+                <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.confirmPassword}</p>
               )}
             </div>
 
@@ -996,7 +996,7 @@ const TenantSignup = () => {
 
                   {/* Billing Cycle */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       {t('signup:tenant.subscription.billingCycle')}
                     </label>
                     <div className="grid grid-cols-2 gap-6">
@@ -1036,7 +1036,7 @@ const TenantSignup = () => {
                     <>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             {t('signup:tenant.payment.cardholderName')} <span className="text-red-500">*</span>
                           </label>
                           <input
@@ -1050,7 +1050,7 @@ const TenantSignup = () => {
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             {t('signup:tenant.payment.cardNumber')} <span className="text-red-500">*</span>
                           </label>
                           <input
@@ -1067,7 +1067,7 @@ const TenantSignup = () => {
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             {t('signup:tenant.payment.expiryDate')} <span className="text-red-500">*</span>
                           </label>
                           <input
@@ -1088,7 +1088,7 @@ const TenantSignup = () => {
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             {t('signup:tenant.payment.cvv')} <span className="text-red-500">*</span>
                           </label>
                           <input
@@ -1103,7 +1103,7 @@ const TenantSignup = () => {
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             {t('signup:tenant.payment.postalCode')}
                           </label>
                           <input
@@ -1189,7 +1189,7 @@ const TenantSignup = () => {
 
             {/* Billing Cycle */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t('signup:tenant.subscription.billingCycle')}
               </label>
               <div className="grid grid-cols-2 gap-6">
@@ -1228,7 +1228,7 @@ const TenantSignup = () => {
             {formData.subscriptionTier !== 'enterprise' && formData.subscriptionTier !== 'community_and_new_business' && (
               <>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     {t('signup:tenant.payment.cardholderName')} *
                   </label>
                   <input
@@ -1236,16 +1236,16 @@ const TenantSignup = () => {
                     value={formData.billingName}
                     onChange={(e) => handleInputChange('billingName', e.target.value)}
                     className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                      errors.billingName ? 'border-red-500' : 'border-gray-200'
+                      errors.billingName ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
                     }`}
                   />
                   {errors.billingName && (
-                    <p className="mt-1 text-sm text-danger-600">{errors.billingName}</p>
+                    <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.billingName}</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     {t('signup:tenant.payment.cardNumber')} *
                   </label>
                   <input
@@ -1253,19 +1253,19 @@ const TenantSignup = () => {
                     value={formData.cardNumber}
                     onChange={(e) => handleInputChange('cardNumber', e.target.value)}
                     className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                      errors.cardNumber ? 'border-red-500' : 'border-gray-200'
+                      errors.cardNumber ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
                     }`}
                     placeholder={t('signup:tenant.payment.cardNumberPlaceholder')}
                     maxLength={19}
                   />
                   {errors.cardNumber && (
-                    <p className="mt-1 text-sm text-danger-600">{errors.cardNumber}</p>
+                    <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.cardNumber}</p>
                   )}
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       {t('signup:tenant.payment.expiryDate')} *
                     </label>
                     <input
@@ -1273,18 +1273,18 @@ const TenantSignup = () => {
                       value={formData.expiryDate}
                       onChange={(e) => handleInputChange('expiryDate', e.target.value)}
                       className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                        errors.expiryDate ? 'border-red-500' : 'border-gray-200'
+                        errors.expiryDate ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
                       }`}
                       placeholder={t('signup:tenant.payment.expiryPlaceholder')}
                       maxLength={5}
                     />
                     {errors.expiryDate && (
-                      <p className="mt-1 text-sm text-danger-600">{errors.expiryDate}</p>
+                      <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.expiryDate}</p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       {t('signup:tenant.payment.cvv')} *
                     </label>
                     <input
@@ -1292,12 +1292,12 @@ const TenantSignup = () => {
                       value={formData.cvv}
                       onChange={(e) => handleInputChange('cvv', e.target.value)}
                       className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                        errors.cvv ? 'border-red-500' : 'border-gray-200'
+                        errors.cvv ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
                       }`}
                       placeholder={t('signup:tenant.payment.cvvPlaceholder')}
                     />
                     {errors.cvv && (
-                      <p className="mt-1 text-sm text-danger-600">{errors.cvv}</p>
+                      <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.cvv}</p>
                     )}
                   </div>
                 </div>
@@ -1342,15 +1342,15 @@ const TenantSignup = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col transition-colors duration-200">
       {/* Success Animation Overlay */}
       {showSuccessAnimation && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fadeIn">
-          <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 animate-scaleIn">
+        <div className="fixed inset-0 bg-black dark:bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 animate-fadeIn">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-full mx-4 animate-scaleIn border border-transparent dark:border-gray-700">
             <div className="text-center">
-              <div className="mx-auto h-20 w-20 bg-green-100 rounded-full flex items-center justify-center mb-4 animate-scaleIn">
+              <div className="mx-auto h-20 w-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-4 animate-scaleIn">
                 <svg
-                  className="h-12 w-12 text-green-600 success-check"
+                  className="h-12 w-12 text-green-600 dark:text-green-400 success-check"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -1361,23 +1361,23 @@ const TenantSignup = () => {
                   <path d="M20 6 L9 17 L4 12"></path>
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2 animate-fadeInUp">
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 animate-fadeInUp">
                 {t('signup:tenant.success.welcome')}
               </h3>
-              <p className="text-gray-600 mb-6 animate-fadeInUp" style={{ animationDelay: '0.1s' }}>
+              <p className="text-gray-600 dark:text-gray-300 mb-6 animate-fadeInUp" style={{ animationDelay: '0.1s' }}>
                 {t('signup:tenant.success.accountCreated')}
               </p>
               <div className="space-y-2 animate-fadeInUp" style={{ animationDelay: '0.2s' }}>
-                <p className="text-sm text-gray-500">{t('signup:tenant.success.tenantCode')}</p>
-                <p className="text-lg font-mono font-bold text-primary-600 bg-gray-50 py-2 px-4 rounded-lg">
+                <p className="text-sm text-gray-500 dark:text-gray-400">{t('signup:tenant.success.tenantCode')}</p>
+                <p className="text-lg font-mono font-bold text-primary-600 dark:text-primary-400 bg-gray-50 dark:bg-gray-700 py-2 px-4 rounded-lg">
                   {formData.tenantCode}
                 </p>
               </div>
               <div className="mt-6 animate-fadeInUp" style={{ animationDelay: '0.3s' }}>
-                <div className="h-1 w-full bg-gray-200 rounded-full overflow-hidden">
-                  <div className="h-full bg-gradient-to-r from-green-500 to-green-600 loading-shimmer"></div>
+                <div className="h-1 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-green-500 to-green-600 dark:from-green-600 dark:to-green-700 loading-shimmer"></div>
                 </div>
-                <p className="text-sm text-gray-500 mt-2">{t('signup:tenant.success.preparing')}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">{t('signup:tenant.success.preparing')}</p>
               </div>
             </div>
           </div>
@@ -1385,16 +1385,16 @@ const TenantSignup = () => {
       )}
 
       {/* Header */}
-      <header className="bg-white ">
+      <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 transition-colors duration-200">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between py-6">
             <Link to="/" className="flex items-center">
-              <ArrowLeft className="h-5 w-5 text-gray-400 mr-2" />
-              <Leaf className="h-8 w-8 text-primary-600" />
-              <span className="ml-2 text-2xl font-bold text-gray-900">{t('signup:tenant.header.title')}</span>
+              <ArrowLeft className="h-5 w-5 text-gray-400 dark:text-gray-500 mr-2" />
+              <Leaf className="h-8 w-8 text-primary-600 dark:text-primary-400" />
+              <span className="ml-2 text-2xl font-bold text-gray-900 dark:text-white">{t('signup:tenant.header.title')}</span>
             </Link>
-            <div className="text-sm text-gray-500">
-              {t('signup:tenant.header.alreadyHaveAccount')} <Link to="/login" className="text-primary-600 hover:text-primary-700">{t('signup:tenant.header.signIn')}</Link>
+            <div className="text-sm text-gray-500 dark:text-gray-400">
+              {t('signup:tenant.header.alreadyHaveAccount')} <Link to="/login" className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300">{t('signup:tenant.header.signIn')}</Link>
             </div>
           </div>
         </div>
@@ -1439,12 +1439,12 @@ const TenantSignup = () => {
           </div>
 
           {/* Form */}
-          <div className="bg-white rounded-xl  p-8">
+          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-8 transition-colors duration-200">
             <div className="mb-8">
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                 {stepTitles[currentStep - 1]}
               </h1>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-300">
                 {currentStep === 1 && t('signup:tenant.stepDescriptions.company')}
                 {currentStep === 2 && t('signup:tenant.stepDescriptions.contact')}
                 {currentStep === 3 && t('signup:tenant.stepDescriptions.account')}
@@ -1474,7 +1474,7 @@ const TenantSignup = () => {
               {currentStep < 4 ? (
                 <button
                   onClick={nextStep}
-                  className="flex items-center px-6 py-3 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-colors"
+                  className="flex items-center px-6 py-3 bg-primary-600 dark:bg-primary-500 text-white rounded-lg font-medium hover:bg-primary-700 dark:hover:bg-primary-600 transition-colors"
                 >
                   {t('signup:tenant.navigation.next')}
                   <ArrowRight className="h-5 w-5 ml-2" />

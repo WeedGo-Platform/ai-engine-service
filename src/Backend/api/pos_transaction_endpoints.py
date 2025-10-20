@@ -88,298 +88,356 @@ async def create_pos_transaction(transaction: POSTransactionCreate):
     try:
         pool = await get_db_pool()
         async with pool.acquire() as conn:
-            # Parse store_id and customer_id as UUIDs
-            store_uuid = None
-            try:
-                store_uuid = uuid.UUID(transaction.store_id)
-            except:
-                logger.warning(f"Invalid store UUID: {transaction.store_id}")
-
-            customer_uuid = None
-            if transaction.customer_id and transaction.customer_id not in ['anonymous', 'anon']:
+            async with conn.transaction():  # Ensure atomicity - rollback on any failure
+                # Parse store_id and customer_id as UUIDs
+                store_uuid = None
                 try:
-                    customer_uuid = uuid.UUID(transaction.customer_id)
+                    store_uuid = uuid.UUID(transaction.store_id)
                 except:
-                    pass
+                    logger.warning(f"Invalid store UUID: {transaction.store_id}")
 
-            # Get user_id from customer if exists
-            user_id = None
-            if customer_uuid:
-                user_row = await conn.fetchrow(
-                    "SELECT user_id FROM profiles WHERE id = $1",
-                    customer_uuid
-                )
-                if user_row:
-                    user_id = user_row['user_id']
+                customer_uuid = None
+                if transaction.customer_id and transaction.customer_id not in ['anonymous', 'anon']:
+                    try:
+                        customer_uuid = uuid.UUID(transaction.customer_id)
+                    except:
+                        pass
 
-            # Prepare items in the format expected by orders table
-            order_items = [item.dict() for item in transaction.items]
+                # Get user_id from customer if exists
+                user_id = None
+                if customer_uuid:
+                    user_row = await conn.fetchrow(
+                        "SELECT user_id FROM profiles WHERE id = $1",
+                        customer_uuid
+                    )
+                    if user_row:
+                        user_id = user_row['user_id']
 
-            # Create order using the unified system
-            order_number = transaction.receipt_number or f"POS-{int(datetime.now().timestamp())}"
+                # Prepare items in the format expected by orders table
+                order_items = [item.dict() for item in transaction.items]
 
-            query = """
-                INSERT INTO orders (
-                    order_number,
-                    user_id,
-                    customer_id,
-                    store_id,
-                    items,
-                    subtotal,
-                    tax_amount,
-                    discount_amount,
-                    total_amount,
-                    payment_status,
-                    payment_method,
-                    payment_details,
-                    order_source,
-                    order_status,
-                    is_pos_transaction,
-                    receipt_number,
-                    pos_metadata
-                ) VALUES (
-                    $1, $2, $3, $4, $5::jsonb, $6, $7, $8, $9, $10, $11, $12::jsonb,
-                    'pos', $13, TRUE, $14, $15::jsonb
-                )
-                RETURNING id::text as id, created_at as timestamp
-            """
+                # Create order using the unified system
+                order_number = transaction.receipt_number or f"POS-{int(datetime.now().timestamp())}"
 
-            pos_metadata = {
-                'cashier_id': transaction.cashier_id,
-                'store_id_text': transaction.store_id,
-                'notes': transaction.notes,
-                'created_via': 'pos_terminal'
-            }
-
-            payment_status = 'paid' if transaction.status == 'completed' else 'pending'
-
-            row = await conn.fetchrow(
-                query,
-                order_number,  # 1
-                user_id,  # 2
-                customer_uuid,  # 3
-                store_uuid,  # 4
-                json.dumps(order_items),  # 5
-                Decimal(str(transaction.subtotal)),  # 6
-                Decimal(str(transaction.tax)),  # 7
-                Decimal(str(transaction.discounts)),  # 8
-                Decimal(str(transaction.total)),  # 9
-                payment_status,  # 10
-                transaction.payment_method,  # 11
-                json.dumps(transaction.payment_details.dict() if transaction.payment_details else {}),  # 12
-                transaction.status,  # 13
-                transaction.receipt_number,  # 14
-                json.dumps(pos_metadata)  # 15
-            )
-
-            # Build result from transaction data
-            result = {
-                'id': row['id'],
-                'store_id': transaction.store_id,
-                'cashier_id': transaction.cashier_id,
-                'customer_id': transaction.customer_id,
-                'items': order_items,
-                'subtotal': transaction.subtotal,
-                'discounts': transaction.discounts,
-                'tax': transaction.tax,
-                'total': transaction.total,
-                'payment_method': transaction.payment_method,
-                'payment_details': transaction.payment_details.dict() if transaction.payment_details else {},
-                'status': transaction.status,
-                'receipt_number': transaction.receipt_number,
-                'notes': transaction.notes,
-                'timestamp': row['timestamp'].isoformat()
-            }
-
-            # STEP 1: Validate inventory availability BEFORE processing (Strict Mode)
-            inventory_validation_failures = []
-
-            for item in transaction.items:
-                sku = item.product.get('sku') or item.product.get('id')
-                batch_lot = item.batch.batch_lot if item.batch else None
-
-                if not sku:
-                    inventory_validation_failures.append({
-                        'product': item.product.get('name', 'Unknown'),
-                        'reason': 'Missing SKU in product data'
-                    })
-                    continue
-
-                # Check if inventory record exists with sufficient quantity
-                check_query = """
-                    SELECT id, sku, batch_lot, quantity_available, quantity_on_hand
-                    FROM ocs_inventory
-                    WHERE store_id = $1 AND sku = $2
+                query = """
+                    INSERT INTO orders (
+                        order_number,
+                        user_id,
+                        customer_id,
+                        store_id,
+                        items,
+                        subtotal,
+                        tax_amount,
+                        discount_amount,
+                        total_amount,
+                        payment_status,
+                        payment_method,
+                        payment_details,
+                        order_source,
+                        order_status,
+                        is_pos_transaction,
+                        receipt_number,
+                        pos_metadata
+                    ) VALUES (
+                        $1, $2, $3, $4, $5::jsonb, $6, $7, $8, $9, $10, $11, $12::jsonb,
+                        'pos', $13, TRUE, $14, $15::jsonb
+                    )
+                    RETURNING id::text as id, created_at as timestamp
                 """
-                check_params = [store_uuid, sku]
-
-                # Add batch filter if batch data provided (required per user spec)
-                if batch_lot:
-                    check_query += " AND batch_lot = $3"
-                    check_params.append(batch_lot)
-                else:
-                    # No batch specified - allow NULL batch for backward compatibility with unbatched inventory
-                    check_query += " AND (batch_lot IS NULL OR batch_lot = '')"
-
-                inventory_record = await conn.fetchrow(check_query, *check_params)
-
-                if not inventory_record:
-                    inventory_validation_failures.append({
-                        'sku': sku,
-                        'batch': batch_lot or 'unbatched',
-                        'quantity_requested': item.quantity,
-                        'reason': 'Inventory record not found for this SKU/batch combination'
-                    })
-                elif inventory_record['quantity_available'] < item.quantity:
-                    inventory_validation_failures.append({
-                        'sku': sku,
-                        'batch': batch_lot or 'unbatched',
-                        'quantity_requested': item.quantity,
-                        'quantity_available': inventory_record['quantity_available'],
-                        'reason': f'Insufficient stock (requested {item.quantity}, available {inventory_record["quantity_available"]})'
-                    })
-
-            # STRICT MODE: Fail transaction if ANY inventory validation fails
-            if inventory_validation_failures:
-                logger.error(f"Transaction validation failed for {transaction.receipt_number}: {inventory_validation_failures}")
-                raise HTTPException(
-                    status_code=400,
-                    detail={
-                        'error': 'Insufficient inventory',
-                        'validation_failures': inventory_validation_failures,
-                        'message': f'{len(inventory_validation_failures)} item(s) have insufficient stock or missing inventory records'
-                    }
+    
+                pos_metadata = {
+                    'cashier_id': transaction.cashier_id,
+                    'store_id_text': transaction.store_id,
+                    'notes': transaction.notes,
+                    'created_via': 'pos_terminal'
+                }
+    
+                payment_status = 'paid' if transaction.status == 'completed' else 'pending'
+    
+                row = await conn.fetchrow(
+                    query,
+                    order_number,  # 1
+                    user_id,  # 2
+                    customer_uuid,  # 3
+                    store_uuid,  # 4
+                    json.dumps(order_items),  # 5
+                    Decimal(str(transaction.subtotal)),  # 6
+                    Decimal(str(transaction.tax)),  # 7
+                    Decimal(str(transaction.discounts)),  # 8
+                    Decimal(str(transaction.total)),  # 9
+                    payment_status,  # 10
+                    transaction.payment_method,  # 11
+                    json.dumps(transaction.payment_details.dict() if transaction.payment_details else {}),  # 12
+                    transaction.status,  # 13
+                    transaction.receipt_number,  # 14
+                    json.dumps(pos_metadata)  # 15
                 )
-
-            # STEP 2: Update inventory for each item with batch tracking
-            inventory_updates_successful = []
-            inventory_update_failures = []
-            order_id = uuid.UUID(row['id'])
-
-            for item in transaction.items:
-                sku = item.product.get('sku') or item.product.get('id')
-                batch_lot = item.batch.batch_lot if item.batch else None
-
-                if not sku:
-                    continue  # Already caught in validation
-
-                try:
-                    # Build WHERE clause for batch-aware update
-                    where_conditions = ["store_id = $1", "sku = $2", "quantity_available >= $3"]
-                    params = [store_uuid, sku, item.quantity]
-                    param_count = 3
-
-                    # Add batch filter
-                    if batch_lot:
-                        param_count += 1
-                        where_conditions.append(f"batch_lot = ${param_count}")
-                        params.append(batch_lot)
-                    else:
-                        where_conditions.append("(batch_lot IS NULL OR batch_lot = '')")
-
-                    where_clause = " AND ".join(where_conditions)
-
-                    # Update inventory with batch awareness
-                    update_query = f"""
-                        UPDATE ocs_inventory
-                        SET quantity_available = quantity_available - $3,
-                            quantity_on_hand = quantity_on_hand - $3,
-                            last_sold = CURRENT_TIMESTAMP,
-                            updated_at = CURRENT_TIMESTAMP
-                        WHERE {where_clause}
-                        RETURNING id, sku, batch_lot, quantity_available, quantity_on_hand
+    
+                # Build result from transaction data
+                result = {
+                    'id': row['id'],
+                    'store_id': transaction.store_id,
+                    'cashier_id': transaction.cashier_id,
+                    'customer_id': transaction.customer_id,
+                    'items': order_items,
+                    'subtotal': transaction.subtotal,
+                    'discounts': transaction.discounts,
+                    'tax': transaction.tax,
+                    'total': transaction.total,
+                    'payment_method': transaction.payment_method,
+                    'payment_details': transaction.payment_details.dict() if transaction.payment_details else {},
+                    'status': transaction.status,
+                    'receipt_number': transaction.receipt_number,
+                    'notes': transaction.notes,
+                    'timestamp': row['timestamp'].isoformat()
+                }
+    
+                # STEP 1: Validate inventory availability BEFORE processing (Strict Mode)
+                inventory_validation_failures = []
+    
+                for item in transaction.items:
+                    sku = item.product.get('sku') or item.product.get('id')
+    
+                    if not sku:
+                        inventory_validation_failures.append({
+                            'product': item.product.get('name', 'Unknown'),
+                            'reason': 'Missing SKU in product data'
+                        })
+                        continue
+    
+                    # Check if inventory record exists with sufficient quantity (SKU-level check only)
+                    # Use case-insensitive comparison with LOWER() to match SKU variations
+                    check_query = """
+                        SELECT id, sku, quantity_available, quantity_on_hand
+                        FROM ocs_inventory
+                        WHERE store_id = $1 AND LOWER(TRIM(sku)) = LOWER(TRIM($2))
                     """
+                    check_params = [store_uuid, sku]
 
-                    result_row = await conn.fetchrow(update_query, *params)
+                    inventory_record = await conn.fetchrow(check_query, *check_params)
+    
+                    if not inventory_record:
+                        inventory_validation_failures.append({
+                            'sku': sku,
+                            'quantity_requested': item.quantity,
+                            'reason': f'Inventory record not found for SKU {sku}'
+                        })
+                    elif inventory_record['quantity_available'] < item.quantity:
+                        inventory_validation_failures.append({
+                            'sku': sku,
+                            'quantity_requested': item.quantity,
+                            'quantity_available': inventory_record['quantity_available'],
+                            'reason': f'Insufficient stock (requested {item.quantity}, available {inventory_record["quantity_available"]})'
+                        })
+    
+                # STRICT MODE: Fail transaction if ANY inventory validation fails
+                if inventory_validation_failures:
+                    logger.error(f"Transaction validation failed for {transaction.receipt_number}: {inventory_validation_failures}")
+                    raise HTTPException(
+                        status_code=400,
+                        detail={
+                            'error': 'Insufficient inventory',
+                            'validation_failures': inventory_validation_failures,
+                            'message': f'{len(inventory_validation_failures)} item(s) have insufficient stock or missing inventory records'
+                        }
+                    )
+    
+                # STEP 2: Update inventory for each item (SKU-level) and consume batches (FIFO)
+                inventory_updates_successful = []
+                inventory_update_failures = []
+                order_id = uuid.UUID(row['id'])
+    
+                for item in transaction.items:
+                    sku = item.product.get('sku') or item.product.get('id')
+    
+                    if not sku:
+                        continue  # Already caught in validation
+    
+                    try:
+                        # Update ocs_inventory (SKU-level aggregate)
+                        # Use case-insensitive comparison with LOWER() to match SKU variations
+                        update_query = """
+                            UPDATE ocs_inventory
+                            SET quantity_available = quantity_available - $3,
+                                quantity_on_hand = quantity_on_hand - $3,
+                                last_sold = CURRENT_TIMESTAMP,
+                                updated_at = CURRENT_TIMESTAMP
+                            WHERE store_id = $1 AND LOWER(TRIM(sku)) = LOWER(TRIM($2)) AND quantity_available >= $3
+                            RETURNING id, sku, quantity_available, quantity_on_hand
+                        """
 
-                    if result_row:
-                        # Success - log the inventory transaction
+                        result_row = await conn.fetchrow(update_query, store_uuid, sku, item.quantity)
+    
+                        if not result_row:
+                            # This should not happen due to validation, but handle it anyway
+                            error_msg = f"Inventory update returned no rows for SKU={sku} (insufficient stock or concurrent update)"
+                            logger.error(error_msg)
+                            inventory_update_failures.append({
+                                'sku': sku,
+                                'reason': 'Update returned no rows (insufficient stock or concurrent update)'
+                            })
+                            continue
+    
+                        # BATCH TRACKING: Every POS sale MUST have a batch (from barcode scan)
+                        # No FIFO/LIFO - exact batch is required
+                        scanned_batch_lot = item.batch.batch_lot if item.batch else None
+    
+                        if not scanned_batch_lot:
+                            error_msg = f"No batch specified for SKU={sku}. POS sales require batch tracking via barcode scanning."
+                            logger.error(f"POS ERROR: {error_msg}")
+                            inventory_update_failures.append({
+                                'sku': sku,
+                                'reason': error_msg
+                            })
+                            continue
+    
+                        # Get the exact scanned batch
+                        logger.info(f"POS: Processing scanned batch {scanned_batch_lot} for SKU {sku}")
+
+                        # Use case-insensitive comparison for SKU matching
+                        batch_query = """
+                            SELECT id, batch_lot, quantity_remaining, unit_cost
+                            FROM batch_tracking
+                            WHERE store_id = $1 AND LOWER(TRIM(sku)) = LOWER(TRIM($2)) AND batch_lot = $3
+                              AND is_active = TRUE AND quantity_remaining > 0
+                        """
+                        exact_batch = await conn.fetchrow(batch_query, store_uuid, sku, scanned_batch_lot)
+    
+                        if not exact_batch:
+                            error_msg = f"Scanned batch {scanned_batch_lot} not found or has no remaining quantity"
+                            logger.error(f"POS ERROR: {error_msg}")
+                            inventory_update_failures.append({
+                                'sku': sku,
+                                'batch': scanned_batch_lot,
+                                'reason': error_msg
+                            })
+                            continue
+    
+                        if exact_batch['quantity_remaining'] < item.quantity:
+                            error_msg = f"Scanned batch {scanned_batch_lot} has insufficient quantity (need {item.quantity}, have {exact_batch['quantity_remaining']})"
+                            logger.error(f"POS ERROR: {error_msg}")
+                            inventory_update_failures.append({
+                                'sku': sku,
+                                'batch': scanned_batch_lot,
+                                'quantity_requested': item.quantity,
+                                'quantity_available': exact_batch['quantity_remaining'],
+                                'reason': error_msg
+                            })
+                            continue
+    
+                        # Consume from exact batch
+                        new_quantity = exact_batch['quantity_remaining'] - item.quantity
+                        is_depleted = new_quantity == 0
+    
+                        await conn.execute(
+                            """
+                            UPDATE batch_tracking
+                            SET quantity_remaining = $2,
+                                is_active = $3,
+                                updated_at = CURRENT_TIMESTAMP
+                            WHERE id = $1
+                            """,
+                            exact_batch['id'],
+                            new_quantity,
+                            not is_depleted
+                        )
+    
+                        batches_consumed = [{
+                            'batch_lot': exact_batch['batch_lot'],
+                            'consumed': item.quantity,
+                            'remaining': new_quantity
+                        }]
+    
+                        logger.info(f"✅ Consumed {item.quantity} from scanned batch {scanned_batch_lot}, remaining: {new_quantity}")
+
+                        # Log the inventory transaction with required columns
+                        quantity_before = result_row['quantity_on_hand'] + item.quantity  # Before the deduction
+                        quantity_after = result_row['quantity_on_hand']  # After the deduction
+
                         await conn.execute(
                             """
                             INSERT INTO ocs_inventory_transactions (
-                                store_id, sku, transaction_type, quantity, batch_lot,
+                                store_id, sku, transaction_type, quantity, quantity_change,
+                                quantity_before, quantity_after, batch_lot,
                                 reference_id, reference_type, notes, created_at
-                            ) VALUES ($1, $2, 'sale', $3, $4, $5, 'pos_transaction', $6, CURRENT_TIMESTAMP)
+                            ) VALUES ($1, $2, 'sale', $3, $4, $5, $6, $7, $8, 'pos_transaction', $9, CURRENT_TIMESTAMP)
                             """,
                             store_uuid,
                             sku,
                             -item.quantity,  # Negative for deduction
-                            batch_lot,
+                            -item.quantity,  # quantity_change (same as quantity for backward compatibility)
+                            quantity_before,
+                            quantity_after,
+                            scanned_batch_lot,
                             order_id,
-                            f"POS sale - Receipt: {transaction.receipt_number}"
+                            f"POS sale - Receipt: {transaction.receipt_number}, Batch: {scanned_batch_lot}"
                         )
-
+    
                         inventory_updates_successful.append({
                             'sku': sku,
-                            'batch': batch_lot or 'unbatched',
                             'quantity_deducted': item.quantity,
-                            'quantity_remaining': result_row['quantity_available']
+                            'quantity_remaining': result_row['quantity_available'],
+                            'batches_consumed': batches_consumed
                         })
-
+    
                         logger.info(
-                            f"✅ Inventory updated: SKU={sku}, Batch={batch_lot or 'unbatched'}, "
-                            f"Deducted={item.quantity}, Remaining={result_row['quantity_available']}"
+                            f"✅ Inventory updated: SKU={sku}, "
+                            f"Deducted={item.quantity}, Remaining={result_row['quantity_available']}, "
+                            f"Batches consumed={len(batches_consumed)}"
                         )
-                    else:
-                        # This should not happen due to validation, but handle it anyway
-                        error_msg = f"Inventory update returned no rows for SKU={sku}, Batch={batch_lot}"
-                        logger.error(error_msg)
+    
+                    except Exception as e:
+                        logger.error(f"❌ Failed to update inventory for SKU={sku}: {e}")
                         inventory_update_failures.append({
                             'sku': sku,
-                            'batch': batch_lot,
-                            'reason': 'Update returned no rows (insufficient stock or concurrent update)'
+                            'error': str(e)
                         })
-
-                except Exception as e:
-                    logger.error(f"❌ Failed to update inventory for SKU={sku}, Batch={batch_lot}: {e}")
-                    inventory_update_failures.append({
-                        'sku': sku,
-                        'batch': batch_lot,
-                        'error': str(e)
-                    })
-
-            # STRICT MODE: Fail entire transaction if ANY inventory update failed
-            if inventory_update_failures:
-                logger.critical(
-                    f"CRITICAL: Inventory update failed for transaction {order_id}. "
-                    f"Failures: {inventory_update_failures}. Rolling back transaction."
-                )
-                # Rollback by raising exception (transaction will be aborted)
-                raise HTTPException(
-                    status_code=500,
-                    detail={
-                        'error': 'Inventory update failed',
-                        'failures': inventory_update_failures,
-                        'message': 'Transaction aborted due to inventory update failure'
-                    }
-                )
-
-            # STEP 3: Update customer loyalty points AFTER successful inventory update
-            if user_id:
-                try:
-                    points_earned = int(transaction.total)  # 1 point per dollar
-                    await conn.execute(
-                        "UPDATE profiles SET loyalty_points = COALESCE(loyalty_points, 0) + $1 WHERE user_id = $2",
-                        points_earned,
-                        user_id
+    
+                # STRICT MODE: Fail entire transaction if ANY inventory update failed
+                if inventory_update_failures:
+                    logger.critical(
+                        f"CRITICAL: Inventory update failed for transaction {order_id}. "
+                        f"Failures: {inventory_update_failures}. Rolling back transaction."
                     )
-                    logger.info(f"Loyalty points awarded: {points_earned} points to user {user_id}")
-                except Exception as e:
-                    logger.warning(f"Failed to update loyalty points: {e}")
-
-            # Add inventory update status to response
-            result['inventory_updates'] = {
-                'successful': inventory_updates_successful,
-                'total_items': len(transaction.items),
-                'updated_count': len(inventory_updates_successful)
-            }
-
-            logger.info(
-                f"✅ Transaction {order_id} completed successfully. "
-                f"Inventory updates: {len(inventory_updates_successful)}/{len(transaction.items)}"
-            )
-
-            return result
+                    # Rollback by raising exception (transaction will be aborted)
+                    raise HTTPException(
+                        status_code=500,
+                        detail={
+                            'error': 'Inventory update failed',
+                            'failures': inventory_update_failures,
+                            'message': 'Transaction aborted due to inventory update failure'
+                        }
+                    )
+    
+                # STEP 3: Update customer loyalty points AFTER successful inventory update
+                if user_id:
+                    try:
+                        points_earned = int(transaction.total)  # 1 point per dollar
+                        await conn.execute(
+                            "UPDATE profiles SET loyalty_points = COALESCE(loyalty_points, 0) + $1 WHERE user_id = $2",
+                            points_earned,
+                            user_id
+                        )
+                        logger.info(f"Loyalty points awarded: {points_earned} points to user {user_id}")
+                    except Exception as e:
+                        logger.warning(f"Failed to update loyalty points: {e}")
+    
+                # Add inventory update status to response
+                result['inventory_updates'] = {
+                    'successful': inventory_updates_successful,
+                    'total_items': len(transaction.items),
+                    'updated_count': len(inventory_updates_successful)
+                }
+    
+                logger.info(
+                    f"✅ Transaction {order_id} completed successfully. "
+                    f"Inventory updates: {len(inventory_updates_successful)}/{len(transaction.items)}"
+                )
+    
+                return result
+    except HTTPException:
+        # Re-raise HTTPExceptions (400, 404, etc.) without modification
+        raise
     except Exception as e:
         logger.error(f"Error creating POS transaction: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))

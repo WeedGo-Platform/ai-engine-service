@@ -48,15 +48,17 @@ class InventoryManagementService:
         gtin_barcode: Optional[str] = None,
         each_gtin: Optional[str] = None,
         packaged_on_date: Optional[datetime] = None,
-        product_name: Optional[str] = None
+        product_name: Optional[str] = None,
+        retail_price: Optional[Decimal] = None
     ) -> Dict[str, Any]:
         """
         Receive inventory from purchase order
 
         Business Logic:
         1. Update ocs_inventory.quantity_on_hand (increase)
-        2. Create or update batch_tracking record (UPSERT on batch_lot)
-        3. If batch exists, merge quantities with weighted average cost
+        2. Update ocs_inventory pricing fields (retail_price, unit_cost, etc.)
+        3. Create or update batch_tracking record (UPSERT on batch_lot)
+        4. If batch exists, merge quantities with weighted average cost
 
         Args:
             store_id: Store UUID
@@ -70,6 +72,7 @@ class InventoryManagementService:
             each_gtin: Optional GTIN for each unit
             packaged_on_date: Optional packaging date
             product_name: Optional product name
+            retail_price: Optional retail price (calculated from pricing rules)
 
         Returns:
             Dict with inventory_id, batch_id, and new quantities
@@ -77,15 +80,33 @@ class InventoryManagementService:
         try:
             # Get or create inventory record
             inventory = await self.inventory_repo.find_by_sku(store_id, sku)
+
+            # If retail_price not provided, use existing or calculate default
+            calculated_retail_price = retail_price
+            if calculated_retail_price is None:
+                if inventory and inventory.retail_price and inventory.retail_price > 0:
+                    # Use existing retail price if available
+                    calculated_retail_price = inventory.retail_price
+                else:
+                    # Calculate default using 25% markup (same as ASN import default)
+                    calculated_retail_price = unit_cost * Decimal('1.25')
+
             if not inventory:
                 inventory = Inventory.create(
                     store_id=store_id,
                     sku=sku,
-                    product_name=product_name or sku  # Use SKU as fallback if no product name
+                    product_name=product_name or sku,  # Use SKU as fallback if no product name
+                    unit_cost=unit_cost,
+                    retail_price=calculated_retail_price
                 )
 
-            # Increase inventory quantity
-            inventory.receive_stock(quantity=quantity, unit_cost=unit_cost, purchase_order_id=purchase_order_id)
+            # Increase inventory quantity with pricing update
+            inventory.receive_stock(
+                quantity=quantity,
+                unit_cost=unit_cost,
+                purchase_order_id=purchase_order_id,
+                retail_price=calculated_retail_price
+            )
 
             # Get existing batch (if any)
             batch = await self.batch_repo.find_by_lot(batch_lot, store_id)
