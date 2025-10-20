@@ -139,33 +139,34 @@ export default function PaymentModal({ isOpen, onClose, total, onComplete }: Pay
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black dark:bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 transition-colors duration-200">
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 w-full max-w-3xl">
+    <div className="fixed inset-0 bg-black dark:bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 p-0 sm:p-4 transition-colors duration-200">
+      <div className="bg-white dark:bg-gray-800 h-full sm:h-auto sm:rounded-lg border-0 sm:border border-gray-200 dark:border-gray-700 w-full sm:max-w-2xl lg:max-w-3xl overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Process Payment</h2>
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800 z-10">
+          <h2 className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">Process Payment</h2>
           <button
             onClick={onClose}
-            className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+            className="p-2 -mr-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            aria-label="Close payment modal"
           >
-            <X className="w-6 h-6" />
+            <X className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           {/* Total Amount */}
-          <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 mb-6 transition-colors duration-200">
+          <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 sm:p-6 mb-4 sm:mb-6 transition-colors duration-200">
             <div className="text-center">
-              <p className="text-sm text-gray-600 dark:text-gray-300 mb-1">Total Amount Due</p>
-              <p className="text-4xl font-bold text-gray-900 dark:text-white">${total.toFixed(2)}</p>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1">Total Amount Due</p>
+              <p className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">${total.toFixed(2)}</p>
             </div>
           </div>
 
           {/* Payment Method Selection */}
-          <div className="mb-6">
+          <div className="mb-4 sm:mb-6">
             <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Payment Method</p>
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
               <button
                 onClick={() => setPaymentMethod('cash')}
                 className={`p-4 rounded-lg border-2 transition-colors ${
@@ -233,12 +234,12 @@ export default function PaymentModal({ isOpen, onClose, total, onComplete }: Pay
               {/* Quick Cash Buttons */}
               <div>
                 <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Quick Amount</p>
-                <div className="grid grid-cols-6 gap-2">
+                <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
                   {QUICK_AMOUNTS.map(amount => (
                     <button
                       key={amount}
                       onClick={() => handleQuickCash(amount)}
-                      className="px-3 py-2 bg-gray-50 dark:bg-gray-600 hover:bg-gray-100 dark:hover:bg-gray-500 rounded text-sm font-medium text-gray-900 dark:text-white transition-colors"
+                      className="px-2 sm:px-3 py-2 bg-gray-50 dark:bg-gray-600 hover:bg-gray-100 dark:hover:bg-gray-500 rounded text-sm font-medium text-gray-900 dark:text-white transition-colors active:scale-95 touch-manipulation"
                     >
                       ${amount}
                     </button>
@@ -249,12 +250,12 @@ export default function PaymentModal({ isOpen, onClose, total, onComplete }: Pay
               {/* Cash Denominations */}
               <div>
                 <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Add Bills</p>
-                <div className="flex gap-2">
+                <div className="grid grid-cols-3 sm:flex sm:gap-2">
                   {CASH_DENOMINATIONS.map(denom => (
                     <button
                       key={denom.value}
                       onClick={() => handleCashDenomination(denom.value)}
-                      className="flex-1 px-3 py-2 bg-primary-100 dark:bg-primary-900/30 hover:bg-green-200 dark:hover:bg-primary-800/40 rounded text-sm font-medium text-gray-900 dark:text-white transition-colors"
+                      className="px-2 sm:px-3 py-2 bg-primary-100 dark:bg-primary-900/30 hover:bg-green-200 dark:hover:bg-primary-800/40 rounded text-sm font-medium text-gray-900 dark:text-white transition-colors sm:flex-1 active:scale-95 touch-manipulation"
                     >
                       {denom.label}
                     </button>
@@ -291,7 +292,7 @@ export default function PaymentModal({ isOpen, onClose, total, onComplete }: Pay
           {/* Split Payment */}
           {paymentMethod === 'split' && (
             <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Cash Amount
@@ -300,7 +301,7 @@ export default function PaymentModal({ isOpen, onClose, total, onComplete }: Pay
                     type="number"
                     value={cashAmount}
                     onChange={(e) => setCashAmount(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors"
+                    className="w-full px-4 py-2.5 text-lg border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
                     placeholder="0.00"
                     step="0.01"
                   />
@@ -313,7 +314,7 @@ export default function PaymentModal({ isOpen, onClose, total, onComplete }: Pay
                     type="number"
                     value={cardAmount}
                     onChange={(e) => setCardAmount(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors"
+                    className="w-full px-4 py-2.5 text-lg border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
                     placeholder="0.00"
                     step="0.01"
                   />
@@ -389,27 +390,27 @@ export default function PaymentModal({ isOpen, onClose, total, onComplete }: Pay
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 transition-colors">
+        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-2 sm:gap-0 p-4 sm:p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 transition-colors sticky bottom-0">
           <button
             onClick={onClose}
-            className="px-6 py-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+            className="w-full sm:w-auto px-6 py-2.5 sm:py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg sm:rounded-none sm:hover:bg-transparent transition-colors font-medium"
           >
             Cancel
           </button>
           <button
             onClick={processPayment}
             disabled={processing || !canProcess()}
-            className="px-6 py-3 bg-primary-500 dark:bg-primary-600 text-white rounded-lg hover:bg-primary-600 dark:hover:bg-primary-700 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed flex items-center gap-2 transition-colors"
+            className="w-full sm:w-auto px-6 py-3 sm:py-3 bg-primary-500 dark:bg-primary-600 text-white rounded-lg hover:bg-primary-600 dark:hover:bg-primary-700 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors font-semibold active:scale-[0.98] touch-manipulation"
           >
             {processing ? (
               <>
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
-                Processing...
+                <span>Processing...</span>
               </>
             ) : (
               <>
                 <CheckCircle className="w-5 h-5" />
-                Complete Payment
+                <span>Complete Payment</span>
               </>
             )}
           </button>

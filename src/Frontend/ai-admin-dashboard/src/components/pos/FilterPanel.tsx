@@ -65,17 +65,35 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="w-80 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg h-fit sticky top-6 transition-colors duration-200">
-      <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-        <h3 className="font-semibold text-lg text-gray-900 dark:text-white">Filters</h3>
-        <button
-          onClick={onClose}
-          className="p-1 hover:bg-gray-50 dark:hover:bg-gray-700 rounded transition-colors"
-        >
-          <X className="w-4 h-4 text-gray-900 dark:text-white" />
-        </button>
-      </div>
-      <div className="p-6 space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto">
+    <>
+      {/* Mobile Backdrop */}
+      <div
+        className="lg:hidden fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 z-40"
+        onClick={onClose}
+      />
+
+      {/* Filter Panel - Drawer on mobile, sidebar on desktop */}
+      <div className={`
+        fixed lg:static inset-y-0 right-0 z-50 lg:z-auto
+        w-full sm:w-96 lg:w-80
+        bg-white dark:bg-gray-800
+        border-l lg:border border-gray-200 dark:border-gray-700
+        lg:rounded-lg h-full lg:h-fit lg:sticky lg:top-6
+        transform transition-all duration-300
+        ${isOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}
+        flex flex-col
+      `}>
+        <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center flex-shrink-0">
+          <h3 className="font-semibold text-lg text-gray-900 dark:text-white">Filters</h3>
+          <button
+            onClick={onClose}
+            className="p-2 -mr-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            aria-label="Close filters"
+          >
+            <X className="w-5 h-5 text-gray-900 dark:text-white" />
+          </button>
+        </div>
+        <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 flex-1 overflow-y-auto">
         {/* Subcategories */}
         {availableSubcategories.length > 0 && (
           <div>
@@ -174,8 +192,8 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
 
         {/* Price Sort */}
         <div>
-          <h4 className="font-semibold text-sm mb-2">Sort by Price</h4>
-          <div className="flex gap-2">
+          <h4 className="font-semibold text-sm mb-2 text-gray-900 dark:text-white">Sort by Price</h4>
+          <div className="flex flex-col sm:flex-row gap-2">
             <button
               onClick={() => onFilterChange({ ...selectedFilters, priceSort: 'none' })}
               className={`px-3 py-1 text-sm rounded border ${
@@ -214,8 +232,8 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
 
         {/* THC Sort */}
         <div>
-          <h4 className="font-semibold text-sm mb-2">Sort by THC %</h4>
-          <div className="flex gap-2">
+          <h4 className="font-semibold text-sm mb-2 text-gray-900 dark:text-white">Sort by THC %</h4>
+          <div className="flex flex-col sm:flex-row gap-2">
             <button
               onClick={() => onFilterChange({ ...selectedFilters, thcSort: 'none' })}
               className={`px-3 py-1 text-sm rounded border ${
@@ -254,8 +272,8 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
 
         {/* CBD Sort */}
         <div>
-          <h4 className="font-semibold text-sm mb-2">Sort by CBD %</h4>
-          <div className="flex gap-2">
+          <h4 className="font-semibold text-sm mb-2 text-gray-900 dark:text-white">Sort by CBD %</h4>
+          <div className="flex flex-col sm:flex-row gap-2">
             <button
               onClick={() => onFilterChange({ ...selectedFilters, cbdSort: 'none' })}
               className={`px-3 py-1 text-sm rounded border ${
@@ -308,26 +326,27 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
             In Stock Only
           </label>
         </div>
-      </div>
+        </div>
 
-      {/* Clear Filters */}
-      <div className="p-6 border-t border-gray-200 dark:border-gray-700">
-        <button
-          onClick={() => onFilterChange({
-            subcategories: [],
-            plantTypes: [],
-            sizes: [],
-            priceSort: 'none',
-            thcSort: 'none',
-            cbdSort: 'none',
-            inStockOnly: false
-          })}
-          className="w-full py-2 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white border border-gray-200 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-        >
-          Clear All Filters
-        </button>
+        {/* Clear Filters */}
+        <div className="p-4 sm:p-6 border-t border-gray-200 dark:border-gray-700 flex-shrink-0">
+          <button
+            onClick={() => onFilterChange({
+              subcategories: [],
+              plantTypes: [],
+              sizes: [],
+              priceSort: 'none',
+              thcSort: 'none',
+              cbdSort: 'none',
+              inStockOnly: false
+            })}
+            className="w-full py-2.5 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors active:scale-95 touch-manipulation"
+          >
+            Clear All Filters
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

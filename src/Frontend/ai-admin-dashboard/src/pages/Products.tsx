@@ -99,36 +99,36 @@ const Products: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Product Catalog</h1>
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Product Catalog</h1>
         <button
           onClick={() => setShowAddModal(true)}
-          className="bg-primary-600 dark:bg-primary-700 text-white px-4 py-2 rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 flex items-center gap-2"
+          className="w-full sm:w-auto bg-primary-600 dark:bg-primary-700 text-white px-4 py-2 rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 flex items-center justify-center gap-2 font-medium text-sm active:scale-95 transition-all touch-manipulation"
         >
-          <Plus className="h-5 w-5" />
+          <Plus className="h-4 w-4 sm:h-5 sm:h-5" />
           Add Product
         </button>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg p-6">
-        <div className="flex gap-6 mb-6">
-          <div className="flex-1">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4 sm:mb-6">
+          <div className="flex-1 min-w-0">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 h-4 w-4 sm:h-5 sm:w-5" />
               <input
                 type="text"
                 placeholder="Search products..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                className="w-full pl-9 sm:pl-10 pr-4 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition-colors"
               />
             </div>
           </div>
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            className="px-3 sm:px-4 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors"
           >
             <option value="all">All Categories</option>
             <option value="flower">Flower</option>
@@ -140,7 +140,7 @@ const Products: React.FC = () => {
           <select
             value={selectedStrainType}
             onChange={(e) => setSelectedStrainType(e.target.value)}
-            className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            className="px-3 sm:px-4 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors"
           >
             <option value="all">All Strains</option>
             <option value="indica">Indica</option>
@@ -150,18 +150,19 @@ const Products: React.FC = () => {
           </select>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
           {products?.data?.map((product: Product) => (
-            <div key={product.id} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-lg dark:hover:shadow-2xl transition-shadow">
-              <div className="p-6">
+            <div key={product.id} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-lg dark:hover:shadow-2xl transition-all active:scale-[0.98]">
+              <div className="p-4 sm:p-6">
                 <div className="flex justify-between items-start mb-2">
-                  <Leaf className="h-8 w-8 text-primary-600 dark:text-primary-400" />
-                  <div className="flex gap-1">
+                  <Leaf className="h-6 w-6 sm:h-8 sm:w-8 text-primary-600 dark:text-primary-400" />
+                  <div className="flex gap-1 sm:gap-2">
                     <button
                       onClick={() => setEditingProduct(product)}
-                      className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300"
+                      className="p-1.5 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded transition-colors active:scale-95 touch-manipulation"
+                      aria-label="Edit product"
                     >
-                      <Edit2 className="h-4 w-4" />
+                      <Edit2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                     </button>
                     <button
                       onClick={() => {
@@ -169,15 +170,16 @@ const Products: React.FC = () => {
                           deleteMutation.mutate(product.id);
                         }
                       }}
-                      className="text-danger-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
+                      className="p-1.5 text-danger-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors active:scale-95 touch-manipulation"
+                      aria-label="Delete product"
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                     </button>
                   </div>
                 </div>
 
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-1">{product.name}</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{product.brand}</p>
+                <h3 className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white mb-1 line-clamp-2">{product.name}</h3>
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-2">{product.brand}</p>
 
                 <div className="flex gap-2 mb-2">
                   <span className={`px-2 py-1 text-xs rounded-full ${getCategoryColor(product.category)}`}>

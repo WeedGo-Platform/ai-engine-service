@@ -225,92 +225,93 @@ const Inventory: React.FC = () => {
   }, [error]);
 
   return (
-    <div className="h-full flex flex-col space-y-6">
+    <div className="h-full flex flex-col space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex justify-between items-center flex-shrink-0">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('inventory:titles.management')}</h1>
-        <div className="flex gap-2">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0 flex-shrink-0">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">{t('inventory:titles.management')}</h1>
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
           <button
             onClick={() => queryClient.invalidateQueries({ queryKey: ['inventory'] })}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium active:scale-95 touch-manipulation"
             title="Force refresh inventory data"
           >
-            <RefreshCw className="w-5 h-5" />
-            Refresh Data
+            <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="hidden xs:inline">Refresh Data</span>
+            <span className="xs:hidden">Refresh</span>
           </button>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 transition-colors"
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 transition-colors text-sm font-medium active:scale-95 touch-manipulation"
           >
-            <Plus className="w-5 h-5" />
+            <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
             {t('inventory:actions.addItem')}
           </button>
         </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 flex-shrink-0">
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 flex-shrink-0">
+        <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{t('inventory:metrics.totalProducts')}</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{t('inventory:metrics.totalProducts')}</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                 {stats.totalItems}
               </p>
             </div>
-            <Package className="w-8 h-8 text-accent-500" />
+            <Package className="w-6 h-6 sm:w-8 sm:h-8 text-accent-500" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
+        <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{t('inventory:metrics.inStock')}</p>
-              <p className="text-2xl font-bold text-primary-600">
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{t('inventory:metrics.inStock')}</p>
+              <p className="text-xl sm:text-2xl font-bold text-primary-600">
                 {stats.inStock}
               </p>
             </div>
-            <CheckCircle className="w-8 h-8 text-primary-500" />
+            <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8 text-primary-500" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
+        <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{t('inventory:metrics.lowStock')}</p>
-              <p className="text-2xl font-bold text-warning-600">
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{t('inventory:metrics.lowStock')}</p>
+              <p className="text-xl sm:text-2xl font-bold text-warning-600">
                 {stats.lowStock}
               </p>
             </div>
-            <AlertTriangle className="w-8 h-8 text-yellow-500" />
+            <AlertTriangle className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-500" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
+        <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{t('inventory:metrics.totalValue')}</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{t('inventory:metrics.totalValue')}</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                 ${stats.totalValue.toLocaleString()}
               </p>
             </div>
-            <DollarSign className="w-8 h-8 text-primary-500" />
+            <DollarSign className="w-6 h-6 sm:w-8 sm:h-8 text-primary-500" />
           </div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg  flex-shrink-0">
-        <div className="flex flex-wrap gap-6">
-          <div className="flex-1 min-w-[200px]">
+      <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm flex-shrink-0">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+          <div className="flex-1 min-w-0">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
               <input
                 type="text"
                 placeholder={t('inventory:messages.searchPlaceholder')}
                 value={filters.searchTerm}
                 onChange={(e) => setFilters(prev => ({ ...prev, searchTerm: e.target.value }))}
-                className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                className="w-full pl-9 sm:pl-10 pr-4 py-2 sm:py-2.5 text-sm border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white transition-colors"
               />
             </div>
           </div>
@@ -318,7 +319,7 @@ const Inventory: React.FC = () => {
           <select
             value={filters.category}
             onChange={(e) => setFilters(prev => ({ ...prev, category: e.target.value }))}
-            className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            className="px-3 sm:px-4 py-2 sm:py-2.5 text-sm border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white transition-colors"
           >
             <option value="all">{t('inventory:categories.all')}</option>
             <option value="flower">{t('inventory:categories.flower')}</option>
@@ -332,7 +333,7 @@ const Inventory: React.FC = () => {
           <select
             value={filters.status}
             onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
-            className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            className="px-3 sm:px-4 py-2 sm:py-2.5 text-sm border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white transition-colors"
           >
             <option value="all">{t('inventory:status.all')}</option>
             <option value="in_stock">{t('inventory:status.inStock')}</option>
@@ -359,9 +360,10 @@ const Inventory: React.FC = () => {
       )}
 
       {/* Inventory Table */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg  overflow-hidden flex-1 flex flex-col min-h-0">
-        <div className="overflow-auto flex-1">
-          <table className="w-full">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden flex-1 flex flex-col min-h-0">
+        <div className="overflow-x-auto flex-1">
+          <div className="inline-block min-w-full align-middle">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600 sticky top-0 z-10">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -598,7 +600,8 @@ const Inventory: React.FC = () => {
                 ))
               )}
             </tbody>
-          </table>
+            </table>
+          </div>
         </div>
       </div>
 
