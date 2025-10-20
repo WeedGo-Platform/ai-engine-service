@@ -140,17 +140,17 @@ const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded-lg border border-gray-200 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black dark:bg-black bg-opacity-50 dark:bg-opacity-70 transition-colors duration-200">
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-4">
-            <Scan className="w-6 h-6 text-accent-600" />
-            <h2 className="text-xl font-semibold">Barcode Intake</h2>
+            <Scan className="w-6 h-6 text-accent-600 dark:text-accent-500" />
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Barcode Intake</h2>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-50 rounded-lg"
+            className="p-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg text-gray-900 dark:text-white transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -160,7 +160,7 @@ const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
         <div className="p-6 space-y-6">
           {/* Barcode Input */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Scan or Enter Barcode
             </label>
             <div className="flex gap-2">
@@ -171,13 +171,13 @@ const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
                 onChange={(e) => setBarcode(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Scan barcode or enter manually..."
-                className="flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
                 disabled={scanning}
               />
               <button
                 onClick={handleScan}
                 disabled={scanning || !barcode}
-                className="px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="px-4 py-2 bg-accent-600 dark:bg-accent-500 text-white rounded-lg hover:bg-accent-700 dark:hover:bg-accent-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-colors"
               >
                 {scanning ? (
                   <>
@@ -196,7 +196,7 @@ const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
 
           {/* Error Message */}
           {error && (
-            <div className="flex items-center gap-2 p-4 bg-danger-50 text-red-700 rounded-lg">
+            <div className="flex items-center gap-2 p-4 bg-danger-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 rounded-lg transition-colors">
               <AlertCircle className="w-5 h-5" />
               <span>{error}</span>
             </div>
@@ -206,7 +206,7 @@ const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
           {scanResult && (
             <div className="space-y-4">
               {/* Product Info */}
-              <div className="p-6 bg-gray-50 rounded-lg">
+              <div className="p-6 bg-gray-50 dark:bg-gray-700 rounded-lg transition-colors">
                 <div className="flex items-start gap-6">
                   {scanResult.data?.image_url ? (
                     <img
@@ -215,31 +215,31 @@ const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
                       className="w-20 h-20 object-cover rounded"
                     />
                   ) : (
-                    <div className="w-20 h-20 bg-gray-100 rounded flex items-center justify-center">
+                    <div className="w-20 h-20 bg-gray-100 dark:bg-gray-600 rounded flex items-center justify-center transition-colors">
                       <Package className="w-8 h-8 text-gray-400" />
                     </div>
                   )}
                   
                   <div className="flex-1">
-                    <h3 className="font-semibold text-lg">
+                    <h3 className="font-semibold text-lg text-gray-900 dark:text-white">
                       {scanResult.data?.name || 'Unknown Product'}
                     </h3>
                     {scanResult.data?.brand && (
-                      <p className="text-sm text-gray-600">Brand: {scanResult.data.brand}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-300">Brand: {scanResult.data.brand}</p>
                     )}
                     {scanResult.data?.description && (
-                      <p className="text-sm text-gray-500 mt-1">{scanResult.data.description}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{scanResult.data.description}</p>
                     )}
                     
                     <div className="flex items-center gap-6 mt-2">
                       <span className={`text-xs px-2 py-1 rounded ${
-                        scanResult.confidence > 0.7 ? 'bg-primary-100 text-primary-700' :
-                        scanResult.confidence > 0.4 ? 'bg-warning-100 text-yellow-700' :
-                        'bg-danger-100 text-red-700'
+                        scanResult.confidence > 0.7 ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400' :
+                        scanResult.confidence > 0.4 ? 'bg-warning-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400' :
+                        'bg-danger-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
                       }`}>
                         Confidence: {(scanResult.confidence * 100).toFixed(0)}%
                       </span>
-                      <span className="text-xs px-2 py-1 bg-blue-100 text-accent-700 rounded">
+                      <span className="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-accent-700 dark:text-blue-400 rounded">
                         Source: {scanResult.source}
                       </span>
                     </div>
@@ -250,7 +250,7 @@ const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
               {/* Intake Form */}
               <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Quantity *
                   </label>
                   <input
@@ -258,12 +258,12 @@ const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
                     value={quantity}
                     onChange={(e) => setQuantity(parseInt(e.target.value) || 0)}
                     min="1"
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Location
                   </label>
                   <input
@@ -271,12 +271,12 @@ const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                     placeholder="e.g., Shelf A1"
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Cost Price *
                   </label>
                   <div className="relative">
@@ -287,13 +287,13 @@ const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
                       onChange={(e) => setCostPrice(e.target.value)}
                       step="0.01"
                       placeholder="0.00"
-                      className="w-full pl-9 pr-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full pl-9 pr-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Retail Price *
                   </label>
                   <div className="relative">
@@ -304,7 +304,7 @@ const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
                       onChange={(e) => setRetailPrice(e.target.value)}
                       step="0.01"
                       placeholder="0.00"
-                      className="w-full pl-9 pr-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full pl-9 pr-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
                     />
                   </div>
                 </div>
@@ -312,17 +312,17 @@ const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
 
               {/* Margin Calculation */}
               {costPrice && retailPrice && (
-                <div className="p-4 bg-primary-50 rounded-lg">
+                <div className="p-4 bg-primary-50 dark:bg-primary-900/30 rounded-lg transition-colors">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Margin:</span>
-                    <span className="font-medium text-primary-700">
+                    <span className="text-gray-600 dark:text-gray-300">Margin:</span>
+                    <span className="font-medium text-primary-700 dark:text-primary-400">
                       ${(parseFloat(retailPrice) - parseFloat(costPrice)).toFixed(2)} 
                       ({((parseFloat(retailPrice) - parseFloat(costPrice)) / parseFloat(retailPrice) * 100).toFixed(1)}%)
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-sm mt-1">
-                    <span className="text-gray-600">Total Value:</span>
-                    <span className="font-medium">
+                    <span className="text-gray-600 dark:text-gray-300">Total Value:</span>
+                    <span className="font-medium text-gray-900 dark:text-white">
                       ${(quantity * parseFloat(retailPrice)).toFixed(2)}
                     </span>
                   </div>
@@ -333,7 +333,7 @@ const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
 
           {/* Manual Entry Notice */}
           {manualEntry && (
-            <div className="p-4 bg-warning-50 text-warning-800 rounded-lg">
+            <div className="p-4 bg-warning-50 dark:bg-yellow-900/30 text-warning-800 dark:text-yellow-400 rounded-lg transition-colors">
               <p className="text-sm">
                 Product not found in database. It will be added to the catalog when you complete the intake.
               </p>
@@ -342,10 +342,10 @@ const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="flex justify-between items-center p-6 border-t bg-gray-50">
+        <div className="flex justify-between items-center p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 transition-colors">
           <button
             onClick={handleReset}
-            className="px-4 py-2 text-gray-600 hover:text-gray-800"
+            className="px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition-colors"
           >
             Reset
           </button>
@@ -353,14 +353,14 @@ const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
           <div className="flex gap-4">
             <button
               onClick={onClose}
-              className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50"
+              className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-600 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 transition-colors"
             >
               Cancel
             </button>
             <button
               onClick={handleIntake}
               disabled={!scanResult || !costPrice || !retailPrice}
-              className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="px-4 py-2 bg-primary-600 dark:bg-primary-500 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-colors"
             >
               <Check className="w-4 h-4" />
               Add to Inventory

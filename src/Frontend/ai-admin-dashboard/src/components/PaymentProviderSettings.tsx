@@ -171,16 +171,16 @@ const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> =
   };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6">
+    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 transition-colors duration-200">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold flex items-center gap-2">
-          <CreditCard className="w-6 h-6" />
+        <h2 className="text-2xl font-bold flex items-center gap-2 text-gray-900 dark:text-white">
+          <CreditCard className="w-6 h-6 text-gray-900 dark:text-white" />
           Payment Provider Settings
         </h2>
         <button
           onClick={handleSave}
           disabled={saving}
-          className="bg-accent-500 text-white px-4 py-2 rounded-lg hover:bg-accent-600 flex items-center gap-2"
+          className="bg-accent-500 dark:bg-accent-600 text-white px-4 py-2 rounded-lg hover:bg-accent-600 dark:hover:bg-accent-700 flex items-center gap-2 transition-colors"
         >
           <Save className="w-4 h-4" />
           {saving ? 'Saving...' : 'Save Changes'}
@@ -188,22 +188,22 @@ const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> =
       </div>
 
       {errors.save && (
-        <div className="mb-4 p-6 bg-danger-50 border border-red-200 rounded-lg flex items-center gap-2">
-          <AlertCircle className="w-5 h-5 text-red-500" />
-          <span className="text-red-700">{errors.save}</span>
+        <div className="mb-4 p-6 bg-danger-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-center gap-2 transition-colors">
+          <AlertCircle className="w-5 h-5 text-red-500 dark:text-red-400" />
+          <span className="text-red-700 dark:text-red-400">{errors.save}</span>
         </div>
       )}
 
       {/* Provider Tabs */}
-      <div className="flex gap-2 mb-6 border-b">
+      <div className="flex gap-2 mb-6 border-b border-gray-200 dark:border-gray-700">
         {PROVIDERS.map(provider => (
           <button
             key={provider.id}
             onClick={() => setActiveProvider(provider.id)}
             className={`px-4 py-2 font-medium transition-colors ${
               activeProvider === provider.id
-                ? 'border-b-2 border-blue-500 text-accent-600'
-                : 'text-gray-600 hover:text-gray-900'
+                ? 'border-b-2 border-blue-500 dark:border-blue-400 text-accent-600 dark:text-accent-400'
+                : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
             }`}
           >
             <span className="mr-2">{provider.icon}</span>
@@ -216,10 +216,10 @@ const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> =
       {activeProvider && (
         <div className="space-y-6">
           {/* Enable/Disable Toggle */}
-          <div className="flex items-center justify-between p-6 bg-gray-50 rounded-lg">
+          <div className="flex items-center justify-between p-6 bg-gray-50 dark:bg-gray-700 rounded-lg transition-colors">
             <div className="flex items-center gap-4">
-              <Shield className="w-5 h-5 text-gray-600" />
-              <span className="font-medium">
+              <Shield className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+              <span className="font-medium text-gray-900 dark:text-white">
                 Enable {PROVIDERS.find(p => p.id === activeProvider)?.name}
               </span>
             </div>
@@ -240,7 +240,7 @@ const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> =
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {getProviderFields(activeProvider).map(field => (
                   <div key={field.id}>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       {field.label}
                     </label>
                     <div className="relative">
@@ -252,14 +252,14 @@ const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> =
                         }
                         value={settings[activeProvider as keyof PaymentProviderSettings]?.[field.id] || ''}
                         onChange={(e) => handleProviderFieldChange(activeProvider, field.id, e.target.value)}
-                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
                         placeholder={`Enter ${field.label.toLowerCase()}`}
                       />
                       {field.type === 'password' && (
                         <button
                           type="button"
                           onClick={() => setShowSecrets(prev => ({ ...prev, [field.id]: !prev[field.id] }))}
-                          className="absolute right-2 top-2.5 text-gray-500 hover:text-gray-700"
+                          className="absolute right-2 top-2.5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
                         >
                           {showSecrets[field.id] ? (
                             <EyeOff className="w-4 h-4" />
@@ -275,7 +275,7 @@ const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> =
 
               {/* Payment Methods */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Supported Payment Methods
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -289,8 +289,8 @@ const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> =
                         onClick={() => handlePaymentMethodToggle(activeProvider, method.id)}
                         className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
                           isSelected
-                            ? 'bg-blue-100 text-accent-700'
-                            : 'bg-gray-50 text-gray-600 hover:bg-gray-50'
+                            ? 'bg-blue-100 dark:bg-blue-900/30 text-accent-700 dark:text-blue-400'
+                            : 'bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
                         }`}
                       >
                         {method.name}
@@ -309,7 +309,7 @@ const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> =
                   onChange={(e) => handleProviderFieldChange(activeProvider, 'test_mode', e.target.checked)}
                   className="w-4 h-4 text-accent-600 rounded focus:ring-blue-500"
                 />
-                <label htmlFor="test-mode" className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                <label htmlFor="test-mode" className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                   <TestTube className="w-4 h-4" />
                   Test Mode
                 </label>
@@ -321,13 +321,13 @@ const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> =
                   <button
                     onClick={() => handleValidate(activeProvider)}
                     disabled={validating === activeProvider}
-                    className="bg-primary-500 text-white px-4 py-2 rounded-lg hover:bg-primary-600 flex items-center gap-2"
+                    className="bg-primary-500 dark:bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-600 dark:hover:bg-primary-700 flex items-center gap-2 transition-colors"
                   >
                     <Check className="w-4 h-4" />
                     {validating === activeProvider ? 'Validating...' : 'Validate Configuration'}
                   </button>
                   {errors[activeProvider] && (
-                    <span className="text-danger-600 text-sm">{errors[activeProvider]}</span>
+                    <span className="text-danger-600 dark:text-red-400 text-sm">{errors[activeProvider]}</span>
                   )}
                 </div>
               )}
@@ -337,17 +337,17 @@ const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> =
       )}
 
       {/* General Settings */}
-      <div className="mt-8 pt-6 border-t">
-        <h3 className="text-lg font-semibold mb-4">General Settings</h3>
+      <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+        <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">General Settings</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Default Provider
             </label>
             <select
               value={settings.default_provider || ''}
               onChange={(e) => setSettings(prev => ({ ...prev, default_provider: e.target.value }))}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
             >
               <option value="">Select provider</option>
               {PROVIDERS.filter(p => settings[p.id as keyof PaymentProviderSettings]?.enabled).map(provider => (
@@ -359,13 +359,13 @@ const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> =
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Fallback Provider
             </label>
             <select
               value={settings.fallback_provider || ''}
               onChange={(e) => setSettings(prev => ({ ...prev, fallback_provider: e.target.value }))}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
             >
               <option value="">Select provider</option>
               {PROVIDERS.filter(p => 
@@ -380,13 +380,13 @@ const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> =
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Currency
             </label>
             <select
               value={settings.currency || 'CAD'}
               onChange={(e) => setSettings(prev => ({ ...prev, currency: e.target.value }))}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
             >
               <option value="CAD">CAD - Canadian Dollar</option>
               <option value="USD">USD - US Dollar</option>
@@ -401,7 +401,7 @@ const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> =
               onChange={(e) => setSettings(prev => ({ ...prev, auto_capture: e.target.checked }))}
               className="w-4 h-4 text-accent-600 rounded focus:ring-blue-500"
             />
-            <label htmlFor="auto-capture" className="text-sm font-medium text-gray-700">
+            <label htmlFor="auto-capture" className="text-sm font-medium text-gray-700 dark:text-gray-300">
               Auto-capture payments
             </label>
           </div>
@@ -414,7 +414,7 @@ const PaymentProviderSettingsComponent: React.FC<PaymentProviderSettingsProps> =
               onChange={(e) => setSettings(prev => ({ ...prev, receipt_email: e.target.checked }))}
               className="w-4 h-4 text-accent-600 rounded focus:ring-blue-500"
             />
-            <label htmlFor="receipt-email" className="text-sm font-medium text-gray-700">
+            <label htmlFor="receipt-email" className="text-sm font-medium text-gray-700 dark:text-gray-300">
               Email receipts to customers
             </label>
           </div>
