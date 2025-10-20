@@ -121,23 +121,24 @@ export default function CustomerModal({ isOpen, onClose, onSelect }: CustomerMod
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black dark:bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 transition-colors duration-200">
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 w-full max-w-2xl">
+    <div className="fixed inset-0 bg-black dark:bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 p-0 sm:p-4 transition-colors duration-200">
+      <div className="bg-white dark:bg-gray-800 h-full sm:h-auto sm:rounded-lg border-0 sm:border border-gray-200 dark:border-gray-700 w-full sm:max-w-2xl overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800 z-10">
+          <h2 className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">
             {showNewCustomerForm ? 'New Customer' : 'Select Customer'}
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+            className="p-2 -mr-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            aria-label="Close customer modal"
           >
-            <X className="w-6 h-6" />
+            <X className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           {!showNewCustomerForm ? (
             <>
               {/* Search */}
@@ -156,11 +157,11 @@ export default function CustomerModal({ isOpen, onClose, onSelect }: CustomerMod
               </div>
 
               {/* Customer List */}
-              <div className="space-y-2 max-h-96 overflow-y-auto">
+              <div className="space-y-2 max-h-[60vh] sm:max-h-96 overflow-y-auto">
                 {loading ? (
                   <div className="text-center py-8">
-                    <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2" />
-                    <p className="text-gray-500 dark:text-gray-400">Searching...</p>
+                    <Loader2 className="w-6 h-6 sm:w-8 sm:h-8 animate-spin mx-auto mb-2 text-gray-400 dark:text-gray-500" />
+                    <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400">Searching...</p>
                   </div>
                 ) : customers.length > 0 ? (
                   customers.map(customer => (
@@ -170,7 +171,7 @@ export default function CustomerModal({ isOpen, onClose, onSelect }: CustomerMod
                         onSelect(customer);
                         onClose();
                       }}
-                      className="w-full p-6 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg text-left transition-colors border border-transparent dark:border-gray-600"
+                      className="w-full p-4 sm:p-6 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg text-left transition-colors border border-transparent dark:border-gray-600 active:scale-[0.98] touch-manipulation"
                     >
                       <div className="flex items-start justify-between">
                         <div>
@@ -224,24 +225,24 @@ export default function CustomerModal({ isOpen, onClose, onSelect }: CustomerMod
               </div>
 
               {/* Quick Actions */}
-              <div className="mt-6 flex gap-4">
+              <div className="mt-6 flex flex-col sm:flex-row gap-2 sm:gap-4">
                 <button
                   onClick={() => setShowNewCustomerForm(true)}
-                  className="flex-1 px-4 py-2 bg-primary-500 dark:bg-primary-600 text-white rounded-lg hover:bg-primary-600 dark:hover:bg-primary-700 transition-colors"
+                  className="flex-1 px-4 py-2.5 sm:py-2 bg-primary-500 dark:bg-primary-600 text-white rounded-lg hover:bg-primary-600 dark:hover:bg-primary-700 transition-colors active:scale-95 font-medium touch-manipulation"
                 >
                   <UserPlus className="w-4 h-4 inline mr-2" />
                   New Customer
                 </button>
                 <button
                   onClick={() => {
-                    onSelect({ 
-                      id: 'anonymous', 
+                    onSelect({
+                      id: 'anonymous',
                       name: 'Anonymous Customer',
-                      is_verified: true 
+                      is_verified: true
                     });
                     onClose();
                   }}
-                  className="flex-1 px-4 py-2 bg-gray-500 dark:bg-gray-600 text-white rounded-lg hover:bg-gray-600 dark:hover:bg-gray-700 transition-colors"
+                  className="flex-1 px-4 py-2.5 sm:py-2 bg-gray-500 dark:bg-gray-600 text-white rounded-lg hover:bg-gray-600 dark:hover:bg-gray-700 transition-colors active:scale-95 font-medium touch-manipulation"
                 >
                   <User className="w-4 h-4 inline mr-2" />
                   Anonymous Sale
@@ -320,26 +321,26 @@ export default function CustomerModal({ isOpen, onClose, onSelect }: CustomerMod
               )}
 
               {/* Form Actions */}
-              <div className="flex gap-4 pt-4">
+              <div className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-4 pt-4">
                 <button
                   onClick={() => {
                     setShowNewCustomerForm(false);
                     setNewCustomer({ name: '', email: '', phone: '', birth_date: '' });
                     setError(null);
                   }}
-                  className="flex-1 px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-500 transition-colors"
+                  className="flex-1 px-4 py-2.5 sm:py-2 text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-500 transition-colors active:scale-95 font-medium touch-manipulation"
                 >
                   Back
                 </button>
                 <button
                   onClick={handleCreateCustomer}
                   disabled={loading || !newCustomer.name || !newCustomer.birth_date}
-                  className="flex-1 px-4 py-2 bg-accent-500 dark:bg-accent-600 text-white rounded-lg hover:bg-accent-600 dark:hover:bg-accent-700 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors"
+                  className="flex-1 px-4 py-2.5 sm:py-2 bg-accent-500 dark:bg-accent-600 text-white rounded-lg hover:bg-accent-600 dark:hover:bg-accent-700 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors active:scale-95 font-semibold touch-manipulation"
                 >
                   {loading ? (
                     <>
                       <Loader2 className="w-4 h-4 inline mr-2 animate-spin" />
-                      Creating...
+                      <span>Creating...</span>
                     </>
                   ) : (
                     'Create Customer'

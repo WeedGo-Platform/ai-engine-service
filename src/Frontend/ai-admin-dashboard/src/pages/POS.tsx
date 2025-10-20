@@ -1017,11 +1017,12 @@ export default function POS({
           {/* Mobile Cart Button */}
           <button
             onClick={() => setMobileCartOpen(true)}
-            className="lg:hidden fixed bottom-4 right-4 z-30 bg-primary-500 dark:bg-primary-600 text-white rounded-full p-6 border border-gray-200 dark:border-gray-700 shadow-lg"
+            className="lg:hidden fixed bottom-4 right-4 z-30 bg-primary-500 dark:bg-primary-600 text-white rounded-full p-4 sm:p-5 border border-gray-200 dark:border-gray-700 shadow-lg hover:bg-primary-600 dark:hover:bg-primary-700 active:scale-95 transition-all"
+            aria-label={t('pos:cart.openCart')}
           >
-            <ShoppingCart className="w-6 h-6" />
+            <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6" />
             {cart.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-danger-500 dark:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">
+              <span className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-danger-500 dark:bg-red-600 text-white rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center text-xs font-bold border-2 border-white dark:border-gray-800">
                 {cart.length}
               </span>
             )}
@@ -1166,11 +1167,11 @@ export default function POS({
                     <p>{t('pos:products.noProductsFound')}</p>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
                 {products.map(product => {
                   const inStock = product.quantity_available > 0;
                   const lowStock = product.quantity_available > 0 && product.quantity_available < 10;
-                  
+
                   return (
                     <div
                       key={product.id}
@@ -1179,26 +1180,26 @@ export default function POS({
                           addToCart(product);
                         }
                       }}
-                      className={`bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700 transition-all ${
+                      className={`bg-white dark:bg-gray-800 p-3 sm:p-4 lg:p-6 rounded-lg border border-gray-200 dark:border-gray-700 transition-all ${
                         inStock
-                          ? 'hover:border-primary-500 dark:hover:border-primary-400 cursor-pointer hover:scale-[1.02] hover:shadow-lg'
+                          ? 'hover:border-primary-500 dark:hover:border-primary-400 cursor-pointer hover:scale-[1.02] hover:shadow-lg active:scale-95'
                           : 'opacity-60 cursor-not-allowed'
                       }`}
                     >
                       {/* Product Image with Badges */}
-                      <div className="relative mb-3">
+                      <div className="relative mb-2 sm:mb-3">
                         {product.image_url ? (
                           <img
                             src={product.image_url}
                             alt={product.name}
-                            className="w-full h-32 object-cover rounded"
+                            className="w-full h-24 sm:h-28 lg:h-32 object-cover rounded"
                             onError={(e) => {
                               (e.target as HTMLImageElement).style.display = 'none';
                             }}
                           />
                         ) : (
-                          <div className="w-full h-32 bg-gray-50 dark:bg-gray-900 rounded flex items-center justify-center">
-                            <Package className="w-8 h-8 text-gray-400 dark:text-gray-500" />
+                          <div className="w-full h-24 sm:h-28 lg:h-32 bg-gray-50 dark:bg-gray-900 rounded flex items-center justify-center">
+                            <Package className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400 dark:text-gray-500" />
                           </div>
                         )}
 
@@ -1302,13 +1303,25 @@ export default function POS({
           <div className={`fixed inset-y-0 right-0 z-50 w-full sm:w-96 bg-white dark:bg-gray-800 transform transition-transform duration-300 lg:static lg:translate-x-0 ${
             mobileCartOpen ? 'translate-x-0' : 'translate-x-full'
           } lg:border-l border-gray-200 dark:border-gray-700 flex flex-col`}>
+            {/* Mobile Close Button */}
+            <div className="lg:hidden flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{t('pos:cart.title')}</h2>
+              <button
+                onClick={() => setMobileCartOpen(false)}
+                className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                aria-label={t('pos:cart.close')}
+              >
+                <X className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+              </button>
+            </div>
+
             {/* Customer Section */}
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+            <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="font-semibold text-gray-900 dark:text-white">{t('pos:customer.label')}</h3>
+                <h3 className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white">{t('pos:customer.label')}</h3>
                 <button
                   onClick={() => setShowCustomerModal(true)}
-                  className="text-accent-500 dark:text-accent-400 hover:text-accent-600 dark:hover:text-accent-300"
+                  className="text-sm text-accent-500 dark:text-accent-400 hover:text-accent-600 dark:hover:text-accent-300 font-medium"
                 >
                   {customer ? t('pos:customer.change') : t('pos:customer.select')}
                 </button>
@@ -1322,27 +1335,30 @@ export default function POS({
                   )}
                 </div>
               ) : (
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <button
                     onClick={() => setShowCustomerModal(true)}
-                    className="flex-1 px-3 py-2 bg-blue-50 dark:bg-blue-900/30 text-accent-600 dark:text-accent-400 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/50"
+                    className="flex-1 px-3 py-2.5 bg-blue-50 dark:bg-blue-900/30 text-accent-600 dark:text-accent-400 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors text-sm font-medium"
                   >
-                    <Users className="w-4 h-4 inline mr-1" />
-                    {t('pos:customer.returning')}
+                    <Users className="w-4 h-4 inline mr-1.5" />
+                    <span className="hidden xs:inline">{t('pos:customer.returning')}</span>
+                    <span className="xs:hidden">Returning</span>
                   </button>
                   <button
                     onClick={() => setCustomer({ id: 'new', name: t('pos:customer.newCustomer'), is_verified: false })}
-                    className="flex-1 px-3 py-2 bg-primary-50 dark:bg-green-900/30 text-primary-600 dark:text-primary-400 rounded-lg hover:bg-primary-100 dark:hover:bg-green-900/50"
+                    className="flex-1 px-3 py-2.5 bg-primary-50 dark:bg-green-900/30 text-primary-600 dark:text-primary-400 rounded-lg hover:bg-primary-100 dark:hover:bg-green-900/50 transition-colors text-sm font-medium"
                   >
-                    <UserPlus className="w-4 h-4 inline mr-1" />
-                    {t('pos:customer.new')}
+                    <UserPlus className="w-4 h-4 inline mr-1.5" />
+                    <span className="hidden xs:inline">{t('pos:customer.new')}</span>
+                    <span className="xs:hidden">New</span>
                   </button>
                   <button
                     onClick={() => setCustomer({ id: 'anon', name: t('pos:customer.anonymous'), is_verified: true })}
-                    className="flex-1 px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600"
+                    className="flex-1 px-3 py-2.5 bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors text-sm font-medium"
                   >
-                    <User className="w-4 h-4 inline mr-1" />
-                    {t('pos:customer.anonymous')}
+                    <User className="w-4 h-4 inline mr-1.5" />
+                    <span className="hidden xs:inline">{t('pos:customer.anonymous')}</span>
+                    <span className="xs:hidden">Guest</span>
                   </button>
                 </div>
               )}
@@ -1364,29 +1380,29 @@ export default function POS({
             )}
 
             {/* Cart Items */}
-            <div className="flex-1 overflow-y-auto p-6">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6">
               {cart.length === 0 ? (
                 <div className="text-center text-gray-400 dark:text-gray-500 py-8">
-                  <ShoppingCart className="w-12 h-12 mx-auto mb-2" />
-                  <p>{t('pos:cart.empty')}</p>
+                  <ShoppingCart className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2" />
+                  <p className="text-sm sm:text-base">{t('pos:cart.empty')}</p>
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-3">
                   {cart.map((item, index) => (
-                    <div key={`${item.product.id}_${item.batch?.batch_lot || 'no-batch'}_${index}`} className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <h4 className="font-medium text-gray-900 dark:text-white">{item.product.name}</h4>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <div key={`${item.product.id}_${item.batch?.batch_lot || 'no-batch'}_${index}`} className="bg-gray-50 dark:bg-gray-900 p-3 sm:p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-sm sm:text-base font-medium text-gray-900 dark:text-white line-clamp-2">{item.product.name}</h4>
+                          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                             ${item.product.price.toFixed(2)} x {item.quantity}
                           </p>
                           {item.batch && (
-                            <p className="text-xs text-accent-600 dark:text-accent-400">
+                            <p className="text-xs text-accent-600 dark:text-accent-400 truncate">
                               {t('pos:cart.batch')} {item.batch.batch_lot}
                             </p>
                           )}
                           {item.discount && (
-                            <p className="text-sm text-primary-600 dark:text-primary-400">
+                            <p className="text-xs sm:text-sm text-primary-600 dark:text-primary-400">
                               {t('pos:cart.discount')} {item.discount}%
                             </p>
                           )}
@@ -1399,12 +1415,13 @@ export default function POS({
                               removeFromCart(item.product.id);
                             }
                           }}
-                          className="text-red-500 dark:text-red-400 hover:text-danger-600 dark:hover:text-red-300"
+                          className="p-1.5 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors flex-shrink-0"
+                          aria-label="Remove item"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
-                      <div className="flex items-center gap-2 mt-2">
+                      <div className="flex items-center gap-1.5 sm:gap-2 mt-2">
                         <button
                           onClick={() => {
                             if (item.batch) {
@@ -1413,11 +1430,12 @@ export default function POS({
                               updateQuantity(item.product.id, item.quantity - 1);
                             }
                           }}
-                          className="w-8 h-8 flex items-center justify-center bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700"
+                          className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 active:scale-95 transition-all touch-manipulation"
+                          aria-label="Decrease quantity"
                         >
-                          <Minus className="w-4 h-4 text-gray-700 dark:text-gray-300" />
+                          <Minus className="w-3 h-3 sm:w-4 sm:h-4 text-gray-700 dark:text-gray-300" />
                         </button>
-                        <span className="w-12 text-center text-gray-900 dark:text-white">{item.quantity}</span>
+                        <span className="w-10 sm:w-12 text-center text-sm sm:text-base font-medium text-gray-900 dark:text-white">{item.quantity}</span>
                         <button
                           onClick={() => {
                             if (item.batch) {
@@ -1426,19 +1444,21 @@ export default function POS({
                               updateQuantity(item.product.id, item.quantity + 1);
                             }
                           }}
-                          className="w-8 h-8 flex items-center justify-center bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700"
+                          className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 active:scale-95 transition-all touch-manipulation"
+                          aria-label="Increase quantity"
                         >
-                          <Plus className="w-4 h-4 text-gray-700 dark:text-gray-300" />
+                          <Plus className="w-3 h-3 sm:w-4 sm:h-4 text-gray-700 dark:text-gray-300" />
                         </button>
                         <button
                           onClick={() => {
                             const discount = prompt('Enter discount percentage:');
                             if (discount) applyDiscount(item.product.id, parseFloat(discount));
                           }}
-                          className="ml-auto px-2 py-1 text-xs bg-warning-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 rounded hover:bg-warning-100 dark:hover:bg-yellow-900/50"
+                          className="ml-auto px-2 py-1 text-xs bg-warning-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 rounded hover:bg-warning-100 dark:hover:bg-yellow-900/50 active:scale-95 transition-all touch-manipulation"
                         >
-                          <Tag className="w-3 h-3 inline mr-1" />
-                          Discount
+                          <Tag className="w-3 h-3 inline mr-0.5 sm:mr-1" />
+                          <span className="hidden xs:inline">Discount</span>
+                          <span className="xs:hidden">%</span>
                         </button>
                       </div>
                     </div>
@@ -1448,7 +1468,7 @@ export default function POS({
             </div>
 
             {/* Totals */}
-            <div className="border-t border-gray-200 dark:border-gray-700 p-6 space-y-2">
+            <div className="border-t border-gray-200 dark:border-gray-700 p-4 sm:p-6 space-y-2">
               <div className="flex justify-between text-sm text-gray-700 dark:text-gray-300">
                 <span>{t('pos:totals.subtotal')}</span>
                 <span>${subtotal.toFixed(2)}</span>
@@ -1531,29 +1551,33 @@ export default function POS({
             </div>
 
             {/* Action Buttons */}
-            <div className="p-6 border-t border-gray-200 dark:border-gray-700 space-y-2">
+            <div className="p-4 sm:p-6 border-t border-gray-200 dark:border-gray-700 space-y-2 bg-gray-50 dark:bg-gray-900 lg:bg-transparent lg:dark:bg-transparent">
               <div className="grid grid-cols-2 gap-2">
                 <button
                   onClick={parkSale}
-                  className="px-4 py-2 bg-warning-500 dark:bg-yellow-600 text-white rounded-lg hover:bg-warning-600 dark:hover:bg-yellow-500"
+                  className="px-3 sm:px-4 py-2 sm:py-2.5 bg-warning-500 dark:bg-yellow-600 text-white rounded-lg hover:bg-warning-600 dark:hover:bg-yellow-500 active:scale-95 transition-all text-sm font-medium touch-manipulation"
+                  disabled={cart.length === 0}
                 >
                   <PauseCircle className="w-4 h-4 inline mr-1" />
-                  {t('pos:actions.parkSale')}
+                  <span className="hidden xs:inline">{t('pos:actions.parkSale')}</span>
+                  <span className="xs:hidden">Park</span>
                 </button>
                 <button
                   onClick={() => { setCart([]); setCustomer(null); }}
-                  className="px-4 py-2 bg-danger-500 dark:bg-red-600 text-white rounded-lg hover:bg-danger-600 dark:hover:bg-red-500"
+                  className="px-3 sm:px-4 py-2 sm:py-2.5 bg-danger-500 dark:bg-red-600 text-white rounded-lg hover:bg-danger-600 dark:hover:bg-red-500 active:scale-95 transition-all text-sm font-medium touch-manipulation"
+                  disabled={cart.length === 0}
                 >
                   <X className="w-4 h-4 inline mr-1" />
-                  {t('pos:actions.clear')}
+                  <span className="hidden xs:inline">{t('pos:actions.clear')}</span>
+                  <span className="xs:hidden">Clear</span>
                 </button>
               </div>
               <button
                 onClick={() => setShowPaymentModal(true)}
                 disabled={cart.length === 0 || !customer || driedFlowerEquivalent > 30}
-                className="w-full px-4 py-3 bg-primary-500 dark:bg-primary-600 text-white rounded-lg hover:bg-primary-600 dark:hover:bg-primary-500 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed"
+                className="w-full px-4 py-3 sm:py-3.5 bg-primary-500 dark:bg-primary-600 text-white rounded-lg hover:bg-primary-600 dark:hover:bg-primary-500 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed active:scale-[0.98] transition-all text-base font-semibold shadow-sm touch-manipulation"
               >
-                <CreditCard className="w-4 h-4 inline mr-2" />
+                <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 inline mr-2" />
                 {t('pos:actions.processPayment')}
               </button>
             </div>
