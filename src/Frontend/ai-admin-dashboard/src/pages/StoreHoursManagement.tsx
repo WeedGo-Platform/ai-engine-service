@@ -293,146 +293,149 @@ export default function StoreHoursManagement() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+      <div className="flex items-center justify-center h-64 bg-gray-50 dark:bg-gray-900 transition-colors">
+        <Loader2 className="w-8 h-8 sm:w-12 sm:h-12 text-primary-600 dark:text-primary-400 animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-4 sm:mb-6 lg:mb-8">
         <button
           onClick={() => navigate(-1)}
-          className="text-gray-600 hover:text-gray-900 mb-4"
+          className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white mb-3 sm:mb-4 transition-colors active:scale-95 touch-manipulation"
         >
-          ← Back to Store
+          <ArrowLeft className="w-4 h-4" />
+          <span className="text-sm sm:text-base">Back to Store</span>
         </button>
-        <h1 className="text-3xl font-bold text-gray-900">Store Hours Management</h1>
-        <p className="text-gray-600 mt-2">{store?.name} - {store?.store_code}</p>
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">Store Hours Management</h1>
+        <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mt-1 sm:mt-2">{store?.name} - {store?.store_code}</p>
       </div>
 
       {/* Notification */}
       {notification && (
-        <div className={`mb-4 p-6 rounded-lg flex items-center ${
-          notification.type === 'success' ? 'bg-primary-50 text-primary-800' : 'bg-danger-50 text-danger-800'
+        <div className={`mb-4 p-4 sm:p-6 rounded-lg flex items-center gap-2 text-sm sm:text-base transition-colors ${
+          notification.type === 'success'
+            ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-800 dark:text-primary-200'
+            : 'bg-danger-50 dark:bg-danger-900/30 text-danger-800 dark:text-danger-200'
         }`}>
           {notification.type === 'success' ? (
-            <Check className="h-5 w-5 mr-2" />
+            <Check className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
           ) : (
-            <AlertCircle className="h-5 w-5 mr-2" />
+            <AlertCircle className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
           )}
-          {notification.message}
+          <span>{notification.message}</span>
         </div>
       )}
 
       {/* Tabs */}
-      <div className="bg-white rounded-lg  mb-6">
-        <div className="border-b border-gray-200">
-          <nav className="-mb-px flex">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm mb-4 sm:mb-6 transition-colors">
+        <div className="border-b border-gray-200 dark:border-gray-700 overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+          <nav className="-mb-px flex space-x-2 sm:space-x-4 min-w-max sm:min-w-0">
             <button
               onClick={() => setActiveTab('regular')}
-              className={`py-2 px-6 border-b-2 font-medium text-sm ${
+              className={`py-2.5 sm:py-3 px-4 sm:px-6 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap transition-all active:scale-95 touch-manipulation ${
                 activeTab === 'regular'
-                  ? 'border-primary-500 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
+                  ? 'border-primary-500 dark:border-primary-400 text-primary-600 dark:text-primary-400'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
             >
-              <Clock className="inline h-4 w-4 mr-2" />
+              <Clock className="inline h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
               Regular Hours
             </button>
             <button
               onClick={() => setActiveTab('holidays')}
-              className={`py-2 px-6 border-b-2 font-medium text-sm ${
+              className={`py-2.5 sm:py-3 px-4 sm:px-6 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap transition-all active:scale-95 touch-manipulation ${
                 activeTab === 'holidays'
-                  ? 'border-primary-500 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
+                  ? 'border-primary-500 dark:border-primary-400 text-primary-600 dark:text-primary-400'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
             >
-              <Calendar className="inline h-4 w-4 mr-2" />
+              <Calendar className="inline h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
               Holiday Hours
             </button>
             <button
               onClick={() => setActiveTab('special')}
-              className={`py-2 px-6 border-b-2 font-medium text-sm ${
+              className={`py-2.5 sm:py-3 px-4 sm:px-6 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap transition-all active:scale-95 touch-manipulation ${
                 activeTab === 'special'
-                  ? 'border-primary-500 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
+                  ? 'border-primary-500 dark:border-primary-400 text-primary-600 dark:text-primary-400'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
             >
-              <AlertCircle className="inline h-4 w-4 mr-2" />
+              <AlertCircle className="inline h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
               Special Hours
             </button>
             <button
               onClick={() => setActiveTab('settings')}
-              className={`py-2 px-6 border-b-2 font-medium text-sm ${
+              className={`py-2.5 sm:py-3 px-4 sm:px-6 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap transition-all active:scale-95 touch-manipulation ${
                 activeTab === 'settings'
-                  ? 'border-primary-500 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'
+                  ? 'border-primary-500 dark:border-primary-400 text-primary-600 dark:text-primary-400'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
             >
-              <Settings className="inline h-4 w-4 mr-2" />
+              <Settings className="inline h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
               Settings
             </button>
           </nav>
         </div>
 
-        <div className="p-6">
+        <div className="p-4 sm:p-6 lg:p-8">
           {/* Regular Hours Tab */}
           {activeTab === 'regular' && (
             <div>
-              <h2 className="text-xl font-semibold mb-4">Regular Weekly Hours</h2>
-              <div className="space-y-4">
+              <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-900 dark:text-white">Regular Weekly Hours</h2>
+              <div className="space-y-3 sm:space-y-4">
                 {regularHours.map((day, dayIndex) => (
-                  <div key={dayIndex} className="border rounded-lg p-6">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
-                        <h3 className="font-medium text-lg">{DAYS_OF_WEEK[dayIndex]}</h3>
-                        <label className="flex items-center">
+                  <div key={dayIndex} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6 bg-white dark:bg-gray-800 transition-colors">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+                        <h3 className="font-medium text-base sm:text-lg text-gray-900 dark:text-white">{DAYS_OF_WEEK[dayIndex]}</h3>
+                        <label className="flex items-center flex-shrink-0">
                           <input
                             type="checkbox"
                             checked={day.is_closed}
                             onChange={(e) => updateRegularHours(dayIndex, 'is_closed', e.target.checked)}
-                            className="rounded border-gray-200 text-primary-600 focus:ring-primary-500"
+                            className="rounded border-gray-300 dark:border-gray-600 text-primary-600 dark:text-primary-500 focus:ring-primary-500 dark:focus:ring-primary-400"
                           />
-                          <span className="ml-2 text-sm text-gray-600">Closed</span>
+                          <span className="ml-2 text-xs sm:text-sm text-gray-600 dark:text-gray-300">Closed</span>
                         </label>
                       </div>
                       <button
                         onClick={() => toggleDayExpanded(dayIndex)}
-                        className="text-gray-500 hover:text-gray-700"
+                        className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 p-1 active:scale-95 touch-manipulation transition-all"
                       >
-                        {expandedDays.has(dayIndex) ? <ChevronUp /> : <ChevronDown />}
+                        {expandedDays.has(dayIndex) ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                       </button>
                     </div>
 
                     {!day.is_closed && (
-                      <div className="mt-4 space-y-3">
+                      <div className="mt-3 sm:mt-4 space-y-3 sm:space-y-4">
                         {/* Time Slots */}
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Store Hours
                           </label>
                           {day.time_slots.map((slot, slotIndex) => (
-                            <div key={slotIndex} className="flex items-center space-x-2 mb-2">
+                            <div key={slotIndex} className="flex items-center gap-2 mb-2">
                               <input
                                 type="time"
                                 value={slot.open}
                                 onChange={(e) => updateTimeSlot(dayIndex, slotIndex, 'open', e.target.value)}
-                                className="px-3 py-2 border border-gray-200 rounded-lg"
+                                className="flex-1 px-2 sm:px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
                               />
-                              <span className="text-gray-500">to</span>
+                              <span className="text-gray-500 dark:text-gray-400 text-sm">to</span>
                               <input
                                 type="time"
                                 value={slot.close}
                                 onChange={(e) => updateTimeSlot(dayIndex, slotIndex, 'close', e.target.value)}
-                                className="px-3 py-2 border border-gray-200 rounded-lg"
+                                className="flex-1 px-2 sm:px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
                               />
                               {day.time_slots.length > 1 && (
                                 <button
                                   onClick={() => removeTimeSlot(dayIndex, slotIndex)}
-                                  className="text-danger-600 hover:text-danger-800"
+                                  className="text-danger-600 dark:text-danger-400 hover:text-danger-800 dark:hover:text-danger-300 p-1 active:scale-95 touch-manipulation transition-all"
                                 >
                                   <Trash2 className="h-4 w-4" />
                                 </button>
@@ -441,17 +444,17 @@ export default function StoreHoursManagement() {
                           ))}
                           <button
                             onClick={() => addTimeSlot(dayIndex)}
-                            className="text-sm text-primary-600 hover:text-primary-700"
+                            className="text-xs sm:text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 flex items-center gap-1 active:scale-95 touch-manipulation transition-all"
                           >
-                            <Plus className="inline h-4 w-4" /> Add time slot
+                            <Plus className="inline h-3.5 w-3.5 sm:h-4 sm:w-4" /> Add time slot
                           </button>
                         </div>
 
                         {/* Service Hours (if expanded) */}
                         {expandedDays.has(dayIndex) && (
-                          <div className="pt-4 border-t space-y-3">
+                          <div className="pt-3 sm:pt-4 border-t border-gray-200 dark:border-gray-700 space-y-3 sm:space-y-4">
                             <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Delivery Hours (optional)
                               </label>
                               <div className="space-y-2">
@@ -467,14 +470,14 @@ export default function StoreHoursManagement() {
                                         time_slots: hours.time_slots.length > 0 ? hours.time_slots : [{ open: '09:00', close: '21:00' }]
                                       });
                                     }}
-                                    className="rounded border-gray-200 text-primary-600 focus:ring-primary-500"
+                                    className="rounded border-gray-300 dark:border-gray-600 text-primary-600 dark:text-primary-500 focus:ring-primary-500 dark:focus:ring-primary-400"
                                   />
-                                  <span className="ml-2 text-sm">Enable delivery during these hours</span>
+                                  <span className="ml-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300">Enable delivery during these hours</span>
                                 </label>
                                 {day.delivery_hours?.enabled && (
-                                  <div className="ml-6">
+                                  <div className="ml-4 sm:ml-6">
                                     {(day.delivery_hours.time_slots || []).map((slot, idx) => (
-                                      <div key={idx} className="flex items-center space-x-2 mb-2">
+                                      <div key={idx} className="flex items-center gap-2 mb-2">
                                         <input
                                           type="time"
                                           value={slot.open}
@@ -486,9 +489,9 @@ export default function StoreHoursManagement() {
                                               time_slots: updatedSlots
                                             });
                                           }}
-                                          className="px-3 py-2 border border-gray-200 rounded-lg"
+                                          className="flex-1 px-2 sm:px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
                                         />
-                                        <span className="text-gray-500">to</span>
+                                        <span className="text-gray-500 dark:text-gray-400 text-sm">to</span>
                                         <input
                                           type="time"
                                           value={slot.close}
@@ -500,7 +503,7 @@ export default function StoreHoursManagement() {
                                               time_slots: updatedSlots
                                             });
                                           }}
-                                          className="px-3 py-2 border border-gray-200 rounded-lg"
+                                          className="flex-1 px-2 sm:px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
                                         />
                                       </div>
                                     ))}
@@ -510,7 +513,7 @@ export default function StoreHoursManagement() {
                             </div>
 
                             <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Pickup Hours (optional)
                               </label>
                               <div className="space-y-2">
@@ -526,14 +529,14 @@ export default function StoreHoursManagement() {
                                         time_slots: hours.time_slots.length > 0 ? hours.time_slots : [{ open: '09:00', close: '21:00' }]
                                       });
                                     }}
-                                    className="rounded border-gray-200 text-primary-600 focus:ring-primary-500"
+                                    className="rounded border-gray-300 dark:border-gray-600 text-primary-600 dark:text-primary-500 focus:ring-primary-500 dark:focus:ring-primary-400"
                                   />
-                                  <span className="ml-2 text-sm">Enable pickup during these hours</span>
+                                  <span className="ml-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300">Enable pickup during these hours</span>
                                 </label>
                                 {day.pickup_hours?.enabled && (
-                                  <div className="ml-6">
+                                  <div className="ml-4 sm:ml-6">
                                     {(day.pickup_hours.time_slots || []).map((slot, idx) => (
-                                      <div key={idx} className="flex items-center space-x-2 mb-2">
+                                      <div key={idx} className="flex items-center gap-2 mb-2">
                                         <input
                                           type="time"
                                           value={slot.open}
@@ -545,9 +548,9 @@ export default function StoreHoursManagement() {
                                               time_slots: updatedSlots
                                             });
                                           }}
-                                          className="px-3 py-2 border border-gray-200 rounded-lg"
+                                          className="flex-1 px-2 sm:px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
                                         />
-                                        <span className="text-gray-500">to</span>
+                                        <span className="text-gray-500 dark:text-gray-400 text-sm">to</span>
                                         <input
                                           type="time"
                                           value={slot.close}
@@ -559,7 +562,7 @@ export default function StoreHoursManagement() {
                                               time_slots: updatedSlots
                                             });
                                           }}
-                                          className="px-3 py-2 border border-gray-200 rounded-lg"
+                                          className="flex-1 px-2 sm:px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
                                         />
                                       </div>
                                     ))}
@@ -574,14 +577,23 @@ export default function StoreHoursManagement() {
                   </div>
                 ))}
               </div>
-              <div className="mt-6">
+              <div className="mt-4 sm:mt-6">
                 <button
                   onClick={saveRegularHours}
                   disabled={saving}
-                  className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50"
+                  className="w-full sm:w-auto px-6 py-2.5 bg-primary-600 dark:bg-primary-500 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95 touch-manipulation flex items-center justify-center gap-2"
                 >
-                  <Save className="inline h-4 w-4 mr-2" />
-                  {saving ? 'Saving...' : 'Save Regular Hours'}
+                  {saving ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span>Saving...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-4 w-4" />
+                      <span>Save Regular Hours</span>
+                    </>
+                  )}
                 </button>
               </div>
             </div>
@@ -590,48 +602,48 @@ export default function StoreHoursManagement() {
           {/* Holiday Hours Tab */}
           {activeTab === 'holidays' && (
             <div>
-              <h2 className="text-xl font-semibold mb-4">Holiday Hours</h2>
-              
+              <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-900 dark:text-white">Holiday Hours</h2>
+
               <button
                 onClick={() => {
                   setEditingHoliday(null);
                   setShowHolidayModal(true);
                 }}
-                className="mb-6 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 flex items-center gap-2"
+                className="mb-4 sm:mb-6 w-full sm:w-auto px-4 py-2.5 bg-primary-600 dark:bg-primary-500 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 transition-all active:scale-95 touch-manipulation flex items-center justify-center gap-2"
               >
                 <Plus className="h-4 w-4" />
-                Add Holiday Hours
+                <span>Add Holiday Hours</span>
               </button>
 
               {/* List of Holiday Hours */}
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {holidayHours.length === 0 ? (
-                  <p className="text-gray-500 text-center py-8">
+                  <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 text-center py-6 sm:py-8">
                     No holiday hours configured. Add holiday-specific hours above.
                   </p>
                 ) : (
                   holidayHours.map((holiday, index) => (
-                    <div key={index} className="border rounded-lg p-6">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h4 className="font-medium">
+                    <div key={index} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6 bg-white dark:bg-gray-800 transition-colors">
+                      <div className="flex justify-between items-start gap-3">
+                        <div className="min-w-0 flex-1">
+                          <h4 className="font-medium text-base sm:text-lg text-gray-900 dark:text-white truncate">
                             {holidays.find(h => h.id === holiday.holiday_id)?.name || 'Holiday'}
                           </h4>
-                          <p className="text-sm text-gray-500">
+                          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
                             {holiday.is_closed ? 'Closed' : `Open: ${holiday.time_slots.map(s => `${s.open}-${s.close}`).join(', ')}`}
                           </p>
                         </div>
-                        <div className="flex gap-2">
-                          <button 
+                        <div className="flex gap-2 flex-shrink-0">
+                          <button
                             onClick={() => {
                               setEditingHoliday(holiday);
                               setShowHolidayModal(true);
                             }}
-                            className="text-accent-600 hover:text-blue-800"
+                            className="text-accent-600 dark:text-accent-400 hover:text-accent-800 dark:hover:text-accent-300 text-sm px-2 py-1 active:scale-95 touch-manipulation transition-all"
                           >
                             Edit
                           </button>
-                          <button 
+                          <button
                             onClick={async () => {
                               if (holiday.id && confirmToastAsync('Delete this holiday configuration?')) {
                                 try {
@@ -643,7 +655,7 @@ export default function StoreHoursManagement() {
                                 }
                               }
                             }}
-                            className="text-danger-600 hover:text-danger-800"
+                            className="text-danger-600 dark:text-danger-400 hover:text-danger-800 dark:hover:text-danger-300 p-1 active:scale-95 touch-manipulation transition-all"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
@@ -659,49 +671,49 @@ export default function StoreHoursManagement() {
           {/* Special Hours Tab */}
           {activeTab === 'special' && (
             <div>
-              <h2 className="text-xl font-semibold mb-4">Special Hours</h2>
-              
+              <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-900 dark:text-white">Special Hours</h2>
+
               <button
                 onClick={() => {
                   setEditingSpecial(null);
                   setShowSpecialModal(true);
                 }}
-                className="mb-6 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 flex items-center gap-2"
+                className="mb-4 sm:mb-6 w-full sm:w-auto px-4 py-2.5 bg-primary-600 dark:bg-primary-500 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 transition-all active:scale-95 touch-manipulation flex items-center justify-center gap-2"
               >
                 <Plus className="h-4 w-4" />
-                Add Special Hours
+                <span>Add Special Hours</span>
               </button>
 
               {/* List of Special Hours */}
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {specialHours.length === 0 ? (
-                  <p className="text-gray-500 text-center py-8">
+                  <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 text-center py-6 sm:py-8">
                     No special hours scheduled. Add temporary schedule changes above.
                   </p>
                 ) : (
                   specialHours.map((special, index) => (
-                    <div key={index} className="border rounded-lg p-6">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h4 className="font-medium">{special.date}</h4>
+                    <div key={index} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6 bg-white dark:bg-gray-800 transition-colors">
+                      <div className="flex justify-between items-start gap-3">
+                        <div className="min-w-0 flex-1">
+                          <h4 className="font-medium text-base sm:text-lg text-gray-900 dark:text-white">{special.date}</h4>
                           {special.reason && (
-                            <p className="text-sm text-gray-500">{special.reason}</p>
+                            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">{special.reason}</p>
                           )}
-                          <p className="text-sm text-gray-600">
+                          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mt-1">
                             {special.is_closed ? 'Closed' : `Open: ${special.time_slots.map(s => `${s.open}-${s.close}`).join(', ')}`}
                           </p>
                         </div>
-                        <div className="flex gap-2">
-                          <button 
+                        <div className="flex gap-2 flex-shrink-0">
+                          <button
                             onClick={() => {
                               setEditingSpecial(special);
                               setShowSpecialModal(true);
                             }}
-                            className="text-accent-600 hover:text-blue-800"
+                            className="text-accent-600 dark:text-accent-400 hover:text-accent-800 dark:hover:text-accent-300 text-sm px-2 py-1 active:scale-95 touch-manipulation transition-all"
                           >
                             Edit
                           </button>
-                          <button 
+                          <button
                             onClick={async () => {
                               if (special.id && confirmToastAsync('Delete this special hours entry?')) {
                                 try {
@@ -713,7 +725,7 @@ export default function StoreHoursManagement() {
                                 }
                               }
                             }}
-                            className="text-danger-600 hover:text-danger-800"
+                            className="text-danger-600 dark:text-danger-400 hover:text-danger-800 dark:hover:text-danger-300 p-1 active:scale-95 touch-manipulation transition-all"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
@@ -729,114 +741,114 @@ export default function StoreHoursManagement() {
           {/* Settings Tab */}
           {activeTab === 'settings' && (
             <div>
-              <h2 className="text-xl font-semibold mb-4">Hours Management Settings</h2>
-              
-              <div className="space-y-6">
+              <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-900 dark:text-white">Hours Management Settings</h2>
+
+              <div className="space-y-4 sm:space-y-6">
                 {/* Holiday Observance */}
                 <div>
-                  <h3 className="font-medium mb-3">Holiday Observance</h3>
-                  <div className="space-y-3">
+                  <h3 className="font-medium text-base sm:text-lg text-gray-900 dark:text-white mb-3">Holiday Observance</h3>
+                  <div className="space-y-2 sm:space-y-3">
                     <label className="flex items-center">
                       <input
                         type="checkbox"
                         checked={settings.observe_federal_holidays}
                         onChange={(e) => setSettings({ ...settings, observe_federal_holidays: e.target.checked })}
-                        className="rounded border-gray-200 text-primary-600 focus:ring-primary-500"
+                        className="rounded border-gray-300 dark:border-gray-600 text-primary-600 dark:text-primary-500 focus:ring-primary-500 dark:focus:ring-primary-400"
                       />
-                      <span className="ml-2">Observe federal holidays</span>
+                      <span className="ml-2 text-sm sm:text-base text-gray-700 dark:text-gray-300">Observe federal holidays</span>
                     </label>
                     <label className="flex items-center">
                       <input
                         type="checkbox"
                         checked={settings.observe_provincial_holidays}
                         onChange={(e) => setSettings({ ...settings, observe_provincial_holidays: e.target.checked })}
-                        className="rounded border-gray-200 text-primary-600 focus:ring-primary-500"
+                        className="rounded border-gray-300 dark:border-gray-600 text-primary-600 dark:text-primary-500 focus:ring-primary-500 dark:focus:ring-primary-400"
                       />
-                      <span className="ml-2">Observe provincial holidays</span>
+                      <span className="ml-2 text-sm sm:text-base text-gray-700 dark:text-gray-300">Observe provincial holidays</span>
                     </label>
                     <label className="flex items-center">
                       <input
                         type="checkbox"
                         checked={settings.observe_municipal_holidays}
                         onChange={(e) => setSettings({ ...settings, observe_municipal_holidays: e.target.checked })}
-                        className="rounded border-gray-200 text-primary-600 focus:ring-primary-500"
+                        className="rounded border-gray-300 dark:border-gray-600 text-primary-600 dark:text-primary-500 focus:ring-primary-500 dark:focus:ring-primary-400"
                       />
-                      <span className="ml-2">Observe municipal holidays</span>
+                      <span className="ml-2 text-sm sm:text-base text-gray-700 dark:text-gray-300">Observe municipal holidays</span>
                     </label>
                   </div>
                 </div>
 
                 {/* Holiday Behavior */}
                 <div>
-                  <h3 className="font-medium mb-3">Default Holiday Behavior</h3>
-                  <div className="space-y-3">
+                  <h3 className="font-medium text-base sm:text-lg text-gray-900 dark:text-white mb-3">Default Holiday Behavior</h3>
+                  <div className="space-y-3 sm:space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
                         When a holiday is observed
                       </label>
                       <select
                         value={settings.default_holiday_action}
                         onChange={(e) => setSettings({ ...settings, default_holiday_action: e.target.value as 'closed' | 'modified' | 'open' })}
-                        className="w-64 px-3 py-2 border border-gray-200 rounded-lg"
+                        className="w-full sm:w-64 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
                       >
                         <option value="closed">Store is closed</option>
                         <option value="modified">Store has modified hours</option>
                         <option value="open">Store remains open (regular hours)</option>
                       </select>
                     </div>
-                    
+
                     {settings.default_holiday_action === 'modified' && (
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
                           Default holiday hours
                         </label>
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center gap-2">
                           <input
                             type="time"
                             value={settings.modified_holiday_hours?.[0]?.open || '10:00'}
-                            onChange={(e) => setSettings({ 
-                              ...settings, 
+                            onChange={(e) => setSettings({
+                              ...settings,
                               modified_holiday_hours: [{ open: e.target.value, close: settings.modified_holiday_hours?.[0]?.close || '18:00' }]
                             })}
-                            className="px-3 py-2 border border-gray-200 rounded-lg"
+                            className="flex-1 px-2 sm:px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
                           />
-                          <span className="text-gray-500">to</span>
+                          <span className="text-gray-500 dark:text-gray-400 text-sm">to</span>
                           <input
                             type="time"
                             value={settings.modified_holiday_hours?.[0]?.close || '18:00'}
-                            onChange={(e) => setSettings({ 
-                              ...settings, 
+                            onChange={(e) => setSettings({
+                              ...settings,
                               modified_holiday_hours: [{ open: settings.modified_holiday_hours?.[0]?.open || '10:00', close: e.target.value }]
                             })}
-                            className="px-3 py-2 border border-gray-200 rounded-lg"
+                            className="flex-1 px-2 sm:px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
                           />
                         </div>
                       </div>
                     )}
-                    
+
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
                         Delivery service on holidays
                       </label>
                       <select
                         value={settings.delivery_holiday_behavior}
                         onChange={(e) => setSettings({ ...settings, delivery_holiday_behavior: e.target.value as 'same_as_store' | 'closed' | 'modified' })}
-                        className="w-64 px-3 py-2 border border-gray-200 rounded-lg"
+                        className="w-full sm:w-64 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
                       >
                         <option value="same_as_store">Same as store hours</option>
                         <option value="closed">No delivery</option>
                         <option value="modified">Modified delivery hours</option>
                       </select>
                     </div>
-                    
+
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
                         Pickup service on holidays
                       </label>
                       <select
                         value={settings.pickup_holiday_behavior}
                         onChange={(e) => setSettings({ ...settings, pickup_holiday_behavior: e.target.value as 'same_as_store' | 'closed' | 'modified' })}
-                        className="w-64 px-3 py-2 border border-gray-200 rounded-lg"
+                        className="w-full sm:w-64 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
                       >
                         <option value="same_as_store">Same as store hours</option>
                         <option value="closed">No pickup</option>
@@ -850,10 +862,19 @@ export default function StoreHoursManagement() {
                   <button
                     onClick={saveSettings}
                     disabled={saving}
-                    className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50"
+                    className="w-full sm:w-auto px-6 py-2.5 bg-primary-600 dark:bg-primary-500 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95 touch-manipulation flex items-center justify-center gap-2"
                   >
-                    <Save className="inline h-4 w-4 mr-2" />
-                    {saving ? 'Saving...' : 'Save Settings'}
+                    {saving ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span>Saving...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Save className="h-4 w-4" />
+                        <span>Save Settings</span>
+                      </>
+                    )}
                   </button>
                 </div>
               </div>
@@ -864,10 +885,10 @@ export default function StoreHoursManagement() {
 
       {/* Holiday Hours Modal */}
       {showHolidayModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-screen overflow-y-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-semibold">
+        <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 p-0 sm:p-4">
+          <div className="bg-white dark:bg-gray-800 h-full sm:h-auto sm:rounded-lg w-full sm:max-w-2xl max-h-full sm:max-h-[90vh] overflow-y-auto transition-colors">
+            <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4 sm:p-6 flex justify-between items-center">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
                 {editingHoliday ? 'Edit Holiday Hours' : 'Add Holiday Hours'}
               </h3>
               <button
@@ -875,11 +896,12 @@ export default function StoreHoursManagement() {
                   setShowHolidayModal(false);
                   setEditingHoliday(null);
                 }}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 p-1 active:scale-95 touch-manipulation transition-all"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
+            <div className="p-4 sm:p-6">
 
             <HolidayHoursForm
               holiday={editingHoliday}
@@ -890,16 +912,17 @@ export default function StoreHoursManagement() {
                 setEditingHoliday(null);
               }}
             />
+            </div>
           </div>
         </div>
       )}
 
       {/* Special Hours Modal */}
       {showSpecialModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-screen overflow-y-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-semibold">
+        <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 p-0 sm:p-4">
+          <div className="bg-white dark:bg-gray-800 h-full sm:h-auto sm:rounded-lg w-full sm:max-w-2xl max-h-full sm:max-h-[90vh] overflow-y-auto transition-colors">
+            <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4 sm:p-6 flex justify-between items-center">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
                 {editingSpecial ? 'Edit Special Hours' : 'Add Special Hours'}
               </h3>
               <button
@@ -907,11 +930,12 @@ export default function StoreHoursManagement() {
                   setShowSpecialModal(false);
                   setEditingSpecial(null);
                 }}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 p-1 active:scale-95 touch-manipulation transition-all"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
+            <div className="p-4 sm:p-6">
 
             <SpecialHoursForm
               special={editingSpecial}
@@ -921,6 +945,7 @@ export default function StoreHoursManagement() {
                 setEditingSpecial(null);
               }}
             />
+            </div>
           </div>
         </div>
       )}
@@ -952,15 +977,15 @@ function HolidayHoursForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
           Holiday
         </label>
         <select
           value={formData.holiday_id}
           onChange={(e) => setFormData({ ...formData, holiday_id: e.target.value })}
-          className="w-full px-3 py-2 border border-gray-200 rounded-lg"
+          className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
           required
         >
           <option value="">Select a holiday...</option>
@@ -978,19 +1003,19 @@ function HolidayHoursForm({
             type="checkbox"
             checked={formData.is_closed}
             onChange={(e) => setFormData({ ...formData, is_closed: e.target.checked })}
-            className="rounded border-gray-200 text-primary-600 focus:ring-primary-500"
+            className="rounded border-gray-300 dark:border-gray-600 text-primary-600 dark:text-primary-500 focus:ring-primary-500 dark:focus:ring-primary-400"
           />
-          <span className="ml-2">Store is closed on this holiday</span>
+          <span className="ml-2 text-sm sm:text-base text-gray-700 dark:text-gray-300">Store is closed on this holiday</span>
         </label>
       </div>
 
       {!formData.is_closed && (
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Store Hours
           </label>
           {formData.time_slots.map((slot, index) => (
-            <div key={index} className="flex items-center space-x-2 mb-2">
+            <div key={index} className="flex items-center gap-2 mb-2">
               <input
                 type="time"
                 value={slot.open}
@@ -999,10 +1024,10 @@ function HolidayHoursForm({
                   updated[index] = { ...updated[index], open: e.target.value };
                   setFormData({ ...formData, time_slots: updated });
                 }}
-                className="px-3 py-2 border border-gray-200 rounded-lg"
+                className="flex-1 px-2 sm:px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
                 required
               />
-              <span className="text-gray-500">to</span>
+              <span className="text-gray-500 dark:text-gray-400 text-sm">to</span>
               <input
                 type="time"
                 value={slot.close}
@@ -1011,7 +1036,7 @@ function HolidayHoursForm({
                   updated[index] = { ...updated[index], close: e.target.value };
                   setFormData({ ...formData, time_slots: updated });
                 }}
-                className="px-3 py-2 border border-gray-200 rounded-lg"
+                className="flex-1 px-2 sm:px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
                 required
               />
               {formData.time_slots.length > 1 && (
@@ -1021,7 +1046,7 @@ function HolidayHoursForm({
                     const updated = formData.time_slots.filter((_, i) => i !== index);
                     setFormData({ ...formData, time_slots: updated });
                   }}
-                  className="text-danger-600 hover:text-danger-800"
+                  className="text-danger-600 dark:text-danger-400 hover:text-danger-800 dark:hover:text-danger-300 p-1 active:scale-95 touch-manipulation transition-all"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
@@ -1036,24 +1061,24 @@ function HolidayHoursForm({
                 time_slots: [...formData.time_slots, { open: '09:00', close: '17:00' }]
               });
             }}
-            className="text-sm text-primary-600 hover:text-primary-700"
+            className="text-xs sm:text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 flex items-center gap-1 active:scale-95 touch-manipulation transition-all"
           >
-            <Plus className="inline h-4 w-4" /> Add time slot
+            <Plus className="inline h-3.5 w-3.5 sm:h-4 sm:w-4" /> Add time slot
           </button>
         </div>
       )}
 
-      <div className="flex justify-end space-x-3 pt-4">
+      <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4 sticky bottom-0 bg-white dark:bg-gray-800 pb-4 sm:pb-0">
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 text-gray-700 bg-gray-50 rounded-lg hover:bg-gray-50"
+          className="w-full sm:w-auto px-4 py-2.5 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-all active:scale-95 touch-manipulation"
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+          className="w-full sm:w-auto px-4 py-2.5 bg-primary-600 dark:bg-primary-500 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 transition-all active:scale-95 touch-manipulation"
         >
           Save
         </button>
@@ -1085,22 +1110,22 @@ function SpecialHoursForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
           Date
         </label>
         <input
           type="date"
           value={formData.date}
           onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-          className="w-full px-3 py-2 border border-gray-200 rounded-lg"
+          className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
           required
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
           Reason (optional)
         </label>
         <input
@@ -1108,7 +1133,7 @@ function SpecialHoursForm({
           value={formData.reason || ''}
           onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
           placeholder="e.g., Staff Training, Inventory, Holiday Sale"
-          className="w-full px-3 py-2 border border-gray-200 rounded-lg"
+          className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
         />
       </div>
 
@@ -1118,19 +1143,19 @@ function SpecialHoursForm({
             type="checkbox"
             checked={formData.is_closed}
             onChange={(e) => setFormData({ ...formData, is_closed: e.target.checked })}
-            className="rounded border-gray-200 text-primary-600 focus:ring-primary-500"
+            className="rounded border-gray-300 dark:border-gray-600 text-primary-600 dark:text-primary-500 focus:ring-primary-500 dark:focus:ring-primary-400"
           />
-          <span className="ml-2">Store is closed on this date</span>
+          <span className="ml-2 text-sm sm:text-base text-gray-700 dark:text-gray-300">Store is closed on this date</span>
         </label>
       </div>
 
       {!formData.is_closed && (
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Store Hours
           </label>
           {formData.time_slots.map((slot, index) => (
-            <div key={index} className="flex items-center space-x-2 mb-2">
+            <div key={index} className="flex items-center gap-2 mb-2">
               <input
                 type="time"
                 value={slot.open}
@@ -1139,10 +1164,10 @@ function SpecialHoursForm({
                   updated[index] = { ...updated[index], open: e.target.value };
                   setFormData({ ...formData, time_slots: updated });
                 }}
-                className="px-3 py-2 border border-gray-200 rounded-lg"
+                className="flex-1 px-2 sm:px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
                 required
               />
-              <span className="text-gray-500">to</span>
+              <span className="text-gray-500 dark:text-gray-400 text-sm">to</span>
               <input
                 type="time"
                 value={slot.close}
@@ -1151,7 +1176,7 @@ function SpecialHoursForm({
                   updated[index] = { ...updated[index], close: e.target.value };
                   setFormData({ ...formData, time_slots: updated });
                 }}
-                className="px-3 py-2 border border-gray-200 rounded-lg"
+                className="flex-1 px-2 sm:px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
                 required
               />
               {formData.time_slots.length > 1 && (
@@ -1161,7 +1186,7 @@ function SpecialHoursForm({
                     const updated = formData.time_slots.filter((_, i) => i !== index);
                     setFormData({ ...formData, time_slots: updated });
                   }}
-                  className="text-danger-600 hover:text-danger-800"
+                  className="text-danger-600 dark:text-danger-400 hover:text-danger-800 dark:hover:text-danger-300 p-1 active:scale-95 touch-manipulation transition-all"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
@@ -1176,24 +1201,24 @@ function SpecialHoursForm({
                 time_slots: [...formData.time_slots, { open: '09:00', close: '17:00' }]
               });
             }}
-            className="text-sm text-primary-600 hover:text-primary-700"
+            className="text-xs sm:text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 flex items-center gap-1 active:scale-95 touch-manipulation transition-all"
           >
-            <Plus className="inline h-4 w-4" /> Add time slot
+            <Plus className="inline h-3.5 w-3.5 sm:h-4 sm:w-4" /> Add time slot
           </button>
         </div>
       )}
 
-      <div className="flex justify-end space-x-3 pt-4">
+      <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4 sticky bottom-0 bg-white dark:bg-gray-800 pb-4 sm:pb-0">
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 text-gray-700 bg-gray-50 rounded-lg hover:bg-gray-50"
+          className="w-full sm:w-auto px-4 py-2.5 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-all active:scale-95 touch-manipulation"
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+          className="w-full sm:w-auto px-4 py-2.5 bg-primary-600 dark:bg-primary-500 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 transition-all active:scale-95 touch-manipulation"
         >
           Save
         </button>
