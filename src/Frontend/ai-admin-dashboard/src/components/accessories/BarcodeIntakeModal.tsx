@@ -140,24 +140,25 @@ const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black dark:bg-black bg-opacity-50 dark:bg-opacity-70 transition-colors duration-200">
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black dark:bg-black bg-opacity-50 dark:bg-opacity-70 p-0 sm:p-4 transition-colors duration-200">
+      <div className="bg-white dark:bg-gray-800 h-full sm:h-auto sm:rounded-lg border-0 sm:border border-gray-200 dark:border-gray-700 w-full sm:max-w-2xl max-h-full sm:max-h-[90vh] overflow-y-auto flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-          <div className="flex items-center gap-4">
-            <Scan className="w-6 h-6 text-accent-600 dark:text-accent-500" />
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Barcode Intake</h2>
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 flex-shrink-0 sticky top-0 bg-white dark:bg-gray-800 z-10">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <Scan className="w-5 h-5 sm:w-6 sm:h-6 text-accent-600 dark:text-accent-500" />
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">Barcode Intake</h2>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg text-gray-900 dark:text-white transition-colors"
+            className="p-2 -mr-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-gray-900 dark:text-white transition-colors"
+            aria-label="Close barcode intake"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-6">
+        <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 flex-1 overflow-y-auto">
           {/* Barcode Input */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -204,34 +205,34 @@ const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
 
           {/* Scan Result */}
           {scanResult && (
-            <div className="space-y-4">
+            <div className="space-y-4 sm:space-y-6">
               {/* Product Info */}
-              <div className="p-6 bg-gray-50 dark:bg-gray-700 rounded-lg transition-colors">
-                <div className="flex items-start gap-6">
+              <div className="p-4 sm:p-6 bg-gray-50 dark:bg-gray-700 rounded-lg transition-colors">
+                <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
                   {scanResult.data?.image_url ? (
                     <img
                       src={scanResult.data.image_url}
                       alt={scanResult.data.name}
-                      className="w-20 h-20 object-cover rounded"
+                      className="w-full sm:w-20 h-32 sm:h-20 object-cover rounded"
                     />
                   ) : (
-                    <div className="w-20 h-20 bg-gray-100 dark:bg-gray-600 rounded flex items-center justify-center transition-colors">
-                      <Package className="w-8 h-8 text-gray-400" />
+                    <div className="w-full sm:w-20 h-32 sm:h-20 bg-gray-100 dark:bg-gray-600 rounded flex items-center justify-center transition-colors">
+                      <Package className="w-12 h-12 sm:w-8 sm:h-8 text-gray-400" />
                     </div>
                   )}
-                  
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-lg text-gray-900 dark:text-white">
+
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-base sm:text-lg text-gray-900 dark:text-white">
                       {scanResult.data?.name || 'Unknown Product'}
                     </h3>
                     {scanResult.data?.brand && (
-                      <p className="text-sm text-gray-600 dark:text-gray-300">Brand: {scanResult.data.brand}</p>
+                      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">Brand: {scanResult.data.brand}</p>
                     )}
                     {scanResult.data?.description && (
-                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{scanResult.data.description}</p>
+                      <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">{scanResult.data.description}</p>
                     )}
-                    
-                    <div className="flex items-center gap-6 mt-2">
+
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-2">
                       <span className={`text-xs px-2 py-1 rounded ${
                         scanResult.confidence > 0.7 ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400' :
                         scanResult.confidence > 0.4 ? 'bg-warning-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400' :
@@ -248,7 +249,7 @@ const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
               </div>
 
               {/* Intake Form */}
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Quantity *
@@ -342,25 +343,26 @@ const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="flex justify-between items-center p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 transition-colors">
+        <div className="flex flex-col-reverse sm:flex-row justify-between items-stretch sm:items-center gap-2 sm:gap-0 p-4 sm:p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 transition-colors flex-shrink-0 sticky bottom-0">
           <button
             onClick={handleReset}
-            className="px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition-colors"
+            className="w-full sm:w-auto px-4 py-2.5 sm:py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg sm:hover:bg-transparent transition-colors font-medium active:scale-95 touch-manipulation"
           >
             Reset
           </button>
-          
-          <div className="flex gap-4">
+
+
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
             <button
               onClick={onClose}
-              className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-600 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 transition-colors"
+              className="w-full sm:w-auto px-4 py-2.5 sm:py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-600 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 transition-colors font-medium active:scale-95 touch-manipulation"
             >
               Cancel
             </button>
             <button
               onClick={handleIntake}
               disabled={!scanResult || !costPrice || !retailPrice}
-              className="px-4 py-2 bg-primary-600 dark:bg-primary-500 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-colors"
+              className="w-full sm:w-auto px-4 py-2.5 sm:py-2 bg-primary-600 dark:bg-primary-500 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors font-semibold active:scale-95 touch-manipulation"
             >
               <Check className="w-4 h-4" />
               Add to Inventory
