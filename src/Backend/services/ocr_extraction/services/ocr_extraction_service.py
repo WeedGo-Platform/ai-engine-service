@@ -139,12 +139,15 @@ class OCRExtractionService:
                     ollama_url="http://localhost:11434"
                 )
 
-                # Register but don't initialize yet (lazy loading)
+                # Register provider
                 provider_registry.register(provider)
-                logger.info(f"  ✅ Registered Ollama provider: {model.name}")
+
+                # Initialize provider to make it available
+                await provider.initialize()
+                logger.info(f"  ✅ Registered and initialized Ollama provider: {model.name}")
 
             except Exception as e:
-                logger.warning(f"  ⚠️ Failed to register Ollama provider {model.name}: {e}")
+                logger.warning(f"  ⚠️ Failed to initialize Ollama provider {model.name}: {e}")
 
         # Initialize Hugging Face providers
         for model in huggingface_models:
@@ -160,12 +163,15 @@ class OCRExtractionService:
                     model=model
                 )
 
-                # Register but don't initialize yet (lazy loading)
+                # Register provider
                 provider_registry.register(provider)
-                logger.info(f"  ✅ Registered Hugging Face provider: {model.name}")
+
+                # Initialize provider to make it available
+                await provider.initialize()
+                logger.info(f"  ✅ Registered and initialized Hugging Face provider: {model.name}")
 
             except Exception as e:
-                logger.warning(f"  ⚠️ Failed to register HF provider {model.name}: {e}")
+                logger.warning(f"  ⚠️ Failed to initialize HF provider {model.name}: {e}")
 
         # Initialize Gemini provider if API key available
         if self.discovery_result.gemini_api_key:
@@ -192,12 +198,15 @@ class OCRExtractionService:
                     api_key=self.discovery_result.gemini_api_key
                 )
 
-                # Register but don't initialize yet
+                # Register provider
                 provider_registry.register(provider)
-                logger.info(f"  ✅ Registered Gemini provider (free tier)")
+
+                # Initialize provider to make it available
+                await provider.initialize()
+                logger.info(f"  ✅ Registered and initialized Gemini provider (free tier)")
 
             except Exception as e:
-                logger.warning(f"  ⚠️ Failed to register Gemini provider: {e}")
+                logger.warning(f"  ⚠️ Failed to initialize Gemini provider: {e}")
 
         logger.info(f"Total providers registered: {len(provider_registry.get_available())}")
 
