@@ -128,9 +128,9 @@ class OCRExtractionService:
         for model in ollama_models:
             try:
                 config = VisionProviderConfig(
-                    provider_type=ProviderType.LOCAL_OLLAMA,
                     name=f"ollama_{model.name}",
-                    enabled=True
+                    provider_type=ProviderType.LOCAL_OLLAMA,
+                    model_name=model.name
                 )
 
                 provider = OllamaVisionProvider(
@@ -150,9 +150,9 @@ class OCRExtractionService:
         for model in huggingface_models:
             try:
                 config = VisionProviderConfig(
-                    provider_type=ProviderType.LOCAL_HUGGINGFACE,
                     name=f"hf_{model.name}",
-                    enabled=True
+                    provider_type=ProviderType.LOCAL_HUGGINGFACE,
+                    model_name=model.name
                 )
 
                 provider = HuggingFaceVisionProvider(
@@ -181,9 +181,9 @@ class OCRExtractionService:
                 )
 
                 config = VisionProviderConfig(
-                    provider_type=ProviderType.CLOUD_FREE,
                     name="gemini_flash",
-                    enabled=True
+                    provider_type=ProviderType.CLOUD_FREE,
+                    model_name="gemini-2.0-flash-exp"
                 )
 
                 provider = GeminiVisionProvider(
