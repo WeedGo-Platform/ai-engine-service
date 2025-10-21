@@ -982,7 +982,7 @@ class BarcodeLookupService:
                 logger.info("Using advanced OCR extraction system")
 
                 # Initialize OCR service if not already done
-                if not ocr_service._initialized:
+                if not ocr_service.is_initialized:
                     await ocr_service.initialize()
                     logger.info("OCR service initialized")
 
