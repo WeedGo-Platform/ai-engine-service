@@ -272,23 +272,23 @@ export default function DeliveryManagement() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-gray-900">Delivery Management</h1>
-        <p className="text-sm text-gray-500 mt-1">Managing deliveries for {currentStore.name}</p>
+        <h1 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white">Delivery Management</h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Managing deliveries for {currentStore.name}</p>
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-gray-200">
-        <nav className="-mb-px flex space-x-8">
+      <div className="border-b border-gray-200 dark:border-gray-700 overflow-x-auto">
+        <nav className="-mb-px flex space-x-4 sm:space-x-8 min-w-max sm:min-w-0">
           {['active', 'tracking', 'staff', 'batch'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+              className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap transition-colors ${
                 activeTab === tab
-                  ? 'border-primary-500 text-primary-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-primary-500 text-primary-600 dark:text-primary-400'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
             >
               <div className="flex items-center space-x-2">
@@ -305,18 +305,18 @@ export default function DeliveryManagement() {
 
       {/* Active Deliveries Tab */}
       {activeTab === 'active' && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-4">
-            <div className="flex justify-between items-center">
-              <h2 className="text-lg font-medium">Active Deliveries ({deliveries.length})</h2>
-              <label className="flex items-center space-x-2">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div className="lg:col-span-2 space-y-3 sm:space-y-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0">
+              <h2 className="text-base sm:text-lg font-medium dark:text-white">Active Deliveries ({deliveries.length})</h2>
+              <label className="flex items-center space-x-2 touch-manipulation">
                 <input
                   type="checkbox"
                   checked={batchMode}
                   onChange={(e) => setBatchMode(e.target.checked)}
                   className="rounded text-primary-600 focus:ring-primary-500"
                 />
-                <span className="text-sm text-gray-700">Batch Mode</span>
+                <span className="text-sm text-gray-700 dark:text-gray-300">Batch Mode</span>
               </label>
             </div>
 
@@ -325,58 +325,58 @@ export default function DeliveryManagement() {
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {deliveries.map((delivery: Delivery) => (
-                  <div key={delivery.id} className="bg-white border border-gray-200 rounded-lg p-4">
+                  <div key={delivery.id} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 sm:p-4 transition-colors">
                     <div className="flex items-start justify-between">
-                      <div className="flex items-start space-x-3">
+                      <div className="flex items-start space-x-2 sm:space-x-3 flex-1">
                         {batchMode && (
                           <input
                             type="checkbox"
                             checked={selectedDeliveries.includes(delivery.id)}
                             onChange={() => toggleDeliverySelection(delivery.id)}
-                            className="mt-1 rounded text-primary-600 focus:ring-primary-500"
+                            className="mt-1 rounded text-primary-600 focus:ring-primary-500 touch-manipulation"
                           />
                         )}
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between mb-2">
-                            <h3 className="font-medium text-gray-900">{delivery.customer_name}</h3>
-                            <span className={`px-2 py-1 text-xs font-medium rounded-full ${statusColors[delivery.status]}`}>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between mb-2 gap-2 sm:gap-0">
+                            <h3 className="font-medium text-sm sm:text-base text-gray-900 dark:text-white truncate">{delivery.customer_name}</h3>
+                            <span className={`px-2 py-1 text-xs font-medium rounded-full whitespace-nowrap ${statusColors[delivery.status]}`}>
                               {delivery.status.replace(/_/g, ' ')}
                             </span>
                           </div>
 
-                          <div className="space-y-1 text-sm text-gray-600">
+                          <div className="space-y-1 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                             <div className="flex items-center space-x-2">
-                              <MapPin className="h-4 w-4" />
-                              <span>{delivery.address.street}, {delivery.address.city}</span>
+                              <MapPin className="h-4 w-4 flex-shrink-0" />
+                              <span className="truncate">{delivery.address.street}, {delivery.address.city}</span>
                             </div>
                             <div className="flex items-center space-x-2">
-                              <Phone className="h-4 w-4" />
+                              <Phone className="h-4 w-4 flex-shrink-0" />
                               <span>{delivery.customer_phone}</span>
                             </div>
                             {delivery.metrics?.estimated_time && (
                               <div className="flex items-center space-x-2">
-                                <Clock className="h-4 w-4" />
+                                <Clock className="h-4 w-4 flex-shrink-0" />
                                 <span>ETA: {new Date(delivery.metrics.estimated_time).toLocaleTimeString()}</span>
                               </div>
                             )}
                             {delivery.assigned_to && (
                               <div className="flex items-center space-x-2">
-                                <User className="h-4 w-4" />
-                                <span>Assigned to: {staff.find((s: StaffMember) => s.id === delivery.assigned_to)?.name || 'Unknown'}</span>
+                                <User className="h-4 w-4 flex-shrink-0" />
+                                <span className="truncate">Assigned to: {staff.find((s: StaffMember) => s.id === delivery.assigned_to)?.name || 'Unknown'}</span>
                               </div>
                             )}
                           </div>
 
-                          <div className="flex space-x-2 mt-3">
+                          <div className="flex flex-wrap gap-2 mt-3">
                             {!delivery.assigned_to && (
                               <button
                                 onClick={() => {
                                   setSelectedDelivery(delivery);
                                   setShowAssignmentModal(true);
                                 }}
-                                className="px-3 py-1 text-xs bg-primary-600 text-white rounded hover:bg-primary-700"
+                                className="px-3 py-1.5 sm:py-1 text-xs bg-primary-600 dark:bg-primary-700 text-white rounded hover:bg-primary-700 dark:hover:bg-primary-600 active:scale-95 transition-all touch-manipulation"
                               >
                                 Assign
                               </button>
@@ -386,7 +386,7 @@ export default function DeliveryManagement() {
                                 setSelectedDelivery(delivery);
                                 setActiveTab('tracking');
                               }}
-                              className="px-3 py-1 text-xs border border-gray-300 rounded hover:bg-gray-50"
+                              className="px-3 py-1.5 sm:py-1 text-xs border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 active:scale-95 transition-all touch-manipulation dark:text-gray-300"
                             >
                               Track
                             </button>
@@ -396,7 +396,7 @@ export default function DeliveryManagement() {
                                   setSelectedDelivery(delivery);
                                   setShowProofModal(true);
                                 }}
-                                className="px-3 py-1 text-xs border border-gray-300 rounded hover:bg-gray-50"
+                                className="px-3 py-1.5 sm:py-1 text-xs border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 active:scale-95 transition-all touch-manipulation dark:text-gray-300"
                               >
                                 Add Proof
                               </button>
@@ -606,40 +606,40 @@ export default function DeliveryManagement() {
       {/* Staff Tab */}
       {activeTab === 'staff' && (
         <div>
-          <h2 className="text-lg font-medium mb-4">Available Staff ({staff.length})</h2>
+          <h2 className="text-base sm:text-lg font-medium mb-3 sm:mb-4 dark:text-white">Available Staff ({staff.length})</h2>
 
           {loadingStaff ? (
             <div className="flex justify-center py-8">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
               {staff.map((member: StaffMember) => (
-                <div key={member.id} className="bg-white border border-gray-200 rounded-lg p-4">
+                <div key={member.id} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 sm:p-4 transition-colors">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-medium text-gray-900">{member.name}</h3>
-                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                    <h3 className="font-medium text-sm sm:text-base text-gray-900 dark:text-white truncate">{member.name}</h3>
+                    <span className={`px-2 py-1 text-xs font-medium rounded-full whitespace-nowrap ${
                       member.is_available
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-gray-100 text-gray-600'
+                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                        : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
                     }`}>
                       {member.status}
                     </span>
                   </div>
 
-                  <div className="space-y-1 text-sm text-gray-600">
+                  <div className="space-y-1 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                     <div className="flex items-center space-x-2">
-                      <Phone className="h-4 w-4" />
+                      <Phone className="h-4 w-4 flex-shrink-0" />
                       <span>{member.phone}</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Truck className="h-4 w-4" />
+                      <Truck className="h-4 w-4 flex-shrink-0" />
                       <span>Active: {member.current_deliveries}/{member.max_deliveries}</span>
                     </div>
                     {member.location && (
                       <div className="flex items-center space-x-2">
-                        <MapPin className="h-4 w-4" />
-                        <span className="text-green-600">Location available</span>
+                        <MapPin className="h-4 w-4 flex-shrink-0" />
+                        <span className="text-green-600 dark:text-green-400">Location available</span>
                       </div>
                     )}
                   </div>
