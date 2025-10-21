@@ -274,13 +274,14 @@ class OCRExtractionService:
         options = options or ExtractionOptions()
 
         logger.info(
-            f"📄 Extracting from document: {document.file_path} "
+            f"📄 Extracting from document: {document.file_path or '<bytes>'} "
             f"using template: {template.name}"
         )
 
-        # Validate document exists
-        if not Path(document.file_path).exists():
-            raise ExtractionError(f"Document not found: {document.file_path}")
+        # Validate document exists (only for file-based documents)
+        if document.file_path and not document.image_bytes:
+            if not Path(document.file_path).exists():
+                raise ExtractionError(f"Document not found: {document.file_path}")
 
         # Select strategy
         try:

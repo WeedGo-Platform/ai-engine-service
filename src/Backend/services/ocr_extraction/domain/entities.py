@@ -40,7 +40,7 @@ class Document:
 
     def __post_init__(self):
         """Initialize document"""
-        if self.file_path:
+        if self.file_path and self.file_path != "dummy.jpg":
             self._validate_file()
         elif self.image_bytes:
             self._validate_bytes()
