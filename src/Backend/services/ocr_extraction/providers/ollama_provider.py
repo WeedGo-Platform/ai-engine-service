@@ -111,7 +111,12 @@ class OllamaVisionProvider(BaseVisionProvider):
 
         try:
             # Load and encode image
-            image_b64 = self._load_and_encode_image(document.file_path)
+            if document.image_bytes:
+                # Document has raw bytes (e.g., from upload)
+                image_b64 = base64.b64encode(document.image_bytes).decode('utf-8')
+            else:
+                # Document has file path
+                image_b64 = self._load_and_encode_image(document.file_path)
 
             # Build request
             request_data = {

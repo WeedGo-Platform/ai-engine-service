@@ -103,7 +103,8 @@ class CloudVisionStrategy(AbstractVisionStrategy):
 
         if not self.cloud_providers:
             raise AllProvidersExhaustedError(
-                "No cloud providers available. Set GEMINI_API_KEY environment variable."
+                attempted_providers=[],
+                last_error="No cloud providers available. Set GEMINI_API_KEY environment variable."
             )
 
         # Build extraction prompt
@@ -142,9 +143,11 @@ class CloudVisionStrategy(AbstractVisionStrategy):
                 continue
 
         # All providers failed
+        attempted_names = [p.name for p in self.cloud_providers]
         error_summary = "; ".join(errors)
         raise AllProvidersExhaustedError(
-            f"All cloud providers failed. Errors: {error_summary}"
+            attempted_providers=attempted_names,
+            last_error=error_summary
         )
 
     def supports_template(self, template: Template) -> bool:

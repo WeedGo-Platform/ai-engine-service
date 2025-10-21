@@ -89,7 +89,8 @@ class LocalVisionStrategy(AbstractVisionStrategy):
 
         if not self.local_providers:
             raise AllProvidersExhaustedError(
-                "No local providers available. Install Ollama or download HF models."
+                attempted_providers=[],
+                last_error="No local providers available. Install Ollama or download HF models."
             )
 
         # Sort by estimated latency (fastest first)
@@ -128,9 +129,11 @@ class LocalVisionStrategy(AbstractVisionStrategy):
                 continue
 
         # All providers failed
+        attempted_names = [p.name for p in sorted_providers]
         error_summary = "; ".join(errors)
         raise AllProvidersExhaustedError(
-            f"All local providers failed. Errors: {error_summary}"
+            attempted_providers=attempted_names,
+            last_error=error_summary
         )
 
     def supports_template(self, template: Template) -> bool:
