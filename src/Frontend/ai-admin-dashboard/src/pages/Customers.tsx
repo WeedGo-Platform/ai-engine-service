@@ -124,36 +124,36 @@ const Customers: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Customer Management</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Managing customers for {currentStore.name}</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Customer Management</h1>
+          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">Managing customers for {currentStore.name}</p>
         </div>
-        <button className="bg-primary-600 dark:bg-primary-700 text-white px-4 py-2 rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 flex items-center gap-2">
-          <UserPlus className="h-5 w-5" />
+        <button className="w-full sm:w-auto bg-primary-600 dark:bg-primary-700 text-white px-4 py-2.5 sm:py-2 rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 flex items-center justify-center gap-2 font-medium text-sm active:scale-95 transition-all touch-manipulation">
+          <UserPlus className="h-4 w-4 sm:h-5 sm:w-5" />
           Add Customer
         </button>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg p-6">
-        <div className="flex gap-6 mb-6">
-          <div className="flex-1">
+      <div className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 mb-4 sm:mb-6">
+          <div className="flex-1 min-w-0">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 h-4 w-4 sm:h-5 sm:w-5" />
               <input
                 type="text"
                 placeholder="Search customers..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                className="w-full pl-9 sm:pl-10 pr-4 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition-colors"
               />
             </div>
           </div>
           <select
             value={selectedType}
             onChange={(e) => setSelectedType(e.target.value)}
-            className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            className="px-3 sm:px-4 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors"
           >
             <option value="all">All Types</option>
             <option value="recreational">Recreational</option>
@@ -161,8 +161,9 @@ const Customers: React.FC = () => {
           </select>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <div className="overflow-x-auto -mx-4 sm:-mx-6">
+          <div className="inline-block min-w-full align-middle px-4 sm:px-6">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -263,6 +264,7 @@ const Customers: React.FC = () => {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
 
         {(!customers || customers.length === 0) && (
@@ -277,96 +279,97 @@ const Customers: React.FC = () => {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Customers</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">
+              <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">Total Customers</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                 {customers?.length || 0}
               </p>
             </div>
-            <Users className="h-8 w-8 text-primary-600 dark:text-primary-400" />
+            <Users className="h-6 w-6 sm:h-8 sm:w-8 text-primary-600 dark:text-primary-400" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Medical Patients</p>
-              <p className="text-2xl font-bold text-accent-600 dark:text-accent-400">
+              <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">Medical Patients</p>
+              <p className="text-xl sm:text-2xl font-bold text-accent-600 dark:text-accent-400">
                 {customers?.filter((c: any) => c.customer_type === 'medical').length || 0}
               </p>
             </div>
-            <Users className="h-8 w-8 text-accent-600 dark:text-accent-400" />
+            <Users className="h-6 w-6 sm:h-8 sm:w-8 text-accent-600 dark:text-accent-400" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Avg Spent</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">
+              <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">Avg Spent</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                 ${customers?.length ?
                   (customers.reduce((sum: number, c: any) => sum + (parseFloat(c.total_spent) || 0), 0) / customers.length).toFixed(2)
                   : '0.00'
                 }
               </p>
             </div>
-            <ShoppingBag className="h-8 w-8 text-purple-600 dark:text-purple-400" />
+            <ShoppingBag className="h-6 w-6 sm:h-8 sm:w-8 text-purple-600 dark:text-purple-400" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Points</p>
-              <p className="text-2xl font-bold text-warning-600 dark:text-warning-400">
+              <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">Total Points</p>
+              <p className="text-xl sm:text-2xl font-bold text-warning-600 dark:text-warning-400">
                 {customers?.reduce((sum: number, c: any) => sum + (c.loyalty_points || 0), 0) || 0}
               </p>
             </div>
-            <Star className="h-8 w-8 text-warning-600 dark:text-warning-400" />
+            <Star className="h-6 w-6 sm:h-8 sm:w-8 text-warning-600 dark:text-warning-400" />
           </div>
         </div>
       </div>
 
       {/* Customer Details Modal */}
       {selectedCustomer && (
-        <div className="fixed inset-0 bg-gray-500 dark:bg-black bg-opacity-75 dark:bg-opacity-70 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+        <div className="fixed inset-0 bg-gray-500 dark:bg-black bg-opacity-75 dark:bg-opacity-70 flex items-center justify-center z-50 p-0 sm:p-4">
+          <div className="bg-white dark:bg-gray-800 h-full sm:h-auto sm:rounded-lg border-0 sm:border border-gray-200 dark:border-gray-700 sm:max-w-3xl w-full max-h-full sm:max-h-[90vh] overflow-y-auto flex flex-col">
+            <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 flex-shrink-0 sticky top-0 bg-white dark:bg-gray-800 z-10">
               <div className="flex justify-between items-center">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Customer Details</h2>
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">Customer Details</h2>
                 <button
                   onClick={() => setSelectedCustomer(null)}
-                  className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
+                  className="p-2 -mr-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                  aria-label="Close customer details"
                 >
-                  <X className="h-6 w-6" />
+                  <X className="h-5 w-5 sm:h-6 sm:w-6" />
                 </button>
               </div>
             </div>
 
-            <div className="p-6 space-y-6">
+            <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 flex-1 overflow-y-auto">
               {/* Customer Header */}
-              <div className="flex items-center space-x-4">
-                <div className="h-16 w-16 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center">
-                  <Users className="h-8 w-8 text-primary-600 dark:text-primary-400" />
+              <div className="flex items-center space-x-3 sm:space-x-4">
+                <div className="h-12 w-12 sm:h-16 sm:w-16 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Users className="h-6 w-6 sm:h-8 sm:w-8 text-primary-600 dark:text-primary-400" />
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   {isEditMode ? (
                     <input
                       type="text"
                       value={editedCustomer?.name || ''}
                       onChange={(e) => handleFieldChange('name', e.target.value)}
-                      className="text-lg font-semibold text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded px-2 py-1 w-full bg-white dark:bg-gray-700"
+                      className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded px-2 py-1 w-full bg-white dark:bg-gray-700 transition-colors"
                       placeholder="Customer Name"
                     />
                   ) : (
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white truncate">
                       {selectedCustomer.name || 'Unknown Customer'}
                     </h3>
                   )}
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Customer ID: {selectedCustomer.id}</p>
+                  <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 truncate">Customer ID: {selectedCustomer.id}</p>
                 </div>
               </div>
 
@@ -414,7 +417,7 @@ const Customers: React.FC = () => {
               {/* Customer Stats */}
               <div>
                 <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Customer Statistics</h4>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                   <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                     <div className="flex items-center space-x-2 mb-1">
                       <Star className="h-4 w-4 text-yellow-500" />
@@ -510,20 +513,20 @@ const Customers: React.FC = () => {
             </div>
 
             {/* Modal Footer */}
-            <div className="p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
-              <div className="flex justify-end space-x-3">
+            <div className="p-4 sm:p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 flex-shrink-0 sticky bottom-0">
+              <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3">
                 {isEditMode ? (
                   <>
                     <button
                       onClick={handleCancelEdit}
-                      className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
+                      className="w-full sm:w-auto px-4 py-2.5 sm:py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 font-medium transition-colors active:scale-95 touch-manipulation"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={handleSaveEdit}
                       disabled={updateMutation.isPending}
-                      className="px-4 py-2 bg-primary-600 dark:bg-primary-700 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full sm:w-auto px-4 py-2.5 sm:py-2 bg-primary-600 dark:bg-primary-700 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed font-semibold transition-colors active:scale-95 touch-manipulation"
                     >
                       {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
                     </button>
@@ -536,13 +539,13 @@ const Customers: React.FC = () => {
                         setIsEditMode(false);
                         setEditedCustomer(null);
                       }}
-                      className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
+                      className="w-full sm:w-auto px-4 py-2.5 sm:py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 font-medium transition-colors active:scale-95 touch-manipulation"
                     >
                       Close
                     </button>
                     <button
                       onClick={handleEditClick}
-                      className="px-4 py-2 bg-primary-600 dark:bg-primary-700 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600"
+                      className="w-full sm:w-auto px-4 py-2.5 sm:py-2 bg-primary-600 dark:bg-primary-700 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 font-semibold transition-colors active:scale-95 touch-manipulation"
                     >
                       Edit Customer
                     </button>
