@@ -280,12 +280,12 @@ export default function Promotions() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('promotions:titles.main')}</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{t('promotions:descriptions.managingFor')} {currentStore.name}</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">{t('promotions:titles.main')}</h1>
+          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">{t('promotions:descriptions.managingFor')} {currentStore.name}</p>
         </div>
         <button
           onClick={() => {
@@ -293,35 +293,35 @@ export default function Promotions() {
             setSelectedPromotion(null);
             setShowModal(true);
           }}
-          className="flex items-center px-4 py-2 bg-primary-600 dark:bg-primary-700 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600"
+          className="w-full sm:w-auto flex items-center justify-center px-4 py-2.5 sm:py-2 bg-primary-600 dark:bg-primary-700 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 active:scale-95 transition-all touch-manipulation"
         >
-          <Plus className="h-5 w-5 mr-2" />
+          <Plus className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
           {t('promotions:actions.createNew')}
         </button>
       </div>
 
       {/* Search Bar */}
       {activeTab === 'promotions' && (
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2 sm:space-x-4">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-gray-400 dark:text-gray-500" />
             <input
               type="text"
               placeholder={t('promotions:search.placeholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full pl-9 sm:pl-10 pr-3 sm:pr-4 py-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
           </div>
         </div>
       )}
 
       {/* Tabs */}
-      <div className="border-b border-gray-200 dark:border-gray-700">
-        <nav className="-mb-px flex space-x-8">
+      <div className="border-b border-gray-200 dark:border-gray-700 overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+        <nav className="-mb-px flex space-x-4 sm:space-x-8">
           <button
             onClick={() => setActiveTab('promotions')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
               activeTab === 'promotions'
                 ? 'border-primary-500 text-primary-600 dark:border-primary-400 dark:text-primary-400'
                 : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-200 dark:hover:border-gray-600'
@@ -331,7 +331,7 @@ export default function Promotions() {
           </button>
           <button
             onClick={() => setActiveTab('analytics')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
               activeTab === 'analytics'
                 ? 'border-primary-500 text-primary-600 dark:border-primary-400 dark:text-primary-400'
                 : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-200 dark:hover:border-gray-600'
@@ -341,7 +341,7 @@ export default function Promotions() {
           </button>
           <button
             onClick={() => setActiveTab('pricing')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
               activeTab === 'pricing'
                 ? 'border-primary-500 text-primary-600 dark:border-primary-400 dark:text-primary-400'
                 : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-200 dark:hover:border-gray-600'
@@ -356,10 +356,11 @@ export default function Promotions() {
       {activeTab === 'promotions' && (
         <div className="bg-white dark:bg-gray-800 rounded-lg">
           {isLoading ? (
-            <div className="p-8 text-center text-gray-900 dark:text-gray-200">{t('promotions:messages.loading.promotions')}</div>
+            <div className="p-4 sm:p-8 text-center text-gray-900 dark:text-gray-200">{t('promotions:messages.loading.promotions')}</div>
           ) : (
-            <div className="overflow-hidden">
-              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <div className="overflow-x-auto -mx-4 sm:mx-0">
+              <div className="inline-block min-w-full align-middle px-4 sm:px-0">
+                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead className="bg-gray-50 dark:bg-gray-900">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -481,71 +482,72 @@ export default function Promotions() {
                   ))}
                 </tbody>
               </table>
+              </div>
             </div>
           )}
         </div>
       )}
 
       {activeTab === 'analytics' && analytics && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           {/* Promotion Stats */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('promotions:titles.overallStats')}</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
-                <div className="text-2xl font-bold text-gray-900 dark:text-white">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4">{t('promotions:titles.overallStats')}</h3>
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
+              <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-3 sm:p-4">
+                <div className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                   {analytics.promotions?.total || 0}
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Total Promotions</div>
+                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Total Promotions</div>
               </div>
-              <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
-                <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+              <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-3 sm:p-4">
+                <div className="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-400">
                   {analytics.promotions?.active || 0}
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Active Now</div>
+                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Active Now</div>
               </div>
-              <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
-                <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+              <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-3 sm:p-4">
+                <div className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">
                   {analytics.promotions?.scheduled || 0}
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Scheduled</div>
+                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Scheduled</div>
               </div>
-              <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
-                <div className="text-2xl font-bold text-gray-500 dark:text-gray-400">
+              <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-3 sm:p-4">
+                <div className="text-xl sm:text-2xl font-bold text-gray-500 dark:text-gray-400">
                   {analytics.promotions?.expired || 0}
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Expired</div>
+                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Expired</div>
               </div>
             </div>
           </div>
 
           {/* Discount Code Stats */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Discount Codes</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
-                <div className="text-2xl font-bold text-gray-900 dark:text-white">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4">Discount Codes</h3>
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
+              <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-3 sm:p-4">
+                <div className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                   {analytics.discount_codes?.total || 0}
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Total Codes</div>
+                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Total Codes</div>
               </div>
-              <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
-                <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+              <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-3 sm:p-4">
+                <div className="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-400">
                   {analytics.discount_codes?.active || 0}
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Active Codes</div>
+                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Active Codes</div>
               </div>
-              <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
-                <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+              <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-3 sm:p-4">
+                <div className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">
                   {analytics.discount_codes?.total_uses || 0}
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Total Uses</div>
+                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Total Uses</div>
               </div>
-              <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
-                <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+              <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-3 sm:p-4">
+                <div className="text-xl sm:text-2xl font-bold text-purple-600 dark:text-purple-400">
                   ${analytics.totals?.total_discount_amount?.toFixed(2) || '0.00'}
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Total Discounts</div>
+                <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Total Discounts</div>
               </div>
             </div>
           </div>
@@ -577,25 +579,25 @@ export default function Promotions() {
 
       {/* Delete Confirmation Dialog */}
       {showDeleteDialog && promotionToDelete && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{t('promotions:titles.deletePromotion')}</h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
+        <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 max-w-md w-full">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">{t('promotions:titles.deletePromotion')}</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 sm:mb-6">
               {t('promotions:confirm.deletePromotion')}
             </p>
-            <div className="flex justify-end space-x-3">
+            <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3">
               <button
                 onClick={() => {
                   setShowDeleteDialog(false);
                   setPromotionToDelete(null);
                 }}
-                className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600"
+                className="w-full sm:w-auto px-4 py-2.5 sm:py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 active:scale-95 transition-all touch-manipulation"
               >
                 {t('promotions:actions.cancel')}
               </button>
               <button
                 onClick={() => deletePromotion.mutate(promotionToDelete)}
-                className="px-4 py-2 bg-danger-600 dark:bg-danger-700 text-white rounded-lg hover:bg-danger-700 dark:hover:bg-danger-600"
+                className="w-full sm:w-auto px-4 py-2.5 sm:py-2 bg-danger-600 dark:bg-danger-700 text-white rounded-lg hover:bg-danger-700 dark:hover:bg-danger-600 active:scale-95 transition-all touch-manipulation"
               >
                 {t('promotions:actions.delete')}
               </button>
@@ -814,19 +816,20 @@ function PromotionModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-0 sm:p-4">
+      <div className="bg-white dark:bg-gray-800 h-full sm:h-auto sm:rounded-xl shadow-2xl max-w-4xl w-full max-h-full sm:max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header with Progress */}
-        <div className="p-6 border-b bg-gradient-to-r from-primary-50 to-primary-100">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold text-gray-900">
+        <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/20">
+          <div className="flex items-center justify-between mb-3 sm:mb-4">
+            <h2 className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">
               {mode === 'edit' ? t('promotions:titles.editPromotion') : mode === 'view' ? t('promotions:titles.viewPromotion') : t('promotions:titles.createPromotion')}
             </h2>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 transition-colors"
+              className="p-2 -mr-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors active:scale-95 touch-manipulation"
+              aria-label="Close modal"
             >
-              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
@@ -926,13 +929,13 @@ function PromotionModal({
           </div>
 
           {/* Navigation Buttons */}
-          <div className="flex justify-between items-center px-6 py-4 border-t bg-gray-50">
-            <div>
+          <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 px-4 sm:px-6 py-3 sm:py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+            <div className="order-2 sm:order-1">
               {currentStep > 1 && (
                 <button
                   type="button"
                   onClick={handleBack}
-                  className="flex items-center px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="w-full sm:w-auto flex items-center justify-center px-4 py-2.5 sm:py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors active:scale-95 touch-manipulation"
                 >
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   {t('promotions:actions.back')}
@@ -940,11 +943,11 @@ function PromotionModal({
               )}
             </div>
 
-            <div className="flex space-x-3">
+            <div className="order-1 sm:order-2 flex flex-col-reverse sm:flex-row gap-2 sm:gap-3">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                className="w-full sm:w-auto px-4 py-2.5 sm:py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors active:scale-95 touch-manipulation"
               >
                 {t('promotions:actions.cancel')}
               </button>
@@ -954,7 +957,7 @@ function PromotionModal({
                   type="button"
                   onClick={handleNext}
                   disabled={!isStepValid(currentStep)}
-                  className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                  className="w-full sm:w-auto flex items-center justify-center px-4 py-2.5 sm:py-2 bg-primary-600 dark:bg-primary-700 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors active:scale-95 touch-manipulation"
                 >
                   {t('promotions:actions.next')}
                   <ArrowRight className="h-4 w-4 ml-2" />
@@ -962,7 +965,7 @@ function PromotionModal({
               ) : (
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-lg hover:from-primary-700 hover:to-primary-800 shadow-sm transition-all"
+                  className="w-full sm:w-auto px-6 py-2.5 sm:py-2 bg-gradient-to-r from-primary-600 to-primary-700 dark:from-primary-700 dark:to-primary-800 text-white rounded-lg hover:from-primary-700 hover:to-primary-800 dark:hover:from-primary-600 dark:hover:to-primary-700 shadow-sm transition-all active:scale-95 touch-manipulation"
                 >
                   {mode === 'edit' ? t('promotions:actions.update') : t('promotions:actions.create')}
                 </button>
