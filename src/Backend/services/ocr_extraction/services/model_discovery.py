@@ -227,32 +227,50 @@ class ModelDiscoveryService:
 
                 # Check if directory contains model files
                 has_config = (item / 'config.json').exists()
-                has_weights = any(
-                    (item / f).exists()
-                    for f in ['pytorch_model.bin', 'model.safetensors', 'paddle_model.pdparams']
-                )
+                weight_files = ['pytorch_model.bin', 'model.safetensors', 'paddle_model.pdparams']
+                has_weights = any((item / f).exists() for f in weight_files)
+
+                model_dir = item
+
+                # If config found but no weights, check subdirectories (common for Git cloned models)
+                if has_config and not has_weights:
+                    for subdir in item.iterdir():
+                        if not subdir.is_dir() or subdir.name.startswith('.'):
+                            continue
+
+                        sub_has_config = (subdir / 'config.json').exists()
+                        sub_has_weights = any((subdir / f).exists() for f in weight_files)
+
+                        if sub_has_config and sub_has_weights:
+                            # Found actual model in subdirectory
+                            model_dir = subdir
+                            has_config = True
+                            has_weights = True
+                            logger.info(f"Found model in subdirectory: {subdir.name}")
+                            break
 
                 if has_config and has_weights:
                     # Determine provider type
                     provider_type = 'huggingface'
-                    if (item / 'paddle_model.pdparams').exists():
+                    if (model_dir / 'paddle_model.pdparams').exists():
                         provider_type = 'paddleocr'
 
                     # Calculate directory size
                     total_size = sum(
                         f.stat().st_size
-                        for f in item.rglob('*')
+                        for f in model_dir.rglob('*')
                         if f.is_file()
                     )
                     size_mb = total_size / (1024 * 1024)
 
                     model = AvailableModel(
-                        name=item.name,
+                        name=model_dir.name,
                         provider_type=provider_type,
-                        model_path=str(item),
+                        model_path=str(model_dir),
                         size_mb=size_mb
                     )
                     models.append(model)
+                    logger.info(f"Discovered HuggingFace model: {model_dir.name} ({size_mb:.1f}MB)")
 
             return models, None
 
