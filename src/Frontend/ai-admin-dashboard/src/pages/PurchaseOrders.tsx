@@ -254,15 +254,15 @@ const PurchaseOrders: React.FC = () => {
   // Show "No Store Selected" UI if no store is selected
   if (!currentStore) {
     return (
-      <div className="h-full flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="mb-4">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-full">
-              <FileText className="w-8 h-8 text-primary-600" />
+      <div className="h-full flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
+        <div className="text-center max-w-md">
+          <div className="mb-3 sm:mb-4">
+            <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-primary-100 dark:bg-primary-900/30 rounded-full">
+              <FileText className="w-6 h-6 sm:w-8 sm:h-8 text-primary-600 dark:text-primary-400" />
             </div>
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No Store Selected</h3>
-          <p className="text-gray-500">Please select a store to manage purchase orders</p>
+          <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">No Store Selected</h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Please select a store to manage purchase orders</p>
         </div>
       </div>
     );
@@ -427,10 +427,10 @@ const PurchaseOrders: React.FC = () => {
         </div>
 
         {(!orders?.purchase_orders || orders.purchase_orders.length === 0) && (
-          <div className="text-center py-12">
-            <FileText className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No purchase orders</h3>
-            <p className="mt-1 text-sm text-gray-500">
+          <div className="text-center py-8 sm:py-12">
+            <FileText className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-gray-400 dark:text-gray-500" />
+            <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">No purchase orders</h3>
+            <p className="mt-1 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
               Get started by creating a new purchase order.
             </p>
           </div>
