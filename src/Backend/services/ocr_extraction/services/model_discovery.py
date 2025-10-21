@@ -30,6 +30,24 @@ class DiscoveryResult:
     huggingface_models: List[str]
     errors: List[str]
 
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for serialization"""
+        return {
+            'models_found': [
+                {
+                    'name': m.name,
+                    'provider_type': m.provider_type.value if hasattr(m.provider_type, 'value') else str(m.provider_type),
+                    'size_mb': m.size_mb,
+                    'model_path': m.model_path
+                }
+                for m in self.models_found
+            ],
+            'ollama_available': self.ollama_available,
+            'gemini_api_key_present': self.gemini_api_key is not None,
+            'huggingface_models': self.huggingface_models,
+            'errors': self.errors
+        }
+
 
 class ModelDiscoveryService:
     """
