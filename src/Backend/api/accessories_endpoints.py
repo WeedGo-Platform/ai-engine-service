@@ -96,6 +96,7 @@ class AccessoryIntakeRequest(BaseModel):
     supplier_id: Optional[int]
     image_url: Optional[str]
     description: Optional[str]
+    location: Optional[str] = None  # Storage location (e.g., "Shelf A1", "Back Room")
     auto_create_catalog: bool = True
 
 
@@ -415,13 +416,14 @@ async def intake_accessory(request: AccessoryIntakeRequest):
         
         # Add to inventory
         cursor.execute("""
-            INSERT INTO accessories_inventory 
-            (store_id, accessory_id, quantity, cost_price, retail_price)
-            VALUES (%s, %s, %s, %s, %s)
+            INSERT INTO accessories_inventory
+            (store_id, accessory_id, quantity, cost_price, retail_price, location)
+            VALUES (%s, %s, %s, %s, %s, %s)
             ON CONFLICT (store_id, accessory_id) DO UPDATE SET
                 quantity = accessories_inventory.quantity + EXCLUDED.quantity,
                 cost_price = EXCLUDED.cost_price,
                 retail_price = EXCLUDED.retail_price,
+                location = COALESCE(EXCLUDED.location, accessories_inventory.location),
                 last_restocked = CURRENT_TIMESTAMP
             RETURNING id, quantity
         """, (
@@ -429,7 +431,8 @@ async def intake_accessory(request: AccessoryIntakeRequest):
             accessory_id,
             request.quantity,
             request.cost_price,
-            request.retail_price
+            request.retail_price,
+            request.location
         ))
         
         inventory_id, new_quantity = cursor.fetchone()

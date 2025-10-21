@@ -232,6 +232,36 @@ export const api = {
     },
     getMessage: (sessionId: string, messageId: string) =>
       axiosInstance.get(`/voice/session/${sessionId}/message/${messageId}`),
+
+    // Voice synthesis (personality-aware)
+    synthesize: (data: {
+      text: string;
+      personality_id: string;
+      language?: string;
+      speed?: number;
+      pitch?: number;
+      quality?: string;
+    }) => axiosInstance.post('/api/voice-synthesis/synthesize', data, {
+      responseType: 'blob', // Expect audio file
+    }),
+
+    loadPersonalityVoice: (personalityId: string) =>
+      axiosInstance.post(`/api/voice-synthesis/personalities/${personalityId}/voice/load`),
+
+    unloadPersonalityVoice: (personalityId: string) =>
+      axiosInstance.delete(`/api/voice-synthesis/personalities/${personalityId}/voice/unload`),
+
+    getProviderStatus: () =>
+      axiosInstance.get('/api/voice-synthesis/providers/status'),
+
+    getCacheStats: () =>
+      axiosInstance.get('/api/voice-synthesis/cache/stats'),
+
+    clearCache: () =>
+      axiosInstance.delete('/api/voice-synthesis/cache/clear'),
+
+    invalidatePersonalityCache: (personalityId: string) =>
+      axiosInstance.delete(`/api/voice-synthesis/personalities/${personalityId}/cache`),
   },
 
   // Store Devices

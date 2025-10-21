@@ -190,7 +190,7 @@ const TenantManagement: React.FC = () => {
   };
 
   const handleSuspendTenant = async (id: string) => {
-    if (confirmToastAsync(t('tenants:confirmations.suspendMessage'))) {
+    if (window.confirm(t('tenants:confirmations.suspendMessage'))) {
       try {
         await tenantService.suspendTenant(id, 'Admin action');
         toast.success(t('tenants:messages.suspended'));
@@ -269,14 +269,14 @@ const TenantManagement: React.FC = () => {
   );
 
   return (
-    <div className="space-y-4 sm:space-y-6">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
+      <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             {isTenantAdminView || isStoreManagerView ? t('tenants:titles.organizationManagement') : t('tenants:titles.management')}
           </h1>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 sm:mt-2">
+          <p className="text-gray-600 dark:text-gray-400 mt-2">
             {isStoreManagerView
               ? t('tenants:descriptions.viewOrganization')
               : isTenantAdminView
@@ -287,57 +287,57 @@ const TenantManagement: React.FC = () => {
         {!isTenantAdminView && !isStoreManagerView && (
           <button
             onClick={() => setShowCreateModal(true)}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 transition-colors active:scale-95 touch-manipulation"
+            className="flex items-center gap-2 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 transition-colors"
           >
-            <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+            <Plus className="w-5 h-5" />
             {t('tenants:titles.create')}
           </button>
         )}
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
-        <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg ">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{isTenantAdminView ? t('tenants:metrics.totalStores') : t('tenants:metrics.totalTenants')}</p>
-              <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
+              <p className="text-sm text-gray-600 dark:text-gray-400">{isTenantAdminView ? t('tenants:metrics.totalStores') : t('tenants:metrics.totalTenants')}</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {isTenantAdminView ? storeCount.total : tenants.length}
               </p>
             </div>
-            <Building2 className="w-6 h-6 sm:w-8 sm:h-8 text-accent-500" />
+            <Building2 className="w-8 h-8 text-accent-500" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg ">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{isTenantAdminView ? t('tenants:metrics.activeStores') : t('tenants:status.active')}</p>
-              <p className="text-xl sm:text-2xl font-bold text-primary-600">
+              <p className="text-sm text-gray-600 dark:text-gray-400">{isTenantAdminView ? t('tenants:metrics.activeStores') : t('tenants:status.active')}</p>
+              <p className="text-2xl font-bold text-primary-600">
                 {isTenantAdminView ? storeCount.active : tenants.filter(t => t.status === 'active').length}
               </p>
             </div>
-            <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8 text-primary-500" />
+            <CheckCircle className="w-8 h-8 text-primary-500" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg ">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{t('tenants:subscription.enterprise')}</p>
-              <p className="text-xl sm:text-2xl font-bold text-purple-600">
+              <p className="text-sm text-gray-600 dark:text-gray-400">{t('tenants:subscription.enterprise')}</p>
+              <p className="text-2xl font-bold text-purple-600">
                 {tenants.filter(t => t.subscription_tier === 'enterprise').length}
               </p>
             </div>
-            <Crown className="w-6 h-6 sm:w-8 sm:h-8 text-purple-500" />
+            <Crown className="w-8 h-8 text-purple-500" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg ">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{isTenantAdminView ? t('tenants:metrics.lastMonthRevenue') : t('tenants:metrics.monthlyRevenue')}</p>
-              <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
+              <p className="text-sm text-gray-600 dark:text-gray-400">{isTenantAdminView ? t('tenants:metrics.lastMonthRevenue') : t('tenants:metrics.monthlyRevenue')}</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 ${isTenantAdminView ?
                   (tenantMetrics?.last_month_revenue?.toLocaleString() || '0') :
                   tenants.reduce((sum, t) => {
@@ -347,29 +347,29 @@ const TenantManagement: React.FC = () => {
                 }
               </p>
               {isTenantAdminView && tenantMetrics?.order_count !== undefined && (
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                <p className="text-xs text-gray-500 mt-1">
                   {tenantMetrics.order_count} order{tenantMetrics.order_count !== 1 ? 's' : ''}
                 </p>
               )}
             </div>
-            <DollarSign className="w-6 h-6 sm:w-8 sm:h-8 text-primary-500" />
+            <DollarSign className="w-8 h-8 text-primary-500" />
           </div>
         </div>
       </div>
 
       {/* Filters - only show for super admin */}
       {!isTenantAdminView && (
-        <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg ">
-          <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-6">
-            <div className="flex-1 min-w-full sm:min-w-[200px]">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
+          <div className="flex flex-wrap gap-6">
+            <div className="flex-1 min-w-[200px]">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   type="text"
                   placeholder={t('tenants:messages.searchPlaceholder')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-9 sm:pl-10 pr-3 sm:pr-4 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                 />
               </div>
             </div>
@@ -377,7 +377,7 @@ const TenantManagement: React.FC = () => {
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="w-full sm:w-auto px-3 sm:px-4 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
             >
             <option value="all">{t('tenants:messages.filterByStatus')}</option>
             <option value="active">{t('tenants:status.active')}</option>
@@ -388,7 +388,7 @@ const TenantManagement: React.FC = () => {
           <select
             value={filterTier}
             onChange={(e) => setFilterTier(e.target.value)}
-            className="w-full sm:w-auto px-3 sm:px-4 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            className="px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
           >
             <option value="all">All Tiers</option>
             <option value="community_and_new_business">Community and New Business</option>
@@ -418,32 +418,32 @@ const TenantManagement: React.FC = () => {
 
       {/* Organization Card for Tenant Admin and Store Manager */}
       {(isTenantAdminView || isStoreManagerView) && tenants.length > 0 && (
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg  p-6">
           {loading ? (
             <div className="text-center py-8">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-              <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">Loading organization data...</p>
+              <p className="mt-4 text-gray-500">Loading organization data...</p>
             </div>
           ) : (
             <div>
-              <div className="flex flex-col sm:flex-row items-start justify-between gap-4 sm:gap-0 mb-4 sm:mb-6">
-                <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-6 w-full sm:w-auto">
+              <div className="flex items-start justify-between mb-6">
+                <div className="flex items-start gap-6">
                   {tenants[0]?.logo_url && (
                     <img
                       src={tenants[0].logo_url.startsWith('http') ? tenants[0].logo_url : `${import.meta.env.VITE_API_URL || 'http://localhost:5024'}${tenants[0].logo_url}`}
                       alt={`${tenants[0].name} logo`}
-                      className="w-12 h-12 sm:w-16 sm:h-16 object-contain rounded"
+                      className="w-16 h-16 object-contain rounded"
                     />
                   )}
-                  <div className="flex-1">
-                    <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white">
+                  <div>
+                    <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
                       {tenants[0].name}
                     </h2>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Code: {tenants[0].code}</p>
+                    <p className="text-gray-500 dark:text-gray-400">Code: {tenants[0].code}</p>
                     <div className="mt-2">
                       <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                        tenants[0].status === 'active'
-                          ? 'bg-primary-100 text-primary-700 dark:bg-green-900/30 dark:text-green-400'
+                        tenants[0].status === 'active' 
+                          ? 'bg-primary-100 text-primary-700 dark:bg-green-900/30 dark:text-green-400' 
                           : 'bg-gray-50 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
                       }`}>
                         {tenants[0].status}
@@ -457,15 +457,15 @@ const TenantManagement: React.FC = () => {
                       setSelectedTenant(tenants[0]);
                       setShowTenantModal(true);
                     }}
-                    className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 active:scale-95 transition-all touch-manipulation"
+                    className="flex items-center gap-2 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700"
                   >
                     <Edit className="w-4 h-4" />
-                    <span className="text-sm">Edit Organization</span>
+                    Edit Organization
                   </button>
                 )}
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div>
                   <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Contact Email</p>
                   <p className="text-gray-900 dark:text-white">{tenants[0].contact_email || 'Not set'}</p>
@@ -618,7 +618,7 @@ const TenantManagement: React.FC = () => {
                       <div className="flex items-center gap-2">
                         <Store className="w-4 h-4 text-gray-400" />
                         <span className="text-sm text-gray-900 dark:text-white">
-                          {tenant.store_count} / {tenant.max_stores}
+                          0 / {tenant.max_stores}
                         </span>
                       </div>
                     </td>
@@ -926,7 +926,7 @@ const TenantFormModal: React.FC<{
   const handleDeleteUser = async (userId: string, userEmail: string) => {
     if (!tenant?.id) return;
 
-    if (!confirmToastAsync(t('common:confirmations.deleteUser', { email: userEmail }))) return;
+    if (!window.confirm(t('common:confirmations.deleteUser', { email: userEmail }))) return;
 
     try {
       const response = await fetch(

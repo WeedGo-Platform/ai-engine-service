@@ -805,16 +805,80 @@ async def get_active_stores_by_tenant(
                 )
             
             stores = []
-            
+
             # Super Admin - can see all active stores
             if user['role'] == 'super_admin':
-                stores = await service.list_stores_by_tenant(
-                    tenant_id=None,
-                    status=StoreStatus.ACTIVE,
-                    limit=100,
-                    offset=0
-                )
-            
+                # Query all active stores directly (not filtered by tenant)
+                store_records = await conn.fetch("""
+                    SELECT * FROM stores
+                    WHERE status = 'active'
+                    ORDER BY created_at DESC
+                    LIMIT 100
+                """)
+
+                # Convert to Store objects
+                from core.domain.models import Store, Address, GeoLocation
+                import json
+
+                for record in store_records:
+                    # Handle address field
+                    address_data = record.get('address')
+                    if address_data:
+                        if isinstance(address_data, str):
+                            address_data = json.loads(address_data)
+                        address = Address(**address_data)
+                    else:
+                        address = None
+
+                    # Handle JSON fields
+                    def parse_json_field(value, default=None):
+                        if value is None:
+                            return default or {}
+                        if isinstance(value, str):
+                            try:
+                                return json.loads(value)
+                            except json.JSONDecodeError:
+                                return default or {}
+                        return value
+
+                    # Handle location
+                    location = None
+                    if record.get('latitude') and record.get('longitude'):
+                        location = GeoLocation(
+                            latitude=Decimal(str(record['latitude'])),
+                            longitude=Decimal(str(record['longitude']))
+                        )
+
+                    store = Store(
+                        id=record['id'],
+                        tenant_id=record['tenant_id'],
+                        province_territory_id=record['province_territory_id'],
+                        store_code=record['store_code'],
+                        name=record['name'],
+                        address=address,
+                        phone=record.get('phone'),
+                        email=record.get('email'),
+                        hours=parse_json_field(record.get('hours'), {}),
+                        timezone=record.get('timezone', 'America/Toronto'),
+                        license_number=record.get('license_number'),
+                        license_expiry=record.get('license_expiry'),
+                        tax_rate=Decimal(str(record.get('tax_rate', 0.13))),
+                        delivery_radius_km=record.get('delivery_radius_km', 0),
+                        delivery_enabled=record.get('delivery_enabled', False),
+                        pickup_enabled=record.get('pickup_enabled', True),
+                        kiosk_enabled=record.get('kiosk_enabled', False),
+                        pos_enabled=record.get('pos_enabled', True),
+                        ecommerce_enabled=record.get('ecommerce_enabled', False),
+                        status=StoreStatus(record.get('status', 'active')),
+                        settings=parse_json_field(record.get('settings'), {}),
+                        pos_integration=parse_json_field(record.get('pos_integration'), {}),
+                        seo_config=parse_json_field(record.get('seo_config'), {}),
+                        location=location,
+                        created_at=record['created_at'],
+                        updated_at=record['updated_at']
+                    )
+                    stores.append(store)
+
             # Tenant Admin - can see all stores for their tenant
             elif user['role'] == 'tenant_admin' and user['tenant_id']:
                 # Get stores for the tenant

@@ -43,6 +43,7 @@ class SynthesisResult:
     sample_rate: int
     duration_ms: float
     format: str = "wav"
+    provider: str = "unknown"
 
 @dataclass
 class VADResult:

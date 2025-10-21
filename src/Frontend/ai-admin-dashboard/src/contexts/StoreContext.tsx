@@ -290,6 +290,8 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({
   const [currentStore, setCurrentStore] = useState<Store | null>(null);
   const [inventoryStats, setInventoryStats] = useState<StoreInventoryStats | null>(null);
   const [filteredStores, setFilteredStores] = useState<Store[]>([]);
+
+  console.log('StoreProvider render:', { isAuthenticated, userId: user?.user_id });
   
   // Fetch stores query
   const {
@@ -303,7 +305,11 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({
     enabled: isAuthenticated,
     staleTime: CACHE_DURATION,
     cacheTime: CACHE_DURATION * 2,
-    onError: () => {
+    onSuccess: (data) => {
+      console.log('✓ StoreContext stores loaded:', data.length, 'stores');
+    },
+    onError: (err) => {
+      console.error('✗ StoreContext stores query failed:', err);
       // Try to use cached data on error
       const cached = storageUtils.getCachedStores();
       if (cached && Date.now() - cached.timestamp < CACHE_DURATION * 2) {
@@ -440,6 +446,14 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({
 
   // Handle store data when it arrives
   useEffect(() => {
+    console.log('StoreContext useEffect triggered:', {
+      allStoresLength: allStores?.length || 0,
+      isLoading,
+      hasCurrentStore: !!currentStore,
+      currentStoreId: currentStore?.id,
+      currentStoreTenantId: currentStore?.tenant_id
+    });
+
     if (allStores && allStores.length > 0 && !isLoading) {
       console.log('Processing store data:', {
         allStoresLength: allStores.length,
@@ -489,16 +503,18 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({
             window.localStorage.removeItem('X-Store-ID');
           }
         }
-      } else if (currentStore && currentStore.id && !currentStore.name) {
-        // Update partial store data with full data
+      } else if (currentStore && currentStore.id && !currentStore.tenant_id) {
+        // Update partial store data with full data (including tenant_id)
         const fullStore = allStores.find(s => s.id === currentStore.id);
         if (fullStore) {
-          console.log('Updating partial store data:', fullStore);
+          console.log('Updating partial store data with tenant_id:', fullStore);
           setCurrentStore(fullStore);
+        } else {
+          console.warn('Full store data not found for ID:', currentStore.id);
         }
       }
     }
-  }, [allStores, isLoading]); // Removed user?.role to avoid re-runs, only depend on data changes
+  }, [allStores, isLoading, currentStore?.id, currentStore?.tenant_id]); // Added currentStore dependencies to trigger enrichment
 
   // Trigger mutations for selected store
   useEffect(() => {

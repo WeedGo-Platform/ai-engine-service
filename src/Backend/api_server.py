@@ -34,6 +34,13 @@ from core.function_schemas import get_function_registry
 from api.voice_endpoints import router as voice_router
 from api.voice_websocket import router as voice_ws_router
 
+# Import personality endpoints
+from api.personality_endpoints import router as personality_router
+
+# Import voice synthesis endpoints
+from api.voice_synthesis_endpoints import router as voice_synthesis_router
+from api.voice_provider_management import router as voice_provider_router
+
 # Import geocoding endpoints (public, no auth required)
 from api.geocoding_endpoints import router as geocoding_router
 
@@ -483,6 +490,9 @@ app.include_router(admin_auth_router)  # Admin authentication endpoints
 app.include_router(context_auth_router)  # Context switching authentication
 app.include_router(voice_router)
 app.include_router(voice_ws_router)  # WebSocket endpoints for continuous voice listening
+app.include_router(personality_router)  # AI personality voice management endpoints
+app.include_router(voice_synthesis_router)  # Voice synthesis with personality voices
+app.include_router(voice_provider_router)  # Voice provider management and configuration
 app.include_router(geocoding_router)  # Address autocomplete and geocoding (public, no auth)
 
 # Register unified chat routes (database-backed with Redis caching)
