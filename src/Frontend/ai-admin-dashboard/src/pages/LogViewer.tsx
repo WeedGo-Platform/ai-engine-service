@@ -198,21 +198,21 @@ export default function LogViewer() {
   const totalPages = Math.ceil(totalHits / pageSize);
 
   return (
-    <div className="p-6 max-w-full">
+    <div className="p-4 sm:p-6 max-w-full bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors">
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">{t('tools:logs.title')}</h1>
-        <p className="mt-1 text-sm text-gray-600">
+      <div className="mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">{t('tools:logs.title')}</h1>
+        <p className="mt-1 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
           {t('tools:logs.description')}
         </p>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-3 sm:p-4 mb-3 sm:mb-4 transition-colors">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-3 sm:mb-4">
           {/* Search */}
-          <div className="lg:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+          <div className="sm:col-span-2">
+            <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               {t('tools:logs.filters.search')}
             </label>
             <div className="relative">
@@ -221,21 +221,21 @@ export default function LogViewer() {
                 value={filters.search}
                 onChange={(e) => setFilters({ ...filters, search: e.target.value })}
                 placeholder={t('tools:logs.filters.searchPlaceholder')}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
               />
-              <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+              <Search className="absolute left-3 top-2.5 h-4 w-4 sm:h-5 sm:w-5 text-gray-400 dark:text-gray-500" />
             </div>
           </div>
 
           {/* Log Level */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               {t('tools:logs.filters.logLevel')}
             </label>
             <select
               value={filters.level}
               onChange={(e) => setFilters({ ...filters, level: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
             >
               <option value="all">{t('tools:logs.filters.allLevels')}</option>
               <option value="ERROR">{t('tools:logs.filters.error')}</option>
@@ -247,7 +247,7 @@ export default function LogViewer() {
 
           {/* Date Range */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               {t('tools:logs.filters.timeRange')}
             </label>
             <div className="flex gap-2">
@@ -255,7 +255,7 @@ export default function LogViewer() {
                 type="datetime-local"
                 value={filters.startDate}
                 onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
-                className="w-full px-2 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-2 py-2 text-xs sm:text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
               />
             </div>
           </div>
@@ -264,7 +264,7 @@ export default function LogViewer() {
         {/* Advanced Filters Toggle */}
         <button
           onClick={() => setFilters({ ...filters, showAdvanced: !filters.showAdvanced })}
-          className="flex items-center text-sm text-primary-600 hover:text-primary-700 font-medium mb-2"
+          className="flex items-center text-xs sm:text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium mb-2 active:scale-95 touch-manipulation transition-all"
         >
           {filters.showAdvanced ? <ChevronDown className="h-4 w-4 mr-1" /> : <ChevronRight className="h-4 w-4 mr-1" />}
           {t('tools:logs.filters.advancedFilters')}
@@ -272,9 +272,9 @@ export default function LogViewer() {
 
         {/* Advanced Filters */}
         {filters.showAdvanced && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4 pt-4 border-t border-gray-200">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-200 dark:border-gray-700">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 <Activity className="inline h-4 w-4 mr-1" />
                 {t('tools:logs.filters.correlationId')}
               </label>
@@ -283,12 +283,12 @@ export default function LogViewer() {
                 value={filters.correlationId}
                 onChange={(e) => setFilters({ ...filters, correlationId: e.target.value })}
                 placeholder={t('tools:logs.filters.correlationIdPlaceholder')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 <Building2 className="inline h-4 w-4 mr-1" />
                 {t('tools:logs.filters.tenantId')}
               </label>
@@ -297,12 +297,12 @@ export default function LogViewer() {
                 value={filters.tenantId}
                 onChange={(e) => setFilters({ ...filters, tenantId: e.target.value })}
                 placeholder={t('tools:logs.filters.tenantIdPlaceholder')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 <Store className="inline h-4 w-4 mr-1" />
                 {t('tools:logs.filters.storeId')}
               </label>
@@ -311,12 +311,12 @@ export default function LogViewer() {
                 value={filters.storeId}
                 onChange={(e) => setFilters({ ...filters, storeId: e.target.value })}
                 placeholder={t('tools:logs.filters.storeIdPlaceholder')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 <User className="inline h-4 w-4 mr-1" />
                 {t('tools:logs.filters.userId')}
               </label>
@@ -325,12 +325,12 @@ export default function LogViewer() {
                 value={filters.userId}
                 onChange={(e) => setFilters({ ...filters, userId: e.target.value })}
                 placeholder={t('tools:logs.filters.userIdPlaceholder')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 <Smartphone className="inline h-4 w-4 mr-1" />
                 {t('tools:logs.filters.sessionId')}
               </label>
@@ -339,12 +339,12 @@ export default function LogViewer() {
                 value={filters.sessionId}
                 onChange={(e) => setFilters({ ...filters, sessionId: e.target.value })}
                 placeholder={t('tools:logs.filters.sessionIdPlaceholder')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {t('tools:logs.filters.service')}
               </label>
               <input
@@ -352,19 +352,19 @@ export default function LogViewer() {
                 value={filters.service}
                 onChange={(e) => setFilters({ ...filters, service: e.target.value })}
                 placeholder={t('tools:logs.filters.servicePlaceholder')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {t('tools:logs.filters.endDate')}
               </label>
               <input
                 type="datetime-local"
                 value={filters.endDate}
                 onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 text-xs sm:text-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 transition-colors"
               />
             </div>
 
@@ -386,7 +386,7 @@ export default function LogViewer() {
                   });
                   setPage(1);
                 }}
-                className="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+                className="w-full px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 active:scale-95 touch-manipulation transition-all"
               >
                 {t('tools:logs.filters.clearAll')}
               </button>
@@ -395,40 +395,40 @@ export default function LogViewer() {
         )}
 
         {/* Action Buttons */}
-        <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
             <button
               onClick={fetchLogs}
               disabled={loading}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-primary-600 dark:bg-primary-500 rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 touch-manipulation transition-all"
             >
               <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-              {t('tools:logs.actions.refresh')}
+              <span className="hidden sm:inline">{t('tools:logs.actions.refresh')}</span>
             </button>
 
             <button
               onClick={exportLogs}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 active:scale-95 touch-manipulation transition-all"
             >
               <Download className="h-4 w-4" />
-              {t('tools:logs.actions.export')}
+              <span className="hidden sm:inline">{t('tools:logs.actions.export')}</span>
             </button>
           </div>
 
-          <div className="flex items-center gap-4">
-            <label className="flex items-center gap-2 text-sm text-gray-700">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full sm:w-auto">
+            <label className="flex items-center gap-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300">
               <input
                 type="checkbox"
                 checked={autoRefresh}
                 onChange={(e) => setAutoRefresh(e.target.checked)}
-                className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                className="rounded border-gray-300 dark:border-gray-600 text-primary-600 dark:text-primary-500 focus:ring-primary-500 dark:focus:ring-primary-400"
               />
-              {t('tools:logs.actions.autoRefresh')}
+              <span className="whitespace-nowrap">{t('tools:logs.actions.autoRefresh')}</span>
               <select
                 value={refreshInterval}
                 onChange={(e) => setRefreshInterval(Number(e.target.value))}
                 disabled={!autoRefresh}
-                className="px-2 py-1 border border-gray-300 rounded text-sm disabled:opacity-50"
+                className="px-2 py-1 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded text-xs sm:text-sm disabled:opacity-50 transition-colors"
               >
                 <option value={5}>5s</option>
                 <option value={10}>10s</option>
@@ -437,7 +437,7 @@ export default function LogViewer() {
               </select>
             </label>
 
-            <div className="text-sm text-gray-600">
+            <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">
               {totalHits.toLocaleString()} {t('tools:logs.table.totalLogs')}
             </div>
           </div>
@@ -445,76 +445,77 @@ export default function LogViewer() {
       </div>
 
       {/* Logs Table */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors">
         {loading && logs.length === 0 ? (
-          <div className="flex items-center justify-center h-64">
-            <RefreshCw className="h-8 w-8 animate-spin text-primary-600" />
+          <div className="flex items-center justify-center h-64 bg-gray-50 dark:bg-gray-900">
+            <RefreshCw className="h-8 w-8 animate-spin text-primary-600 dark:text-primary-400" />
           </div>
         ) : logs.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-64 text-gray-500">
-            <FileText className="h-12 w-12 mb-2" />
-            <p>{t('tools:logs.table.noLogs')}</p>
+          <div className="flex flex-col items-center justify-center h-64 text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900">
+            <FileText className="h-10 w-10 sm:h-12 sm:w-12 mb-2" />
+            <p className="text-sm sm:text-base">{t('tools:logs.table.noLogs')}</p>
           </div>
         ) : (
           <>
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead className="bg-gray-50 dark:bg-gray-900">
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       {t('tools:logs.table.timestamp')}
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       {t('tools:logs.table.level')}
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       {t('tools:logs.table.serviceLogger')}
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       {t('tools:logs.table.message')}
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       {t('tools:logs.table.correlationId')}
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       {t('tools:logs.table.actions')}
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                   {logs.map((log) => (
-                    <tr key={log._id} className="hover:bg-gray-50">
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                    <tr key={log._id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                      <td className="px-3 sm:px-4 py-3 whitespace-nowrap text-xs sm:text-sm text-gray-900 dark:text-gray-100">
                         <div className="flex items-center gap-1">
-                          <Clock className="h-3 w-3 text-gray-400" />
-                          {format(parseUTCTimestamp(log._source['@timestamp']), 'MMM dd, HH:mm:ss.SSS')}
+                          <Clock className="h-3 w-3 text-gray-400 dark:text-gray-500" />
+                          <span className="hidden sm:inline">{format(parseUTCTimestamp(log._source['@timestamp']), 'MMM dd, HH:mm:ss.SSS')}</span>
+                          <span className="sm:hidden">{format(parseUTCTimestamp(log._source['@timestamp']), 'HH:mm:ss')}</span>
                         </div>
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap">
+                      <td className="px-3 sm:px-4 py-3 whitespace-nowrap">
                         <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium border ${getLevelColor(log._source.level)}`}>
                           {getLevelIcon(log._source.level)}
-                          {log._source.level}
+                          <span className="hidden sm:inline">{log._source.level}</span>
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-900">
+                      <td className="px-3 sm:px-4 py-3 text-xs sm:text-sm text-gray-900 dark:text-gray-100">
                         <div className="max-w-xs">
                           <div className="font-medium truncate">{log._source.service || 'N/A'}</div>
-                          <div className="text-xs text-gray-500 truncate">{log._source.logger}</div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400 truncate hidden sm:block">{log._source.logger}</div>
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-sm text-gray-900">
+                      <td className="px-3 sm:px-4 py-3 text-xs sm:text-sm text-gray-900 dark:text-gray-100">
                         <div className="max-w-md truncate">{log._source.message}</div>
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-xs font-mono text-gray-600">
+                      <td className="px-3 sm:px-4 py-3 whitespace-nowrap text-xs font-mono text-gray-600 dark:text-gray-400 hidden lg:table-cell">
                         {log._source.correlation_id || '-'}
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm">
+                      <td className="px-3 sm:px-4 py-3 whitespace-nowrap text-sm">
                         <button
                           onClick={() => setSelectedLog(log)}
-                          className="text-primary-600 hover:text-primary-900 flex items-center gap-1"
+                          className="text-primary-600 dark:text-primary-400 hover:text-primary-900 dark:hover:text-primary-300 flex items-center gap-1 active:scale-95 touch-manipulation transition-all"
                         >
                           <Eye className="h-4 w-4" />
-                          {t('tools:logs.actions.details')}
+                          <span className="hidden sm:inline">{t('tools:logs.actions.details')}</span>
                         </button>
                       </td>
                     </tr>
@@ -524,10 +525,10 @@ export default function LogViewer() {
             </div>
 
             {/* Pagination */}
-            <div className="bg-gray-50 px-4 py-3 flex items-center justify-between border-t border-gray-200">
-              <div className="flex-1 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-700">
+            <div className="bg-gray-50 dark:bg-gray-900 px-3 sm:px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-t border-gray-200 dark:border-gray-700 transition-colors">
+              <div className="flex-1 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 w-full">
+                <div className="flex items-center gap-2 text-xs sm:text-sm">
+                  <span className="text-gray-700 dark:text-gray-300">
                     {t('tools:logs.pagination.showing', { from: ((page - 1) * pageSize) + 1, to: Math.min(page * pageSize, totalHits), total: totalHits.toLocaleString() })}
                   </span>
                   <select
@@ -536,7 +537,7 @@ export default function LogViewer() {
                       setPageSize(Number(e.target.value));
                       setPage(1);
                     }}
-                    className="px-2 py-1 border border-gray-300 rounded text-sm"
+                    className="px-2 py-1 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded text-xs sm:text-sm transition-colors"
                   >
                     <option value={25}>25 {t('tools:logs.pagination.perPage')}</option>
                     <option value={50}>50 {t('tools:logs.pagination.perPage')}</option>
@@ -545,21 +546,21 @@ export default function LogViewer() {
                   </select>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-2 w-full sm:w-auto">
                   <button
                     onClick={() => setPage(Math.max(1, page - 1))}
                     disabled={page === 1}
-                    className="px-3 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 sm:flex-none px-3 py-1.5 text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 touch-manipulation transition-all"
                   >
                     {t('tools:logs.pagination.previous')}
                   </button>
-                  <span className="px-3 py-1 text-sm text-gray-700">
+                  <span className="flex-1 sm:flex-none px-3 py-1.5 text-xs sm:text-sm text-gray-700 dark:text-gray-300 text-center">
                     {t('tools:logs.pagination.page', { current: page, total: totalPages })}
                   </span>
                   <button
                     onClick={() => setPage(Math.min(totalPages, page + 1))}
                     disabled={page === totalPages}
-                    className="px-3 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 sm:flex-none px-3 py-1.5 text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 touch-manipulation transition-all"
                   >
                     {t('tools:logs.pagination.next')}
                   </button>
@@ -573,134 +574,134 @@ export default function LogViewer() {
       {/* Log Detail Modal */}
       {selectedLog && (
         <div className="fixed inset-0 z-50 overflow-y-auto">
-          <div className="flex min-h-screen items-center justify-center p-4">
-            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onClick={() => setSelectedLog(null)} />
+          <div className="flex min-h-screen items-center justify-center p-0 sm:p-4">
+            <div className="fixed inset-0 bg-gray-500 dark:bg-black bg-opacity-75 dark:bg-opacity-80 transition-opacity" onClick={() => setSelectedLog(null)} />
 
-            <div className="relative bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+            <div className="relative bg-white dark:bg-gray-800 h-full sm:h-auto sm:rounded-lg shadow-xl w-full sm:max-w-4xl max-h-full sm:max-h-[90vh] overflow-hidden transition-colors">
               {/* Header */}
-              <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900">{t('tools:logs.details.title')}</h3>
+              <div className="sticky top-0 flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">{t('tools:logs.details.title')}</h3>
                 <button
                   onClick={() => setSelectedLog(null)}
-                  className="text-gray-400 hover:text-gray-500"
+                  className="text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-300 p-1 active:scale-95 touch-manipulation transition-all"
                 >
-                  <X className="h-6 w-6" />
+                  <X className="h-5 w-5 sm:h-6 sm:w-6" />
                 </button>
               </div>
 
               {/* Content */}
-              <div className="px-6 py-4 overflow-y-auto max-h-[calc(90vh-8rem)]">
-                <div className="space-y-4">
+              <div className="px-4 sm:px-6 py-3 sm:py-4 overflow-y-auto max-h-[calc(100vh-12rem)] sm:max-h-[calc(90vh-8rem)]">
+                <div className="space-y-3 sm:space-y-4">
                   {/* Summary */}
-                  <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
+                  <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4 p-3 sm:p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                     <span className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium border ${getLevelColor(selectedLog._source.level)}`}>
                       {getLevelIcon(selectedLog._source.level)}
                       {selectedLog._source.level}
                     </span>
-                    <div className="flex-1">
-                      <div className="text-sm font-medium text-gray-900">{selectedLog._source.message}</div>
-                      <div className="mt-1 text-xs text-gray-500">
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-medium text-gray-900 dark:text-white break-words">{selectedLog._source.message}</div>
+                      <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
                         {format(parseUTCTimestamp(selectedLog._source['@timestamp']), 'MMM dd, yyyy HH:mm:ss.SSS')}
                       </div>
                     </div>
                   </div>
 
                   {/* Metadata */}
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     {selectedLog._source.correlation_id && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.correlationId')}</dt>
-                        <dd className="mt-1 text-sm text-gray-900 font-mono">{selectedLog._source.correlation_id}</dd>
+                        <dt className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">{t('tools:logs.details.correlationId')}</dt>
+                        <dd className="mt-1 text-xs sm:text-sm text-gray-900 dark:text-white font-mono break-all">{selectedLog._source.correlation_id}</dd>
                       </div>
                     )}
                     {selectedLog._source.session_id && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.sessionId')}</dt>
-                        <dd className="mt-1 text-sm text-gray-900 font-mono">{selectedLog._source.session_id}</dd>
+                        <dt className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">{t('tools:logs.details.sessionId')}</dt>
+                        <dd className="mt-1 text-xs sm:text-sm text-gray-900 dark:text-white font-mono break-all">{selectedLog._source.session_id}</dd>
                       </div>
                     )}
                     {selectedLog._source.tenant_id && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.tenantId')}</dt>
-                        <dd className="mt-1 text-sm text-gray-900 font-mono">{selectedLog._source.tenant_id}</dd>
+                        <dt className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">{t('tools:logs.details.tenantId')}</dt>
+                        <dd className="mt-1 text-xs sm:text-sm text-gray-900 dark:text-white font-mono break-all">{selectedLog._source.tenant_id}</dd>
                       </div>
                     )}
                     {selectedLog._source.store_id && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.storeId')}</dt>
-                        <dd className="mt-1 text-sm text-gray-900 font-mono">{selectedLog._source.store_id}</dd>
+                        <dt className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">{t('tools:logs.details.storeId')}</dt>
+                        <dd className="mt-1 text-xs sm:text-sm text-gray-900 dark:text-white font-mono break-all">{selectedLog._source.store_id}</dd>
                       </div>
                     )}
                     {selectedLog._source.user_id && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.userId')}</dt>
-                        <dd className="mt-1 text-sm text-gray-900 font-mono">{selectedLog._source.user_id}</dd>
+                        <dt className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">{t('tools:logs.details.userId')}</dt>
+                        <dd className="mt-1 text-xs sm:text-sm text-gray-900 dark:text-white font-mono break-all">{selectedLog._source.user_id}</dd>
                       </div>
                     )}
                     {selectedLog._source.service && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.service')}</dt>
-                        <dd className="mt-1 text-sm text-gray-900">{selectedLog._source.service}</dd>
+                        <dt className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">{t('tools:logs.details.service')}</dt>
+                        <dd className="mt-1 text-xs sm:text-sm text-gray-900 dark:text-white">{selectedLog._source.service}</dd>
                       </div>
                     )}
                     {selectedLog._source.environment && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.environment')}</dt>
-                        <dd className="mt-1 text-sm text-gray-900">{selectedLog._source.environment}</dd>
+                        <dt className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">{t('tools:logs.details.environment')}</dt>
+                        <dd className="mt-1 text-xs sm:text-sm text-gray-900 dark:text-white">{selectedLog._source.environment}</dd>
                       </div>
                     )}
                     {selectedLog._source.logger && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.logger')}</dt>
-                        <dd className="mt-1 text-sm text-gray-900">{selectedLog._source.logger}</dd>
+                        <dt className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">{t('tools:logs.details.logger')}</dt>
+                        <dd className="mt-1 text-xs sm:text-sm text-gray-900 dark:text-white break-all">{selectedLog._source.logger}</dd>
                       </div>
                     )}
                     {selectedLog._source.module && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.module')}</dt>
-                        <dd className="mt-1 text-sm text-gray-900">{selectedLog._source.module}</dd>
+                        <dt className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">{t('tools:logs.details.module')}</dt>
+                        <dd className="mt-1 text-xs sm:text-sm text-gray-900 dark:text-white">{selectedLog._source.module}</dd>
                       </div>
                     )}
                     {selectedLog._source.function && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.function')}</dt>
-                        <dd className="mt-1 text-sm text-gray-900">{selectedLog._source.function}</dd>
+                        <dt className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">{t('tools:logs.details.function')}</dt>
+                        <dd className="mt-1 text-xs sm:text-sm text-gray-900 dark:text-white">{selectedLog._source.function}</dd>
                       </div>
                     )}
                     {selectedLog._source.line && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.lineNumber')}</dt>
-                        <dd className="mt-1 text-sm text-gray-900">{selectedLog._source.line}</dd>
+                        <dt className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">{t('tools:logs.details.lineNumber')}</dt>
+                        <dd className="mt-1 text-xs sm:text-sm text-gray-900 dark:text-white">{selectedLog._source.line}</dd>
                       </div>
                     )}
                     {selectedLog._source.duration_ms && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.duration')}</dt>
-                        <dd className="mt-1 text-sm text-gray-900">{selectedLog._source.duration_ms}ms</dd>
+                        <dt className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">{t('tools:logs.details.duration')}</dt>
+                        <dd className="mt-1 text-xs sm:text-sm text-gray-900 dark:text-white">{selectedLog._source.duration_ms}ms</dd>
                       </div>
                     )}
                     {selectedLog._source.status_code && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.statusCode')}</dt>
-                        <dd className="mt-1 text-sm text-gray-900">{selectedLog._source.status_code}</dd>
+                        <dt className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">{t('tools:logs.details.statusCode')}</dt>
+                        <dd className="mt-1 text-xs sm:text-sm text-gray-900 dark:text-white">{selectedLog._source.status_code}</dd>
                       </div>
                     )}
                     {selectedLog._source.method && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.method')}</dt>
-                        <dd className="mt-1 text-sm text-gray-900">{selectedLog._source.method}</dd>
+                        <dt className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">{t('tools:logs.details.method')}</dt>
+                        <dd className="mt-1 text-xs sm:text-sm text-gray-900 dark:text-white">{selectedLog._source.method}</dd>
                       </div>
                     )}
                     {selectedLog._source.path && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.path')}</dt>
-                        <dd className="mt-1 text-sm text-gray-900">{selectedLog._source.path}</dd>
+                        <dt className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">{t('tools:logs.details.path')}</dt>
+                        <dd className="mt-1 text-xs sm:text-sm text-gray-900 dark:text-white break-all">{selectedLog._source.path}</dd>
                       </div>
                     )}
                     {selectedLog._source.client_host && (
                       <div>
-                        <dt className="text-sm font-medium text-gray-500">{t('tools:logs.details.clientHost')}</dt>
-                        <dd className="mt-1 text-sm text-gray-900">{selectedLog._source.client_host}</dd>
+                        <dt className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">{t('tools:logs.details.clientHost')}</dt>
+                        <dd className="mt-1 text-xs sm:text-sm text-gray-900 dark:text-white">{selectedLog._source.client_host}</dd>
                       </div>
                     )}
                   </div>
@@ -708,19 +709,19 @@ export default function LogViewer() {
                   {/* Exception */}
                   {selectedLog._source.exception && (
                     <div>
-                      <dt className="text-sm font-medium text-gray-500 mb-2">{t('tools:logs.details.exception')}</dt>
-                      <dd className="text-sm text-red-900 bg-red-50 p-3 rounded-lg font-mono whitespace-pre-wrap">
+                      <dt className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">{t('tools:logs.details.exception')}</dt>
+                      <dd className="text-xs sm:text-sm text-red-900 dark:text-red-200 bg-red-50 dark:bg-red-900/20 p-3 rounded-lg font-mono whitespace-pre-wrap overflow-x-auto">
                         {selectedLog._source.exception}
                       </dd>
                     </div>
                   )}
 
                   {/* Raw JSON */}
-                  <details className="mt-4">
-                    <summary className="cursor-pointer text-sm font-medium text-gray-700 hover:text-gray-900">
+                  <details className="mt-3 sm:mt-4">
+                    <summary className="cursor-pointer text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
                       {t('tools:logs.details.viewRawJson')}
                     </summary>
-                    <pre className="mt-2 p-4 bg-gray-900 text-green-400 rounded-lg overflow-x-auto text-xs">
+                    <pre className="mt-2 p-3 sm:p-4 bg-gray-900 dark:bg-black text-green-400 dark:text-green-300 rounded-lg overflow-x-auto text-xs">
                       {JSON.stringify(selectedLog._source, null, 2)}
                     </pre>
                   </details>
@@ -728,7 +729,7 @@ export default function LogViewer() {
               </div>
 
               {/* Footer */}
-              <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end gap-2">
+              <div className="sticky bottom-0 px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3">
                 <button
                   onClick={() => {
                     const dataStr = JSON.stringify(selectedLog._source, null, 2);
@@ -741,14 +742,14 @@ export default function LogViewer() {
                     URL.revokeObjectURL(url);
                     toast.success(t('tools:logs.messages.logExported'));
                   }}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+                  className="w-full sm:w-auto px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 active:scale-95 touch-manipulation transition-all"
                 >
                   <Download className="inline h-4 w-4 mr-1" />
                   {t('tools:logs.actions.export')}
                 </button>
                 <button
                   onClick={() => setSelectedLog(null)}
-                  className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700"
+                  className="w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-primary-600 dark:bg-primary-500 rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 active:scale-95 touch-manipulation transition-all"
                 >
                   {t('tools:logs.actions.close')}
                 </button>
