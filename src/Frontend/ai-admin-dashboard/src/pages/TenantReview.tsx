@@ -186,8 +186,8 @@ const TenantReview: React.FC = () => {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
-          <AlertCircle className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
-          <p className="text-gray-600">{t('signup:review.messages.noPermission')}</p>
+          <AlertCircle className="h-10 w-10 sm:h-12 sm:w-12 text-yellow-500 dark:text-yellow-400 mx-auto mb-4" />
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">{t('signup:review.messages.noPermission')}</p>
         </div>
       </div>
     );
@@ -196,151 +196,152 @@ const TenantReview: React.FC = () => {
   if (accountsLoading || statsLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 dark:border-primary-400"></div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6 p-3 sm:p-0">
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t('signup:review.title')}</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white transition-colors">{t('signup:review.title')}</h1>
+          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1 transition-colors">
             {t('signup:review.description')}
           </p>
         </div>
         <button
           onClick={() => queryClient.invalidateQueries({ queryKey: ['pending-accounts'] })}
-          className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all active:scale-95 touch-manipulation"
         >
           <RefreshCw className="h-4 w-4" />
-          {t('signup:review.refresh')}
+          <span className="text-sm">{t('signup:review.refresh')}</span>
         </button>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg p-6 shadow-sm">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6 shadow-sm transition-colors">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">{t('signup:review.stats.totalPending')}</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">{t('signup:review.stats.totalPending')}</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                 {stats?.total_pending || 0}
               </p>
             </div>
-            <Clock className="h-8 w-8 text-yellow-600" />
+            <Clock className="h-7 w-7 sm:h-8 sm:w-8 text-yellow-600 dark:text-yellow-400" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg p-6 shadow-sm">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6 shadow-sm transition-colors">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">{t('signup:review.stats.thisWeek')}</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">{t('signup:review.stats.thisWeek')}</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                 {stats?.pending_this_week || 0}
               </p>
             </div>
-            <TrendingUp className="h-8 w-8 text-blue-600" />
+            <TrendingUp className="h-7 w-7 sm:h-8 sm:w-8 text-blue-600 dark:text-blue-400" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg p-6 shadow-sm">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6 shadow-sm transition-colors">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">{t('signup:review.stats.avgReviewTime')}</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">{t('signup:review.stats.avgReviewTime')}</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                 {stats?.avg_review_time_hours || 0}h
               </p>
             </div>
-            <Clock className="h-8 w-8 text-purple-600" />
+            <Clock className="h-7 w-7 sm:h-8 sm:w-8 text-purple-600 dark:text-purple-400" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg p-6 shadow-sm">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6 shadow-sm transition-colors">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">{t('signup:review.stats.approvalRate')}</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">{t('signup:review.stats.approvalRate')}</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                 {stats?.approval_rate || 0}%
               </p>
             </div>
-            <CheckCircle className="h-8 w-8 text-green-600" />
+            <CheckCircle className="h-7 w-7 sm:h-8 sm:w-8 text-green-600 dark:text-green-400" />
           </div>
         </div>
       </div>
 
       {/* Pending Accounts List */}
-      <div className="bg-white rounded-lg shadow-sm">
-        <div className="px-6 py-4 border-b">
-          <h2 className="text-lg font-semibold">{t('signup:review.table.title')}</h2>
+      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm transition-colors">
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">{t('signup:review.table.title')}</h2>
         </div>
 
         {pendingAccounts && pendingAccounts.length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+          <div className="overflow-x-auto -mx-4 sm:mx-0">
+            <div className="inline-block min-w-full align-middle">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <thead className="bg-gray-50 dark:bg-gray-700/50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     {t('signup:review.table.storeName')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden md:table-cell">
                     {t('signup:review.table.contact')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden lg:table-cell">
                     {t('signup:review.table.licenseNumber')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden sm:table-cell">
                     {t('signup:review.table.submitted')}
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     {t('signup:review.table.tier')}
                   </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     {t('signup:review.table.actions')}
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 {pendingAccounts.map((account) => (
-                  <tr key={account.tenant_id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
+                  <tr key={account.tenant_id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                    <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                       <div className="flex items-center">
-                        <Building className="h-5 w-5 text-gray-400 mr-2" />
-                        <div>
-                          <div className="text-sm font-medium text-gray-900">
+                        <Building className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 dark:text-gray-500 mr-2 flex-shrink-0" />
+                        <div className="min-w-0">
+                          <div className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white truncate">
                             {account.store_name}
                           </div>
-                          <div className="text-xs text-gray-500">
+                          <div className="text-xs text-gray-500 dark:text-gray-400 truncate">
                             {account.tenant_code}
                           </div>
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{account.contact_name}</div>
-                      <div className="text-xs text-gray-500">{account.contact_email}</div>
+                    <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap hidden md:table-cell">
+                      <div className="text-xs sm:text-sm text-gray-900 dark:text-white">{account.contact_name}</div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">{account.contact_email}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 dark:text-white hidden lg:table-cell">
                       {account.license_number}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500 dark:text-gray-400 hidden sm:table-cell">
                       {new Date(account.submitted_at).toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                       <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                         account.verification_tier === 'auto_approved'
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-yellow-100 text-yellow-800'
+                          ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400'
+                          : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400'
                       }`}>
                         {account.verification_tier}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-right text-xs sm:text-sm font-medium">
                       <button
                         onClick={() => setSelectedAccount(account.tenant_id)}
-                        className="text-primary-600 hover:text-primary-900"
+                        className="text-primary-600 dark:text-primary-400 hover:text-primary-900 dark:hover:text-primary-300 transition-colors"
                       >
                         {t('signup:review.table.review')}
                       </button>
@@ -349,122 +350,123 @@ const TenantReview: React.FC = () => {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         ) : (
-          <div className="p-12 text-center">
-            <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-            <p className="text-gray-600">{t('signup:review.table.noPending')}</p>
+          <div className="p-8 sm:p-12 text-center">
+            <CheckCircle className="h-10 w-10 sm:h-12 sm:w-12 text-green-500 dark:text-green-400 mx-auto mb-4" />
+            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">{t('signup:review.table.noPending')}</p>
           </div>
         )}
       </div>
 
       {/* Account Detail Modal */}
       {selectedAccount && accountDetail && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black dark:bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-700">
             {/* Modal Header */}
-            <div className="px-6 py-4 border-b flex justify-between items-center">
-              <h2 className="text-xl font-bold">{t('signup:review.modal.title')}</h2>
+            <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center sticky top-0 bg-white dark:bg-gray-800 z-10">
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">{t('signup:review.modal.title')}</h2>
               <button
                 onClick={() => setSelectedAccount(null)}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
               >
-                <XCircle className="h-6 w-6" />
+                <XCircle className="h-5 w-5 sm:h-6 sm:w-6" />
               </button>
             </div>
 
             {/* Modal Content */}
-            <div className="p-6 space-y-6">
+            <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
               {/* Store Information */}
               <div>
-                <h3 className="text-lg font-semibold mb-4 flex items-center">
-                  <Building className="h-5 w-5 mr-2" />
+                <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 flex items-center text-gray-900 dark:text-white">
+                  <Building className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                   {t('signup:review.modal.storeInfo')}
                 </h3>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
-                    <label className="text-sm font-medium text-gray-600">{t('signup:review.modal.storeName')}</label>
-                    <p className="text-gray-900">{accountDetail.store_name}</p>
+                    <label className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">{t('signup:review.modal.storeName')}</label>
+                    <p className="text-sm sm:text-base text-gray-900 dark:text-white">{accountDetail.store_name}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600">{t('signup:review.modal.licenseNumber')}</label>
-                    <p className="text-gray-900">{accountDetail.license_number}</p>
+                    <label className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">{t('signup:review.modal.licenseNumber')}</label>
+                    <p className="text-sm sm:text-base text-gray-900 dark:text-white">{accountDetail.license_number}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600">{t('signup:review.modal.crsaAddress')}</label>
-                    <p className="text-gray-900">{accountDetail.crsa_address}</p>
+                    <label className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">{t('signup:review.modal.crsaAddress')}</label>
+                    <p className="text-sm sm:text-base text-gray-900 dark:text-white">{accountDetail.crsa_address}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600">{t('signup:review.modal.municipality')}</label>
-                    <p className="text-gray-900">{accountDetail.crsa_municipality || 'N/A'}</p>
+                    <label className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">{t('signup:review.modal.municipality')}</label>
+                    <p className="text-sm sm:text-base text-gray-900 dark:text-white">{accountDetail.crsa_municipality || 'N/A'}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600">{t('signup:review.modal.crsaStatus')}</label>
-                    <p className="text-gray-900">{accountDetail.crsa_store_status}</p>
+                    <label className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">{t('signup:review.modal.crsaStatus')}</label>
+                    <p className="text-sm sm:text-base text-gray-900 dark:text-white">{accountDetail.crsa_store_status}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600">{t('signup:review.modal.crsaWebsite')}</label>
-                    <p className="text-gray-900">{accountDetail.crsa_website || 'N/A'}</p>
+                    <label className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">{t('signup:review.modal.crsaWebsite')}</label>
+                    <p className="text-sm sm:text-base text-gray-900 dark:text-white break-all">{accountDetail.crsa_website || 'N/A'}</p>
                   </div>
                 </div>
               </div>
 
               {/* Contact Information */}
               <div>
-                <h3 className="text-lg font-semibold mb-4 flex items-center">
-                  <Mail className="h-5 w-5 mr-2" />
+                <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 flex items-center text-gray-900 dark:text-white">
+                  <Mail className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                   {t('signup:review.modal.contactInfo')}
                 </h3>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
-                    <label className="text-sm font-medium text-gray-600">{t('signup:review.modal.contactName')}</label>
-                    <p className="text-gray-900">{accountDetail.contact_name}</p>
+                    <label className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">{t('signup:review.modal.contactName')}</label>
+                    <p className="text-sm sm:text-base text-gray-900 dark:text-white">{accountDetail.contact_name}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600">{t('signup:review.modal.role')}</label>
-                    <p className="text-gray-900">{accountDetail.contact_role}</p>
+                    <label className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">{t('signup:review.modal.role')}</label>
+                    <p className="text-sm sm:text-base text-gray-900 dark:text-white">{accountDetail.contact_role}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600">{t('signup:review.modal.email')}</label>
-                    <p className="text-gray-900">{accountDetail.contact_email}</p>
+                    <label className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">{t('signup:review.modal.email')}</label>
+                    <p className="text-sm sm:text-base text-gray-900 dark:text-white break-all">{accountDetail.contact_email}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600">{t('signup:review.modal.phone')}</label>
-                    <p className="text-gray-900">{accountDetail.contact_phone || 'N/A'}</p>
+                    <label className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">{t('signup:review.modal.phone')}</label>
+                    <p className="text-sm sm:text-base text-gray-900 dark:text-white">{accountDetail.contact_phone || 'N/A'}</p>
                   </div>
                 </div>
               </div>
 
               {/* Verification Context */}
               <div>
-                <h3 className="text-lg font-semibold mb-4 flex items-center">
-                  <FileText className="h-5 w-5 mr-2" />
+                <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 flex items-center text-gray-900 dark:text-white">
+                  <FileText className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                   {t('signup:review.modal.verificationContext')}
                 </h3>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
-                    <label className="text-sm font-medium text-gray-600">{t('signup:review.modal.emailDomain')}</label>
-                    <p className="text-gray-900">{accountDetail.email_domain}</p>
+                    <label className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">{t('signup:review.modal.emailDomain')}</label>
+                    <p className="text-sm sm:text-base text-gray-900 dark:text-white">{accountDetail.email_domain}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600">{t('signup:review.modal.domainMatchesCrsa')}</label>
-                    <p className={`font-semibold ${accountDetail.domain_matches_crsa ? 'text-green-600' : 'text-yellow-600'}`}>
+                    <label className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">{t('signup:review.modal.domainMatchesCrsa')}</label>
+                    <p className={`text-sm sm:text-base font-semibold ${accountDetail.domain_matches_crsa ? 'text-green-600 dark:text-green-400' : 'text-yellow-600 dark:text-yellow-400'}`}>
                       {accountDetail.domain_matches_crsa ? t('signup:review.modal.yes') : t('signup:review.modal.no')}
                     </p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600">{t('signup:review.modal.verificationTier')}</label>
+                    <label className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">{t('signup:review.modal.verificationTier')}</label>
                     <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                       accountDetail.verification_tier === 'auto_approved'
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-yellow-100 text-yellow-800'
+                        ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400'
+                        : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400'
                     }`}>
                       {accountDetail.verification_tier}
                     </span>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600">{t('signup:review.modal.submitted')}</label>
-                    <p className="text-gray-900">
+                    <label className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">{t('signup:review.modal.submitted')}</label>
+                    <p className="text-sm sm:text-base text-gray-900 dark:text-white">
                       {new Date(accountDetail.submitted_at).toLocaleString()}
                     </p>
                   </div>
@@ -473,37 +475,37 @@ const TenantReview: React.FC = () => {
 
               {/* Admin Notes */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('signup:review.modal.adminNotes')}
                 </label>
                 <textarea
                   value={adminNotes}
                   onChange={(e) => setAdminNotes(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 dark:focus:border-primary-400 text-sm transition-colors"
                   rows={3}
                   placeholder={t('signup:review.modal.adminNotesPlaceholder')}
                 />
               </div>
 
               {/* Actions */}
-              <div className="flex justify-end gap-4 pt-4 border-t">
+              <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-4 pt-3 sm:pt-4 border-t border-gray-200 dark:border-gray-700 sticky bottom-0 bg-white dark:bg-gray-800 -mx-4 sm:-mx-6 px-4 sm:px-6 pb-4 sm:pb-0">
                 <button
                   onClick={() => {
                     setShowRejectModal(true);
                   }}
-                  className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-red-600 dark:bg-red-500 text-white rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition-all active:scale-95 touch-manipulation"
                   disabled={rejectMutation.isPending}
                 >
                   <UserX className="h-4 w-4" />
-                  {t('signup:review.modal.reject')}
+                  <span className="text-sm">{t('signup:review.modal.reject')}</span>
                 </button>
                 <button
                   onClick={() => approveMutation.mutate(selectedAccount)}
-                  className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-green-600 dark:bg-green-500 text-white rounded-lg hover:bg-green-700 dark:hover:bg-green-600 transition-all active:scale-95 touch-manipulation"
                   disabled={approveMutation.isPending}
                 >
                   <UserCheck className="h-4 w-4" />
-                  {approveMutation.isPending ? t('signup:review.modal.approving') : t('signup:review.modal.approve')}
+                  <span className="text-sm">{approveMutation.isPending ? t('signup:review.modal.approving') : t('signup:review.modal.approve')}</span>
                 </button>
               </div>
             </div>
@@ -513,30 +515,30 @@ const TenantReview: React.FC = () => {
 
       {/* Reject Modal */}
       {showRejectModal && selectedAccount && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg max-w-md w-full mx-4">
-            <div className="px-6 py-4 border-b">
-              <h2 className="text-xl font-bold">{t('signup:review.reject.title')}</h2>
+        <div className="fixed inset-0 bg-black dark:bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full mx-4 border border-gray-200 dark:border-gray-700">
+            <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">{t('signup:review.reject.title')}</h2>
             </div>
-            <div className="p-6 space-y-4">
-              <p className="text-gray-600">
+            <div className="p-4 sm:p-6 space-y-4">
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
                 {t('signup:review.reject.description')}
               </p>
               <textarea
                 value={rejectReason}
                 onChange={(e) => setRejectReason(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-red-500 dark:focus:ring-red-400 focus:border-red-500 dark:focus:border-red-400 text-sm transition-colors"
                 rows={4}
                 placeholder={t('signup:review.reject.reasonPlaceholder')}
                 required
               />
-              <div className="flex justify-end gap-4">
+              <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-4">
                 <button
                   onClick={() => {
                     setShowRejectModal(false);
                     setRejectReason('');
                   }}
-                  className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                  className="w-full sm:w-auto px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-all active:scale-95 touch-manipulation text-sm"
                 >
                   {t('signup:review.reject.cancel')}
                 </button>
@@ -548,7 +550,7 @@ const TenantReview: React.FC = () => {
                     }
                     rejectMutation.mutate(selectedAccount);
                   }}
-                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                  className="w-full sm:w-auto px-4 py-2 bg-red-600 dark:bg-red-500 text-white rounded-lg hover:bg-red-700 dark:hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95 touch-manipulation text-sm"
                   disabled={rejectMutation.isPending || rejectReason.length < 10}
                 >
                   {rejectMutation.isPending ? t('signup:review.reject.rejecting') : t('signup:review.reject.confirm')}

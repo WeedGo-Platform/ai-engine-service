@@ -149,147 +149,147 @@ const Verification = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 dark:from-gray-900 dark:to-gray-800 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 dark:from-gray-900 dark:to-gray-800 py-8 sm:py-12 px-4 sm:px-6 lg:px-8 transition-colors">
       <div className="max-w-md mx-auto">
-        <div className="text-center mb-8">
-          <div className="mx-auto h-12 w-12 bg-primary-600 dark:bg-primary-700 rounded-full flex items-center justify-center mb-4">
-            <Shield className="h-6 w-6 text-white" />
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="mx-auto h-10 w-10 sm:h-12 sm:w-12 bg-primary-600 dark:bg-primary-700 rounded-full flex items-center justify-center mb-3 sm:mb-4">
+            <Shield className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white">{t('auth:verification.title')}</h2>
-          <p className="mt-2 text-gray-600 dark:text-gray-400">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">{t('auth:verification.title')}</h2>
+          <p className="mt-2 text-sm sm:text-base text-gray-600 dark:text-gray-400">
             {state.phone ? t('auth:verification.subtitleWithPhone') : t('auth:verification.subtitle')}
           </p>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-8 space-y-6">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 transition-colors">
           {/* Email Verification */}
-          <div className={`border rounded-lg p-6 ${emailVerified ? 'border-primary-500 dark:border-primary-600 bg-primary-50 dark:bg-primary-900/20' : 'border-gray-200 dark:border-gray-700'}`}>
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center">
-                <Mail className={`h-5 w-5 mr-2 ${emailVerified ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
-                <span className="font-medium text-gray-700 dark:text-gray-300">{t('auth:verification.email.title')}</span>
+          <div className={`border rounded-lg p-4 sm:p-6 transition-colors ${emailVerified ? 'border-primary-500 dark:border-primary-600 bg-primary-50 dark:bg-primary-900/20' : 'border-gray-200 dark:border-gray-700'}`}>
+            <div className="flex items-center justify-between mb-2 sm:mb-3">
+              <div className="flex items-center min-w-0">
+                <Mail className={`h-4 w-4 sm:h-5 sm:w-5 mr-2 flex-shrink-0 ${emailVerified ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                <span className="font-medium text-sm sm:text-base text-gray-700 dark:text-gray-300 truncate">{t('auth:verification.email.title')}</span>
               </div>
-              {emailVerified && <CheckCircle className="h-5 w-5 text-primary-600 dark:text-primary-400" />}
+              {emailVerified && <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-primary-600 dark:text-primary-400 flex-shrink-0" />}
             </div>
 
             {!emailVerified && (
               <>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-3 break-words">
                   {t('auth:verification.email.instruction', { email: state.email })}
                 </p>
 
-                <div className="flex space-x-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <input
                     type="text"
                     value={emailCode}
                     onChange={(e) => setEmailCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                     placeholder={t('auth:verification.codePlaceholder')}
-                    className="flex-1 px-3 py-2 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 dark:focus:border-primary-400 text-center font-mono text-lg"
+                    className="flex-1 px-3 py-2.5 sm:py-2 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 dark:focus:border-primary-400 text-center font-mono text-base sm:text-lg transition-colors"
                     maxLength={6}
                     disabled={isLoading || emailVerified}
                   />
                   <button
                     onClick={() => handleVerifyCode('email')}
                     disabled={isLoading || emailVerified || !emailCode}
-                    className="px-4 py-2 bg-primary-600 dark:bg-primary-700 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-2 bg-primary-600 dark:bg-primary-700 text-white text-sm sm:text-base rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95 touch-manipulation"
                   >
                     {t('auth:verification.verify')}
                   </button>
                 </div>
 
                 {errors.email && (
-                  <p className="mt-2 text-sm text-danger-600 dark:text-red-400">{errors.email}</p>
+                  <p className="mt-2 text-xs sm:text-sm text-danger-600 dark:text-red-400">{errors.email}</p>
                 )}
 
                 <button
                   onClick={() => handleResendCode('email')}
                   disabled={resendTimer.email > 0 || isLoading}
-                  className="mt-2 text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 disabled:text-gray-400 disabled:cursor-not-allowed flex items-center"
+                  className="mt-2 text-xs sm:text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 disabled:text-gray-400 disabled:cursor-not-allowed flex items-center transition-colors active:scale-95 touch-manipulation"
                 >
-                  <RefreshCcw className="h-3 w-3 mr-1" />
-                  {resendTimer.email > 0 ? t('auth:verification.resendTimer', { seconds: resendTimer.email }) : t('auth:verification.resend')}
+                  <RefreshCcw className="h-3 w-3 mr-1 flex-shrink-0" />
+                  <span className="truncate">{resendTimer.email > 0 ? t('auth:verification.resendTimer', { seconds: resendTimer.email }) : t('auth:verification.resend')}</span>
                 </button>
               </>
             )}
 
             {emailVerified && (
-              <p className="text-sm text-primary-600 dark:text-primary-400">{t('auth:verification.email.verified')}</p>
+              <p className="text-xs sm:text-sm text-primary-600 dark:text-primary-400">{t('auth:verification.email.verified')}</p>
             )}
           </div>
 
           {/* Phone Verification (if phone provided) */}
           {state.phone && (
-            <div className={`border rounded-lg p-6 ${phoneVerified ? 'border-primary-500 dark:border-primary-600 bg-primary-50 dark:bg-primary-900/20' : 'border-gray-200 dark:border-gray-700'}`}>
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center">
-                  <Phone className={`h-5 w-5 mr-2 ${phoneVerified ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
-                  <span className="font-medium text-gray-700 dark:text-gray-300">{t('auth:verification.phone.title')}</span>
+            <div className={`border rounded-lg p-4 sm:p-6 transition-colors ${phoneVerified ? 'border-primary-500 dark:border-primary-600 bg-primary-50 dark:bg-primary-900/20' : 'border-gray-200 dark:border-gray-700'}`}>
+              <div className="flex items-center justify-between mb-2 sm:mb-3">
+                <div className="flex items-center min-w-0">
+                  <Phone className={`h-4 w-4 sm:h-5 sm:w-5 mr-2 flex-shrink-0 ${phoneVerified ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                  <span className="font-medium text-sm sm:text-base text-gray-700 dark:text-gray-300 truncate">{t('auth:verification.phone.title')}</span>
                 </div>
-                {phoneVerified && <CheckCircle className="h-5 w-5 text-primary-600 dark:text-primary-400" />}
+                {phoneVerified && <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-primary-600 dark:text-primary-400 flex-shrink-0" />}
               </div>
 
               {!phoneVerified && (
                 <>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-3 break-words">
                     {t('auth:verification.phone.instruction', { phone: state.phone })}
                   </p>
 
-                  <div className="flex space-x-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <input
                       type="text"
                       value={phoneCode}
                       onChange={(e) => setPhoneCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                       placeholder={t('auth:verification.codePlaceholder')}
-                      className="flex-1 px-3 py-2 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 dark:focus:border-primary-400 text-center font-mono text-lg"
+                      className="flex-1 px-3 py-2.5 sm:py-2 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 dark:focus:border-primary-400 text-center font-mono text-base sm:text-lg transition-colors"
                       maxLength={6}
                       disabled={isLoading || phoneVerified}
                     />
                     <button
                       onClick={() => handleVerifyCode('phone')}
                       disabled={isLoading || phoneVerified || !phoneCode}
-                      className="px-4 py-2 bg-primary-600 dark:bg-primary-700 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-2 bg-primary-600 dark:bg-primary-700 text-white text-sm sm:text-base rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95 touch-manipulation"
                     >
                       {t('auth:verification.verify')}
                     </button>
                   </div>
 
                   {errors.phone && (
-                    <p className="mt-2 text-sm text-danger-600 dark:text-red-400">{errors.phone}</p>
+                    <p className="mt-2 text-xs sm:text-sm text-danger-600 dark:text-red-400">{errors.phone}</p>
                   )}
 
                   <button
                     onClick={() => handleResendCode('phone')}
                     disabled={resendTimer.phone > 0 || isLoading}
-                    className="mt-2 text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 disabled:text-gray-400 disabled:cursor-not-allowed flex items-center"
+                    className="mt-2 text-xs sm:text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 disabled:text-gray-400 disabled:cursor-not-allowed flex items-center transition-colors active:scale-95 touch-manipulation"
                   >
-                    <RefreshCcw className="h-3 w-3 mr-1" />
-                    {resendTimer.phone > 0 ? t('auth:verification.resendTimer', { seconds: resendTimer.phone }) : t('auth:verification.resend')}
+                    <RefreshCcw className="h-3 w-3 mr-1 flex-shrink-0" />
+                    <span className="truncate">{resendTimer.phone > 0 ? t('auth:verification.resendTimer', { seconds: resendTimer.phone }) : t('auth:verification.resend')}</span>
                   </button>
                 </>
               )}
 
               {phoneVerified && (
-                <p className="text-sm text-primary-600 dark:text-primary-400">{t('auth:verification.phone.verified')}</p>
+                <p className="text-xs sm:text-sm text-primary-600 dark:text-primary-400">{t('auth:verification.phone.verified')}</p>
               )}
             </div>
           )}
 
           {/* Success message when all verified */}
           {emailVerified && (!state.phone || phoneVerified) && (
-            <div className="bg-primary-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6">
+            <div className="bg-primary-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 sm:p-6 transition-colors">
               <div className="flex items-center">
-                <CheckCircle className="h-5 w-5 text-primary-600 dark:text-primary-400 mr-2" />
-                <p className="text-primary-700 dark:text-primary-300 font-medium">{t('auth:verification.allComplete')}</p>
+                <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-primary-600 dark:text-primary-400 mr-2 flex-shrink-0" />
+                <p className="text-sm sm:text-base text-primary-700 dark:text-primary-300 font-medium">{t('auth:verification.allComplete')}</p>
               </div>
             </div>
           )}
 
           {/* Skip verification option */}
           {!emailVerified && (
-            <div className="text-center pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="text-center pt-3 sm:pt-4 border-t border-gray-200 dark:border-gray-700">
               <button
                 onClick={handleSkipVerification}
-                className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
+                className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors active:scale-95 touch-manipulation"
               >
                 {t('auth:verification.skip')}
               </button>
