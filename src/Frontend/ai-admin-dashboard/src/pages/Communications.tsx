@@ -475,94 +475,94 @@ const Communications: React.FC = () => {
   };
 
   const renderOverview = () => (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{t('communications:stats.totalCampaigns')}</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{t('communications:stats.totalCampaigns')}</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                 {stats?.total_campaigns || 0}
               </p>
             </div>
-            <Send className="w-8 h-8 text-purple-600 dark:text-purple-400" />
+            <Send className="w-6 h-6 sm:w-8 sm:h-8 text-purple-600 dark:text-purple-400" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+        <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{t('communications:stats.messagesSent')}</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{t('communications:stats.messagesSent')}</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                 {stats?.total_sent || 0}
               </p>
             </div>
-            <Mail className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+            <Mail className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600 dark:text-blue-400" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+        <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{t('communications:stats.successRate')}</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{t('communications:stats.successRate')}</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                 {stats?.avg_success_rate?.toFixed(1) || 0}%
               </p>
             </div>
-            <TrendingUp className="w-8 h-8 text-green-600 dark:text-green-400" />
+            <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8 text-green-600 dark:text-green-400" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+        <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{t('communications:stats.failed')}</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{t('communications:stats.failed')}</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                 {stats?.total_failed || 0}
               </p>
             </div>
-            <XCircle className="w-8 h-8 text-red-600 dark:text-red-400" />
+            <XCircle className="w-6 h-6 sm:w-8 sm:h-8 text-red-600 dark:text-red-400" />
           </div>
         </div>
       </div>
 
       {/* Channel Performance */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t('communications:titles.channelPerformance')}</h3>
+        <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
+          <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">{t('communications:titles.channelPerformance')}</h3>
         </div>
-        <div className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="p-4 sm:p-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
             {['email', 'sms', 'push'].map(channel => {
               const channelData = channelStats.find(c => c.channel_type === channel);
               const Icon = channel === 'email' ? Mail : channel === 'sms' ? MessageSquare : Bell;
 
               return (
-                <div key={channel} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-4">
+                <div key={channel} className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 sm:p-4">
+                  <div className="flex items-center justify-between mb-3 sm:mb-4">
                     <div className="flex items-center space-x-2">
-                      <Icon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                      <span className="font-medium capitalize text-gray-900 dark:text-white">{channel}</span>
+                      <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-gray-400" />
+                      <span className="text-sm sm:text-base font-medium capitalize text-gray-900 dark:text-white">{channel}</span>
                     </div>
                   </div>
                   <div className="space-y-2">
                     <div className="flex justify-between">
-                      <span className="text-sm text-gray-600 dark:text-gray-400">{t('communications:channels.campaigns')}</span>
-                      <span className="text-sm font-medium text-gray-900 dark:text-white">
+                      <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{t('communications:channels.campaigns')}</span>
+                      <span className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white">
                         {channelData?.campaigns_used || 0}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-sm text-gray-600 dark:text-gray-400">{t('communications:channels.messages')}</span>
-                      <span className="text-sm font-medium text-gray-900 dark:text-white">
+                      <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{t('communications:channels.messages')}</span>
+                      <span className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white">
                         {channelData?.messages_sent || 0}
                       </span>
                     </div>
                     {channel !== 'sms' && (
                       <div className="flex justify-between">
-                        <span className="text-sm text-gray-600 dark:text-gray-400">{t('communications:channels.engagement')}</span>
-                        <span className="text-sm font-medium text-gray-900 dark:text-white">
+                        <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{t('communications:channels.engagement')}</span>
+                        <span className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white">
                           {channelData?.avg_engagement_rate?.toFixed(1) || 0}%
                         </span>
                       </div>
@@ -577,17 +577,18 @@ const Communications: React.FC = () => {
 
       {/* Recent Campaigns */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-        <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t('communications:titles.recentCampaigns')}</h3>
+        <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+          <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">{t('communications:titles.recentCampaigns')}</h3>
           <button
             onClick={() => setActiveTab('campaigns')}
-            className="text-sm text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium"
+            className="text-xs sm:text-sm text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium whitespace-nowrap active:scale-95 transition-all touch-manipulation"
           >
             {t('communications:actions.viewAll')}
           </button>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full">
+        <div className="overflow-x-auto -mx-4 sm:mx-0">
+          <div className="inline-block min-w-full align-middle px-4 sm:px-0">
+            <table className="min-w-full">
             <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -643,6 +644,7 @@ const Communications: React.FC = () => {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       </div>
     </div>
@@ -650,18 +652,19 @@ const Communications: React.FC = () => {
 
   const renderCampaigns = () => (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-      <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t('communications:titles.broadcastCampaigns')}</h3>
+      <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
+        <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">{t('communications:titles.broadcastCampaigns')}</h3>
         <button
           onClick={() => setShowCreateWizard(true)}
-          className="px-4 py-2 bg-purple-600 dark:bg-purple-700 text-white rounded-lg hover:bg-purple-700 dark:hover:bg-purple-600 flex items-center space-x-2"
+          className="w-full sm:w-auto px-4 py-2.5 sm:py-2 bg-purple-600 dark:bg-purple-700 text-white rounded-lg hover:bg-purple-700 dark:hover:bg-purple-600 flex items-center justify-center sm:justify-start space-x-2 active:scale-95 transition-all touch-manipulation"
         >
           <Plus className="w-4 h-4" />
           <span>{t('communications:actions.newCampaign')}</span>
         </button>
       </div>
-      <div className="overflow-x-auto">
-        <table className="w-full">
+      <div className="overflow-x-auto -mx-4 sm:mx-0">
+        <div className="inline-block min-w-full align-middle px-4 sm:px-0">
+          <table className="min-w-full">
           <thead className="bg-gray-50 dark:bg-gray-700">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -799,6 +802,7 @@ const Communications: React.FC = () => {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );
@@ -836,35 +840,37 @@ const Communications: React.FC = () => {
   }
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('communications:titles.main')}</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">{t('communications:titles.main')}</h1>
+          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
             {t('communications:descriptions.managingFor')} {currentStore.name}
           </p>
         </div>
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2 sm:space-x-3">
           <button
             onClick={() => setRefreshKey(prev => prev + 1)}
-            className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+            className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white active:scale-95 transition-all touch-manipulation"
             title={t('communications:actions.refresh')}
+            aria-label="Refresh data"
           >
-            <RefreshCw className="w-5 h-5" />
+            <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
           <button
             onClick={() => navigate('/dashboard/communications/settings')}
-            className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+            className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white active:scale-95 transition-all touch-manipulation"
             title={t('communications:actions.settings')}
+            aria-label="Open settings"
           >
-            <Settings className="w-5 h-5" />
+            <Settings className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
         </div>
       </div>
 
       {/* Navigation Tabs */}
-      <div className="border-b border-gray-200 dark:border-gray-700">
-        <nav className="-mb-px flex space-x-8">
+      <div className="border-b border-gray-200 dark:border-gray-700 overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+        <nav className="-mb-px flex space-x-4 sm:space-x-8">
           {[
             { id: 'overview', label: t('communications:tabs.overview'), icon: BarChart3 },
             { id: 'campaigns', label: t('communications:tabs.campaigns'), icon: Send },
@@ -875,13 +881,13 @@ const Communications: React.FC = () => {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`flex items-center space-x-2 py-2 px-1 border-b-2 font-medium text-sm ${
+              className={`flex items-center space-x-1 sm:space-x-2 py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
                 activeTab === tab.id
                   ? 'border-purple-500 dark:border-purple-400 text-purple-600 dark:text-purple-400'
                   : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
             >
-              <tab.icon className="w-4 h-4" />
+              <tab.icon className="w-3 h-3 sm:w-4 sm:h-4" />
               <span>{tab.label}</span>
             </button>
           ))}
@@ -893,13 +899,13 @@ const Communications: React.FC = () => {
         {activeTab === 'overview' && renderOverview()}
         {activeTab === 'campaigns' && renderCampaigns()}
         {activeTab === 'templates' && (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
             <TemplateManager />
           </div>
         )}
         {activeTab === 'segments' && (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <p className="text-gray-600 dark:text-gray-400">{t('communications:descriptions.segmentationComingSoon')}</p>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
+            <p className="text-sm text-gray-600 dark:text-gray-400">{t('communications:descriptions.segmentationComingSoon')}</p>
           </div>
         )}
         {activeTab === 'analytics' && renderAnalytics()}
