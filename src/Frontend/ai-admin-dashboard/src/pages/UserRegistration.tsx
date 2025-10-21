@@ -209,10 +209,10 @@ const UserRegistration = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">{t('signup:userRegistration.loading')}</p>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+        <div className="text-center max-w-md">
+          <div className="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-primary-600 dark:border-primary-400 mx-auto"></div>
+          <p className="mt-4 text-sm sm:text-base text-gray-600 dark:text-gray-400">{t('signup:userRegistration.loading')}</p>
         </div>
       </div>
     );
@@ -220,14 +220,14 @@ const UserRegistration = () => {
 
   if (!tenantInfo) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">{t('signup:userRegistration.tenantNotFound')}</h2>
-          <p className="text-gray-600 mb-4">{t('signup:userRegistration.tenantNotFoundDescription')}</p>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+        <div className="text-center max-w-md">
+          <AlertCircle className="h-10 w-10 sm:h-12 sm:w-12 text-red-500 dark:text-red-400 mx-auto mb-3 sm:mb-4" />
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-2">{t('signup:userRegistration.tenantNotFound')}</h2>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{t('signup:userRegistration.tenantNotFoundDescription')}</p>
           <button
             onClick={() => navigate('/signup')}
-            className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+            className="w-full sm:w-auto px-6 py-2.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 active:scale-95 transition-all touch-manipulation"
           >
             {t('signup:userRegistration.goToSignup')}
           </button>
@@ -237,70 +237,70 @@ const UserRegistration = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 dark:from-gray-800 dark:to-gray-900 py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md mx-auto">
-        <div className="text-center mb-8">
-          <div className="mx-auto h-12 w-12 bg-primary-600 rounded-full flex items-center justify-center mb-4">
-            <User className="h-6 w-6 text-white" />
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="mx-auto h-10 w-10 sm:h-12 sm:w-12 bg-primary-600 dark:bg-primary-700 rounded-full flex items-center justify-center mb-3 sm:mb-4">
+            <User className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-900">{t('signup:userRegistration.title')}</h2>
-          <p className="mt-2 text-gray-600">{t('signup:userRegistration.joinTenant', { tenantName: tenantInfo.name })}</p>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">{t('signup:userRegistration.title')}</h2>
+          <p className="mt-2 text-sm sm:text-base text-gray-600 dark:text-gray-300">{t('signup:userRegistration.joinTenant', { tenantName: tenantInfo.name })}</p>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-lg p-8">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 sm:p-8 transition-colors">
           {/* Tenant Information (Read-only) */}
-          <div className="mb-6 p-6 bg-gray-50 rounded-lg">
+          <div className="mb-6 p-4 sm:p-6 bg-gray-50 dark:bg-gray-700 rounded-lg transition-colors">
             <div className="flex items-center mb-2">
-              <Building2 className="h-5 w-5 text-gray-500 mr-2" />
-              <span className="text-sm font-medium text-gray-700">{t('signup:userRegistration.tenantInfo')}</span>
+              <Building2 className="h-5 w-5 text-gray-500 dark:text-gray-400 mr-2" />
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('signup:userRegistration.tenantInfo')}</span>
             </div>
             <div className="space-y-2">
               <div>
-                <span className="text-xs text-gray-500">{t('signup:userRegistration.tenantName')}</span>
-                <p className="font-medium text-gray-900">{tenantInfo.name}</p>
+                <span className="text-xs text-gray-500 dark:text-gray-400">{t('signup:userRegistration.tenantName')}</span>
+                <p className="font-medium text-gray-900 dark:text-white">{tenantInfo.name}</p>
               </div>
               <div>
-                <span className="text-xs text-gray-500">{t('signup:userRegistration.tenantCode')}</span>
-                <p className="font-mono text-sm text-gray-700">{tenantInfo.code}</p>
+                <span className="text-xs text-gray-500 dark:text-gray-400">{t('signup:userRegistration.tenantCode')}</span>
+                <p className="font-mono text-sm text-gray-700 dark:text-gray-200">{tenantInfo.code}</p>
               </div>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-2 gap-6">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('signup:userRegistration.firstName')} *
                 </label>
                 <input
                   type="text"
                   value={formData.firstName}
                   onChange={(e) => handleInputChange('firstName', e.target.value)}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                    errors.firstName ? 'border-red-500' : 'border-gray-200'
+                  className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 transition-colors ${
+                    errors.firstName ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
                   }`}
                   placeholder={t('signup:userRegistration.firstNamePlaceholder')}
                 />
                 {errors.firstName && (
-                  <p className="mt-1 text-sm text-danger-600">{errors.firstName}</p>
+                  <p className="mt-1 text-sm text-danger-600 dark:text-red-400">{errors.firstName}</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('signup:userRegistration.lastName')} *
                 </label>
                 <input
                   type="text"
                   value={formData.lastName}
                   onChange={(e) => handleInputChange('lastName', e.target.value)}
-                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                    errors.lastName ? 'border-red-500' : 'border-gray-200'
+                  className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 transition-colors ${
+                    errors.lastName ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
                   }`}
                   placeholder={t('signup:userRegistration.lastNamePlaceholder')}
                 />
                 {errors.lastName && (
-                  <p className="mt-1 text-sm text-danger-600">{errors.lastName}</p>
+                  <p className="mt-1 text-sm text-danger-600 dark:text-red-400">{errors.lastName}</p>
                 )}
               </div>
             </div>
@@ -435,16 +435,16 @@ const UserRegistration = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3 px-4 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="w-full py-3 px-4 bg-primary-600 dark:bg-primary-700 text-white font-medium rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-all touch-manipulation"
             >
               {isSubmitting ? t('signup:userRegistration.creating') : t('signup:userRegistration.createButton')}
             </button>
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
+          <div className="mt-4 sm:mt-6 text-center">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
               {t('signup:userRegistration.alreadyHaveAccount')}{' '}
-              <a href="/login" className="text-primary-600 hover:text-primary-700 font-medium">
+              <a href="/login" className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium transition-colors">
                 {t('signup:userRegistration.signIn')}
               </a>
             </p>
