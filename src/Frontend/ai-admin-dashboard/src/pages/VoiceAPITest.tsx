@@ -198,58 +198,58 @@ const VoiceAPITest: React.FC = () => {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">{t('tools:voiceApi.title')}</h1>
+    <div className="p-3 sm:p-4 lg:p-6 max-w-4xl mx-auto">
+      <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6 text-gray-900 dark:text-white transition-colors">{t('tools:voiceApi.title')}</h1>
 
       {/* API Endpoint Configuration */}
-      <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-        <label className="block text-sm font-medium mb-2">{t('tools:voiceApi.apiEndpoint')}</label>
+      <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg transition-colors">
+        <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">{t('tools:voiceApi.apiEndpoint')}</label>
         <input
           type="text"
           value={apiEndpoint}
           onChange={(e) => setApiEndpoint(e.target.value)}
-          className="w-full px-3 py-2 border rounded-md"
+          className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 dark:focus:border-primary-400 transition-colors text-sm"
           placeholder="http://localhost:5024"
         />
       </div>
 
       {/* Status Messages */}
       {error && (
-        <div className="mb-4 p-4 bg-red-50 text-red-700 rounded-lg flex items-center">
-          <AlertCircle className="mr-2" size={20} />
-          {error}
+        <div className="mb-4 p-3 sm:p-4 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-700 rounded-lg flex items-center transition-colors">
+          <AlertCircle className="mr-2 flex-shrink-0" size={20} />
+          <span className="text-sm sm:text-base">{error}</span>
         </div>
       )}
 
       {success && (
-        <div className="mb-4 p-4 bg-green-50 text-green-700 rounded-lg flex items-center">
-          <CheckCircle className="mr-2" size={20} />
-          {success}
+        <div className="mb-4 p-3 sm:p-4 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-700 rounded-lg flex items-center transition-colors">
+          <CheckCircle className="mr-2 flex-shrink-0" size={20} />
+          <span className="text-sm sm:text-base">{success}</span>
         </div>
       )}
 
       {/* Recording Section */}
-      <div className="mb-8 p-6 bg-white border rounded-lg shadow-sm">
-        <h2 className="text-xl font-semibold mb-4">{t('tools:voiceApi.recording.title')}</h2>
+      <div className="mb-6 sm:mb-8 p-4 sm:p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm transition-colors">
+        <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-900 dark:text-white">{t('tools:voiceApi.recording.title')}</h2>
 
-        <div className="flex items-center space-x-4 mb-4">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 mb-4">
           <button
             onClick={isRecording ? stopRecording : startRecording}
-            className={`px-6 py-3 rounded-lg font-medium transition-colors flex items-center ${
+            className={`w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium transition-all active:scale-95 touch-manipulation flex items-center justify-center gap-2 ${
               isRecording
-                ? 'bg-red-500 hover:bg-red-600 text-white'
-                : 'bg-blue-500 hover:bg-blue-600 text-white'
+                ? 'bg-red-500 dark:bg-red-600 hover:bg-red-600 dark:hover:bg-red-700 text-white'
+                : 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700 text-white'
             }`}
           >
             {isRecording ? (
               <>
-                <MicOff className="mr-2" size={20} />
-                {t('tools:voiceApi.recording.stop')}
+                <MicOff className="flex-shrink-0" size={20} />
+                <span className="text-sm sm:text-base">{t('tools:voiceApi.recording.stop')}</span>
               </>
             ) : (
               <>
-                <Mic className="mr-2" size={20} />
-                {t('tools:voiceApi.recording.start')}
+                <Mic className="flex-shrink-0" size={20} />
+                <span className="text-sm sm:text-base">{t('tools:voiceApi.recording.start')}</span>
               </>
             )}
           </button>
@@ -257,73 +257,73 @@ const VoiceAPITest: React.FC = () => {
           {recordedAudio && (
             <button
               onClick={playRecordedAudio}
-              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg flex items-center"
+              className="w-full sm:w-auto px-4 py-2.5 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg flex items-center justify-center gap-2 transition-all active:scale-95 touch-manipulation"
             >
-              <Volume2 className="mr-2" size={20} />
-              {t('tools:voiceApi.recording.play')}
+              <Volume2 className="flex-shrink-0" size={20} />
+              <span className="text-sm sm:text-base">{t('tools:voiceApi.recording.play')}</span>
             </button>
           )}
         </div>
 
         {isRecording && (
-          <div className="text-sm text-gray-600 animate-pulse">
+          <div className="text-sm text-gray-600 dark:text-gray-300 animate-pulse">
             {t('tools:voiceApi.recording.inProgress')}
           </div>
         )}
 
         {recordedAudio && (
-          <div className="text-sm text-green-600">
+          <div className="text-sm text-green-600 dark:text-green-400">
             {t('tools:voiceApi.recording.ready')}
           </div>
         )}
       </div>
 
       {/* Transcription Section */}
-      <div className="mb-8 p-6 bg-white border rounded-lg shadow-sm">
-        <h2 className="text-xl font-semibold mb-4">{t('tools:voiceApi.transcription.title')}</h2>
+      <div className="mb-6 sm:mb-8 p-4 sm:p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm transition-colors">
+        <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-900 dark:text-white">{t('tools:voiceApi.transcription.title')}</h2>
 
         <button
           onClick={testTranscription}
           disabled={!recordedAudio || isTranscribing}
-          className={`px-6 py-3 rounded-lg font-medium transition-colors flex items-center ${
+          className={`w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium transition-all active:scale-95 touch-manipulation flex items-center justify-center gap-2 ${
             !recordedAudio || isTranscribing
-              ? 'bg-gray-300 cursor-not-allowed text-gray-500'
-              : 'bg-purple-500 hover:bg-purple-600 text-white'
+              ? 'bg-gray-300 dark:bg-gray-600 cursor-not-allowed text-gray-500 dark:text-gray-400'
+              : 'bg-purple-500 dark:bg-purple-600 hover:bg-purple-600 dark:hover:bg-purple-700 text-white'
           }`}
         >
-          <Upload className="mr-2" size={20} />
-          {isTranscribing ? t('tools:voiceApi.transcription.buttonLoading') : t('tools:voiceApi.transcription.button')}
+          <Upload className="flex-shrink-0" size={20} />
+          <span className="text-sm sm:text-base">{isTranscribing ? t('tools:voiceApi.transcription.buttonLoading') : t('tools:voiceApi.transcription.button')}</span>
         </button>
 
         {transcription && (
-          <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-            <h3 className="font-medium mb-2">{t('tools:voiceApi.transcription.result')}</h3>
-            <p className="text-gray-700">{transcription}</p>
+          <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg transition-colors">
+            <h3 className="font-medium mb-2 text-gray-900 dark:text-white">{t('tools:voiceApi.transcription.result')}</h3>
+            <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base">{transcription}</p>
           </div>
         )}
       </div>
 
       {/* Synthesis Section */}
-      <div className="mb-8 p-6 bg-white border rounded-lg shadow-sm">
-        <h2 className="text-xl font-semibold mb-4">{t('tools:voiceApi.synthesis.title')}</h2>
+      <div className="mb-6 sm:mb-8 p-4 sm:p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm transition-colors">
+        <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-900 dark:text-white">{t('tools:voiceApi.synthesis.title')}</h2>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-2">{t('tools:voiceApi.synthesis.textLabel')}</label>
+          <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">{t('tools:voiceApi.synthesis.textLabel')}</label>
           <textarea
             value={synthesisText}
             onChange={(e) => setSynthesisText(e.target.value)}
-            className="w-full px-3 py-2 border rounded-md"
+            className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 dark:focus:border-primary-400 transition-colors text-sm"
             rows={3}
             placeholder={t('tools:voiceApi.synthesis.textPlaceholder')}
           />
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-2">{t('tools:voiceApi.synthesis.voiceLabel')}</label>
+          <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">{t('tools:voiceApi.synthesis.voiceLabel')}</label>
           <select
             value={selectedVoice}
             onChange={(e) => setSelectedVoice(e.target.value)}
-            className="px-3 py-2 border rounded-md"
+            className="w-full sm:w-auto px-3 py-2 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 dark:focus:border-primary-400 transition-colors text-sm"
           >
             {voices.map(voice => (
               <option key={typeof voice === 'string' ? voice : voice.id} value={typeof voice === 'string' ? voice : voice.id}>
@@ -333,27 +333,27 @@ const VoiceAPITest: React.FC = () => {
           </select>
         </div>
 
-        <div className="flex items-center space-x-4">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
           <button
             onClick={testSynthesis}
             disabled={!synthesisText.trim() || isSynthesizing}
-            className={`px-6 py-3 rounded-lg font-medium transition-colors flex items-center ${
+            className={`w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium transition-all active:scale-95 touch-manipulation flex items-center justify-center gap-2 ${
               !synthesisText.trim() || isSynthesizing
-                ? 'bg-gray-300 cursor-not-allowed text-gray-500'
-                : 'bg-green-500 hover:bg-green-600 text-white'
+                ? 'bg-gray-300 dark:bg-gray-600 cursor-not-allowed text-gray-500 dark:text-gray-400'
+                : 'bg-green-500 dark:bg-green-600 hover:bg-green-600 dark:hover:bg-green-700 text-white'
             }`}
           >
-            <Download className="mr-2" size={20} />
-            {isSynthesizing ? t('tools:voiceApi.synthesis.buttonLoading') : t('tools:voiceApi.synthesis.button')}
+            <Download className="flex-shrink-0" size={20} />
+            <span className="text-sm sm:text-base">{isSynthesizing ? t('tools:voiceApi.synthesis.buttonLoading') : t('tools:voiceApi.synthesis.button')}</span>
           </button>
 
           {synthesizedAudio && (
             <button
               onClick={playSynthesizedAudio}
-              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg flex items-center"
+              className="w-full sm:w-auto px-4 py-2.5 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg flex items-center justify-center gap-2 transition-all active:scale-95 touch-manipulation"
             >
-              <Volume2 className="mr-2" size={20} />
-              {t('tools:voiceApi.synthesis.play')}
+              <Volume2 className="flex-shrink-0" size={20} />
+              <span className="text-sm sm:text-base">{t('tools:voiceApi.synthesis.play')}</span>
             </button>
           )}
         </div>
@@ -363,13 +363,13 @@ const VoiceAPITest: React.FC = () => {
       <audio ref={audioRef} className="hidden" />
 
       {/* Debug Info */}
-      <div className="mt-8 p-4 bg-gray-100 rounded-lg">
-        <h3 className="font-medium mb-2">{t('tools:voiceApi.debug.title')}</h3>
-        <div className="text-sm text-gray-600 space-y-1">
-          <p>{t('tools:voiceApi.debug.endpoint')}: {apiEndpoint}</p>
-          <p>{t('tools:voiceApi.debug.transcription')}: {apiEndpoint}/api/voice/transcribe</p>
-          <p>{t('tools:voiceApi.debug.synthesis')}: {apiEndpoint}/api/voice/synthesize</p>
-          <p>{t('tools:voiceApi.debug.voices')}: {apiEndpoint}/api/voice/voices</p>
+      <div className="mt-6 sm:mt-8 p-3 sm:p-4 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg transition-colors">
+        <h3 className="font-medium mb-2 text-gray-900 dark:text-white">{t('tools:voiceApi.debug.title')}</h3>
+        <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 space-y-1 break-all">
+          <p><strong>{t('tools:voiceApi.debug.endpoint')}:</strong> {apiEndpoint}</p>
+          <p><strong>{t('tools:voiceApi.debug.transcription')}:</strong> {apiEndpoint}/api/voice/transcribe</p>
+          <p><strong>{t('tools:voiceApi.debug.synthesis')}:</strong> {apiEndpoint}/api/voice/synthesize</p>
+          <p><strong>{t('tools:voiceApi.debug.voices')}:</strong> {apiEndpoint}/api/voice/voices</p>
         </div>
       </div>
     </div>
