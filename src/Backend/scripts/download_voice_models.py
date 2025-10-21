@@ -4,8 +4,10 @@ import os
 import sys
 from pathlib import Path
 
-# Create model directories
-base_dir = Path("models/voice/biometric")
+# Create model directories (relative to Backend directory)
+script_dir = Path(__file__).parent
+backend_dir = script_dir.parent
+base_dir = backend_dir / "models" / "voice" / "biometric"
 
 models_to_create = {
     "speaker_verification/ecapa_tdnn.pt": 23 * 1024 * 1024,  # 23MB

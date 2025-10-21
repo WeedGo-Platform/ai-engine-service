@@ -11,6 +11,9 @@ from pydantic import BaseModel
 from typing import List, Dict, Optional
 import logging
 from datetime import datetime
+import asyncpg
+import redis.asyncio as redis
+import os
 
 # Import translation service
 from services.translation_service import TranslationService
@@ -18,8 +21,52 @@ from services.translation_service import TranslationService
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
-# Initialize translation service
-translation_service = TranslationService()
+# Database and Redis connection pools (lazy initialization)
+db_pool = None
+redis_client = None
+
+
+async def get_db_pool():
+    """Get or create database connection pool"""
+    global db_pool
+    if db_pool is None:
+        db_pool = await asyncpg.create_pool(
+            host=os.getenv('DB_HOST', 'localhost'),
+            port=int(os.getenv('DB_PORT', 5434)),
+            database=os.getenv('DB_NAME', 'ai_engine'),
+            user=os.getenv('DB_USER', 'weedgo'),
+            password=os.getenv('DB_PASSWORD', 'your_password_here'),
+            min_size=1,
+            max_size=10
+        )
+    return db_pool
+
+
+async def get_redis_client():
+    """Get or create Redis client"""
+    global redis_client
+    if redis_client is None:
+        try:
+            redis_client = await redis.from_url(
+                os.getenv('REDIS_URL', 'redis://localhost:6379'),
+                encoding="utf-8",
+                decode_responses=True
+            )
+            # Test connection
+            await redis_client.ping()
+            logger.info("Redis connection established for translation warmup")
+        except Exception as e:
+            logger.warning(f"Redis not available for translation warmup, using memory cache only: {e}")
+            redis_client = None
+    return redis_client
+
+
+async def get_translation_service():
+    """Get translation service instance with database connection"""
+    pool = await get_db_pool()
+    redis_cli = await get_redis_client()
+    conn = await pool.acquire()
+    return TranslationService(conn, redis_cli), pool, conn
 
 
 class WarmupRequest(BaseModel):
@@ -113,70 +160,88 @@ async def warmup_translations_task(
 ) -> Dict:
     """
     Background task to warm up translation cache
-    
+
     Args:
         languages: List of language codes to warm up
         namespaces: List of namespaces (common, auth, dashboard)
-    
+
     Returns:
         Dictionary with warmup statistics
     """
     start_time = datetime.now()
     translations_cached = 0
     errors = []
-    
-    # Determine which strings to translate based on namespaces
-    strings_to_translate = []
-    if 'common' in namespaces or not namespaces:
-        strings_to_translate.extend(COMMON_UI_STRINGS)
-    if 'auth' in namespaces or not namespaces:
-        strings_to_translate.extend(AUTH_STRINGS)
-    if 'dashboard' in namespaces or not namespaces:
-        strings_to_translate.extend(DASHBOARD_STRINGS)
-    
-    logger.info(f"🔥 Starting cache warmup for {len(languages)} languages, {len(strings_to_translate)} strings")
-    
-    # Translate each string for each language
-    for lang in languages:
-        for text in strings_to_translate:
-            try:
-                # Determine namespace based on which list the string came from
-                if text in COMMON_UI_STRINGS:
-                    namespace = 'common'
-                elif text in AUTH_STRINGS:
-                    namespace = 'auth'
-                else:
-                    namespace = 'dashboard'
-                
-                # Call translation service (will cache the result)
-                result = await translation_service.translate_single(
-                    text=text,
-                    target_language=lang,
-                    source_language='en',
-                    context=f'ui_{namespace}',
-                    namespace=namespace,
-                    use_cache=True  # This will store in cache if not already cached
-                )
-                
-                if result.get('success'):
-                    translations_cached += 1
-                    
-            except Exception as e:
-                error_msg = f"Failed to translate '{text}' to {lang}: {str(e)}"
-                logger.warning(error_msg)
-                errors.append(error_msg)
-                
-    end_time = datetime.now()
-    duration = (end_time - start_time).total_seconds()
-    
-    logger.info(f"✅ Cache warmup complete: {translations_cached} translations cached in {duration:.2f}s")
-    
-    return {
-        'languages_processed': languages,
-        'translations_cached': translations_cached,
-        'duration_seconds': duration,
-        'errors': errors
-    }
+
+    # Get translation service with database connection
+    try:
+        translation_service, pool, conn = await get_translation_service()
+    except Exception as e:
+        logger.error(f"Failed to initialize translation service: {e}")
+        return {
+            'languages_processed': languages,
+            'translations_cached': 0,
+            'duration_seconds': 0.0,
+            'errors': [f"Failed to initialize translation service: {str(e)}"]
+        }
+
+    try:
+        # Determine which strings to translate based on namespaces
+        strings_to_translate = []
+        if 'common' in namespaces or not namespaces:
+            strings_to_translate.extend(COMMON_UI_STRINGS)
+        if 'auth' in namespaces or not namespaces:
+            strings_to_translate.extend(AUTH_STRINGS)
+        if 'dashboard' in namespaces or not namespaces:
+            strings_to_translate.extend(DASHBOARD_STRINGS)
+
+        logger.info(f"🔥 Starting cache warmup for {len(languages)} languages, {len(strings_to_translate)} strings")
+
+        # Translate each string for each language
+        for lang in languages:
+            for text in strings_to_translate:
+                try:
+                    # Determine namespace based on which list the string came from
+                    if text in COMMON_UI_STRINGS:
+                        namespace = 'common'
+                    elif text in AUTH_STRINGS:
+                        namespace = 'auth'
+                    else:
+                        namespace = 'dashboard'
+
+                    # Call translation service (will cache the result)
+                    result = await translation_service.translate_single(
+                        text=text,
+                        target_language=lang,
+                        source_language='en',
+                        context=f'ui_{namespace}',
+                        namespace=namespace,
+                        use_cache=True  # This will store in cache if not already cached
+                    )
+
+                    # Check if translation was successful (no error in result)
+                    if not result.get('error'):
+                        translations_cached += 1
+
+                except Exception as e:
+                    error_msg = f"Failed to translate '{text}' to {lang}: {str(e)}"
+                    logger.warning(error_msg)
+                    errors.append(error_msg)
+
+        end_time = datetime.now()
+        duration = (end_time - start_time).total_seconds()
+
+        logger.info(f"✅ Cache warmup complete: {translations_cached} translations cached in {duration:.2f}s")
+
+        return {
+            'languages_processed': languages,
+            'translations_cached': translations_cached,
+            'duration_seconds': duration,
+            'errors': errors
+        }
+
+    finally:
+        # Always release the database connection
+        await pool.release(conn)
 
 
 @router.post("/warmup", response_model=WarmupResponse)
@@ -258,18 +323,25 @@ async def warmup_cache(
 async def warmup_status():
     """
     Get cache warmup status and statistics.
-    
+
     Returns information about cached translations and cache hit rates.
     """
     try:
-        # Get cache statistics from translation service
-        stats = await translation_service.get_cache_stats()
-        
-        return {
-            "success": True,
-            "cache_stats": stats,
-            "message": "Cache statistics retrieved successfully"
-        }
+        # Get translation service with database connection
+        translation_service, pool, conn = await get_translation_service()
+
+        try:
+            # Get translation statistics
+            stats = await translation_service.get_translation_stats()
+
+            return {
+                "success": True,
+                "cache_stats": stats,
+                "message": "Cache statistics retrieved successfully"
+            }
+        finally:
+            await pool.release(conn)
+
     except Exception as e:
         logger.error(f"Failed to get cache stats: {str(e)}")
         return {

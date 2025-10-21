@@ -13,6 +13,7 @@ class TaskType(Enum):
     REASONING = "reasoning"  # Complex reasoning (product recommendations)
     CHAT = "chat"  # Real-time chat
     SIMPLE = "simple"  # Simple queries
+    EXTRACTION = "extraction"  # Data extraction from text (fast, not reasoning-heavy)
     DEVELOPMENT = "development"  # Development/testing
     TOOL_USE = "tool_use"  # Function calling / tool use
 

@@ -32,9 +32,11 @@ class PiperTTSHandler(TTSHandler):
         config.quality = "high"
         
         super().__init__(config)
-        
-        # Piper model paths
-        self.models_dir = Path("/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/Backend/models/voice/piper")
+
+        # Centralized model directory (relative path from this file)
+        self.models_dir = Path(__file__).parent.parent.parent / "models" / "voice" / "piper"
+        self.models_dir.mkdir(parents=True, exist_ok=True)
+
         self.available_voices = {
             # American English voices
             "amy": {
@@ -320,7 +322,8 @@ class PiperTTSHandler(TTSHandler):
                 audio=audio_data,
                 sample_rate=48000,  # We upsample to 48kHz
                 duration_ms=audio_duration_ms,
-                format="wav"
+                format="wav",
+                provider="piper"
             )
             
         except Exception as e:
@@ -333,7 +336,8 @@ class PiperTTSHandler(TTSHandler):
                 audio=self._generate_silence(),
                 sample_rate=48000,
                 duration_ms=0,
-                format="wav"
+                format="wav",
+                provider="piper"
             )
     
     def _synthesize_with_piper(self, text: str, voice_info: Dict, speed: float) -> bytes:

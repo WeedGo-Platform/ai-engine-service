@@ -82,6 +82,7 @@ class StyleTTS2Handler(TTSHandler):
                     tuple,
                     set,
                     frozenset,
+                    torch.optim.lr_scheduler.OneCycleLR,  # Required for StyleTTS2
                 ])
                 logger.info("Added safe globals for PyTorch 2.6+ compatibility")
             except Exception as e:
@@ -201,7 +202,8 @@ class StyleTTS2Handler(TTSHandler):
                 audio=audio_data,
                 sample_rate=24000,  # StyleTTS2 native sample rate
                 duration_ms=audio_duration_ms,
-                format="wav"
+                format="wav",
+                provider="styletts2"
             )
 
         except Exception as e:
@@ -215,7 +217,8 @@ class StyleTTS2Handler(TTSHandler):
                 audio=self._generate_silence(),
                 sample_rate=24000,
                 duration_ms=0,
-                format="wav"
+                format="wav",
+                provider="styletts2"
             )
 
     def _synthesize_with_styletts2(
