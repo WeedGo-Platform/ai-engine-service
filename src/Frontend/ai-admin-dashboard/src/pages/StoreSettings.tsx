@@ -152,9 +152,9 @@ const StoreSettings: React.FC = () => {
   }
 
   return (
-    <div className="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <div className="p-4 sm:p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
       {/* Header */}
-      <div className="mb-6">
+      <div className="mb-4 sm:mb-6">
         <button
           onClick={() => {
             // Navigate back to the tenant's stores page
@@ -167,19 +167,19 @@ const StoreSettings: React.FC = () => {
               navigate(-1); // Go back if we don't have tenant info
             }
           }}
-          className="mb-4 flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+          className="mb-3 sm:mb-4 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white active:scale-95 transition-all touch-manipulation"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to Stores
+          <span>Back to Stores</span>
         </button>
 
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
           <div>
-            <h1 className="text-3xl font-bold flex items-center gap-4 text-gray-900 dark:text-white">
-              <StoreIcon className="w-8 h-8" />
-              {store.name} Settings
+            <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-3 sm:gap-4 text-gray-900 dark:text-white">
+              <StoreIcon className="w-6 h-6 sm:w-8 sm:h-8" />
+              <span className="line-clamp-1">{store.name} Settings</span>
             </h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-1">Manage store configuration and POS settings</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Manage store configuration and POS settings</p>
           </div>
         </div>
       </div>
@@ -200,11 +200,11 @@ const StoreSettings: React.FC = () => {
       )}
 
       {/* Tabs */}
-      <div className="mb-6 border-b border-gray-200 dark:border-gray-700">
-        <nav className="-mb-px flex space-x-8">
+      <div className="mb-4 sm:mb-6 border-b border-gray-200 dark:border-gray-700 overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+        <nav className="-mb-px flex space-x-4 sm:space-x-8 min-w-max sm:min-w-0">
           <button
             onClick={() => setActiveTab('general')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap transition-colors ${
               activeTab === 'general'
                 ? 'border-blue-500 dark:border-primary-400 text-accent-600 dark:text-primary-400'
                 : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-200 dark:hover:border-gray-600'
@@ -214,7 +214,7 @@ const StoreSettings: React.FC = () => {
           </button>
           <button
             onClick={() => setActiveTab('settings')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap transition-colors ${
               activeTab === 'settings'
                 ? 'border-blue-500 dark:border-primary-400 text-accent-600 dark:text-primary-400'
                 : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-200 dark:hover:border-gray-600'
@@ -227,10 +227,10 @@ const StoreSettings: React.FC = () => {
 
       {/* Tab Content */}
       {activeTab === 'general' && (
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-          <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">General Information</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-6 transition-colors">
+          <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-900 dark:text-white">General Information</h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Store Name
@@ -328,10 +328,10 @@ const StoreSettings: React.FC = () => {
             </div>
           )}
 
-          <div className="mt-6">
-            <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Service Options</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              <label className="flex items-center gap-2">
+          <div className="mt-4 sm:mt-6">
+            <h3 className="text-base sm:text-lg font-semibold mb-3 text-gray-900 dark:text-white">Service Options</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
+              <label className="flex items-center gap-2 touch-manipulation">
                 <input
                   type="checkbox"
                   checked={store.delivery_enabled}
@@ -341,7 +341,7 @@ const StoreSettings: React.FC = () => {
                 <span className="text-sm text-gray-900 dark:text-white">Delivery Enabled</span>
               </label>
 
-              <label className="flex items-center gap-2">
+              <label className="flex items-center gap-2 touch-manipulation">
                 <input
                   type="checkbox"
                   checked={store.pickup_enabled}
@@ -351,7 +351,7 @@ const StoreSettings: React.FC = () => {
                 <span className="text-sm text-gray-900 dark:text-white">Pickup Enabled</span>
               </label>
 
-              <label className="flex items-center gap-2">
+              <label className="flex items-center gap-2 touch-manipulation">
                 <input
                   type="checkbox"
                   checked={store.kiosk_enabled}
@@ -361,7 +361,7 @@ const StoreSettings: React.FC = () => {
                 <span className="text-sm text-gray-900 dark:text-white">Kiosk Enabled</span>
               </label>
 
-              <label className="flex items-center gap-2">
+              <label className="flex items-center gap-2 touch-manipulation">
                 <input
                   type="checkbox"
                   checked={store.pos_enabled}
@@ -371,7 +371,7 @@ const StoreSettings: React.FC = () => {
                 <span className="text-sm text-gray-900 dark:text-white">POS Enabled</span>
               </label>
 
-              <label className="flex items-center gap-2">
+              <label className="flex items-center gap-2 touch-manipulation">
                 <input
                   type="checkbox"
                   checked={store.ecommerce_enabled}
