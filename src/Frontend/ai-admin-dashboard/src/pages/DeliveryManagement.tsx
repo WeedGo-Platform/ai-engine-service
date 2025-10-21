@@ -257,15 +257,15 @@ export default function DeliveryManagement() {
   // Early return if no store is selected
   if (!currentStore) {
     return (
-      <div className="h-full flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="mb-4">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-full">
-              <Truck className="w-8 h-8 text-primary-600" />
+      <div className="h-full flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
+        <div className="text-center max-w-md">
+          <div className="mb-3 sm:mb-4">
+            <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-primary-100 dark:bg-primary-900/30 rounded-full">
+              <Truck className="w-6 h-6 sm:w-8 sm:h-8 text-primary-600 dark:text-primary-400" />
             </div>
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No Store Selected</h3>
-          <p className="text-gray-500">Please select a store to manage deliveries</p>
+          <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">No Store Selected</h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Please select a store to manage deliveries</p>
         </div>
       </div>
     );
