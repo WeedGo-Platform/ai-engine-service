@@ -289,93 +289,94 @@ const OrdersEnhanced: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">{t('orders:titles.management')}</h1>
-        <div className="flex gap-2">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">{t('orders:titles.management')}</h1>
+        <div className="flex gap-2 w-full sm:w-auto">
           <button
             onClick={() => refetch()}
-            className="p-2 bg-white rounded-lg  hover:border border-gray-200"
+            className="p-2 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 active:scale-95 transition-all touch-manipulation"
             title={t('orders:actions.refresh')}
+            aria-label="Refresh orders"
           >
-            <RefreshCw className="h-5 w-5" />
+            <RefreshCw className="h-4 h-4 sm:h-5 sm:w-5 dark:text-gray-300" />
           </button>
           <button
             onClick={exportOrders}
-            className="px-4 py-2 bg-white rounded-lg  hover:border border-gray-200 flex items-center gap-2"
+            className="flex-1 sm:flex-none px-4 py-2 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-center gap-2 active:scale-95 transition-all touch-manipulation"
           >
-            <Download className="h-5 w-5" />
-            {t('orders:actions.export')}
+            <Download className="h-4 h-4 sm:h-5 sm:w-5 dark:text-gray-300" />
+            <span className="text-sm dark:text-gray-200">{t('orders:actions.export')}</span>
           </button>
         </div>
       </div>
 
       {/* Metrics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
-        <div className="bg-white rounded-lg  p-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 border border-gray-200 dark:border-gray-700 transition-colors">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium text-gray-600">{t('orders:metrics.pending')}</p>
-              <p className="text-2xl font-bold text-warning-600">{metrics.pending}</p>
+              <p className="text-xs font-medium text-gray-600 dark:text-gray-400">{t('orders:metrics.pending')}</p>
+              <p className="text-xl sm:text-2xl font-bold text-warning-600 dark:text-warning-400">{metrics.pending}</p>
             </div>
-            <Clock className="h-8 w-8 text-warning-600 opacity-20" />
+            <Clock className="w-6 h-6 sm:h-8 sm:w-8 text-warning-600 dark:text-warning-400 opacity-20" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg  p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 border border-gray-200 dark:border-gray-700 transition-colors">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium text-gray-600">{t('orders:metrics.preparing')}</p>
-              <p className="text-2xl font-bold text-accent-600">{metrics.preparing}</p>
+              <p className="text-xs font-medium text-gray-600 dark:text-gray-400">{t('orders:metrics.preparing')}</p>
+              <p className="text-xl sm:text-2xl font-bold text-accent-600 dark:text-accent-400">{metrics.preparing}</p>
             </div>
-            <Package className="h-8 w-8 text-accent-600 opacity-20" />
+            <Package className="w-6 h-6 sm:h-8 sm:w-8 text-accent-600 dark:text-accent-400 opacity-20" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg  p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 border border-gray-200 dark:border-gray-700 transition-colors">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium text-gray-600">{t('orders:metrics.ready')}</p>
-              <p className="text-2xl font-bold text-primary-600">{metrics.ready}</p>
+              <p className="text-xs font-medium text-gray-600 dark:text-gray-400">{t('orders:metrics.ready')}</p>
+              <p className="text-xl sm:text-2xl font-bold text-primary-600 dark:text-primary-400">{metrics.ready}</p>
             </div>
-            <CheckCircle className="h-8 w-8 text-primary-600 opacity-20" />
+            <CheckCircle className="w-6 h-6 sm:h-8 sm:w-8 text-primary-600 dark:text-primary-400 opacity-20" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg  p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 border border-gray-200 dark:border-gray-700 transition-colors">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium text-gray-600">{t('orders:metrics.todayRevenue')}</p>
-              <p className="text-xl font-bold text-primary-600">${(metrics.revenue || 0).toFixed(2)}</p>
+              <p className="text-xs font-medium text-gray-600 dark:text-gray-400">{t('orders:metrics.todayRevenue')}</p>
+              <p className="text-base sm:text-xl font-bold text-primary-600 dark:text-primary-400">${(metrics.revenue || 0).toFixed(2)}</p>
             </div>
-            <DollarSign className="h-8 w-8 text-primary-600 opacity-20" />
+            <DollarSign className="w-6 h-6 sm:h-8 sm:w-8 text-primary-600 dark:text-primary-400 opacity-20" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg  p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 border border-gray-200 dark:border-gray-700 transition-colors">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium text-gray-600">{t('orders:metrics.avgProcessTime')}</p>
-              <p className="text-xl font-bold text-gray-700">{metrics.avgTime} {t('orders:messages.min')}</p>
+              <p className="text-xs font-medium text-gray-600 dark:text-gray-400">{t('orders:metrics.avgProcessTime')}</p>
+              <p className="text-base sm:text-xl font-bold text-gray-700 dark:text-gray-200">{metrics.avgTime} {t('orders:messages.min')}</p>
             </div>
-            <Timer className="h-8 w-8 text-gray-600 opacity-20" />
+            <Timer className="w-6 h-6 sm:h-8 sm:w-8 text-gray-600 dark:text-gray-400 opacity-20" />
           </div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-lg  p-6">
-        <div className="flex flex-wrap gap-6 items-center">
+      <div className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 border border-gray-200 dark:border-gray-700 transition-colors">
+        <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-6 sm:items-center">
           {/* Search */}
-          <div className="flex-1 min-w-[200px] relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+          <div className="flex-1 min-w-full sm:min-w-[200px] relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 h-4 h-4 sm:h-5 sm:w-5" />
             <input
               type="text"
               placeholder={t('orders:messages.searchPlaceholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border rounded-lg"
+              className="w-full pl-10 pr-4 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors"
             />
           </div>
 
@@ -383,7 +384,7 @@ const OrdersEnhanced: React.FC = () => {
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="px-4 py-2 border rounded-lg"
+            className="w-full sm:w-auto px-4 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors"
           >
             <option value="all">{t('orders:status.all')}</option>
             <option value="pending">{t('orders:status.pending')}</option>
@@ -400,7 +401,7 @@ const OrdersEnhanced: React.FC = () => {
           <select
             value={selectedType}
             onChange={(e) => setSelectedType(e.target.value)}
-            className="px-4 py-2 border rounded-lg"
+            className="w-full sm:w-auto px-4 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors"
           >
             <option value="all">{t('orders:orderTypes.all')}</option>
             <option value="delivery">{t('orders:orderTypes.delivery')}</option>
@@ -409,68 +410,72 @@ const OrdersEnhanced: React.FC = () => {
           </select>
 
           {/* Date Range */}
-          <input
-            type="date"
-            value={dateRange.start}
-            onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
-            className="px-4 py-2 border rounded-lg"
-          />
-          <span>{t('orders:messages.to')}</span>
-          <input
-            type="date"
-            value={dateRange.end}
-            onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
-            className="px-4 py-2 border rounded-lg"
-          />
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <input
+              type="date"
+              value={dateRange.start}
+              onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
+              className="flex-1 sm:flex-none px-4 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors"
+            />
+            <span className="text-sm text-gray-500 dark:text-gray-400">{t('orders:messages.to')}</span>
+            <input
+              type="date"
+              value={dateRange.end}
+              onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
+              className="flex-1 sm:flex-none px-4 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors"
+            />
+          </div>
 
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="p-2 bg-gray-50 rounded-lg hover:bg-gray-50"
+            className="p-2 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 active:scale-95 transition-all touch-manipulation"
+            aria-label="Toggle filters"
           >
-            <Filter className="h-5 w-5" />
+            <Filter className="h-4 h-4 sm:h-5 sm:w-5 dark:text-gray-300" />
           </button>
         </div>
       </div>
 
       {/* Orders Table */}
-      <div className="bg-white rounded-lg  overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 transition-colors">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {t('orders:fields.orderNumber')}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {t('orders:fields.customer')}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {t('orders:fields.status')}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {t('orders:fields.type')}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {t('orders:fields.items')}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {t('orders:fields.cannabis')}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {t('orders:fields.total')}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {t('orders:fields.verification')}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {t('orders:fields.time')}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {t('orders:fields.actions')}
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+          <div className="inline-block min-w-full align-middle">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <thead className="bg-gray-50 dark:bg-gray-700">
+                <tr>
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('orders:fields.orderNumber')}
+                  </th>
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('orders:fields.customer')}
+                  </th>
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('orders:fields.status')}
+                  </th>
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('orders:fields.type')}
+                  </th>
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('orders:fields.items')}
+                  </th>
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('orders:fields.cannabis')}
+                  </th>
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('orders:fields.total')}
+                  </th>
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('orders:fields.verification')}
+                  </th>
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('orders:fields.time')}
+                  </th>
+                  <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                    {t('orders:fields.actions')}
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
               {orders?.data?.map((order: Order) => (
                 <tr key={order.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -685,13 +690,14 @@ const OrdersEnhanced: React.FC = () => {
                 </tr>
               ))}
             </tbody>
-          </table>
+            </table>
+          </div>
         </div>
 
         {(!orders?.data || orders.data.length === 0) && (
           <div className="text-center py-12">
-            <ShoppingCart className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">{t('orders:messages.noOrders')}</h3>
+            <ShoppingCart className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
+            <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">{t('orders:messages.noOrders')}</h3>
             <p className="mt-1 text-sm text-gray-500">
               {t('orders:messages.ordersWillAppear')}
             </p>
