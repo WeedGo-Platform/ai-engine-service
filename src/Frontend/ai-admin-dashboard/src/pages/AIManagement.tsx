@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import toast from 'react-hot-toast';
 import JsonEditor from '../components/JsonEditor';
+import Personalities from '../components/Personalities';
 
 interface Model {
   name: string;
@@ -18,10 +19,10 @@ const AIManagement: React.FC = () => {
   const [models, setModels] = useState<Model[]>([]);
   const [currentModel, setCurrentModel] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoadingModel, setIsLoadingModel] = useState(false);
+  const [isLoadingModel, setIsLoadingModel] = useState<string | null>(null);
   const [modelLoadStatus, setModelLoadStatus] = useState<string>('');
   const [modelError, setModelError] = useState<string>('');
-  const [activeTab, setActiveTab] = useState<'models' | 'configuration' | 'inference'>('models');
+  const [activeTab, setActiveTab] = useState<'models' | 'configuration' | 'inference' | 'personalities'>('models');
   const [configuration, setConfiguration] = useState<any>(null);
   const [isLoadingConfig, setIsLoadingConfig] = useState(false);
   const [expandedSections, setExpandedSections] = useState<{ [key: string]: boolean }>({});
@@ -84,7 +85,7 @@ const AIManagement: React.FC = () => {
 
   // Load a model
   const loadModel = async (modelName: string) => {
-    setIsLoadingModel(true);
+    setIsLoadingModel(modelName);
     setModelError('');
     setModelLoadStatus('Loading...');
 
@@ -104,7 +105,7 @@ const AIManagement: React.FC = () => {
 
       const data = await response.json();
 
-      if (data.status === 'success') {
+      if (data.success === true) {
         setCurrentModel(modelName);
         setModelLoadStatus('Model loaded successfully');
         toast.success(`Model ${modelName} loaded successfully`);
@@ -114,8 +115,8 @@ const AIManagement: React.FC = () => {
           fetchConfiguration();
         }
       } else {
-        setModelError(data.error || t('common:toasts.model.loadFailed'));
-        toast.error(data.error || t('common:toasts.model.loadFailed'));
+        setModelError(data.error || data.detail || t('common:toasts.model.loadFailed'));
+        toast.error(data.error || data.detail || t('common:toasts.model.loadFailed'));
       }
     } catch (error) {
       console.error('Error loading model:', error);
@@ -123,12 +124,12 @@ const AIManagement: React.FC = () => {
       toast.error(t('common:toasts.model.loadFailed'));
     }
 
-    setIsLoadingModel(false);
+    setIsLoadingModel(null);
   };
 
   // Unload current model
   const unloadModel = async () => {
-    setIsLoadingModel(true);
+    setIsLoadingModel(currentModel || 'unload');
     setModelError('');
 
     try {
@@ -155,7 +156,7 @@ const AIManagement: React.FC = () => {
       toast.error(t('common:toasts.model.unloadFailed'));
     }
 
-    setIsLoadingModel(false);
+    setIsLoadingModel(null);
   };
 
   // Fetch configuration
@@ -386,57 +387,69 @@ const AIManagement: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-4 sm:p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
-          <div className="flex items-center gap-3 mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-4 sm:p-6 transition-colors">
+          <div className="flex items-center gap-3 mb-4 sm:mb-6">
             <div className="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg">
-              <Bot className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
+              <Bot className="h-5 w-5 sm:h-6 sm:w-6 text-indigo-600 dark:text-indigo-400" />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">AI Engine Management</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">AI Engine Management</h1>
           </div>
 
           {/* Tabs */}
-          <div className="flex gap-4 mb-6 border-b border-gray-200 dark:border-gray-700">
-            <button
-              onClick={() => setActiveTab('models')}
-              className={`pb-3 px-1 font-medium transition-colors ${
-                activeTab === 'models'
-                  ? 'text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 dark:border-indigo-400'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-              }`}
-            >
-              Models
-            </button>
-            <button
-              onClick={() => setActiveTab('configuration')}
-              className={`pb-3 px-1 font-medium transition-colors ${
-                activeTab === 'configuration'
-                  ? 'text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 dark:border-indigo-400'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-              }`}
-            >
-              Configuration
-            </button>
-            <button
-              onClick={() => setActiveTab('inference')}
-              className={`pb-3 px-1 font-medium transition-colors ${
-                activeTab === 'inference'
-                  ? 'text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 dark:border-indigo-400'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-              }`}
-            >
-              Inference
-            </button>
+          <div className="flex gap-2 sm:gap-4 mb-4 sm:mb-6 border-b border-gray-200 dark:border-gray-700 overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+            <nav className="-mb-px flex space-x-2 sm:space-x-4 min-w-max sm:min-w-0">
+              <button
+                onClick={() => setActiveTab('models')}
+                className={`pb-3 px-1 font-medium text-xs sm:text-sm whitespace-nowrap transition-colors ${
+                  activeTab === 'models'
+                    ? 'text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 dark:border-indigo-400'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                }`}
+              >
+                Models
+              </button>
+              <button
+                onClick={() => setActiveTab('configuration')}
+                className={`pb-3 px-1 font-medium text-xs sm:text-sm whitespace-nowrap transition-colors ${
+                  activeTab === 'configuration'
+                    ? 'text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 dark:border-indigo-400'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                }`}
+              >
+                Configuration
+              </button>
+              <button
+                onClick={() => setActiveTab('inference')}
+                className={`pb-3 px-1 font-medium text-xs sm:text-sm whitespace-nowrap transition-colors ${
+                  activeTab === 'inference'
+                    ? 'text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 dark:border-indigo-400'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                }`}
+              >
+                Inference
+              </button>
+              <button
+                onClick={() => setActiveTab('personalities')}
+                className={`pb-3 px-1 font-medium text-xs sm:text-sm whitespace-nowrap transition-colors ${
+                  activeTab === 'personalities'
+                    ? 'text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 dark:border-indigo-400'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                }`}
+              >
+                Personalities
+              </button>
+            </nav>
           </div>
 
           {/* Tab Content */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {activeTab === 'models' && (
               <div>
                 {/* Current Status */}
-                <div className="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4 mb-6">
-                  <div className="flex items-center justify-between">
+                <div className="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4 sm:p-6 mb-4 sm:mb-6 transition-colors">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
                       <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">Current Model</h3>
                       {currentModel ? (
@@ -473,48 +486,48 @@ const AIManagement: React.FC = () => {
 
                 {/* Available Models */}
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Available Models</h2>
+                  <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4">Available Models</h2>
 
                   {isLoading ? (
                     <div className="flex items-center justify-center py-12">
-                      <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
+                      <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin text-indigo-600" />
                     </div>
                   ) : models.length === 0 ? (
-                    <p className="text-gray-500 dark:text-gray-400 text-center py-12">No models found</p>
+                    <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 text-center py-12">No models found</p>
                   ) : (
-                    <div className="grid gap-4">
+                    <div className="grid gap-3 sm:gap-4">
                       {models.map((model) => (
                         <div
                           key={model.name}
-                          className={`border rounded-lg p-4 transition-all ${
+                          className={`border rounded-lg p-3 sm:p-4 transition-all ${
                             currentModel === model.name
                               ? 'border-indigo-500 dark:border-indigo-400 bg-indigo-50 dark:bg-indigo-900/20'
                               : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
                           }`}
                         >
-                          <div className="flex items-center justify-between">
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2">
-                                <Cpu className="h-5 w-5 text-gray-600 dark:text-gray-400" />
-                                <h3 className="font-medium text-gray-900 dark:text-white">{model.name}</h3>
+                          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <Cpu className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600 dark:text-gray-400 flex-shrink-0" />
+                                <h3 className="font-medium text-sm sm:text-base text-gray-900 dark:text-white truncate">{model.name}</h3>
                                 {currentModel === model.name && (
-                                  <span className="px-2 py-0.5 text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full">
+                                  <span className="px-2 py-0.5 text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full flex-shrink-0">
                                     Active
                                   </span>
                                 )}
                               </div>
-                              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1 truncate">
                                 {model.filename} • {model.size_gb} GB
                               </p>
                             </div>
                             {currentModel !== model.name && (
                               <button
                                 onClick={() => loadModel(model.name)}
-                                disabled={isLoadingModel}
-                                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                disabled={isLoadingModel !== null}
+                                className="w-full sm:w-auto px-4 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95 touch-manipulation"
                               >
-                                {isLoadingModel ? (
-                                  <span className="flex items-center gap-2">
+                                {isLoadingModel === model.name ? (
+                                  <span className="flex items-center justify-center gap-2">
                                     <Loader2 className="h-4 w-4 animate-spin" />
                                     Loading...
                                   </span>
@@ -1152,6 +1165,10 @@ const AIManagement: React.FC = () => {
                   </div>
                 )}
               </div>
+            )}
+
+            {activeTab === 'personalities' && (
+              <Personalities />
             )}
           </div>
         </div>
