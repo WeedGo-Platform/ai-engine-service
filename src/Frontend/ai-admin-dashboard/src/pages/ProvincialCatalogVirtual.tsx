@@ -290,30 +290,30 @@ const ProvincialCatalogVirtual: React.FC = () => {
   };
 
   return (
-    <div className="max-w-full mx-auto space-y-6">
+    <div className="max-w-full mx-auto space-y-4 sm:space-y-6 px-4 sm:px-0">
       {/* Header */}
-      <div className="bg-white  rounded-lg p-6">
-        <h1 className="text-2xl font-bold text-gray-900">{t('catalog:titles.mainVirtual')}</h1>
-        <p className="mt-2 text-gray-600">
+      <div className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 transition-colors">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">{t('catalog:titles.mainVirtual')}</h1>
+        <p className="mt-2 text-sm sm:text-base text-gray-600 dark:text-gray-300">
           {t('catalog:descriptions.mainVirtual')}
         </p>
       </div>
 
       {/* Upload Section */}
       {canUpload && (
-        <div className="bg-white  rounded-lg p-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">{t('catalog:titles.uploadSection')}</h2>
-          
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 transition-colors">
+          <h2 className="text-base sm:text-lg font-medium text-gray-900 dark:text-white mb-4">{t('catalog:titles.uploadSection')}</h2>
+
           <div className="space-y-4">
             {/* Province selector */}
             <div className="max-w-xs">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t('catalog:descriptions.selectProvince')}
               </label>
               <select
                 value={selectedProvince}
                 onChange={(e) => setSelectedProvince(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg text-sm sm:text-base focus:outline-none focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 transition-colors"
                 disabled={uploadStatus.type === 'uploading'}
               >
                 <option value="ON">{t('catalog:provinces.ontario')}</option>
@@ -322,10 +322,10 @@ const ProvincialCatalogVirtual: React.FC = () => {
 
             {/* File upload */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t('catalog:upload.uploadFile')}
               </label>
-              <div className="flex items-center space-x-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -337,14 +337,14 @@ const ProvincialCatalogVirtual: React.FC = () => {
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={uploadStatus.type === 'uploading'}
-                  className="px-4 py-2 border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full sm:w-auto px-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:focus:ring-primary-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95 touch-manipulation"
                 >
                   <Upload className="inline-block w-4 h-4 mr-2" />
                   {t('catalog:upload.chooseFile')}
                 </button>
                 {selectedFile && (
-                  <span className="text-sm text-gray-600">
-                    <FileText className="inline-block w-4 h-4 mr-1" />
+                  <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 truncate max-w-full">
+                    <FileText className="inline-block w-4 h-4 mr-1 flex-shrink-0" />
                     {selectedFile.name}
                   </span>
                 )}
@@ -355,7 +355,7 @@ const ProvincialCatalogVirtual: React.FC = () => {
             <button
               onClick={handleUpload}
               disabled={!selectedFile || uploadStatus.type === 'uploading'}
-              className="px-6 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-2.5 bg-primary-600 dark:bg-primary-500 text-white rounded-lg font-medium text-sm sm:text-base hover:bg-primary-700 dark:hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:focus:ring-primary-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95 touch-manipulation"
             >
               {uploadStatus.type === 'uploading' ? (
                 <>
@@ -422,25 +422,25 @@ const ProvincialCatalogVirtual: React.FC = () => {
       )}
 
       {/* Search and Filter */}
-      <div className="bg-white  rounded-lg p-6">
-        <div className="flex gap-6">
-          <div className="flex-1 max-w-md">
+      <div className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 transition-colors">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-6">
+          <div className="flex-1 sm:max-w-md">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 h-4 w-4 sm:h-5 sm:w-5" />
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder={t('catalog:search.placeholder')}
-                className="w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                className="w-full pl-9 sm:pl-10 pr-3 py-2 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg text-sm sm:text-base focus:outline-none focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 transition-colors"
               />
             </div>
           </div>
-          <div>
+          <div className="w-full sm:w-auto">
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-primary-500 focus:border-primary-500 min-w-[150px]"
+              className="w-full sm:min-w-[150px] px-3 py-2 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg text-sm sm:text-base focus:outline-none focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 transition-colors"
             >
               <option value="">{t('catalog:search.allCategories')}</option>
               <option value="Flower">Flower</option>
@@ -458,18 +458,18 @@ const ProvincialCatalogVirtual: React.FC = () => {
       </div>
 
       {/* Virtual Scrolling Table */}
-      <div className="bg-white  rounded-lg p-6">
-        <div className="mb-4 flex justify-between items-center">
-          <div>
-            <h2 className="text-lg font-medium text-gray-900">
+      <div className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 transition-colors">
+        <div className="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
+          <div className="min-w-0">
+            <h2 className="text-base sm:text-lg font-medium text-gray-900 dark:text-white truncate">
               {t('catalog:titles.catalogProducts')} ({t('catalog:table.itemsCount', { count: filteredProducts.length })})
             </h2>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
               {t('catalog:descriptions.scrollHint')}
             </p>
           </div>
           <button
-            className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 border border-gray-200 rounded-lg"
+            className="w-full sm:w-auto px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg transition-all active:scale-95 touch-manipulation flex-shrink-0"
             onClick={() => {
               // Export functionality
               const csvContent = [
