@@ -10,6 +10,7 @@ import BarcodeIntakeModal from '../components/accessories/BarcodeIntakeModal';
 import { getApiEndpoint } from '../config/app.config';
 import QuickIntakeModal from '../components/accessories/QuickIntakeModal';
 import InventoryAdjustModal from '../components/accessories/InventoryAdjustModal';
+import OCRScanModal from '../components/accessories/OCRScanModal';
 import { useStoreContext } from '../contexts/StoreContext';
 
 interface Accessory {
@@ -51,6 +52,7 @@ const Accessories: React.FC = () => {
 
   // Modals
   const [showBarcodeIntake, setShowBarcodeIntake] = useState(false);
+  const [showOCRScan, setShowOCRScan] = useState(false);
   const [showQuickIntake, setShowQuickIntake] = useState(false);
   const [showAdjustModal, setShowAdjustModal] = useState(false);
 
@@ -142,6 +144,14 @@ const Accessories: React.FC = () => {
     }
   };
 
+  // Handle OCR scan complete
+  const handleOCRScanned = (extractedData: any) => {
+    setShowOCRScan(false);
+    // Pre-populate QuickIntake modal with OCR-extracted data
+    // For now, just refresh inventory
+    fetchAccessories();
+  };
+
   // Handle inventory adjustment
   const handleAdjustInventory = async (adjustment: any) => {
     try {
@@ -219,6 +229,13 @@ const Accessories: React.FC = () => {
           >
             <Scan className="w-4 h-4" />
             <span className="text-sm">Scan Barcode</span>
+          </button>
+          <button
+            onClick={() => setShowOCRScan(true)}
+            className="w-full sm:w-auto px-4 py-2.5 sm:py-2 bg-indigo-600 dark:bg-indigo-700 text-white rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 flex items-center justify-center gap-2 active:scale-95 transition-all touch-manipulation"
+          >
+            <Camera className="w-4 h-4" />
+            <span className="text-sm">OCR Scan</span>
           </button>
           <button
             onClick={() => setShowQuickIntake(true)}
@@ -458,6 +475,15 @@ const Accessories: React.FC = () => {
           isOpen={showBarcodeIntake}
           onClose={() => setShowBarcodeIntake(false)}
           onComplete={handleBarcodeScanned}
+          storeId={storeId}
+        />
+      )}
+
+      {showOCRScan && (
+        <OCRScanModal
+          isOpen={showOCRScan}
+          onClose={() => setShowOCRScan(false)}
+          onComplete={handleOCRScanned}
           storeId={storeId}
         />
       )}
