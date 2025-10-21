@@ -47,9 +47,9 @@ function KioskApp({ currentStore }: { currentStore: { id: string; name: string }
   // Don't render if no store is selected
   if (!currentStore) {
     return (
-      <div className="h-full flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-        <div className="text-center">
-          <p className="text-gray-500 dark:text-gray-400">{t('apps:storeSelection.pleaseSelect')}</p>
+      <div className="h-full flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
+        <div className="text-center max-w-md">
+          <p className="text-sm text-gray-500 dark:text-gray-400">{t('apps:storeSelection.pleaseSelect')}</p>
         </div>
       </div>
     );
@@ -190,47 +190,47 @@ export default function Apps() {
   return (
     <div ref={containerRef} className="h-full flex flex-col bg-gray-50 dark:bg-gray-900">
       {/* Compact Header */}
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="px-4 sm:px-6 py-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">{t('apps:title')}</h1>
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 transition-colors">
+        <div className="px-4 sm:px-6 py-2 sm:py-3">
+          <div className="flex items-center justify-between gap-2 sm:gap-4">
+            <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+              <h1 className="text-base sm:text-lg lg:text-xl font-bold text-gray-900 dark:text-white truncate">{t('apps:title')}</h1>
 
               {/* Tabs - more compact */}
               <div className="flex gap-1 sm:gap-2">
                 <button
                   onClick={() => setActiveTab('pos')}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium flex items-center gap-1.5 transition-colors ${
+                  className={`px-2 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium flex items-center gap-1 sm:gap-1.5 transition-all active:scale-95 touch-manipulation ${
                     activeTab === 'pos'
                       ? 'bg-accent-500 dark:bg-accent-600 text-white'
                       : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                   }`}
                 >
-                  <ShoppingCart className="w-3.5 h-3.5" />
+                  <ShoppingCart className="w-3.5 h-3.5 flex-shrink-0" />
                   <span className="hidden sm:inline">{t('apps:tabs.pos')}</span>
                   <span className="sm:hidden">{t('apps:tabs.posShort')}</span>
                 </button>
                 <button
                   onClick={() => setActiveTab('kiosk')}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium flex items-center gap-1.5 transition-colors ${
+                  className={`px-2 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium flex items-center gap-1 sm:gap-1.5 transition-all active:scale-95 touch-manipulation ${
                     activeTab === 'kiosk'
                       ? 'bg-accent-500 dark:bg-accent-600 text-white'
                       : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                   }`}
                 >
-                  <Monitor className="w-3.5 h-3.5" />
+                  <Monitor className="w-3.5 h-3.5 flex-shrink-0" />
                   <span className="hidden sm:inline">{t('apps:tabs.kiosk')}</span>
                   <span className="sm:hidden">{t('apps:tabs.kioskShort')}</span>
                 </button>
                 <button
                   onClick={() => setActiveTab('menu-display')}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium flex items-center gap-1.5 transition-colors ${
+                  className={`px-2 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium flex items-center gap-1 sm:gap-1.5 transition-all active:scale-95 touch-manipulation ${
                     activeTab === 'menu-display'
                       ? 'bg-accent-500 dark:bg-accent-600 text-white'
                       : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                   }`}
                 >
-                  <Menu className="w-3.5 h-3.5" />
+                  <Menu className="w-3.5 h-3.5 flex-shrink-0" />
                   <span className="hidden sm:inline">{t('apps:tabs.menuDisplay')}</span>
                   <span className="sm:hidden">{t('apps:tabs.menuShort')}</span>
                 </button>
@@ -241,13 +241,13 @@ export default function Apps() {
             {activeTab === 'kiosk' && (
               <button
                 onClick={handleKioskFullscreenToggle}
-                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all active:scale-95 touch-manipulation flex-shrink-0"
                 title={isKioskFullscreen ? t('apps:fullscreen.exit') : t('apps:fullscreen.enter')}
               >
                 {isKioskFullscreen ? (
-                  <Minimize className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                  <Minimize className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-gray-300" />
                 ) : (
-                  <Maximize className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                  <Maximize className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-gray-300" />
                 )}
               </button>
             )}
@@ -259,22 +259,22 @@ export default function Apps() {
       <div className="flex-1 overflow-hidden">
         {/* Show warning message for admin users without store selection */}
         {(isSuperAdmin() || isTenantAdminOnly()) && !currentStore && (
-          <div className="h-full flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-            <div className="text-center">
-              <div className="mb-4">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-warning-100 dark:bg-warning-900/30 rounded-full">
-                  <Monitor className="w-8 h-8 text-warning-600 dark:text-warning-400" />
+          <div className="h-full flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
+            <div className="text-center max-w-md">
+              <div className="mb-3 sm:mb-4">
+                <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-warning-100 dark:bg-warning-900/30 rounded-full">
+                  <Monitor className="w-6 h-6 sm:w-8 sm:h-8 text-warning-600 dark:text-warning-400" />
                 </div>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{t('apps:storeSelection.required')}</h3>
-              <p className="text-gray-500 dark:text-gray-400 mb-4">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">{t('apps:storeSelection.required')}</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
                 {t('apps:storeSelection.description', {
                   appName: activeTab === 'pos' ? t('apps:tabs.pos') : activeTab === 'kiosk' ? t('apps:tabs.kiosk') : t('apps:tabs.menuDisplay')
                 })}
               </p>
               <button
                 onClick={() => setShowStoreSelectionModal(true)}
-                className="px-4 py-2 bg-accent-500 dark:bg-accent-600 text-white rounded-lg hover:bg-accent-600 dark:hover:bg-accent-500 transition-colors"
+                className="w-full sm:w-auto px-6 py-2.5 bg-accent-500 dark:bg-accent-600 text-white rounded-lg hover:bg-accent-600 dark:hover:bg-accent-500 transition-all active:scale-95 touch-manipulation"
               >
                 {t('apps:storeSelection.selectButton')}
               </button>
