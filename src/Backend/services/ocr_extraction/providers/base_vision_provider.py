@@ -10,6 +10,7 @@ Following DDD: This is an interface in the domain layer.
 
 import time
 import logging
+import asyncio
 from abc import ABC, abstractmethod
 from typing import Dict, Any, Optional
 from datetime import datetime

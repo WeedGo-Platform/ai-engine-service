@@ -206,7 +206,8 @@ class HybridVisionStrategy(AbstractVisionStrategy):
                 return local_result
             else:
                 raise AllProvidersExhaustedError(
-                    "Both local and cloud providers failed"
+                    attempted_providers=["local", "cloud"],
+                    last_error="Both local and cloud providers failed"
                 )
 
         # Should never reach here, but just in case
