@@ -173,7 +173,7 @@ class ValidationService:
         elif field.field_type == FieldType.PHONE:
             self._validate_phone(field, value, result)
 
-        elif field.field_type == FieldType.URL:
+        elif field.field_type == FieldType.IMAGE_URL:
             self._validate_url(field, value, result)
 
         elif field.field_type == FieldType.TABLE:
