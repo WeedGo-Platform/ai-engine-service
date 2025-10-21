@@ -116,7 +116,7 @@ const Landing = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {/* AI-Powered Customer Experience */}
             <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm hover:shadow-md dark:hover:shadow-gray-700/50 transition-all border border-transparent dark:border-gray-700">
               <Bot className="h-12 w-12 text-primary-600 dark:text-primary-400 mb-4" />
@@ -287,7 +287,7 @@ const Landing = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {/* Community and New Business Plan */}
             <div className="bg-white dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 rounded-xl p-8 hover:border-primary-300 dark:hover:border-primary-500 transition-colors">
               <div className="text-center">
@@ -409,7 +409,7 @@ const Landing = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             {getArrayFromTranslation('testimonials.items').map((testimonial: any, index: number) => (
               <div key={index} className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-transparent dark:border-gray-700">
                 <div className="flex items-center mb-4">
@@ -458,7 +458,7 @@ const Landing = () => {
       {/* Footer */}
       <footer className="bg-gray-900 dark:bg-gray-950 text-white py-12 transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
             <div>
               <div className="flex items-center mb-4">
                 <Leaf className="h-6 w-6 text-green-400 dark:text-green-500" />

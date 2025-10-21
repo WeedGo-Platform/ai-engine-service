@@ -586,46 +586,46 @@ const TenantSignup = () => {
               )}
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('signup:tenant.companyInfo.businessNumber')} *
                 </label>
                 <input
                   type="text"
                   value={formData.businessNumber}
                   onChange={(e) => handleInputChange('businessNumber', e.target.value)}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                  className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg text-sm sm:text-base bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 transition-colors ${
                     errors.businessNumber ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
                   }`}
                   placeholder={t('signup:tenant.companyInfo.businessNumberPlaceholder')}
                 />
-                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                <p className="mt-1 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                   {t('signup:tenant.companyInfo.businessNumberHelp')}
                 </p>
                 {errors.businessNumber && (
-                  <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.businessNumber}</p>
+                  <p className="mt-1 text-xs sm:text-sm text-danger-600 dark:text-danger-400">{errors.businessNumber}</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('signup:tenant.companyInfo.gstHstNumber')} *
                 </label>
                 <input
                   type="text"
                   value={formData.gstHstNumber}
                   onChange={(e) => handleInputChange('gstHstNumber', e.target.value)}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                  className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg text-sm sm:text-base bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 transition-colors ${
                     errors.gstHstNumber ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
                   }`}
                   placeholder={t('signup:tenant.companyInfo.gstHstPlaceholder')}
                 />
-                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                <p className="mt-1 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                   {t('signup:tenant.companyInfo.gstHstHelp')}
                 </p>
                 {errors.gstHstNumber && (
-                  <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.gstHstNumber}</p>
+                  <p className="mt-1 text-xs sm:text-sm text-danger-600 dark:text-danger-400">{errors.gstHstNumber}</p>
                 )}
               </div>
             </div>
@@ -671,44 +671,44 @@ const TenantSignup = () => {
 
       case 2:
         return (
-          <div className="space-y-6">
-            <div className="grid md:grid-cols-2 gap-6">
+          <div className="space-y-4 sm:space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('signup:tenant.contactInfo.firstName')} *
                 </label>
                 <input
                   type="text"
                   value={formData.firstName}
                   onChange={(e) => handleInputChange('firstName', e.target.value)}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                  className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg text-sm sm:text-base bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 transition-colors ${
                     errors.firstName ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
                   }`}
                 />
                 {errors.firstName && (
-                  <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.firstName}</p>
+                  <p className="mt-1 text-xs sm:text-sm text-danger-600 dark:text-danger-400">{errors.firstName}</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('signup:tenant.contactInfo.lastName')} *
                 </label>
                 <input
                   type="text"
                   value={formData.lastName}
                   onChange={(e) => handleInputChange('lastName', e.target.value)}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                  className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg text-sm sm:text-base bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 transition-colors ${
                     errors.lastName ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
                   }`}
                 />
                 {errors.lastName && (
-                  <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.lastName}</p>
+                  <p className="mt-1 text-xs sm:text-sm text-danger-600 dark:text-danger-400">{errors.lastName}</p>
                 )}
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('signup:tenant.contactInfo.email')} *
@@ -1387,41 +1387,41 @@ const TenantSignup = () => {
       {/* Header */}
       <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 transition-colors duration-200">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between py-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between py-4 sm:py-6 gap-3 sm:gap-0">
             <Link to="/" className="flex items-center">
-              <ArrowLeft className="h-5 w-5 text-gray-400 dark:text-gray-500 mr-2" />
-              <Leaf className="h-8 w-8 text-primary-600 dark:text-primary-400" />
-              <span className="ml-2 text-2xl font-bold text-gray-900 dark:text-white">{t('signup:tenant.header.title')}</span>
+              <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 dark:text-gray-500 mr-2 flex-shrink-0" />
+              <Leaf className="h-6 w-6 sm:h-8 sm:w-8 text-primary-600 dark:text-primary-400 flex-shrink-0" />
+              <span className="ml-2 text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">{t('signup:tenant.header.title')}</span>
             </Link>
-            <div className="text-sm text-gray-500 dark:text-gray-400">
-              {t('signup:tenant.header.alreadyHaveAccount')} <Link to="/login" className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300">{t('signup:tenant.header.signIn')}</Link>
+            <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+              {t('signup:tenant.header.alreadyHaveAccount')} <Link to="/login" className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors">{t('signup:tenant.header.signIn')}</Link>
             </div>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <div className="flex-1 py-12">
+      <div className="flex-1 py-6 sm:py-8 lg:py-12">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Progress Bar */}
-          <div className="mb-8">
+          <div className="mb-6 sm:mb-8">
             <div className="flex items-center justify-between">
               {stepTitles.map((title, index) => (
                 <div key={index} className="flex items-center">
-                  <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${
+                  <div className={`flex items-center justify-center w-7 h-7 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-full border-2 text-xs sm:text-sm lg:text-base transition-colors ${
                     index + 1 <= currentStep
-                      ? 'bg-primary-600 border-primary-600 text-white'
-                      : 'border-gray-200 text-gray-400'
+                      ? 'bg-primary-600 dark:bg-primary-500 border-primary-600 dark:border-primary-500 text-white'
+                      : 'border-gray-200 dark:border-gray-600 text-gray-400 dark:text-gray-500'
                   }`}>
                     {index + 1 < currentStep ? (
-                      <CheckCircle className="h-6 w-6" />
+                      <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />
                     ) : (
                       <span>{index + 1}</span>
                     )}
                   </div>
                   {index < stepTitles.length - 1 && (
-                    <div className={`flex-1 h-1 mx-4 ${
-                      index + 1 < currentStep ? 'bg-primary-600' : 'bg-gray-300'
+                    <div className={`flex-1 h-0.5 sm:h-1 mx-1 sm:mx-2 lg:mx-4 transition-colors ${
+                      index + 1 < currentStep ? 'bg-primary-600 dark:bg-primary-500' : 'bg-gray-300 dark:bg-gray-600'
                     }`} />
                   )}
                 </div>
@@ -1429,22 +1429,23 @@ const TenantSignup = () => {
             </div>
             <div className="flex justify-between mt-2">
               {stepTitles.map((title, index) => (
-                <div key={index} className={`text-sm ${
-                  index + 1 === currentStep ? 'text-primary-600 font-medium' : 'text-gray-500'
+                <div key={index} className={`text-xs sm:text-sm transition-colors ${
+                  index + 1 === currentStep ? 'text-primary-600 dark:text-primary-400 font-medium' : 'text-gray-500 dark:text-gray-400'
                 }`}>
-                  {title}
+                  <span className="hidden sm:inline">{title}</span>
+                  <span className="sm:hidden">{index + 1}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Form */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-8 transition-colors duration-200">
-            <div className="mb-8">
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6 lg:p-8 transition-colors duration-200">
+            <div className="mb-6 sm:mb-8">
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-2">
                 {stepTitles[currentStep - 1]}
               </h1>
-              <p className="text-gray-600 dark:text-gray-300">
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
                 {currentStep === 1 && t('signup:tenant.stepDescriptions.company')}
                 {currentStep === 2 && t('signup:tenant.stepDescriptions.contact')}
                 {currentStep === 3 && t('signup:tenant.stepDescriptions.account')}
@@ -1457,50 +1458,51 @@ const TenantSignup = () => {
             </div>
 
             {/* Navigation Buttons */}
-            <div className="flex justify-between pt-8 mt-8 border-t border-gray-200">
+            <div className="flex flex-col-reverse sm:flex-row justify-between gap-3 sm:gap-0 pt-6 sm:pt-8 mt-6 sm:mt-8 border-t border-gray-200 dark:border-gray-700">
               <button
                 onClick={prevStep}
                 disabled={currentStep === 1}
-                className={`flex items-center px-6 py-3 rounded-lg font-medium ${
+                className={`flex items-center justify-center sm:justify-start px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium text-sm sm:text-base transition-all active:scale-95 touch-manipulation ${
                   currentStep === 1
-                    ? 'text-gray-400 cursor-not-allowed'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                    ? 'text-gray-400 dark:text-gray-600 cursor-not-allowed'
+                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-700'
                 }`}
               >
-                <ArrowLeft className="h-5 w-5 mr-2" />
-                {t('signup:tenant.navigation.previous')}
+                <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5 mr-2 flex-shrink-0" />
+                <span className="hidden sm:inline">{t('signup:tenant.navigation.previous')}</span>
+                <span className="sm:hidden">{t('signup:tenant.navigation.back')}</span>
               </button>
 
               {currentStep < 4 ? (
                 <button
                   onClick={nextStep}
-                  className="flex items-center px-6 py-3 bg-primary-600 dark:bg-primary-500 text-white rounded-lg font-medium hover:bg-primary-700 dark:hover:bg-primary-600 transition-colors"
+                  className="flex items-center justify-center sm:justify-start px-4 sm:px-6 py-2.5 sm:py-3 bg-primary-600 dark:bg-primary-500 text-white rounded-lg font-medium text-sm sm:text-base hover:bg-primary-700 dark:hover:bg-primary-600 transition-all active:scale-95 touch-manipulation"
                 >
                   {t('signup:tenant.navigation.next')}
-                  <ArrowRight className="h-5 w-5 ml-2" />
+                  <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 ml-2 flex-shrink-0" />
                 </button>
               ) : (
                 <button
                   onClick={handleSubmit}
                   disabled={isSubmitting}
-                  className="relative flex items-center px-8 py-3 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-all transform hover:scale-105 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none overflow-hidden"
+                  className="relative flex items-center justify-center px-6 sm:px-8 py-2.5 sm:py-3 bg-primary-600 dark:bg-primary-500 text-white rounded-lg font-medium text-sm sm:text-base hover:bg-primary-700 dark:hover:bg-primary-600 transition-all active:scale-95 touch-manipulation disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none overflow-hidden"
                 >
                   {isSubmitting ? (
                     <>
-                      <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                      <span className="animate-pulse">
+                      <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 mr-2 animate-spin flex-shrink-0" />
+                      <span className="animate-pulse truncate">
                         {submitProgress.message || t('signup:tenant.progress.processing')}
                       </span>
                     </>
                   ) : (
                     <>
                       <span>{t('signup:tenant.navigation.createAccount')}</span>
-                      <CheckCircle className="h-5 w-5 ml-2" />
+                      <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 ml-2 flex-shrink-0" />
                     </>
                   )}
                   {submitProgress.step === 'complete' && (
-                    <div className="absolute inset-0 bg-green-600 flex items-center justify-center animate-slideIn">
-                      <CheckCircle2 className="h-6 w-6 text-white animate-scaleIn" />
+                    <div className="absolute inset-0 bg-green-600 dark:bg-green-500 flex items-center justify-center animate-slideIn">
+                      <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 text-white animate-scaleIn" />
                     </div>
                   )}
                 </button>
