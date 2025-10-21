@@ -131,49 +131,49 @@ const TenantSettings: React.FC = () => {
   }
 
   return (
-    <div className="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <div className="p-4 sm:p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
       {/* Header */}
-      <div className="mb-6">
+      <div className="mb-4 sm:mb-6">
         <button
           onClick={() => navigate('/dashboard/tenants')}
-          className="mb-4 flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+          className="mb-3 sm:mb-4 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white active:scale-95 transition-all touch-manipulation"
         >
           <ArrowLeft className="w-4 h-4" />
-          {t('settings:actions.backToTenants')}
+          <span>{t('settings:actions.backToTenants')}</span>
         </button>
 
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
           <div>
-            <h1 className="text-3xl font-bold flex items-center gap-4 text-gray-900 dark:text-white">
-              <Building2 className="w-8 h-8" />
-              {tenant.name} {t('settings:titles.tenantSettings')}
+            <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-3 sm:gap-4 text-gray-900 dark:text-white">
+              <Building2 className="w-6 h-6 sm:w-8 sm:h-8" />
+              <span className="line-clamp-1">{tenant.name} {t('settings:titles.tenantSettings')}</span>
             </h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-1">{t('settings:descriptions.tenantManagement')}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{t('settings:descriptions.tenantManagement')}</p>
           </div>
         </div>
       </div>
 
       {/* Alerts */}
       {success && (
-        <div className="mb-4 p-6 bg-primary-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg flex items-center gap-2">
+        <div className="mb-4 p-4 sm:p-6 bg-primary-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg flex items-center gap-2">
           <AlertCircle className="w-5 h-5 text-primary-500 dark:text-green-400" />
-          <span className="text-primary-700 dark:text-green-300">{success}</span>
+          <span className="text-sm sm:text-base text-primary-700 dark:text-green-300">{success}</span>
         </div>
       )}
 
       {error && (
-        <div className="mb-4 p-6 bg-danger-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg flex items-center gap-2">
+        <div className="mb-4 p-4 sm:p-6 bg-danger-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg flex items-center gap-2">
           <AlertCircle className="w-5 h-5 text-red-500 dark:text-red-400" />
-          <span className="text-red-700 dark:text-red-300">{error}</span>
+          <span className="text-sm sm:text-base text-red-700 dark:text-red-300">{error}</span>
         </div>
       )}
 
       {/* Tabs */}
-      <div className="mb-6 border-b border-gray-200 dark:border-gray-700">
-        <nav className="-mb-px flex space-x-8">
+      <div className="mb-4 sm:mb-6 border-b border-gray-200 dark:border-gray-700 overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
+        <nav className="-mb-px flex space-x-4 sm:space-x-8 min-w-max sm:min-w-0">
           <button
             onClick={() => setActiveTab('general')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap transition-colors ${
               activeTab === 'general'
                 ? 'border-blue-500 dark:border-primary-400 text-accent-600 dark:text-primary-400'
                 : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-200 dark:hover:border-gray-600'
@@ -183,7 +183,7 @@ const TenantSettings: React.FC = () => {
           </button>
           <button
             onClick={() => setActiveTab('payment')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap transition-colors ${
               activeTab === 'payment'
                 ? 'border-blue-500 dark:border-primary-400 text-accent-600 dark:text-primary-400'
                 : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-200 dark:hover:border-gray-600'
@@ -193,7 +193,7 @@ const TenantSettings: React.FC = () => {
           </button>
           <button
             onClick={() => setActiveTab('communication')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`py-2 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap transition-colors ${
               activeTab === 'communication'
                 ? 'border-blue-500 dark:border-primary-400 text-accent-600 dark:text-primary-400'
                 : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-200 dark:hover:border-gray-600'
@@ -206,10 +206,10 @@ const TenantSettings: React.FC = () => {
 
       {/* Tab Content */}
       {activeTab === 'general' && (
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-          <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">{t('settings:titles.generalInformation')}</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-6 transition-colors">
+          <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-900 dark:text-white">{t('settings:titles.generalInformation')}</h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {t('settings:fields.tenantName')}
@@ -276,11 +276,11 @@ const TenantSettings: React.FC = () => {
           </div>
 
           {tenant.address && (
-            <div className="mt-6">
+            <div className="mt-4 sm:mt-6">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {t('settings:fields.address')}
               </label>
-              <p className="text-lg text-gray-900 dark:text-white">
+              <p className="text-base sm:text-lg text-gray-900 dark:text-white">
                 {tenant.address.street}<br />
                 {tenant.address.city}, {tenant.address.province} {tenant.address.postal_code}<br />
                 {tenant.address.country}
