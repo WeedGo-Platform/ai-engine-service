@@ -288,38 +288,38 @@ const StoreManagement: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex justify-between items-start">
+      <div className="flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-0">
         <div>
           <button
             onClick={() => navigate('/dashboard/tenants')}
-            className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-2"
+            className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-2 active:scale-95 transition-all touch-manipulation"
           >
             <ArrowLeft className="w-4 h-4" />
             {t('stores:actions.backToTenants')}
           </button>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
             {t('stores:titles.management')}
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-2">
+          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 sm:mt-2">
             {tenant.name} - {tenant.code}
           </p>
         </div>
         {canAddStore && (
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 transition-colors"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 transition-colors active:scale-95 touch-manipulation"
           >
-            <Plus className="w-5 h-5" />
+            <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
             {t('stores:actions.new')}
           </button>
         )}
       </div>
 
       {/* Tenant Info Card */}
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg ">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg ">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           <div>
             <p className="text-sm text-gray-600 dark:text-gray-400">{t('stores:labels.subscription')}</p>
             <p className="text-lg font-semibold text-gray-900 dark:text-white capitalize">
