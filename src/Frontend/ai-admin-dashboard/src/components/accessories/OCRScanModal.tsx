@@ -94,18 +94,33 @@ const OCRScanModal: React.FC<OCRScanModalProps> = ({
     setStep('processing');
 
     try {
-      // Create form data with image
-      const formDataToSend = new FormData();
-      formDataToSend.append('image', selectedFile);
-      formDataToSend.append('store_id', storeId.toString());
+      // Convert image to base64
+      const base64Image = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          if (typeof reader.result === 'string') {
+            // Remove data URL prefix (data:image/png;base64,)
+            const base64 = reader.result.split(',')[1];
+            resolve(base64);
+          } else {
+            reject(new Error('Failed to read image as base64'));
+          }
+        };
+        reader.onerror = () => reject(reader.error);
+        reader.readAsDataURL(selectedFile);
+      });
 
-      // Call OCR API
+      // Call OCR API with JSON payload
       const response = await axios.post<ExtractionResult>(
         getApiEndpoint('/accessories/ocr/extract'),
-        formDataToSend,
+        {
+          image_data: base64Image,
+          store_id: storeId.toString(),
+          document_type: 'label'
+        },
         {
           headers: {
-            'Content-Type': 'multipart/form-data',
+            'Content-Type': 'application/json',
           },
         }
       );
