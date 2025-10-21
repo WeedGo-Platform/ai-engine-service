@@ -120,8 +120,12 @@ class OCRExtractionService:
         if not self.discovery_result:
             return
 
+        # Filter models by provider type
+        ollama_models = [m for m in self.discovery_result.models_found if m.is_ollama_model]
+        huggingface_models = [m for m in self.discovery_result.models_found if m.is_huggingface_model or m.is_paddleocr_model]
+
         # Initialize Ollama providers
-        for model in self.discovery_result.ollama_models:
+        for model in ollama_models:
             try:
                 config = VisionProviderConfig(
                     provider_type=ProviderType.LOCAL_OLLAMA,
@@ -143,7 +147,7 @@ class OCRExtractionService:
                 logger.warning(f"  ⚠️ Failed to register Ollama provider {model.name}: {e}")
 
         # Initialize Hugging Face providers
-        for model in self.discovery_result.huggingface_models:
+        for model in huggingface_models:
             try:
                 config = VisionProviderConfig(
                     provider_type=ProviderType.LOCAL_HUGGINGFACE,

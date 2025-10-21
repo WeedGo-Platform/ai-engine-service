@@ -485,6 +485,7 @@ const Accessories: React.FC = () => {
           onClose={() => setShowOCRScan(false)}
           onComplete={handleOCRScanned}
           storeId={storeId}
+          categories={categories}
         />
       )}
 
