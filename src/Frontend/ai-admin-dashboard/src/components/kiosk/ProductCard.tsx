@@ -1,6 +1,7 @@
 import React from 'react';
 import { getApiUrl } from '../../config/app.config';
 import { Plus, Info, Star, TrendingUp, Award, Clock, Leaf, Sparkles } from 'lucide-react';
+import { formatCurrency } from '../../utils/currency';
 
 interface ProductCardProps {
   product: {
@@ -185,15 +186,15 @@ export default function ProductCard({ product, onAddToCart, onClick }: ProductCa
             {product.is_sale && product.sale_price ? (
               <>
                 <span className="text-xl font-bold text-red-600 dark:text-red-400">
-                  ${product.sale_price.toFixed(2)}
+                  {formatCurrency(product.sale_price)}
                 </span>
                 <span className="text-sm text-gray-500 dark:text-gray-400 line-through">
-                  ${(product.retail_price || product.price || 0).toFixed(2)}
+                  {formatCurrency(product.retail_price || product.price || 0)}
                 </span>
               </>
             ) : (
               <span className="text-xl font-bold text-primary-600 dark:text-primary-400">
-                ${(product.retail_price || product.price || 0).toFixed(2)}
+                {formatCurrency(product.retail_price || product.price || 0)}
               </span>
             )}
           </div>

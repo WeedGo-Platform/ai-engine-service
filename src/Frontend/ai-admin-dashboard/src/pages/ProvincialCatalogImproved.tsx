@@ -9,6 +9,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { getApiEndpoint } from '../config/app.config';
 import { uploadProvincialCatalog } from '../services/catalogService';
 import { useQuery } from '@tanstack/react-query';
+import { formatCurrency } from '../utils/currency';
 
 interface UploadStatus {
   type: 'idle' | 'uploading' | 'success' | 'error';
@@ -493,7 +494,7 @@ const ProvincialCatalogImproved: React.FC = () => {
                         <div className="ml-4 text-right">
                           <p className="text-lg font-bold text-primary-600">
                             {product.unit_price != null && !isNaN(Number(product.unit_price))
-                              ? `$${Number(product.unit_price).toFixed(2)}`
+                              ? formatCurrency(Number(product.unit_price))
                               : 'N/A'}
                           </p>
                           {product.size && (

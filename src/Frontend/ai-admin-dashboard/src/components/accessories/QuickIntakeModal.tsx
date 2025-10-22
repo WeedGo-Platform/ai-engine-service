@@ -1,17 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { getApiEndpoint } from '../../config/app.config';
 import {
   X, Plus, Package, DollarSign, Hash,
   Upload, Check, AlertCircle
 } from 'lucide-react';
 import axios from 'axios';
+import { getSubcategoriesForCategory, getCategorySlug } from '../../constants/subcategories';
+import { formatCurrency } from '../../utils/currency';
 
 interface QuickIntakeModalProps {
   isOpen: boolean;
   onClose: () => void;
   onComplete: () => void;
   storeId: string;
-  categories: Array<{ id: number; name: string; icon: string }>;
+  categories: Array<{ id: number; name: string; slug: string; icon: string }>;
   initialData?: any;
 }
 
@@ -29,6 +31,7 @@ const QuickIntakeModal: React.FC<QuickIntakeModalProps> = ({
     sku: initialData?.sku || '',
     barcode: initialData?.barcode || '',
     category_id: initialData?.category_id || '',
+    subcategory: initialData?.subcategory || '',
     description: initialData?.description || '',
     quantity: 1,
     cost_price: initialData?.cost_price || '',
@@ -40,6 +43,25 @@ const QuickIntakeModal: React.FC<QuickIntakeModalProps> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [imagePreview, setImagePreview] = useState(initialData?.image_url || '');
+
+  // Format currency input as user types (last 2 digits = cents)
+  const handleCurrencyInput = (value: string, setter: (val: string) => void) => {
+    const numericValue = value.replace(/\D/g, '');
+    if (numericValue === '') {
+      setter('');
+      return;
+    }
+    const cents = parseInt(numericValue, 10);
+    const dollars = (cents / 100).toFixed(2);
+    setter(dollars);
+  };
+
+  // Get available subcategories based on selected category
+  const availableSubcategories = useMemo(() => {
+    if (!formData.category_id) return [];
+    const slug = getCategorySlug(formData.category_id, categories);
+    return getSubcategoriesForCategory(slug);
+  }, [formData.category_id, categories]);
 
   // Handle form field changes
   const handleChange = (field: string, value: any) => {
@@ -101,6 +123,7 @@ const QuickIntakeModal: React.FC<QuickIntakeModalProps> = ({
           name: formData.name,
           brand: formData.brand || null,
           category_id: formData.category_id || null,
+          subcategory: formData.subcategory || null,
           description: formData.description || null,
           image_url: formData.image_url || null,
           msrp: parseFloat(formData.retail_price)
@@ -118,6 +141,7 @@ const QuickIntakeModal: React.FC<QuickIntakeModalProps> = ({
           name: formData.name,
           brand: formData.brand,
           category_id: formData.category_id,
+          subcategory: formData.subcategory || null,
           quantity: formData.quantity,
           cost_price: parseFloat(formData.cost_price),
           retail_price: parseFloat(formData.retail_price),
@@ -254,7 +278,10 @@ const QuickIntakeModal: React.FC<QuickIntakeModalProps> = ({
               </label>
               <select
                 value={formData.category_id}
-                onChange={(e) => handleChange('category_id', e.target.value ? Number(e.target.value) : null)}
+                onChange={(e) => {
+                  handleChange('category_id', e.target.value ? Number(e.target.value) : null);
+                  handleChange('subcategory', ''); // Clear subcategory when category changes
+                }}
                 className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
               >
                 <option value="">Select Category</option>
@@ -265,6 +292,26 @@ const QuickIntakeModal: React.FC<QuickIntakeModalProps> = ({
                 ))}
               </select>
             </div>
+
+            {formData.category_id && availableSubcategories.length > 0 && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Subcategory
+                </label>
+                <select
+                  value={formData.subcategory}
+                  onChange={(e) => handleChange('subcategory', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+                >
+                  <option value="">Select subcategory (optional)</option>
+                  {availableSubcategories.map(subcat => (
+                    <option key={subcat} value={subcat}>
+                      {subcat}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -346,10 +393,9 @@ const QuickIntakeModal: React.FC<QuickIntakeModalProps> = ({
                 <div className="relative">
                   <DollarSign className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
                   <input
-                    type="number"
+                    type="text"
                     value={formData.cost_price}
-                    onChange={(e) => handleChange('cost_price', e.target.value)}
-                    step="0.01"
+                    onChange={(e) => handleCurrencyInput(e.target.value, (val) => handleChange('cost_price', val))}
                     placeholder="0.00"
                     className="w-full pl-9 pr-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
                   />
@@ -363,10 +409,9 @@ const QuickIntakeModal: React.FC<QuickIntakeModalProps> = ({
                 <div className="relative">
                   <DollarSign className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
                   <input
-                    type="number"
+                    type="text"
                     value={formData.retail_price}
-                    onChange={(e) => handleChange('retail_price', e.target.value)}
-                    step="0.01"
+                    onChange={(e) => handleCurrencyInput(e.target.value, (val) => handleChange('retail_price', val))}
                     placeholder="0.00"
                     className="w-full pl-9 pr-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
                   />
@@ -384,7 +429,7 @@ const QuickIntakeModal: React.FC<QuickIntakeModalProps> = ({
                 <div className="flex items-center justify-between text-sm mt-1">
                   <span className="text-gray-600 dark:text-gray-300">Total Inventory Value:</span>
                   <span className="font-medium text-gray-900 dark:text-white">
-                    ${(formData.quantity * parseFloat(formData.retail_price)).toFixed(2)}
+                    {formatCurrency(formData.quantity * parseFloat(formData.retail_price))}
                   </span>
                 </div>
               </div>

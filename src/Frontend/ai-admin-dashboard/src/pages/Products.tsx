@@ -5,6 +5,7 @@ import { Product } from '../types';
 import { Leaf, Plus, Edit2, Trash2, Search, Filter } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { confirmToastAsync } from '../components/ConfirmToast';
+import { formatCurrency } from '../utils/currency';
 
 const Products: React.FC = () => {
   const queryClient = useQueryClient();
@@ -196,7 +197,7 @@ const Products: React.FC = () => {
                 </div>
 
                 <div className="text-2xl font-bold text-primary-600 dark:text-primary-400">
-                  ${product.price.toFixed(2)}
+                  {formatCurrency(product.price)}
                 </div>
 
                 <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">

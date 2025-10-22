@@ -3,7 +3,7 @@ import {
   Package, Scan, Plus, Search, Filter, AlertTriangle,
   Download, Upload, Edit2, Trash2, Eye, BarChart3,
   DollarSign, TrendingUp, ShoppingCart, Camera,
-  RefreshCw, Check, X, Loader2, Info, Box
+  RefreshCw, Check, X, Loader2, Info, Box, Tag
 } from 'lucide-react';
 import axios from 'axios';
 import BarcodeIntakeModal from '../components/accessories/BarcodeIntakeModal';
@@ -11,7 +11,9 @@ import { getApiEndpoint } from '../config/app.config';
 import QuickIntakeModal from '../components/accessories/QuickIntakeModal';
 import InventoryAdjustModal from '../components/accessories/InventoryAdjustModal';
 import OCRScanModal from '../components/accessories/OCRScanModal';
+import CategoryManagementModal from '../components/accessories/CategoryManagementModal';
 import { useStoreContext } from '../contexts/StoreContext';
+import { formatCurrency } from '../utils/currency';
 
 interface Accessory {
   id: number;
@@ -55,6 +57,7 @@ const Accessories: React.FC = () => {
   const [showOCRScan, setShowOCRScan] = useState(false);
   const [showQuickIntake, setShowQuickIntake] = useState(false);
   const [showAdjustModal, setShowAdjustModal] = useState(false);
+  const [showCategoryManagement, setShowCategoryManagement] = useState(false);
 
   // Stats
   const [inventoryStats, setInventoryStats] = useState({
@@ -217,6 +220,13 @@ const Accessories: React.FC = () => {
         </div>
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
           <button
+            onClick={() => setShowCategoryManagement(true)}
+            className="w-full sm:w-auto px-4 py-2.5 sm:py-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 flex items-center justify-center gap-2 text-gray-900 dark:text-white active:scale-95 transition-all touch-manipulation"
+          >
+            <Tag className="w-4 h-4" />
+            <span className="text-sm">Categories</span>
+          </button>
+          <button
             onClick={exportInventory}
             className="w-full sm:w-auto px-4 py-2.5 sm:py-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 flex items-center justify-center gap-2 text-gray-900 dark:text-white active:scale-95 transition-all touch-manipulation"
           >
@@ -273,7 +283,7 @@ const Accessories: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Inventory Value</p>
-              <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">${inventoryStats.total_value.toFixed(2)}</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">{formatCurrency(inventoryStats.total_value)}</p>
             </div>
             <DollarSign className="w-6 h-6 sm:w-8 sm:h-8 text-primary-600 dark:text-primary-400" />
           </div>
@@ -308,18 +318,27 @@ const Accessories: React.FC = () => {
           </div>
 
           {/* Category Filter */}
-          <select
-            value={selectedCategory || ''}
-            onChange={(e) => setSelectedCategory(e.target.value ? Number(e.target.value) : null)}
-            className="w-full sm:w-auto px-4 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-primary-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors"
-          >
-            <option value="">All Categories</option>
-            {categories.map(cat => (
-              <option key={cat.id} value={cat.id}>
-                {cat.icon} {cat.name}
-              </option>
-            ))}
-          </select>
+          <div className="flex gap-2">
+            <select
+              value={selectedCategory || ''}
+              onChange={(e) => setSelectedCategory(e.target.value ? Number(e.target.value) : null)}
+              className="w-full sm:w-auto px-4 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-primary-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors"
+            >
+              <option value="">All Categories</option>
+              {categories.map(cat => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.icon} {cat.name}
+                </option>
+              ))}
+            </select>
+            <button
+              onClick={() => setShowCategoryManagement(true)}
+              className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors border border-gray-200 dark:border-gray-600"
+              title="Manage Categories"
+            >
+              <Tag className="w-4 h-4" />
+            </button>
+          </div>
 
           {/* Low Stock Toggle */}
           <label className="flex items-center gap-2 cursor-pointer touch-manipulation">
@@ -421,17 +440,17 @@ const Accessories: React.FC = () => {
                         </div>
                       </td>
                       <td className="px-3 sm:px-4 py-3 text-right">
-                        <p className="text-xs sm:text-sm text-gray-900 dark:text-white">${item.cost_price.toFixed(2)}</p>
+                        <p className="text-xs sm:text-sm text-gray-900 dark:text-white">{formatCurrency(item.cost_price)}</p>
                       </td>
                       <td className="px-3 sm:px-4 py-3 text-right">
-                        <p className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white">${item.retail_price.toFixed(2)}</p>
+                        <p className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white">{formatCurrency(item.retail_price)}</p>
                         {item.sale_price && (
-                          <p className="text-xs text-primary-600 dark:text-primary-400">${item.sale_price.toFixed(2)}</p>
+                          <p className="text-xs text-primary-600 dark:text-primary-400">{formatCurrency(item.sale_price)}</p>
                         )}
                       </td>
                       <td className="px-3 sm:px-4 py-3 text-right">
                         <p className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white">
-                          ${(item.quantity * item.retail_price).toFixed(2)}
+                          {formatCurrency(item.quantity * item.retail_price)}
                         </p>
                       </td>
                       <td className="px-3 sm:px-4 py-3 text-center">
@@ -476,6 +495,7 @@ const Accessories: React.FC = () => {
           onClose={() => setShowBarcodeIntake(false)}
           onComplete={handleBarcodeScanned}
           storeId={storeId}
+          categories={categories}
         />
       )}
 
@@ -511,6 +531,17 @@ const Accessories: React.FC = () => {
           }}
           accessory={selectedAccessory}
           onAdjust={handleAdjustInventory}
+        />
+      )}
+
+      {showCategoryManagement && (
+        <CategoryManagementModal
+          isOpen={showCategoryManagement}
+          onClose={() => setShowCategoryManagement(false)}
+          onCategoriesUpdated={() => {
+            fetchCategories();
+            fetchAccessories();
+          }}
         />
       )}
     </div>

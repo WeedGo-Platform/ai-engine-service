@@ -10,6 +10,7 @@ import CreatePurchaseOrderModal from '../components/CreatePurchaseOrderModal';
 import { useStoreContext } from '../contexts/StoreContext';
 import { useAuth } from '../contexts/AuthContext';
 import toast from 'react-hot-toast';
+import { formatCurrency } from '../utils/currency';
 
 const PurchaseOrders: React.FC = () => {
   const navigate = useNavigate();
@@ -380,7 +381,7 @@ const PurchaseOrders: React.FC = () => {
                       {order.item_count || 0} items
                     </td>
                     <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900 dark:text-white">
-                      ${order.total_amount?.toFixed(2) || '0.00'}
+                      {formatCurrency(order.total_amount || 0)}
                     </td>
                     <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm font-medium">
                       <div className="flex items-center gap-2">
@@ -480,7 +481,7 @@ const PurchaseOrders: React.FC = () => {
             <div>
               <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">Total Value</p>
               <p className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
-                ${orders?.stats?.total_value?.toFixed(2) || '0.00'}
+                {formatCurrency(orders?.stats?.total_value || 0)}
               </p>
             </div>
             <FileText className="w-6 h-6 sm:h-8 sm:w-8 text-gray-600 dark:text-gray-400" />
@@ -615,8 +616,8 @@ const PurchaseOrders: React.FC = () => {
                               {item.item_name}
                             </td>
                             <td className="px-4 py-3 text-sm text-center text-gray-900 dark:text-gray-200">{item.quantity_ordered || 0}</td>
-                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-gray-200">${(item.unit_cost || 0).toFixed(2)}</td>
-                            <td className="px-4 py-3 text-sm text-right font-medium text-gray-900 dark:text-gray-200">${(item.total_cost || 0).toFixed(2)}</td>
+                            <td className="px-4 py-3 text-sm text-right text-gray-900 dark:text-gray-200">{formatCurrency(item.unit_cost || 0)}</td>
+                            <td className="px-4 py-3 text-sm text-right font-medium text-gray-900 dark:text-gray-200">{formatCurrency(item.total_cost || 0)}</td>
                             <td className="px-4 py-3 text-sm text-center">
                               <button
                                 onClick={() => setSelectedItem(item)}
@@ -658,7 +659,7 @@ const PurchaseOrders: React.FC = () => {
                             )}
                           </div>
                           <span className={`font-medium ${charge.amount >= 0 ? 'text-yellow-700 dark:text-yellow-400' : 'text-green-700 dark:text-green-400'}`}>
-                            {charge.amount >= 0 ? '+' : ''}${charge.amount.toFixed(2)}
+                            {charge.amount >= 0 ? '+' : ''}{formatCurrency(charge.amount)}
                           </span>
                         </div>
                       ))}
@@ -672,26 +673,26 @@ const PurchaseOrders: React.FC = () => {
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600 dark:text-gray-400">Subtotal (Items):</span>
-                      <span className="font-medium text-gray-900 dark:text-white">${(selectedOrder.subtotal || 0).toFixed(2)}</span>
+                      <span className="font-medium text-gray-900 dark:text-white">{formatCurrency(selectedOrder.subtotal || 0)}</span>
                     </div>
                     {selectedOrder.charges && selectedOrder.charges.length > 0 && (
                       <div className="flex justify-between text-sm">
                         <span className="text-gray-600 dark:text-gray-400">Additional Charges:</span>
                         <span className="font-medium text-gray-900 dark:text-white">
-                          ${selectedOrder.charges.reduce((sum: number, c: any) => sum + (c.amount || 0), 0).toFixed(2)}
+                          {formatCurrency(selectedOrder.charges.reduce((sum: number, c: any) => sum + (c.amount || 0), 0))}
                         </span>
                       </div>
                     )}
                     {selectedOrder.tax_amount > 0 && (
                       <div className="flex justify-between text-sm">
                         <span className="text-gray-600 dark:text-gray-400">Tax:</span>
-                        <span className="font-medium text-blue-700 dark:text-blue-400">+${(selectedOrder.tax_amount || 0).toFixed(2)}</span>
+                        <span className="font-medium text-blue-700 dark:text-blue-400">+{formatCurrency(selectedOrder.tax_amount || 0)}</span>
                       </div>
                     )}
                     <div className="border-t border-gray-300 dark:border-gray-600 pt-2 mt-2">
                       <div className="flex justify-between">
                         <span className="text-lg font-bold text-gray-900 dark:text-white">Total Amount:</span>
-                        <span className="text-lg font-bold text-primary-600 dark:text-primary-400">${(selectedOrder.total_amount || 0).toFixed(2)}</span>
+                        <span className="text-lg font-bold text-primary-600 dark:text-primary-400">{formatCurrency(selectedOrder.total_amount || 0)}</span>
                       </div>
                     </div>
                   </div>
@@ -776,12 +777,12 @@ const PurchaseOrders: React.FC = () => {
                     </tr>
                     <tr>
                       <td className="py-2.5 px-4 font-medium text-gray-600 dark:text-gray-400">Unit Cost:</td>
-                      <td className="py-2.5 px-4 text-gray-900 dark:text-gray-200">${(selectedItem.unit_cost || 0).toFixed(2)}</td>
+                      <td className="py-2.5 px-4 text-gray-900 dark:text-gray-200">{formatCurrency(selectedItem.unit_cost || 0)}</td>
                     </tr>
                     <tr>
                       <td className="py-2.5 px-4 font-medium text-gray-600 dark:text-gray-400">Total Cost:</td>
                       <td className="py-2.5 px-4 text-gray-700 dark:text-gray-300 font-medium text-sm">
-                        ${(selectedItem.total_cost || 0).toFixed(2)}
+                        {formatCurrency(selectedItem.total_cost || 0)}
                       </td>
                     </tr>
                     <tr>

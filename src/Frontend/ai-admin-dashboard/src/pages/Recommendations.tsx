@@ -7,6 +7,8 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 import { useStoreContext } from '../contexts/StoreContext';
+import { formatCurrency as formatCurrencyUtil } from '../utils/currency';
+import { formatCurrency } from '../utils/currency';
 
 const API_BASE_URL = 'http://localhost:5024';
 
@@ -113,8 +115,8 @@ export default function Recommendations() {
   };
 
   const formatCurrency = (value: number | null) => {
-    if (value === null || value === undefined) return '$0.00';
-    return `$${value.toFixed(2)}`;
+    if (value === null || value === undefined) return formatCurrencyUtil(0);
+    return formatCurrencyUtil(value);
   };
 
   // Show "No Store Selected" UI if no store is selected

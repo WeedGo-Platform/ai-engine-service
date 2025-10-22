@@ -4,6 +4,7 @@ import { ChevronLeft, Plus, Minus, Trash2, ShoppingCart } from 'lucide-react';
 import { useKiosk } from '../../contexts/KioskContext';
 import ProductRecommendations from './ProductRecommendations';
 import ProductDetailsModal from './ProductDetailsModal';
+import { formatCurrency } from '../../utils/currency';
 
 interface CartProps {
   onBack: () => void;
@@ -103,7 +104,7 @@ export default function Cart({ onBack, onCheckout, currentStore }: CartProps) {
                     )}
                   </div>
                   <p className="text-primary-600 dark:text-primary-400 font-medium mt-1">
-                    ${item.price.toFixed(2)}
+                    {formatCurrency(item.price)}
                   </p>
                 </div>
 
@@ -127,7 +128,7 @@ export default function Cart({ onBack, onCheckout, currentStore }: CartProps) {
                 {/* Item Total */}
                 <div className="text-right">
                   <p className="font-semibold text-lg text-gray-900 dark:text-white">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    {formatCurrency(item.price * item.quantity)}
                   </p>
                 </div>
 
@@ -148,16 +149,16 @@ export default function Cart({ onBack, onCheckout, currentStore }: CartProps) {
             <div className="space-y-2">
               <div className="flex justify-between text-gray-600 dark:text-gray-400">
                 <span>Subtotal</span>
-                <span>${subtotal.toFixed(2)}</span>
+                                <span>{formatCurrency(subtotal)}</span>
               </div>
               <div className="flex justify-between text-gray-600 dark:text-gray-400">
                 <span>Tax (HST 13%)</span>
-                <span>${tax.toFixed(2)}</span>
+                <span>{formatCurrency(tax)}</span>
               </div>
               <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
                 <div className="flex justify-between text-xl font-bold text-gray-900 dark:text-white">
                   <span>Total</span>
-                  <span className="text-primary-600 dark:text-primary-400">${total.toFixed(2)}</span>
+                                    <span className="text-primary-600 dark:text-primary-400">{formatCurrency(total)}</span>
                 </div>
               </div>
             </div>

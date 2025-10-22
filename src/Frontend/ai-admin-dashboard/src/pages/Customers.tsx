@@ -4,6 +4,7 @@ import { api } from '../services/api';
 import { Customer } from '../types';
 import { Users, Mail, Phone, Calendar, ShoppingBag, Star, Search, UserPlus, X, MapPin, CreditCard, Clock, Package } from 'lucide-react';
 import { useStoreContext } from '../contexts/StoreContext';
+import { formatCurrency } from '../utils/currency';
 
 const Customers: React.FC = () => {
   const { currentStore } = useStoreContext();
@@ -238,8 +239,8 @@ const Customers: React.FC = () => {
                       <span className="text-sm text-gray-900 dark:text-white">{customer.loyalty_points || 0}</span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                    ${(parseFloat(customer.total_spent) || 0).toFixed(2)}
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                    {formatCurrency(parseFloat(customer.total_spent) || 0)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
@@ -443,7 +444,9 @@ const Customers: React.FC = () => {
                       <span className="text-xs text-gray-600 dark:text-gray-400">Total Spent</span>
                     </div>
                     <p className="text-lg font-semibold text-gray-900 dark:text-white">
-                      ${parseFloat(selectedCustomer.total_spent || '0').toFixed(2)}
+                                          <p className="text-2xl font-bold text-primary-600 dark:text-primary-400">
+                      {formatCurrency(parseFloat(selectedCustomer.total_spent || '0'))}
+                    </p>
                     </p>
                   </div>
                   <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">

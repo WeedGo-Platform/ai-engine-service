@@ -12,6 +12,7 @@ import {
   Building2, Tag, Layers, TestTube, Pill
 } from 'lucide-react';
 import { useStoreContext } from '../../contexts/StoreContext';
+import { formatCurrency } from '../../utils/currency';
 
 interface ProductDetailsModalProps {
   isOpen: boolean;
@@ -375,19 +376,19 @@ export default function ProductDetailsModal({
                   {product.is_sale && product.sale_price ? (
                     <>
                       <span className="text-3xl font-bold text-red-600">
-                        ${product.sale_price.toFixed(2)}
+                        {formatCurrency(product.sale_price)}
                       </span>
                       <span className="text-lg text-gray-500 line-through">
-                        ${(pricing.retail_price || pricing.unit_price || product.price || 0).toFixed(2)}
+                        {formatCurrency(pricing.retail_price || pricing.unit_price || product.price || 0)}
                       </span>
                     </>
                   ) : (
                     <span className="text-3xl font-bold text-primary-600">
-                      ${(pricing.retail_price || pricing.unit_price || pricing.effective_price || product.price || 0).toFixed(2)}
+                      {formatCurrency(pricing.retail_price || pricing.unit_price || pricing.effective_price || product.price || 0)}
                     </span>
                   )}
                   {pricing.unit_cost && (
-                    <span className="text-sm text-gray-500">(Cost: ${pricing.unit_cost.toFixed(2)})</span>
+                    <span className="text-sm text-gray-500">(Cost: {formatCurrency(pricing.unit_cost)})</span>
                   )}
                 </div>
 
@@ -511,7 +512,7 @@ export default function ProductDetailsModal({
                 >
                   <ShoppingCart className="w-5 h-5" />
                   {inventory.quantity_available === 0 ? 'Out of Stock' :
-                   `Add to Cart - $${((pricing.effective_price || pricing.unit_price || product.price || 0) * quantity).toFixed(2)}`}
+                   `Add to Cart - ${formatCurrency((pricing.effective_price || pricing.unit_price || product.price || 0) * quantity)}`}
                 </button>
               </div>
 
@@ -891,31 +892,31 @@ export default function ProductDetailsModal({
                             {pricing.unit_price && (
                               <div>
                                 <span className="text-gray-600">Unit Price:</span>
-                                <span className="ml-2 font-medium">${pricing.unit_price.toFixed(2)}</span>
+                                <span className="ml-2 font-medium">{formatCurrency(pricing.unit_price)}</span>
                               </div>
                             )}
                             {pricing.unit_cost && (
                               <div>
                                 <span className="text-gray-600">Unit Cost:</span>
-                                <span className="ml-2 font-medium">${pricing.unit_cost.toFixed(2)}</span>
+                                <span className="ml-2 font-medium">{formatCurrency(pricing.unit_cost)}</span>
                               </div>
                             )}
                             {pricing.retail_price && (
                               <div>
                                 <span className="text-gray-600">Retail Price:</span>
-                                <span className="ml-2 font-medium">${pricing.retail_price.toFixed(2)}</span>
+                                <span className="ml-2 font-medium">{formatCurrency(pricing.retail_price)}</span>
                               </div>
                             )}
                             {pricing.override_price && (
                               <div>
                                 <span className="text-gray-600">Override Price:</span>
-                                <span className="ml-2 font-medium">${pricing.override_price.toFixed(2)}</span>
+                                <span className="ml-2 font-medium">{formatCurrency(pricing.override_price)}</span>
                               </div>
                             )}
                             {pricing.effective_price && (
                               <div className="col-span-2">
                                 <span className="text-gray-600">Effective Price:</span>
-                                <span className="ml-2 font-bold text-lg">${pricing.effective_price.toFixed(2)}</span>
+                                <span className="ml-2 font-bold text-lg">{formatCurrency(pricing.effective_price)}</span>
                               </div>
                             )}
                           </div>

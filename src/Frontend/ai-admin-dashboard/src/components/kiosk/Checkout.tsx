@@ -3,6 +3,7 @@ import { getApiUrl } from '../../config/app.config';
 import { ChevronLeft, ShoppingBag, Loader2, AlertCircle, User, Mail, Phone } from 'lucide-react';
 import { useKiosk } from '../../contexts/KioskContext';
 import { useKioskSession } from '../../hooks/useKioskSession';
+import { formatCurrency } from '../../utils/currency';
 
 interface CheckoutProps {
   onBack: () => void;
@@ -121,7 +122,7 @@ export default function Checkout({ onBack, onComplete, currentStore }: CheckoutP
                     <span className="text-gray-500 dark:text-gray-400 ml-2">x{item.quantity}</span>
                   </div>
                   <span className="font-medium text-gray-900 dark:text-white">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    {formatCurrency(item.price * item.quantity)}
                   </span>
                 </div>
               ))}
@@ -131,15 +132,15 @@ export default function Checkout({ onBack, onComplete, currentStore }: CheckoutP
             <div className="border-t border-gray-200 dark:border-gray-700 pt-4 space-y-2">
               <div className="flex justify-between text-gray-600 dark:text-gray-400">
                 <span>Subtotal</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>{formatCurrency(subtotal)}</span>
               </div>
               <div className="flex justify-between text-gray-600 dark:text-gray-400">
                 <span>Tax (HST 13%)</span>
-                <span>${tax.toFixed(2)}</span>
+                <span>{formatCurrency(tax)}</span>
               </div>
               <div className="flex justify-between text-xl font-bold pt-2 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
                 <span>Total</span>
-                <span className="text-primary-600 dark:text-primary-400">${total.toFixed(2)}</span>
+                <span className="text-primary-600 dark:text-primary-400">{formatCurrency(total)}</span>
               </div>
             </div>
           </div>
@@ -252,7 +253,7 @@ export default function Checkout({ onBack, onComplete, currentStore }: CheckoutP
             ) : (
               <>
                 <ShoppingBag className="w-6 h-6" />
-                Place Order - Pay ${total.toFixed(2)} at Pickup
+                Place Order - Pay {formatCurrency(total)} at Pickup
               </>
             )}
           </button>

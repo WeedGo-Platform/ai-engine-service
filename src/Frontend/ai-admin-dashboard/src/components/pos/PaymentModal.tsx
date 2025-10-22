@@ -3,6 +3,7 @@ import {
   X, CreditCard, DollarSign, Smartphone, Calculator,
   CheckCircle, AlertCircle, Printer, Mail
 } from 'lucide-react';
+import { formatCurrency } from '../../utils/currency';
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -159,7 +160,7 @@ export default function PaymentModal({ isOpen, onClose, total, onComplete }: Pay
           <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 sm:p-6 mb-4 sm:mb-6 transition-colors duration-200">
             <div className="text-center">
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-1">Total Amount Due</p>
-              <p className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">${total.toFixed(2)}</p>
+              <p className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">{formatCurrency(total)}</p>
             </div>
           </div>
 
@@ -269,7 +270,7 @@ export default function PaymentModal({ isOpen, onClose, total, onComplete }: Pay
                   <div className="flex items-center justify-between">
                     <span className="text-lg font-medium text-gray-900 dark:text-white">Change Due:</span>
                     <span className="text-2xl font-bold text-yellow-700 dark:text-yellow-400">
-                      ${change.toFixed(2)}
+                      {formatCurrency(change)}
                     </span>
                   </div>
                 </div>
@@ -285,7 +286,7 @@ export default function PaymentModal({ isOpen, onClose, total, onComplete }: Pay
               <p className="text-sm text-gray-600 dark:text-gray-300">
                 Waiting for {paymentMethod === 'card' ? 'credit' : 'debit'} card...
               </p>
-              <p className="text-2xl font-bold mt-4">${total.toFixed(2)}</p>
+              <p className="text-2xl font-bold mt-4">{formatCurrency(total)}</p>
             </div>
           )}
 
@@ -332,12 +333,12 @@ export default function PaymentModal({ isOpen, onClose, total, onComplete }: Pay
                 </div>
                 <div className="flex justify-between font-bold pt-2 border-t border-gray-200 dark:border-gray-600 mt-2 text-gray-900 dark:text-white">
                   <span>Total:</span>
-                  <span>${((parseFloat(cashAmount) || 0) + (parseFloat(cardAmount) || 0)).toFixed(2)}</span>
+                  <span>{formatCurrency((parseFloat(cashAmount) || 0) + (parseFloat(cardAmount) || 0))}</span>
                 </div>
                 {change > 0 && (
                   <div className="flex justify-between text-sm text-warning-600 dark:text-yellow-400 mt-2">
                     <span>Change:</span>
-                    <span>${change.toFixed(2)}</span>
+                    <span>{formatCurrency(change)}</span>
                   </div>
                 )}
               </div>

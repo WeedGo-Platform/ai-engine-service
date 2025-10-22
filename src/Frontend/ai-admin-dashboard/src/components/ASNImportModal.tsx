@@ -8,6 +8,7 @@ import StoreSelector from './StoreSelector';
 import { getApiEndpoint } from '../config/app.config';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { formatCurrency } from '../utils/currency';
 
 interface ChargeItem {
   id: string;
@@ -73,6 +74,23 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
 
   const [error, setError] = useState<string | null>(null);
   const [storeDefaultMarkup, setStoreDefaultMarkup] = useState<number>(25); // Default 25% if not configured
+
+  // Currency input handler - treats input like a cash register (last 2 digits are cents)
+  const handleCurrencyInput = (value: string, setter: (val: string) => void) => {
+    // Remove all non-numeric characters
+    const numericValue = value.replace(/\D/g, '');
+    
+    // Handle empty input
+    if (numericValue === '') {
+      setter('');
+      return;
+    }
+    
+    // Convert to cents and then to dollar format
+    const cents = parseInt(numericValue, 10);
+    const dollars = (cents / 100).toFixed(2);
+    setter(dollars);
+  };
 
   // Charge management functions
   const addCharge = () => {
@@ -1011,9 +1029,9 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
                           <td className="px-4 py-3 whitespace-nowrap text-sm font-medium">{item.sku}</td>
                           <td className="px-4 py-3 text-sm">{item.item_name || '-'}</td>
                           <td className="px-4 py-3 whitespace-nowrap text-sm">{item.shipped_qty}</td>
-                          <td className="px-4 py-3 whitespace-nowrap text-sm">${item.unit_price.toFixed(2)}</td>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm">{formatCurrency(item.unit_price)}</td>
                           <td className="px-4 py-3 whitespace-nowrap text-sm font-medium">
-                            ${(item.shipped_qty * item.unit_price).toFixed(2)}
+                            {formatCurrency(item.shipped_qty * item.unit_price)}
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap text-sm">{item.vendor || '-'}</td>
                         </tr>
@@ -1044,7 +1062,7 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
                                   </div>
                                   <div>
                                     <span className="font-medium text-gray-700">UnitPrice:</span>
-                                    <div className="text-gray-900 mt-1 font-semibold">${item.unit_price.toFixed(2)}</div>
+                                    <div className="text-gray-900 mt-1 font-semibold">{formatCurrency(item.unit_price)}</div>
                                   </div>
                                   <div>
                                     <span className="font-medium text-gray-700">Vendor:</span>
@@ -1264,21 +1282,21 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
                             />
                           </td>
                           <td className="px-4 py-3 text-right">
-                            <span className="text-sm">${item.unit_price.toFixed(2)}</span>
+                            <span className="text-sm">{formatCurrency(item.unit_price)}</span>
                           </td>
                           <td className="px-4 py-3 text-right">
                             <div className="flex flex-col items-end">
                               <input
-                                type="number"
-                                value={item.retail_price || 0}
+                                type="text"
+                                value={item.retail_price || ''}
                                 onChange={(e) => {
                                   const newItems = [...asnItems];
-                                  newItems[index].retail_price = parseFloat(e.target.value) || 0;
-                                  setAsnItems(newItems);
+                                  handleCurrencyInput(e.target.value, (val) => {
+                                    newItems[index].retail_price = parseFloat(val) || 0;
+                                    setAsnItems(newItems);
+                                  });
                                 }}
                                 className="w-24 px-2 py-1 text-right border border-gray-200 rounded"
-                                min="0"
-                                step="0.01"
                                 placeholder="0.00"
                               />
                               {item.markup_percentage !== undefined && (
@@ -1296,7 +1314,7 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
                           </td>
                           <td className="px-4 py-3 text-right">
                             <span className="text-sm font-medium">
-                              ${(item.shipped_qty * item.unit_price).toFixed(2)}
+                              {formatCurrency(item.shipped_qty * item.unit_price)}
                             </span>
                           </td>
                         </tr>
@@ -1308,7 +1326,7 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
                           Total:
                         </td>
                         <td className="px-4 py-3 text-right font-bold text-gray-900">
-                          ${asnItems.reduce((sum, item) => sum + (item.shipped_qty * item.unit_price), 0).toFixed(2)}
+                          {formatCurrency(asnItems.reduce((sum, item) => sum + (item.shipped_qty * item.unit_price), 0))}
                         </td>
                       </tr>
                     </tfoot>
@@ -1357,12 +1375,14 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
                           className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500"
                         />
                         <input
-                          type="number"
-                          value={Math.abs(charge.amount || 0)}
-                          onChange={(e) => updateCharge(charge.id, 'amount', e.target.value)}
+                          type="text"
+                          value={Math.abs(charge.amount || 0) || ''}
+                          onChange={(e) => {
+                            handleCurrencyInput(e.target.value, (val) => {
+                              updateCharge(charge.id, 'amount', val);
+                            });
+                          }}
                           placeholder="0.00"
-                          step="0.01"
-                          min="0"
                           className="w-32 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 text-right"
                         />
                         <label className="flex items-center gap-2 px-2 whitespace-nowrap">
@@ -1406,7 +1426,7 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
                   <div className="flex justify-between">
                     <span className="text-gray-600">Subtotal:</span>
                     <span className="font-medium">
-                      ${asnItems.reduce((sum, item) => sum + (item.shipped_qty * item.unit_price), 0).toFixed(2)}
+                      {formatCurrency(asnItems.reduce((sum, item) => sum + (item.shipped_qty * item.unit_price), 0))}
                     </span>
                   </div>
 
@@ -1419,7 +1439,7 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
                           <div key={charge.id} className={`flex justify-between ${charge.isCredit ? 'text-yellow-700' : 'text-green-700'}`}>
                             <span>{charge.description || 'Charge'}:</span>
                             <span className="font-medium">
-                              {charge.isCredit ? '+' : '−'}${Math.abs(charge.amount).toFixed(2)}
+                              {charge.isCredit ? '+' : '−'}{formatCurrency(Math.abs(charge.amount))}
                             </span>
                           </div>
                         );
@@ -1432,7 +1452,7 @@ const ASNImportModal: React.FC<ASNImportModalProps> = ({ isOpen, onClose, suppli
                               const signedAmount = c.isCredit ? Math.abs(c.amount) : -Math.abs(c.amount);
                               return sum + signedAmount;
                             }, 0);
-                            return `${total >= 0 ? '+' : ''}$${total.toFixed(2)}`;
+                            return `${total >= 0 ? '+' : ''}${formatCurrency(total)}`;
                           })()}
                         </span>
                       </div>
