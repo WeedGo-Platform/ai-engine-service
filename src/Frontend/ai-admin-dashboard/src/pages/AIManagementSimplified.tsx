@@ -3,6 +3,7 @@ import { Bot, Cpu, Settings, Zap, Volume2, User } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+import { useAuth } from '../contexts/AuthContext';
 import ModelsTab from '../components/aiManagement/ModelsTab';
 import ConfigurationTab from '../components/aiManagement/ConfigurationTab';
 import InferenceTab from '../components/aiManagement/InferenceTab';
@@ -12,6 +13,7 @@ import JsonEditor from '../components/JsonEditor';
 
 const AIManagementSimplified: React.FC = () => {
   const { t } = useTranslation(['common']);
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<string>('models');
 
   // State for models tab
@@ -148,7 +150,7 @@ const AIManagementSimplified: React.FC = () => {
               )}
 
               {activeTab === 'inference' && (
-                <InferenceTab />
+                <InferenceTab tenantId={user?.tenant_id} />
               )}
 
               {activeTab === 'voice' && (

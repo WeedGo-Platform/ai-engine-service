@@ -1079,45 +1079,218 @@ const InferenceTab: React.FC<InferenceTabProps> = ({ token, tenantId: propTenant
                     </div>
                   </div>
 
-                  {/* Per-Provider Breakdown */}
+                  {/* Rate Limit Warnings */}
                   {usageStats.by_provider && Object.keys(usageStats.by_provider).length > 0 && (
-                    <div className="space-y-3">
-                      <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">By Provider</h4>
-                      {Object.entries(usageStats.by_provider).map(([provider, stats]: [string, any]) => (
-                        <div key={provider} className="border border-gray-200 dark:border-gray-700 rounded-lg p-3">
-                          <div className="flex items-center justify-between mb-2">
-                            <div className="flex items-center gap-2">
-                              {provider === 'groq' && <Zap className="h-4 w-4 text-yellow-500" />}
-                              {provider === 'openrouter' && <Network className="h-4 w-4 text-blue-500" />}
-                              {provider === 'llm7' && <Cloud className="h-4 w-4 text-purple-500" />}
-                              <span className="font-medium text-gray-900 dark:text-white capitalize">{provider}</span>
-                            </div>
-                            <span className="text-xs text-gray-500 dark:text-gray-400">
-                              {stats.requests} requests
-                            </span>
-                          </div>
-                          <div className="grid grid-cols-3 gap-2 text-xs">
-                            <div>
-                              <p className="text-gray-500 dark:text-gray-400">Tokens</p>
-                              <p className="font-medium text-gray-900 dark:text-white">
-                                {stats.tokens?.toLocaleString() || 0}
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-gray-500 dark:text-gray-400">Cost</p>
-                              <p className="font-medium text-gray-900 dark:text-white">
-                                ${stats.cost_usd?.toFixed(4) || '0.0000'}
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-gray-500 dark:text-gray-400">Models</p>
-                              <p className="font-medium text-gray-900 dark:text-white">
-                                {stats.models?.length || 0}
-                              </p>
+                    <>
+                      {Object.entries(usageStats.by_provider).some(([provider, stats]: [string, any]) => {
+                        const maxRequests = provider === 'groq' ? 14400 : provider === 'openrouter' ? 200 : 10000;
+                        const usagePercent = (stats.requests / maxRequests) * 100;
+                        return usagePercent > 50;
+                      }) && (
+                        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3 mb-4">
+                          <div className="flex items-start gap-2">
+                            <AlertCircle className="h-4 w-4 text-yellow-600 dark:text-yellow-400 mt-0.5 flex-shrink-0" />
+                            <div className="flex-1">
+                              <h5 className="text-sm font-medium text-yellow-900 dark:text-yellow-300 mb-1">
+                                Rate Limit Notice
+                              </h5>
+                              <div className="text-xs text-yellow-800 dark:text-yellow-400 space-y-1">
+                                {Object.entries(usageStats.by_provider).map(([provider, stats]: [string, any]) => {
+                                  const maxRequests = provider === 'groq' ? 14400 : provider === 'openrouter' ? 200 : 10000;
+                                  const usagePercent = (stats.requests / maxRequests) * 100;
+                                  if (usagePercent > 50) {
+                                    return (
+                                      <p key={provider}>
+                                        <span className="font-medium capitalize">{provider}</span>:{' '}
+                                        {usagePercent.toFixed(0)}% of daily limit used
+                                        {usagePercent > 80 && (
+                                          <span className="ml-1 text-red-600 dark:text-red-400 font-medium">
+                                            (Critical!)
+                                          </span>
+                                        )}
+                                      </p>
+                                    );
+                                  }
+                                  return null;
+                                })}
+                              </div>
+                              {inferenceConfig?.auto_failover && (
+                                <p className="text-xs text-yellow-700 dark:text-yellow-500 mt-2">
+                                  ✓ Auto-failover is enabled - will switch providers automatically
+                                </p>
+                              )}
                             </div>
                           </div>
                         </div>
-                      ))}
+                      )}
+                    </>
+                  )}
+
+                  {/* Per-Provider Breakdown */}
+                  {usageStats.by_provider && Object.keys(usageStats.by_provider).length > 0 && (
+                    <div className="space-y-3">
+                      <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Provider Breakdown</h4>
+                      {Object.entries(usageStats.by_provider).map(([provider, stats]: [string, any]) => {
+                        // Calculate rate limit percentage
+                        const maxRequests = provider === 'groq' ? 14400 : provider === 'openrouter' ? 200 : 10000;
+                        const usagePercent = (stats.requests / maxRequests) * 100;
+                        const isWarning = usagePercent > 50;
+                        const isCritical = usagePercent > 80;
+                        
+                        return (
+                          <div 
+                            key={provider} 
+                            className={`border rounded-lg p-3 ${
+                              isCritical 
+                                ? 'border-red-300 dark:border-red-700 bg-red-50/50 dark:bg-red-900/10'
+                                : isWarning
+                                ? 'border-yellow-300 dark:border-yellow-700 bg-yellow-50/50 dark:bg-yellow-900/10'
+                                : 'border-gray-200 dark:border-gray-700'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center gap-2">
+                                {provider === 'groq' && <Zap className="h-4 w-4 text-yellow-500" />}
+                                {provider === 'openrouter' && <Network className="h-4 w-4 text-blue-500" />}
+                                {provider === 'llm7' && <Cloud className="h-4 w-4 text-purple-500" />}
+                                <span className="font-medium text-gray-900 dark:text-white capitalize">{provider}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                {isCritical && (
+                                  <span className="px-2 py-0.5 text-xs bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded font-medium">
+                                    Critical
+                                  </span>
+                                )}
+                                {isWarning && !isCritical && (
+                                  <span className="px-2 py-0.5 text-xs bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 rounded font-medium">
+                                    Warning
+                                  </span>
+                                )}
+                                <span className="text-xs text-gray-500 dark:text-gray-400">
+                                  {stats.requests} requests
+                                </span>
+                              </div>
+                            </div>
+                            
+                            {/* Rate Limit Progress Bar */}
+                            <div className="mb-3">
+                              <div className="flex items-center justify-between text-xs mb-1">
+                                <span className="text-gray-600 dark:text-gray-400">Daily Limit Usage</span>
+                                <span className={`font-medium ${
+                                  isCritical ? 'text-red-600 dark:text-red-400' :
+                                  isWarning ? 'text-yellow-600 dark:text-yellow-400' :
+                                  'text-gray-600 dark:text-gray-400'
+                                }`}>
+                                  {usagePercent.toFixed(1)}%
+                                </span>
+                              </div>
+                              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                <div 
+                                  className={`h-2 rounded-full transition-all ${
+                                    isCritical ? 'bg-red-500' :
+                                    isWarning ? 'bg-yellow-500' :
+                                    'bg-green-500'
+                                  }`}
+                                  style={{ width: `${Math.min(100, usagePercent)}%` }}
+                                />
+                              </div>
+                              <div className="flex items-center justify-between text-xs mt-1 text-gray-500 dark:text-gray-400">
+                                <span>{stats.requests.toLocaleString()} used</span>
+                                <span>{maxRequests.toLocaleString()} max</span>
+                              </div>
+                            </div>
+
+                            <div className="grid grid-cols-3 gap-2 text-xs">
+                              <div>
+                                <p className="text-gray-500 dark:text-gray-400">Tokens</p>
+                                <p className="font-medium text-gray-900 dark:text-white">
+                                  {stats.tokens?.toLocaleString() || 0}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-gray-500 dark:text-gray-400">Cost</p>
+                                <p className="font-medium text-gray-900 dark:text-white">
+                                  ${stats.cost_usd?.toFixed(4) || '0.0000'}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-gray-500 dark:text-gray-400">Models</p>
+                                <p className="font-medium text-gray-900 dark:text-white">
+                                  {stats.models?.length || 0}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* Per-Model Details */}
+                  {usageStats.by_model && usageStats.by_model.length > 0 && (
+                    <div className="space-y-3 mt-4">
+                      <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Model Performance</h4>
+                      <div className="space-y-2">
+                        {usageStats.by_model.slice(0, 5).map((modelStat: any, index: number) => (
+                          <div 
+                            key={`${modelStat.provider}-${modelStat.model}`}
+                            className="border border-gray-200 dark:border-gray-700 rounded-lg p-2.5"
+                          >
+                            <div className="flex items-center justify-between mb-1.5">
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-medium text-gray-900 dark:text-white">
+                                  {modelStat.model}
+                                </span>
+                                <span className="text-xs text-gray-500 dark:text-gray-400">
+                                  ({modelStat.provider})
+                                </span>
+                              </div>
+                              <span className="text-xs text-gray-500 dark:text-gray-400">
+                                {modelStat.requests} req
+                              </span>
+                            </div>
+                            <div className="grid grid-cols-4 gap-2 text-xs">
+                              <div>
+                                <p className="text-gray-500 dark:text-gray-400 mb-0.5">Success</p>
+                                <p className="font-medium text-green-600 dark:text-green-400">
+                                  {((modelStat.successful / modelStat.requests) * 100).toFixed(0)}%
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-gray-500 dark:text-gray-400 mb-0.5">Latency</p>
+                                <p className="font-medium text-gray-900 dark:text-white">
+                                  {modelStat.latency_ms?.avg?.toFixed(0) || 0}ms
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-gray-500 dark:text-gray-400 mb-0.5">Tokens</p>
+                                <p className="font-medium text-gray-900 dark:text-white">
+                                  {modelStat.tokens?.total?.toLocaleString() || 0}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-gray-500 dark:text-gray-400 mb-0.5">Cost</p>
+                                <p className="font-medium text-gray-900 dark:text-white">
+                                  ${modelStat.cost_usd?.toFixed(3) || '0.000'}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Empty State */}
+                  {usageStats.total_requests === 0 && (
+                    <div className="text-center py-8">
+                      <TrendingUp className="h-12 w-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        No usage data yet for this time period
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                        Make some requests to see statistics here
+                      </p>
                     </div>
                   )}
                 </>
