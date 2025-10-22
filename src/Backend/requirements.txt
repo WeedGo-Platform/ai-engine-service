@@ -28,6 +28,7 @@ numpy==1.24.3
 scikit-learn==1.3.2
 
 # Voice/TTS
+pydub==0.25.1  # Audio format conversion (portable, uses ffmpeg if available)
 coqui-tts==0.27.2  # XTTS v2 voice cloning (17 languages)
 styletts2==0.1.6  # StyleTTS2 voice cloning (higher quality)
 google-cloud-texttospeech  # Google Cloud TTS (100+ languages, cloud backup)
