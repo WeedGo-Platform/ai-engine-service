@@ -38,6 +38,7 @@ from .types import (
     AllProvidersExhaustedError
 )
 from .router import LLMRouter
+from .tenant_router import TenantLLMRouter, get_tenant_router, complete_for_tenant
 from .providers import (
     BaseProvider,
     OpenRouterProvider,
@@ -67,6 +68,11 @@ __all__ = [
 
     # Router
     "LLMRouter",
+    
+    # Tenant Router
+    "TenantLLMRouter",
+    "get_tenant_router",
+    "complete_for_tenant",
 
     # Providers
     "BaseProvider",
