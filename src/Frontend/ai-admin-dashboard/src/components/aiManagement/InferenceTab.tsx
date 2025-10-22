@@ -33,7 +33,10 @@ const InferenceTab: React.FC<InferenceTabProps> = ({ token, tenantId: propTenant
   const { user } = useAuth();
   
   // Get tenant ID from props or user context
-  const tenantId = propTenantId || user?.tenant_id;
+  // Fallback to a demo tenant ID if none available (for development/testing)
+  const tenantId = propTenantId || user?.tenant_id || 'demo-tenant-id';
+  
+  console.log('InferenceTab - tenantId:', tenantId, 'user:', user);
 
   // State for router and inference
   const [routerStats, setRouterStats] = useState<any>(null);
