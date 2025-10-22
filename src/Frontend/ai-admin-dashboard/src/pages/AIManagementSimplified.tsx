@@ -10,75 +10,65 @@ import VoiceTab from '../components/aiManagement/VoiceTab';
 import Personalities from '../components/Personalities';
 import JsonEditor from '../components/JsonEditor';
 
-interface Model {
-  name: string;
-  filename: string;
-  path: string;
-  size_gb: number;
-}
-
-const AIManagement: React.FC = () => {
+const AIManagementSimplified: React.FC = () => {
   const { t } = useTranslation(['common']);
   const [activeTab, setActiveTab] = useState<string>('models');
 
   // State for models tab
-  const [models, setModels] = useState<Model[]>([]);
+  const [models, setModels] = useState<any[]>([]);
   const [currentModel, setCurrentModel] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingModel, setIsLoadingModel] = useState<string | null>(null);
-  const [modelLoadStatus, setModelLoadStatus] = useState<string>('');
-  const [modelError, setModelError] = useState<string>('');
+  const [modelStatuses, setModelStatuses] = useState<Record<string, any>>({});
 
   // State for JSON editor modal
   const [editingFile, setEditingFile] = useState<any>(null);
 
-  // Fetch available models
+  // Placeholder functions for models
   const fetchModels = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get('/api/admin/models');
-      const data = response.data;
-      if (data.models) {
-        setModels(data.models);
-        setCurrentModel(data.current_model);
-      }
+      const response = await axios.get('/api/ai/models');
+      setModels(response.data.models || []);
+      setCurrentModel(response.data.current || null);
     } catch (error) {
-      console.error('Error fetching models:', error);
-      toast.error(t('common:toasts.model.fetchFailed'));
+      toast.error('Failed to fetch models');
     }
     setIsLoading(false);
   };
 
-  // Load a model
   const loadModel = async (modelName: string) => {
     setIsLoadingModel(modelName);
-    setModelError('');
-    setModelLoadStatus('Loading...');
-
     try {
-      const response = await axios.post('/api/admin/model/load', {
-        model: modelName
-      });
-      const data = response.data;
-
-      if (data.success === true) {
-        setCurrentModel(modelName);
-        setModelLoadStatus('Model loaded successfully');
-        toast.success(`Model ${modelName} loaded successfully`);
-      } else {
-        setModelError(data.error || data.detail || t('common:toasts.model.loadFailed'));
-        toast.error(data.error || data.detail || t('common:toasts.model.loadFailed'));
-      }
+      await axios.post('/api/ai/models/load', { model: modelName });
+      toast.success(`Model ${modelName} loaded`);
+      await fetchModels();
     } catch (error) {
-      console.error('Error loading model:', error);
-      setModelError(t('common:toasts.model.loadFailed'));
-      toast.error(t('common:toasts.model.loadFailed'));
+      toast.error('Failed to load model');
     }
-
     setIsLoadingModel(null);
   };
 
-  // Unload and download functions removed - not in original design
+  const unloadModel = async (modelName: string) => {
+    setIsLoadingModel(modelName);
+    try {
+      await axios.post('/api/ai/models/unload', { model: modelName });
+      toast.success(`Model ${modelName} unloaded`);
+      await fetchModels();
+    } catch (error) {
+      toast.error('Failed to unload model');
+    }
+    setIsLoadingModel(null);
+  };
+
+  const downloadModel = async (modelName: string) => {
+    try {
+      await axios.post('/api/ai/models/download', { model: modelName });
+      toast.success(`Downloading ${modelName}...`);
+    } catch (error) {
+      toast.error('Failed to download model');
+    }
+  };
 
   useEffect(() => {
     if (activeTab === 'models') {
@@ -145,9 +135,11 @@ const AIManagement: React.FC = () => {
                   models={models}
                   isLoading={isLoading}
                   isLoadingModel={isLoadingModel}
-                  modelLoadStatus={modelLoadStatus}
-                  modelError={modelError}
+                  modelStatuses={modelStatuses}
+                  fetchModels={fetchModels}
                   loadModel={loadModel}
+                  unloadModel={unloadModel}
+                  downloadModel={downloadModel}
                 />
               )}
 
@@ -192,4 +184,4 @@ const AIManagement: React.FC = () => {
   );
 };
 
-export default AIManagement;
+export default AIManagementSimplified;
