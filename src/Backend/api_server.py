@@ -41,6 +41,9 @@ from api.personality_endpoints import router as personality_router
 from api.voice_synthesis_endpoints import router as voice_synthesis_router
 from api.voice_provider_management import router as voice_provider_router
 
+# Import tenant LLM configuration endpoints
+from api.tenant_llm_config import router as tenant_llm_config_router
+
 # Import geocoding endpoints (public, no auth required)
 from api.geocoding_endpoints import router as geocoding_router
 
@@ -493,6 +496,7 @@ app.include_router(voice_ws_router)  # WebSocket endpoints for continuous voice 
 app.include_router(personality_router)  # AI personality voice management endpoints
 app.include_router(voice_synthesis_router)  # Voice synthesis with personality voices
 app.include_router(voice_provider_router)  # Voice provider management and configuration
+app.include_router(tenant_llm_config_router)  # Tenant LLM tokens and inference config
 app.include_router(geocoding_router)  # Address autocomplete and geocoding (public, no auth)
 
 # Register unified chat routes (database-backed with Redis caching)

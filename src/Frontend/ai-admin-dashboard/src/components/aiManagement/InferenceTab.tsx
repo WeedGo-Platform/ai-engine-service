@@ -52,7 +52,7 @@ const InferenceTab: React.FC<InferenceTabProps> = ({ token }) => {
   const fetchModelConfig = async () => {
     setIsLoadingModels(true);
     try {
-      const response = await fetch('http://localhost:5024/api/admin/router/model-config', {
+      const response = await fetch('http://localhost:5024/api/admin/router/models/config', {
         headers: {
           'Authorization': token ? `Bearer ${token}` : ''
         }
@@ -82,11 +82,17 @@ const InferenceTab: React.FC<InferenceTabProps> = ({ token }) => {
           'Authorization': token ? `Bearer ${token}` : ''
         }
       });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.detail || errorData.error || 'Failed to toggle router');
+      }
+      
       const data = await response.json();
 
-      if (data.status === 'success') {
+      if (data.success) {
         await fetchRouterStats();
-        toast.success(data.active ? 'Switched to cloud inference' : 'Switched to local inference');
+        toast.success(data.message || (data.active ? 'Switched to cloud inference' : 'Switched to local inference'));
       } else {
         toast.error(data.error || 'Failed to toggle router');
       }
@@ -279,18 +285,11 @@ const InferenceTab: React.FC<InferenceTabProps> = ({ token }) => {
                                 {provider.split(' (')[0]}
                               </p>
                             </div>
-                            <select
-                              value={currentModel}
-                              onChange={(e) => updateProviderModel(provider, e.target.value)}
-                              disabled={isUpdatingModel}
-                              className="w-full sm:w-auto px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white disabled:opacity-50"
-                            >
-                              {models.map((model: any) => (
-                                <option key={model.name} value={model.name}>
-                                  {model.name} {model.default && '(default)'}
-                                </option>
-                              ))}
-                            </select>
+                            <div className="w-full sm:w-auto px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-gray-50 dark:bg-gray-900">
+                              <code className="text-xs font-mono text-gray-900 dark:text-white">
+                                {currentModel}
+                              </code>
+                            </div>
                           </div>
                         );
                       })}
@@ -300,11 +299,11 @@ const InferenceTab: React.FC<InferenceTabProps> = ({ token }) => {
                   <div className="mt-4 flex items-start gap-2 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                     <AlertCircle className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
                     <div className="text-xs sm:text-sm text-blue-800 dark:text-blue-300">
-                      <p className="font-medium mb-1">Model Selection Tips:</p>
+                      <p className="font-medium mb-1">Current Model Configuration:</p>
                       <ul className="list-disc list-inside space-y-1">
-                        <li>Changes take effect immediately</li>
+                        <li>Models are configured via backend settings</li>
                         <li>Different models have different strengths (speed, reasoning, cost)</li>
-                        <li>Free tier models have rate limits - monitor your usage</li>
+                        <li>Free tier models have rate limits - the router automatically switches on errors</li>
                       </ul>
                     </div>
                   </div>
