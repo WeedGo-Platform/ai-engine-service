@@ -266,9 +266,7 @@ const OrdersEnhanced: React.FC = () => {
       'Date': new Date(order.created_at).toLocaleString(),
     }));
 
-    // Convert to CSV and download
-    console.log('Exporting orders:', csv);
-    alert(t('orders:messages.exportMessage'));
+        }));\n\n    // Convert to CSV and download\n    alert(t('orders:messages.exportMessage'));\n  };
   };
 
   const metrics = calculateMetrics();

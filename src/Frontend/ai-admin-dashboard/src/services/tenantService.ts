@@ -1,4 +1,3 @@
-import { appConfig } from '../config/app.config';
 import { getAuthStorage, getStorageKey } from '../config/auth.config';
 import axios from 'axios';
 

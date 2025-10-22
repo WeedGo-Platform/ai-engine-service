@@ -3,7 +3,9 @@
  * Handles text-to-speech (TTS) and voice synthesis
  */
 
-const API_BASE_URL = 'http://localhost:5024';
+import { appConfig } from '../config/app.config';
+
+const API_BASE_URL = appConfig.api.baseUrl;
 
 export interface Voice {
   id: string;
@@ -75,8 +77,6 @@ export const voiceApi = {
       // Use Ryan (male voice) for Carlos by default
       const selectedVoice = voice || 'ryan';
 
-      console.log('[voiceApi] Synthesizing with voice:', selectedVoice, 'text length:', text.length);
-
       const formData = new FormData();
       formData.append('text', text);
       formData.append('voice', selectedVoice);
@@ -88,8 +88,6 @@ export const voiceApi = {
         body: formData
       });
 
-      console.log('[voiceApi] Response status:', response.status, response.statusText);
-
       if (!response.ok) {
         const errorText = await response.text();
         console.error('[voiceApi] API error:', errorText);
@@ -97,13 +95,11 @@ export const voiceApi = {
       }
 
       const blob = await response.blob();
-      console.log('[voiceApi] Received blob:', blob.size, 'bytes, type:', blob.type);
 
       return blob;
     } catch (error) {
       console.error('[voiceApi] Synthesis failed:', error);
       // Use browser TTS as last resort
-      console.warn('[voiceApi] Falling back to browser TTS');
       return voiceApi.synthesizeBrowserTTS(text);
     }
   },
@@ -112,8 +108,6 @@ export const voiceApi = {
    * Fallback: Use browser's built-in speech synthesis (actual speaking, not blob)
    */
   synthesizeBrowserTTS: async (text: string): Promise<Blob> => {
-    console.log('[voiceApi] Using browser TTS as fallback');
-
     // Just speak directly with browser TTS, return empty blob
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(text);

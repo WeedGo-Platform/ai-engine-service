@@ -23,9 +23,11 @@ import { useTranslation } from 'react-i18next';
 import { api } from '../services/api';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useStoreContext } from '../contexts/StoreContext';
+import { useAuth } from '../contexts/AuthContext';
 import InventoryEditModal from '../components/InventoryEditModal';
 import { getApiEndpoint } from '../config/app.config';
 import { usePersistentState, usePersistentFilters } from '../hooks/usePersistentState';
+import axios from 'axios';
 
 interface InventoryItem {
   id: string;
@@ -101,12 +103,21 @@ const Inventory: React.FC = () => {
 
   const queryClient = useQueryClient();
   const { currentStore, inventoryStats } = useStoreContext();
+  const { token } = useAuth();
 
   // Fetch inventory data for current store
-  const { data: inventory, isLoading } = useQuery({
+  const { data: inventory, isLoading, error: queryError } = useQuery({
     queryKey: ['inventory', currentStore?.id, filters.searchTerm, filters.category, filters.status],
     queryFn: async () => {
-      if (!currentStore) return [];
+      if (!currentStore) {
+        console.log('No current store selected');
+        return [];
+      }
+      
+      if (!token) {
+        console.error('No auth token available from useAuth');
+        throw new Error('Authentication required');
+      }
       
       const params: any = {
         store_id: currentStore.id
@@ -118,27 +129,47 @@ const Inventory: React.FC = () => {
         else if (filters.status === 'out_of_stock') params.out_of_stock = true;
       }
       
-      // Use the new store-inventory endpoint
-      const response = await fetch(`${getApiEndpoint('/store-inventory/list')}?${new URLSearchParams(params)}`, {
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Store-ID': currentStore.id
+      try {
+        console.log('Fetching inventory for store:', currentStore.id);
+        console.log('Using endpoint:', getApiEndpoint('/store-inventory/list'));
+        console.log('Query params:', params);
+        console.log('Auth token present:', !!token);
+        
+        // Use fetch with proper authentication headers
+        const response = await fetch(`${getApiEndpoint('/store-inventory/list')}?${new URLSearchParams(params)}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+            'X-Store-ID': currentStore.id
+          }
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Inventory fetch failed:', {
+            status: response.status,
+            statusText: response.statusText,
+            body: errorText
+          });
+          throw new Error(`Failed to fetch inventory: ${response.status} ${response.statusText}`);
         }
-      });
+        
+        const data = await response.json();
+        console.log('Inventory API response:', {
+          totalItems: data.items?.length || 0,
+          total: data.total,
+          firstItem: data.items?.[0]
+        });
 
-      if (!response.ok) throw new Error('Failed to fetch inventory');
-      const data = await response.json();
-
-      // Debug: Log first item to see what batch_lot looks like
-      if (data.items && data.items.length > 0) {
-        console.log('First inventory item:', data.items[0]);
-        console.log('batch_lot value:', data.items[0].batch_lot);
-        console.log('batch_details:', data.items[0].batch_details);
+        return data.items || [];
+      } catch (err) {
+        console.error('Error fetching inventory:', err);
+        throw err;
       }
-
-      return data.items || [];
     },
-    enabled: !!currentStore
+    enabled: !!currentStore && !!token,
+    retry: 1,
+    retryDelay: 1000
   });
 
   // Toggle expanded row
@@ -223,6 +254,15 @@ const Inventory: React.FC = () => {
       return () => clearTimeout(timer);
     }
   }, [error]);
+
+  // Display query errors
+  useEffect(() => {
+    if (queryError) {
+      const errorMessage = queryError instanceof Error ? queryError.message : 'Failed to load inventory';
+      setError(errorMessage);
+      console.error('Inventory query error:', queryError);
+    }
+  }, [queryError]);
 
   return (
     <div className="h-full flex flex-col space-y-4 sm:space-y-6">

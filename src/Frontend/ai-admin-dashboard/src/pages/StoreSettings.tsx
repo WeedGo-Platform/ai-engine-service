@@ -55,13 +55,7 @@ const StoreSettings: React.FC = () => {
       if (!storeCode || storeCode === 'undefined') {
         console.warn('StoreSettings: Invalid or missing storeCode in URL:', storeCode);
 
-        // Try to use currentStore from context as fallback
-        if (currentStore?.store_code) {
-          console.log('StoreSettings: Using store_code from context:', currentStore.store_code);
-          // Redirect to proper URL with store code
-          navigate(`/dashboard/stores/${currentStore.store_code}/settings`, { replace: true });
-          return;
-        }
+                // Try to use currentStore from context as fallback\n        if (currentStore?.store_code) {\n          // Redirect to proper URL with store code\n          navigate(`/dashboard/stores/${currentStore.store_code}/settings`, { replace: true });\n          return;\n        }
 
         setError('No store selected. Please select a store first.');
         setLoading(false);

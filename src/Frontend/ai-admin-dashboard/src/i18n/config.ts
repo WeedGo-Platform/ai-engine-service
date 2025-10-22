@@ -46,17 +46,14 @@ const loadResources = () => {
   const resources: Record<string, Record<string, any>> = {};
 
   // Use Vite's glob import - this loads all JSON files at build time
-  const modules = import.meta.glob('./locales/**/*.json', { eager: true });
+  const modules = import.meta.glob<{ default: Record<string, any> }>('./locales/**/*.json', { eager: true });
 
   SUPPORTED_LANGUAGES.forEach(({ code }) => {
     resources[code] = {};
     namespaces.forEach(ns => {
       const key = `./locales/${code}/${ns}.json`;
       if (modules[key]) {
-        // @ts-ignore
         resources[code][ns] = modules[key].default || modules[key];
-      } else {
-        console.warn(`Failed to load namespace "${ns}" for language "${code}"`);
       }
     });
   });

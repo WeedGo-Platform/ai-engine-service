@@ -211,13 +211,15 @@ const StoreSelectionModal: React.FC<StoreSelectionModalProps> = ({
   };
 
   const renderStoreSelection = () => {
-    console.log('renderStoreSelection - state:', {
-      loadingStores,
-      stores,
-      storesError,
-      selectedTenant,
-      step
-    });
+    if (process.env.NODE_ENV === 'development') {
+      console.log('renderStoreSelection - state:', {
+        loadingStores,
+        stores,
+        storesError,
+        selectedTenant,
+        step
+      });
+    }
 
     if (loadingStores) {
       return (

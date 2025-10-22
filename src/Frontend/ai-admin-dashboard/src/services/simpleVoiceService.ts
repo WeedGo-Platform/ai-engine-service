@@ -3,13 +3,15 @@
  * Uses the existing /api/voice endpoints for transcription and synthesis
  */
 
+import { appConfig } from '../config/app.config';
+
 export class SimpleVoiceService {
   private mediaRecorder: MediaRecorder | null = null;
   private audioStream: MediaStream | null = null;
   private audioChunks: Blob[] = [];
   private isRecording = false;
   private onTranscriptCallback: ((text: string) => void) | null = null;
-  private apiBase = 'http://localhost:5024';
+  private apiBase = appConfig.api.baseUrl;
 
   /**
    * Request microphone permission

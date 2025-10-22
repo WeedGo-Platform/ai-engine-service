@@ -38,7 +38,7 @@ export const uploadProvincialCatalog = async (
             const percentCompleted = Math.round(
               (progressEvent.loaded * 100) / progressEvent.total
             );
-            console.log(`Upload Progress: ${percentCompleted}%`);
+            // Upload progress tracking could be sent to analytics if needed
           }
         }
       }

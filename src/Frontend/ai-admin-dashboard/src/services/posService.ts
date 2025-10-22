@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { appConfig } from '../config/app.config';
 
-const API_BASE_URL = 'http://localhost:5024/api';
+const API_BASE_URL = `${appConfig.api.baseUrl}/api`;
 
 export interface Product {
   id: string;

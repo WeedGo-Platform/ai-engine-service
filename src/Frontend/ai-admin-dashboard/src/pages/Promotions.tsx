@@ -11,6 +11,7 @@ import { format } from 'date-fns';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useStoreContext } from '../contexts/StoreContext';
+import { appConfig } from '../config/app.config';
 import { formatCurrency } from '../utils/currency';
 import {
   Step1BasicInfo,
@@ -20,7 +21,7 @@ import {
   Step5Review
 } from '../components/PromotionWizardSteps';
 
-const API_BASE_URL = 'http://localhost:5024';
+const API_BASE_URL = appConfig.api.baseUrl;
 
 interface Promotion {
   id: string;

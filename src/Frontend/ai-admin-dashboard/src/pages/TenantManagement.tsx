@@ -6,12 +6,10 @@ import {
   Building2,
   Plus,
   Edit,
-  Trash2,
   CheckCircle,
   XCircle,
   AlertCircle,
   Search,
-  Filter,
   DollarSign,
   Store,
   Users,
@@ -20,10 +18,8 @@ import {
   Play,
   Crown,
   Package,
-  Settings,
   CreditCard,
   UserPlus,
-  Lock,
   Ban,
   UserX,
   Shield,
@@ -39,7 +35,7 @@ const TenantManagement: React.FC = () => {
   const navigate = useNavigate();
   const { user, isSuperAdmin, isTenantAdmin, isStoreManager } = useAuth();
   const { t } = useTranslation(['tenants', 'errors', 'modals', 'common']);
-  const { handleOperationError, handleErrorSmart } = useErrorHandler();
+  const { handleOperationError } = useErrorHandler();
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -53,8 +49,6 @@ const TenantManagement: React.FC = () => {
   const [isStoreManagerView, setIsStoreManagerView] = useState(false);
   const [tenantMetrics, setTenantMetrics] = useState<any>(null);
   const [storeCount, setStoreCount] = useState({ total: 0, active: 0 });
-  const [success, setSuccess] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     // Check if user is tenant admin and not super admin
@@ -105,7 +99,7 @@ const TenantManagement: React.FC = () => {
 
       // If tenant admin or store manager, only load their tenant
       if (isTenantAdminView || isStoreManagerView) {
-        const currentTenantCode = user?.tenants?.[0]?.code || user?.tenant_code;
+        const currentTenantCode = user?.tenants?.[0]?.code;
         if (currentTenantCode) {
           try {
             const response = await fetch(getApiEndpoint(`/tenants/by-code/${currentTenantCode}`));
@@ -211,15 +205,8 @@ const TenantManagement: React.FC = () => {
     }
   };
 
-  const handleUpgradeSubscription = async (id: string, newTier: string) => {
-    try {
-      await tenantService.upgradeTenantSubscription(id, newTier);
-      toast.success(t('tenants:messages.upgraded'));
-      loadTenants();
-    } catch (err) {
-      handleOperationError(err, 'update', 'tenant');
-    }
-  };
+  // Removed unused handleUpgradeSubscription - can be added back when needed
+  // Removed handleDeleteTenant - deleteTenant method doesn't exist on tenantService
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -398,22 +385,6 @@ const TenantManagement: React.FC = () => {
           </select>
         </div>
       </div>
-      )}
-
-      {/* Success Alert */}
-      {success && (
-        <div className="bg-primary-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6 flex items-center gap-2">
-          <CheckCircle className="w-5 h-5 text-primary-600 dark:text-green-400" />
-          <span className="text-primary-700 dark:text-green-300">{success}</span>
-        </div>
-      )}
-
-      {/* Error Alert */}
-      {error && (
-        <div className="bg-danger-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 flex items-center gap-2">
-          <AlertCircle className="w-5 h-5 text-danger-600 dark:text-red-400" />
-          <span className="text-red-700 dark:text-red-300">{error}</span>
-        </div>
       )}
 
       {/* Organization Card for Tenant Admin and Store Manager */}
@@ -701,7 +672,7 @@ const TenantManagement: React.FC = () => {
             await handleUpdateTenant(selectedTenant.id, updatedTenant, logoFile);
             setShowTenantModal(false);
             setSelectedTenant(null);
-            fetchTenants(); // Refresh tenants to show updated logo
+            loadTenants(); // Refresh tenants to show updated logo
           }}
           readOnly={false}
           showUsersTab={true}
@@ -773,6 +744,7 @@ const TenantFormModal: React.FC<{
   onSave: (data: Partial<CreateTenantRequest>, logoFile?: File | null) => void;
   onClose: () => void;
 }> = ({ tenant, onSave, onClose }) => {
+  const { t } = useTranslation(['tenants', 'common']);
   const [activeTab, setActiveTab] = useState<'general' | 'features' | 'branding' | 'legal' | 'delivery' | 'payment' | 'notifications' | 'seo' | 'analytics' | 'budtender' | 'users'>('general');
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(tenant?.logo_url || null);
@@ -833,15 +805,21 @@ const TenantFormModal: React.FC<{
       facebook_pixel_id: tenant?.settings?.analytics?.facebook_pixel_id || '',
       enable_heatmaps: tenant?.settings?.analytics?.enable_heatmaps ?? false,
       enable_session_recording: tenant?.settings?.analytics?.enable_session_recording ?? false,
+      segment_write_key: tenant?.settings?.analytics?.segment_write_key || '',
+      mixpanel_token: tenant?.settings?.analytics?.mixpanel_token || '',
     },
     virtual_budtender: {
       enabled: tenant?.settings?.virtual_budtender?.enabled ?? false,
       ai_model: tenant?.settings?.virtual_budtender?.ai_model || 'gpt-4',
       personality: tenant?.settings?.virtual_budtender?.personality || 'friendly',
+      product_recommendations: tenant?.settings?.virtual_budtender?.product_recommendations ?? true,
+      dosage_guidance: tenant?.settings?.virtual_budtender?.dosage_guidance ?? true,
     },
     payment: {
       accepted_methods: tenant?.settings?.payment?.accepted_methods || ['credit_card', 'debit_card'],
       gateway_provider: tenant?.settings?.payment?.gateway_provider || 'stripe',
+      hold_duration_days: tenant?.settings?.payment?.hold_duration_days || 7,
+      auto_capture: tenant?.settings?.payment?.auto_capture ?? true,
     },
     notifications: {
       email_enabled: tenant?.settings?.notifications?.email_enabled ?? true,
@@ -1821,7 +1799,7 @@ const TenantFormModal: React.FC<{
                       onChange={(e) => {
                         const methods = e.target.checked 
                           ? [...settings.payment.accepted_methods, 'credit_card']
-                          : settings.payment.accepted_methods.filter(m => m !== 'credit_card');
+                          : settings.payment.accepted_methods.filter((m: string) => m !== 'credit_card');
                         setSettings({ ...settings, payment: { ...settings.payment, accepted_methods: methods }});
                       }}
                       className="w-4 h-4 text-accent-600 rounded"
@@ -1835,7 +1813,7 @@ const TenantFormModal: React.FC<{
                       onChange={(e) => {
                         const methods = e.target.checked 
                           ? [...settings.payment.accepted_methods, 'debit_card']
-                          : settings.payment.accepted_methods.filter(m => m !== 'debit_card');
+                          : settings.payment.accepted_methods.filter((m: string) => m !== 'debit_card');
                         setSettings({ ...settings, payment: { ...settings.payment, accepted_methods: methods }});
                       }}
                       className="w-4 h-4 text-accent-600 rounded"
@@ -1849,7 +1827,7 @@ const TenantFormModal: React.FC<{
                       onChange={(e) => {
                         const methods = e.target.checked 
                           ? [...settings.payment.accepted_methods, 'cash']
-                          : settings.payment.accepted_methods.filter(m => m !== 'cash');
+                          : settings.payment.accepted_methods.filter((m: string) => m !== 'cash');
                         setSettings({ ...settings, payment: { ...settings.payment, accepted_methods: methods }});
                       }}
                       className="w-4 h-4 text-accent-600 rounded"
@@ -1863,7 +1841,7 @@ const TenantFormModal: React.FC<{
                       onChange={(e) => {
                         const methods = e.target.checked 
                           ? [...settings.payment.accepted_methods, 'etransfer']
-                          : settings.payment.accepted_methods.filter(m => m !== 'etransfer');
+                          : settings.payment.accepted_methods.filter((m: string) => m !== 'etransfer');
                         setSettings({ ...settings, payment: { ...settings.payment, accepted_methods: methods }});
                       }}
                       className="w-4 h-4 text-accent-600 rounded"

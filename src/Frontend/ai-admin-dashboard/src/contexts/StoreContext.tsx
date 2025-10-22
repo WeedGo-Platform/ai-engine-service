@@ -4,7 +4,15 @@
  * Follows SOLID principles and clean architecture patterns
  */
 
-import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  ReactNode,
+} from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from './AuthContext';
 import { getApiUrl } from '../config/app.config';
@@ -291,7 +299,10 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({
   const [inventoryStats, setInventoryStats] = useState<StoreInventoryStats | null>(null);
   const [filteredStores, setFilteredStores] = useState<Store[]>([]);
 
-  console.log('StoreProvider render:', { isAuthenticated, userId: user?.user_id });
+  // Reduce logging frequency - only log on auth changes
+  if (process.env.NODE_ENV === 'development') {
+    console.log('StoreProvider render:', { isAuthenticated, userId: user?.user_id });
+  }
   
   // Fetch stores query
   const {
@@ -446,21 +457,25 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({
 
   // Handle store data when it arrives
   useEffect(() => {
-    console.log('StoreContext useEffect triggered:', {
-      allStoresLength: allStores?.length || 0,
-      isLoading,
-      hasCurrentStore: !!currentStore,
-      currentStoreId: currentStore?.id,
-      currentStoreTenantId: currentStore?.tenant_id
-    });
+    if (process.env.NODE_ENV === 'development') {
+      console.log('StoreContext useEffect triggered:', {
+        allStoresLength: allStores?.length || 0,
+        isLoading,
+        hasCurrentStore: !!currentStore,
+        currentStoreId: currentStore?.id,
+        currentStoreTenantId: currentStore?.tenant_id
+      });
+    }
 
     if (allStores && allStores.length > 0 && !isLoading) {
-      console.log('Processing store data:', {
-        allStoresLength: allStores.length,
-        currentStore,
-        user,
-        userRole: user?.role
-      });
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Processing store data:', {
+          allStoresLength: allStores.length,
+          currentStore,
+          user,
+          userRole: user?.role
+        });
+      }
 
       // Update filtered stores
       setFilteredStores(allStores);
@@ -498,7 +513,9 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({
             }
           } else {
             // Clear any stored selection for admin users
-            console.log('Admin user detected, clearing stored selection');
+            if (process.env.NODE_ENV === 'development') {
+              console.log('Admin user detected, clearing stored selection');
+            }
             storageUtils.clearStoreId();
             window.localStorage.removeItem('X-Store-ID');
           }
@@ -560,10 +577,10 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({
   }, [currentStore]);
   
   // =====================================================
-  // Context Value
+  // Context Value (Memoized to prevent re-renders)
   // =====================================================
   
-  const contextValue: StoreContextValue = {
+  const contextValue: StoreContextValue = useMemo(() => ({
     currentStore,
     stores: filteredStores,
     isLoading,
@@ -576,7 +593,20 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({
     getStoreById,
     isStoreActive,
     hasStoreAccess,
-  };
+  }), [
+    currentStore,
+    filteredStores,
+    isLoading,
+    error,
+    selectStore,
+    clearStore,
+    refreshStores,
+    inventoryStats,
+    loadInventoryStats,
+    getStoreById,
+    isStoreActive,
+    hasStoreAccess,
+  ]);
   
   return (
     <StoreContext.Provider value={contextValue}>

@@ -7,10 +7,11 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 import { useStoreContext } from '../contexts/StoreContext';
+import { appConfig } from '../config/app.config';
 import { formatCurrency as formatCurrencyUtil } from '../utils/currency';
 import { formatCurrency } from '../utils/currency';
 
-const API_BASE_URL = 'http://localhost:5024';
+const API_BASE_URL = appConfig.api.baseUrl;
 
 interface RecommendationMetric {
   recommendation_type: string;
