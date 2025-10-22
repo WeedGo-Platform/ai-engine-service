@@ -13,6 +13,7 @@ import {
   RotateCcw
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { appConfig } from '../config/app.config';
 
 interface VoiceRecordUploadModalProps {
   isOpen: boolean;
@@ -197,7 +198,7 @@ const VoiceRecordUploadModal: React.FC<VoiceRecordUploadModalProps> = ({
     });
     
     try {
-      const response = await fetch('http://localhost:5024/api/voice-synthesis/synthesize', {
+      const response = await fetch(`${appConfig.api.baseUrl}/api/voice-synthesis/synthesize`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -284,7 +285,7 @@ const VoiceRecordUploadModal: React.FC<VoiceRecordUploadModalProps> = ({
       formData.append('file', fileToUpload, `${personalityId}.wav`);
 
       const response = await fetch(
-        `http://localhost:5024/api/voice-providers/voice-samples/upload?personality_id=${personalityId}`,
+        `${appConfig.api.baseUrl}/api/voice-providers/voice-samples/upload?personality_id=${personalityId}`,
         {
           method: 'POST',
           headers: {

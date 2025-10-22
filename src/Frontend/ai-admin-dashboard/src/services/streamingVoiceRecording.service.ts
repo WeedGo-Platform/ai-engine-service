@@ -203,7 +203,6 @@ export class StreamingVoiceRecordingService {
       this.ws = new WebSocket(this.wsUrl);
 
       this.ws.onopen = () => {
-        console.log('WebSocket connected for streaming voice');
         // Send initial configuration
         this.ws?.send(JSON.stringify({
           type: 'config',
@@ -236,11 +235,7 @@ export class StreamingVoiceRecordingService {
       };
 
       this.ws.onclose = () => {
-        console.log('WebSocket closed');
-        if (this.isRecording) {
-          this.stopRecording();
-        }
-      };
+        this.isConnected = false;
 
       // Timeout for connection
       setTimeout(() => {
@@ -318,14 +313,12 @@ export class StreamingVoiceRecordingService {
       if (silenceDuration >= this.PAUSE_THRESHOLD_MS &&
           silenceDuration < this.PAUSE_THRESHOLD_MS + 100 && // Only trigger once
           this.currentTranscript.trim()) {
-        console.log('Auto-sending after 2 second pause');
         this.callbacks.onAutoSend?.(this.currentTranscript);
         this.currentTranscript = ''; // Clear after sending
       }
 
       // Check for complete silence (3 seconds) - auto stop
       if (silenceDuration >= this.SILENCE_THRESHOLD_MS) {
-        console.log('Auto-stopping after 3 seconds of silence');
         this.callbacks.onAutoStop?.();
         this.stopRecording();
       }

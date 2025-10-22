@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { useStoreContext } from '../contexts/StoreContext';
 import { api } from '../services/api';
+import { appConfig } from '../config/app.config';
 import BroadcastWizard from '../components/BroadcastWizard';
 import TemplateManager from '../components/TemplateManager';
 import CommunicationsAnalytics from '../components/CommunicationsAnalytics';
@@ -182,7 +183,7 @@ const Communications: React.FC = () => {
       };
 
       // Fetch broadcasts
-      const broadcastsRes = await fetch(`http://localhost:5024/api/v1/communications/broadcasts?store_id=${currentStore.id}&limit=10`, {
+      const broadcastsRes = await fetch(`${appConfig.api.baseUrl}/api/v1/communications/broadcasts?store_id=${currentStore.id}&limit=10`, {
         headers
       });
       if (broadcastsRes.ok) {
@@ -191,7 +192,7 @@ const Communications: React.FC = () => {
       }
 
       // Fetch analytics
-      const analyticsRes = await fetch(`http://localhost:5024/api/v1/communications/analytics/overview?store_id=${currentStore.id}`, {
+      const analyticsRes = await fetch(`${appConfig.api.baseUrl}/api/v1/communications/analytics/overview?store_id=${currentStore.id}`, {
         headers
       });
       if (analyticsRes.ok) {
@@ -211,7 +212,7 @@ const Communications: React.FC = () => {
   const handleExecuteBroadcast = async (broadcastId: string) => {
     try {
       const token = localStorage.getItem('weedgo_auth_access_token');
-      const response = await fetch(`http://localhost:5024/api/v1/communications/broadcasts/${broadcastId}/execute`, {
+      const response = await fetch(`${appConfig.api.baseUrl}/api/v1/communications/broadcasts/${broadcastId}/execute`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -232,7 +233,7 @@ const Communications: React.FC = () => {
   const handlePauseBroadcast = async (broadcastId: string) => {
     try {
       const token = localStorage.getItem('weedgo_auth_access_token');
-      const response = await fetch(`http://localhost:5024/api/v1/communications/broadcasts/${broadcastId}/pause`, {
+      const response = await fetch(`${appConfig.api.baseUrl}/api/v1/communications/broadcasts/${broadcastId}/pause`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -253,7 +254,7 @@ const Communications: React.FC = () => {
   const handleResumeBroadcast = async (broadcastId: string) => {
     try {
       const token = localStorage.getItem('weedgo_auth_access_token');
-      const response = await fetch(`http://localhost:5024/api/v1/communications/broadcasts/${broadcastId}/resume`, {
+      const response = await fetch(`${appConfig.api.baseUrl}/api/v1/communications/broadcasts/${broadcastId}/resume`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -276,7 +277,7 @@ const Communications: React.FC = () => {
 
     try {
       const token = localStorage.getItem('weedgo_auth_access_token');
-      const response = await fetch(`http://localhost:5024/api/v1/communications/broadcasts/${broadcastId}`, {
+      const response = await fetch(`${appConfig.api.baseUrl}/api/v1/communications/broadcasts/${broadcastId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -289,8 +290,8 @@ const Communications: React.FC = () => {
         setRefreshKey(prev => prev + 1);
       }
     } catch (error) {
-      console.error('Failed to fetch broadcasts:', error);
-      toast.error(t('communications:messages.error.fetchBroadcasts'));
+      console.error('Failed to cancel broadcast:', error);
+      toast.error(t('communications:messages.error.cancelBroadcast'));
     }
   };
 
@@ -347,7 +348,7 @@ const Communications: React.FC = () => {
     setAnalyticsLoading(true);
     try {
       const token = localStorage.getItem('weedgo_auth_access_token');
-      const response = await fetch(`http://localhost:5024/api/v1/communications/analytics/detailed?store_id=${currentStore.id}&date_range=${selectedDateRange}`, {
+      const response = await fetch(`${appConfig.api.baseUrl}/api/v1/communications/analytics/detailed?store_id=${currentStore.id}&date_range=${selectedDateRange}`, {
         headers: {
           'Content-Type': 'application/json',
           ...(token && { 'Authorization': `Bearer ${token}` }),

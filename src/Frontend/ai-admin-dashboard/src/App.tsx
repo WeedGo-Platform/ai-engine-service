@@ -93,15 +93,17 @@ function Layout() {
 
   // Build navigation based on user permissions
   const navigation = React.useMemo(() => {
-    // Debug logging
-    console.log('Navigation Debug:', {
-      user,
-      isStoreManager: isStoreManager(),
-      isTenantAdmin: isTenantAdmin(),
-      isSuperAdmin: isSuperAdmin(),
-      stores: user?.stores,
-      store_role: user?.store_role
-    });
+    // Debug logging (development only)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Navigation Debug:', {
+        user,
+        isStoreManager: isStoreManager(),
+        isTenantAdmin: isTenantAdmin(),
+        isSuperAdmin: isSuperAdmin(),
+        stores: user?.stores,
+        store_role: user?.store_role
+      });
+    }
     
     // For store managers only (not tenant admin or super admin), show specific menu items
     let items = [];
@@ -366,7 +368,7 @@ function Layout() {
         </header>
 
         {/* Page content */}
-        <main className={`flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900 ${location.pathname === '/dashboard/apps' ? '' : 'p-6 sm:p-6 lg:p-8'}`}>
+        <main className={`flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900 ${location.pathname === '/dashboard/apps' ? 'pr-4' : 'p-6 sm:p-6 lg:p-8 pr-8'}`}>
           <Outlet />
         </main>
       </div>

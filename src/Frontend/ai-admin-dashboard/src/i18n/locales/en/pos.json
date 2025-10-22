@@ -27,7 +27,10 @@
     "empty": "Cart is empty",
     "batch": "Batch:",
     "discount": "Discount:",
-    "quantity": "Quantity"
+    "quantity": "Quantity",
+    "openCart": "Open Cart",
+    "title": "Shopping Cart",
+    "close": "Close Cart"
   },
   "weight": {
     "driedFlowerEquivalent": "Dried Flower Equivalent:",

@@ -9,7 +9,6 @@ import {
   RefreshCw,
   Download,
   AlertCircle,
-import { formatCurrency } from '../utils/currency';
   CheckCircle,
   XCircle,
   Clock,
@@ -18,14 +17,16 @@ import { formatCurrency } from '../utils/currency';
   Undo,
   Settings,
 } from 'lucide-react';
+import { formatCurrency } from '../utils/currency';
+
 import { format } from 'date-fns';
 import { paymentService } from '../services/paymentServiceV2';
 import type {
-  PaymentTransactionDTO,
   TransactionFilters,
   CreateRefundRequest,
+  PaymentStatus,
 } from '../types/payment';
-import { ApiError, NetworkError, AuthenticationError } from '../utils/api-error-handler';
+import { ApiError } from '../utils/api-error-handler';
 import { useStoreContext } from '../contexts/StoreContext';
 import toast from 'react-hot-toast';
 
@@ -99,12 +100,16 @@ const PaymentsPage: React.FC = () => {
   useEffect(() => {
     // Only fetch if we have a complete store object with tenant_id
     if (currentStore?.id && currentStore?.tenant_id) {
-      fetchTransactions();
-      fetchMetrics();
+      fetchTransactions().catch(err => {
+        console.error('Failed to fetch transactions:', err);
+      });
+      fetchMetrics().catch(err => {
+        console.error('Failed to fetch metrics:', err);
+      });
     } else if (currentStore?.id && !currentStore?.tenant_id) {
       // Store is selected but data is incomplete - wait for full load
-      console.log('Waiting for complete store data (tenant_id missing)...');
-      setIsLoading(true);
+      // Waiting for complete store data with tenant_id
+      return;
     }
   }, [dateRange, statusFilter, currentStore?.id, currentStore?.tenant_id]);
 
@@ -121,7 +126,7 @@ const PaymentsPage: React.FC = () => {
       const filters: TransactionFilters = {
         start_date: format(dateRange.from, 'yyyy-MM-dd'),
         end_date: format(dateRange.to, 'yyyy-MM-dd'),
-        status: statusFilter !== 'all' ? statusFilter : undefined,
+        status: statusFilter !== 'all' ? statusFilter as PaymentStatus : undefined,
         limit: 100,
         offset: 0,
       };
@@ -156,11 +161,11 @@ const PaymentsPage: React.FC = () => {
         total_transactions: metricsData.total_transactions,
         successful_transactions: metricsData.successful_transactions,
         failed_transactions: metricsData.failed_transactions,
-        total_amount: metricsData.total_volume,
+        total_amount: metricsData.total_amount,
         total_fees: metricsData.total_fees || 0,
         total_refunds: metricsData.total_refunds || 0,
         success_rate: metricsData.success_rate,
-        avg_transaction_time: metricsData.average_transaction_time || 0,
+        avg_transaction_time: metricsData.avg_transaction_time || 0,
       });
     } catch (error) {
       console.error('Error fetching metrics:', error);
@@ -179,9 +184,8 @@ const PaymentsPage: React.FC = () => {
     try {
       const refundRequest: CreateRefundRequest = {
         amount: parseFloat(refundAmount),
-        currency: selectedTransaction.currency,
+        currency: selectedTransaction.currency as 'CAD' | 'USD',
         reason: refundReason || 'Customer requested refund',
-        tenant_id: tenantId,
       };
 
       await paymentService.refundTransaction(

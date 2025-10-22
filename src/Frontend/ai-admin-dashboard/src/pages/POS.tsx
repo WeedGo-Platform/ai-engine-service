@@ -17,6 +17,7 @@ import FilterPanel from '../components/pos/FilterPanel';
 import TransactionHistory from '../components/pos/TransactionHistory';
 import posService from '../services/posService';
 import { useStoreContext } from '../contexts/StoreContext';
+import { useAuth } from '../contexts/AuthContext';
 import ProductDetailsModal from '../components/ProductDetailsModal';
 import toast from 'react-hot-toast';
 import { formatCurrency } from '../utils/currency';
@@ -260,6 +261,7 @@ export default function POS({
 }: POSProps = {}) {
   // Get store context
   const { currentStore } = useStoreContext();
+  const { user } = useAuth();
 
   // Translation hook
   const { t } = useTranslation(['pos', 'common', 'errors']);
@@ -750,7 +752,7 @@ export default function POS({
 
       const parkedData = {
         store_id: currentStore?.id || 'store_001',
-        cashier_id: 'cashier_001', // TODO: Get from auth context
+        cashier_id: user?.user_id || 'anonymous',
         customer_id: customer?.id === 'anonymous' ? undefined : customer?.id,
         items: cart.map(item => ({
           product: item.product,
@@ -1887,7 +1889,7 @@ export default function POS({
               // Create transaction via API
               const transactionData = {
                 store_id: currentStore?.id || 'store_001',
-                cashier_id: 'cashier_001', // TODO: Get from auth context
+                cashier_id: user?.user_id || 'anonymous',
                 customer_id: customer?.id === 'anonymous' ? undefined : customer?.id,
                 items: cart.map(item => ({
                   product: item.product,

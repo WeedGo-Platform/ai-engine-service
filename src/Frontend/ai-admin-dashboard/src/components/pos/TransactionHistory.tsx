@@ -5,6 +5,7 @@ import {
   ArrowUpDown, FileText, Loader2
 } from 'lucide-react';
 import { useStoreContext } from '../../contexts/StoreContext';
+import { useAuth } from '../../contexts/AuthContext';
 import posService from '../../services/posService';
 import toast from 'react-hot-toast';
 import { formatCurrency } from '../../utils/currency';
@@ -267,6 +268,7 @@ const RefundModal: React.FC<RefundModalProps> = ({ transaction, onClose, onRefun
 
 export default function TransactionHistory() {
   const { currentStore } = useStoreContext();
+  const { user } = useAuth();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(false);
@@ -372,7 +374,7 @@ export default function TransactionHistory() {
         amount,
         reason,
         items,
-        processed_by: 'current_user' // TODO: Get from auth context
+        processed_by: user?.user_id || 'anonymous'
       });
 
       // Refresh transactions
