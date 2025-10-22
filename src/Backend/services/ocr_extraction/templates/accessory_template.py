@@ -103,49 +103,106 @@ def create_accessory_template() -> Template:
 
     # Build extraction prompt
     prompt_template = """
-You are an expert at extracting product information from accessory packaging photos.
+You are a precise OCR system. Your ONLY job is to read visible text from this image.
 
-Analyze this image and extract the following information:
+⚠️ CRITICAL RULES - VIOLATION WILL CAUSE SYSTEM FAILURE:
 
-**REQUIRED FIELDS:**
-- product_name: The full product name as shown on the packaging
-- brand: The brand or manufacturer name
+1. **ONLY EXTRACT TEXT YOU CAN LITERALLY SEE AND READ**
+2. **DO NOT INVENT, GUESS, OR HALLUCINATE ANY INFORMATION**
+3. **IF YOU CANNOT CLEARLY READ SOMETHING → LEAVE IT BLANK/EMPTY**
+4. **MAKING UP DATA IS STRICTLY FORBIDDEN**
 
-**OPTIONAL FIELDS (extract if visible):**
-- sku: Product SKU or model number
-- barcode: UPC/EAN barcode (numbers only, no spaces)
-- price: Retail price (numbers only, no $ symbol)
-- quantity: Quantity or count shown
-- description: Product description or features
-- category: Product category (papers, tips, lighters, grinders, etc.)
-- size_variant: Size designation (King Size, 1¼, etc.)
+---
 
-**IMPORTANT INSTRUCTIONS:**
-1. Extract EXACTLY what you see - don't infer or guess
-2. For barcode: digits only, no spaces or dashes
-3. For price: numbers only (e.g., "2.99" not "$2.99")
-4. For quantity: just the number (e.g., "32" not "32 papers")
-5. If a field is not visible, omit it from the response
-6. Be precise with product names - include full details shown
+**EXTRACTION INSTRUCTIONS:**
 
-**OUTPUT FORMAT:**
-Return a JSON object with the extracted fields:
+**product_name** (REQUIRED):
+- Read the main product name printed on the package
+- Must be exact text as shown - no modifications
+- Example: "RAW Original Tips" (not "RAW King Size Tips" if King Size isn't visible)
 
+**brand** (REQUIRED):
+- The brand name ONLY - typically the logo or main brand text
+- Examples: "RAW", "Zig Zag", "OCB"
+- ⚠️ DO NOT extract: warning labels, legal disclaimers, manufacturer addresses
+- ⚠️ If brand logo/text is not clearly visible → leave empty
+
+**barcode**:
+- Look for vertical black/white bars (barcode pattern)
+- Read the 12-13 digit number printed UNDER those bars
+- ⚠️ If barcode bars are NOT visible → leave empty
+- ⚠️ If numbers under bars are blurry/unreadable → leave empty
+- ⚠️ DO NOT guess or make up barcode numbers
+- ⚠️ DO NOT use random product codes as barcodes
+
+**size_variant**:
+- Read ANY size-related text visible on package
+- Examples of what to extract:
+  * "50 tips per pack" ✓
+  * "King Size" ✓
+  * "1¼ size" ✓
+  * "100 leaves" ✓
+  * "25 packs per box" ✓
+- ⚠️ ONLY extract size text that is ACTUALLY PRINTED on the package
+- ⚠️ If you don't see any size text → leave empty
+- ⚠️ DO NOT assume or infer size from product type
+
+**description**:
+- Any visible product features, materials, descriptions
+- Examples: "unbleached", "natural gum", "made in Spain"
+- Only include text you can actually read on the package
+
+**sku**, **price**, **quantity**, **category**:
+- Extract if clearly visible
+- Leave empty if not visible
+
+---
+
+**VALIDATION CHECKLIST BEFORE RESPONDING:**
+
+For EACH field you're about to fill in, ask yourself:
+- ✓ Can I see this exact text in the image?
+- ✓ Can I read it clearly enough to be certain?
+- ✓ Am I copying it exactly as shown?
+
+If any answer is NO → DO NOT fill that field!
+
+---
+
+**EXAMPLES OF CORRECT BEHAVIOR:**
+
+Image shows: "RAW Original Tips - 50 tips per pack"
+✓ CORRECT: {"product_name": "RAW Original Tips", "brand": "RAW", "size_variant": "50 tips per pack"}
+✗ WRONG: {"product_name": "RAW Original Tips", "brand": "RAW", "size_variant": "King Size"} ← HALLUCINATION!
+
+Image shows barcode bars with clear numbers underneath: 716165250333
+✓ CORRECT: {"barcode": "716165250333"}
+
+Image shows barcode bars but numbers are blurry
+✓ CORRECT: {"barcode": ""} ← Leave empty, don't guess!
+
+Image shows "Not labeled for sport or sale in the US"
+✓ CORRECT: Do NOT extract this as brand - it's a warning label
+✗ WRONG: {"brand": "Not labeled for sport or sale in the US"}
+
+---
+
+**OUTPUT FORMAT - JSON ONLY:**
 ```json
 {
-  "product_name": "...",
-  "brand": "...",
-  "sku": "..." (if visible),
-  "barcode": "..." (if visible),
-  "price": "..." (if visible),
-  "quantity": "..." (if visible),
-  "description": "..." (if visible),
-  "category": "..." (if visible),
-  "size_variant": "..." (if visible)
+  "product_name": "",
+  "brand": "",
+  "barcode": "",
+  "size_variant": "",
+  "description": "",
+  "sku": "",
+  "price": "",
+  "quantity": "",
+  "category": ""
 }
 ```
 
-Only include fields that are clearly visible in the image.
+**FINAL REMINDER: Empty fields are REQUIRED when data is not clearly visible. Accuracy > Completeness.**
 """.strip()
 
     # Define JSON output schema

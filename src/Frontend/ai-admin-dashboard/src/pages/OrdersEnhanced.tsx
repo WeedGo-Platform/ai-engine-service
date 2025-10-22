@@ -9,6 +9,7 @@ import {
   DollarSign, TrendingUp, Users, BarChart3, Send, Camera,
   FileText, RefreshCw, Ban
 } from 'lucide-react';
+import { formatCurrency } from '../utils/currency';
 
 interface Order {
   id: string;
@@ -348,7 +349,7 @@ const OrdersEnhanced: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs font-medium text-gray-600 dark:text-gray-400">{t('orders:metrics.todayRevenue')}</p>
-              <p className="text-base sm:text-xl font-bold text-primary-600 dark:text-primary-400">${(metrics.revenue || 0).toFixed(2)}</p>
+              <p className="text-base sm:text-xl font-bold text-primary-600 dark:text-primary-400">{formatCurrency(metrics.revenue || 0)}</p>
             </div>
             <DollarSign className="w-6 h-6 sm:h-8 sm:w-8 text-primary-600 dark:text-primary-400 opacity-20" />
           </div>
@@ -548,7 +549,9 @@ const OrdersEnhanced: React.FC = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">
-                      ${order.total_amount?.toFixed(2) || '0.00'}
+                                          <span className="text-sm font-medium text-gray-900 dark:text-white">
+                      {formatCurrency(order.total_amount || 0)}
+                    </span>
                     </div>
                     <div className="text-xs text-gray-500">{order.payment_method}</div>
                   </td>
@@ -859,8 +862,8 @@ const OrdersEnhanced: React.FC = () => {
                           {item.thc_content}% / {item.cbd_content}%
                         </td>
                         <td className="px-4 py-2 text-sm">{item.quantity}</td>
-                        <td className="px-4 py-2 text-sm">${(item.unit_price || 0).toFixed(2)}</td>
-                        <td className="px-4 py-2 text-sm font-medium">${(item.total_price || 0).toFixed(2)}</td>
+                        <td className="px-4 py-2 text-sm">{formatCurrency(item.unit_price || 0)}</td>
+                        <td className="px-4 py-2 text-sm font-medium">{formatCurrency(item.total_price || 0)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -873,11 +876,11 @@ const OrdersEnhanced: React.FC = () => {
                   <div className="w-64">
                     <div className="flex justify-between py-1">
                       <span className="text-sm text-gray-600">Subtotal:</span>
-                      <span className="text-sm">${(selectedOrder.subtotal || 0).toFixed(2)}</span>
+                      <span className="text-sm">{formatCurrency(selectedOrder.subtotal || 0)}</span>
                     </div>
                     <div className="flex justify-between py-1">
                       <span className="text-sm text-gray-600">Tax (13% HST):</span>
-                      <span className="text-sm">${(selectedOrder.tax_amount || 0).toFixed(2)}</span>
+                      <span className="text-sm">{formatCurrency(selectedOrder.tax_amount || 0)}</span>
                     </div>
                     {selectedOrder.delivery_fee > 0 && (
                       <div className="flex justify-between py-1">

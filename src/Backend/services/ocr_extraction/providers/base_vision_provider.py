@@ -143,6 +143,9 @@ class BaseVisionProvider(ABC):
 
                 latency_ms = (time.time() - start_time) * 1000
 
+                # Calculate confidence scores for extracted fields
+                confidence_scores = self._calculate_field_confidence(data)
+
                 # Build result
                 result = ExtractionResult(
                     document_id=document.id,
@@ -151,6 +154,7 @@ class BaseVisionProvider(ABC):
                     model_used=self.model.name,
                     latency_ms=latency_ms,
                     cost=self.config.cost_per_image,
+                    confidence_scores=confidence_scores,
                 )
 
                 # Record success
@@ -191,6 +195,88 @@ class BaseVisionProvider(ABC):
     def _record_failure(self):
         """Record failed request"""
         self.total_failures += 1
+
+    def _calculate_field_confidence(self, data: Dict[str, Any]) -> Dict[str, float]:
+        """
+        Calculate confidence scores for extracted fields
+        
+        Since vision models don't return per-field confidence, we estimate it based on:
+        - Field presence (0.0 if empty, base score if present)
+        - Field length (longer text suggests higher confidence)
+        - Field type validation (structured data like barcodes get higher scores)
+        - Critical fields (product_name, brand, barcode, description) are weighted higher
+        
+        Args:
+            data: Extracted data dictionary
+            
+        Returns:
+            Dictionary mapping field names to confidence scores (0.0 to 1.0)
+        """
+        confidence_scores = {}
+        
+        # Define critical fields that should be extracted for accessories
+        critical_fields = {'product_name', 'brand', 'barcode', 'description'}
+        
+        for field_name, value in data.items():
+            # Skip metadata fields
+            if field_name in ('raw_text', 'extraction_time', 'provider', 'confidence'):
+                continue
+                
+            # Empty or None values get 0 confidence
+            if value is None or value == "" or value == []:
+                confidence_scores[field_name] = 0.0
+                continue
+            
+            # Start with base confidence for having any value
+            # Critical fields get higher base score
+            score = 0.7 if field_name in critical_fields else 0.6
+            
+            # Adjust based on value characteristics
+            if isinstance(value, str):
+                # Longer strings suggest more content was found
+                if len(value) > 100:  # Long description
+                    score += 0.2
+                elif len(value) > 50:
+                    score += 0.15
+                elif len(value) > 20:
+                    score += 0.1
+                elif len(value) > 10:
+                    score += 0.05
+                
+                # Structured data (barcodes, SKUs) with correct length/format
+                if field_name == 'barcode':
+                    if value.isdigit() and 8 <= len(value) <= 14:
+                        score = 0.95  # High confidence for valid barcode format
+                    elif any(c.isdigit() for c in value):
+                        score = 0.75  # Partial confidence if has digits
+                        
+                if field_name == 'sku' and any(c.isdigit() for c in value):
+                    score += 0.1
+                    
+                # Brand names that are all caps suggest clear printing
+                if field_name == 'brand' and value.isupper() and len(value) > 2:
+                    score += 0.15
+                
+                # Product names with good length and detail
+                if field_name == 'product_name' and len(value) > 15:
+                    score += 0.1
+                    
+                # Descriptions with substantial content
+                if field_name == 'description' and len(value) > 30:
+                    score += 0.15
+                    
+            elif isinstance(value, (int, float)):
+                # Numeric values (prices, quantities) are typically accurate
+                score = 0.85
+                
+            elif isinstance(value, list) and len(value) > 0:
+                # Tables or arrays with data
+                score = 0.75
+            
+            # Cap at 0.95 (we can't be 100% certain without human verification)
+            confidence_scores[field_name] = min(score, 0.95)
+        
+        return confidence_scores
 
     def get_stats(self) -> Dict[str, Any]:
         """

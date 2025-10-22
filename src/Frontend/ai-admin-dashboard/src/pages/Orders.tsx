@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { getApiEndpoint } from '../config/app.config';
+import { formatCurrency } from '../utils/currency';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../services/api';
 import { Order, Customer, Product } from '../types';
@@ -239,7 +242,7 @@ const Orders: React.FC = () => {
                     {order.items?.length || 0} items
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                    ${order.total_amount?.toFixed(2) || '0.00'}
+                    {formatCurrency(order.total_amount || 0)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center text-sm text-gray-900 dark:text-white">
@@ -476,8 +479,8 @@ const Orders: React.FC = () => {
                           <tr key={item.id}>
                             <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-900 dark:text-white">{item.product?.name || 'Unknown'}</td>
                             <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-900 dark:text-white">{item.quantity}</td>
-                            <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-900 dark:text-white">${(item.unit_price || 0).toFixed(2)}</td>
-                            <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-900 dark:text-white">${(item.total_price || 0).toFixed(2)}</td>
+                            <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-900 dark:text-white">{formatCurrency(item.unit_price || 0)}</td>
+                            <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-900 dark:text-white">{formatCurrency(item.total_price || 0)}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -489,15 +492,15 @@ const Orders: React.FC = () => {
               <div className="border-t border-gray-200 dark:border-gray-700 pt-3 sm:pt-4">
                 <div className="flex justify-end space-y-1">
                   <div className="text-right">
-                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Subtotal: ${(selectedOrder.subtotal || 0).toFixed(2)}</p>
-                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Tax (13% HST): ${(selectedOrder.tax_amount || 0).toFixed(2)}</p>
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Subtotal: {formatCurrency(selectedOrder.subtotal || 0)}</p>
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Tax (13% HST): {formatCurrency(selectedOrder.tax_amount || 0)}</p>
                     {selectedOrder.delivery_fee > 0 && (
-                      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Delivery: ${(selectedOrder.delivery_fee || 0).toFixed(2)}</p>
+                      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Delivery: {formatCurrency(selectedOrder.delivery_fee || 0)}</p>
                     )}
                     {selectedOrder.discount_amount > 0 && (
-                      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Discount: -${(selectedOrder.discount_amount || 0).toFixed(2)}</p>
+                      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Discount: -{formatCurrency(selectedOrder.discount_amount || 0)}</p>
                     )}
-                    <p className="text-base sm:text-lg font-bold text-gray-900 dark:text-white mt-1">Total: ${(selectedOrder.total_amount || 0).toFixed(2)}</p>
+                    <p className="text-base sm:text-lg font-bold text-gray-900 dark:text-white mt-1">Total: {formatCurrency(selectedOrder.total_amount || 0)}</p>
                   </div>
                 </div>
               </div>

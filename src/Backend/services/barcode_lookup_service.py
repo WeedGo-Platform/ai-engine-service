@@ -1006,11 +1006,12 @@ class BarcodeLookupService:
                     'sku': result.extracted_data.get('sku', ''),
                     'price': result.extracted_data.get('price'),
                     'quantity': result.extracted_data.get('quantity'),
+                    'size_variant': result.extracted_data.get('size_variant', ''),
                     'description': result.extracted_data.get('description', ''),
                     'category': result.extracted_data.get('category', ''),
                     'confidence': result.get_overall_confidence(),
-                    'provider': result.provider_name,
-                    'extraction_time': result.extraction_time
+                    'provider': result.provider_used,
+                    'extraction_time': result.latency_ms / 1000  # Convert ms to seconds
                 }
 
                 # Save OCR history
@@ -1027,7 +1028,7 @@ class BarcodeLookupService:
                             json.dumps(data),
                             data['confidence'],
                             'success' if data['confidence'] > 0.5 else 'low_confidence',
-                            result.provider_name
+                            result.provider_used
                         ))
                         self.db.commit()
                     except Exception as db_err:
@@ -1036,7 +1037,7 @@ class BarcodeLookupService:
                     finally:
                         cursor.close()
 
-                logger.info(f"Advanced OCR completed: confidence={data['confidence']:.2%}, provider={result.provider_name}")
+                logger.info(f"Advanced OCR completed: confidence={data['confidence']:.2%}, provider={result.provider_used}")
                 return data
 
             except Exception as e:

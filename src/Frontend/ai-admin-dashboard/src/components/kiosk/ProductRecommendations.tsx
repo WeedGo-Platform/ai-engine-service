@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getApiUrl } from '../../config/app.config';
 import { Plus, Sparkles } from 'lucide-react';
 import { useKiosk } from '../../contexts/KioskContext';
+import { formatCurrency } from '../../utils/currency';
 
 interface RecommendedProduct {
   id: string;
@@ -171,15 +172,15 @@ export default function ProductRecommendations({
                   {product.is_sale && product.sale_price ? (
                     <>
                       <span className="text-sm font-semibold text-red-600">
-                        ${product.sale_price.toFixed(2)}
+                        {formatCurrency(product.sale_price)}
                       </span>
                       <span className="text-xs text-gray-500 line-through ml-1">
-                        ${product.retail_price.toFixed(2)}
+                        {formatCurrency(product.retail_price)}
                       </span>
                     </>
                   ) : (
                     <span className="text-sm font-semibold text-primary-600">
-                      ${product.retail_price.toFixed(2)}
+                      {formatCurrency(product.retail_price)}
                     </span>
                   )}
                 </div>

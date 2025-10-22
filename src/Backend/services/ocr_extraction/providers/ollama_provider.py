@@ -114,9 +114,12 @@ class OllamaVisionProvider(BaseVisionProvider):
             if document.image_bytes:
                 # Document has raw bytes (e.g., from upload)
                 image_b64 = base64.b64encode(document.image_bytes).decode('utf-8')
+                img_size_kb = len(document.image_bytes) / 1024
+                logger.info(f"📸 Processing image from bytes: {img_size_kb:.1f} KB")
             else:
                 # Document has file path
                 image_b64 = self._load_and_encode_image(document.file_path)
+                logger.info(f"📸 Processing image from file: {document.file_path}")
 
             # Build request
             request_data = {
@@ -126,10 +129,14 @@ class OllamaVisionProvider(BaseVisionProvider):
                 "format": "json",  # Request JSON response
                 "stream": False,
                 "options": {
-                    "temperature": 0.1,  # Low temperature for consistent extraction
+                    "temperature": 0.0,  # Zero temperature for maximum accuracy, no creativity
+                    "top_k": 1,  # Only use most likely token
+                    "top_p": 0.1,  # Minimal sampling diversity
                     "num_predict": 500,  # Max tokens
                 }
             }
+            
+            logger.info(f"🤖 Calling Ollama model: {self.model.name} with temp=0.0, top_k=1")
 
             # Call Ollama API
             response = await self.client.post(
@@ -148,12 +155,21 @@ class OllamaVisionProvider(BaseVisionProvider):
             import json
             try:
                 data = json.loads(response_text)
+                # DEBUG: Log all extracted fields
+                logger.info(f"✅ Ollama extraction complete:")
+                logger.info(f"   Product: {data.get('product_name', 'N/A')}")
+                logger.info(f"   Brand: {data.get('brand', 'N/A')}")
+                logger.info(f"   Barcode: {data.get('barcode', 'N/A')}")
+                logger.info(f"   Size: {data.get('size_variant', 'N/A')}")
             except json.JSONDecodeError:
                 # Try to extract JSON from response
                 import re
                 json_match = re.search(r'\{.*\}', response_text, re.DOTALL)
                 if json_match:
                     data = json.loads(json_match.group(0))
+                    if 'barcode' in data:
+                        img_size = len(document.image_bytes) if document.image_bytes else 0
+                        logger.info(f"🔍 DEBUG - Ollama extracted barcode (from regex): '{data.get('barcode')}' from image ({img_size} bytes)")
                 else:
                     data = {"raw_text": response_text}
 

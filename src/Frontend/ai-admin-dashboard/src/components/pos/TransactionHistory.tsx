@@ -7,6 +7,7 @@ import {
 import { useStoreContext } from '../../contexts/StoreContext';
 import posService from '../../services/posService';
 import toast from 'react-hot-toast';
+import { formatCurrency } from '../../utils/currency';
 
 interface Transaction {
   id: string;
@@ -49,7 +50,7 @@ const RefundModal: React.FC<RefundModalProps> = ({ transaction, onClose, onRefun
     }
 
     if (refundType === 'partial' && (refundAmount <= 0 || refundAmount > maxRefundable)) {
-      toast.error(`Refund amount must be between $0.01 and $${maxRefundable.toFixed(2)}`);
+      toast.error(`Refund amount must be between $0.01 and ${formatCurrency(maxRefundable)}`);
       return;
     }
 
@@ -91,8 +92,8 @@ const RefundModal: React.FC<RefundModalProps> = ({ transaction, onClose, onRefun
           </div>
           <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
             Transaction: {transaction.receipt_number} |
-            Total: ${transaction.total.toFixed(2)} |
-            {(transaction.refunded_amount ?? 0) ? ` Previously refunded: $${(transaction.refunded_amount ?? 0).toFixed(2)}` : ''}
+            Total: {formatCurrency(transaction.total)} |
+            {(transaction.refunded_amount ?? 0) ? ` Previously refunded: ${formatCurrency(transaction.refunded_amount ?? 0)}` : ''}
           </div>
         </div>
 
@@ -111,7 +112,7 @@ const RefundModal: React.FC<RefundModalProps> = ({ transaction, onClose, onRefun
               >
                 <Check className="w-5 h-5 mx-auto mb-1" />
                 <span className="text-sm">Full Refund</span>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">${maxRefundable.toFixed(2)}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{formatCurrency(maxRefundable)}</p>
               </button>
 
               <button
@@ -159,7 +160,7 @@ const RefundModal: React.FC<RefundModalProps> = ({ transaction, onClose, onRefun
                 />
               </div>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                Maximum refundable: ${maxRefundable.toFixed(2)}
+                Maximum refundable: {formatCurrency(maxRefundable)}
               </p>
             </div>
           )}
@@ -189,11 +190,11 @@ const RefundModal: React.FC<RefundModalProps> = ({ transaction, onClose, onRefun
                     <div className="flex-1">
                       <p className="font-medium text-sm text-gray-900 dark:text-white">{item.product?.name}</p>
                       <p className="text-xs text-gray-500 dark:text-gray-400">
-                        Qty: {item.quantity} × ${item.product?.price?.toFixed(2)}
+                        Qty: {item.quantity} × {formatCurrency(item.product?.price || 0)}
                       </p>
                     </div>
                     <span className="font-medium text-gray-900 dark:text-white">
-                      ${((item.product?.price || 0) * item.quantity).toFixed(2)}
+                      {formatCurrency((item.product?.price || 0) * item.quantity)}
                     </span>
                   </label>
                 ))}
@@ -548,10 +549,10 @@ export default function TransactionHistory() {
           </span>
           <div className="flex items-center gap-6">
             <span className="text-gray-600 dark:text-gray-400">
-              Total: ${filteredTransactions.reduce((sum, t) => sum + t.total, 0).toFixed(2)}
+              Total: {formatCurrency(filteredTransactions.reduce((sum, t) => sum + t.total, 0))}
             </span>
             <span className="text-gray-600 dark:text-gray-400">
-              Refunded: ${filteredTransactions.reduce((sum, t) => sum + (t.refunded_amount || 0), 0).toFixed(2)}
+              Refunded: {formatCurrency(filteredTransactions.reduce((sum, t) => sum + (t.refunded_amount || 0), 0))}
             </span>
           </div>
         </div>
@@ -649,10 +650,10 @@ export default function TransactionHistory() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="text-sm">
-                      <p className="font-medium text-gray-900 dark:text-white">${transaction.total.toFixed(2)}</p>
+                      <p className="font-medium text-gray-900 dark:text-white">{formatCurrency(transaction.total)}</p>
                       {(transaction.refunded_amount ?? 0) > 0 && (
                         <p className="text-danger-600 dark:text-red-400 text-xs">
-                          -${(transaction.refunded_amount ?? 0).toFixed(2)}
+                          -{formatCurrency(transaction.refunded_amount ?? 0)}
                         </p>
                       )}
                     </div>
@@ -767,7 +768,7 @@ export default function TransactionHistory() {
                   {selectedTransaction.items?.map((item, index) => (
                     <div key={index} className="flex justify-between text-sm text-gray-900 dark:text-white">
                       <span>{item.product?.name} × {item.quantity}</span>
-                      <span>${((item.product?.price || 0) * item.quantity).toFixed(2)}</span>
+                      <span>{formatCurrency((item.product?.price || 0) * item.quantity)}</span>
                     </div>
                   ))}
                 </div>
@@ -776,20 +777,20 @@ export default function TransactionHistory() {
               <div className="border-t border-gray-200 dark:border-gray-700 mt-4 pt-4 space-y-2">
                 <div className="flex justify-between text-sm text-gray-700 dark:text-gray-300">
                   <span>Subtotal</span>
-                  <span>${selectedTransaction.subtotal.toFixed(2)}</span>
+                  <span>{formatCurrency(selectedTransaction.subtotal)}</span>
                 </div>
                 <div className="flex justify-between text-sm text-gray-700 dark:text-gray-300">
                   <span>Tax</span>
-                  <span>${selectedTransaction.tax.toFixed(2)}</span>
+                  <span>{formatCurrency(selectedTransaction.tax)}</span>
                 </div>
                 <div className="flex justify-between font-medium text-gray-900 dark:text-white">
                   <span>Total</span>
-                  <span>${selectedTransaction.total.toFixed(2)}</span>
+                  <span>{formatCurrency(selectedTransaction.total)}</span>
                 </div>
                 {selectedTransaction.refunded_amount > 0 && (
                   <div className="flex justify-between text-sm text-danger-600 dark:text-red-400">
                     <span>Refunded</span>
-                    <span>-${selectedTransaction.refunded_amount.toFixed(2)}</span>
+                    <span>-{formatCurrency(selectedTransaction.refunded_amount)}</span>
                   </div>
                 )}
               </div>

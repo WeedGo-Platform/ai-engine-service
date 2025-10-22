@@ -11,6 +11,7 @@ import { format } from 'date-fns';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useStoreContext } from '../contexts/StoreContext';
+import { formatCurrency } from '../utils/currency';
 import {
   Step1BasicInfo,
   Step2Discount,
@@ -545,7 +546,7 @@ export default function Promotions() {
               </div>
               <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-3 sm:p-4">
                 <div className="text-xl sm:text-2xl font-bold text-purple-600 dark:text-purple-400">
-                  ${analytics.totals?.total_discount_amount?.toFixed(2) || '0.00'}
+                  {formatCurrency(analytics.totals?.total_discount_amount || 0)}
                 </div>
                 <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Total Discounts</div>
               </div>
@@ -1647,10 +1648,10 @@ function PricingConfiguration() {
                                                                 </div>
                                                                 <div className="text-right">
                                                                   <div className="text-sm font-semibold text-gray-900">
-                                                                    ${(product.override_price || product.retail_price)?.toFixed(2) || '0.00'}
+                                                                    {formatCurrency(product.override_price || product.retail_price || 0)}
                                                                   </div>
                                                                   <div className="text-xs text-gray-500">
-                                                                    Cost: ${product.unit_cost?.toFixed(2) || '0.00'}
+                                                                    Cost: {formatCurrency(product.unit_cost || 0)}
                                                                   </div>
                                                                   {/* Markup Badge */}
                                                                   <div className="mt-1">
@@ -1804,20 +1805,20 @@ function PricingConfiguration() {
               <div className="text-sm text-blue-700">
                 {selectedProduct && selectedProduct.unit_cost ? (
                   <>
-                    <div>{t('promotions:pricing.currentCost')} = ${selectedProduct.unit_cost.toFixed(2)}</div>
-                    <div>{t('promotions:pricing.currentRetail')} = ${(selectedProduct.override_price || selectedProduct.retail_price)?.toFixed(2) || '0.00'}</div>
+                    <div>{t('promotions:pricing.currentCost')} = {formatCurrency(selectedProduct.unit_cost)}</div>
+                    <div>{t('promotions:pricing.currentRetail')} = {formatCurrency(selectedProduct.override_price || selectedProduct.retail_price || 0)}</div>
                     <div className="mt-2 pt-2 border-t border-blue-200">
                       <div className="font-medium">{t('promotions:pricing.newPricing', { markup: markupValue })}</div>
-                      <div>{t('promotions:pricing.newRetailPrice')} = ${(selectedProduct.unit_cost * (1 + markupValue / 100)).toFixed(2)}</div>
+                      <div>{t('promotions:pricing.newRetailPrice')} = {formatCurrency(selectedProduct.unit_cost * (1 + markupValue / 100))}</div>
                       <div className="mt-1">
-                        {t('promotions:pricing.profitMargin')}: ${(selectedProduct.unit_cost * (markupValue / 100)).toFixed(2)} ({markupValue}%)
+                        {t('promotions:pricing.profitMargin')}: {formatCurrency(selectedProduct.unit_cost * (markupValue / 100))} ({markupValue}%)
                       </div>
                       {selectedProduct.retail_price && (
                         <div className="mt-1 text-xs">
                           {t('promotions:pricing.priceChange')}: {
                             ((selectedProduct.unit_cost * (1 + markupValue / 100)) - selectedProduct.retail_price) > 0
-                              ? `+$${((selectedProduct.unit_cost * (1 + markupValue / 100)) - selectedProduct.retail_price).toFixed(2)}`
-                              : `-$${Math.abs((selectedProduct.unit_cost * (1 + markupValue / 100)) - selectedProduct.retail_price).toFixed(2)}`
+                              ? `+${formatCurrency((selectedProduct.unit_cost * (1 + markupValue / 100)) - selectedProduct.retail_price)}`
+                              : `-${formatCurrency(Math.abs((selectedProduct.unit_cost * (1 + markupValue / 100)) - selectedProduct.retail_price))}`
                           }
                         </div>
                       )}
@@ -1826,9 +1827,9 @@ function PricingConfiguration() {
                 ) : (
                   <>
                     <div>{t('promotions:pricing.ifCost')} = $10.00</div>
-                    <div>{t('promotions:pricing.retailPrice')} = ${(10 * (1 + markupValue / 100)).toFixed(2)}</div>
+                    <div>{t('promotions:pricing.retailPrice')} = {formatCurrency(10 * (1 + markupValue / 100))}</div>
                     <div className="mt-1 font-medium">
-                      {t('promotions:pricing.profitMargin')}: ${(10 * (markupValue / 100)).toFixed(2)} ({markupValue}%)
+                      {t('promotions:pricing.profitMargin')}: {formatCurrency(10 * (markupValue / 100))} ({markupValue}%)
                     </div>
                   </>
                 )}

@@ -41,6 +41,7 @@ class AccessoryBase(BaseModel):
     name: str
     brand: Optional[str]
     category_id: Optional[int]
+    subcategory: Optional[str] = None
     description: Optional[str]
     image_url: Optional[str]
     specifications: Optional[Dict[str, Any]] = {}
@@ -90,6 +91,7 @@ class AccessoryIntakeRequest(BaseModel):
     name: str
     brand: Optional[str]
     category_id: Optional[int]
+    subcategory: Optional[str] = None
     quantity: int
     cost_price: float
     retail_price: float
@@ -291,9 +293,9 @@ async def add_to_catalog(accessory: AccessoryBase):
     try:
         cursor.execute("""
             INSERT INTO accessories_catalog 
-            (barcode, upc, sku, name, brand, category_id, description,
+            (barcode, upc, sku, name, brand, category_id, subcategory, description,
              image_url, specifications, materials, dimensions, msrp, tags)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             RETURNING id
         """, (
             accessory.barcode,
@@ -302,6 +304,7 @@ async def add_to_catalog(accessory: AccessoryBase):
             accessory.name,
             accessory.brand,
             accessory.category_id,
+            accessory.subcategory,
             accessory.description,
             accessory.image_url,
             json.dumps(accessory.specifications),
@@ -340,14 +343,14 @@ async def update_catalog_item(accessory_id: int, accessory: AccessoryBase):
         cursor.execute("""
             UPDATE accessories_catalog SET
                 barcode = %s, upc = %s, sku = %s, name = %s,
-                brand = %s, category_id = %s, description = %s,
+                brand = %s, category_id = %s, subcategory = %s, description = %s,
                 image_url = %s, specifications = %s, materials = %s,
                 dimensions = %s, msrp = %s, tags = %s,
                 updated_at = CURRENT_TIMESTAMP
             WHERE id = %s
         """, (
             accessory.barcode, accessory.upc, accessory.sku, accessory.name,
-            accessory.brand, accessory.category_id, accessory.description,
+            accessory.brand, accessory.category_id, accessory.subcategory, accessory.description,
             accessory.image_url, json.dumps(accessory.specifications),
             accessory.materials,
             json.dumps(accessory.dimensions) if accessory.dimensions else None,
@@ -397,8 +400,8 @@ async def intake_accessory(request: AccessoryIntakeRequest):
         if not accessory_id and request.auto_create_catalog:
             cursor.execute("""
                 INSERT INTO accessories_catalog 
-                (barcode, sku, name, brand, category_id, description, image_url)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                (barcode, sku, name, brand, category_id, subcategory, description, image_url)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                 RETURNING id
             """, (
                 request.barcode,
@@ -406,6 +409,7 @@ async def intake_accessory(request: AccessoryIntakeRequest):
                 request.name,
                 request.brand,
                 request.category_id,
+                request.subcategory,
                 request.description,
                 request.image_url
             ))

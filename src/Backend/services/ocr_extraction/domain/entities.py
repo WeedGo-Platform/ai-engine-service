@@ -196,6 +196,9 @@ class ExtractionResult:
     def get_overall_confidence(self) -> float:
         """
         Calculate overall confidence score
+        
+        Only averages confidence scores for fields that were actually extracted (non-zero).
+        This prevents empty optional fields from dragging down the overall confidence.
 
         Returns:
             Float between 0.0 and 1.0
@@ -203,8 +206,14 @@ class ExtractionResult:
         if not self.confidence_scores:
             return 0.0
 
-        # Average of all field confidences
-        return sum(self.confidence_scores.values()) / len(self.confidence_scores)
+        # Only count fields with non-zero confidence (actually extracted)
+        non_zero_scores = [score for score in self.confidence_scores.values() if score > 0.0]
+        
+        if not non_zero_scores:
+            return 0.0
+
+        # Average of extracted field confidences only
+        return sum(non_zero_scores) / len(non_zero_scores)
 
     def get_confidence_level(self) -> ConfidenceLevel:
         """

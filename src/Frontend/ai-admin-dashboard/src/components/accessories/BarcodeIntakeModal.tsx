@@ -1,23 +1,27 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { getApiEndpoint } from '../../config/app.config';
 import {
   X, Scan, Loader2, Check, AlertCircle,
   Search, Package, DollarSign
 } from 'lucide-react';
 import axios from 'axios';
+import { getSubcategoriesForCategory, getCategorySlug } from '../../constants/subcategories';
+import { formatCurrency, formatCurrencyInput, parseCurrencyInput } from '../../utils/currency';
 
 interface BarcodeIntakeModalProps {
   isOpen: boolean;
   onClose: () => void;
   onComplete: (data: any) => void;
   storeId: string;
+  categories: Array<{ id: number; name: string; slug: string; icon: string }>;
 }
 
 const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
   isOpen,
   onClose,
   onComplete,
-  storeId
+  storeId,
+  categories
 }) => {
   const [barcode, setBarcode] = useState('');
   const [scanning, setScanning] = useState(false);
@@ -30,8 +34,33 @@ const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
   const [costPrice, setCostPrice] = useState('');
   const [retailPrice, setRetailPrice] = useState('');
   const [location, setLocation] = useState('');
+  const [categoryId, setCategoryId] = useState('');
+  const [subcategory, setSubcategory] = useState('');
+
+  // Get available subcategories based on selected category
+  const availableSubcategories = useMemo(() => {
+    if (!categoryId) return [];
+    const slug = getCategorySlug(categoryId, categories);
+    return getSubcategoriesForCategory(slug);
+  }, [categoryId, categories]);
   
   const barcodeInputRef = useRef<HTMLInputElement>(null);
+
+  // Format currency input as user types (last 2 digits = cents)
+  const handleCurrencyInput = (value: string, setter: (val: string) => void) => {
+    // Remove all non-numeric characters
+    const numericValue = value.replace(/\D/g, '');
+    
+    if (numericValue === '') {
+      setter('');
+      return;
+    }
+    
+    // Convert to cents then to dollars
+    const cents = parseInt(numericValue, 10);
+    const dollars = (cents / 100).toFixed(2);
+    setter(dollars);
+  };
 
   useEffect(() => {
     if (isOpen && barcodeInputRef.current) {
@@ -65,7 +94,7 @@ const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
           setRetailPrice(response.data.data.price.toString());
         }
         if (response.data.data.msrp) {
-          setCostPrice((response.data.data.msrp * 0.5).toFixed(2)); // Assume 50% margin
+          setCostPrice(formatCurrencyInput(response.data.data.msrp * 0.5)); // Assume 50% margin
         }
       }
 
@@ -93,7 +122,8 @@ const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
         store_id: storeId,
         name: scanResult.data?.name || 'Unknown Product',
         brand: scanResult.data?.brand,
-        category_id: scanResult.data?.category_id,
+        category_id: categoryId || scanResult.data?.category_id,
+        subcategory: subcategory || null,
         quantity,
         cost_price: parseFloat(costPrice),
         retail_price: parseFloat(retailPrice),
@@ -126,6 +156,8 @@ const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
     setCostPrice('');
     setRetailPrice('');
     setLocation('');
+    setCategoryId('');
+    setSubcategory('');
     setError('');
     setManualEntry(false);
   };
@@ -278,15 +310,52 @@ const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Category
+                  </label>
+                  <select
+                    value={categoryId}
+                    onChange={(e) => { setCategoryId(e.target.value); setSubcategory(''); }}
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+                  >
+                    <option value="">Select category</option>
+                    {categories.map(cat => (
+                      <option key={cat.id} value={cat.id}>
+                        {cat.icon} {cat.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {categoryId && availableSubcategories.length > 0 && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Subcategory
+                    </label>
+                    <select
+                      value={subcategory}
+                      onChange={(e) => setSubcategory(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
+                    >
+                      <option value="">Select subcategory (optional)</option>
+                      {availableSubcategories.map(subcat => (
+                        <option key={subcat} value={subcat}>
+                          {subcat}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Cost Price *
                   </label>
                   <div className="relative">
                     <DollarSign className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
                     <input
-                      type="number"
+                      type="text"
                       value={costPrice}
-                      onChange={(e) => setCostPrice(e.target.value)}
-                      step="0.01"
+                      onChange={(e) => handleCurrencyInput(e.target.value, setCostPrice)}
                       placeholder="0.00"
                       className="w-full pl-9 pr-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
                     />
@@ -300,10 +369,9 @@ const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
                   <div className="relative">
                     <DollarSign className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
                     <input
-                      type="number"
+                      type="text"
                       value={retailPrice}
-                      onChange={(e) => setRetailPrice(e.target.value)}
-                      step="0.01"
+                      onChange={(e) => handleCurrencyInput(e.target.value, setRetailPrice)}
                       placeholder="0.00"
                       className="w-full pl-9 pr-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors"
                     />
@@ -317,14 +385,14 @@ const BarcodeIntakeModal: React.FC<BarcodeIntakeModalProps> = ({
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-600 dark:text-gray-300">Margin:</span>
                     <span className="font-medium text-primary-700 dark:text-primary-400">
-                      ${(parseFloat(retailPrice) - parseFloat(costPrice)).toFixed(2)} 
+                      {formatCurrency(parseFloat(retailPrice) - parseFloat(costPrice))} 
                       ({((parseFloat(retailPrice) - parseFloat(costPrice)) / parseFloat(retailPrice) * 100).toFixed(1)}%)
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-sm mt-1">
                     <span className="text-gray-600 dark:text-gray-300">Total Value:</span>
                     <span className="font-medium text-gray-900 dark:text-white">
-                      ${(quantity * parseFloat(retailPrice)).toFixed(2)}
+                      {formatCurrency(quantity * parseFloat(retailPrice))}
                     </span>
                   </div>
                 </div>

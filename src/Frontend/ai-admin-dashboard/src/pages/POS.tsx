@@ -19,6 +19,7 @@ import posService from '../services/posService';
 import { useStoreContext } from '../contexts/StoreContext';
 import ProductDetailsModal from '../components/ProductDetailsModal';
 import toast from 'react-hot-toast';
+import { formatCurrency } from '../utils/currency';
 
 interface Batch {
   batch_lot: string;
@@ -1250,7 +1251,7 @@ export default function POS({
                         </div>
                       </div>
                       <div className="mt-2 flex items-center justify-between">
-                        <span className="text-lg font-bold text-gray-900 dark:text-white">${product.price.toFixed(2)}</span>
+                        <span className="text-lg font-bold text-gray-900 dark:text-white">{formatCurrency(product.price)}</span>
                         <span className={`text-xs ${
                           !inStock ? 'text-red-500 dark:text-red-400 font-medium' :
                           lowStock ? 'text-warning-600 dark:text-yellow-500' :
@@ -1394,7 +1395,7 @@ export default function POS({
                         <div className="flex-1 min-w-0">
                           <h4 className="text-sm sm:text-base font-medium text-gray-900 dark:text-white line-clamp-2">{item.product.name}</h4>
                           <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-                            ${item.product.price.toFixed(2)} x {item.quantity}
+                            {formatCurrency(item.product.price)} x {item.quantity}
                           </p>
                           {item.batch && (
                             <p className="text-xs text-accent-600 dark:text-accent-400 truncate">
@@ -1471,7 +1472,7 @@ export default function POS({
             <div className="border-t border-gray-200 dark:border-gray-700 p-4 sm:p-6 space-y-2">
               <div className="flex justify-between text-sm text-gray-700 dark:text-gray-300">
                 <span>{t('pos:totals.subtotal')}</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>{formatCurrency(subtotal)}</span>
               </div>
 
               {/* Discount Section */}
@@ -1528,7 +1529,7 @@ export default function POS({
                 {discountAmount > 0 && (
                   <div className="flex justify-between text-sm text-primary-600 dark:text-primary-400 mt-1">
                     <span>{t('pos:totals.discountApplied')}</span>
-                    <span>-${discountAmount.toFixed(2)}</span>
+                    <span>-{formatCurrency(discountAmount)}</span>
                   </div>
                 )}
               </div>
@@ -1536,17 +1537,17 @@ export default function POS({
               {discountAmount > 0 && (
                 <div className="flex justify-between text-sm font-medium text-primary-600 dark:text-primary-400">
                   <span>{t('pos:totals.afterDiscount')}</span>
-                  <span>${discountedSubtotal.toFixed(2)}</span>
+                  <span>{formatCurrency(discountedSubtotal)}</span>
                 </div>
               )}
 
               <div className="flex justify-between text-sm text-gray-700 dark:text-gray-300">
                 <span>{t('pos:totals.tax')}</span>
-                <span>${tax.toFixed(2)}</span>
+                <span>{formatCurrency(tax)}</span>
               </div>
               <div className="flex justify-between text-lg font-bold border-t border-gray-200 dark:border-gray-700 pt-2 text-gray-900 dark:text-white">
                 <span>{t('pos:totals.total')}</span>
-                <span>${total.toFixed(2)}</span>
+                <span>{formatCurrency(total)}</span>
               </div>
             </div>
 
@@ -1605,7 +1606,7 @@ export default function POS({
                         {new Date(sale.timestamp).toLocaleString()}
                       </p>
                     </div>
-                    <span className="text-lg font-bold text-gray-900 dark:text-white">${sale.total.toFixed(2)}</span>
+                    <span className="text-lg font-bold text-gray-900 dark:text-white">{formatCurrency(sale.total)}</span>
                   </div>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
                     {sale.items.length} {t('pos:parked.items')}

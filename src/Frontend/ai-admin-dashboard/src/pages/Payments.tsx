@@ -9,6 +9,7 @@ import {
   RefreshCw,
   Download,
   AlertCircle,
+import { formatCurrency } from '../utils/currency';
   CheckCircle,
   XCircle,
   Clock,
@@ -74,6 +75,23 @@ const PaymentsPage: React.FC = () => {
   const [isRefundDialogOpen, setIsRefundDialogOpen] = useState(false);
   const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Currency input handler - treats input like a cash register (last 2 digits are cents)
+  const handleCurrencyInput = (value: string, setter: (val: string) => void) => {
+    // Remove all non-numeric characters
+    const numericValue = value.replace(/\D/g, '');
+    
+    // Handle empty input
+    if (numericValue === '') {
+      setter('');
+      return;
+    }
+    
+    // Convert to cents and then to dollar format
+    const cents = parseInt(numericValue, 10);
+    const dollars = (cents / 100).toFixed(2);
+    setter(dollars);
+  };
 
   // Only use tenant_id if it's actually available (not from incomplete store data)
   const tenantId = currentStore?.tenant_id;
@@ -259,9 +277,9 @@ const PaymentsPage: React.FC = () => {
                     <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
                       Total Revenue
                     </dt>
-                    <dd className="text-2xl font-semibold text-gray-900 dark:text-white">
-                      ${metrics.total_amount.toFixed(2)}
-                    </dd>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                      {formatCurrency(metrics.total_amount)}
+                    </p>
                     <dd className="text-xs text-gray-500 dark:text-gray-400">
                       {metrics.total_transactions} transactions
                     </dd>
@@ -305,9 +323,9 @@ const PaymentsPage: React.FC = () => {
                     <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
                       Total Refunds
                     </dt>
-                    <dd className="text-2xl font-semibold text-gray-900 dark:text-white">
-                      ${metrics.total_refunds.toFixed(2)}
-                    </dd>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                      {formatCurrency(metrics.total_refunds)}
+                    </p>
                   </dl>
                 </div>
               </div>
@@ -325,9 +343,9 @@ const PaymentsPage: React.FC = () => {
                     <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
                       Processing Fees
                     </dt>
-                    <dd className="text-2xl font-semibold text-gray-900 dark:text-white">
-                      ${metrics.total_fees.toFixed(2)}
-                    </dd>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                      {formatCurrency(metrics.total_fees)}
+                    </p>
                     <dd className="text-xs text-gray-500 dark:text-gray-400">
                       {((metrics.total_fees / metrics.total_amount) * 100).toFixed(2)}% of revenue
                     </dd>
@@ -440,7 +458,7 @@ const PaymentsPage: React.FC = () => {
                         {transaction.customer_name || 'N/A'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                        ${transaction.amount.toFixed(2)} {transaction.currency}
+                        {formatCurrency(transaction.amount)} {transaction.currency}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
                         {getStatusBadge(transaction.status)}
@@ -497,7 +515,7 @@ const PaymentsPage: React.FC = () => {
                       Original Amount
                     </label>
                     <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                      ${selectedTransaction.amount.toFixed(2)} {selectedTransaction.currency}
+                      {formatCurrency(selectedTransaction.amount)} {selectedTransaction.currency}
                     </p>
                   </div>
                   <div>
@@ -506,11 +524,10 @@ const PaymentsPage: React.FC = () => {
                     </label>
                     <input
                       id="refund-amount"
-                      type="number"
-                      step="0.01"
+                      type="text"
                       max={selectedTransaction.amount}
                       value={refundAmount}
-                      onChange={(e) => setRefundAmount(e.target.value)}
+                      onChange={(e) => handleCurrencyInput(e.target.value, setRefundAmount)}
                       placeholder="Enter refund amount"
                       className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                     />

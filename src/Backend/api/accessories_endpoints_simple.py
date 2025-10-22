@@ -2,7 +2,7 @@
 Simple Accessories Management API Endpoints
 """
 
-from fastapi import APIRouter, HTTPException, Depends, Query
+from fastapi import APIRouter, HTTPException, Depends, Query, Body
 from pydantic import BaseModel
 from typing import Optional, Dict, Any, List
 import logging
@@ -116,7 +116,7 @@ async def get_categories():
         cursor = conn.cursor()
         
         cursor.execute("""
-            SELECT id, name, slug, icon, sort_order
+            SELECT id, name, slug, icon, sort_order, description, is_active
             FROM accessory_categories
             ORDER BY sort_order, name
         """)
@@ -130,7 +130,9 @@ async def get_categories():
                 'name': row[1],
                 'slug': row[2],
                 'icon': row[3],
-                'sort_order': row[4]
+                'sort_order': row[4],
+                'description': row[5],
+                'is_active': row[6]
             })
         
         cursor.close()
@@ -140,4 +142,140 @@ async def get_categories():
         
     except Exception as e:
         logger.error(f"Categories fetch error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/categories")
+async def create_category(
+    name: str = Body(...),
+    slug: str = Body(...),
+    icon: str = Body(''),
+    description: str = Body(''),
+    sort_order: int = Body(0),
+    is_active: bool = Body(True)
+):
+    """Create a new accessory category"""
+    try:
+        conn = psycopg2.connect(**DB_CONFIG)
+        cursor = conn.cursor()
+        
+        cursor.execute("""
+            INSERT INTO accessory_categories (name, slug, icon, description, sort_order, is_active)
+            VALUES (%s, %s, %s, %s, %s, %s)
+            RETURNING id, name, slug, icon, description, sort_order, is_active
+        """, (name, slug, icon, description, sort_order, is_active))
+        
+        row = cursor.fetchone()
+        conn.commit()
+        
+        category = {
+            'id': row[0],
+            'name': row[1],
+            'slug': row[2],
+            'icon': row[3],
+            'description': row[4],
+            'sort_order': row[5],
+            'is_active': row[6]
+        }
+        
+        cursor.close()
+        conn.close()
+        
+        logger.info(f"Created category: {name}")
+        return category
+        
+    except Exception as e:
+        logger.error(f"Category creation error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.put("/categories/{category_id}")
+async def update_category(
+    category_id: int,
+    name: str = Body(...),
+    slug: str = Body(...),
+    icon: str = Body(''),
+    description: str = Body(''),
+    sort_order: int = Body(0),
+    is_active: bool = Body(True)
+):
+    """Update an existing accessory category"""
+    try:
+        conn = psycopg2.connect(**DB_CONFIG)
+        cursor = conn.cursor()
+        
+        cursor.execute("""
+            UPDATE accessory_categories
+            SET name = %s, slug = %s, icon = %s, description = %s, sort_order = %s, is_active = %s
+            WHERE id = %s
+            RETURNING id, name, slug, icon, description, sort_order, is_active
+        """, (name, slug, icon, description, sort_order, is_active, category_id))
+        
+        row = cursor.fetchone()
+        if not row:
+            raise HTTPException(status_code=404, detail="Category not found")
+        
+        conn.commit()
+        
+        category = {
+            'id': row[0],
+            'name': row[1],
+            'slug': row[2],
+            'icon': row[3],
+            'description': row[4],
+            'sort_order': row[5],
+            'is_active': row[6]
+        }
+        
+        cursor.close()
+        conn.close()
+        
+        logger.info(f"Updated category {category_id}: {name}")
+        return category
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Category update error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.delete("/categories/{category_id}")
+async def delete_category(category_id: int):
+    """Delete an accessory category"""
+    try:
+        conn = psycopg2.connect(**DB_CONFIG)
+        cursor = conn.cursor()
+        
+        # Check if category is in use
+        cursor.execute("""
+            SELECT COUNT(*) FROM accessories_catalog WHERE category_id = %s
+        """, (category_id,))
+        
+        count = cursor.fetchone()[0]
+        if count > 0:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Cannot delete category: {count} products are using this category"
+            )
+        
+        # Delete category
+        cursor.execute("""
+            DELETE FROM accessory_categories WHERE id = %s RETURNING id
+        """, (category_id,))
+        
+        if cursor.fetchone() is None:
+            raise HTTPException(status_code=404, detail="Category not found")
+        
+        conn.commit()
+        cursor.close()
+        conn.close()
+        
+        logger.info(f"Deleted category {category_id}")
+        return {"success": True, "message": "Category deleted successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Category deletion error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
