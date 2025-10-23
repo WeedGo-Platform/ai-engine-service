@@ -374,6 +374,22 @@ class SearchService {
   }
 
   /**
+   * Get filter options for a category
+   */
+  async getFilterOptions(category?: string): Promise<any> {
+    // Mock implementation - replace with actual API call
+    return {
+      brands: [],
+      strains: [],
+      sizes: [],
+      weights: [],
+      priceRanges: [],
+      thcRanges: [],
+      cbdRanges: []
+    };
+  }
+
+  /**
    * Clear search history
    */
   clearSearchHistory(): void {

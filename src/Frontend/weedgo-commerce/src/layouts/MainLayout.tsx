@@ -13,7 +13,7 @@ import {
   ChatBubbleLeftRightIcon as ChatAlt2Icon,
   GlobeAltIcon
 } from '@heroicons/react/24/outline';
-import { RootState } from '@store/index';
+import { RootState, AppDispatch } from '@store/index';
 import ChatInterface from '@components/chat/ChatInterface';
 import StoreSelector from '@components/common/StoreSelector';
 import Logo from '@components/atoms/Logo';
@@ -27,7 +27,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const { t, i18n } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);

@@ -131,8 +131,8 @@ const Register: React.FC = () => {
     try {
       // Check if email already exists
       const emailCheck = await authApi.checkEmail(formData.email.toLowerCase().trim());
-      if (emailCheck.exists) {
-        toast.error('An account with this email already exists');
+      if (!emailCheck.available) {
+        toast.error(emailCheck.message || 'An account with this email already exists');
         setLoading(false);
         return;
       }

@@ -18,6 +18,7 @@ export interface Tenant {
   company_name?: string;
   business_number?: string;
   gst_hst_number?: string;
+  crol_number?: string; // Cannabis Retail Operating License number for OCS
   address?: Address;
   contact_email?: string;
   contact_phone?: string;
@@ -70,6 +71,7 @@ export interface CreateTenantRequest {
   company_name?: string;
   business_number?: string;
   gst_hst_number?: string;
+  crol_number?: string; // Cannabis Retail Operating License number for OCS
   address?: Address;
   contact_phone?: string;
   website?: string;

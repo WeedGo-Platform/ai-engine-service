@@ -38,22 +38,39 @@ export default function Recommendations() {
   const [selectedProduct, setSelectedProduct] = useState<string>('');
   const [activeTab, setActiveTab] = useState<'overview' | 'performance' | 'test'>('overview');
 
-  // Fetch trending products
+  // Fetch trending products with error handling
   const { data: trendingProducts } = useQuery({
     queryKey: ['trending-products'],
     queryFn: async () => {
-      const response = await axios.get(`${API_BASE_URL}/api/promotions/recommendations/trending?limit=10`);
-      return response.data.products;
-    }
+      try {
+        const response = await axios.get(`${API_BASE_URL}/api/promotions/recommendations/trending?limit=10`);
+        return response.data.products;
+      } catch (error) {
+        // Return empty array if endpoint doesn't exist yet
+        console.log('Recommendations trending endpoint not available yet');
+        return [];
+      }
+    },
+    retry: false // Don't retry if the endpoint doesn't exist
   });
 
-  // Fetch recommendation analytics
+  // Fetch recommendation analytics with error handling
   const { data: analytics } = useQuery({
     queryKey: ['recommendation-analytics'],
     queryFn: async () => {
-      const response = await axios.get(`${API_BASE_URL}/api/promotions/recommendations/analytics`);
-      return response.data;
-    }
+      try {
+        const response = await axios.get(`${API_BASE_URL}/api/promotions/recommendations/analytics`);
+        return response.data;
+      } catch (error) {
+        // Return mock data if endpoint doesn't exist yet
+        console.log('Recommendations analytics endpoint not available yet');
+        return {
+          metrics: [],
+          topPerformers: []
+        };
+      }
+    },
+    retry: false // Don't retry if the endpoint doesn't exist
   });
 
   // Fetch similar products for selected product

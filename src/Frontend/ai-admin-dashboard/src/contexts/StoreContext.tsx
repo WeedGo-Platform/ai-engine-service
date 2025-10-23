@@ -129,17 +129,8 @@ const storeService = {
     const token = localStorage.getItem('weedgo_auth_access_token') ||
                   sessionStorage.getItem('weedgo_auth_access_token');
 
-    const response = await fetch(getApiUrl('/api/stores/tenant/active'), {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token && { 'Authorization': `Bearer ${token}` })
-      },
-    });
-
-    if (!response.ok) {
-      // Fallback to fetch all stores if tenant endpoint doesn't exist
-      const fallbackResponse = await fetch(getApiUrl('/api/stores'), {
+    try {
+      const response = await fetch(getApiUrl('/api/stores/tenant/active'), {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -147,14 +138,31 @@ const storeService = {
         },
       });
 
-      if (!fallbackResponse.ok) {
-        throw new Error('Failed to fetch stores');
+      if (!response.ok) {
+        // Fallback to fetch all stores if tenant endpoint doesn't exist
+        const fallbackResponse = await fetch(getApiUrl('/api/stores'), {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token && { 'Authorization': `Bearer ${token}` })
+          },
+        });
+
+        if (!fallbackResponse.ok) {
+          console.warn('Failed to fetch stores from both endpoints, returning empty array');
+          return [];
+        }
+
+        const data = await fallbackResponse.json();
+        return Array.isArray(data) ? data : [];
       }
 
-      return fallbackResponse.json();
+      const data = await response.json();
+      return Array.isArray(data) ? data : [];
+    } catch (error) {
+      console.error('Error fetching stores:', error);
+      return []; // Return empty array instead of throwing
     }
-
-    return response.json();
   },
   
   /**
@@ -299,10 +307,7 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({
   const [inventoryStats, setInventoryStats] = useState<StoreInventoryStats | null>(null);
   const [filteredStores, setFilteredStores] = useState<Store[]>([]);
 
-  // Reduce logging frequency - only log on auth changes
-  if (process.env.NODE_ENV === 'development') {
-    console.log('StoreProvider render:', { isAuthenticated, userId: user?.user_id });
-  }
+  // Remove excessive logging - now only logs important state changes via useEffect
   
   // Fetch stores query
   const {
@@ -531,16 +536,16 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({
         }
       }
     }
-  }, [allStores, isLoading, currentStore?.id, currentStore?.tenant_id]); // Added currentStore dependencies to trigger enrichment
+  }, [allStores, isLoading, user?.role, persistSelection]); // Simplified dependencies to prevent re-renders
 
   // Trigger mutations for selected store
   useEffect(() => {
-    if (currentStore && filteredStores.length > 0) {
-      // Trigger mutations when store is selected
+    if (currentStore?.id && currentStore?.tenant_id && filteredStores.length > 0) {
+      // Only trigger mutations when we have complete store data
       selectStoreMutation.mutate(currentStore.id);
       loadInventoryStatsMutation.mutate(currentStore.id);
     }
-  }, [currentStore?.id]);
+  }, [currentStore?.id]); // Only depend on the ID
 
   // Initialize store selection on mount for default store
   useEffect(() => {

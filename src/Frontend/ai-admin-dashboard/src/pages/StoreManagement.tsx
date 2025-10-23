@@ -469,6 +469,13 @@ const StoreManagement: React.FC = () => {
                         {t('stores:actions.settings')}
                       </button>
                       <button
+                        onClick={() => navigate(`/dashboard/stores/${store.id}/details`)}
+                        className="px-3 py-1.5 text-sm text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg flex items-center gap-1"
+                      >
+                        <Settings className="w-4 h-4" />
+                        Details
+                      </button>
+                      <button
                         onClick={() => navigate(`/dashboard/stores/${store.store_code}/hours`)}
                         className="px-3 py-1.5 text-sm text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-lg flex items-center gap-1"
                       >

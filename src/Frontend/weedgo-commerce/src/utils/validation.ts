@@ -2,6 +2,7 @@
  * Comprehensive form validation utilities for all forms
  */
 
+import { useState } from 'react';
 import { sanitizeInput } from './security';
 
 export type ValidationResult = {

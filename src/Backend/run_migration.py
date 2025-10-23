@@ -3,12 +3,13 @@
 
 import asyncio
 import asyncpg
+import os
 import sys
 from pathlib import Path
 
 async def run_migration():
     # Read migration file
-    migration_file = Path("migrations/011_inventory_movements.sql")
+    migration_file = Path("migrations/001_ocs_integration_schema.sql")
     if not migration_file.exists():
         print(f"Migration file not found: {migration_file}")
         return False
@@ -19,11 +20,11 @@ async def run_migration():
     # Connect to database
     try:
         conn = await asyncpg.connect(
-            host='localhost',
-            port=5434,
-            database='ai_engine',
-            user='weedgo',
-            password='weedgo123'
+            host=os.getenv('DB_HOST', 'localhost'),
+            port=int(os.getenv('DB_PORT', 5434)),
+            database=os.getenv('DB_NAME', 'ai_engine'),
+            user=os.getenv('DB_USER', 'weedgo'),
+            password=os.getenv('DB_PASSWORD', 'weedgo123')
         )
         
         print(f"Running migration: {migration_file}")
@@ -31,17 +32,20 @@ async def run_migration():
         # Execute migration
         await conn.execute(migration_sql)
         
-        print("Migration completed successfully!")
+        print("✅ Migration completed successfully!")
         
         # Verify tables were created
         tables = await conn.fetch("""
             SELECT table_name 
             FROM information_schema.tables 
             WHERE table_schema = 'public' 
-            AND table_name IN ('inventory_movements', 'inventory_snapshots')
+            AND table_name LIKE 'ocs_%'
+            ORDER BY table_name
         """)
         
-        print(f"Created tables: {[t['table_name'] for t in tables]}")
+        print(f"\n✅ Created OCS tables ({len(tables)}):")
+        for t in tables:
+            print(f"   - {t['table_name']}")
         
         await conn.close()
         return True

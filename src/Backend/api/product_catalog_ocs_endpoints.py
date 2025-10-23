@@ -19,6 +19,7 @@ Provides access to Ontario Cannabis Store product catalog data
 
 from fastapi import APIRouter, HTTPException, Query, Depends
 from typing import List, Optional, Dict, Any
+import os
 from pydantic import BaseModel, Field
 from datetime import datetime
 import asyncpg
@@ -156,11 +157,11 @@ async def get_db_connection():
     """Get database connection"""
     try:
         conn = await asyncpg.connect(
-            host='localhost',
-            port=5434,
-            database='ai_engine',
-            user='weedgo',
-            password='weedgo123'
+            host=os.getenv('DB_HOST', 'localhost'),
+            port=int(os.getenv('DB_PORT', 5434)),
+            database=os.getenv('DB_NAME', 'ai_engine'),
+            user=os.getenv('DB_USER', 'weedgo'),
+            password=os.getenv('DB_PASSWORD', 'weedgo123')
         )
         return conn
     except Exception as e:

@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """
-Run specific migration to resolve customer table conflict
+Run the 010 customer schema migration
 """
 
 import asyncio
 import asyncpg
+import os
 import logging
 from pathlib import Path
 
@@ -18,11 +19,11 @@ async def run_customer_migration():
         # Connect to database
         logger.info("Connecting to database...")
         conn = await asyncpg.connect(
-            host='localhost',
-            port=5434,
-            database='ai_engine',
-            user='weedgo',
-            password='weedgo123'
+            host=os.getenv('DB_HOST', 'localhost'),
+            port=int(os.getenv('DB_PORT', 5434)),
+            database=os.getenv('DB_NAME', 'ai_engine'),
+            user=os.getenv('DB_USER', 'weedgo'),
+            password=os.getenv('DB_PASSWORD', 'weedgo123')
         )
         
         # Read the specific migration file

@@ -10,6 +10,7 @@ from typing import Optional, Dict, Any, Literal
 from datetime import datetime
 import logging
 import asyncpg
+import os
 import uuid
 import re
 
@@ -71,11 +72,11 @@ async def get_db_connection():
     """Get database connection"""
     try:
         conn = await asyncpg.connect(
-            host='localhost',
-            port=5434,
-            database='ai_engine',
-            user='weedgo',
-            password='weedgo123'
+            host=os.getenv('DB_HOST', 'localhost'),
+            port=int(os.getenv('DB_PORT', 5434)),
+            database=os.getenv('DB_NAME', 'ai_engine'),
+            user=os.getenv('DB_USER', 'weedgo'),
+            password=os.getenv('DB_PASSWORD', 'weedgo123')
         )
         return conn
     except Exception as e:

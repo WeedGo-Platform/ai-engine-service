@@ -5,6 +5,7 @@ Debug Feature Extraction in Detail
 
 import asyncio
 import asyncpg
+import os
 import sys
 import hashlib
 from pathlib import Path
@@ -20,11 +21,11 @@ async def debug_feature_extraction():
     try:
         # Connect to database
         conn = await asyncpg.connect(
-            host='localhost',
-            port=5432,
-            database='ai_engine',
-            user='weedgo',
-            password='weedgo123'
+            host=os.getenv('DB_HOST', 'localhost'),
+            port=int(os.getenv('DB_PORT', 5432)),
+            database=os.getenv('DB_NAME', 'ai_engine'),
+            user=os.getenv('DB_USER', 'weedgo'),
+            password=os.getenv('DB_PASSWORD', 'weedgo123')
         )
         
         service = VoiceAuthService(conn)

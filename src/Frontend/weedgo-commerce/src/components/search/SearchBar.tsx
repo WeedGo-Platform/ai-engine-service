@@ -42,7 +42,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
   // Load search history on mount
   useEffect(() => {
     if (showHistory) {
-      setHistory(searchService.getSearchHistory());
+      const searchHistory = searchService.getSearchHistory();
+      setHistory(searchHistory.map(h => h.query));
     }
   }, [showHistory]);
 
@@ -97,7 +98,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     // Update history
     if (showHistory) {
       const updatedHistory = searchService.getSearchHistory();
-      setHistory(updatedHistory);
+      setHistory(updatedHistory.map(h => h.query));
     }
   }, [navigate, onSearch, showHistory]);
 

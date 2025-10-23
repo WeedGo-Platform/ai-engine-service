@@ -212,6 +212,7 @@ export interface IErrorBoundaryProps {
   children: React.ReactNode;
   fallback?: React.ReactNode;
   onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
+  className?: string;
 }
 
 // Layout Components
@@ -223,6 +224,16 @@ export interface IHeroProps {
     text: string;
     action: () => void;
   };
+  primaryButton?: {
+    text: string;
+    href?: string;
+    onClick?: () => void;
+  };
+  secondaryButton?: {
+    text: string;
+    href?: string;
+    onClick?: () => void;
+  };
   className?: string;
 }
 
@@ -231,6 +242,11 @@ export interface ICategoryCardProps {
   onClick?: (category: ICategory) => void;
   variant?: 'default' | 'featured' | 'compact';
   className?: string;
+  // Additional props for direct usage
+  title?: string;
+  description?: string;
+  icon?: string;
+  image?: string;
 }
 
 // ========================================
@@ -258,6 +274,11 @@ export interface IProduct {
   unit_weight?: string;
   rating?: number;
   reviews_count?: number;
+  // Additional optional properties for compatibility
+  strain?: string;
+  size?: number;
+  thc?: number; // Alias for thc_content
+  cbd?: number; // Alias for cbd_content
 }
 
 export interface ICartItem {
@@ -265,6 +286,19 @@ export interface ICartItem {
   product: IProduct;
   quantity: number;
   price: number;
+  // Additional optional properties for legacy compatibility
+  image?: string;
+  name?: string;
+  sku?: string;
+  brand?: string;
+  size?: number;
+  weight?: number;
+  unit?: string;
+  category?: string;
+  strain?: string;
+  thc?: number;
+  cbd?: number;
+  maxQuantity?: number;
 }
 
 export interface IChatMessage {

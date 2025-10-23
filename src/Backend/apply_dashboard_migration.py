@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """
-Apply dashboard compatibility migration to database
+Apply dashboard migration: Add dashboard_config table
 """
 
 import asyncio
 import asyncpg
+import os
 import logging
 from pathlib import Path
 
@@ -19,11 +20,11 @@ async def apply_migration():
     
     # Connect to database
     conn = await asyncpg.connect(
-        host='localhost',
-        port=5434,
-        database='ai_engine',
-        user='weedgo',
-        password='weedgo123'
+        host=os.getenv('DB_HOST', 'localhost'),
+        port=int(os.getenv('DB_PORT', 5434)),
+        database=os.getenv('DB_NAME', 'ai_engine'),
+        user=os.getenv('DB_USER', 'weedgo'),
+        password=os.getenv('DB_PASSWORD', 'weedgo123')
     )
     
     try:

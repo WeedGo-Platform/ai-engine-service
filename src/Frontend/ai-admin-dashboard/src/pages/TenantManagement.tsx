@@ -760,6 +760,7 @@ const TenantFormModal: React.FC<{
     company_name: tenant?.company_name || '',
     business_number: tenant?.business_number || '',
     gst_hst_number: tenant?.gst_hst_number || '',
+    crol_number: tenant?.crol_number || '',
     contact_phone: tenant?.contact_phone || '',
     website: tenant?.website || '',
     address: tenant?.address || {
@@ -1257,6 +1258,24 @@ const TenantFormModal: React.FC<{
                   />
                 </div>
 
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    CROL Number
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.crol_number}
+                    onChange={(e) => setFormData({ ...formData, crol_number: e.target.value })}
+                    placeholder="Cannabis Retail Operating License"
+                    className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                  />
+                  <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    Required for OCS integration (Ontario only)
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Website

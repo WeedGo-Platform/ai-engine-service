@@ -6,6 +6,7 @@ Create a test admin user with proper bcrypt password hashing
 import asyncio
 import asyncpg
 import bcrypt
+import os
 import uuid
 from datetime import datetime
 
@@ -14,11 +15,11 @@ async def create_test_admin():
     
     # Database connection
     conn = await asyncpg.connect(
-        host='localhost',
-        port=5434,
-        database='ai_engine',
-        user='weedgo',
-        password='weedgo123'
+        host=os.getenv('DB_HOST', 'localhost'),
+        port=int(os.getenv('DB_PORT', 5434)),
+        database=os.getenv('DB_NAME', 'ai_engine'),
+        user=os.getenv('DB_USER', 'weedgo'),
+        password=os.getenv('DB_PASSWORD', 'weedgo123')
     )
     
     try:

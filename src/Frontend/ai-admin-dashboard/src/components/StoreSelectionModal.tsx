@@ -211,15 +211,7 @@ const StoreSelectionModal: React.FC<StoreSelectionModalProps> = ({
   };
 
   const renderStoreSelection = () => {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('renderStoreSelection - state:', {
-        loadingStores,
-        stores,
-        storesError,
-        selectedTenant,
-        step
-      });
-    }
+    // Removed excessive logging from render method to prevent console spam
 
     if (loadingStores) {
       return (

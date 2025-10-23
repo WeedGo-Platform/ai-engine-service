@@ -56,9 +56,10 @@ class BarcodeLookupService:
     """
     
     def __init__(self, redis_client=None, db_connection=None, llm_router=None):
+        import os
         self.redis = redis_client or redis.Redis(
-            host='localhost',
-            port=6379,
+            host=os.getenv('REDIS_HOST', 'localhost'),
+            port=int(os.getenv('REDIS_PORT', 6379)),
             db=0,
             decode_responses=True
         )

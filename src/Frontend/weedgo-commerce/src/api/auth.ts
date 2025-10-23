@@ -100,7 +100,7 @@ export const authApi = {
 
   logout: async (): Promise<void> => {
     try {
-      await apiClient.post('/api/auth/logout');
+      await apiClient.post('/api/v1/auth/customer/logout');
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
@@ -119,7 +119,7 @@ export const authApi = {
   },
 
   getCurrentUser: async (): Promise<User> => {
-    const response = await apiClient.get<User>('/api/auth/me');
+    const response = await apiClient.get<User>('/api/v1/auth/customer/me');
     return response.data;
   },
 
@@ -145,5 +145,27 @@ export const authApi = {
       date_of_birth: dateOfBirth,
     });
     return response.data;
+  },
+
+  checkEmail: async (email: string): Promise<{ available: boolean; message?: string }> => {
+    try {
+      // Use the existing guest checkout endpoint to check if user exists
+      const response = await apiClient.get<{ exists: boolean; requires_login: boolean }>(
+        `/api/checkout/check-user/${encodeURIComponent(email)}`
+      );
+
+      // Convert the response: if email exists, it's NOT available
+      return {
+        available: !response.data.exists,
+        message: response.data.exists
+          ? 'An account with this email already exists. Please sign in instead.'
+          : undefined
+      };
+    } catch (error: any) {
+      console.error('Email check failed:', error);
+      // Return available: true on error to allow registration to proceed
+      // The actual validation will happen server-side during registration
+      return { available: true };
+    }
   },
 };

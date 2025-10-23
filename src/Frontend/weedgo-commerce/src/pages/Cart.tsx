@@ -202,12 +202,12 @@ const Cart: React.FC = () => {
                       <div className="flex gap-4 mt-2">
                         {(item.product?.thc_content || item.thc) ? (
                           <span className="text-xs text-purple-600">
-                            THC: {(item.product?.thc_content || item.thc).toFixed(1)}%
+                            THC: {(item.product?.thc_content || item.thc || 0).toFixed(1)}%
                           </span>
                         ) : null}
                         {(item.product?.cbd_content || item.cbd) ? (
                           <span className="text-xs text-blue-600">
-                            CBD: {(item.product?.cbd_content || item.cbd).toFixed(1)}%
+                            CBD: {(item.product?.cbd_content || item.cbd || 0).toFixed(1)}%
                           </span>
                         ) : null}
                       </div>
