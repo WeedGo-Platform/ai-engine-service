@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """
-Check database for role and customer type definitions
+Check ENUM types and their values in the database
 """
 
 import asyncio
 import asyncpg
+import os
 import json
 
 async def check_database():
@@ -13,11 +14,11 @@ async def check_database():
     try:
         # Connect to database
         conn = await asyncpg.connect(
-            host='localhost',
-            port=5434,
-            database='ai_engine',
-            user='weedgo',
-            password='your_password_here'
+            host=os.getenv('DB_HOST', 'localhost'),
+            port=int(os.getenv('DB_PORT', 5434)),
+            database=os.getenv('DB_NAME', 'ai_engine'),
+            user=os.getenv('DB_USER', 'weedgo'),
+            password=os.getenv('DB_PASSWORD', 'your_password_here')
         )
         
         print("=" * 80)

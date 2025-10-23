@@ -3,14 +3,15 @@
 
 import psycopg2
 import redis
+import os
 
 # Database connection
 DB_CONFIG = {
-    'host': 'localhost',
-    'port': 5434,
-    'database': 'ai_engine',
-    'user': 'weedgo',
-    'password': 'your_password_here'
+    'host': os.getenv('DB_HOST', 'localhost'),
+    'port': int(os.getenv('DB_PORT', 5434)),
+    'database': os.getenv('DB_NAME', 'ai_engine'),
+    'user': os.getenv('DB_USER', 'weedgo'),
+    'password': os.getenv('DB_PASSWORD', 'your_password_here')
 }
 
 def update_britane_image():
@@ -37,7 +38,11 @@ def update_britane_image():
         
         # Clear cache
         try:
-            r = redis.Redis(host='localhost', port=6379, db=0)
+            r = redis.Redis(
+                host=os.getenv('REDIS_HOST', 'localhost'),
+                port=int(os.getenv('REDIS_PORT', 6379)),
+                db=0
+            )
             cache_key = f"barcode:6528273015278"
             if r.exists(cache_key):
                 r.delete(cache_key)

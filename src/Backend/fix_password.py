@@ -2,15 +2,16 @@
 import bcrypt
 import asyncpg
 import asyncio
+import os
 
 async def update_password():
     # Connect to database
     conn = await asyncpg.connect(
-        host='localhost',
-        port=5434,
-        user='weedgo',
-        password='your_password_here',
-        database='ai_engine'
+        host=os.getenv('DB_HOST', 'localhost'),
+        port=int(os.getenv('DB_PORT', 5434)),
+        user=os.getenv('DB_USER', 'weedgo'),
+        password=os.getenv('DB_PASSWORD', 'your_password_here'),
+        database=os.getenv('DB_NAME', 'ai_engine')
     )
     
     # Hash the password

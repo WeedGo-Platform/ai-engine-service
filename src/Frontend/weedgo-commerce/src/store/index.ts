@@ -7,6 +7,7 @@ import chatSlice from '@features/chat/chatSlice';
 import deliverySlice from '@features/delivery/deliverySlice';
 import reviewsSlice from '@features/reviews/reviewsSlice';
 import wishlistSlice from '@features/wishlist/wishlistSlice';
+import storeSlice from '@features/store/storeSlice';
 
 export const store = configureStore({
   reducer: {
@@ -17,6 +18,7 @@ export const store = configureStore({
     delivery: deliverySlice,
     reviews: reviewsSlice,
     wishlist: wishlistSlice,
+    store: storeSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

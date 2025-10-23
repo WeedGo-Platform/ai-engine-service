@@ -204,6 +204,9 @@ async def refund_payment(
 async def list_transactions(
     order_id: Optional[str] = Query(None, description="Filter by order ID"),
     status: Optional[str] = Query(None, description="Filter by status"),
+    start_date: Optional[str] = Query(None, description="Start date for filtering (ISO 8601)"),
+    end_date: Optional[str] = Query(None, description="End date for filtering (ISO 8601)"),
+    tenant_id: Optional[str] = Query(None, description="Filter by tenant ID"),
     limit: int = Query(50, le=100, description="Maximum number of results"),
     offset: int = Query(0, ge=0, description="Number of results to skip"),
     service: PaymentService = Depends(get_payment_service),
@@ -259,6 +262,9 @@ async def health_check():
     description="Get payment statistics and metrics"
 )
 async def get_stats(
+    tenant_id: Optional[str] = Query(None, description="Filter by tenant ID"),
+    start: Optional[str] = Query(None, description="Start date for stats (ISO 8601)"),
+    end: Optional[str] = Query(None, description="End date for stats (ISO 8601)"),
     service: PaymentService = Depends(get_payment_service),
     current_user: dict = Depends(get_current_user)
 ):

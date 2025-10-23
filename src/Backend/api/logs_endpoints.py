@@ -7,15 +7,16 @@ from fastapi import APIRouter, HTTPException, Query
 from typing import Optional, List, Dict, Any
 from datetime import datetime
 import logging
+import os
 from elasticsearch import Elasticsearch
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/logs", tags=["logs"])
 
 # Elasticsearch configuration
-ES_HOST = "localhost"
-ES_PORT = 9200
-ES_INDEX = "ai-engine-logs"
+ES_HOST = os.getenv('ES_HOST', 'localhost')
+ES_PORT = int(os.getenv('ES_PORT', 9200))
+ES_INDEX = os.getenv('ES_INDEX', 'ai-engine-logs')
 
 # Initialize Elasticsearch client
 try:

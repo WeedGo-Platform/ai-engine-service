@@ -8,6 +8,7 @@ import string
 import json
 import asyncio
 import logging
+import os
 import socket
 from datetime import datetime, timedelta
 from typing import Optional, Dict, Any, Literal
@@ -142,12 +143,12 @@ class OTPService:
     
     async def get_db_connection(self) -> asyncpg.Connection:
         """Get database connection"""
-        return await asyncpg.connect(
-            host='localhost',
-            port=5434,
-            database='ai_engine',
-            user='weedgo',
-            password='your_password_here'
+        conn = await asyncpg.connect(
+            host=os.getenv('DB_HOST', 'localhost'),
+            port=int(os.getenv('DB_PORT', 5434)),
+            database=os.getenv('DB_NAME', 'ai_engine'),
+            user=os.getenv('DB_USER', 'weedgo'),
+            password=os.getenv('DB_PASSWORD', 'your_password_here')
         )
     
     async def check_rate_limit(

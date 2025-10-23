@@ -13,6 +13,7 @@ import bcrypt
 import uuid
 import json
 import asyncpg
+import os
 
 from core.authentication import get_auth
 
@@ -56,11 +57,11 @@ async def get_db_connection():
     """Get database connection"""
     try:
         conn = await asyncpg.connect(
-            host='localhost',
-            port=5434,
-            database='ai_engine',
-            user='weedgo',
-            password='your_password_here'
+            host=os.getenv('DB_HOST', 'localhost'),
+            port=int(os.getenv('DB_PORT', 5434)),
+            database=os.getenv('DB_NAME', 'ai_engine'),
+            user=os.getenv('DB_USER', 'weedgo'),
+            password=os.getenv('DB_PASSWORD', 'your_password_here')
         )
         return conn
     except Exception as e:

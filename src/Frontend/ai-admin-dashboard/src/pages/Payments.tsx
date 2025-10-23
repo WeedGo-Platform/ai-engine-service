@@ -100,12 +100,19 @@ const PaymentsPage: React.FC = () => {
   useEffect(() => {
     // Only fetch if we have a complete store object with tenant_id
     if (currentStore?.id && currentStore?.tenant_id) {
-      fetchTransactions().catch(err => {
-        console.error('Failed to fetch transactions:', err);
-      });
-      fetchMetrics().catch(err => {
-        console.error('Failed to fetch metrics:', err);
-      });
+      // Wrap in Promise.allSettled to handle all errors gracefully
+      Promise.allSettled([
+        fetchTransactions().catch(err => {
+          console.error('Failed to fetch transactions:', err);
+          // Return undefined to prevent unhandled rejection
+          return undefined;
+        }),
+        fetchMetrics().catch(err => {
+          console.error('Failed to fetch metrics:', err);
+          // Return undefined to prevent unhandled rejection
+          return undefined;
+        })
+      ]);
     } else if (currentStore?.id && !currentStore?.tenant_id) {
       // Store is selected but data is incomplete - wait for full load
       // Waiting for complete store data with tenant_id

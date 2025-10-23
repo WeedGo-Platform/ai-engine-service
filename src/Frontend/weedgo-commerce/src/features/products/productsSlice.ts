@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { productsApi, ProductFilters, Category, Brand } from '@api/products';
+import { productsApi, ProductFilters, Category, Brand, Product, ProductsResponse } from '@api/products';
 import { IProduct } from '@templates/types';
+import { mapProductsToIProducts, mapProductToIProduct } from '@utils/typeMappers';
 
 interface ProductsState {
   products: IProduct[];
@@ -142,14 +143,15 @@ const productsSlice = createSlice({
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.isLoading = false;
+        const mappedProducts = mapProductsToIProducts(action.payload.products);
         if (action.payload.page === 0) {
-          state.products = action.payload.products;
+          state.products = mappedProducts;
         } else {
-          state.products = [...state.products, ...action.payload.products];
+          state.products = [...state.products, ...mappedProducts];
         }
         state.total = action.payload.total;
         state.page = action.payload.page;
-        state.hasMore = action.payload.has_more;
+        state.hasMore = action.payload.has_more || false;
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.isLoading = false;
@@ -164,7 +166,7 @@ const productsSlice = createSlice({
       })
       .addCase(fetchProduct.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.currentProduct = action.payload;
+        state.currentProduct = action.payload ? mapProductToIProduct(action.payload) : null;
       })
       .addCase(fetchProduct.rejected, (state, action) => {
         state.isLoading = false;
@@ -179,9 +181,9 @@ const productsSlice = createSlice({
       })
       .addCase(searchProducts.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.products = action.payload.products;
+        state.products = mapProductsToIProducts(action.payload.products);
         state.total = action.payload.total;
-        state.hasMore = action.payload.has_more;
+        state.hasMore = action.payload.has_more || false;
       })
       .addCase(searchProducts.rejected, (state, action) => {
         state.isLoading = false;
@@ -219,13 +221,13 @@ const productsSlice = createSlice({
     // Fetch featured products
     builder
       .addCase(fetchFeaturedProducts.fulfilled, (state, action) => {
-        state.featuredProducts = action.payload;
+        state.featuredProducts = mapProductsToIProducts(action.payload);
       });
 
     // Fetch sale products
     builder
       .addCase(fetchSaleProducts.fulfilled, (state, action) => {
-        state.saleProducts = action.payload;
+        state.saleProducts = mapProductsToIProducts(action.payload);
       });
   },
 });

@@ -1,7 +1,23 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Agent } from '../pages/admin/agi/components/AgentCard';
-import { ActivityEntry } from '../pages/admin/agi/components/ActivityLog';
 import agiService from '../services/agiService';
+
+// AGI components have been removed, using local type definitions
+interface Agent {
+  id: string;
+  name: string;
+  status: 'active' | 'idle' | 'processing' | 'error';
+  description?: string;
+  capabilities?: string[];
+}
+
+interface ActivityEntry {
+  id: string;
+  timestamp: Date;
+  agent: string;
+  action: string;
+  status: 'success' | 'error' | 'pending';
+  details?: string;
+}
 
 interface AGIStats {
   totalRequests: number;

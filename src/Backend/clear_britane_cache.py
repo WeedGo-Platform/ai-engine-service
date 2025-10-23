@@ -2,8 +2,13 @@
 """Clear cache for Britane barcode"""
 
 import redis
+import os
 
-r = redis.Redis(host='localhost', port=6379, db=0)
+r = redis.Redis(
+    host=os.getenv('REDIS_HOST', 'localhost'),
+    port=int(os.getenv('REDIS_PORT', 6379)),
+    db=0
+)
 
 barcode = "6528273015278"
 cache_key = f"barcode:{barcode}"

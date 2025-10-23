@@ -6,6 +6,7 @@ Debug Voice Authentication Issues
 import asyncio
 import asyncpg
 import base64
+import os
 import sys
 import traceback
 from pathlib import Path
@@ -22,11 +23,11 @@ async def debug_voice_auth():
         
         # Test direct database connection
         conn = await asyncpg.connect(
-            host='localhost',
-            port=5432,
-            database='ai_engine',
-            user='weedgo',
-            password='your_password_here'
+            host=os.getenv('DB_HOST', 'localhost'),
+            port=int(os.getenv('DB_PORT', 5432)),
+            database=os.getenv('DB_NAME', 'ai_engine'),
+            user=os.getenv('DB_USER', 'weedgo'),
+            password=os.getenv('DB_PASSWORD', 'your_password_here')
         )
         
         print("✅ Direct database connection successful")
@@ -60,11 +61,11 @@ async def debug_voice_auth():
         # Test with pool connection (like the endpoint)
         print("\n🔍 Step 5: Testing with connection pool...")
         pool = await asyncpg.create_pool(
-            host='localhost',
-            port=5432,
-            database='ai_engine',
-            user='weedgo',
-            password='your_password_here',
+            host=os.getenv('DB_HOST', 'localhost'),
+            port=int(os.getenv('DB_PORT', 5432)),
+            database=os.getenv('DB_NAME', 'ai_engine'),
+            user=os.getenv('DB_USER', 'weedgo'),
+            password=os.getenv('DB_PASSWORD', 'your_password_here'),
             min_size=1,
             max_size=10
         )

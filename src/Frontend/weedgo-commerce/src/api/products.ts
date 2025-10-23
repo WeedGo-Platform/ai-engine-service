@@ -54,6 +54,7 @@ export interface ProductsResponse {
   offset: number;
   page: number;
   total_pages: number;
+  has_more?: boolean; // Added for pagination
 }
 
 export interface Category {

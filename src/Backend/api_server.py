@@ -54,6 +54,7 @@ from api.chat_integration import initialize_unified_chat_system, register_unifie
 from api.customer_auth import router as customer_auth_router
 from api.auth_otp import router as otp_auth_router
 from api.auth_context import router as context_auth_router
+from api.guest_checkout_endpoints import router as guest_checkout_router
 
 # Import tenant and store endpoints
 from api.tenant_endpoints import router as tenant_router
@@ -491,6 +492,7 @@ app.include_router(customer_auth_router)  # Customer authentication endpoints
 app.include_router(otp_auth_router)   # OTP authentication endpoints
 app.include_router(admin_auth_router)  # Admin authentication endpoints
 app.include_router(context_auth_router)  # Context switching authentication
+app.include_router(guest_checkout_router)  # Guest checkout endpoints (email check, passwordless checkout)
 app.include_router(voice_router)
 app.include_router(voice_ws_router)  # WebSocket endpoints for continuous voice listening
 app.include_router(personality_router)  # AI personality voice management endpoints
@@ -783,6 +785,14 @@ try:
     logger.info("Payment V2 endpoints (DDD) loaded successfully")
 except Exception as e:
     logger.warning(f"Failed to load payment V2 endpoints: {e}")
+
+# Import and include products V2 endpoints (DDD)
+try:
+    from api.v2.products.product_endpoints import router as products_v2_router
+    app.include_router(products_v2_router, prefix="/api/v2")
+    logger.info("Products V2 endpoints (DDD) loaded successfully")
+except Exception as e:
+    logger.warning(f"Failed to load products V2 endpoints: {e}")
 
 # Import and include SEO/Sitemap endpoints
 try:

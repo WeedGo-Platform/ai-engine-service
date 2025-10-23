@@ -5,6 +5,8 @@ Create essential tables for dashboard
 
 import asyncio
 import asyncpg
+import os
+import asyncpg
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -12,11 +14,11 @@ logger = logging.getLogger(__name__)
 
 async def create_tables():
     conn = await asyncpg.connect(
-        host='localhost',
-        port=5434,
-        database='ai_engine',
-        user='weedgo',
-        password='your_password_here'
+        host=os.getenv('DB_HOST', 'localhost'),
+        port=int(os.getenv('DB_PORT', 5434)),
+        database=os.getenv('DB_NAME', 'ai_engine'),
+        user=os.getenv('DB_USER', 'weedgo'),
+        password=os.getenv('DB_PASSWORD', 'your_password_here')
     )
     
     try:

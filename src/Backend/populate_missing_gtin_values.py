@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-Script to populate missing GTIN values in batch_tracking table
-by retrieving them from purchase_order_items table
+Fill in missing GTIN values from OCS SKU
 """
 
 import asyncio
 import asyncpg
+import os
 import logging
 from typing import Optional
 
@@ -19,11 +19,11 @@ async def populate_gtin_values():
         # Connect to database
         logger.info("Connecting to database...")
         conn = await asyncpg.connect(
-            host='localhost',
-            port=5434,
-            database='ai_engine',
-            user='weedgo',
-            password='your_password_here'
+            host=os.getenv('DB_HOST', 'localhost'),
+            port=int(os.getenv('DB_PORT', 5434)),
+            database=os.getenv('DB_NAME', 'ai_engine'),
+            user=os.getenv('DB_USER', 'weedgo'),
+            password=os.getenv('DB_PASSWORD', 'your_password_here')
         )
         
         # First, check how many batch_tracking records have missing GTIN values

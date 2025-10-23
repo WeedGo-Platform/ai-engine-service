@@ -170,6 +170,7 @@ export const addItem = (item: {
     product: {
       id: item.id,
       sku: item.sku,
+      slug: item.sku.toLowerCase().replace(/\s+/g, '-'), // Generate slug from SKU
       name: item.name,
       description: '',
       category: item.category || '',

@@ -60,6 +60,13 @@ const Home: React.FC = () => {
           {features.map((feature, index) => (
             <CategoryCard
               key={index}
+              category={{
+                id: `feature-${index}`,
+                name: feature.title,
+                slug: feature.title.toLowerCase().replace(/\s+/g, '-'),
+                description: feature.description,
+                image_url: feature.icon
+              }}
               title={feature.title}
               description={feature.description}
               icon={feature.icon}

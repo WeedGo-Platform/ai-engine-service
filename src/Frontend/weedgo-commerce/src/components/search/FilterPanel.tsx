@@ -302,7 +302,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
                   <input
                     type="checkbox"
                     value={strain.value}
-                    checked={filters.strain === strain.value}
+                    checked={filters.strain?.includes(strain.value) || false}
                     onChange={(e) =>
                       handleFilterChange(
                         'strain',

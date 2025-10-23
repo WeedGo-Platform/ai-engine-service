@@ -39,6 +39,7 @@ import TenantSettings from './pages/TenantSettings';
 import TenantPaymentSettings from './pages/TenantPaymentSettings';
 import TenantReview from './pages/TenantReview';
 import StoreManagement from './pages/StoreManagement';
+import StoreDetails from './pages/StoreDetails';
 import StoreSettings from './pages/StoreSettings';
 import StoreHoursManagement from './pages/StoreHoursManagement';
 import Promotions from './pages/Promotions';
@@ -455,6 +456,7 @@ const router = createBrowserRouter([
         )
       },
       { path: 'tenants/:tenantCode/stores', element: <StoreManagement /> },
+      { path: 'stores/:storeId/details', element: <StoreDetails /> },
       { path: 'stores/:storeCode/settings', element: <StoreSettings /> },
       { path: 'stores/:storeCode/hours', element: <StoreHoursManagement /> },
       { path: 'products', element: <Products /> },

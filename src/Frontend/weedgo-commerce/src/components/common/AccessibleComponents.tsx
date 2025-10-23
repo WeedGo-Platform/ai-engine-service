@@ -2,7 +2,7 @@
  * Accessible React components with ARIA labels and keyboard navigation
  */
 
-import React, { forwardRef, ButtonHTMLAttributes, InputHTMLAttributes, SelectHTMLAttributes } from 'react';
+import React, { forwardRef, useEffect, ButtonHTMLAttributes, InputHTMLAttributes, SelectHTMLAttributes } from 'react';
 import { useFocusTrap, useEscapeKey, useAnnouncement } from '@hooks/useAccessibility';
 
 // Skip Link Component for keyboard navigation

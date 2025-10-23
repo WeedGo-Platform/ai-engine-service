@@ -124,38 +124,38 @@ export const api = {
       axiosInstance.get('/api/v2/inventory/check', { params: { sku, batch_lot: batchLot } }),
   },
 
-  // Orders (V1 - V2 endpoints not yet implemented in backend)
+  // Orders (Backend endpoints at /api/orders)
   orders: {
-    getAll: (params?: any) => axiosInstance.get('/api/v1/orders', { params }),
-    getById: (id: string) => axiosInstance.get(`/api/v1/orders/${id}`),
-    getByNumber: (orderNumber: string) => axiosInstance.get(`/api/v1/orders/by-number/${orderNumber}`),
-    create: (data: any) => axiosInstance.post('/api/v1/orders', data),
+    getAll: (params?: any) => axiosInstance.get('/api/orders', { params }),
+    getById: (id: string) => axiosInstance.get(`/api/orders/${id}`),
+    getByNumber: (orderNumber: string) => axiosInstance.get(`/api/orders/by-number/${orderNumber}`),
+    create: (data: any) => axiosInstance.post('/api/orders', data),
     updateStatus: (id: string, data: { payment_status?: string; delivery_status?: string; notes?: string }) =>
-      axiosInstance.put(`/api/v1/orders/${id}/status`, data),
-    cancel: (id: string, reason: string) => axiosInstance.post(`/api/v1/orders/${id}/cancel`, { reason }),
-    getHistory: (id: string) => axiosInstance.get(`/api/v1/orders/${id}/history`),
-    getSummary: () => axiosInstance.get('/api/v1/orders/analytics/summary'),
+      axiosInstance.put(`/api/orders/${id}/status`, data),
+    cancel: (id: string, reason: string) => axiosInstance.post(`/api/orders/${id}/cancel`, { reason }),
+    getHistory: (id: string) => axiosInstance.get(`/api/orders/${id}/history`),
+    getSummary: () => axiosInstance.get('/api/orders/analytics/summary'),
   },
 
-  // Customers (V1 - V2 endpoints not yet implemented in backend)
+  // Customers (Backend endpoints at /api/customers)
   customers: {
     getAll: (params?: any) => {
-      // Use V1 customers endpoint
+      // Use customers endpoint
       const searchQuery = params?.search || '';
-      return axiosInstance.get('/api/v1/customers/search', {
+      return axiosInstance.get('/api/customers/search', {
         params: {
           q: searchQuery,
           ...(params?.customer_type && { customer_type: params.customer_type })
         }
       });
     },
-    getById: (id: string) => axiosInstance.get(`/api/v1/customers/${id}`),
-    create: (data: any) => axiosInstance.post('/api/v1/customers', data),
-    update: (id: string, data: any) => axiosInstance.put(`/api/v1/customers/${id}`, data),
-    delete: (id: string) => axiosInstance.delete(`/api/v1/customers/${id}`),
-    getOrders: (id: string) => axiosInstance.get(`/api/v1/orders/customer/${id}`),
+    getById: (id: string) => axiosInstance.get(`/api/customers/${id}`),
+    create: (data: any) => axiosInstance.post('/api/customers', data),
+    update: (id: string, data: any) => axiosInstance.put(`/api/customers/${id}`, data),
+    delete: (id: string) => axiosInstance.delete(`/api/customers/${id}`),
+    getOrders: (id: string) => axiosInstance.get(`/api/orders/customer/${id}`),
     updateLoyaltyPoints: (id: string, points: number) =>
-      axiosInstance.patch(`/api/v1/customers/${id}/loyalty`, { points }),
+      axiosInstance.patch(`/api/customers/${id}/loyalty`, { points }),
   },
 
   // Suppliers (V1 - preserved until V2 implementation)

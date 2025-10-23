@@ -138,7 +138,7 @@ export const useAlternateLangSEO = (languages: Array<{ lang: string; url: string
     languages.forEach(({ lang, url }) => {
       const link = document.createElement('link');
       link.rel = 'alternate';
-      link.hrefLang = lang;
+      link.hreflang = lang;
       link.href = url;
       document.head.appendChild(link);
       links.push(link);

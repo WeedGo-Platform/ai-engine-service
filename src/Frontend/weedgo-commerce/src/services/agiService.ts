@@ -1,6 +1,22 @@
 import axios from 'axios';
-import { Agent } from '../pages/admin/agi/components/AgentCard';
-import { ActivityEntry } from '../pages/admin/agi/components/ActivityLog';
+
+// AGI components have been removed, using local type definitions
+interface Agent {
+  id: string;
+  name: string;
+  status: 'active' | 'idle' | 'processing' | 'error';
+  description?: string;
+  capabilities?: string[];
+}
+
+interface ActivityEntry {
+  id: string;
+  timestamp: Date;
+  agent: string;
+  action: string;
+  status: 'success' | 'error' | 'pending';
+  details?: string;
+}
 
 const AGI_API_BASE = process.env.REACT_APP_AGI_API_URL || 'http://localhost:5024/agi/api';
 const WS_URL = process.env.REACT_APP_AGI_WS_URL || 'ws://localhost:5024/agi/ws';
