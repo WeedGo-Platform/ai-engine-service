@@ -165,7 +165,7 @@ const OrderTracking: React.FC = () => {
       case 'preparing':
         return 'bg-yellow-100 text-yellow-800';
       case 'confirmed':
-        return 'bg-purple-100 text-purple-800';
+        return 'bg-primary-100 text-primary-800';
       case 'cancelled':
         return 'bg-red-100 text-red-800';
       default:

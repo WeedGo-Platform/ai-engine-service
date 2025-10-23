@@ -244,9 +244,9 @@ const ProductDetail: React.FC = () => {
 
           {/* THC/CBD Content */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-purple-50 p-4 rounded-lg">
-              <div className="text-sm text-purple-600">THC</div>
-              <div className="text-2xl font-bold text-purple-900">
+            <div className="bg-primary-50 p-4 rounded-lg">
+              <div className="text-sm text-primary-600">THC</div>
+              <div className="text-2xl font-bold text-primary-800">
                 {product.thc_content.toFixed(1)}%
               </div>
             </div>

@@ -193,7 +193,7 @@ const Cart: React.FC = () => {
                           </span>
                         )}
                         {item.strain && (
-                          <span className="text-xs bg-purple-50 text-purple-700 px-2 py-1 rounded">
+                          <span className="text-xs bg-primary-50 text-primary-700 px-2 py-1 rounded">
                             {item.strain}
                           </span>
                         )}
@@ -201,7 +201,7 @@ const Cart: React.FC = () => {
 
                       <div className="flex gap-4 mt-2">
                         {(item.product?.thc_content || item.thc) ? (
-                          <span className="text-xs text-purple-600">
+                          <span className="text-xs text-primary-700">
                             THC: {(item.product?.thc_content || item.thc || 0).toFixed(1)}%
                           </span>
                         ) : null}

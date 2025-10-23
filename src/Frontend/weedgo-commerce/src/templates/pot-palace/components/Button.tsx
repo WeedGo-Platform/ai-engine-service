@@ -15,22 +15,22 @@ export const PotPalaceButton: React.FC<IButtonProps> = ({
   className,
   type = 'button'
 }) => {
-  const baseStyles = 'inline-flex items-center justify-center font-black uppercase tracking-wider transition-all duration-300 transform active:scale-95 relative overflow-hidden';
+  const baseStyles = 'inline-flex items-center justify-center font-semibold transition-all duration-300 transform active:scale-98 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2D5F3F]';
 
   const variants = {
-    primary: 'bg-[#84CC16] hover:bg-[#6FA914] text-white shadow-2xl hover:shadow-xl border-4 border-white',
-    secondary: 'bg-[#FB923C] hover:bg-[#F97316] text-white shadow-2xl hover:shadow-xl border-4 border-white',
-    outline: 'bg-transparent border-4 border-[#A855F7] text-[#A855F7] hover:bg-[#A855F7] hover:text-white',
-    ghost: 'bg-transparent text-[#84CC16] hover:bg-[#84CC16]/10 border-2 border-transparent hover:border-[#84CC16]',
-    danger: 'bg-[#DC2626] hover:bg-[#B91C1C] text-white shadow-2xl border-4 border-white'
+    primary: 'bg-[#2D5F3F] hover:bg-[#234B32] text-white shadow-md hover:shadow-lg',
+    secondary: 'bg-[#7A9E88] hover:bg-[#658574] text-white shadow-md hover:shadow-lg',
+    outline: 'bg-transparent border-2 border-[#2D5F3F] text-[#2D5F3F] hover:bg-[#2D5F3F] hover:text-white',
+    ghost: 'bg-transparent text-[#2D5F3F] hover:bg-[#7A9E88]/10',
+    danger: 'bg-[#DC2626] hover:bg-[#B91C1C] text-white shadow-md hover:shadow-lg'
   };
 
   const sizes = {
-    xs: 'px-4 py-2 text-sm rounded-xl',
-    sm: 'px-5 py-2.5 text-base rounded-2xl',
-    md: 'px-8 py-4 text-lg rounded-3xl',
-    lg: 'px-10 py-5 text-xl rounded-full',
-    xl: 'px-12 py-6 text-2xl rounded-full'
+    xs: 'px-3 py-1.5 text-sm rounded-md',
+    sm: 'px-4 py-2 text-sm rounded-lg',
+    md: 'px-6 py-3 text-base rounded-lg',
+    lg: 'px-8 py-4 text-base rounded-lg',
+    xl: 'px-10 py-5 text-lg rounded-lg'
   };
 
   return (
@@ -44,18 +44,21 @@ export const PotPalaceButton: React.FC<IButtonProps> = ({
         sizes[size],
         fullWidth && 'w-full',
         (disabled || loading) && 'opacity-50 cursor-not-allowed',
-        'hover:rotate-2 hover:-translate-y-1',
+        'hover:translate-y-[-2px]',
         className
       )}
     >
       {loading ? (
-        <span className="animate-spin mr-2 text-2xl">🌿</span>
+        <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
       ) : leftIcon && (
-        <span className="mr-2 text-xl">{leftIcon}</span>
+        <span className="mr-2">{leftIcon}</span>
       )}
       {children}
       {rightIcon && (
-        <span className="ml-2 text-xl">{rightIcon}</span>
+        <span className="ml-2">{rightIcon}</span>
       )}
     </button>
   );

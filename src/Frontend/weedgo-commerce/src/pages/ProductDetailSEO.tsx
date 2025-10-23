@@ -93,15 +93,15 @@ const ProductDetailSEO: React.FC = () => {
       let data: Product | null = null;
       if (response.products && response.products.length > 0) {
         // First try to find by slug
-        data = response.products.find(p => p.slug === productSlug);
+        data = response.products.find(p => p.slug === productSlug) || null;
 
         // If not found by slug, try by SKU
-        if (!data) {
-          data = response.products.find(p => p.sku === productSlug || p.id === productSlug);
+        if (data === null) {
+          data = response.products.find(p => p.sku === productSlug || p.id === productSlug) || null;
         }
 
         // If still not found, use the first result if it's a close match
-        if (!data && response.products.length === 1) {
+        if (data === null && response.products.length === 1) {
           data = response.products[0];
         }
       }

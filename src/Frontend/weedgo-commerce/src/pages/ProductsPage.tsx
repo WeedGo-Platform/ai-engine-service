@@ -35,7 +35,7 @@ const ProductsPage: React.FC = () => {
     error,
   } = useSelector((state: RootState) => state.products);
 
-  const storeId = localStorage.getItem('selected_store_id');
+  const storeId = localStorage.getItem('selected_store_id') ?? 'default-store';
 
   // Local state for UI controls
   const [selectedCategory, setSelectedCategory] = useState<string>('');
@@ -338,7 +338,7 @@ const ProductsPage: React.FC = () => {
                             ${product.price.toFixed(2)}
                           </span>
                         )}
-                        <span className="text-sm text-gray-500">/{product.unit_size}</span>
+                        <span className="text-sm text-gray-500">/{product.unit_weight || product.size ? `${product.size}g` : ''}</span>
                       </div>
 
                       {/* Stock Status */}

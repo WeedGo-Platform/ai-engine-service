@@ -34,19 +34,19 @@ export const PotPalaceTemplate: ITemplate = {
   name: 'pot-palace',
   theme: {
     colors: {
-      // Vibrant, playful cannabis-inspired color palette - NO GRADIENTS!
-      primary: '#84CC16',        // Bright lime green
-      secondary: '#FB923C',      // Vibrant orange
-      accent: '#A855F7',         // Electric purple
-      background: '#FFFBEB',     // Warm cream background
-      surface: '#FFFFFF',        // White surfaces
-      text: '#581C87',           // Deep purple text
-      textSecondary: '#EA580C',  // Orange text
-      border: '#C084FC',         // Purple borders
-      error: '#EF4444',
-      success: '#84CC16',
-      warning: '#F97316',
-      info: '#06B6D4'
+      // Professional, calm earth-tone palette
+      primary: '#2D5F3F',        // Deep forest green
+      secondary: '#7A9E88',      // Muted sage green
+      accent: '#C9A86A',         // Warm gold accent
+      background: '#FAFAF8',     // Off-white background
+      surface: '#FFFFFF',        // Pure white surfaces
+      text: '#1F2937',           // Charcoal gray text
+      textSecondary: '#6B7280',  // Medium gray text
+      border: '#E5E7EB',         // Light gray borders
+      error: '#DC2626',
+      success: '#059669',
+      warning: '#D97706',
+      info: '#0891B2'
     },
     spacing: {
       xs: '0.25rem',
@@ -58,17 +58,17 @@ export const PotPalaceTemplate: ITemplate = {
     },
     borderRadius: {
       none: '0',
-      sm: '0.25rem',
+      sm: '0.375rem',
       md: '0.5rem',
-      lg: '1rem',
-      xl: '1.5rem',
+      lg: '0.75rem',
+      xl: '1rem',
       full: '9999px'
     },
     shadows: {
-      sm: '0 1px 3px rgba(0, 0, 0, 0.12)',
-      md: '0 4px 6px rgba(0, 0, 0, 0.15)',
-      lg: '0 10px 20px rgba(0, 0, 0, 0.18)',
-      xl: '0 20px 40px rgba(0, 0, 0, 0.22)'
+      sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+      md: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+      lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+      xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1)'
     },
     cssVariables: true
   },
@@ -81,16 +81,16 @@ export const PotPalaceTemplate: ITemplate = {
     tabletBreakpoint: '1024px'
   },
   animations: {
-    defaultDuration: 400,
-    defaultEasing: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)', // Bouncy feel
-    pageTransition: 'bounce',
-    cardHover: 'grow',
-    buttonPress: 'bounce'
+    defaultDuration: 300,
+    defaultEasing: 'cubic-bezier(0.4, 0, 0.2, 1)', // Smooth, professional easing
+    pageTransition: 'fade',
+    cardHover: 'subtle-lift',
+    buttonPress: 'subtle-scale'
   },
   typography: {
     fontFamily: {
-      sans: "'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-      display: "'Bebas Neue', cursive",
+      sans: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+      display: "'Playfair Display', serif",
       mono: "'Source Code Pro', monospace"
     },
     fontSize: {
@@ -100,9 +100,9 @@ export const PotPalaceTemplate: ITemplate = {
       lg: '1.125rem',
       xl: '1.25rem',
       '2xl': '1.5rem',
-      '3xl': '2rem',
-      '4xl': '2.5rem',
-      '5xl': '3.5rem'
+      '3xl': '1.875rem',
+      '4xl': '2.25rem',
+      '5xl': '3rem'
     },
     fontWeight: {
       light: 300,
@@ -112,9 +112,9 @@ export const PotPalaceTemplate: ITemplate = {
       bold: 700
     },
     lineHeight: {
-      tight: 1.1,
+      tight: 1.25,
       normal: 1.5,
-      relaxed: 1.7
+      relaxed: 1.75
     }
   },
   components: {

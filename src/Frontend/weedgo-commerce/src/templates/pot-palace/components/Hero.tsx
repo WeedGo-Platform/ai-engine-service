@@ -3,8 +3,8 @@ import { IHeroProps } from '../../types';
 import { clsx } from 'clsx';
 
 export const PotPalaceHero: React.FC<IHeroProps> = ({
-  title = 'Welcome to Pot Palace',
-  subtitle = 'Your Premium Cannabis Destination 🔥',
+  title = 'Premium Cannabis, Delivered',
+  subtitle = 'Experience quality and convenience with our curated selection',
   backgroundImage,
   primaryButton,
   secondaryButton,
@@ -12,56 +12,59 @@ export const PotPalaceHero: React.FC<IHeroProps> = ({
 }) => {
   return (
     <div className={clsx(
-      'relative min-h-[700px] flex items-center justify-center',
-      'bg-[#84CC16]', // Solid lime green background
+      'relative min-h-[600px] flex items-center justify-center',
+      'bg-gradient-to-br from-[#2D5F3F] via-[#3B7A55] to-[#2D5F3F]',
       'overflow-hidden',
       className
     )}>
-      {/* Fun pattern overlay */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute inset-0"
-          style={{
-            backgroundImage: `repeating-linear-gradient(45deg, #FB923C 0px, #FB923C 20px, transparent 20px, transparent 40px)`,
-          }}
-        />
+      {/* Subtle organic pattern overlay */}
+      <div className="absolute inset-0 opacity-5">
+        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="leaf-pattern" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+              <path d="M50 10 Q40 30 50 50 Q60 30 50 10" fill="white" opacity="0.3"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#leaf-pattern)" />
+        </svg>
       </div>
 
       {backgroundImage && (
         <img
           src={backgroundImage}
           alt=""
-          className="absolute inset-0 w-full h-full object-cover opacity-20"
+          className="absolute inset-0 w-full h-full object-cover opacity-15 mix-blend-overlay"
         />
       )}
 
-      <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
-        {/* Big, bold title with emojis */}
-        <h1 className="text-6xl md:text-8xl font-black text-white mb-6 uppercase tracking-wider drop-shadow-2xl transform hover:scale-105 transition-transform">
-          <span className="inline-block animate-bounce">🌿</span>
-          <span className="inline-block mx-4">{title}</span>
-          <span className="inline-block animate-bounce" style={{ animationDelay: '0.5s' }}>🌿</span>
+      {/* Subtle accent shapes */}
+      <div className="absolute top-20 right-20 w-64 h-64 bg-[#C9A86A] rounded-full opacity-10 blur-3xl" />
+      <div className="absolute bottom-20 left-20 w-80 h-80 bg-[#7A9E88] rounded-full opacity-10 blur-3xl" />
+
+      <div className="relative z-10 text-center px-4 max-w-4xl mx-auto py-20">
+        {/* Clean, modern title */}
+        <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold text-white mb-6 leading-tight tracking-tight">
+          {title}
         </h1>
 
         {subtitle && (
-          <div className="mb-12">
-            <p className="text-2xl md:text-3xl text-white font-bold bg-[#FB923C] inline-block px-6 py-3 rounded-full transform rotate-1 shadow-2xl">
-              {subtitle}
-            </p>
-          </div>
+          <p className="text-lg md:text-xl text-white/90 mb-12 max-w-2xl mx-auto font-light leading-relaxed">
+            {subtitle}
+          </p>
         )}
 
-        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+        {/* Clean call-to-action buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           {primaryButton && (
             <a
               href={primaryButton.href}
               onClick={primaryButton.onClick}
-              className="group relative inline-flex items-center px-12 py-6 bg-[#FB923C] hover:bg-[#F97316] text-white font-black text-xl uppercase rounded-full transform hover:scale-110 hover:rotate-2 transition-all duration-300 shadow-2xl border-4 border-white"
+              className="group inline-flex items-center px-8 py-4 bg-white text-[#2D5F3F] font-semibold text-base rounded-lg hover:bg-[#C9A86A] hover:text-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:translate-y-[-2px]"
             >
-              <span className="mr-2 text-2xl">🚀</span>
               <span>{primaryButton.text}</span>
-              <span className="ml-2 text-2xl">🔥</span>
-              {/* Pulse effect */}
-              <div className="absolute inset-0 rounded-full bg-[#FB923C] opacity-50 animate-ping" />
+              <svg className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
             </a>
           )}
 
@@ -69,33 +72,39 @@ export const PotPalaceHero: React.FC<IHeroProps> = ({
             <a
               href={secondaryButton.href}
               onClick={secondaryButton.onClick}
-              className="inline-flex items-center px-10 py-5 bg-white text-[#84CC16] font-black text-xl uppercase rounded-full transform hover:scale-110 hover:-rotate-2 transition-all duration-300 border-4 border-[#A855F7] shadow-2xl hover:bg-[#FFFBEB]"
+              className="inline-flex items-center px-8 py-4 bg-transparent border-2 border-white text-white font-semibold text-base rounded-lg hover:bg-white hover:text-[#2D5F3F] transition-all duration-300"
             >
-              <span className="mr-2">✨</span>
               <span>{secondaryButton.text}</span>
-              <span className="ml-2">✨</span>
             </a>
           )}
         </div>
+
+        {/* Trust indicators */}
+        <div className="mt-16 flex flex-wrap justify-center gap-8 text-white/80 text-sm">
+          <div className="flex items-center gap-2">
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            <span>Licensed & Legal</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+              <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z" />
+            </svg>
+            <span>Same-Day Delivery</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            <span>Premium Quality</span>
+          </div>
+        </div>
       </div>
 
-      {/* Floating decorative emojis */}
-      <div className="absolute top-10 left-10 text-7xl animate-spin" style={{ animationDuration: '10s' }}>🍃</div>
-      <div className="absolute bottom-10 right-10 text-7xl animate-spin" style={{ animationDuration: '8s', animationDirection: 'reverse' }}>💚</div>
-      <div className="absolute top-1/4 right-1/4 text-6xl animate-pulse">⭐</div>
-      <div className="absolute bottom-1/4 left-1/4 text-6xl animate-bounce">🌟</div>
-      <div className="absolute top-20 right-20 text-5xl animate-pulse" style={{ animationDelay: '1s' }}>💫</div>
-      <div className="absolute bottom-20 left-20 text-5xl animate-bounce" style={{ animationDelay: '0.5s' }}>🌈</div>
-
-      {/* Fun wavy bottom border */}
-      <div className="absolute bottom-0 left-0 right-0">
-        <svg viewBox="0 0 1440 120" className="w-full">
-          <path
-            fill="#FFFBEB"
-            d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"
-          />
-        </svg>
-      </div>
+      {/* Smooth bottom transition */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#FAFAF8] to-transparent" />
     </div>
   );
 };

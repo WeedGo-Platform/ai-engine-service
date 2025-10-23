@@ -156,6 +156,10 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
   // Voice State
   const [voiceState, setVoiceState] = useState<RecordingState>('idle');
   const [voicePermission, setVoicePermission] = useState<boolean>(false);
+  
+  // Mic mode: 'off' | 'wake' | 'active'
+  type MicMode = 'off' | 'wake' | 'active';
+  const [micMode, setMicMode] = useState<MicMode>('off');
   const [isRecording, setIsRecording] = useState(false);
   const [transcript, setTranscript] = useState<string>('');
   const [liveTranscript, setLiveTranscript] = useState<string>('');
@@ -166,13 +170,12 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
   const pendingTranscriptRef = useRef<string>('');
   const sendMessageRef = useRef<(text: string) => void>();
 
-  // TTS State - restore preference from localStorage
-  const [isSpeakerEnabled, setIsSpeakerEnabled] = useState<boolean>(() => {
-    const saved = localStorage.getItem('chatWidgetTTSEnabled');
-    return saved === 'true';
-  });
+  // TTS State - Default to OFF for better UX
+  const [isSpeakerEnabled, setIsSpeakerEnabled] = useState<boolean>(false);
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
+  const [isConversationMode, setIsConversationMode] = useState<boolean>(false);
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
+  const conversationSilenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Web Speech API Recognition
   const [recognition, setRecognition] = useState<any>(null);
@@ -300,6 +303,20 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
 
           const transcriptText = String(result[0].transcript);
 
+          // Wake word detection in wake mode
+          if (micMode === 'wake') {
+            const lowerText = transcriptText.toLowerCase();
+            if (lowerText.includes('hey assistant') || lowerText.includes('hey ai') || lowerText.includes('hey there')) {
+              console.log('[WakeWord] Detected! Switching to active mode');
+              setMicMode('active');
+              recognition.stop();
+              setTimeout(() => startActiveRecording(), 300);
+              return;
+            }
+            setTranscript(transcriptText);
+            return; // Don't process further in wake mode
+          }
+
           if (result.isFinal) {
             newFinalText += transcriptText + ' ';
             // Add to accumulated final text
@@ -328,7 +345,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
         // Reset timers on any speech activity
         lastSpeechTimeRef.current = Date.now();
 
-        // Clear existing timers
+        // Clear ALL existing timers to prevent stale timers
         if (pauseTimerRef.current) {
           clearTimeout(pauseTimerRef.current);
           pauseTimerRef.current = null;
@@ -336,6 +353,10 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
         if (silenceTimerRef.current) {
           clearTimeout(silenceTimerRef.current);
           silenceTimerRef.current = null;
+        }
+        if (conversationSilenceTimerRef.current) {
+          clearTimeout(conversationSilenceTimerRef.current);
+          conversationSilenceTimerRef.current = null;
         }
 
         // Set pause timer (2 seconds) - sends accumulated text as a chunk
@@ -358,9 +379,11 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
           }, 2000); // 2 seconds pause = send chunk
         }
 
-        // Set silence timer (2 seconds) - stops recording completely
+        // Set silence timer - stops recording completely
+        // In conversation mode, use 4 seconds timeout for silence detection
+        const silenceTimeout = isConversationMode ? 4000 : 2000;
         silenceTimerRef.current = setTimeout(() => {
-          console.log('Auto-stopping due to silence');
+          console.log(`Auto-stopping due to ${silenceTimeout/1000}s silence`);
 
           // Send any remaining transcript before stopping
           const remainingText = allFinalText.trim();
@@ -369,17 +392,31 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
             sendMessageRef.current?.(remainingText);
           }
 
+          // Exit conversation mode
+          if (isConversationMode) {
+            console.log('[ConversationMode] Ending conversation due to silence');
+            setIsConversationMode(false);
+          }
+
           recognition.stop();
           // Keep the transcript visible for a moment to show it was sent
           setTimeout(() => {
             setTranscript('');
             setLiveTranscript('');
           }, 500);
-        }, 2000); // 2 seconds of silence = stop
+        }, silenceTimeout);
       };
 
       recognition.onerror = (event: any) => {
-        console.error('Speech recognition error:', event.error);
+        console.error('[Mic] Speech recognition error:', event.error);
+        
+        // Don't stop recording on "no-speech" error - it's normal during pauses
+        if (event.error === 'no-speech') {
+          console.log('[Mic] No speech detected, but continuing to listen...');
+          return; // Keep recording active
+        }
+        
+        // For other errors, stop recording
         setVoiceState('error');
         setIsRecording(false);
         setIsTranscribing(false);
@@ -396,7 +433,24 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
       };
 
       recognition.onend = () => {
-        console.log('Speech recognition ended');
+        console.log('[Mic] Speech recognition ended');
+        
+        // If we're still supposed to be recording, restart it
+        if (isRecording) {
+          console.log('[Mic] Auto-restarting recognition...');
+          try {
+            recognition.start();
+          } catch (e) {
+            console.error('[Mic] Failed to restart recognition:', e);
+            setVoiceState('idle');
+            setIsRecording(false);
+            setIsTranscribing(false);
+          }
+          return;
+        }
+        
+        // Otherwise, clean up
+        console.log('[Mic] Cleaning up recognition state');
         setVoiceState('idle');
         setIsRecording(false);
         setIsTranscribing(false);
@@ -803,6 +857,90 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
       let charIndex = 0;
       const typingSpeed = 15; // milliseconds per character (adjustable for speed)
 
+      // Start Text-to-Speech IMMEDIATELY (parallel with typing animation) if enabled
+      if (isSpeakerEnabled && fullContent) {
+        (async () => {
+          try {
+            // Strip markdown before TTS to avoid reading "asterisk asterisk"
+            const cleanContent = stripMarkdown(fullContent);
+            console.log('[ChatWidget] Starting TTS immediately (parallel with typing):', cleanContent.substring(0, 50) + '...');
+
+            // Detect browser language
+            const browserLang = navigator.language || navigator.languages?.[0] || 'en-US';
+            console.log('[ChatWidget] Browser language:', browserLang);
+
+            // Select voice based on personality and language
+            const gender = selectedPersonality === 'rhomida' ? 'female' : 'male';
+            const voice = voiceApi.selectVoice(browserLang, gender);
+            console.log('[ChatWidget] Using voice:', voice, 'for personality:', selectedPersonality);
+
+            const audioBlob = await voiceApi.synthesize(cleanContent, voice);
+            console.log('[ChatWidget] Received audio blob, size:', audioBlob.size);
+
+            const audioUrl = URL.createObjectURL(audioBlob);
+
+            // Stop any currently playing audio
+            if (currentAudioRef.current) {
+              currentAudioRef.current.pause();
+              currentAudioRef.current = null;
+            }
+
+            // Create and play new audio
+            const audio = new Audio(audioUrl);
+            currentAudioRef.current = audio;
+
+                setIsSpeaking(true);
+                audio.onended = () => {
+                  console.log('[ChatWidget] TTS playback ended');
+                  setIsSpeaking(false);
+                  URL.revokeObjectURL(audioUrl);
+                  currentAudioRef.current = null;
+
+                  // Auto-start mic after voice finishes (conversation mode)
+                  // Only if mic is OFF and not already recording
+                  if (isSpeakerEnabled && micMode === 'off' && !isRecording) {
+                    console.log('[ConversationMode] Voice finished, auto-starting mic in 500ms...');
+                    setIsConversationMode(true);
+                    // Small delay to feel more natural
+                    setTimeout(() => {
+                      setMicMode('active');
+                      startActiveRecording();
+                    }, 500);
+                  }
+                };            audio.onerror = (e) => {
+              console.error('[ChatWidget] Audio playback error:', e);
+              setIsSpeaking(false);
+              URL.revokeObjectURL(audioUrl);
+              currentAudioRef.current = null;
+            };
+
+            // Try to play with better error handling
+            try {
+              await audio.play();
+              console.log('[ChatWidget] TTS playback started successfully');
+            } catch (playError: any) {
+              console.error('[ChatWidget] Audio play() failed:', playError);
+              
+              // Fallback to browser TTS if autoplay blocked
+              if (playError.name === 'NotAllowedError' || playError.name === 'NotSupportedError') {
+                console.warn('[ChatWidget] Autoplay blocked, falling back to browser TTS');
+                if ('speechSynthesis' in window) {
+                  const utterance = new SpeechSynthesisUtterance(cleanContent);
+                  utterance.rate = 1.0;
+                  window.speechSynthesis.speak(utterance);
+                }
+              }
+              setIsSpeaking(false);
+              URL.revokeObjectURL(audioUrl);
+              currentAudioRef.current = null;
+            }
+          } catch (error) {
+            console.error('[ChatWidget] TTS Error:', error);
+            setIsSpeaking(false);
+          }
+        })();
+      }
+
       typingIntervalRef.current = setInterval(() => {
         if (charIndex < fullContent.length) {
           const nextChar = fullContent[charIndex];
@@ -821,94 +959,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
             msg.id === messageId ? { ...msg, content: fullContent } : msg
           ));
 
-          // Handle Text-to-Speech if enabled (after typing animation completes)
-          if (isSpeakerEnabled && fullContent) {
-            (async () => {
-              try {
-                // Strip markdown before TTS to avoid reading "asterisk asterisk"
-                const cleanContent = stripMarkdown(fullContent);
-                console.log('[ChatWidget] Starting TTS for message:', cleanContent.substring(0, 50) + '...');
-
-                // Detect browser language
-                const browserLang = navigator.language || navigator.languages?.[0] || 'en-US';
-                console.log('[ChatWidget] Browser language:', browserLang);
-
-                // Select voice based on personality and language
-                // rhomida = female voice, carlos = male voice
-                const gender = selectedPersonality === 'rhomida' ? 'female' : 'male';
-                const voice = voiceApi.selectVoice(browserLang, gender);
-                console.log('[ChatWidget] Using voice:', voice, 'for personality:', selectedPersonality, 'gender:', gender, 'language:', browserLang);
-
-                const audioBlob = await voiceApi.synthesize(cleanContent, voice);
-                console.log('[ChatWidget] Received audio blob, size:', audioBlob.size, 'type:', audioBlob.type);
-
-                const audioUrl = URL.createObjectURL(audioBlob);
-
-                // Stop any currently playing audio
-                if (currentAudioRef.current) {
-                  currentAudioRef.current.pause();
-                  currentAudioRef.current = null;
-                }
-
-                // Create and play new audio
-                const audio = new Audio(audioUrl);
-                currentAudioRef.current = audio;
-
-                setIsSpeaking(true);
-                audio.onended = () => {
-                  console.log('[ChatWidget] TTS playback ended');
-                  setIsSpeaking(false);
-                  URL.revokeObjectURL(audioUrl);
-                  currentAudioRef.current = null;
-                };
-
-                audio.onerror = (e) => {
-                  console.error('[ChatWidget] Audio playback error:', e);
-                  setIsSpeaking(false);
-                  URL.revokeObjectURL(audioUrl);
-                  currentAudioRef.current = null;
-                };
-
-                // Try to play with better error handling for autoplay policies
-                try {
-                  await audio.play();
-                  console.log('[ChatWidget] TTS playback started successfully');
-                } catch (playError: any) {
-                  console.error('[ChatWidget] Audio play() failed:', playError);
-
-                  // If autoplay is blocked, try browser TTS as fallback
-                  if (playError.name === 'NotAllowedError' || playError.name === 'NotSupportedError') {
-                    console.warn('[ChatWidget] Autoplay blocked, falling back to browser TTS');
-                    if ('speechSynthesis' in window) {
-                      const utterance = new SpeechSynthesisUtterance(cleanContent);
-                      utterance.rate = 1.0;
-                      utterance.pitch = 1.0;
-                      utterance.volume = 1.0;
-                      window.speechSynthesis.speak(utterance);
-                      console.log('[ChatWidget] Browser TTS started');
-                    }
-                  }
-                  setIsSpeaking(false);
-                  URL.revokeObjectURL(audioUrl);
-                  currentAudioRef.current = null;
-                }
-              } catch (error) {
-                console.error('[ChatWidget] TTS Error:', error);
-                setIsSpeaking(false);
-
-                // Try browser TTS as last resort with clean content
-                if ('speechSynthesis' in window) {
-                  const cleanContent = stripMarkdown(fullContent);
-                  console.warn('[ChatWidget] Attempting browser TTS fallback after error');
-                  const utterance = new SpeechSynthesisUtterance(cleanContent);
-                  utterance.rate = 1.0;
-                  utterance.pitch = 1.0;
-                  utterance.volume = 1.0;
-                  window.speechSynthesis.speak(utterance);
-                }
-              }
-            })();
-          }
+          // Note: TTS already started in parallel at the beginning, no need to start it here again
         }
       }, typingSpeed);
 
@@ -1056,8 +1107,35 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
   const startVoiceRecording = async () => {
     if (!recognition) return;
 
-    if (isRecording) {
-      console.log('Manually stopping recording');
+    // Cycle through: OFF → WAKE → ACTIVE → OFF
+    if (micMode === 'off') {
+      console.log('[Mic] Switching to WAKE WORD mode');
+      setMicMode('wake');
+      startWakeWordListening();
+      return;
+    }
+    
+    if (micMode === 'wake') {
+      console.log('[Mic] Switching to ACTIVE mode');
+      setMicMode('active');
+      recognition.stop(); // Stop wake word listening
+      startActiveRecording();
+      return;
+    }
+
+    if (micMode === 'active' || isRecording) {
+      console.log('[Mic] Manually stopping recording');
+      
+      // Exit conversation mode if manually stopped
+      if (isConversationMode) {
+        console.log('[ConversationMode] Manually stopped, exiting conversation mode');
+        setIsConversationMode(false);
+      }
+      
+      // Set state first to prevent auto-restart
+      setMicMode('off');
+      setIsRecording(false);
+      setIsTranscribing(false);
 
       // Clear both timers if active
       if (silenceTimerRef.current) {
@@ -1074,43 +1152,64 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
         sendMessage(pendingTranscriptRef.current.trim());
       }
 
+      // Stop recognition (onend will be called but isRecording is now false)
       recognition.stop();
-    } else {
-      console.log('Starting recording');
-
-      // Auto-enable speaker/TTS when user starts speaking (UX improvement)
-      if (!isSpeakerEnabled) {
-        console.log('Auto-enabling TTS for voice interaction');
-        setIsSpeakerEnabled(true);
-        localStorage.setItem('chatWidgetTTSEnabled', 'true');
-      }
-
-      // Stop any currently playing audio when starting to record
-      if (currentAudioRef.current) {
-        currentAudioRef.current.pause();
-        currentAudioRef.current = null;
-        setIsSpeaking(false);
-      }
-      // Also stop browser's speech synthesis if active
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-      }
-
-      // Clear any previous transcripts
-      setTranscript('');
-      setLiveTranscript('');
-      // setFinalizedTranscript(''); // Removed - not being read
-      pendingTranscriptRef.current = '';
-
-      // Start recognition
-      recognition.start();
-      setIsRecording(true);
-      setIsTranscribing(true);
-      setVoiceState('recording');
-
-      // Update activity time
-      lastSpeechTimeRef.current = Date.now();
+      return;
     }
+  };
+  
+  const startWakeWordListening = () => {
+    if (!recognition) return;
+    
+    console.log('[WakeWord] Starting wake word detection');
+    setTranscript('');
+    setLiveTranscript('');
+    
+    try {
+      recognition.start();
+    } catch (error) {
+      console.error('[WakeWord] Failed to start:', error);
+      setMicMode('off');
+    }
+  };
+  
+  const startActiveRecording = () => {
+    if (!recognition) return;
+    
+    console.log('[Mic] Starting active recording');
+
+    // Auto-enable speaker/TTS when user starts speaking (UX improvement)
+    if (!isSpeakerEnabled) {
+      console.log('Auto-enabling TTS for voice interaction');
+      setIsSpeakerEnabled(true);
+      localStorage.setItem('chatWidgetTTSEnabled', 'true');
+    }
+
+    // Stop any currently playing audio when starting to record
+    if (currentAudioRef.current) {
+      currentAudioRef.current.pause();
+      currentAudioRef.current = null;
+      setIsSpeaking(false);
+    }
+    // Also stop browser's speech synthesis if active
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+
+    // Clear any previous transcripts
+    setTranscript('');
+    setLiveTranscript('');
+    // setFinalizedTranscript(''); // Removed - not being read
+    pendingTranscriptRef.current = '';
+
+    // Start recognition
+    recognition.start();
+    setIsRecording(true);
+    setIsTranscribing(true);
+    setVoiceState('recording');
+
+    // Update activity time
+    lastSpeechTimeRef.current = Date.now();
   };
 
   const cancelVoiceRecording = () => {

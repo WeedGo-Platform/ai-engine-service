@@ -104,7 +104,7 @@ export const Header: React.FC<HeaderProps> = ({ onChatToggle, className }) => {
                       leftIcon={<ChatIcon className="h-5 w-5" />}
                       className="relative"
                     >
-                      <span className="absolute -top-1 -right-1 h-3 w-3 bg-purple-500 rounded-full animate-pulse" />
+                      <span className="absolute -top-1 -right-1 h-3 w-3 bg-success-500 rounded-full animate-pulse" />
                     </Button>
                   )}
 

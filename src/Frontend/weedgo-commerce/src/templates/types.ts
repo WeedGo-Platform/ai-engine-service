@@ -81,6 +81,7 @@ export interface ISearchBarProps {
   variant?: 'default' | 'compact' | 'minimal';
   className?: string;
   showSuggestions?: boolean;
+  showButton?: boolean;
 }
 
 export interface IFilterPanelProps {

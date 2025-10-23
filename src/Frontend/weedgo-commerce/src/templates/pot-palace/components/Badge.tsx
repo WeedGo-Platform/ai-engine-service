@@ -9,27 +9,26 @@ export const PotPalaceBadge: React.FC<IBadgeProps> = ({
   className
 }) => {
   const variants = {
-    primary: 'bg-green-100 text-green-800 border-green-300',
-    secondary: 'bg-yellow-100 text-yellow-800 border-yellow-300',
-    success: 'bg-green-500 text-white',
-    danger: 'bg-red-100 text-red-800 border-red-300',
-    warning: 'bg-orange-100 text-orange-800 border-orange-300',
-    info: 'bg-blue-100 text-blue-800 border-blue-300'
+    primary: 'bg-[#2D5F3F]/10 text-[#2D5F3F] border-[#2D5F3F]/20',
+    secondary: 'bg-[#7A9E88]/10 text-[#7A9E88] border-[#7A9E88]/20',
+    success: 'bg-[#059669]/10 text-[#059669] border-[#059669]/20',
+    danger: 'bg-[#DC2626]/10 text-[#DC2626] border-[#DC2626]/20',
+    warning: 'bg-[#D97706]/10 text-[#D97706] border-[#D97706]/20',
+    info: 'bg-[#0891B2]/10 text-[#0891B2] border-[#0891B2]/20'
   };
 
   const sizes = {
     xs: 'px-2 py-0.5 text-xs',
     sm: 'px-2.5 py-1 text-sm',
-    md: 'px-3 py-1.5 text-base',
-    lg: 'px-4 py-2 text-lg'
+    md: 'px-3 py-1 text-sm',
+    lg: 'px-4 py-1.5 text-base'
   };
 
   return (
     <span className={clsx(
-      'inline-flex items-center font-bold rounded-full border-2',
+      'inline-flex items-center font-medium rounded-md border',
       variants[variant],
       sizes[size],
-      'animate-pulse',
       className
     )}>
       {children}

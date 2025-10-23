@@ -106,8 +106,10 @@ export const voiceApi = {
   // Get available voices
   getVoices: async () => {
     try {
-      const response = await api.get('/api/voice/voices');
-      return response.data.voices || response.data || [];
+      // api.get() already unwraps response.data, so we get the data directly
+      const data = await api.get('/api/voice/voices');
+      // Backend returns { status: 'success', voices: [...], current_voice: null }
+      return data.voices || [];
     } catch (error) {
       console.error('Failed to get voices:', error);
       return [];
@@ -117,8 +119,8 @@ export const voiceApi = {
   // Change selected voice
   changeVoice: async (voiceId: string) => {
     try {
-      const response = await api.post('/api/voice/change', { voice_id: voiceId });
-      return response.data;
+      const data = await api.post('/api/voice/change', { voice_id: voiceId });
+      return data;
     } catch (error) {
       console.error('Failed to change voice:', error);
       throw error;
@@ -136,13 +138,16 @@ export const voiceApi = {
       formData.append('speed', '1.0');
       formData.append('format', 'wav');
 
-      const response = await api.post('/api/voice/synthesize', formData, {
+      // Use the raw axios instance for blob responses
+      const axiosInstance = api.getAxiosInstance();
+      const response = await axiosInstance.post('/api/voice/synthesize', formData, {
         responseType: 'blob',
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
 
+      // For blob responses, we need response.data (not unwrapped)
       return response.data;
     } catch (error) {
       console.error('Failed to synthesize speech:', error);

@@ -122,7 +122,7 @@ export const ProductRecommendations: React.FC<ProductRecommendationsProps> = ({
                   </span>
                 )}
                 {product.strain_type && (
-                  <span className="bg-purple-100 text-purple-700 px-2 py-0.5 rounded">
+                  <span className="bg-primary-100 text-primary-700 px-2 py-0.5 rounded">
                     {product.strain_type}
                   </span>
                 )}

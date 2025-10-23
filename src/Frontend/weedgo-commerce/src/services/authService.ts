@@ -203,7 +203,7 @@ class AuthService {
     }
 
     // Basic validation (don't clear tokens if refresh is invalid, might be refreshing)
-    if (!token.split('.').length === 3) {
+    if (token.split('.').length !== 3) {
       return null;
     }
 

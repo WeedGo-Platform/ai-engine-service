@@ -51,6 +51,34 @@ export default defineConfig({
       '@pages': path.resolve(__dirname, './src/pages'),
     }
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // React core libraries
+          'react-vendor': ['react', 'react-dom', 'react/jsx-runtime'],
+
+          // State management
+          'redux-vendor': ['redux', 'react-redux', '@reduxjs/toolkit'],
+
+          // Routing
+          'router-vendor': ['react-router-dom'],
+
+          // UI libraries and utilities
+          'ui-vendor': ['clsx', 'react-hot-toast'],
+
+          // Template system (if large)
+          'templates': [
+            './src/templates/TemplateProvider',
+            './src/templates/modern/index',
+            './src/templates/pot-palace/index',
+          ],
+        },
+      },
+    },
+    // Optional: Adjust chunk size warning limit
+    chunkSizeWarningLimit: 600,
+  },
   server: {
     port: 3000,
     proxy: {

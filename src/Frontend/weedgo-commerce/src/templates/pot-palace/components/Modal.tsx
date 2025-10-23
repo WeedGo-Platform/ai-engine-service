@@ -47,7 +47,7 @@ export const PotPalaceModal: React.FC<IModalProps> = ({
         'max-h-[90vh] overflow-hidden flex flex-col',
         className
       )}>
-        {(title || onClose) && (
+        {title && (
           <div className="flex items-center justify-between p-6 border-b-3 border-green-200 bg-gradient-to-r from-green-50 to-yellow-50">
             {title && (
               <h2 className="text-2xl font-bold text-gray-800 font-display">

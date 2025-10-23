@@ -12,6 +12,7 @@ interface ChatInputAreaProps {
   isRecording: boolean;
   isTranscribing: boolean;
   transcript: string;
+  micMode?: 'off' | 'wake' | 'active'; // New prop for mic mode
   onToggleVoiceRecording: () => void;
   isSpeakerEnabled: boolean;
   onToggleSpeaker: () => void;
@@ -21,7 +22,7 @@ interface ChatInputAreaProps {
   onUseTemplate: (template: ConversationTemplate) => void;
 }
 
-const ChatInputArea = forwardRef<HTMLInputElement, ChatInputAreaProps>(({
+const ChatInputArea = forwardRef<HTMLInputElement, ChatInputAreaProps>(({  
   inputMessage,
   onInputChange,
   onSendMessage,
@@ -31,6 +32,7 @@ const ChatInputArea = forwardRef<HTMLInputElement, ChatInputAreaProps>(({
   isRecording,
   isTranscribing,
   transcript,
+  micMode = 'off',
   onToggleVoiceRecording,
   isSpeakerEnabled,
   onToggleSpeaker,
@@ -91,11 +93,17 @@ const ChatInputArea = forwardRef<HTMLInputElement, ChatInputAreaProps>(({
             onClick={onToggleVoiceRecording}
             disabled={!isModelLoaded || isSending}
             className={`p-3 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
-              isRecording 
+              micMode === 'active' || isRecording
                 ? 'bg-gradient-to-r from-red-600 to-red-500 text-white animate-pulse shadow-lg' 
+                : micMode === 'wake'
+                ? 'bg-gradient-to-r from-amber-600 to-amber-500 text-white shadow-lg'
                 : 'bg-purple-800/50 hover:bg-purple-700/50 text-purple-300 hover:text-pink-400'
             }`}
-            title={isRecording ? "Stop recording" : "Start voice recording"}
+            title={
+              micMode === 'active' ? 'Stop recording' 
+              : micMode === 'wake' ? 'Wake word mode (click for active)' 
+              : 'Start wake word mode'
+            }
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
