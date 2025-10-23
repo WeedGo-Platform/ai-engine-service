@@ -46,11 +46,7 @@ export class ProductService extends BaseService {
   async getProducts(filters?: ProductFilters): Promise<ApiResponse<PaginatedResponse<Product>>> {
     return this.getPaginated<Product>(
       this.basePath,
-      filters,
-      {
-        useCache: true,
-        cacheKey: `products-${JSON.stringify(filters)}`
-      }
+      filters
     );
   }
 

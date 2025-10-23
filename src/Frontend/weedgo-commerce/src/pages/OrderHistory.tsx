@@ -160,7 +160,7 @@ const OrderHistory: React.FC = () => {
       case 'ready':
         return 'text-yellow-600';
       case 'confirmed':
-        return 'text-purple-600';
+        return 'text-primary-600';
       default:
         return 'text-gray-600';
     }

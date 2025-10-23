@@ -118,11 +118,33 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
     setUserError(null);
     
     try {
-      const response = await fetch(getApiEndpoint(`/tenants/${tenant.id}/users`));
-      if (!response.ok) throw new Error('Failed to fetch users');
+      const authToken = localStorage.getItem('authToken');
+      const apiUrl = getApiEndpoint(`/tenants/${tenant.id}/users`);
+      console.log('TenantEditModal fetchTenantUsers: Fetching users for tenant', tenant.id);
+      console.log('TenantEditModal fetchTenantUsers: Full API URL:', apiUrl);
+      console.log('TenantEditModal fetchTenantUsers: Auth token exists:', !!authToken);
+      const response = await fetch(apiUrl, {
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      console.log('TenantEditModal fetchTenantUsers: Response status:', response.status);
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('TenantEditModal fetchTenantUsers: Error response:', errorText);
+        throw new Error('Failed to fetch users');
+      }
       const data = await response.json();
-      setTenantUsers(data);
+      console.log('TenantEditModal fetchTenantUsers: Received users:', data);
+      // Filter out customers - only show admin users (tenant_admin, store_manager, staff)
+      const adminUsers = data.filter((user: any) => 
+        user.role !== 'customer' && user.role !== 'super_admin'
+      );
+      console.log('TenantEditModal fetchTenantUsers: Filtered admin users:', adminUsers);
+      setTenantUsers(adminUsers);
     } catch (err: any) {
+      console.error('TenantEditModal fetchTenantUsers: Error:', err);
       setUserError(err.message);
     } finally {
       setLoadingUsers(false);
@@ -153,9 +175,11 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
     const resetMethod = confirmToastAsync(t('common:confirmations.passwordResetMethod'));
 
     try {
+      const authToken = localStorage.getItem('authToken');
       const response = await fetch(getApiEndpoint(`/tenants/${tenant.id}/users/${userId}/reset-password`), {
         method: 'POST',
         headers: {
+          'Authorization': `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ method: resetMethod ? 'email' : 'otp' })
@@ -179,9 +203,11 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
     setUserSuccess(null);
     
     try {
+      const authToken = localStorage.getItem('authToken');
       const response = await fetch(getApiEndpoint(`/tenants/${tenant.id}/users/${userId}/toggle-active`), {
         method: 'PATCH',
         headers: {
+          'Authorization': `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         }
       });
@@ -201,9 +227,11 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
     setUserSuccess(null);
     
     try {
+      const authToken = localStorage.getItem('authToken');
       const response = await fetch(getApiEndpoint(`/tenants/${tenant.id}/users/${userId}`), {
         method: 'PUT',
         headers: {
+          'Authorization': `Bearer ${authToken}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ role: newRole })
@@ -231,8 +259,13 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
     setUserSuccess(null);
     
     try {
+      const authToken = localStorage.getItem('authToken');
       const response = await fetch(getApiEndpoint(`/tenants/${tenant.id}/users/${userId}`), {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        }
       });
       
       if (!response.ok) {
@@ -800,6 +833,14 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
 
                 {loadingUsers ? (
                   <div className="text-center py-4 text-gray-600 dark:text-gray-400">Loading users...</div>
+                ) : tenantUsers.length === 0 ? (
+                  <div className="text-center py-8 bg-gray-50 dark:bg-gray-700/50 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600">
+                    <Users className="w-12 h-12 mx-auto text-gray-400 dark:text-gray-500 mb-3" />
+                    <p className="text-gray-600 dark:text-gray-400 font-medium mb-1">No admin users yet</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-500 mb-4">
+                      Click the "Add User" button above to create the first admin user for this tenant
+                    </p>
+                  </div>
                 ) : (
                   <div className="space-y-2">
                     {tenantUsers.map((user: any) => (

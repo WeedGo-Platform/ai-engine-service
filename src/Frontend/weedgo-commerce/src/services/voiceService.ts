@@ -1,6 +1,6 @@
 class VoiceService {
   private recognition: any;
-  private synthesis: SpeechSynthesis;
+  private synthesis: SpeechSynthesis | null = null;
   private isInitialized: boolean = false;
 
   constructor() {

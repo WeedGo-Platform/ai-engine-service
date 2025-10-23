@@ -1,8 +1,9 @@
 import React from 'react';
-import { ICategoryCardProps } from '../../types';
+import { ICategoryCardProps, ICategory } from '../../types';
 import { clsx } from 'clsx';
 
 export const ModernCategoryCard: React.FC<ICategoryCardProps> = ({
+  category,
   title,
   description,
   icon,
@@ -17,9 +18,19 @@ export const ModernCategoryCard: React.FC<ICategoryCardProps> = ({
     compact: 'bg-white border-[#E8E8ED]'
   };
 
+  // Use category if provided, otherwise construct from props
+  const categoryData: ICategory = category || {
+    id: '',
+    name: title || '',
+    description: description || '',
+    image: image || '',
+    slug: '',
+    productCount: 0
+  };
+
   return (
     <div
-      onClick={onClick}
+      onClick={onClick ? () => onClick(categoryData) : undefined}
       className={clsx(
         'rounded-2xl overflow-hidden cursor-pointer p-6',
         'transition-all duration-200',
@@ -40,11 +51,11 @@ export const ModernCategoryCard: React.FC<ICategoryCardProps> = ({
         </div>
       )}
 
-      {image && !icon && (
+      {(categoryData.image || image) && !icon && (
         <div className="h-24 w-24 mb-4 rounded-xl overflow-hidden bg-[#F5F5F7]">
           <img
-            src={image}
-            alt={title}
+            src={categoryData.image || image}
+            alt={categoryData.name || title}
             className="w-full h-full object-cover"
           />
         </div>
@@ -52,12 +63,12 @@ export const ModernCategoryCard: React.FC<ICategoryCardProps> = ({
 
       <div className="relative z-10">
         <h3 className="font-semibold text-lg mb-2 text-[#1D1D1F]">
-          {title}
+          {categoryData.name || title}
         </h3>
 
-        {description && (
+        {(categoryData.description || description) && (
           <p className="text-sm text-[#86868B] leading-relaxed">
-            {description}
+            {categoryData.description || description}
           </p>
         )}
 

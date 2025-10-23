@@ -4,6 +4,17 @@
 
 import React, { useCallback, useEffect, useRef, useMemo } from 'react';
 
+// Declare analytics on window
+declare global {
+  interface Window {
+    analytics?: {
+      track: (event: string, properties: any) => void;
+      identify: (userId: string, traits?: any) => void;
+      page: (name?: string, properties?: any) => void;
+    };
+  }
+}
+
 /**
  * Custom hook for debouncing values
  */
@@ -190,7 +201,7 @@ export async function lazyWithRetry<T>(
 export function useBatchedState<T>(initialState: T) {
   const [state, setState] = useState(initialState);
   const pendingUpdates = useRef<Partial<T>[]>([]);
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const batchedSetState = useCallback((update: Partial<T>) => {
     pendingUpdates.current.push(update);

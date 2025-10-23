@@ -55,7 +55,12 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
   useEffect(() => {
     const fetchOptions = async () => {
       try {
-        const options = await searchService.getFilterOptions(filters.category);
+        const categoryParam = Array.isArray(filters.category)
+          ? filters.category[0]
+          : filters.category;
+        // Ensure categoryParam is string or undefined, not string[]
+        const categoryValue = typeof categoryParam === 'string' ? categoryParam : undefined;
+        const options = await searchService.getFilterOptions(categoryValue);
         setFilterOptions(options);
       } catch (error) {
         console.error('Failed to fetch filter options:', error);

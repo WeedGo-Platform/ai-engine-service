@@ -223,7 +223,7 @@ const AdvancedSearch: React.FC<AdvancedSearchProps> = ({
           }}
           className={`px-3 py-1 rounded-full text-sm capitalize ${
             filters.strain?.includes(strain)
-              ? 'bg-purple-600 text-white'
+              ? 'bg-primary-600 text-white'
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >

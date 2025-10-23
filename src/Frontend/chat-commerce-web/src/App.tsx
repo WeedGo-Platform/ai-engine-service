@@ -74,13 +74,17 @@ function AppContent() {
   });
   const [expandedMessages, setExpandedMessages] = useState<Set<string>>(new Set());
   
+  // Mic mode: 'off' | 'wake' | 'active'
+  type MicMode = 'off' | 'wake' | 'active';
+  const [micMode, setMicMode] = useState<MicMode>('off');
   const [isRecording, setIsRecording] = useState(false);
   const [recognition, setRecognition] = useState<any>(null);
   const [transcript, setTranscript] = useState<string>('');
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [sessionLoaded, setSessionLoaded] = useState(false);
-  const [isSpeakerEnabled, setIsSpeakerEnabled] = useState(false);
+  const [isSpeakerEnabled, setIsSpeakerEnabled] = useState(false); // Default OFF
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isConversationMode, setIsConversationMode] = useState(false);
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
   
   // New state for real-time transcript
@@ -88,6 +92,7 @@ function AppContent() {
   const [finalizedTranscript, setFinalizedTranscript] = useState<string>('');
   const silenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pauseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const conversationSilenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastSpeechTimeRef = useRef<number>(Date.now());
   const pendingTranscriptRef = useRef<string>('');
   
@@ -168,7 +173,7 @@ function AppContent() {
       let lastSentText = '';
       
       recognitionInstance.onresult = (event: any) => {
-        console.log('Speech result event, resultIndex:', event.resultIndex, 'results length:', event.results.length);
+        console.log('[Mic] Speech result event, resultIndex:', event.resultIndex, 'results length:', event.results.length);
         
         let interimText = '';
         let newFinalText = '';
@@ -182,7 +187,22 @@ function AppContent() {
           }
           
           const transcriptText = String(result[0].transcript);
-          console.log(`Result ${i}: "${transcriptText}" (final: ${result.isFinal})`);
+          console.log(`[Mic] Result ${i}: "${transcriptText}" (final: ${result.isFinal})`);
+          
+          // Wake word detection in wake mode
+          if (micMode === 'wake') {
+            const lowerText = transcriptText.toLowerCase();
+            if (lowerText.includes('hey assistant') || lowerText.includes('hey ai') || lowerText.includes('hey there')) {
+              console.log('[WakeWord] Detected! Switching to active mode');
+              setMicMode('active');
+              recognitionInstance.stop();
+              setTimeout(() => startActiveRecording(), 300);
+              showNotificationMessage('✅ Wake word detected!');
+              return;
+            }
+            setTranscript(transcriptText);
+            return; // Don't process further in wake mode
+          }
           
           if (result.isFinal) {
             newFinalText += transcriptText + ' ';
@@ -199,7 +219,7 @@ function AppContent() {
         
         // Show complete transcript immediately (accumulated final + current interim)
         const completeTranscript = allFinalText + interimText;
-        console.log('Setting transcript to:', completeTranscript);
+        console.log('[Mic] Setting transcript to:', completeTranscript);
         
         // Update all transcript states immediately for live display
         setTranscript(completeTranscript);
@@ -213,20 +233,26 @@ function AppContent() {
         // Reset timers on any speech activity
         lastSpeechTimeRef.current = Date.now();
         
-        // Clear existing pause timer
+        // Clear ALL existing timers to prevent stale timers
         if (pauseTimerRef.current) {
           clearTimeout(pauseTimerRef.current);
+          pauseTimerRef.current = null;
         }
         
-        // Clear existing silence timer
         if (silenceTimerRef.current) {
           clearTimeout(silenceTimerRef.current);
+          silenceTimerRef.current = null;
+        }
+        
+        if (conversationSilenceTimerRef.current) {
+          clearTimeout(conversationSilenceTimerRef.current);
+          conversationSilenceTimerRef.current = null;
         }
         
         // Set pause timer (1.5 seconds) - sends text but keeps recording
         if (allFinalText.trim() && allFinalText.trim() !== lastSentText) {
           pauseTimerRef.current = setTimeout(() => {
-            console.log('Pause detected, sending chunk:', allFinalText);
+            console.log('[Mic] Pause detected, sending chunk:', allFinalText);
             
             const textToSend = allFinalText.trim();
             if (textToSend && textToSend !== lastSentText) {
@@ -245,13 +271,21 @@ function AppContent() {
         }
         
         // Set long silence timer (5 seconds) - stops recording completely
+        // In conversation mode, use shorter timeout (4 seconds)
+        const silenceTimeout = isConversationMode ? 4000 : 5000;
         silenceTimerRef.current = setTimeout(() => {
-          console.log('5 seconds of silence detected, stopping recording');
+          console.log(`[Mic] ${silenceTimeout/1000} seconds of silence detected, stopping recording`);
           
           // Send any remaining unsent text
           const remainingText = allFinalText.trim();
           if (remainingText && remainingText !== lastSentText) {
             sendMessageRef.current?.(remainingText);
+          }
+          
+          // Exit conversation mode
+          if (isConversationMode) {
+            console.log('[ConversationMode] Ending conversation due to silence');
+            setIsConversationMode(false);
           }
           
           // Stop recording
@@ -263,17 +297,53 @@ function AppContent() {
           allFinalText = '';
           lastResultIndex = 0;
           lastSentText = '';
-        }, 5000); // 5 seconds = stop recording
+        }, silenceTimeout);
       };
       
       recognitionInstance.onerror = (event: any) => {
-        console.error('Speech recognition error:', event.error);
+        console.error('[Mic] Speech recognition error:', event.error);
+        
+        // Don't stop recording on "no-speech" error - it's normal during pauses
+        if (event.error === 'no-speech') {
+          console.log('[Mic] No speech detected, but continuing to listen...');
+          return; // Keep recording active
+        }
+        
+        // For other errors, stop recording
         setIsRecording(false);
         setIsTranscribing(false);
+        
+        // Show user-friendly error message
+        const errorMessages: Record<string, string> = {
+          'not-allowed': 'Microphone access denied. Please allow microphone access in your browser settings.',
+          'audio-capture': 'Microphone not found. Please check your microphone connection.',
+          'network': 'Network error. Please check your internet connection.',
+          'aborted': 'Recording was aborted.',
+          'service-not-allowed': 'Speech recognition service not allowed.'
+        };
+        
+        const message = errorMessages[event.error] || `Recording error: ${event.error}`;
+        showNotificationMessage(message);
       };
       
       recognitionInstance.onend = () => {
-        console.log('Speech recognition ended');
+        console.log('[Mic] Speech recognition ended');
+        
+        // If we're still supposed to be recording, restart it
+        if (isRecording) {
+          console.log('[Mic] Auto-restarting recognition...');
+          try {
+            recognitionInstance.start();
+          } catch (e) {
+            console.error('[Mic] Failed to restart recognition:', e);
+            setIsRecording(false);
+            setIsTranscribing(false);
+          }
+          return;
+        }
+        
+        // Otherwise, clean up
+        console.log('[Mic] Cleaning up recognition state');
         
         // Clear both timers
         if (silenceTimerRef.current) {
@@ -295,6 +365,10 @@ function AppContent() {
       };
       
       setRecognition(recognitionInstance);
+      console.log('[Mic] Speech recognition initialized successfully');
+    } else {
+      console.warn('[Mic] Speech recognition not supported in this browser');
+      showNotificationMessage('Speech recognition is not supported in your browser. Try Chrome or Edge.');
     }
   }, []);
 
@@ -360,13 +434,17 @@ function AppContent() {
   // Load available voices
   const loadAvailableVoices = async () => {
     try {
+      console.log('[Voice] Loading available voices...');
       const voices = await voiceApi.getVoices();
+      console.log('[Voice] Loaded voices:', voices);
       setAvailableVoices(voices);
       if (voices.length > 0 && !selectedVoice) {
         setSelectedVoice(voices[0].id);
+        console.log('[Voice] Auto-selected first voice:', voices[0].id);
       }
     } catch (error) {
-      console.error('Error loading voices:', error);
+      console.error('[Voice] Error loading voices:', error);
+      showNotificationMessage('Failed to load voices');
     }
   };
 
@@ -487,7 +565,10 @@ function AppContent() {
       // Handle voice synthesis if enabled
       if (isSpeakerEnabled && selectedVoice) {
         try {
+          console.log('[Voice] Synthesizing speech with voice:', selectedVoice);
+          console.log('[Voice] Text to synthesize:', messageContent.substring(0, 100) + '...');
           const audioBlob = await voiceApi.synthesize(messageContent, selectedVoice);
+          console.log('[Voice] Received audio blob:', audioBlob.size, 'bytes');
           const audioUrl = URL.createObjectURL(audioBlob);
           
           // Stop any currently playing audio
@@ -503,23 +584,42 @@ function AppContent() {
           setIsSpeaking(true);
           
           audio.addEventListener('ended', () => {
+            console.log('[Voice] Audio playback ended');
             setIsSpeaking(false);
             URL.revokeObjectURL(audioUrl);
             currentAudioRef.current = null;
+
+            // Auto-start mic after voice finishes (conversation mode)
+            if (isSpeakerEnabled && micMode === 'off') {
+              console.log('[ConversationMode] Voice finished, auto-starting mic in 500ms...');
+              setIsConversationMode(true);
+              // Small delay to feel more natural
+              setTimeout(() => {
+                setMicMode('active');
+                startActiveRecording();
+              }, 500);
+            }
           });
           
           audio.addEventListener('error', (e) => {
-            console.error('Audio playback error:', e);
+            console.error('[Voice] Audio playback error:', e);
+            showNotificationMessage('Failed to play voice audio');
             setIsSpeaking(false);
             URL.revokeObjectURL(audioUrl);
             currentAudioRef.current = null;
           });
           
+          console.log('[Voice] Starting audio playback...');
           await audio.play();
+          console.log('[Voice] Audio playing successfully');
         } catch (error) {
-          console.error('Error synthesizing speech:', error);
+          console.error('[Voice] Error synthesizing speech:', error);
+          showNotificationMessage('Voice synthesis failed: ' + (error as Error).message);
           setIsSpeaking(false);
         }
+      } else if (isSpeakerEnabled && !selectedVoice) {
+        console.warn('[Voice] Speaker enabled but no voice selected');
+        showNotificationMessage('No voice selected. Please select a voice in settings.');
       }
     } catch (error) {
       console.error('Error sending message:', error);
@@ -555,10 +655,24 @@ function AppContent() {
 
   // Handle voice recording
   const handleVoiceRecord = () => {
-    if (!recognition) return;
+    if (!recognition) {
+      console.error('[Mic] Speech recognition not initialized');
+      showNotificationMessage('Speech recognition not available in your browser');
+      return;
+    }
     
     if (isRecording) {
-      console.log('Manually stopping recording');
+      console.log('[Mic] Manually stopping recording');
+      
+      // Set flag to prevent auto-restart
+      setIsRecording(false);
+      setIsTranscribing(false);
+      
+      // Exit conversation mode if manually stopped
+      if (isConversationMode) {
+        console.log('[ConversationMode] Manually stopped, exiting conversation mode');
+        setIsConversationMode(false);
+      }
       
       // Clear both timers if active
       if (silenceTimerRef.current) {
@@ -572,26 +686,63 @@ function AppContent() {
       
       // Send any pending transcript before stopping
       if (pendingTranscriptRef.current && pendingTranscriptRef.current.trim()) {
+        console.log('[Mic] Sending pending transcript:', pendingTranscriptRef.current.trim());
         sendMessageRef.current?.(pendingTranscriptRef.current.trim());
       }
       
+      // Stop recognition (this will trigger onend, but isRecording is now false)
       recognition.stop();
-    } else {
-      console.log('Starting recording');
-      
-      // Clear any previous transcripts
-      setTranscript('');
-      setLiveTranscript('');
-      setFinalizedTranscript('');
-      pendingTranscriptRef.current = '';
-      
+      showNotificationMessage('Recording stopped');
+      return;
+    }
+  };
+  
+  const startWakeWordListening = () => {
+    if (!recognition) return;
+    
+    console.log('[WakeWord] Starting wake word detection');
+    setTranscript('');
+    setLiveTranscript('');
+    
+    try {
+      recognition.start();
+      showNotificationMessage('🎤 Listening for "Hey Assistant"...');
+    } catch (error) {
+      console.error('[WakeWord] Failed to start:', error);
+      setMicMode('off');
+    }
+  };
+  
+  const startActiveRecording = () => {
+    if (!recognition) return;
+    
+    console.log('[Mic] Starting active recording');
+    
+    // Clear any previous transcripts
+    setTranscript('');
+    setLiveTranscript('');
+    setFinalizedTranscript('');
+    pendingTranscriptRef.current = '';
+    
+    // Set recording state BEFORE starting
+    setIsRecording(true);
+    setIsTranscribing(true);
+    
+    try {
       // Start recognition
       recognition.start();
-      setIsRecording(true);
-      setIsTranscribing(true);
       
       // Initialize speech time
       lastSpeechTimeRef.current = Date.now();
+      
+      console.log('[Mic] Recording started successfully');
+      showNotificationMessage('Recording... Speak now');
+    } catch (error) {
+      console.error('[Mic] Failed to start recording:', error);
+      setIsRecording(false);
+      setIsTranscribing(false);
+      setMicMode('off');
+      showNotificationMessage('Failed to start recording. Check microphone permissions.');
     }
   };
 
@@ -673,11 +824,30 @@ function AppContent() {
     const newState = !isSpeakerEnabled;
     setIsSpeakerEnabled(newState);
     
-    // If turning off speaker, stop any currently playing audio
-    if (!newState && currentAudioRef.current) {
-      currentAudioRef.current.pause();
-      currentAudioRef.current = null;
-      setIsSpeaking(false);
+    console.log('[Voice] Speaker toggled:', newState ? 'ON' : 'OFF');
+    console.log('[Voice] Selected voice:', selectedVoice);
+    console.log('[Voice] Available voices:', availableVoices.length);
+    
+    if (newState) {
+      // Turning on - check if voice is available
+      if (!selectedVoice && availableVoices.length > 0) {
+        setSelectedVoice(availableVoices[0].id);
+        console.log('[Voice] Auto-selected voice:', availableVoices[0].id);
+        showNotificationMessage(`Voice enabled: ${availableVoices[0].name}`);
+      } else if (selectedVoice) {
+        const voice = availableVoices.find(v => v.id === selectedVoice);
+        showNotificationMessage(`Voice enabled: ${voice?.name || selectedVoice}`);
+      } else {
+        showNotificationMessage('Voice enabled but no voices available');
+      }
+    } else {
+      // Turning off - stop any currently playing audio
+      if (currentAudioRef.current) {
+        currentAudioRef.current.pause();
+        currentAudioRef.current = null;
+        setIsSpeaking(false);
+      }
+      showNotificationMessage('Voice disabled');
     }
   };
 
@@ -829,6 +999,7 @@ function AppContent() {
                 isRecording={isRecording}
                 isTranscribing={isTranscribing}
                 transcript={transcript}
+                micMode={micMode}
                 onToggleVoiceRecording={handleVoiceRecord}
                 isSpeakerEnabled={isSpeakerEnabled}
                 onToggleSpeaker={handleToggleSpeaker}

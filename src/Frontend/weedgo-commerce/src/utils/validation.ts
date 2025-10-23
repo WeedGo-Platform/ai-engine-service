@@ -532,7 +532,7 @@ export const useFormValidation = (
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
-  const validateField = (name: string, value: any) => {
+  const validateSingleField = (name: string, value: any) => {
     const fieldSchema = schema[name];
     if (!fieldSchema) return;
 
@@ -550,7 +550,7 @@ export const useFormValidation = (
     }));
 
     if (touched[name]) {
-      validateField(name, value);
+      validateSingleField(name, value);
     }
   };
 
@@ -559,7 +559,7 @@ export const useFormValidation = (
       ...prev,
       [name]: true,
     }));
-    validateField(name, values[name]);
+    validateSingleField(name, values[name]);
   };
 
   const handleSubmit = (callback: () => void) => {

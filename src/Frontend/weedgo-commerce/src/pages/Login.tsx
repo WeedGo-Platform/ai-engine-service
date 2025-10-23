@@ -12,7 +12,11 @@ const Login: React.FC = () => {
   const location = useLocation();
   const dispatch = useDispatch();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    email: string;
+    password: string;
+    [key: string]: string;
+  }>({
     email: '',
     password: '',
   });
@@ -57,13 +61,19 @@ const Login: React.FC = () => {
       [name]: true,
     });
 
-    // Validate on blur
-    const validation = validateForm({ [name]: formData[name] }, { [name]: ValidationSchemas.login[name] });
-    if (!validation.isValid) {
-      setErrors({
-        ...errors,
-        [name]: validation.errors[name] || '',
-      });
+    // Validate on blur - ensure name is a valid key
+    if (name in formData) {
+      const fieldName = name as keyof typeof formData;
+      const validation = validateForm(
+        { [fieldName]: formData[fieldName] },
+        { [fieldName]: ValidationSchemas.login[fieldName] }
+      );
+      if (!validation.isValid) {
+        setErrors({
+          ...errors,
+          [fieldName]: validation.errors[fieldName] || '',
+        });
+      }
     }
   };
 

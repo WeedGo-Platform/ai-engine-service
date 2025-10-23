@@ -740,22 +740,45 @@ async def get_tenant_users(
     pool: asyncpg.Pool = Depends(get_db_pool)
 ):
     """Get all users for a tenant"""
+    logger.info(f"get_tenant_users called for tenant_id: {tenant_id}")
+    logger.info(f"tenant_id type: {type(tenant_id)}")
     try:
         async with pool.acquire() as conn:
             # Query users table directly where tenant_id matches
+            # Try both UUID and string comparison to debug
             query = """
                 SELECT
                     id, email, first_name, last_name, role, active,
                     tenant_id, permissions, created_at, last_login_at
                 FROM users
-                WHERE tenant_id = $1
+                WHERE tenant_id = $1::uuid OR tenant_id::text = $1::text
                 ORDER BY created_at DESC
             """
-            rows = await conn.fetch(query, tenant_id)
+            rows = await conn.fetch(query, str(tenant_id))
+            logger.info(f"Found {len(rows)} users for tenant {tenant_id}")
+            
+            # Also try a count query for debugging
+            count_query = "SELECT COUNT(*) FROM users WHERE tenant_id IS NOT NULL"
+            total_users = await conn.fetchval(count_query)
+            logger.info(f"Total users with tenant_id in database: {total_users}")
 
             users = []
             for row in rows:
                 try:
+                    logger.debug(f"Processing user row: {dict(row)}")
+                    
+                    # Parse permissions - handle both JSON string and dict
+                    permissions = row['permissions']
+                    if isinstance(permissions, str):
+                        import json
+                        try:
+                            permissions = json.loads(permissions) if permissions else {}
+                        except json.JSONDecodeError:
+                            logger.warning(f"Failed to parse permissions JSON: {permissions}")
+                            permissions = {}
+                    elif permissions is None:
+                        permissions = {}
+                    
                     # Handle potential None values and ensure proper typing
                     user = TenantUserResponse(
                         id=row['id'],
@@ -765,7 +788,7 @@ async def get_tenant_users(
                         role=row['role'] or 'customer',
                         active=row['active'] if row['active'] is not None else True,
                         tenant_id=row['tenant_id'],
-                        permissions=row['permissions'] or {},
+                        permissions=permissions,
                         created_at=row['created_at'],
                         last_login_at=row['last_login_at']
                     )
@@ -774,6 +797,7 @@ async def get_tenant_users(
                     logger.warning(f"Skipping user due to validation error: {validation_error}, row data: {dict(row)}")
                     continue
 
+            logger.info(f"Returning {len(users)} users for tenant {tenant_id}")
             return users
     except Exception as e:
         logger.error(f"Error getting tenant users: {e}")

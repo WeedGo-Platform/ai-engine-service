@@ -23,9 +23,11 @@ import {
   Ban,
   UserX,
   Shield,
-  RefreshCw
+  RefreshCw,
+  X
 } from 'lucide-react';
 import tenantService, { Tenant, CreateTenantRequest } from '../services/tenantService';
+import ocsService from '../services/ocsService';
 import { getApiEndpoint } from '../config/app.config';
 import { useAuth } from '../contexts/AuthContext';
 import TenantEditModal from '../components/TenantEditModal';
@@ -49,6 +51,7 @@ const TenantManagement: React.FC = () => {
   const [isStoreManagerView, setIsStoreManagerView] = useState(false);
   const [tenantMetrics, setTenantMetrics] = useState<any>(null);
   const [storeCount, setStoreCount] = useState({ total: 0, active: 0 });
+  const [showOCSCredentialsModal, setShowOCSCredentialsModal] = useState(false);
 
   useEffect(() => {
     // Check if user is tenant admin and not super admin
@@ -272,13 +275,22 @@ const TenantManagement: React.FC = () => {
           </p>
         </div>
         {!isTenantAdminView && !isStoreManagerView && (
-          <button
-            onClick={() => setShowCreateModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 transition-colors"
-          >
-            <Plus className="w-5 h-5" />
-            {t('tenants:titles.create')}
-          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={() => setShowOCSCredentialsModal(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              <Shield className="w-5 h-5" />
+              OCS Credentials
+            </button>
+            <button
+              onClick={() => setShowCreateModal(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 transition-colors"
+            >
+              <Plus className="w-5 h-5" />
+              {t('tenants:titles.create')}
+            </button>
+          </div>
         )}
       </div>
 
@@ -696,6 +708,125 @@ const TenantManagement: React.FC = () => {
           }}
         />
       )}
+
+      {/* OCS Credentials Modal */}
+      {showOCSCredentialsModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <Shield className="w-6 h-6" />
+                OCS OAuth Credentials Configuration
+              </h2>
+              <button
+                onClick={() => setShowOCSCredentialsModal(false)}
+                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+              <p className="text-sm text-blue-900 dark:text-blue-100">
+                <strong>Note:</strong> These OAuth credentials will be used to authenticate with the OCS API for the selected tenant. 
+                Each tenant requires its own set of OAuth credentials.
+              </p>
+            </div>
+
+            <form onSubmit={async (e) => {
+              e.preventDefault();
+              const formData = new FormData(e.currentTarget);
+              const tenantId = formData.get('tenant_id') as string;
+              const credentials = {
+                client_id: formData.get('client_id') as string,
+                client_secret: formData.get('client_secret') as string,
+              };
+
+              try {
+                await ocsService.storeCredentials(tenantId, credentials);
+                toast.success('OCS credentials saved successfully');
+                setShowOCSCredentialsModal(false);
+              } catch (error) {
+                console.error('Error saving OCS credentials:', error);
+                toast.error('Failed to save OCS credentials');
+              }
+            }}>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Select Tenant
+                  </label>
+                  <select
+                    name="tenant_id"
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                  >
+                    <option value="">-- Select a tenant --</option>
+                    {tenants.map(tenant => (
+                      <option key={tenant.id} value={tenant.id}>
+                        {tenant.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    OAuth Client ID
+                  </label>
+                  <input
+                    type="text"
+                    name="client_id"
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    placeholder="Enter OAuth Client ID"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    OAuth Client Secret
+                  </label>
+                  <input
+                    type="password"
+                    name="client_secret"
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                    placeholder="Enter OAuth Client Secret"
+                  />
+                </div>
+
+                <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-2">Default OAuth Configuration</h3>
+                  <div className="space-y-1 text-xs text-gray-600 dark:text-gray-400">
+                    <p><strong>Token URL:</strong> https://login.microsoftonline.com/common/oauth2/v2.0/token</p>
+                    <p><strong>Scope:</strong> https://ocsapi.ocs.ca/.default</p>
+                  </div>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                    These default values are automatically used by the OCS integration.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-3 mt-6">
+                <button
+                  type="button"
+                  onClick={() => setShowOCSCredentialsModal(false)}
+                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Save Credentials
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -752,6 +883,8 @@ const TenantFormModal: React.FC<{
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [userError, setUserError] = useState<string | null>(null);
   const [userSuccess, setUserSuccess] = useState<string | null>(null);
+  const [showAddUserForm, setShowAddUserForm] = useState(false);
+  const [newUser, setNewUser] = useState({ email: '', first_name: '', last_name: '', role: 'staff', password: '' });
   const [formData, setFormData] = useState<Partial<CreateTenantRequest>>({
     name: tenant?.name || '',
     code: tenant?.code || '',
@@ -845,18 +978,42 @@ const TenantFormModal: React.FC<{
   }, [activeTab, tenant?.id]);
 
   const fetchTenantUsers = async () => {
-    if (!tenant?.id) return;
+    if (!tenant?.id) {
+      console.log('fetchTenantUsers: No tenant ID available');
+      return;
+    }
     
+    console.log('fetchTenantUsers: Fetching users for tenant:', tenant.id);
     setLoadingUsers(true);
     setUserError(null);
     try {
-      const response = await fetch(getApiEndpoint(`/tenants/${tenant.id}/users`));
-      if (!response.ok) throw new Error('Failed to fetch users');
+      const authToken = localStorage.getItem('authToken');
+      const apiUrl = getApiEndpoint(`/tenants/${tenant.id}/users`);
+      console.log('fetchTenantUsers: Full API URL:', apiUrl);
+      console.log('fetchTenantUsers: Auth token exists:', !!authToken);
+      const response = await fetch(apiUrl, {
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      console.log('fetchTenantUsers: Response status:', response.status);
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('fetchTenantUsers: Error response:', errorText);
+        throw new Error(`Failed to fetch users: ${response.status}`);
+      }
       const data = await response.json();
-      setTenantUsers(data);
+      console.log('fetchTenantUsers: Received users:', data);
+      // Filter out customers - only show admin users (tenant_admin, store_manager, staff)
+      const adminUsers = data.filter((user: any) => 
+        user.role !== 'customer' && user.role !== 'super_admin'
+      );
+      console.log('fetchTenantUsers: Filtered admin users:', adminUsers);
+      setTenantUsers(adminUsers);
     } catch (err: any) {
+      console.error('fetchTenantUsers: Error:', err);
       setUserError(err.message);
-      console.error('Error fetching users:', err);
     } finally {
       setLoadingUsers(false);
     }
@@ -945,37 +1102,22 @@ const TenantFormModal: React.FC<{
   };
 
   const handleAddUser = async () => {
-    // This would open a modal to add a new user
-    // For now, let's create a simple prompt-based implementation
-    const email = window.prompt(t('tenants:userManagement.enterEmail'));
-    if (!email) return;
-
-    const firstName = window.prompt(t('tenants:userManagement.enterFirstName'));
-    if (!firstName) return;
-
-    const lastName = window.prompt(t('tenants:userManagement.enterLastName'));
-    if (!lastName) return;
-
-    const role = window.prompt(t('tenants:userManagement.enterRole'));
-    if (!role || !['tenant_admin', 'store_manager', 'staff'].includes(role)) {
-      alert(t('tenants:userManagement.invalidRole'));
-      return;
-    }
-
     if (!tenant?.id) return;
 
+    setUserError(null);
+    setUserSuccess(null);
+
     try {
+      const authToken = localStorage.getItem('authToken');
       const response = await fetch(
         getApiEndpoint(`/tenants/${tenant.id}/users`),
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email,
-            first_name: firstName,
-            last_name: lastName,
-            role
-          })
+          headers: { 
+            'Authorization': `Bearer ${authToken}`,
+            'Content-Type': 'application/json' 
+          },
+          body: JSON.stringify(newUser)
         }
       );
       if (!response.ok) {
@@ -984,6 +1126,8 @@ const TenantFormModal: React.FC<{
       }
       await fetchTenantUsers();
       setUserSuccess(t('tenants:userManagement.created'));
+      setShowAddUserForm(false);
+      setNewUser({ email: '', first_name: '', last_name: '', role: 'staff', password: '' });
       setTimeout(() => setUserSuccess(null), 3000);
     } catch (err: any) {
       setUserError(err.message);
@@ -1703,12 +1847,72 @@ const TenantFormModal: React.FC<{
                 <button
                   type="button"
                   className="flex items-center gap-2 px-4 py-2 bg-accent-500 text-white rounded-lg hover:bg-accent-600 transition-colors"
-                  onClick={handleAddUser}
+                  onClick={() => setShowAddUserForm(true)}
                 >
                   <UserPlus className="w-4 h-4" />
                   Add User
                 </button>
               </div>
+
+              {/* Add User Form */}
+              {showAddUserForm && (
+                <div className="p-6 bg-gray-50 dark:bg-gray-700 rounded-lg space-y-3 mb-4">
+                  <h4 className="font-medium text-gray-900 dark:text-white">Add New User</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <input
+                      type="email"
+                      placeholder="Email"
+                      value={newUser.email}
+                      onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                      className="px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-600 text-gray-900 dark:text-white placeholder-gray-400"
+                    />
+                    <input
+                      type="password"
+                      placeholder="Password"
+                      value={newUser.password}
+                      onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+                      className="px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-600 text-gray-900 dark:text-white placeholder-gray-400"
+                    />
+                    <input
+                      type="text"
+                      placeholder="First Name"
+                      value={newUser.first_name}
+                      onChange={(e) => setNewUser({ ...newUser, first_name: e.target.value })}
+                      className="px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-600 text-gray-900 dark:text-white placeholder-gray-400"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Last Name"
+                      value={newUser.last_name}
+                      onChange={(e) => setNewUser({ ...newUser, last_name: e.target.value })}
+                      className="px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-600 text-gray-900 dark:text-white placeholder-gray-400"
+                    />
+                    <select
+                      value={newUser.role}
+                      onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
+                      className="px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-600 text-gray-900 dark:text-white col-span-2"
+                    >
+                      <option value="tenant_admin">Tenant Admin</option>
+                      <option value="store_manager">Store Manager</option>
+                      <option value="staff">Staff</option>
+                    </select>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handleAddUser}
+                      className="px-4 py-2 bg-primary-600 dark:bg-primary-700 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600"
+                    >
+                      Add User
+                    </button>
+                    <button
+                      onClick={() => setShowAddUserForm(false)}
+                      className="px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {/* User List */}
               <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
@@ -1717,9 +1921,13 @@ const TenantFormModal: React.FC<{
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
                   </div>
                 ) : tenantUsers.length === 0 ? (
-                  <p className="text-center py-8 text-gray-500 dark:text-gray-400">
-                    No users found for this tenant.
-                  </p>
+                  <div className="text-center py-8 bg-white dark:bg-gray-700/50 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600">
+                    <Users className="w-12 h-12 mx-auto text-gray-400 dark:text-gray-500 mb-3" />
+                    <p className="text-gray-600 dark:text-gray-400 font-medium mb-1">No admin users yet</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-500 mb-4">
+                      Click the "Add User" button above to create the first admin user for this tenant
+                    </p>
+                  </div>
                 ) : (
                   <div className="space-y-3">
                     {tenantUsers.map((user) => (

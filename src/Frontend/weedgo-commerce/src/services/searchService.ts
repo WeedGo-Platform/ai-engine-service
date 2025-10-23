@@ -467,7 +467,9 @@ class SearchService {
     // Limit cache size
     if (this.searchCache.size > 50) {
       const firstKey = this.searchCache.keys().next().value;
-      this.searchCache.delete(firstKey);
+      if (firstKey) {
+        this.searchCache.delete(firstKey);
+      }
     }
   }
 

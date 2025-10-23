@@ -451,7 +451,7 @@ Intent:"""
     
     def _detect_language(self, message: str) -> str:
         """
-        Simple language detection heuristic
+        Enhanced language detection using keyword matching
         
         Args:
             message: Input message
@@ -459,7 +459,62 @@ Intent:"""
         Returns:
             Language code
         """
-        # Simple heuristic - can be enhanced with proper language detection
+        message_lower = message.lower().strip()
+        
+        # Spanish keywords (most common words and greetings)
+        spanish_keywords = [
+            'hola', 'adios', 'gracias', 'por favor', 'buenos', 'dias', 'buenas', 'noches', 'tardes',
+            'como', 'cómo', 'estas', 'estás', 'que', 'qué', 'si', 'sí', 'no', 'bien', 'mal',
+            'mucho', 'poco', 'donde', 'dónde', 'cuando', 'cuándo', 'quien', 'quién',
+            'amigo', 'amiga', 'señor', 'señora', 'necesito', 'quiero', 'tengo', 'tienes',
+            'puedo', 'puede', 'ayuda', 'aqui', 'aquí', 'alli', 'allí', 'ahora', 'despues', 'después'
+        ]
+        
+        # French keywords
+        french_keywords = [
+            'bonjour', 'salut', 'merci', 'oui', 'non', 'comment', 'ça', 'va', 'bien',
+            'je', 'tu', 'il', 'elle', 'nous', 'vous', 'ils', 'elles', 'est', 'sont',
+            'avoir', 'être', 'faire', 'aller', 'venir', 'voir', 'dire', 'pouvoir',
+            'vouloir', 'avec', 'dans', 'pour', 'sur', 'mais', 'aussi', 'très', 'alors'
+        ]
+        
+        # German keywords
+        german_keywords = [
+            'hallo', 'guten', 'tag', 'morgen', 'abend', 'danke', 'bitte', 'ja', 'nein',
+            'wie', 'was', 'wo', 'wann', 'warum', 'wer', 'ich', 'du', 'er', 'sie', 'es',
+            'wir', 'ihr', 'ist', 'sind', 'haben', 'sein', 'werden', 'können', 'müssen',
+            'möchten', 'mit', 'für', 'auf', 'in', 'zu', 'auch', 'nicht', 'und', 'oder'
+        ]
+        
+        # Portuguese keywords
+        portuguese_keywords = [
+            'olá', 'oi', 'obrigado', 'obrigada', 'sim', 'não', 'como', 'está', 'vai',
+            'bom', 'boa', 'dia', 'noite', 'tarde', 'eu', 'você', 'ele', 'ela', 'nós',
+            'vocês', 'eles', 'elas', 'é', 'são', 'estar', 'ter', 'fazer', 'ir', 'vir',
+            'ver', 'poder', 'querer', 'com', 'em', 'para', 'por', 'mas', 'também', 'muito'
+        ]
+        
+        # Italian keywords
+        italian_keywords = [
+            'ciao', 'buongiorno', 'buonasera', 'grazie', 'prego', 'scusa', 'si', 'sì', 'no',
+            'come', 'cosa', 'dove', 'quando', 'perché', 'chi', 'io', 'tu', 'lui', 'lei',
+            'noi', 'voi', 'loro', 'è', 'sono', 'essere', 'avere', 'fare', 'andare', 'venire',
+            'vedere', 'dire', 'potere', 'volere', 'con', 'in', 'per', 'su', 'ma', 'anche', 'molto'
+        ]
+        
+        # Split message into words
+        words = message_lower.split()
+        
+        # Count matches for each language
+        language_scores = {
+            'es': sum(1 for word in words if word in spanish_keywords),
+            'fr': sum(1 for word in words if word in french_keywords),
+            'de': sum(1 for word in words if word in german_keywords),
+            'pt': sum(1 for word in words if word in portuguese_keywords),
+            'it': sum(1 for word in words if word in italian_keywords)
+        }
+        
+        # Check character-based detection for non-Latin scripts
         if any(ord(char) > 0x4E00 for char in message):
             return "zh"  # Chinese
         elif any(ord(char) in range(0x0600, 0x06FF) for char in message):
@@ -468,8 +523,16 @@ Intent:"""
             return "ja"  # Japanese
         elif any(ord(char) in range(0xAC00, 0xD7AF) for char in message):
             return "ko"  # Korean
-        else:
-            return "en"  # Default to English
+        
+        # Get language with highest score
+        max_score = max(language_scores.values())
+        if max_score > 0:
+            detected = max(language_scores, key=language_scores.get)
+            logger.info(f"🌐 Language detection: '{message}' → {detected} (score: {max_score})")
+            return detected
+        
+        # Default to English
+        return "en"
     
     def _get_cache_key(self, message: str, language: str) -> str:
         """

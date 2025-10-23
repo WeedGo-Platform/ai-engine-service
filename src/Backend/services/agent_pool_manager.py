@@ -614,8 +614,19 @@ class AgentPoolManager:
                 # Add template as reference knowledge
                 prompt_parts.append(f"REFERENCE INFORMATION:\n{template_str}")
 
-                # Detect language FIRST before building instructions
-                detected_language = intent_result.get("language", "en") if intent_result else "en"
+                # Detect language - use multiple methods
+                detected_language = "en"
+                
+                # Method 1: Try to get from intent_result
+                if intent_result:
+                    detected_language = intent_result.get("language", "en")
+                
+                # Method 2: If still English, do direct keyword detection
+                if detected_language == "en":
+                    detected_language = self._detect_language_keywords(message)
+                    if detected_language != "en":
+                        logger.info(f"🌐 Direct language detection: '{message}' → {detected_language}")
+                
                 language_map = {
                     "es": "Spanish (Español)",
                     "fr": "French (Français)",
@@ -633,12 +644,13 @@ class AgentPoolManager:
                     "2. Keep response focused and concise (2-3 short paragraphs maximum)\n"
                     "3. Be conversational and friendly, not formal\n"
                     "4. End with a specific follow-up question to learn more about their needs\n"
-                    "5. Do NOT include all pricing tiers unless specifically asked for a comparison"
+                    "5. Do NOT include all pricing tiers unless specifically asked for a comparison\n"
+                    "6. Do NOT use template variables like {time} or {variable} - provide actual information"
                 )
                 
                 # Add language instruction to the INSTRUCTIONS section, not at the end
                 if detected_language != "en" and detected_language in language_map:
-                    instructions += f"\n6. CRITICAL: You MUST respond ENTIRELY in {language_map[detected_language]}. The customer wrote in {language_map[detected_language]}, so all your text must be in {language_map[detected_language]}."
+                    instructions += f"\n6. CRITICAL LANGUAGE RULE: Respond ONLY in {language_map[detected_language]}. Do NOT add English translations in parentheses. Do NOT include bilingual text. The customer speaks {language_map[detected_language]}, so use ONLY {language_map[detected_language]} in your entire response."
                     logger.info(f"🌐 Multilingual: Detected {language_map[detected_language]}, adding language requirement to instructions")
                 
                 prompt_parts.append(instructions)
@@ -673,8 +685,19 @@ class AgentPoolManager:
                 if system_prompt:
                     prompt_parts.append(system_prompt)
 
-                # Detect language FIRST
-                detected_language = intent_result.get("language", "en") if intent_result else "en"
+                # Detect language - use multiple methods
+                detected_language = "en"
+                
+                # Method 1: Try to get from intent_result
+                if intent_result:
+                    detected_language = intent_result.get("language", "en")
+                
+                # Method 2: If still English, do direct keyword detection
+                if detected_language == "en":
+                    detected_language = self._detect_language_keywords(message)
+                    if detected_language != "en":
+                        logger.info(f"🌐 Direct language detection: '{message}' → {detected_language}")
+                
                 language_map = {
                     "es": "Spanish (Español)",
                     "fr": "French (Français)",
@@ -690,7 +713,7 @@ class AgentPoolManager:
                 
                 # Add language instruction to system prompt if needed
                 if detected_language != "en" and detected_language in language_map:
-                    language_instruction = f"\n\nCRITICAL LANGUAGE REQUIREMENT: You MUST respond entirely in {language_map[detected_language]}. The user wrote their message in {language_map[detected_language]}, so your entire response must be in {language_map[detected_language]}."
+                    language_instruction = f"\n\nCRITICAL LANGUAGE RULE: Respond ONLY in {language_map[detected_language]}. Do NOT add English translations in parentheses. Do NOT include bilingual text. Do NOT use template variables like {{time}} - provide actual values. The user speaks {language_map[detected_language]}, so use ONLY {language_map[detected_language]} in your entire response."
                     if system_prompt:
                         system_prompt += language_instruction
                     else:
@@ -1284,6 +1307,80 @@ JSON:"""
                     logger.warning(f"  ⚠️ Failed to enroll tools for agent {agent_id}")
             else:
                 logger.info(f"  ℹ️ No tools configured for agent {agent_id}")
+
+    def _detect_language_keywords(self, message: str) -> str:
+        """
+        Detect language using keyword matching for common words
+        
+        Args:
+            message: User message to analyze
+            
+        Returns:
+            Language code (es, fr, de, pt, it, en)
+        """
+        message_lower = message.lower().strip()
+        
+        # Spanish keywords (most common words and greetings)
+        spanish_keywords = [
+            'hola', 'adios', 'gracias', 'por favor', 'buenos', 'dias', 'buenas', 'noches', 'tardes',
+            'como', 'cómo', 'estas', 'estás', 'que', 'qué', 'si', 'sí', 'no', 'bien', 'mal',
+            'mucho', 'poco', 'donde', 'dónde', 'cuando', 'cuándo', 'quien', 'quién',
+            'amigo', 'amiga', 'señor', 'señora', 'necesito', 'quiero', 'tengo', 'tienes',
+            'puedo', 'puede', 'ayuda', 'aqui', 'aquí', 'alli', 'allí', 'ahora', 'despues', 'después'
+        ]
+        
+        # French keywords
+        french_keywords = [
+            'bonjour', 'salut', 'merci', 'oui', 'non', 'comment', 'ça', 'va', 'bien',
+            'je', 'tu', 'il', 'elle', 'nous', 'vous', 'ils', 'elles', 'est', 'sont',
+            'avoir', 'être', 'faire', 'aller', 'venir', 'voir', 'dire', 'pouvoir',
+            'vouloir', 'avec', 'dans', 'pour', 'sur', 'mais', 'aussi', 'très', 'alors'
+        ]
+        
+        # German keywords
+        german_keywords = [
+            'hallo', 'guten', 'tag', 'morgen', 'abend', 'danke', 'bitte', 'ja', 'nein',
+            'wie', 'was', 'wo', 'wann', 'warum', 'wer', 'ich', 'du', 'er', 'sie', 'es',
+            'wir', 'ihr', 'ist', 'sind', 'haben', 'sein', 'werden', 'können', 'müssen',
+            'möchten', 'mit', 'für', 'auf', 'in', 'zu', 'auch', 'nicht', 'und', 'oder'
+        ]
+        
+        # Portuguese keywords
+        portuguese_keywords = [
+            'olá', 'oi', 'obrigado', 'obrigada', 'sim', 'não', 'como', 'está', 'vai',
+            'bom', 'boa', 'dia', 'noite', 'tarde', 'eu', 'você', 'ele', 'ela', 'nós',
+            'vocês', 'eles', 'elas', 'é', 'são', 'estar', 'ter', 'fazer', 'ir', 'vir',
+            'ver', 'poder', 'querer', 'com', 'em', 'para', 'por', 'mas', 'também', 'muito'
+        ]
+        
+        # Italian keywords
+        italian_keywords = [
+            'ciao', 'buongiorno', 'buonasera', 'grazie', 'prego', 'scusa', 'si', 'sì', 'no',
+            'come', 'cosa', 'dove', 'quando', 'perché', 'chi', 'io', 'tu', 'lui', 'lei',
+            'noi', 'voi', 'loro', 'è', 'sono', 'essere', 'avere', 'fare', 'andare', 'venire',
+            'vedere', 'dire', 'potere', 'volere', 'con', 'in', 'per', 'su', 'ma', 'anche', 'molto'
+        ]
+        
+        # Split message into words
+        words = message_lower.split()
+        
+        # Count matches for each language
+        language_scores = {
+            'es': sum(1 for word in words if word in spanish_keywords),
+            'fr': sum(1 for word in words if word in french_keywords),
+            'de': sum(1 for word in words if word in german_keywords),
+            'pt': sum(1 for word in words if word in portuguese_keywords),
+            'it': sum(1 for word in words if word in italian_keywords)
+        }
+        
+        # Get language with highest score
+        max_score = max(language_scores.values())
+        if max_score > 0:
+            return max(language_scores, key=language_scores.get)
+        
+        # Default to English
+        return "en"
+
 
 
 # Singleton instance
