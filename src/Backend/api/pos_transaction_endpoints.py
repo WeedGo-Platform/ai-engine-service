@@ -328,7 +328,7 @@ async def create_pos_transaction(transaction: POSTransactionCreate):
                         # Consume from exact batch
                         new_quantity = exact_batch['quantity_remaining'] - item.quantity
                         is_depleted = new_quantity == 0
-    
+
                         await conn.execute(
                             """
                             UPDATE batch_tracking
@@ -349,7 +349,6 @@ async def create_pos_transaction(transaction: POSTransactionCreate):
                         }]
     
                         logger.info(f"✅ Consumed {item.quantity} from scanned batch {scanned_batch_lot}, remaining: {new_quantity}")
-
                         # Log the inventory transaction with required columns
                         quantity_before = result_row['quantity_on_hand'] + item.quantity  # Before the deduction
                         quantity_after = result_row['quantity_on_hand']  # After the deduction
@@ -439,8 +438,8 @@ async def create_pos_transaction(transaction: POSTransactionCreate):
         # Re-raise HTTPExceptions (400, 404, etc.) without modification
         raise
     except Exception as e:
-        logger.error(f"Error creating POS transaction: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"Error creating POS transaction: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Transaction creation failed: {str(e)}")
 
 
 @router.get("/pos/transactions")

@@ -144,7 +144,14 @@ class InventoryManagementService:
                     purchase_order_id=purchase_order_id
                 )
 
-                # Set GTIN if provided
+                # Set GTIN fields if provided
+                if case_gtin:
+                    batch.case_gtin = case_gtin
+                if each_gtin:
+                    batch.each_gtin = each_gtin
+                if gtin_barcode:
+                    batch.gtin_barcode = gtin_barcode
+                # Set legacy gtin field for backwards compatibility
                 if case_gtin or gtin_barcode:
                     batch.gtin = case_gtin or gtin_barcode
 

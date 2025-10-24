@@ -274,6 +274,22 @@ class SmartAIEngineV5:
                 # Set tool manager reference in agent pool and enroll agent-specific tools
                 if self.agent_pool:
                     self.agent_pool.set_tool_manager(self.tool_manager)
+                
+                # Initialize portable RAG tool (lazy initialization)
+                try:
+                    import os
+                    
+                    # Get data directory (portable - no database needed)
+                    data_dir = os.environ.get('RAG_DATA_DIR', 'data/rag')
+                    
+                    # Mark RAG as available but initialize lazily (async required)
+                    if self.agent_pool:
+                        self.agent_pool.rag_data_dir = data_dir
+                        self.agent_pool.rag_tool = None  # Will be initialized on first use
+                        logger.info(f"✅ Portable RAG configured (data: {data_dir}) - will initialize on first use")
+                        
+                except Exception as e:
+                    logger.error(f"❌ Failed to configure RAG tool: {e}")
 
                 # Load agent-specific tools if configured
                 if self.current_agent:
@@ -1252,8 +1268,13 @@ class SmartAIEngineV5:
         
         return tool_calls
     
-    async def _execute_tool_calls(self, tool_calls: List[Dict]) -> str:
-        """Execute tool calls and format results"""
+    async def _execute_tool_calls(self, tool_calls: List[Dict], context: Dict[str, Any] = None) -> str:
+        """Execute tool calls and format results
+        
+        Args:
+            tool_calls: List of tool calls from LLM
+            context: Optional context containing user_role, customer_id, store_id, tenant_id
+        """
         if not self.tool_manager:
             return ""
         
@@ -1262,12 +1283,23 @@ class SmartAIEngineV5:
             tool_name = call['tool']
             params = call['parameters']
             
-            result = await self.tool_manager.execute_tool(tool_name, params)
+            # Inject user context for query_database tool
+            if tool_name == "query_database" and context:
+                if 'user_role' in context and 'user_role' not in params:
+                    params['user_role'] = context['user_role']
+                if 'customer_id' in context and 'customer_id' not in params:
+                    params['customer_id'] = context['customer_id']
+                if 'store_id' in context and 'store_id' not in params:
+                    params['store_id'] = context['store_id']
+                if 'tenant_id' in context and 'tenant_id' not in params:
+                    params['tenant_id'] = context['tenant_id']
             
-            if result.success:
-                results.append(f"[TOOL_RESULT: {tool_name}]\n{json.dumps(result.data, indent=2)}")
+            result = await self.tool_manager.execute_tool(tool_name, **params)
+            
+            if result.get('success'):
+                results.append(f"[TOOL_RESULT: {tool_name}]\n{json.dumps(result.get('result', result), indent=2)}")
             else:
-                results.append(f"[TOOL_ERROR: {tool_name}]\n{result.error}")
+                results.append(f"[TOOL_ERROR: {tool_name}]\n{result.get('error', 'Unknown error')}")
         
         return "\n".join(results)
     
@@ -1455,7 +1487,8 @@ class SmartAIEngineV5:
                  top_k: int = 40,
                  use_tools: bool = False,
                  use_context: bool = False,
-                 session_id: Optional[str] = None) -> Dict:
+                 session_id: Optional[str] = None,
+                 context: Optional[Dict[str, Any]] = None) -> Dict:
         """Generate response with optional prompt template, tools, and context"""
         
         if not self.current_model:
@@ -2602,7 +2635,7 @@ Please provide a personalized response based on the user's history and preferenc
             tools_used = []
             
             if tool_calls and self.tool_manager:
-                tool_results = await self._execute_tool_calls(tool_calls)
+                tool_results = await self._execute_tool_calls(tool_calls, context=context)
                 result['text'] = tool_results
                 tools_used = [tc.get('tool') for tc in tool_calls]
             

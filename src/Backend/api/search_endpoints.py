@@ -63,13 +63,14 @@ async def search_products(
     try:
         # Parse GS1-128 barcode if present
         # GS1-128 format: (01)GTIN(13)DATE(10)BATCH
+        original_barcode = q
         if q and q.startswith('01') and len(q) > 16:
             # Extract GTIN from GS1-128 barcode
             # Position 2-15 contains the 14-digit GTIN
             gtin = q[2:16]
             # Use the extracted GTIN for search
             q = gtin
-            logger.info(f"Parsed GS1-128 barcode, extracted GTIN: {gtin}")
+            logger.info(f"Parsed GS1-128 barcode: {original_barcode}, extracted GTIN: {gtin}")
 
         # Build the query using catalog with optional inventory
         # This allows POS to see all products, not just those with inventory
@@ -326,10 +327,12 @@ async def search_products(
         actual_params.append(offset)
 
         try:
+            logger.info(f"Executing search with params: {actual_params[:3]}")  # Log first 3 params
             rows = await conn.fetch(actual_query, *actual_params)
+            logger.info(f"Search returned {len(rows)} products")
         except Exception as e:
             logger.error(f"Error executing query: {str(e)}")
-            logger.error(f"Query was: {query[:500]}")
+            logger.error(f"Query was: {actual_query[:500]}")
             raise
 
         # Convert to list of dicts

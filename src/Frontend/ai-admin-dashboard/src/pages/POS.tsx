@@ -383,7 +383,8 @@ export default function POS({
         price: p.price || p.unit_price || 0,
         quantity_available: p.available_quantity || p.stock_quantity || 0,
         subcategory: p.sub_category || p.subcategory,
-        size: p.size || p.pack_size
+        size: p.size || p.pack_size,
+        batches: Array.isArray(p.batches) ? p.batches : (p.batches ? JSON.parse(p.batches) : []) // Parse batches if string
       }));
 
       // Apply client-side filters
@@ -1066,20 +1067,31 @@ export default function POS({
                             ? JSON.parse(product.batches)
                             : product.batches;
 
+                          console.log('🔍 Barcode scan - Product found:', product.name);
+                          console.log('🔍 Available batches:', batches);
+
                           // Check if search term matches a specific batch (for GS1-128 barcodes with batch info)
                           let matchedBatch = null;
                           if (batches && batches.length > 0) {
-                            // Extract batch/lot from GS1-128 if present (AI 10 = Batch/Lot)
+                            // Extract GTIN and batch/lot from GS1-128 if present
+                            let gtinFromBarcode = null;
                             let batchLotFromBarcode = null;
-                            if (searchTerm.startsWith('01') && searchTerm.length > 30) {
-                              // GS1-128 format: (01)GTIN(13)DATE(10)BATCH
+                            
+                            if (searchTerm.startsWith('01') && searchTerm.length > 16) {
+                              // GS1-128 format: (01)GTIN(13/17)DATE(10)BATCH
+                              // Extract 14-digit GTIN from positions 2-15
+                              gtinFromBarcode = searchTerm.substring(2, 16);
+                              
+                              // Find batch/lot (AI 10 = Batch/Lot)
                               const batchStartPos = searchTerm.indexOf('10', 16);
                               if (batchStartPos > 0) {
                                 batchLotFromBarcode = searchTerm.substring(batchStartPos + 2);
                               }
+                              
+                              console.log('🔍 Extracted from barcode:', { gtinFromBarcode, batchLotFromBarcode });
                             }
 
-                            // Try to find matching batch
+                            // Try to find matching batch by batch lot first
                             if (batchLotFromBarcode) {
                               matchedBatch = batches.find((b: Batch) =>
                                 b.batch_lot === batchLotFromBarcode ||
@@ -1088,21 +1100,24 @@ export default function POS({
                               );
                             }
 
-                            // If no match by batch lot, check GTINs
-                            if (!matchedBatch) {
+                            // If no match by batch lot, try matching by GTIN
+                            if (!matchedBatch && gtinFromBarcode) {
                               matchedBatch = batches.find((b: Batch) =>
-                                b.case_gtin === searchTerm ||
-                                b.each_gtin === searchTerm ||
-                                (searchTerm.includes(b.case_gtin || '') && b.case_gtin) ||
-                                (searchTerm.includes(b.each_gtin || '') && b.each_gtin)
+                                b.case_gtin === gtinFromBarcode ||
+                                b.each_gtin === gtinFromBarcode ||
+                                (b.case_gtin && gtinFromBarcode.includes(b.case_gtin)) ||
+                                (b.each_gtin && gtinFromBarcode.includes(b.each_gtin))
                               );
                             }
 
                             // If still no match but there's only one batch, use it
                             if (!matchedBatch && batches.length === 1) {
                               matchedBatch = batches[0];
+                              console.log('🔍 Using single available batch:', matchedBatch);
                             }
                           }
+
+                          console.log('🔍 Final matched batch:', matchedBatch);
 
                           // Add to cart with matched batch
                           addToCart({
@@ -1180,7 +1195,24 @@ export default function POS({
                       key={product.id}
                       onClick={() => {
                         if (inStock) {
-                          addToCart(product);
+                          // Check if product has batches
+                          if (product.batch_count > 0 && product.batches && product.batches.length > 0) {
+                            if (product.batches.length === 1) {
+                              // Only 1 batch - add directly to cart with batch info
+                              addToCart(product, product.batches[0]);
+                            } else {
+                              // Multiple batches - show modal for selection
+                              setSelectedProductBatches(product);
+                              setShowProductDetailsModal(true);
+                            }
+                          } else if (product.batch_count > 0) {
+                            // Has batch count but batches not loaded - fetch details
+                            fetchProductDetails(product.id || product.sku);
+                            setSelectedProductBatches(product);
+                          } else {
+                            // No batch tracking - add directly
+                            addToCart(product);
+                          }
                         }
                       }}
                       className={`bg-white dark:bg-gray-800 p-3 sm:p-4 lg:p-6 rounded-lg border border-gray-200 dark:border-gray-700 transition-all ${
@@ -1243,14 +1275,7 @@ export default function POS({
                       </div>
                       <h3 className="font-semibold text-sm line-clamp-2 text-gray-900 dark:text-white">{product.name}</h3>
                       <div className="flex items-center justify-between mt-1">
-                        <div>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">{product.brand}</p>
-                          {(product.size || product.pack_size) && (
-                            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mt-1">
-                              {product.size || product.pack_size}
-                            </p>
-                          )}
-                        </div>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">{product.brand}</p>
                       </div>
                       <div className="mt-2 flex items-center justify-between">
                         <span className="text-lg font-bold text-gray-900 dark:text-white">{formatCurrency(product.price)}</span>
@@ -1281,7 +1306,11 @@ export default function POS({
                           className="mt-2 flex items-center gap-1 text-xs text-accent-600 dark:text-accent-400 hover:text-accent-700 dark:hover:text-accent-300"
                         >
                           <Package className="w-3 h-3" />
-                          <span>{product.batch_count} {product.batch_count > 1 ? t('pos:products.batches') : t('pos:products.batch')}</span>
+                          <span>
+                            {product.batch_count === 1 && product.batches?.[0]?.batch_lot
+                              ? `${t('pos:products.batch')}: ${product.batches[0].batch_lot}`
+                              : `${product.batch_count} ${product.batch_count > 1 ? t('pos:products.batches') : t('pos:products.batch')}`}
+                          </span>
                         </button>
                       )}
                     </div>

@@ -604,9 +604,11 @@ async def get_recommendations(
             "recommendations": recommendations
         }
 
+    except HTTPException:
+        raise
     except Exception as e:
-        logger.error(f"Error getting recommendations: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get recommendations")
+        logger.error(f"Error getting recommendations: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to get recommendations: {str(e)}")
 
 
 @router.post("/cart/add")

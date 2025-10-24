@@ -138,6 +138,17 @@ class ToolManager(IToolManager):
                 "requires_params": ["verification_id", "email", "contact_name", "contact_role"]
             }
         )
+
+        # Register dynamic query tool for access-controlled database queries
+        self.register_tool(
+            "query_database",
+            self._create_dynamic_query_tool,
+            {
+                "description": "Query database with automatic access control and row-level filtering",
+                "category": "database",
+                "requires_context": True
+            }
+        )
     
     def register_tool(self, tool_name: str, tool_function: Callable, 
                      config: Optional[Dict] = None) -> bool:
@@ -197,6 +208,12 @@ class ToolManager(IToolManager):
 
             if tool_name == "smart_product_search" and tool_name not in self.tool_instances:
                 instance = self._create_smart_product_search_tool()
+                if instance:
+                    self.tool_instances[tool_name] = instance
+
+            # Initialize dynamic query tool on first use
+            if tool_name == "query_database" and tool_name not in self.tool_instances:
+                instance = self._create_dynamic_query_tool()
                 if instance:
                     self.tool_instances[tool_name] = instance
 
@@ -547,6 +564,25 @@ class ToolManager(IToolManager):
             logger.error(f"Failed to create tenant signup tool: {e}")
             return None
 
+    def _create_dynamic_query_tool(self):
+        """
+        Create dynamic query tool instance for access-controlled database queries
+
+        Returns:
+            DynamicQueryTool instance or None
+        """
+        try:
+            from services.tools.dynamic_query_tool import get_dynamic_query_tool
+            import os
+            
+            base_url = os.getenv('API_BASE_URL', 'http://localhost:5024')
+            tool = get_dynamic_query_tool(base_url=base_url)
+            logger.info(f"Dynamic query tool created with base_url: {base_url}")
+            return tool
+        except Exception as e:
+            logger.error(f"Failed to create dynamic query tool: {e}")
+            return None
+
     def _initialize_database_tool(self):
         """Initialize database tool if not already done"""
         if "database_search" not in self.tool_instances:
@@ -621,6 +657,18 @@ class ToolManager(IToolManager):
                     'error': result.error if not result.success else None
                 }
             return result
+
+        # Handle dynamic query tool
+        elif tool_name == "query_database":
+            return await instance.query(
+                resource_type=kwargs.get("resource_type"),
+                user_role=kwargs.get("user_role", "customer"),
+                customer_id=kwargs.get("customer_id"),
+                store_id=kwargs.get("store_id"),
+                tenant_id=kwargs.get("tenant_id"),
+                filters=kwargs.get("filters"),
+                limit=kwargs.get("limit", 50)
+            )
 
         raise ValueError(f"Unknown tool execution pattern for '{tool_name}'")
     

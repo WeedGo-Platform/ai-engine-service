@@ -27,7 +27,10 @@ class BatchTracking(Entity):
     batch_lot: str = ""  # Lot/batch number
 
     # Batch Information
-    gtin: Optional[str] = None
+    gtin: Optional[str] = None  # Legacy field, use case_gtin/each_gtin instead
+    case_gtin: Optional[str] = None  # GTIN for case packaging
+    each_gtin: Optional[str] = None  # GTIN for each/unit packaging
+    gtin_barcode: Optional[str] = None  # Full GS1-128 barcode
     supplier_batch: Optional[str] = None  # Supplier's batch number
     production_date: Optional[date] = None
     expiry_date: Optional[date] = None

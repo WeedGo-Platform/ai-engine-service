@@ -136,10 +136,10 @@ class AsyncPGBatchTrackingRepository(IBatchTrackingRepository):
             batch.received_date,
             batch.purchase_order_id,
             batch.location_id,
-            batch.gtin,  # Maps to case_gtin in DB
+            batch.case_gtin,  # Store case GTIN separately
             batch.packaged_date,
-            batch.gtin,  # Maps to gtin_barcode in DB
-            batch.gtin,  # Maps to each_gtin in DB (simplified for now)
+            batch.gtin_barcode,  # Store full barcode separately
+            batch.each_gtin,  # Store each GTIN separately
             batch.is_active,
             batch.created_at,
             batch.updated_at
@@ -156,9 +156,13 @@ class AsyncPGBatchTrackingRepository(IBatchTrackingRepository):
                 quantity_remaining = $2,
                 unit_cost = $3,
                 location_id = $4,
-                is_active = $5,
-                updated_at = $6
-            WHERE batch_lot = $7 AND store_id = $8
+                case_gtin = $5,
+                each_gtin = $6,
+                gtin_barcode = $7,
+                packaged_on_date = $8,
+                is_active = $9,
+                updated_at = $10
+            WHERE batch_lot = $11 AND store_id = $12
         """
 
         await conn.execute(
@@ -167,6 +171,10 @@ class AsyncPGBatchTrackingRepository(IBatchTrackingRepository):
             batch.quantity_remaining,
             batch.unit_cost,
             batch.location_id,
+            batch.case_gtin,
+            batch.each_gtin,
+            batch.gtin_barcode,
+            batch.packaged_date,
             batch.is_active,
             datetime.utcnow(),
             batch.batch_lot,

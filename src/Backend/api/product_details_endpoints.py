@@ -277,6 +277,47 @@ async def get_product_details(
             "raw_data": product  # Include all raw fields for completeness
         }
 
+        # Fetch batches if store_id is provided
+        if store_id:
+            try:
+                batch_query = """
+                    SELECT 
+                        batch_lot,
+                        quantity_remaining,
+                        case_gtin,
+                        each_gtin,
+                        packaged_on_date,
+                        location_code
+                    FROM batch_tracking
+                    WHERE store_id = $1 
+                      AND LOWER(TRIM(sku)) = LOWER(TRIM($2))
+                      AND is_active = TRUE
+                      AND quantity_remaining > 0
+                    ORDER BY packaged_on_date ASC, created_at ASC
+                """
+                batch_rows = await conn.fetch(batch_query, store_id, product_id)
+                
+                batches = []
+                for batch_row in batch_rows:
+                    batches.append({
+                        "batch_lot": batch_row["batch_lot"],
+                        "quantity_remaining": batch_row["quantity_remaining"],
+                        "case_gtin": batch_row["case_gtin"],
+                        "each_gtin": batch_row["each_gtin"],
+                        "packaged_on_date": batch_row["packaged_on_date"].isoformat() if batch_row["packaged_on_date"] else None,
+                        "location_code": batch_row["location_code"]
+                    })
+                
+                organized_data["batches"] = batches
+                organized_data["batch_count"] = len(batches)
+            except Exception as batch_error:
+                logger.warning(f"Error fetching batches for product {product_id}: {str(batch_error)}")
+                organized_data["batches"] = []
+                organized_data["batch_count"] = 0
+        else:
+            organized_data["batches"] = []
+            organized_data["batch_count"] = 0
+
         return organized_data
 
     except HTTPException:

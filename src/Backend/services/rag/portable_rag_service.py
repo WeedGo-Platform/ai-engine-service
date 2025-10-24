@@ -1,0 +1,616 @@
+"""
+Portable RAG Service - No PostgreSQL pgvector dependency
+Uses SQLite + FAISS for complete portability
+Designed for containerized deployments
+"""
+
+import os
+# Set single-threaded mode to avoid segfaults on macOS
+os.environ['OMP_NUM_THREADS'] = '1'
+os.environ['MKL_NUM_THREADS'] = '1'
+os.environ['OPENBLAS_NUM_THREADS'] = '1'
+os.environ['VECLIB_MAXIMUM_THREADS'] = '1'
+os.environ['NUMEXPR_NUM_THREADS'] = '1'
+
+import numpy as np
+import logging
+from typing import List, Dict, Optional, Any, Tuple
+from datetime import datetime, timezone
+import sqlite3
+import faiss
+import pickle
+from pathlib import Path
+import hashlib
+import json
+import asyncio
+
+from .embedding_service import get_embedding_service
+
+logger = logging.getLogger(__name__)
+
+
+class PortableRAGService:
+    """
+    Fully portable RAG service using SQLite + FAISS
+    No external database dependencies - perfect for containers/Docker
+    """
+    
+    def __init__(
+        self,
+        data_dir: str = "data/rag",
+        embedding_model: str = "all-MiniLM-L6-v2",
+        cache_ttl: int = 3600
+    ):
+        """
+        Initialize portable RAG service
+        
+        Args:
+            data_dir: Directory for SQLite DB and FAISS index
+            embedding_model: Embedding model (default: all-MiniLM-L6-v2 for stability)
+            cache_ttl: Cache time-to-live in seconds
+        """
+        self.data_dir = Path(data_dir)
+        self.data_dir.mkdir(parents=True, exist_ok=True)
+        
+        self.db_path = self.data_dir / "knowledge.db"
+        self.faiss_index_path = self.data_dir / "faiss.index"
+        self.mapping_path = self.data_dir / "chunk_mapping.pkl"
+        
+        self.cache_ttl = cache_ttl
+        
+        # Initialize embedding service
+        self.embedding_service = get_embedding_service(
+            model_name=embedding_model,
+            device="cpu"
+        )
+        self.embedding_dim = self.embedding_service.embedding_dim
+        
+        # FAISS index
+        self.faiss_index = None
+        self.chunk_id_mapping = {}  # FAISS position -> chunk_id
+        self.reverse_mapping = {}  # chunk_id -> FAISS position
+        
+        # Caches
+        self.chunk_cache = {}
+        self.query_cache = {}
+        
+        # Metrics
+        self.metrics = {
+            "total_queries": 0,
+            "cache_hits": 0,
+            "faiss_searches": 0,
+            "db_queries": 0,
+            "average_latency_ms": 0
+        }
+        
+        # Initialize database
+        self._init_database()
+        
+        logger.info(f"✅ Portable RAG Service initialized")
+        logger.info(f"   Data directory: {self.data_dir}")
+        logger.info(f"   Database: {self.db_path}")
+        logger.info(f"   Embedding dimension: {self.embedding_dim}")
+    
+    def _init_database(self):
+        """Create SQLite tables if they don't exist"""
+        conn = sqlite3.connect(str(self.db_path))
+        cursor = conn.cursor()
+        
+        # Knowledge documents table
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS knowledge_documents (
+                document_id TEXT PRIMARY KEY,
+                title TEXT NOT NULL,
+                document_type TEXT NOT NULL,
+                tenant_id TEXT,
+                store_id TEXT,
+                source_table TEXT,
+                source_id TEXT,
+                access_level TEXT DEFAULT 'public',
+                language TEXT DEFAULT 'en',
+                metadata TEXT,
+                created_at REAL,
+                updated_at REAL,
+                is_active INTEGER DEFAULT 1
+            )
+        """)
+        
+        # Knowledge chunks table
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS knowledge_chunks (
+                chunk_id TEXT PRIMARY KEY,
+                document_id TEXT NOT NULL,
+                content TEXT NOT NULL,
+                chunk_index INTEGER NOT NULL,
+                metadata TEXT,
+                created_at REAL,
+                token_count INTEGER,
+                FOREIGN KEY (document_id) REFERENCES knowledge_documents(document_id) ON DELETE CASCADE
+            )
+        """)
+        
+        # Query analytics table
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS rag_query_analytics (
+                query_id TEXT PRIMARY KEY,
+                query_text TEXT NOT NULL,
+                query_hash TEXT,
+                tenant_id TEXT,
+                store_id TEXT,
+                agent_id TEXT,
+                results_count INTEGER,
+                latency_ms REAL,
+                cache_hit INTEGER DEFAULT 0,
+                created_at REAL
+            )
+        """)
+        
+        # Create indexes
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_docs_type ON knowledge_documents(document_type)")
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_docs_tenant ON knowledge_documents(tenant_id)")
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_docs_store ON knowledge_documents(store_id)")
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_docs_active ON knowledge_documents(is_active)")
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_chunks_doc ON knowledge_chunks(document_id)")
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_analytics_hash ON rag_query_analytics(query_hash)")
+        
+        conn.commit()
+        conn.close()
+        
+        logger.info("✅ SQLite database initialized")
+    
+    async def initialize(self):
+        """Load FAISS index and mappings"""
+        logger.info("Initializing portable RAG service...")
+        
+        # Load FAISS index if exists
+        if self.faiss_index_path.exists():
+            await self._load_faiss_index()
+            logger.info(f"✅ Loaded FAISS index with {len(self.chunk_id_mapping)} chunks")
+        else:
+            # Create empty FAISS index
+            await self._create_faiss_index()
+            logger.info("✅ Created new FAISS index")
+    
+    async def _load_faiss_index(self):
+        """Load FAISS index and mappings from disk"""
+        def _load():
+            # Load FAISS index
+            self.faiss_index = faiss.read_index(str(self.faiss_index_path))
+            
+            # Load mappings
+            if self.mapping_path.exists():
+                with open(self.mapping_path, 'rb') as f:
+                    mappings = pickle.load(f)
+                    self.chunk_id_mapping = mappings['chunk_id_mapping']
+                    self.reverse_mapping = mappings['reverse_mapping']
+        
+        await asyncio.to_thread(_load)
+    
+    async def _save_faiss_index(self):
+        """Save FAISS index and mappings to disk"""
+        def _save():
+            # Save FAISS index
+            faiss.write_index(self.faiss_index, str(self.faiss_index_path))
+            
+            # Save mappings
+            with open(self.mapping_path, 'wb') as f:
+                pickle.dump({
+                    'chunk_id_mapping': self.chunk_id_mapping,
+                    'reverse_mapping': self.reverse_mapping
+                }, f)
+        
+        await asyncio.to_thread(_save)
+    
+    async def _create_faiss_index(self):
+        """Create new FAISS index"""
+        def _create():
+            # Use HNSW for better performance (no training needed)
+            self.faiss_index = faiss.IndexHNSWFlat(self.embedding_dim, 32)
+            self.faiss_index.hnsw.efConstruction = 40
+            self.faiss_index.hnsw.efSearch = 16
+        
+        await asyncio.to_thread(_create)
+    
+    async def add_document(
+        self,
+        title: str,
+        content: str,
+        document_type: str,
+        document_id: Optional[str] = None,
+        tenant_id: Optional[str] = None,
+        store_id: Optional[str] = None,
+        access_level: str = "public",
+        language: str = "en",
+        metadata: Optional[Dict] = None,
+        chunk_size: int = 512,
+        chunk_overlap: int = 50
+    ) -> Dict[str, Any]:
+        """
+        Add a document to the knowledge base
+        
+        Args:
+            title: Document title
+            content: Document content (will be chunked)
+            document_type: Type of document (faq, product, compliance, etc.)
+            document_id: Optional document ID (generated if not provided)
+            tenant_id: Optional tenant ID for multi-tenancy
+            store_id: Optional store ID
+            access_level: Access level (public, customer, platform, internal)
+            language: Document language
+            metadata: Additional metadata
+            chunk_size: Maximum tokens per chunk
+            chunk_overlap: Token overlap between chunks
+        
+        Returns:
+            Dictionary with document_id, chunk_count, status
+        """
+        import uuid
+        from .document_chunker import get_document_chunker
+        
+        if document_id is None:
+            document_id = str(uuid.uuid4())
+        
+        # Insert document metadata
+        def _insert_document():
+            conn = sqlite3.connect(str(self.db_path))
+            cursor = conn.cursor()
+            
+            cursor.execute("""
+                INSERT OR REPLACE INTO knowledge_documents
+                (document_id, title, document_type, tenant_id, store_id, access_level, 
+                 language, metadata, created_at, updated_at, is_active)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
+            """, (
+                document_id, title, document_type, tenant_id, store_id, access_level,
+                language, json.dumps(metadata or {}), datetime.now().timestamp(), 
+                datetime.now().timestamp()
+            ))
+            
+            conn.commit()
+            conn.close()
+        
+        await asyncio.to_thread(_insert_document)
+        
+        # Chunk the content
+        chunker = get_document_chunker()
+        chunks = chunker.chunk_document(
+            text=content,
+            metadata={"language": language, "chunk_size": chunk_size}
+        )
+        
+        # Add chunks to database and FAISS
+        chunk_ids = []
+        for idx, chunk in enumerate(chunks):
+            chunk_id = f"{document_id}_chunk_{idx}"
+            chunk_ids.append(chunk_id)
+            
+            # Insert chunk metadata
+            def _insert_chunk():
+                conn = sqlite3.connect(str(self.db_path))
+                cursor = conn.cursor()
+                
+                cursor.execute("""
+                    INSERT OR REPLACE INTO knowledge_chunks
+                    (chunk_id, document_id, content, chunk_index, metadata, created_at, token_count)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                """, (
+                    chunk_id, document_id, chunk['text'], idx,
+                    json.dumps(chunk.get('metadata', {})),
+                    datetime.now().timestamp(), chunk.get('token_count', 0)
+                ))
+                
+                conn.commit()
+                conn.close()
+            
+            await asyncio.to_thread(_insert_chunk)
+            
+            # Generate embedding and add to FAISS
+            embedding = await self.embedding_service.encode_async(chunk['text'])
+            
+            # Add to FAISS
+            def _add_to_faiss():
+                if self.faiss_index is None:
+                    raise ValueError("FAISS index not initialized")
+                
+                position = self.faiss_index.ntotal
+                self.faiss_index.add(np.array([embedding], dtype=np.float32))
+                self.chunk_id_mapping[position] = chunk_id
+                self.reverse_mapping[chunk_id] = position
+            
+            await asyncio.to_thread(_add_to_faiss)
+        
+        # Save FAISS index
+        await self._save_faiss_index()
+        
+        logger.info(f"✅ Added document: {title} ({len(chunks)} chunks)")
+        
+        return {
+            "success": True,
+            "document_id": document_id,
+            "chunk_count": len(chunks),
+            "chunk_ids": chunk_ids
+        }
+    
+    async def retrieve(
+        self,
+        query: str,
+        top_k: int = 10,
+        tenant_id: Optional[str] = None,
+        store_id: Optional[str] = None,
+        agent_id: Optional[str] = None,
+        document_types: Optional[List[str]] = None,
+        min_similarity: float = 0.0,
+        language: str = "en"
+    ) -> List[Dict[str, Any]]:
+        """
+        Retrieve relevant chunks for a query
+        
+        Args:
+            query: Search query
+            top_k: Number of results to return
+            tenant_id: Filter by tenant
+            store_id: Filter by store
+            agent_id: Agent making request (for access control)
+            document_types: Filter by document types
+            min_similarity: Minimum similarity threshold
+            language: Query language
+        
+        Returns:
+            List of relevant chunks with metadata
+        """
+        start_time = datetime.now()
+        
+        # Check cache
+        query_hash = hashlib.md5(f"{query}_{tenant_id}_{store_id}".encode()).hexdigest()
+        if query_hash in self.query_cache:
+            self.metrics["cache_hits"] += 1
+            logger.debug(f"Cache hit for query: {query[:50]}...")
+            return self.query_cache[query_hash]
+        
+        self.metrics["total_queries"] += 1
+        
+        # Generate query embedding
+        query_embedding = await self.embedding_service.encode_async(query)
+        
+        # Search FAISS (get more candidates for filtering)
+        search_k = min(top_k * 3, self.faiss_index.ntotal) if self.faiss_index.ntotal > 0 else 0
+        
+        def _faiss_search():
+            if self.faiss_index is None or self.faiss_index.ntotal == 0:
+                return [], []
+            
+            distances, indices = self.faiss_index.search(
+                np.array([query_embedding], dtype=np.float32),
+                search_k
+            )
+            return distances[0], indices[0]
+        
+        distances, indices = await asyncio.to_thread(_faiss_search)
+        
+        self.metrics["faiss_searches"] += 1
+        
+        if len(indices) == 0:
+            return []
+        
+        # Get chunk IDs from FAISS results
+        candidate_chunk_ids = [
+            self.chunk_id_mapping[int(idx)]
+            for idx in indices
+            if int(idx) in self.chunk_id_mapping
+        ]
+        
+        # Fetch chunks from SQLite with filtering
+        def _fetch_chunks():
+            conn = sqlite3.connect(str(self.db_path))
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            
+            placeholders = ','.join('?' * len(candidate_chunk_ids))
+            query_sql = f"""
+                SELECT 
+                    c.chunk_id, c.document_id, c.content, c.chunk_index, c.metadata as chunk_metadata,
+                    d.title, d.document_type, d.tenant_id, d.store_id, d.access_level, d.language
+                FROM knowledge_chunks c
+                JOIN knowledge_documents d ON c.document_id = d.document_id
+                WHERE c.chunk_id IN ({placeholders})
+                    AND d.is_active = 1
+            """
+            
+            params = list(candidate_chunk_ids)
+            
+            # Add filters
+            if tenant_id:
+                query_sql += " AND (d.tenant_id = ? OR d.tenant_id IS NULL)"
+                params.append(tenant_id)
+            
+            if store_id:
+                query_sql += " AND (d.store_id = ? OR d.store_id IS NULL)"
+                params.append(store_id)
+            
+            if document_types:
+                placeholders_types = ','.join('?' * len(document_types))
+                query_sql += f" AND d.document_type IN ({placeholders_types})"
+                params.extend(document_types)
+            
+            cursor.execute(query_sql, params)
+            results = cursor.fetchall()
+            conn.close()
+            
+            return [dict(row) for row in results]
+        
+        chunks = await asyncio.to_thread(_fetch_chunks)
+        self.metrics["db_queries"] += 1
+        
+        # Map chunks back to their distances and apply access control
+        results = []
+        chunk_map = {chunk['chunk_id']: chunk for chunk in chunks}
+        
+        for idx, (distance, faiss_idx) in enumerate(zip(distances, indices)):
+            if int(faiss_idx) not in self.chunk_id_mapping:
+                continue
+            
+            chunk_id = self.chunk_id_mapping[int(faiss_idx)]
+            if chunk_id not in chunk_map:
+                continue
+            
+            chunk = chunk_map[chunk_id]
+            
+            # Access control
+            if not self._check_access(chunk['access_level'], agent_id):
+                continue
+            
+            # Calculate similarity (L2 distance -> similarity)
+            similarity = max(0, 1.0 - float(distance) / 2.0)  # Normalize
+            
+            if similarity < min_similarity:
+                continue
+            
+            results.append({
+                "chunk_id": chunk_id,
+                "document_id": chunk['document_id'],
+                "content": chunk['content'],
+                "title": chunk['title'],
+                "document_type": chunk['document_type'],
+                "similarity": similarity,
+                "chunk_index": chunk['chunk_index'],
+                "tenant_id": chunk['tenant_id'],
+                "store_id": chunk['store_id'],
+                "metadata": json.loads(chunk['chunk_metadata']) if chunk['chunk_metadata'] else {}
+            })
+            
+            if len(results) >= top_k:
+                break
+        
+        # Cache results
+        self.query_cache[query_hash] = results
+        
+        # Track analytics
+        latency_ms = (datetime.now() - start_time).total_seconds() * 1000
+        self.metrics["average_latency_ms"] = (
+            (self.metrics["average_latency_ms"] * (self.metrics["total_queries"] - 1) + latency_ms)
+            / self.metrics["total_queries"]
+        )
+        
+        logger.info(f"🔍 Retrieved {len(results)} chunks for query (latency: {latency_ms:.2f}ms)")
+        
+        return results
+    
+    def _check_access(self, doc_access_level: str, agent_id: Optional[str]) -> bool:
+        """
+        Check if agent has access to document
+        
+        Access levels (hierarchical):
+        - public: All agents
+        - customer: Dispensary + assistant agents
+        - platform: Sales agents
+        - internal: Admin only
+        """
+        if doc_access_level == "public":
+            return True
+        
+        if agent_id is None:
+            return doc_access_level == "public"
+        
+        agent_access = {
+            "dispensary": ["public", "customer"],
+            "assistant": ["public", "customer"],
+            "sales": ["public", "platform"],
+            "admin": ["public", "customer", "platform", "internal"]
+        }
+        
+        allowed = agent_access.get(agent_id, ["public"])
+        return doc_access_level in allowed
+    
+    async def delete_document(self, document_id: str) -> bool:
+        """Delete a document and all its chunks"""
+        def _delete():
+            conn = sqlite3.connect(str(self.db_path))
+            cursor = conn.cursor()
+            
+            # Get chunk IDs to remove from FAISS
+            cursor.execute("SELECT chunk_id FROM knowledge_chunks WHERE document_id = ?", (document_id,))
+            chunk_ids = [row[0] for row in cursor.fetchall()]
+            
+            # Delete from database
+            cursor.execute("DELETE FROM knowledge_chunks WHERE document_id = ?", (document_id,))
+            cursor.execute("DELETE FROM knowledge_documents WHERE document_id = ?", (document_id,))
+            conn.commit()
+            conn.close()
+            
+            return chunk_ids
+        
+        chunk_ids = await asyncio.to_thread(_delete)
+        
+        # Remove from FAISS (rebuild index without deleted chunks)
+        if chunk_ids:
+            await self._rebuild_faiss_index()
+            logger.info(f"✅ Deleted document {document_id} ({len(chunk_ids)} chunks)")
+        
+        return True
+    
+    async def _rebuild_faiss_index(self):
+        """Rebuild FAISS index from scratch (used after deletions)"""
+        logger.info("Rebuilding FAISS index...")
+        
+        # Get all chunks
+        def _fetch_all_chunks():
+            conn = sqlite3.connect(str(self.db_path))
+            cursor = conn.cursor()
+            cursor.execute("SELECT chunk_id, content FROM knowledge_chunks ORDER BY chunk_id")
+            chunks = cursor.fetchall()
+            conn.close()
+            return chunks
+        
+        chunks = await asyncio.to_thread(_fetch_all_chunks)
+        
+        # Create new FAISS index
+        await self._create_faiss_index()
+        self.chunk_id_mapping = {}
+        self.reverse_mapping = {}
+        
+        # Re-add all chunks
+        for idx, (chunk_id, content) in enumerate(chunks):
+            embedding = await self.embedding_service.encode_async(content)
+            
+            def _add():
+                position = self.faiss_index.ntotal
+                self.faiss_index.add(np.array([embedding], dtype=np.float32))
+                self.chunk_id_mapping[position] = chunk_id
+                self.reverse_mapping[chunk_id] = position
+            
+            await asyncio.to_thread(_add)
+        
+        await self._save_faiss_index()
+        logger.info(f"✅ FAISS index rebuilt with {len(chunks)} chunks")
+    
+    def get_metrics(self) -> Dict[str, Any]:
+        """Get performance metrics"""
+        return {
+            **self.metrics,
+            "cache_hit_rate": (
+                self.metrics["cache_hits"] / self.metrics["total_queries"]
+                if self.metrics["total_queries"] > 0 else 0
+            ),
+            "total_chunks": len(self.chunk_id_mapping)
+        }
+
+
+# Singleton instance
+_portable_rag_service = None
+
+
+async def get_portable_rag_service(
+    data_dir: str = "data/rag",
+    embedding_model: str = "all-MiniLM-L6-v2"
+) -> PortableRAGService:
+    """Get or create portable RAG service instance"""
+    global _portable_rag_service
+    
+    if _portable_rag_service is None:
+        _portable_rag_service = PortableRAGService(
+            data_dir=data_dir,
+            embedding_model=embedding_model
+        )
+        await _portable_rag_service.initialize()
+    
+    return _portable_rag_service

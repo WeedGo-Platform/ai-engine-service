@@ -236,6 +236,7 @@ export class StreamingVoiceRecordingService {
 
       this.ws.onclose = () => {
         this.isConnected = false;
+      };
 
       // Timeout for connection
       setTimeout(() => {
