@@ -24,6 +24,7 @@ import { useTranslation } from 'react-i18next';
 // Voice Visualization (optional - can be removed if not needed)
 // import VoiceVisualization from './chat/VoiceVisualization';
 import { useAuth } from '../contexts/AuthContext';
+import { useStoreContext } from '../contexts/StoreContext';
 import { voiceApi } from '../services/voiceApi';
 import { getApiUrl } from '../config/app.config';
 
@@ -110,6 +111,9 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
 }) => {
   // Get user context from AuthContext
   const { user } = useAuth();
+  
+  // Get store context for multi-tenant operations
+  const { currentStore } = useStoreContext();
 
   // Get translation function for chat namespace
   const { t } = useTranslation('chat');
@@ -139,11 +143,11 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
   // Agent and Personality State - restore from localStorage
   const [selectedAgent, setSelectedAgent] = useState(() => {
     const saved = localStorage.getItem('chatWidgetAgent');
-    return saved || 'assistant'; // Default to assistant agent for admin dashboard
+    return saved || 'manager'; // Default to manager agent for admin dashboard
   });
   const [selectedPersonality, setSelectedPersonality] = useState(() => {
     const saved = localStorage.getItem('chatWidgetPersonality');
-    return saved || 'rhomida'; // Default to rhomida for assistant agent
+    return saved || 'manager'; // Default to manager personality
   });
   const [availableAgents, setAvailableAgents] = useState<any[]>([]);
   const [availablePersonalities, setAvailablePersonalities] = useState<any[]>([]);
@@ -221,10 +225,10 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
           const data = await response.json();
           setAvailableAgents(data.agents || []);
 
-          // If we have agents and assistant is available, fetch its personalities
-          const assistantAgent = data.agents?.find((a: any) => a.id === 'assistant');
-          if (assistantAgent) {
-            fetchPersonalities('assistant');
+          // If we have agents and manager is available, fetch its personalities
+          const managerAgent = data.agents?.find((a: any) => a.id === 'manager');
+          if (managerAgent) {
+            fetchPersonalities('manager');
           }
         }
       } catch (error) {
@@ -1031,7 +1035,9 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
       type: 'message',
       message: messageToSend,
       session_id: sessionId,
-      ...(user?.user_id && { user_id: user.user_id })
+      ...(user?.user_id && { user_id: user.user_id }),
+      ...(currentStore?.id && { store_id: currentStore.id }),
+      ...(currentStore?.tenant_id && { tenant_id: currentStore.tenant_id })
     };
 
     console.log('[ChatWidget] WebSocket message payload:', messagePayload);

@@ -176,6 +176,7 @@ class CustomerService:
             raise
 
     async def list_customers(self, search: str = None,
+                           tenant_id: UUID = None,
                            is_active: bool = None,
                            limit: int = 50,
                            offset: int = 0) -> List[Dict[str, Any]]:
@@ -200,6 +201,11 @@ class CustomerService:
                     p.phone ILIKE ${param_count}
                 )"""
                 params.append(f"%{search}%")
+
+            if tenant_id:
+                param_count += 1
+                query += f" AND p.tenant_id = ${param_count}"
+                params.append(tenant_id)
 
             if is_active is not None:
                 param_count += 1

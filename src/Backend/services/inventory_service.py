@@ -500,18 +500,18 @@ class InventoryService:
                     i.quantity_available,
                     i.reorder_point,
                     i.reorder_quantity,
-                    s.name as last_supplier
+                    po_sup.supplier_name as last_supplier
                 FROM ocs_inventory i
-                JOIN ocs_product_catalog pc ON i.sku = pc.ocs_variant_number
+                JOIN ocs_product_catalog pc ON LOWER(TRIM(i.sku)) = LOWER(TRIM(pc.ocs_variant_number))
                 LEFT JOIN (
-                    SELECT DISTINCT ON (poi.sku)
-                        poi.sku,
-                        s.name
+                    SELECT DISTINCT ON (LOWER(TRIM(poi.sku)))
+                        LOWER(TRIM(poi.sku)) as sku,
+                        s.name as supplier_name
                     FROM purchase_order_items poi
                     JOIN purchase_orders po ON poi.purchase_order_id = po.id
-                    JOIN suppliers s ON po.supplier_id = s.id
-                    ORDER BY poi.sku, po.order_date DESC
-                ) s ON i.sku = s.sku
+                    JOIN provincial_suppliers s ON po.supplier_id = s.id
+                    ORDER BY LOWER(TRIM(poi.sku)), po.order_date DESC
+                ) po_sup ON LOWER(TRIM(i.sku)) = po_sup.sku
                 WHERE i.quantity_available <= (i.reorder_point * $1)
                 ORDER BY i.quantity_available ASC
             """
@@ -570,31 +570,36 @@ class InventoryService:
                                        limit: int = 50) -> List[Dict[str, Any]]:
         """Search products with inventory information including batch details"""
         try:
+            # Product catalog already contains supplier info, no need to join provincial_suppliers
+            # Provincial suppliers are for purchase orders only (one provincial supplier per jurisdiction)
             query = """
                 SELECT 
-                    ipv.id,
-                    ipv.name,
-                    ipv.sku,
-                    ipv.category,
-                    ipv.strain_type,
-                    ipv.thc_percentage,
-                    ipv.cbd_percentage,
-                    ipv.description,
-                    ipv.brand,
-                    ipv.quantity_available,
-                    ipv.price,
-                    ipv.stock_status,
+                    p.ocs_variant_number as id,
+                    p.product_name as name,
+                    p.ocs_variant_number as sku,
+                    p.category,
+                    p.strain_type,
+                    p.maximum_thc_content_percent as thc_percentage,
+                    p.maximum_cbd_content_percent as cbd_percentage,
+                    p.description,
+                    p.brand,
+                    COALESCE(i.quantity_available, 0) as quantity_available,
+                    COALESCE(i.retail_price, p.unit_price) as price,
+                    CASE 
+                        WHEN i.quantity_available > 10 THEN 'in_stock'
+                        WHEN i.quantity_available > 0 THEN 'low_stock'
+                        ELSE 'out_of_stock'
+                    END as stock_status,
                     bt.batch_lot,
                     bt.case_gtin,
                     bt.packaged_on_date,
                     bt.gtin_barcode,
                     bt.each_gtin,
-                    bt.quantity_remaining as batch_quantity,
-                    s.name as supplier_name
-                FROM inventory_products_view ipv
-                LEFT JOIN batch_tracking bt ON ipv.sku = bt.sku AND bt.quantity_remaining > 0
-                LEFT JOIN purchase_orders po ON bt.purchase_order_id = po.id
-                LEFT JOIN suppliers s ON po.supplier_id = s.id
+                    bt.quantity_remaining as batch_quantity
+                FROM ocs_product_catalog p
+                LEFT JOIN ocs_inventory i ON LOWER(TRIM(p.ocs_variant_number)) = LOWER(TRIM(i.sku))
+                LEFT JOIN batch_tracking bt ON LOWER(TRIM(p.ocs_variant_number)) = LOWER(TRIM(bt.sku)) 
+                    AND bt.quantity_remaining > 0 AND bt.is_active = true
                 WHERE 1=1
             """
             
@@ -603,18 +608,24 @@ class InventoryService:
             
             if search_term:
                 param_count += 1
-                query += f" AND (ipv.name ILIKE ${param_count} OR ipv.description ILIKE ${param_count} OR ipv.brand ILIKE ${param_count} OR bt.batch_lot ILIKE ${param_count})"
+                query += f""" AND (
+                    p.product_name ILIKE ${param_count} OR 
+                    p.description ILIKE ${param_count} OR 
+                    p.brand ILIKE ${param_count} OR 
+                    p.ocs_variant_number ILIKE ${param_count} OR
+                    bt.batch_lot ILIKE ${param_count}
+                )"""
                 params.append(f"%{search_term}%")
             
             if category:
                 param_count += 1
-                query += f" AND category = ${param_count}"
+                query += f" AND p.category = ${param_count}"
                 params.append(category)
             
             if in_stock_only:
-                query += " AND quantity_available > 0"
+                query += " AND i.quantity_available > 0"
             
-            query += f" ORDER BY quantity_available DESC LIMIT ${param_count + 1}"
+            query += f" ORDER BY i.quantity_available DESC NULLS LAST LIMIT ${param_count + 1}"
             params.append(limit)
             
             results = await self.db.fetch(query, *params)

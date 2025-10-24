@@ -1,0 +1,333 @@
+name: Multi-Environment Deployment
+
+on:
+  push:
+    branches:
+      - develop    # Triggers UAT deployment
+      - staging    # Triggers Beta deployment
+      - release    # Triggers Pre-PROD deployment
+
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: true
+        type: choice
+        options:
+          - uat
+          - beta
+          - preprod
+          - all
+
+env:
+  NODE_VERSION: '20'
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  # Determine which environments to deploy based on branch or input
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      deploy_uat: ${{ steps.determine.outputs.deploy_uat }}
+      deploy_beta: ${{ steps.determine.outputs.deploy_beta }}
+      deploy_preprod: ${{ steps.determine.outputs.deploy_preprod }}
+    steps:
+      - name: Determine deployments
+        id: determine
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            ENV="${{ github.event.inputs.environment }}"
+            echo "deploy_uat=$([[ $ENV == 'uat' || $ENV == 'all' ]] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+            echo "deploy_beta=$([[ $ENV == 'beta' || $ENV == 'all' ]] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+            echo "deploy_preprod=$([[ $ENV == 'preprod' || $ENV == 'all' ]] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+          else
+            echo "deploy_uat=$([[ ${{ github.ref }} == 'refs/heads/develop' ]] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+            echo "deploy_beta=$([[ ${{ github.ref }} == 'refs/heads/staging' ]] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+            echo "deploy_preprod=$([[ ${{ github.ref }} == 'refs/heads/release' ]] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+          fi
+
+  #############################################################################
+  # UAT ENVIRONMENT (Cloudflare + Koyeb + Neon + Upstash + R2)
+  #############################################################################
+
+  deploy-uat-backend:
+    needs: setup
+    if: needs.setup.outputs.deploy_uat == 'true'
+    runs-on: ubuntu-latest
+    environment: uat
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        working-directory: src/Backend
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tests
+        working-directory: src/Backend
+        run: pytest tests/ -v
+
+      - name: Deploy to Koyeb
+        env:
+          KOYEB_TOKEN: ${{ secrets.KOYEB_TOKEN }}
+        run: |
+          curl -X POST "https://app.koyeb.com/v1/services/${{ secrets.KOYEB_SERVICE_ID_UAT }}/redeploy" \
+            -H "Authorization: Bearer $KOYEB_TOKEN"
+
+  deploy-uat-frontends:
+    needs: [setup, deploy-uat-backend]
+    if: needs.setup.outputs.deploy_uat == 'true'
+    runs-on: ubuntu-latest
+    environment: uat
+    strategy:
+      matrix:
+        app:
+          - name: admin
+            path: src/Frontend/ai-admin-dashboard
+            project: weedgo-uat-admin
+          - name: commerce-headless
+            path: src/Frontend/weedgo-commerce
+            project: weedgo-uat-commerce-headless
+            build_cmd: npm run build -- --mode headless
+          - name: commerce-pot-palace
+            path: src/Frontend/weedgo-commerce
+            project: weedgo-uat-commerce-pot-palace
+            build_cmd: npm run build -- --mode pot-palace
+          - name: commerce-modern
+            path: src/Frontend/weedgo-commerce
+            project: weedgo-uat-commerce-modern
+            build_cmd: npm run build -- --mode modern
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: ${{ matrix.app.path }}/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ${{ matrix.app.path }}
+        run: npm ci
+
+      - name: Load environment variables
+        working-directory: ${{ matrix.app.path }}
+        run: |
+          echo "${{ secrets.ENV_UAT_FRONTEND }}" > .env.uat
+
+      - name: Build
+        working-directory: ${{ matrix.app.path }}
+        run: ${{ matrix.app.build_cmd || 'npm run build' }}
+        env:
+          NODE_ENV: production
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: ${{ matrix.app.project }}
+          directory: ${{ matrix.app.path }}/dist
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+  #############################################################################
+  # BETA ENVIRONMENT (Netlify + Render + Supabase)
+  #############################################################################
+
+  deploy-beta-backend:
+    needs: setup
+    if: needs.setup.outputs.deploy_beta == 'true'
+    runs-on: ubuntu-latest
+    environment: beta
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        working-directory: src/Backend
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tests
+        working-directory: src/Backend
+        run: pytest tests/ -v
+
+      - name: Trigger Render deployment
+        env:
+          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK_BETA }}
+        run: |
+          curl -X POST "$RENDER_DEPLOY_HOOK"
+
+  deploy-beta-frontends:
+    needs: [setup, deploy-beta-backend]
+    if: needs.setup.outputs.deploy_beta == 'true'
+    runs-on: ubuntu-latest
+    environment: beta
+    strategy:
+      matrix:
+        app:
+          - name: admin
+            path: src/Frontend/ai-admin-dashboard
+            site_id: ${{ secrets.NETLIFY_SITE_ID_BETA_ADMIN }}
+          - name: commerce-headless
+            path: src/Frontend/weedgo-commerce
+            site_id: ${{ secrets.NETLIFY_SITE_ID_BETA_COMMERCE_HEADLESS }}
+            build_cmd: npm run build -- --mode headless
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        working-directory: ${{ matrix.app.path }}
+        run: npm ci
+
+      - name: Load environment variables
+        working-directory: ${{ matrix.app.path }}
+        run: |
+          echo "${{ secrets.ENV_BETA_FRONTEND }}" > .env.beta
+
+      - name: Build
+        working-directory: ${{ matrix.app.path }}
+        run: ${{ matrix.app.build_cmd || 'npm run build' }}
+
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v3
+        with:
+          publish-dir: '${{ matrix.app.path }}/dist'
+          production-deploy: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: 'Deploy from GitHub Actions - ${{ github.sha }}'
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ matrix.app.site_id }}
+
+  #############################################################################
+  # PRE-PROD ENVIRONMENT (Vercel + Railway)
+  #############################################################################
+
+  deploy-preprod-backend:
+    needs: setup
+    if: needs.setup.outputs.deploy_preprod == 'true'
+    runs-on: ubuntu-latest
+    environment: preprod
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        working-directory: src/Backend
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tests
+        working-directory: src/Backend
+        run: pytest tests/ -v
+
+      - name: Deploy to Railway
+        uses: bervProject/railway-deploy@main
+        with:
+          railway_token: ${{ secrets.RAILWAY_TOKEN }}
+          service: weedgo-preprod-backend
+
+  deploy-preprod-frontends:
+    needs: [setup, deploy-preprod-backend]
+    if: needs.setup.outputs.deploy_preprod == 'true'
+    runs-on: ubuntu-latest
+    environment: preprod
+    strategy:
+      matrix:
+        app:
+          - name: admin
+            path: src/Frontend/ai-admin-dashboard
+            vercel_project: weedgo-preprod-admin
+          - name: commerce-headless
+            path: src/Frontend/weedgo-commerce
+            vercel_project: weedgo-preprod-commerce-headless
+            build_cmd: npm run build -- --mode headless
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        working-directory: ${{ matrix.app.path }}
+        run: npm ci
+
+      - name: Load environment variables
+        working-directory: ${{ matrix.app.path }}
+        run: |
+          echo "${{ secrets.ENV_PREPROD_FRONTEND }}" > .env.preprod
+
+      - name: Build
+        working-directory: ${{ matrix.app.path }}
+        run: ${{ matrix.app.build_cmd || 'npm run build' }}
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ matrix.app.vercel_project_id }}
+          working-directory: ${{ matrix.app.path }}
+          vercel-args: '--prod'
+
+  #############################################################################
+  # POST-DEPLOYMENT: Health Checks & Notifications
+  #############################################################################
+
+  health-check:
+    needs: [deploy-uat-backend, deploy-beta-backend, deploy-preprod-backend]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check UAT health
+        if: needs.setup.outputs.deploy_uat == 'true'
+        run: |
+          curl -f https://weedgo-uat.koyeb.app/health || exit 1
+
+      - name: Check Beta health
+        if: needs.setup.outputs.deploy_beta == 'true'
+        run: |
+          sleep 30  # Render takes time to wake from cold start
+          curl -f https://weedgo-beta.onrender.com/health || exit 1
+
+      - name: Check Pre-PROD health
+        if: needs.setup.outputs.deploy_preprod == 'true'
+        run: |
+          curl -f https://weedgo-preprod.up.railway.app/health || exit 1
+
+      - name: Notify on success
+        if: success()
+        run: |
+          echo "✅ All deployments successful!"
+          # Add Slack/Discord webhook notification here
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "❌ Deployment failed! Check logs."
+          # Add Slack/Discord webhook notification here

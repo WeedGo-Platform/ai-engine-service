@@ -19,6 +19,7 @@ import psutil
 from services.intent_detector import LLMIntentDetector
 from services.tools.product_search_tool import ProductSearchTool
 from services.tool_manager import ToolManager
+from services.intent_flow_processor import IntentFlowProcessor  # NEW: Clean declarative flow
 
 logger = logging.getLogger(__name__)
 
@@ -64,7 +65,8 @@ class AgentConfig:
 
     # Intent detection and prompt templates
     intent_detector: Optional[Any] = None
-    prompt_templates: Dict[str, Any] = field(default_factory=dict)
+    intent_configs: Dict[str, Any] = field(default_factory=dict)  # NEW: Clean declarative intent configs
+    prompt_templates: Dict[str, Any] = field(default_factory=dict)  # LEGACY: Backward compat
     intent_config: Dict[str, Any] = field(default_factory=dict)
 
     # Tools
@@ -86,6 +88,7 @@ class SessionState:
     personality_id: str
     user_id: Optional[str] = None
     context_history: List[Dict[str, Any]] = field(default_factory=list)
+    conversation_history: List[Dict[str, Any]] = field(default_factory=list)
     created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     last_activity: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     metadata: Dict[str, Any] = field(default_factory=dict)
@@ -125,6 +128,9 @@ class AgentPoolManager:
 
         # Tool manager reference (will be set by SmartAIEngine)
         self.tool_manager = None
+        
+        # NEW: Intent flow processor for clean declarative message processing
+        self.intent_flow_processor = None  # Will be initialized when shared_model is available
 
         # Performance metrics
         self.metrics = {
@@ -219,18 +225,21 @@ class AgentPoolManager:
                 logger.error(f"  ❌ Failed to initialize intent detector: {e}")
                 agent_config.intent_detector = None
 
-            # Load prompt templates
+            # Load intent configurations (NEW: Clean declarative architecture)
             prompts_file = agent_dir / "prompts.json"
             if prompts_file.exists():
                 try:
                     logger.info(f"📁 Loading prompts.json for agent {agent_dir.name}")
                     with open(prompts_file, 'r') as f:
                         prompts_data = json.load(f)
-                        agent_config.prompt_templates = prompts_data.get('prompts', {})
-                        logger.info(f"  ✅ prompts.json loaded: {len(agent_config.prompt_templates)} templates")
-                        logger.info(f"     Available templates: {list(agent_config.prompt_templates.keys())}")
+                        # NEW: Load intents instead of prompts
+                        agent_config.intent_configs = prompts_data.get('intents', {})
+                        # LEGACY: Keep prompt_templates for backward compatibility
+                        agent_config.prompt_templates = prompts_data.get('prompts', prompts_data.get('intents', {}))
+                        logger.info(f"  ✅ prompts.json loaded: {len(agent_config.intent_configs)} intent configs")
+                        logger.info(f"     Available intents: {list(agent_config.intent_configs.keys())}")
                 except Exception as e:
-                    logger.error(f"  ❌ Failed to load prompt templates: {e}")
+                    logger.error(f"  ❌ Failed to load intent configs: {e}")
             else:
                 logger.warning(f"  ❌ prompts.json not found at {prompts_file}")
 
@@ -489,6 +498,15 @@ class AgentPoolManager:
         if not session:
             raise ValueError(f"Session not found: {session_id}")
 
+        # Extract user context for tools (query_database, etc.)
+        user_context = {
+            'user_role': kwargs.get('user_role') or session.metadata.get('user_role', 'customer'),
+            'customer_id': kwargs.get('customer_id') or session.user_id or session.metadata.get('customer_id'),
+            'store_id': kwargs.get('store_id') or session.metadata.get('store_id') or '5071d685-00dc-4e56-bb11-36e31b305c50',  # TEMPORARY: Hardcoded store for testing
+            'tenant_id': kwargs.get('tenant_id') or session.metadata.get('tenant_id') or '9a7585bf-5156-4fc2-971b-fcf00e174b88'  # TEMPORARY: Hardcoded tenant for testing
+        }
+        logger.info(f"👤 User context: role={user_context['user_role']}, customer_id={user_context['customer_id']}, store_id={user_context['store_id']}, tenant_id={user_context['tenant_id']}")
+
         # Get personality configuration
         personality = self.get_personality(session.agent_id, session.personality_id)
         if not personality:
@@ -518,6 +536,70 @@ class AgentPoolManager:
                     
             except Exception as e:
                 logger.warning(f"Intent detection failed: {e}")
+
+        # ========================================
+        # NEW: Clean Declarative Flow for Manager Agent
+        # ========================================
+        if session.agent_id == "manager" and hasattr(agent_config, 'intent_configs') and agent_config.intent_configs:
+            logger.info(f"🎯 Using NEW clean declarative flow for manager agent")
+            
+            # Get intent configuration
+            intent_config = agent_config.intent_configs.get(detected_intent)
+            
+            if intent_config:
+                # Initialize flow processor if not already done
+                if not self.intent_flow_processor and self.shared_model:
+                    logger.info(f"🔧 Initializing IntentFlowProcessor")
+                    self.intent_flow_processor = IntentFlowProcessor(
+                        llm_generator=self.shared_model.generate,
+                        base_api_url="http://localhost:5024"
+                    )
+                
+                if self.intent_flow_processor:
+                    try:
+                        # Process message through clean declarative flow
+                        result = await self.intent_flow_processor.process_message(
+                            message=message,
+                            detected_intent=detected_intent,
+                            intent_config=intent_config,
+                            user_context=user_context,
+                            session_id=session_id
+                        )
+                        
+                        # Return result directly
+                        logger.info(f"✅ Clean flow completed: {len(result.get('text', ''))} chars, {result.get('tool_result_count', 0)} items")
+                        
+                        session.conversation_history.append({
+                            "role": "user",
+                            "content": message,
+                            "timestamp": datetime.now(timezone.utc).isoformat()
+                        })
+                        session.conversation_history.append({
+                            "role": "assistant",
+                            "content": result['text'],
+                            "timestamp": datetime.now(timezone.utc).isoformat(),
+                            "intent": detected_intent,
+                            "tool_executed": result.get('tool_executed', False)
+                        })
+                        
+                        return {
+                            "text": result['text'],
+                            "detected_intent": detected_intent,
+                            "intent_confidence": intent_result.get('confidence', 0) if intent_result else 0,
+                            "tool_executed": result.get('tool_executed', False),
+                            "tool_result_count": result.get('tool_result_count', 0)
+                        }
+                    except Exception as e:
+                        logger.error(f"❌ Clean flow failed: {e}", exc_info=True)
+                        # Fall through to legacy flow
+                else:
+                    logger.warning(f"⚠️ IntentFlowProcessor not initialized, falling back to legacy flow")
+            else:
+                logger.warning(f"⚠️ No intent config found for {detected_intent}, falling back to legacy flow")
+        
+        # ========================================
+        # LEGACY FLOW (for other agents)
+        # ========================================
 
         # Step 2: Execute tools for product_search intent
         tool_results = None
@@ -570,6 +652,60 @@ class AgentPoolManager:
             else:
                 logger.warning(f"⚠️ Signup tools not available. tool_manager={self.tool_manager is not None}, has_tools={hasattr(agent_config, 'tools')}, tools={agent_config.tools if hasattr(agent_config, 'tools') else None}")
 
+        # Step 2c: RAG Knowledge Retrieval (before LLM generation)
+        rag_context = None
+        rag_confidence = 0.0
+        
+        # Lazy initialize RAG tool if configured but not yet initialized
+        if hasattr(self, 'rag_data_dir') and self.rag_data_dir and not hasattr(self, 'rag_tool'):
+            self.rag_tool = None  # Default to None
+        
+        if hasattr(self, 'rag_data_dir') and self.rag_data_dir and (not hasattr(self, 'rag_tool') or self.rag_tool is None):
+            try:
+                from services.tools.rag_tool import get_rag_tool
+                logger.info(f"🔧 Initializing RAG tool on first use...")
+                self.rag_tool = await get_rag_tool(data_dir=self.rag_data_dir)
+                logger.info(f"✅ RAG tool initialized successfully")
+            except Exception as e:
+                logger.error(f"❌ Failed to initialize RAG tool: {e}", exc_info=True)
+                self.rag_tool = None
+        
+        if hasattr(self, 'rag_tool') and self.rag_tool:
+            logger.info(f"🔍 Retrieving knowledge from RAG for query: {message[:100]}")
+            try:
+                rag_result = await self.rag_tool.search_knowledge(
+                    query=message,
+                    agent_id=session.agent_id,
+                    tenant_id=kwargs.get('tenant_id'),
+                    store_id=kwargs.get('store_id'),
+                    top_k=5,
+                    min_similarity=0.3
+                )
+                
+                if rag_result.get('success') and rag_result.get('results'):
+                    rag_confidence = rag_result.get('confidence', 0.0)
+                    results = rag_result['results']
+                    
+                    # Format RAG context for LLM
+                    context_parts = ["KNOWLEDGE BASE INFORMATION:"]
+                    for i, result in enumerate(results[:3], 1):  # Top 3 results
+                        source = result.get('source', 'unknown')
+                        text = result.get('text', '')
+                        metadata = result.get('metadata', {})
+                        
+                        context_parts.append(f"\n[Source {i}: {source}]")
+                        if metadata.get('question'):
+                            context_parts.append(f"Q: {metadata['question']}")
+                        context_parts.append(text)
+                    
+                    rag_context = "\n".join(context_parts)
+                    logger.info(f"✅ RAG: Found {len(results)} results (confidence: {rag_confidence:.2f})")
+                else:
+                    logger.info(f"📭 RAG: No relevant knowledge found")
+                    
+            except Exception as e:
+                logger.error(f"❌ RAG retrieval failed: {e}", exc_info=True)
+
         # Step 3: Select appropriate prompt template
         prompt_template = None
         max_tokens = 500
@@ -583,6 +719,66 @@ class AgentPoolManager:
             prompt_template = agent_config.prompt_templates.get(template_key)
             if prompt_template:
                 logger.info(f"Using prompt template: {template_key}")
+        
+        # Step 3.5: Execute required tools if specified in template config
+        query_tool_results = None
+        if prompt_template and prompt_template.get('tool_config'):
+            tool_config = prompt_template['tool_config']
+            required_tools = tool_config.get('required_tools', [])
+            
+            if required_tools and self.tool_manager:
+                logger.info(f"🔧 Required tools to execute: {required_tools}")
+                
+                # Get tool parameters from template config
+                tool_params = tool_config.get('tool_params', {})
+                
+                # Extract parameters for query_database tool
+                query_db_params = tool_params.get('query_database', {})
+                resource_type = query_db_params.get('resource_type')
+                limit = query_db_params.get('limit', 100)
+                filters = query_db_params.get('filters', {})
+                
+                # Execute query_database or database_query tool
+                if 'query_database' in required_tools or 'database_query' in required_tools:
+                    logger.info(f"🔧 Executing query_database: resource_type={resource_type}, limit={limit}, filters={filters}")
+                    
+                    try:
+                        # Build tool execution context
+                        tool_context = {
+                            'user_context': user_context,
+                            'session_id': session_id,
+                            'agent_id': session.agent_id,
+                            'message': message
+                        }
+                        
+                        # Execute the tool with flat kwargs (not nested in 'parameters')
+                        query_tool_results = await self.tool_manager.execute_tool(
+                            tool_name='query_database',
+                            resource_type=resource_type,
+                            user_role=user_context.get('role', 'customer'),
+                            customer_id=user_context.get('customer_id'),
+                            store_id=user_context.get('store_id'),
+                            tenant_id=user_context.get('tenant_id'),
+                            filters=filters,
+                            limit=limit
+                        )
+                        
+                        # Unwrap result from ToolManager wrapper
+                        if query_tool_results and query_tool_results.get('success'):
+                            # ToolManager wraps the actual result in a 'result' key
+                            actual_result = query_tool_results.get('result', query_tool_results)
+                            data = actual_result.get('data', [])
+                            # Add resource_type to results for data injection formatting
+                            actual_result['resource_type'] = resource_type
+                            # Replace wrapper with actual result for later use
+                            query_tool_results = actual_result
+                            logger.info(f"✅ Tool executed successfully: returned {len(data) if isinstance(data, list) else 'N/A'} items")
+                        else:
+                            error = query_tool_results.get('error') if query_tool_results else 'Unknown error'
+                            logger.error(f"❌ Tool execution failed: {error}")
+                            
+                    except Exception as e:
+                        logger.error(f"❌ Tool execution exception: {e}", exc_info=True)
 
         # Step 4: Build prompt with template or fallback
         if prompt_template:
@@ -611,47 +807,25 @@ class AgentPoolManager:
                 if system_prompt:
                     prompt_parts.append(system_prompt)
 
+                # Add RAG context if available (highest priority knowledge)
+                if rag_context:
+                    prompt_parts.append(f"\n{rag_context}\n")
+                    logger.info(f"📚 Injected RAG context into prompt")
+
                 # Add template as reference knowledge
                 prompt_parts.append(f"REFERENCE INFORMATION:\n{template_str}")
 
-                # Detect language - use multiple methods
-                detected_language = "en"
-                
-                # Method 1: Try to get from intent_result
-                if intent_result:
-                    detected_language = intent_result.get("language", "en")
-                
-                # Method 2: If still English, do direct keyword detection
-                if detected_language == "en":
-                    detected_language = self._detect_language_keywords(message)
-                    if detected_language != "en":
-                        logger.info(f"🌐 Direct language detection: '{message}' → {detected_language}")
-                
-                language_map = {
-                    "es": "Spanish (Español)",
-                    "fr": "French (Français)",
-                    "zh": "Chinese (中文)",
-                    "ja": "Japanese (日本語)",
-                    "ko": "Korean (한국어)",
-                    "de": "German (Deutsch)",
-                    "pt": "Portuguese (Português)"
-                }
-                
-                # Build instructions with language requirement if needed
+                # Build instructions - let LLM naturally detect and respond in user's language
                 instructions = (
                     "\nINSTRUCTIONS: "
-                    "1. Answer ONLY what the customer asked - don't include unrelated information\n"
-                    "2. Keep response focused and concise (2-3 short paragraphs maximum)\n"
-                    "3. Be conversational and friendly, not formal\n"
-                    "4. End with a specific follow-up question to learn more about their needs\n"
-                    "5. Do NOT include all pricing tiers unless specifically asked for a comparison\n"
-                    "6. Do NOT use template variables like {time} or {variable} - provide actual information"
+                    "1. RESPOND IN THE SAME LANGUAGE the customer used - if they speak Spanish, respond in Spanish; if French, respond in French, etc.\n"
+                    "2. Answer ONLY what the customer asked - don't include unrelated information\n"
+                    "3. Keep response focused and concise (2-3 short paragraphs maximum)\n"
+                    "4. Be conversational and friendly, not formal\n"
+                    "5. End with a specific follow-up question to learn more about their needs\n"
+                    "6. Do NOT include all pricing tiers unless specifically asked for a comparison\n"
+                    "7. Do NOT use template variables like {time} or {variable} - provide actual information"
                 )
-                
-                # Add language instruction to the INSTRUCTIONS section, not at the end
-                if detected_language != "en" and detected_language in language_map:
-                    instructions += f"\n6. CRITICAL LANGUAGE RULE: Respond ONLY in {language_map[detected_language]}. Do NOT add English translations in parentheses. Do NOT include bilingual text. The customer speaks {language_map[detected_language]}, so use ONLY {language_map[detected_language]} in your entire response."
-                    logger.info(f"🌐 Multilingual: Detected {language_map[detected_language]}, adding language requirement to instructions")
                 
                 prompt_parts.append(instructions)
 
@@ -688,15 +862,11 @@ class AgentPoolManager:
                 # Detect language - use multiple methods
                 detected_language = "en"
                 
-                # Method 1: Try to get from intent_result
+                # Get language from intent_result if available
                 if intent_result:
                     detected_language = intent_result.get("language", "en")
-                
-                # Method 2: If still English, do direct keyword detection
-                if detected_language == "en":
-                    detected_language = self._detect_language_keywords(message)
-                    if detected_language != "en":
-                        logger.info(f"🌐 Direct language detection: '{message}' → {detected_language}")
+                else:
+                    detected_language = "en"
                 
                 language_map = {
                     "es": "Spanish (Español)",
@@ -754,6 +924,74 @@ class AgentPoolManager:
                     if product.get('short_description'):
                         products_info += f"   {product['short_description'][:100]}\n"
                 prompt_with_context += products_info
+            
+            # Add tool results from query_database tool
+            if query_tool_results and query_tool_results.get('success'):
+                data = query_tool_results.get('data', [])
+                resource_type = query_tool_results.get('resource_type', 'data')
+                count = query_tool_results.get('count', 0)
+                
+                logger.info(f"� Tool results check: success={query_tool_results.get('success')}, count={count}, data_length={len(data) if isinstance(data, list) else 0}")
+                
+                if data and isinstance(data, list) and len(data) > 0:
+                    logger.info(f"💾 Injecting {len(data)} items from database into prompt")
+                    
+                    # Format data based on type
+                    if isinstance(data, list) and len(data) > 0:
+                        data_info = f"\n\nDATABASE RESULTS ({resource_type}):\n"
+                        data_info += f"Total items: {len(data)}\n\n"
+                        
+                        # Add detailed info for first 10 items
+                        for i, item in enumerate(data[:10], 1):
+                            if isinstance(item, dict):
+                                # Format based on resource type
+                                if resource_type in ['inventory', 'products']:
+                                    name = item.get('name') or item.get('product_name') or item.get('sku', 'Unknown')
+                                    data_info += f"{i}. {name}"
+                                    if item.get('quantity') is not None:
+                                        data_info += f" - Quantity: {item['quantity']}"
+                                    if item.get('price') is not None:
+                                        data_info += f" - Price: ${item['price']}"
+                                    data_info += "\n"
+                                elif resource_type in ['my_orders', 'orders']:
+                                    order_id = item.get('order_id') or item.get('id', 'Unknown')
+                                    status = item.get('status', 'unknown')
+                                    total = item.get('total') or item.get('total_amount', 0)
+                                    data_info += f"{i}. Order #{order_id} - Status: {status} - Total: ${total}\n"
+                                elif resource_type == 'customers':
+                                    name = item.get('name') or item.get('email', 'Unknown')
+                                    email = item.get('email', '')
+                                    data_info += f"{i}. {name}"
+                                    if email and email != name:
+                                        data_info += f" ({email})"
+                                    data_info += "\n"
+                                elif resource_type == 'deliveries':
+                                    delivery_id = item.get('delivery_id') or item.get('id', 'Unknown')
+                                    status = item.get('status', 'unknown')
+                                    data_info += f"{i}. Delivery #{delivery_id} - Status: {status}\n"
+                                else:
+                                    # Generic format for other types
+                                    item_id = item.get('id') or item.get('name', f'Item {i}')
+                                    data_info += f"{i}. {item_id}\n"
+                        
+                        if len(data) > 10:
+                            data_info += f"\n... and {len(data) - 10} more items\n"
+                        
+                        prompt_with_context += data_info
+                        logger.info(f"✅ Database results injected into prompt")
+                    elif isinstance(data, dict):
+                        # Single item or aggregated data
+                        data_info = f"\n\nDATABASE RESULTS ({resource_type}):\n"
+                        for key, value in data.items():
+                            data_info += f"{key}: {value}\n"
+                        prompt_with_context += data_info
+                        logger.info(f"✅ Database results (dict) injected into prompt")
+                else:
+                    logger.warning(f"⚠️ Tool returned empty or invalid data: data type={type(data)}, is_list={isinstance(data, list)}, length={len(data) if isinstance(data, list) else 'N/A'}")
+                    # Add "no data found" context to prompt
+                    prompt_with_context += f"\n\nDATABASE QUERY: No {resource_type} found matching the criteria.\n"
+            elif query_tool_results and not query_tool_results.get('success'):
+                logger.error(f"❌ Tool execution failed: {query_tool_results.get('message', 'Unknown error')}")
 
             # Get max tokens from template constraints - limit to 150 for concise responses
             constraints = prompt_template.get('constraints', {})
@@ -806,7 +1044,8 @@ class AgentPoolManager:
                 max_tokens=final_max_tokens,
                 temperature=personality.style.get('temperature', 0.7) if personality.style else 0.7,
                 use_tools=kwargs.get('use_tools', False),
-                use_context=False  # We're managing context ourselves
+                use_context=False,  # We're managing context ourselves
+                context=user_context  # Pass user context for tool calls
             )
 
             logger.info(f"📝 Raw result from shared_model.generate: type={type(result)}, keys={result.keys() if isinstance(result, dict) else 'N/A'}")
@@ -1307,79 +1546,6 @@ JSON:"""
                     logger.warning(f"  ⚠️ Failed to enroll tools for agent {agent_id}")
             else:
                 logger.info(f"  ℹ️ No tools configured for agent {agent_id}")
-
-    def _detect_language_keywords(self, message: str) -> str:
-        """
-        Detect language using keyword matching for common words
-        
-        Args:
-            message: User message to analyze
-            
-        Returns:
-            Language code (es, fr, de, pt, it, en)
-        """
-        message_lower = message.lower().strip()
-        
-        # Spanish keywords (most common words and greetings)
-        spanish_keywords = [
-            'hola', 'adios', 'gracias', 'por favor', 'buenos', 'dias', 'buenas', 'noches', 'tardes',
-            'como', 'cómo', 'estas', 'estás', 'que', 'qué', 'si', 'sí', 'no', 'bien', 'mal',
-            'mucho', 'poco', 'donde', 'dónde', 'cuando', 'cuándo', 'quien', 'quién',
-            'amigo', 'amiga', 'señor', 'señora', 'necesito', 'quiero', 'tengo', 'tienes',
-            'puedo', 'puede', 'ayuda', 'aqui', 'aquí', 'alli', 'allí', 'ahora', 'despues', 'después'
-        ]
-        
-        # French keywords
-        french_keywords = [
-            'bonjour', 'salut', 'merci', 'oui', 'non', 'comment', 'ça', 'va', 'bien',
-            'je', 'tu', 'il', 'elle', 'nous', 'vous', 'ils', 'elles', 'est', 'sont',
-            'avoir', 'être', 'faire', 'aller', 'venir', 'voir', 'dire', 'pouvoir',
-            'vouloir', 'avec', 'dans', 'pour', 'sur', 'mais', 'aussi', 'très', 'alors'
-        ]
-        
-        # German keywords
-        german_keywords = [
-            'hallo', 'guten', 'tag', 'morgen', 'abend', 'danke', 'bitte', 'ja', 'nein',
-            'wie', 'was', 'wo', 'wann', 'warum', 'wer', 'ich', 'du', 'er', 'sie', 'es',
-            'wir', 'ihr', 'ist', 'sind', 'haben', 'sein', 'werden', 'können', 'müssen',
-            'möchten', 'mit', 'für', 'auf', 'in', 'zu', 'auch', 'nicht', 'und', 'oder'
-        ]
-        
-        # Portuguese keywords
-        portuguese_keywords = [
-            'olá', 'oi', 'obrigado', 'obrigada', 'sim', 'não', 'como', 'está', 'vai',
-            'bom', 'boa', 'dia', 'noite', 'tarde', 'eu', 'você', 'ele', 'ela', 'nós',
-            'vocês', 'eles', 'elas', 'é', 'são', 'estar', 'ter', 'fazer', 'ir', 'vir',
-            'ver', 'poder', 'querer', 'com', 'em', 'para', 'por', 'mas', 'também', 'muito'
-        ]
-        
-        # Italian keywords
-        italian_keywords = [
-            'ciao', 'buongiorno', 'buonasera', 'grazie', 'prego', 'scusa', 'si', 'sì', 'no',
-            'come', 'cosa', 'dove', 'quando', 'perché', 'chi', 'io', 'tu', 'lui', 'lei',
-            'noi', 'voi', 'loro', 'è', 'sono', 'essere', 'avere', 'fare', 'andare', 'venire',
-            'vedere', 'dire', 'potere', 'volere', 'con', 'in', 'per', 'su', 'ma', 'anche', 'molto'
-        ]
-        
-        # Split message into words
-        words = message_lower.split()
-        
-        # Count matches for each language
-        language_scores = {
-            'es': sum(1 for word in words if word in spanish_keywords),
-            'fr': sum(1 for word in words if word in french_keywords),
-            'de': sum(1 for word in words if word in german_keywords),
-            'pt': sum(1 for word in words if word in portuguese_keywords),
-            'it': sum(1 for word in words if word in italian_keywords)
-        }
-        
-        # Get language with highest score
-        max_score = max(language_scores.values())
-        if max_score > 0:
-            return max(language_scores, key=language_scores.get)
-        
-        # Default to English
-        return "en"
 
 
 

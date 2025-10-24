@@ -104,6 +104,7 @@ async def create_customer(
 @router.get("/", response_model=List[Dict[str, Any]])
 async def list_customers(
     search: Optional[str] = Query(None, description="Search in name, email, phone"),
+    tenant_id: Optional[UUID] = Query(None, description="Filter by tenant ID"),
     is_active: Optional[bool] = Query(None, description="Filter by active status"),
     limit: int = Query(50, ge=1, le=200),
     offset: int = Query(0, ge=0),
@@ -113,6 +114,7 @@ async def list_customers(
     try:
         customers = await service.list_customers(
             search=search,
+            tenant_id=tenant_id,
             is_active=is_active,
             limit=limit,
             offset=offset
