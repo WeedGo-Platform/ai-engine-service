@@ -49,6 +49,7 @@ from core.services.tenant_service import TenantService
 from core.repositories.tenant_repository import TenantRepository
 from core.repositories.user_repository import UserRepository
 from core.repositories.interfaces import ISubscriptionRepository
+from core.repositories.subscription_repository import SubscriptionRepository
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/tenants", tags=["tenants"])
@@ -119,24 +120,6 @@ class TenantResponse(BaseModel):
     settings: Dict[str, Any]
     created_at: datetime
     updated_at: datetime
-
-
-# Placeholder subscription repository - implement later
-class SubscriptionRepository:
-    def __init__(self, pool):
-        self.pool = pool
-    
-    async def create(self, subscription):
-        pass
-    
-    async def get_by_tenant(self, tenant_id):
-        return None
-    
-    async def update(self, subscription):
-        pass
-    
-    async def list_expiring(self, days_ahead):
-        return []
 
 
 # Database connection pool (singleton)
