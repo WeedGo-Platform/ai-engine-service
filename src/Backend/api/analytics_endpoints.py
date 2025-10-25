@@ -580,152 +580,152 @@ async def get_customer_analytics(
     db_pool: asyncpg.Pool = Depends(get_db_pool)
 ):
     """Get customer analytics and insights from real customer data"""
-    
-    async with db_pool.acquire() as conn:
-        # Get customer statistics
-        where_clause = "WHERE 1=1"
-        params = []
-        param_index = 1
-        
-        if tenant_id:
-            where_clause += f" AND tenant_id = ${param_index}"
-            params.append(tenant_id)
-            param_index += 1
+    try:
+        async with db_pool.acquire() as conn:
+            # Get customer statistics
+            where_clause = "WHERE 1=1"
+            params = []
+            param_index = 1
             
-        if store_id:
-            where_clause += f" AND store_id = ${param_index}"
-            params.append(store_id)
+            if tenant_id:
+                where_clause += f" AND tenant_id = ${param_index}"
+                params.append(tenant_id)
+                param_index += 1
+                
+            if store_id:
+                where_clause += f" AND store_id = ${param_index}"
+                params.append(store_id)
+                
+            customer_query = f"""
+                SELECT 
+                    COUNT(DISTINCT customer_id) as total_customers,
+                    COUNT(DISTINCT customer_id) FILTER (WHERE created_at >= CURRENT_DATE - INTERVAL '30 days') as new_customers_30d,
+                    COUNT(DISTINCT customer_id) FILTER (WHERE customer_id IN (
+                        SELECT customer_id FROM orders 
+                        {where_clause}
+                        GROUP BY customer_id 
+                        HAVING COUNT(*) > 1
+                    )) as returning_customers,
+                    AVG(total_amount) as avg_order_value
+                FROM orders
+                {where_clause}
+            """
             
-        customer_query = f"""
-            SELECT 
-                COUNT(DISTINCT customer_id) as total_customers,
-                COUNT(DISTINCT customer_id) FILTER (WHERE created_at >= CURRENT_DATE - INTERVAL '30 days') as new_customers_30d,
-                COUNT(DISTINCT customer_id) FILTER (WHERE customer_id IN (
-                    SELECT customer_id FROM orders 
+            if params:
+                # Need to pass params twice for the subquery and main query
+                stats = await conn.fetchrow(customer_query, *params, *params)
+            else:
+                stats = await conn.fetchrow(customer_query)
+            
+            total_customers = stats['total_customers'] or 0
+            new_customers_30d = stats['new_customers_30d'] or 0
+            returning_customers = stats['returning_customers'] or 0
+            avg_order_value = float(stats['avg_order_value'] or 0)
+            
+            # Calculate customer lifetime value (simplified)
+            clv_query = f"""
+                SELECT AVG(total_revenue) as avg_clv
+                FROM (
+                    SELECT customer_id, SUM(total_amount) as total_revenue
+                    FROM orders
                     {where_clause}
-                    GROUP BY customer_id 
-                    HAVING COUNT(*) > 1
-                )) as returning_customers,
-                AVG(total_amount) as avg_order_value
-            FROM orders
-            {where_clause}
-        """
-        
-        if params:
-            # Need to pass params twice for the subquery and main query
-            stats = await conn.fetchrow(customer_query, *params, *params)
-        else:
-            stats = await conn.fetchrow(customer_query)
-        
-        total_customers = stats['total_customers'] or 0
-        new_customers_30d = stats['new_customers_30d'] or 0
-        returning_customers = stats['returning_customers'] or 0
-        avg_order_value = float(stats['avg_order_value'] or 0)
-        
-        # Calculate customer lifetime value (simplified)
-        clv_query = f"""
-            SELECT AVG(total_revenue) as avg_clv
-            FROM (
-                SELECT customer_id, SUM(total_amount) as total_revenue
-                FROM orders
-                {where_clause}
-                GROUP BY customer_id
-            ) as customer_revenues
-        """
-        
-        if params:
-            clv_result = await conn.fetchrow(clv_query, *params)
-        else:
-            clv_result = await conn.fetchrow(clv_query)
-        
-        customer_lifetime_value = float(clv_result['avg_clv'] or 0)
-        
-        # Calculate retention rate
-        retention_rate = (returning_customers / max(total_customers, 1)) * 100
-        
-        # Get customer segments based on order frequency
-        segments_query = f"""
-            WITH customer_orders AS (
-                SELECT customer_id, COUNT(*) as order_count
-                FROM orders
-                {where_clause}
-                GROUP BY customer_id
-            )
-            SELECT 
-                CASE 
-                    WHEN order_count >= 10 THEN 'vip'
-                    WHEN order_count >= 5 THEN 'regular'
-                    WHEN order_count >= 2 THEN 'occasional'
-                    ELSE 'new'
-                END as segment,
-                COUNT(*) as count
-            FROM customer_orders
-            GROUP BY segment
-        """
-        
-        if params:
-            segment_rows = await conn.fetch(segments_query, *params)
-        else:
-            segment_rows = await conn.fetch(segments_query)
-        
-        segments = {"vip": 0, "regular": 0, "occasional": 0, "new": 0}
-        for row in segment_rows:
-            segments[row['segment']] = row['count']
-        
-        # Get top customer locations
-        location_where = "WHERE delivery_address IS NOT NULL"
-        location_params = []
-        location_param_index = 1
-        
-        if tenant_id:
-            location_where += f" AND tenant_id = ${location_param_index}"
-            location_params.append(tenant_id)
-            location_param_index += 1
+                    GROUP BY customer_id
+                ) as customer_revenues
+            """
             
-        if store_id:
-            location_where += f" AND store_id = ${location_param_index}"
-            location_params.append(store_id)
+            if params:
+                clv_result = await conn.fetchrow(clv_query, *params)
+            else:
+                clv_result = await conn.fetchrow(clv_query)
             
-        location_query = f"""
-            SELECT 
-                COALESCE(delivery_address->>'city', 'Unknown') as city,
-                COUNT(DISTINCT customer_id) as customers
-            FROM orders
-            {location_where}
-            GROUP BY city
-            ORDER BY customers DESC
-            LIMIT 5
-        """
-        
-        if location_params:
-            location_rows = await conn.fetch(location_query, *location_params)
-        else:
-            location_rows = await conn.fetch(location_query)
-        
-        top_locations = []
-        for row in location_rows:
-            top_locations.append({
-                "city": row['city'],
-                "customers": row['customers']
-            })
-        
-        return {
-            "total_customers": total_customers,
-            "new_customers_30d": new_customers_30d,
-            "returning_customers_30d": returning_customers,
-            "customer_lifetime_value": round(customer_lifetime_value, 2),
-            "retention_rate": round(retention_rate, 1),
-            "segments": segments,
-            "demographics": {
-                "age_groups": {
-                    "21-30": 28,  # These would need customer age data
-                    "31-40": 35,
-                    "41-50": 22,
-                    "51+": 15
-                },
-                "top_locations": top_locations
+            customer_lifetime_value = float(clv_result['avg_clv'] or 0)
+            
+            # Calculate retention rate
+            retention_rate = (returning_customers / max(total_customers, 1)) * 100
+            
+            # Get customer segments based on order frequency
+            segments_query = f"""
+                WITH customer_orders AS (
+                    SELECT customer_id, COUNT(*) as order_count
+                    FROM orders
+                    {where_clause}
+                    GROUP BY customer_id
+                )
+                SELECT 
+                    CASE 
+                        WHEN order_count >= 10 THEN 'vip'
+                        WHEN order_count >= 5 THEN 'regular'
+                        WHEN order_count >= 2 THEN 'occasional'
+                        ELSE 'new'
+                    END as segment,
+                    COUNT(*) as count
+                FROM customer_orders
+                GROUP BY segment
+            """
+            
+            if params:
+                segment_rows = await conn.fetch(segments_query, *params)
+            else:
+                segment_rows = await conn.fetch(segments_query)
+            
+            segments = {"vip": 0, "regular": 0, "occasional": 0, "new": 0}
+            for row in segment_rows:
+                segments[row['segment']] = row['count']
+            
+            # Get top customer locations
+            location_where = "WHERE delivery_address IS NOT NULL"
+            location_params = []
+            location_param_index = 1
+            
+            if tenant_id:
+                location_where += f" AND tenant_id = ${location_param_index}"
+                location_params.append(tenant_id)
+                location_param_index += 1
+                
+            if store_id:
+                location_where += f" AND store_id = ${location_param_index}"
+                location_params.append(store_id)
+                
+            location_query = f"""
+                SELECT 
+                    COALESCE(delivery_address->>'city', 'Unknown') as city,
+                    COUNT(DISTINCT customer_id) as customers
+                FROM orders
+                {location_where}
+                GROUP BY city
+                ORDER BY customers DESC
+                LIMIT 5
+            """
+            
+            if location_params:
+                location_rows = await conn.fetch(location_query, *location_params)
+            else:
+                location_rows = await conn.fetch(location_query)
+            
+            top_locations = []
+            for row in location_rows:
+                top_locations.append({
+                    "city": row['city'],
+                    "customers": row['customers']
+                })
+            
+            return {
+                "total_customers": total_customers,
+                "new_customers_30d": new_customers_30d,
+                "returning_customers_30d": returning_customers,
+                "customer_lifetime_value": round(customer_lifetime_value, 2),
+                "retention_rate": round(retention_rate, 1),
+                "segments": segments,
+                "demographics": {
+                    "age_groups": {
+                        "21-30": 28,  # These would need customer age data
+                        "31-40": 35,
+                        "41-50": 22,
+                        "51+": 15
+                    },
+                    "top_locations": top_locations
+                }
             }
-        }
         
     except Exception as e:
         raise HTTPException(
