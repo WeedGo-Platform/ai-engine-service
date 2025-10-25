@@ -16,6 +16,7 @@ from .base import BasePaymentProvider, PaymentError
 from .clover_provider import CloverProvider
 from .moneris_provider import MonerisProvider
 from .interac_provider import InteracProvider
+from .stripe_provider import StripeProvider
 from ..security.credential_manager import CredentialManager, CredentialType
 
 logger = logging.getLogger(__name__)
@@ -39,6 +40,7 @@ class ProviderRegistry:
         ProviderType.CLOVER: CloverProvider,
         ProviderType.MONERIS: MonerisProvider,
         ProviderType.INTERAC: InteracProvider,
+        ProviderType.STRIPE: StripeProvider,
         # Additional providers can be registered here
     }
     
