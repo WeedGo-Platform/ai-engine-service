@@ -1,0 +1,215 @@
+{
+  "agent": {
+    "id": "manager",
+    "name": "Business Manager",
+    "version": "2.0.0",
+    "description": "Clean declarative architecture - all config in JSON, context injection via templates"
+  },
+  "intents": {
+    "greeting": {
+      "description": "User greetings and initial interactions",
+      "response_template": {
+        "system": "You are a professional business manager assistant. Be friendly and helpful.",
+        "template": "User said: {{message}}\n\nGreet the user warmly and let them know you can help with inventory, orders, customers, deliveries, sales analytics, and business metrics. All data you provide is REAL from the database.",
+        "max_tokens": 100,
+        "temperature": 0.7
+      }
+    },
+    "dashboard_stats": {
+      "description": "Dashboard analytics and overall business metrics",
+      "tool": "api_query",
+      "tool_config": {
+        "endpoint": "/analytics/dashboard",
+        "method": "GET",
+        "params": {
+          "tenant_id": "{{context.tenant_id}}",
+          "store_id": "{{context.store_id}}",
+          "limit": 1
+        }
+      },
+      "response_template": {
+        "system": "You are a business analyst. Use ONLY the provided database results. NEVER fabricate data.",
+        "template": "User asked: {{message}}\n\nDatabase returned {{tool_result.count}} metric(s):\n{{tool_result.data}}\n\nGenerate a clear, concise summary of the dashboard metrics using ONLY the real data above.",
+        "max_tokens": 150,
+        "temperature": 0.3
+      }
+    },
+    "inventory_query": {
+      "description": "Questions about inventory and stock levels",
+      "tool": "api_query",
+      "tool_config": {
+        "endpoint": "/api/store-inventory/list",
+        "method": "GET",
+        "params": {
+          "store_id": "{{context.store_id}}",
+          "tenant_id": "{{context.tenant_id}}",
+          "limit": 100
+        }
+      },
+      "response_template": {
+        "system": "You are a business manager. Use ONLY the provided inventory data. NEVER make up numbers.",
+        "template": "User asked: {{message}}\n\nDatabase returned {{tool_result.count}} items in inventory:\n{{tool_result.data}}\n\nProvide a clear summary of the inventory. Include total item count and list the key products with their names, SKUs, and quantities. If the user asked for a specific list, provide it. If count is 0, say there are no items in inventory.",
+        "max_tokens": 150,
+        "temperature": 0.3
+      }
+    },
+    "low_stock_query": {
+      "description": "Questions about low stock items",
+      "tool": "api_query",
+      "tool_config": {
+        "endpoint": "/api/store-inventory/list",
+        "method": "GET",
+        "params": {
+          "store_id": "{{context.store_id}}",
+          "tenant_id": "{{context.tenant_id}}",
+          "low_stock": true,
+          "limit": 50
+        }
+      },
+      "response_template": {
+        "system": "You are a business manager. Use ONLY the provided low stock data.",
+        "template": "User asked: {{message}}\n\nDatabase returned {{tool_result.count}} low stock items:\n{{tool_result.data}}\n\nGenerate a clear list of items running low using ONLY the real data above.",
+        "max_tokens": 100,
+        "temperature": 0.3
+      }
+    },
+    "order_query": {
+      "description": "Questions about orders and transactions",
+      "tool": "api_query",
+      "tool_config": {
+        "endpoint": "/api/orders",
+        "method": "GET",
+        "params": {
+          "customer_id": "{{context.customer_id}}",
+          "store_id": "{{context.store_id}}",
+          "limit": 100
+        }
+      },
+      "response_template": {
+        "system": "You are a business manager. Use ONLY the provided order data. NEVER fabricate order numbers.",
+        "template": "User asked: {{message}}\n\nDatabase returned {{tool_result.count}} orders:\n{{tool_result.data}}\n\nProvide a clear summary of the orders. If there are many orders, summarize key statistics (total count, common statuses, total value). For specific order requests, list the relevant orders with their IDs and key details.",
+        "max_tokens": 150,
+        "temperature": 0.3
+      }
+    },
+    "sales_query": {
+      "description": "Questions about revenue and sales amounts",
+      "tool": "api_query",
+      "tool_config": {
+        "endpoint": "/api/analytics/sales-today",
+        "method": "GET",
+        "params": {
+          "store_id": "{{context.store_id}}"
+        }
+      },
+      "response_template": {
+        "system": "You are a business analyst. Use ONLY the provided sales data. NEVER fabricate numbers. The API returns today's sales metrics including total_orders, total_revenue, average_order_value, orders_by_hour, top_products, and payment_methods.",
+        "template": "User asked: {{message}}\n\nToday's sales data:\n{{tool_result.data}}\n\nProvide a clear, accurate summary using ONLY the real data above. Include: total orders, total revenue, and average order value. If asked about trends, mention the orders_by_hour data. If asked about products, reference top_products. Always cite exact numbers from the data.",
+        "max_tokens": 150,
+        "temperature": 0.3
+      }
+    },
+    "customer_query": {
+      "description": "Questions about customers",
+      "tool": "api_query",
+      "tool_config": {
+        "endpoint": "/api/customers/search",
+        "method": "GET",
+        "params": {
+          "q": " ",
+          "limit": 100
+        },
+        "headers": {
+          "X-Store-ID": "{{context.store_id}}"
+        }
+      },
+      "response_template": {
+        "system": "You are a business manager. Use ONLY the provided customer data.",
+        "template": "User asked: {{message}}\n\nDatabase returned {{tool_result.count}} customers:\n{{tool_result.data}}\n\nProvide a clear summary of the customers. If there are many, provide key statistics. If the user asked for a specific list or details, provide it using ONLY the real data above.",
+        "max_tokens": 100,
+        "temperature": 0.3
+      }
+    },
+    "delivery_query": {
+      "description": "Questions about deliveries and shipping",
+      "tool": "api_query",
+      "tool_config": {
+        "endpoint": "/api/v1/delivery/active",
+        "method": "GET",
+        "params": {
+          "store_id": "{{context.store_id}}",
+          "limit": 100
+        }
+      },
+      "response_template": {
+        "system": "You are a business manager. Use ONLY the provided delivery data.",
+        "template": "User asked: {{message}}\n\nDatabase returned {{tool_result.count}} deliveries:\n{{tool_result.data}}\n\nGenerate a clear response about the deliveries using ONLY the real data above.",
+        "max_tokens": 75,
+        "temperature": 0.3
+      }
+    },
+    "purchase_order_query": {
+      "description": "Questions about purchase orders",
+      "tool": "api_query",
+      "tool_config": {
+        "endpoint": "/api/inventory/purchase-orders",
+        "method": "GET",
+        "params": {
+          "tenant_id": "{{context.tenant_id}}",
+          "limit": 50
+        }
+      },
+      "response_template": {
+        "system": "You are a business manager. Use ONLY the provided purchase order data.",
+        "template": "User asked: {{message}}\n\nDatabase returned {{tool_result.count}} purchase orders:\n{{tool_result.data}}\n\nGenerate a clear response about the POs using ONLY the real data above.",
+        "max_tokens": 75,
+        "temperature": 0.3
+      }
+    },
+    "product_search": {
+      "description": "Search for specific products",
+      "tool": "api_query",
+      "tool_config": {
+        "endpoint": "/api/products/search",
+        "method": "GET",
+        "params": {
+          "store_id": "{{context.store_id}}",
+          "q": "{{extracted.search_term}}",
+          "limit": 20
+        }
+      },
+      "response_template": {
+        "system": "You are a business manager. Use ONLY the provided product search results.",
+        "template": "User searched for: {{extracted.search_term}}\n\nDatabase returned {{tool_result.count}} products:\n{{tool_result.data}}\n\nList the products found with their names, SKUs, and key details. If no products found, say so clearly.",
+        "max_tokens": 150,
+        "temperature": 0.3
+      }
+    },
+    "store_query": {
+      "description": "Questions about stores and locations",
+      "tool": "api_query",
+      "tool_config": {
+        "endpoint": "/api/stores/tenant/{{context.tenant_id}}",
+        "method": "GET",
+        "params": {
+          "limit": 50
+        }
+      },
+      "response_template": {
+        "system": "You are a business manager. Use ONLY the provided store data.",
+        "template": "User asked: {{message}}\n\nDatabase returned {{tool_result.count}} stores:\n{{tool_result.data}}\n\nGenerate a clear response about the stores using ONLY the real data above.",
+        "max_tokens": 100,
+        "temperature": 0.3
+      }
+    },
+    "general": {
+      "description": "General questions or uncategorized queries",
+      "response_template": {
+        "system": "You are a helpful business manager assistant. If the question requires specific data, politely ask for clarification.",
+        "template": "User asked: {{message}}\n\nProvide a helpful response. If you need to query specific data (inventory, orders, customers, etc.), ask the user to rephrase their question to be more specific.",
+        "max_tokens": 75,
+        "temperature": 0.7
+      }
+    }
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "agent": {
+    "id": "assistant",
+    "name": "Task Helper",
+    "version": "1.0.0"
+  },
+  "prompts": {
+    "greeting": {
+      "template": "You are {personality_name}, a professional assistant {personality_traits}.\n\nUser said: \"{message}\"\n\nRespond with:\n1. A professional greeting\n2. Introduce yourself and your capabilities\n3. Ask how you can help with their tasks\n4. Set clear expectations\n\nResponse:",
+      "variables": ["personality_name", "personality_traits", "message"],
+      "output_format": "text"
+    },
+    "task_analysis": {
+      "template": "Analyze this task request:\n\n{task}\n\nProvide:\n1. Understanding of the requirements\n2. Break down into steps\n3. Identify potential challenges\n4. Suggest optimal approach\n5. Time estimate if applicable\n\nAnalysis:",
+      "variables": ["task"],
+      "output_format": "text"
+    },
+    "code_help": {
+      "template": "Help with this coding task:\n\n{code_request}\n\nProvide:\n1. Clear explanation of the solution\n2. Example code with comments\n3. Best practices to follow\n4. Common pitfalls to avoid\n5. Alternative approaches if applicable\n\nCode assistance:",
+      "variables": ["code_request"],
+      "output_format": "text"
+    },
+    "research": {
+      "template": "Research this topic:\n\n{topic}\n\nProvide:\n1. Overview of key concepts\n2. Important facts and figures\n3. Current trends or developments\n4. Reliable sources for further reading\n5. Practical applications\n\nResearch summary:",
+      "variables": ["topic"],
+      "output_format": "text"
+    },
+    "productivity": {
+      "template": "Help improve productivity for:\n\n{situation}\n\nSuggest:\n1. Time management strategies\n2. Tool recommendations\n3. Workflow optimizations\n4. Priority setting techniques\n5. Habit building tips\n\nProductivity advice:",
+      "variables": ["situation"],
+      "output_format": "text"
+    },
+    "inventory_query": {
+      "template": "Query inventory data for: {message}\n\nYou have access to real inventory data. Use the query_database tool to get actual inventory information.\n\nUser asked: \"{message}\"\n\nFirst, query the database to get real data, then provide a helpful response with the actual inventory information.",
+      "variables": ["message"],
+      "output_format": "text",
+      "tool_config": {
+        "required_tools": ["query_database"],
+        "tool_params": {
+          "query_database": {
+            "resource_type": "inventory",
+            "limit": 50
+          }
+        }
+      }
+    },
+    "database_query": {
+      "template": "Database query for: {message}\n\nYou have access to query the database for real information. Use the query_database tool based on what the user is asking about.\n\nUser asked: \"{message}\"\n\nFirst, query the database to get real data, then provide a helpful response with the actual information.",
+      "variables": ["message"],
+      "output_format": "text",
+      "tool_config": {
+        "required_tools": ["query_database"],
+        "tool_params": {
+          "query_database": {
+            "limit": 50
+          }
+        }
+      }
+    },
+    "customer_query": {
+      "template": "Customer query for: {message}\n\nYou have access to query real customer data from the database. Use the query_database tool to get actual customer information.\n\nUser asked: \"{message}\"\n\nFirst, query the database to get real customer data, then provide a helpful response with the actual information.",
+      "variables": ["message"],
+      "output_format": "text",
+      "tool_config": {
+        "required_tools": ["query_database"],
+        "tool_params": {
+          "query_database": {
+            "resource_type": "customers",
+            "limit": 50
+          }
+        }
+      }
+    },
+    "order_query": {
+      "template": "Order query for: {message}\n\nYou have access to query real order data from the database. Use the query_database tool to get actual order information.\n\nUser asked: \"{message}\"\n\nFirst, query the database to get real order data, then provide a helpful response with the actual information.",
+      "variables": ["message"],
+      "output_format": "text",
+      "tool_config": {
+        "required_tools": ["query_database"],
+        "tool_params": {
+          "query_database": {
+            "resource_type": "my_orders",
+            "limit": 50
+          }
+        }
+      }
+    }
+  }
+}

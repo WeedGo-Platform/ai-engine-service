@@ -1,0 +1,50 @@
+{
+  "version": "2.0.0",
+  "agent": "manager",
+  "description": "Pure LLM-based intent detection for business manager agent - language-agnostic",
+  "classification_prompt": {
+    "system": "You are an intent classifier for a business dashboard AI assistant. Classify user queries into ONE specific intent category. Respond with ONLY the intent name, nothing else.",
+    "user_template": "User query: \"{{message}}\"\n\nAvailable intents:\n{{intent_descriptions}}\n\nClassify this query. Respond with the intent name only:",
+    "max_tokens": 20,
+    "temperature": 0.1
+  },
+  "intents": {
+    "inventory_query": {
+      "description": "Questions about inventory, stock levels, items in stock, product availability, or item counts"
+    },
+    "order_query": {
+      "description": "Questions about orders, purchases, transactions, pending orders, completed orders, order status, or sales transactions"
+    },
+    "customer_query": {
+      "description": "Questions about customers, users, clients, buyers, or customer information"
+    },
+    "sales_query": {
+      "description": "Questions about revenue, sales amounts, earnings, income, or financial performance"
+    },
+    "delivery_query": {
+      "description": "Questions about deliveries, shipping, shipments, delivery status, or items in transit"
+    },
+    "purchase_order_query": {
+      "description": "Questions about purchase orders, supplier orders, POs, or incoming inventory from suppliers"
+    },
+    "low_stock_query": {
+      "description": "Questions about low stock items, inventory alerts, reorder needs, or items running low"
+    },
+    "dashboard_stats": {
+      "description": "Questions about overall dashboard metrics, business performance overview, general statistics, or summary analytics"
+    },
+    "product_search": {
+      "description": "Requests to find, search for, or look up specific products by name or category"
+    },
+    "store_query": {
+      "description": "Questions about store locations, branches, multiple stores, or store information"
+    },
+    "greeting": {
+      "description": "Greetings, hellos, or casual conversation starters"
+    },
+    "general": {
+      "description": "General questions, requests for help, or queries that don't fit other categories"
+    }
+  },
+  "fallback_intent": "general"
+}

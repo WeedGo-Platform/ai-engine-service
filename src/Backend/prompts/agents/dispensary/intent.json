@@ -1,0 +1,448 @@
+{
+  "version": "1.0.0",
+  "agent": "dispensary",
+  "description": "Intent configuration for cannabis dispensary agent",
+  "classification_prompt": {
+    "template": "Classify this {language} cannabis dispensary message into ONE intent.\nMessage: \"{message}\"\nAvailable intents: {intents}\nIntent:",
+    "max_tokens": 20,
+    "temperature": 0.1
+  },
+  "intents": {
+    "greeting": {
+      "description": "User greetings and conversation starters",
+      "priority": 1,
+      "keywords": [
+        "hello", "hi", "hey", "greetings", "good morning", "good afternoon", 
+        "good evening", "wassup", "yo", "howdy", "hola", "bonjour", "nihao"
+      ],
+      "patterns": [
+        "how are you", "what's up", "how's it going", "nice to meet"
+      ],
+      "examples": [
+        "Hello there!",
+        "Hi, how are you?",
+        "Good morning!",
+        "Hey, what's up?"
+      ],
+      "prompt_type": "greeting"
+    },
+    "chitchat": {
+      "description": "Personal questions about the assistant (name, birthday, preferences, etc.)",
+      "priority": 1,
+      "keywords": [
+        "your name", "who are you", "what's your name", "your birthday",
+        "when is your birthday", "how old are you", "where do you live",
+        "what do you like", "your favorite", "what food", "what music",
+        "tell me about yourself", "about you"
+      ],
+      "patterns": [
+        "what is your", "what's your", "when is your", "where do you",
+        "what do you like", "do you like"
+      ],
+      "examples": [
+        "What is your name?",
+        "When is your birthday?",
+        "What food do you like to eat?",
+        "Where do you live?",
+        "Do you like music?"
+      ],
+      "prompt_type": "greeting"
+    },
+    "promotions": {
+      "description": "Questions about deals, sales, discounts, and promotions",
+      "priority": 2,
+      "keywords": [
+        "deal", "deals", "sale", "sales", "discount", "discounts",
+        "promo", "promotion", "promotions", "special", "specials",
+        "offer", "offers", "coupon", "coupons"
+      ],
+      "patterns": [
+        "any deals", "on sale", "have any promotions", "special offer",
+        "discount on", "running any"
+      ],
+      "examples": [
+        "Do you have any promotions going on?",
+        "Any deals today?",
+        "What's on sale?",
+        "Do you have any discounts?"
+      ],
+      "prompt_type": "general"
+    },
+    "product_search": {
+      "description": "Looking for specific products, strains, or categories. Use this when user mentions product names, strain types (sativa/indica/hybrid), or product categories (pre-roll, flower, edibles, etc).",
+      "priority": 3,
+      "keywords": [
+        "looking for", "show me", "find", "search", "i want", "i need",
+        "indica", "sativa", "hybrid", "flower", "edibles", "concentrates",
+        "pre roll", "preroll", "pre-roll", "vape", "oil", "tincture",
+        "gummies", "chocolate", "topical", "cbd", "thc", "strain", "strains",
+        "cannabis", "marijuana", "weed", "bud", "buds"
+      ],
+      "patterns": [
+        "do you have", "can I get", "I'd like", "looking to buy",
+        "show me your", "show me", "what strains", "got any",
+        "i want sativa", "i want indica", "i want hybrid",
+        "i want pre", "i want flower", "i want edibles"
+      ],
+      "examples": [
+        "I'm looking for Blue Dream",
+        "Show me your indica strains",
+        "Show me indica",
+        "Show me sativa",
+        "Show me indica pre rolls",
+        "Do you have any edibles?",
+        "I want something with high THC",
+        "indica",
+        "sativa",
+        "pre rolls",
+        "i want sativa",
+        
+        "i want a sativa pre roll",
+        "i need indica flower"
+      ],
+      "prompt_type": "product_search"
+    },
+    "product_selection": {
+      "description": "User selecting a product from a previously shown list ONLY by number or ordinal position (1st, 2nd, etc). NOT for product searches with named items like 'sativa' or 'pre-roll'.",
+      "priority": 2,
+      "keywords": [
+        "number", "option", "the first", "the second", "the third",
+        "first one", "second one", "third one", "that one", "this one",
+        "number 1", "number 2", "number 3", "option 1", "option 2"
+      ],
+      "patterns": [
+        "number \\d+", "option \\d+", "\\d+", "the first one", "the second one",
+        "the third one", "first option", "second option", "above"
+      ],
+      "examples": [
+        "number 1",
+        "the first one",
+        "number 2 please",
+        "the first one above",
+        "give me option 3",
+        "1",
+        "2",
+        "the second one"
+      ],
+      "prompt_type": "product_selection"
+    },
+    "recommendation": {
+      "description": "Asking for product recommendations",
+      "priority": 2,
+      "keywords": [
+        "recommend", "suggest", "advice", "best", "good for", "help",
+        "what should", "which", "favorite", "popular", "top"
+      ],
+      "patterns": [
+        "what do you recommend", "help me choose", "what's best for",
+        "I need something for", "suggest something", "what's good for"
+      ],
+      "examples": [
+        "What do you recommend for sleep?",
+        "Help me choose something for anxiety",
+        "What's your best strain for creativity?",
+        "Recommend something for a beginner"
+      ],
+      "prompt_type": "recommendation"
+    },
+    "product_info": {
+      "description": "Asking about product details, effects, or specifications",
+      "priority": 3,
+      "keywords": [
+        "tell me about", "what is", "how much", "price", "cost", 
+        "thc", "cbd", "effects", "strain", "potency", "terpenes"
+      ],
+      "patterns": [
+        "information about", "details on", "what's the", 
+        "how strong", "what are the effects", "tell me more"
+      ],
+      "examples": [
+        "Tell me about OG Kush",
+        "What's the THC content?",
+        "How much does it cost?",
+        "What are the effects of this strain?"
+      ],
+      "prompt_type": "product_info"
+    },
+    "medical": {
+      "description": "Medical or therapeutic inquiries",
+      "priority": 3,
+      "keywords": [
+        "medical", "pain", "anxiety", "sleep", "insomnia", "depression",
+        "stress", "appetite", "nausea", "inflammation", "ptsd", "relief"
+      ],
+      "patterns": [
+        "help with", "good for pain", "treat my", "medical marijuana",
+        "therapeutic", "symptoms"
+      ],
+      "examples": [
+        "I need something for chronic pain",
+        "What's good for anxiety relief?",
+        "Can you help with insomnia?",
+        "Looking for medical grade products"
+      ],
+      "prompt_type": "recommendation"
+    },
+    "dosage": {
+      "description": "Questions about dosing and consumption",
+      "priority": 4,
+      "keywords": [
+        "how much", "dosage", "dose", "serving", "start with",
+        "beginner", "tolerance", "microdose", "amount"
+      ],
+      "patterns": [
+        "how much should I", "what's a good dose", "start with how much",
+        "first time", "new to this"
+      ],
+      "examples": [
+        "How much should I take?",
+        "What's a good starting dose?",
+        "I'm new to edibles, how much?",
+        "What's the recommended dosage?"
+      ],
+      "prompt_type": "product_info"
+    },
+    "availability": {
+      "description": "Checking product availability and stock",
+      "priority": 4,
+      "keywords": [
+        "in stock", "available", "have any", "sold out", "when",
+        "restock", "back in", "inventory"
+      ],
+      "patterns": [
+        "is it available", "do you have it", "when will you get",
+        "back in stock"
+      ],
+      "examples": [
+        "Is Blue Dream in stock?",
+        "When will you restock?",
+        "Do you have this available?",
+        "Is it sold out?"
+      ],
+      "prompt_type": "product_search"
+    },
+    "yes_no": {
+      "description": "Yes/no questions requiring confirmation",
+      "priority": 5,
+      "keywords": [
+        "is", "are", "do", "does", "can", "should", "will", "would",
+        "could", "may", "might"
+      ],
+      "patterns": [
+        "is it", "are there", "do you", "can I", "should I",
+        "will it", "does this"
+      ],
+      "examples": [
+        "Is this strain good for daytime?",
+        "Can I mix strains?",
+        "Do you deliver?",
+        "Are you open late?"
+      ],
+      "prompt_type": "yes_no"
+    },
+    "purchase": {
+      "description": "Ready to buy or purchase intent",
+      "priority": 2,
+      "keywords": [
+        "buy", "purchase", "order", "checkout", "cart", "add",
+        "get this", "I'll take", "want to buy"
+      ],
+      "patterns": [
+        "add to cart", "I want to buy", "place an order",
+        "how do I purchase", "I'll take"
+      ],
+      "examples": [
+        "I want to buy this",
+        "Add to my cart",
+        "How do I checkout?",
+        "I'll take an ounce"
+      ],
+      "prompt_type": "product_search"
+    },
+    "general": {
+      "description": "General conversation or uncategorized",
+      "priority": 10,
+      "keywords": [],
+      "patterns": [],
+      "examples": [
+        "That's interesting",
+        "Okay thanks",
+        "I see",
+        "Tell me more"
+      ],
+      "prompt_type": null
+    }
+  },
+  "multilingual": {
+    "enabled": true,
+    "supported_languages": ["en", "es", "fr", "zh", "ja", "ko", "de", "pt"],
+    "auto_detect": true
+  },
+  "caching": {
+    "enabled": true,
+    "max_cache_size": 1000,
+    "ttl_seconds": 3600
+  },
+  "fallback": {
+    "default_intent": "general",
+    "confidence_threshold": 0.3,
+    "use_pattern_matching": true
+  },
+  "entity_extraction": {
+    "description": "Extract structured search parameters from natural language queries in any language",
+    "prompt_template": "You are a cannabis product search parameter extractor. Extract structured information from the user's query.\n\nAvailable product categories from database: {available_categories}\nAvailable subcategories: {available_subcategories}\n\nIMPORTANT SUBCATEGORY MAPPINGS:\n- For \"pre-roll\", \"pre roll\", \"preroll\", \"pré-roll\" (any language) → use subcategory \"Pre-Rolls\"\n- For \"flower\", \"bud\", \"dried flower\" → use subcategory \"Dried Flower\"\n- For \"edible\", \"gummy\", \"gummies\" → use subcategory \"Edibles\"\n- For \"vape\", \"cartridge\", \"cart\" → use subcategory \"Vaporizers\"\n- For \"concentrate\", \"shatter\", \"wax\" → use subcategory \"Concentrates\"\n- For \"oil\", \"capsule\" → use subcategory \"Oils & Capsules\"\n\nUser query: \"{message}\"\n\nExtract the following if mentioned:\n- strain_type: sativa, indica, or hybrid\n- product_category: main category (e.g., flower, edibles, concentrates)\n- product_subcategory: specific subcategory using exact names from mappings above\n- thc_range: min and max THC percentage if specified\n- cbd_range: min and max CBD percentage if specified\n- price_range: min and max price if specified\n- effects: desired effects (e.g., relaxing, energizing, creative)\n- confidence: your confidence level (0.0 to 1.0) in the extraction\n- needs_clarification: true if query is ambiguous and needs user input\n- clarification_reason: why clarification is needed\n\nReturn ONLY valid JSON matching the schema.",
+    "max_tokens": 300,
+    "temperature": 0.1,
+    "output_format": "json",
+    "context_sources": [
+      "available_categories",
+      "available_subcategories",
+      "conversation_history"
+    ]
+  },
+  "parameter_builder": {
+    "description": "Build API search parameters from extracted entities with user context",
+    "confidence_threshold": 0.7,
+    "use_user_preferences": true,
+    "fallback_to_quick_actions": true,
+    "preference_confidence_threshold": 0.6,
+    "rules": {
+      "high_confidence": "If entities.confidence >= 0.7 and !needs_clarification, build search params directly",
+      "with_preferences": "If needs_clarification and user_preferences.confidence >= 0.6, apply preferences",
+      "quick_actions": "If needs_clarification and (no preferences OR preference confidence < 0.6), generate quick actions"
+    }
+  },
+  "quick_actions": {
+    "description": "Generate interactive quick action buttons for disambiguation",
+    "category_clarification": {
+      "prompt_template": "The user is looking for {strain_type} products but didn't specify the subcategory.\n\nAvailable subcategories: {available_subcategories}\n\nGenerate a friendly question and quick action options.\n\nFormat:\n{\n  \"message\": \"friendly question asking for their preferred consumption method\",\n  \"quick_actions\": [\n    {\"label\": \"subcategory name\", \"value\": \"subcategory_value\", \"icon\": \"emoji or icon name\"},\n    ...\n  ]\n}\n\nReturn ONLY valid JSON.",
+      "max_tokens": 200,
+      "temperature": 0.7,
+      "output_format": "json"
+    },
+    "effect_clarification": {
+      "prompt_template": "The user wants {product_category} but didn't specify desired effects.\n\nCommon effects: relaxing, energizing, creative, focused, sleepy, happy, pain-relief\n\nGenerate a friendly question and quick action options for effects.\n\nReturn ONLY valid JSON matching quick_actions schema.",
+      "max_tokens": 200,
+      "temperature": 0.7,
+      "output_format": "json"
+    },
+    "potency_clarification": {
+      "prompt_template": "The user is interested in {product_category} but didn't specify THC/CBD preferences.\n\nGenerate options: low (0-15% THC), medium (15-25% THC), high (25%+ THC), CBD-focused\n\nReturn ONLY valid JSON matching quick_actions schema.",
+      "max_tokens": 200,
+      "temperature": 0.7,
+      "output_format": "json"
+    }
+  },
+  "schemas": {
+    "entity_extraction_output": {
+      "type": "object",
+      "properties": {
+        "strain_type": {
+          "type": ["string", "null"],
+          "enum": ["sativa", "indica", "hybrid", null],
+          "description": "Cannabis strain type"
+        },
+        "product_category": {
+          "type": ["string", "null"],
+          "description": "Main product category"
+        },
+        "product_subcategory": {
+          "type": ["string", "null"],
+          "description": "Specific product subcategory"
+        },
+        "thc_range": {
+          "type": ["object", "null"],
+          "properties": {
+            "min": {"type": ["number", "null"]},
+            "max": {"type": ["number", "null"]}
+          }
+        },
+        "cbd_range": {
+          "type": ["object", "null"],
+          "properties": {
+            "min": {"type": ["number", "null"]},
+            "max": {"type": ["number", "null"]}
+          }
+        },
+        "price_range": {
+          "type": ["object", "null"],
+          "properties": {
+            "min": {"type": ["number", "null"]},
+            "max": {"type": ["number", "null"]}
+          }
+        },
+        "effects": {
+          "type": ["array", "null"],
+          "items": {"type": "string"},
+          "description": "Desired effects (relaxing, energizing, etc.)"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Confidence level in the extraction"
+        },
+        "needs_clarification": {
+          "type": "boolean",
+          "description": "Whether the query needs user clarification"
+        },
+        "clarification_reason": {
+          "type": ["string", "null"],
+          "description": "Reason why clarification is needed"
+        }
+      },
+      "required": ["confidence", "needs_clarification"]
+    },
+    "quick_actions_output": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "description": "Friendly message asking for clarification"
+        },
+        "quick_actions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "description": "Display label for the button"
+              },
+              "value": {
+                "type": "string",
+                "description": "Value to send when clicked"
+              },
+              "icon": {
+                "type": ["string", "null"],
+                "description": "Optional emoji or icon identifier"
+              }
+            },
+            "required": ["label", "value"]
+          },
+          "minItems": 2,
+          "maxItems": 6,
+          "description": "Quick action button options"
+        }
+      },
+      "required": ["message", "quick_actions"]
+    },
+    "search_parameters": {
+      "type": "object",
+      "description": "Final search parameters for product API",
+      "properties": {
+        "category": {"type": ["string", "null"]},
+        "subCategory": {"type": ["string", "null"]},
+        "strainType": {"type": ["string", "null"]},
+        "minThc": {"type": ["number", "null"]},
+        "maxThc": {"type": ["number", "null"]},
+        "minCbd": {"type": ["number", "null"]},
+        "maxCbd": {"type": ["number", "null"]},
+        "minPrice": {"type": ["number", "null"]},
+        "maxPrice": {"type": ["number", "null"]},
+        "effects": {"type": ["array", "null"]},
+        "limit": {"type": "integer", "default": 10}
+      }
+    }
+  }
+}

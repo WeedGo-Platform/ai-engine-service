@@ -1,0 +1,271 @@
+{
+  "version": "1.0.0",
+  "agent": "sales",
+  "description": "Intent configuration for sales consultant agent",
+  "classification_prompt": {
+    "template": "Classify this customer message into ONE intent.\nMessage: \"{message}\"\nAvailable intents: {intents}\nIntent:",
+    "max_tokens": 20,
+    "temperature": 0.1
+  },
+  "intents": {
+    "pricing_inquiry": {
+      "description": "Customer asks about pricing, plans, costs, or subscription tiers",
+      "priority": 1,
+      "keywords": [
+        "pricing", "price", "cost", "how much", "tier", "plan", "subscription",
+        "free", "enterprise", "professional", "small business", "payment", "monthly", "fee",
+        "定价", "价格", "多少钱", "费用", "收费", "套餐", "计划", "订阅", "月费", "免费",
+        "precio", "costo", "cuánto cuesta", "plan", "suscripción", "tarifa",
+        "prix", "coût", "combien", "tarif", "abonnement"
+      ],
+      "patterns": [
+        "how much", "what's the price", "pricing for", "cost of", "what does it cost",
+        "多少", "是多少", "价格", "定价", "cuánto", "combien"
+      ],
+      "examples": [
+        "What's the pricing?",
+        "How much does it cost?",
+        "Tell me about your plans",
+        "What are the subscription tiers?",
+        "定价是多少",
+        "价格是多少",
+        "¿Cuánto cuesta?",
+        "Quel est le prix?"
+      ],
+      "prompt_type": "pricing_inquiry"
+    },
+    "feature_question": {
+      "description": "Customer asks about specific features, capabilities, or functionality",
+      "priority": 1,
+      "keywords": [
+        "feature", "capability", "can it", "does it", "support", "AI", "kiosk", "POS",
+        "delivery", "mobile app", "ecommerce", "menu", "age verification", "fraud protection",
+        "language", "SEO", "API", "white label",
+        "功能", "特点", "能", "支持", "可以", "配送", "移动应用", "电商", "菜单",
+        "característica", "función", "puede", "soporta", "aplicación móvil",
+        "fonctionnalité", "peut-il", "supporte", "application mobile"
+      ],
+      "patterns": [
+        "what features", "can it", "does it support", "do you have", "tell me about",
+        "有什么功能", "能不能", "支持", "可以", "qué funciones", "quelles fonctionnalités"
+      ],
+      "examples": [
+        "What features do you have?",
+        "Can it handle delivery management?",
+        "Does it support mobile apps?",
+        "Tell me about the AI features",
+        "有什么功能",
+        "支持配送吗",
+        "¿Qué funciones tiene?",
+        "Quelles fonctionnalités?"
+      ],
+      "prompt_type": "feature_inquiry"
+    },
+    "signup_help": {
+      "description": "Customer needs help getting started, signing up, or onboarding",
+      "priority": 1,
+      "keywords": [
+        "sign up", "signup", "get started", "start", "begin", "register",
+        "create account", "onboard", "setup", "how to", "trial"
+      ],
+      "patterns": [
+        "how do I", "how to sign up", "get started", "create an account", "start trial"
+      ],
+      "examples": [
+        "How do I sign up?",
+        "How can I get started?",
+        "Help me create an account",
+        "I want to start a trial"
+      ],
+      "prompt_type": "signup_help"
+    },
+    "tier_recommendation": {
+      "description": "Customer wants help choosing the right plan for their business",
+      "priority": 2,
+      "keywords": [
+        "which plan", "recommend", "right tier", "choose", "best for",
+        "my business", "should I", "comparison", "difference between"
+      ],
+      "patterns": [
+        "which plan", "what do you recommend", "help me choose", "best for", "which tier"
+      ],
+      "examples": [
+        "Which plan is right for me?",
+        "What do you recommend for a small dispensary?",
+        "Help me choose the best tier",
+        "What's the difference between plans?"
+      ],
+      "prompt_type": "pricing_inquiry"
+    },
+    "platform_comparison": {
+      "description": "Customer comparing WeedGo to competitors or other solutions",
+      "priority": 3,
+      "keywords": [
+        "compare", "vs", "versus", "competitor", "alternative",
+        "better than", "why choose", "different from", "other platforms"
+      ],
+      "patterns": [
+        "compare to", "vs", "better than", "why choose", "different from"
+      ],
+      "examples": [
+        "How does this compare to competitors?",
+        "WeedGo vs other platforms?",
+        "Why should I choose WeedGo?",
+        "What makes you different?"
+      ],
+      "prompt_type": "feature_inquiry"
+    },
+    "technical_question": {
+      "description": "Customer asks about integrations, APIs, technical details, or migration",
+      "priority": 3,
+      "keywords": [
+        "integrate", "integration", "API", "migrate", "migration",
+        "import", "export", "database", "technical", "security",
+        "uptime", "data", "QuickBooks", "Xero", "Mailchimp"
+      ],
+      "patterns": [
+        "API access", "integrate with", "migration", "technical details", "security"
+      ],
+      "examples": [
+        "Does it have API access?",
+        "Can you integrate with QuickBooks?",
+        "How does migration work?",
+        "Tell me about security"
+      ],
+      "prompt_type": "feature_inquiry"
+    },
+    "business_size_inquiry": {
+      "description": "Customer provides or asks about business size, locations, volume",
+      "priority": 3,
+      "keywords": [
+        "location", "locations", "store", "stores", "dispensary", "dispensaries",
+        "chain", "multi-location", "single store", "small business", "large business",
+        "startup", "established",
+        "我有", "门店", "商店", "家", "个", "分店", "连锁", "店铺",
+        "tengo", "tienda", "tiendas", "ubicación", "ubicaciones",
+        "j'ai", "magasin", "magasins", "boutique"
+      ],
+      "patterns": [
+        "I have", "we have", "operating", "locations", "stores", "multiple",
+        "我有", "有", "家商店", "个店", "tengo", "j'ai"
+      ],
+      "examples": [
+        "I have 3 store locations",
+        "We're a single dispensary",
+        "We operate 10 stores",
+        "I'm just starting out",
+        "我有两家商店",
+        "我有三个门店",
+        "Tengo 2 tiendas",
+        "J'ai 3 magasins"
+      ],
+      "prompt_type": "pricing_inquiry"
+    },
+    "support_inquiry": {
+      "description": "Customer asks about support, training, or customer service",
+      "priority": 3,
+      "keywords": [
+        "support", "help", "training", "customer service", "onboarding",
+        "account manager", "assistance", "learn", "tutorial"
+      ],
+      "patterns": [
+        "what support", "customer service", "training", "help with", "account manager"
+      ],
+      "examples": [
+        "What support do you offer?",
+        "Do I get training?",
+        "Is there an account manager?",
+        "How do I get help?"
+      ],
+      "prompt_type": "feature_inquiry"
+    },
+    "objection_handling": {
+      "description": "Customer expresses concerns, doubts, or objections",
+      "priority": 2,
+      "keywords": [
+        "expensive", "too much", "not sure", "concerned", "worried",
+        "risky", "complicated", "don't need", "already have", "switching", "downtime"
+      ],
+      "patterns": [
+        "seems expensive", "not sure if", "concerned about", "worried that", "too complicated"
+      ],
+      "examples": [
+        "Seems expensive for a small business",
+        "I'm not sure if I need all these features",
+        "Worried about the switching process",
+        "Already have a system in place"
+      ],
+      "prompt_type": "pricing_inquiry"
+    },
+    "greeting": {
+      "description": "Customer greets or initiates conversation",
+      "priority": 1,
+      "keywords": [
+        "hello", "hi", "hey", "good morning", "good afternoon", "greetings",
+        "你好", "您好", "早上好", "下午好", "晚上好", "嗨",
+        "hola", "buenos días", "buenas tardes",
+        "bonjour", "salut", "bonsoir"
+      ],
+      "patterns": [
+        "hello", "hi there", "hey", "good morning", "good afternoon",
+        "你好", "您好", "hola", "bonjour"
+      ],
+      "examples": [
+        "Hello",
+        "Hi there",
+        "Good morning",
+        "Hey, I have some questions",
+        "你好",
+        "您好，我想了解一下",
+        "Hola",
+        "Bonjour"
+      ],
+      "prompt_type": "greeting"
+    },
+    "closing_request": {
+      "description": "Customer indicates readiness to sign up or move forward",
+      "priority": 1,
+      "keywords": [
+        "ready", "let's do it", "sign me up", "I'm in",
+        "get started", "proceed", "next steps"
+      ],
+      "patterns": [
+        "I'm ready", "let's do it", "sign me up", "I want to start", "next steps"
+      ],
+      "examples": [
+        "I'm ready to sign up",
+        "Let's do it",
+        "Sign me up!",
+        "What are the next steps?"
+      ],
+      "prompt_type": "signup_help"
+    },
+    "general": {
+      "description": "General or unclear question that doesn't fit other intents",
+      "priority": 10,
+      "keywords": [],
+      "patterns": [],
+      "examples": [
+        "That's interesting",
+        "Okay thanks",
+        "I see"
+      ],
+      "prompt_type": null
+    }
+  },
+  "multilingual": {
+    "enabled": true,
+    "supported_languages": ["en", "es", "fr", "zh", "ja", "ko", "de", "pt"],
+    "auto_detect": true
+  },
+  "caching": {
+    "enabled": true,
+    "max_cache_size": 1000,
+    "ttl_seconds": 3600
+  },
+  "fallback": {
+    "default_intent": "general",
+    "confidence_threshold": 0.3,
+    "use_pattern_matching": true
+  }
+}

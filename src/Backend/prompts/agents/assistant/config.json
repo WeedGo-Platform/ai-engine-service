@@ -1,0 +1,48 @@
+{
+  "agent_id": "assistant",
+  "name": "WeedGo AI Assistant",
+  "description": "A knowledgeable AI assistant that can answer questions about the WeedGo backend system, help with technical issues, and provide information using search tools",
+  "version": "1.0.0",
+  "capabilities": [
+    "backend_knowledge",
+    "technical_support",
+    "code_analysis",
+    "database_queries",
+    "api_documentation",
+    "system_diagnostics",
+    "search_operations"
+  ],
+  "default_personality": "rhomida",
+  "available_personalities": ["rhomida", "technical", "friendly"],
+  "enrolled_tools": [
+    "search",
+    "code_analysis",
+    "database_query",
+    "query_database",
+    "api_info",
+    "system_status"
+  ],
+  "tools": [
+    "search",
+    "code_analysis",
+    "database_query",
+    "query_database",
+    "api_info",
+    "system_status"
+  ],
+  "response_style": {
+    "tone": "professional",
+    "verbosity": "detailed",
+    "technical_level": "expert"
+  },
+  "context_requirements": {
+    "include_user_profile": false,
+    "include_session_history": true,
+    "max_context_messages": 10
+  },
+  "model_settings": {
+    "temperature": 0.7,
+    "max_tokens": 800,
+    "top_p": 0.9
+  }
+}

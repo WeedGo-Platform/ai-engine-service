@@ -175,7 +175,6 @@ data/raw/
 data/processed/
 data/interim/
 *.csv
-*.json
 *.xml
 *.xlsx
 *.xls
