@@ -75,7 +75,7 @@ class SubscriptionResponse(BaseModel):
 # ==========================================
 
 SUBSCRIPTION_PRICING = {
-    "community": {
+    "community_and_new_business": {
         "monthly": Decimal("0.00"),  # Free tier
         "quarterly": Decimal("0.00"),
         "annual": Decimal("0.00"),
@@ -84,18 +84,31 @@ SUBSCRIPTION_PRICING = {
         "max_users": 3,
         "max_products": 100
     },
-    "professional": {
+    "small_business": {
+        "monthly": Decimal("99.00"),
+        "quarterly": Decimal("267.00"),  # 10% discount
+        "annual": Decimal("990.00"),  # ~17% discount
+        "stripe_price_id": {
+            "monthly": "price_small_business_monthly_cad",  # Replace with actual Stripe price IDs
+            "quarterly": "price_small_business_quarterly_cad",
+            "annual": "price_small_business_annual_cad"
+        },
+        "max_stores": 5,
+        "max_users": 15,
+        "max_products": 5000
+    },
+    "professional_and_growing_business": {
         "monthly": Decimal("199.00"),
         "quarterly": Decimal("537.00"),  # 10% discount
         "annual": Decimal("1990.00"),  # ~17% discount
         "stripe_price_id": {
-            "monthly": "price_professional_monthly_cad",  # Replace with actual Stripe price IDs
+            "monthly": "price_professional_monthly_cad",
             "quarterly": "price_professional_quarterly_cad",
             "annual": "price_professional_annual_cad"
         },
-        "max_stores": 5,
-        "max_users": 25,
-        "max_products": 10000
+        "max_stores": 12,
+        "max_users": 50,
+        "max_products": 20000
     },
     "enterprise": {
         "monthly": Decimal("499.00"),

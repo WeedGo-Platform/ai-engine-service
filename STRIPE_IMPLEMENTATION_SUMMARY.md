@@ -1,6 +1,68 @@
 # Stripe Subscription Integration - Implementation Summary
 
-## What Was Implemented
+## Overview
+
+This implementation adds **Stripe recurring payments** for tenant subscriptions while **integrating with the existing tenant creation flow**. The free "Community and New Business" tier requires no payment, keeping signup simple.
+
+## Key Principles
+
+✅ **No Code Duplication**: Integrates with existing `TenantService` and subscription flow  
+✅ **Keep It Simple**: Free tier has zero payment requirements  
+✅ **Build on Existing UI**: Uses existing `TenantSignup.tsx` flow  
+✅ **No Trials**: Paid plans start billing immediately (removed 14-day trial concept)
+
+## Architecture Integration
+
+### Existing Flow (Before Stripe)
+
+1. User fills out `TenantSignup.tsx` form
+2. POST to `/api/tenants/signup`
+3. `TenantService.create_tenant()` creates:
+   - Tenant record
+   - Admin user
+   - Basic subscription record (free or paid)
+4. Returns tenant details
+
+### Enhanced Flow (With Stripe)
+
+**For Free Tier (community_and_new_business):**
+1. Same as before - no changes
+2. No payment required, no Stripe calls
+3. Simple signup flow continues to work
+
+**For Paid Tiers (small_business, professional_and_growing_business, enterprise):**
+1. User fills out form including payment details
+2. POST to `/api/tenants/signup` with `settings.billing` data
+3. `TenantService.create_tenant()` creates tenant + subscription
+4. **NEW**: Also calls Stripe to create:
+   - Stripe customer
+   - Stripe subscription
+5. Stores Stripe IDs in subscription metadata
+6. Returns tenant details
+
+### Code Integration Points
+
+1. **Tenant Creation** (`tenant_endpoints.py`):
+   - Already creates subscription via `TenantService`
+   - Now also creates Stripe subscription for paid tiers
+   - Uses existing transaction for atomicity
+
+2. **Subscription Repository** (`subscription_repository.py`):
+   - Enhanced with Stripe-specific queries
+   - Stores Stripe customer/subscription IDs in metadata JSONB field
+   - No duplication - single source of truth
+
+3. **Subscription Pricing** (`subscription_endpoints.py`):
+   - Maps to existing tier names (community_and_new_business, small_business, etc.)
+   - Aligned with `SubscriptionTier` enum in domain model
+
+### Removed Duplications
+
+❌ **Removed**: Placeholder `SubscriptionRepository` in `tenant_endpoints.py` (line 125)  
+✅ **Using**: Real `SubscriptionRepository` from `core/repositories/`
+
+❌ **Not Creating**: Parallel subscription system  
+✅ **Integrating**: Stripe into existing tenant creation flow
 
 ### Backend Components
 
