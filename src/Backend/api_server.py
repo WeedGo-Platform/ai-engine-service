@@ -438,9 +438,13 @@ else:
     cors_origins = default_cors_origins
     logger.info(f"Using default CORS origins for local development: {cors_origins}")
 
+# Use allow_origin_regex for Vercel deployments (all *.vercel.app subdomains)
+cors_origin_regex = os.getenv("CORS_ORIGIN_REGEX", r"https://.*\.vercel\.app")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=cors_origins,
+    allow_origin_regex=cors_origin_regex,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
