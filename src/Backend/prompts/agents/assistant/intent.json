@@ -1,0 +1,74 @@
+{
+  "version": "1.0.0",
+  "agent": "assistant",
+  "description": "Intent configuration for WeedGo AI assistant",
+  "classification_prompt": {
+    "template": "Classify this technical support message into ONE intent.\nMessage: \"{message}\"\nAvailable intents: {intents}\nIntent:",
+    "max_tokens": 20,
+    "temperature": 0.1
+  },
+  "intents": {
+    "greeting": {
+      "description": "User greetings and hellos",
+      "keywords": ["hello", "hi", "hey", "greetings"],
+      "patterns": ["how are you", "what's up"],
+      "prompt_type": "greeting"
+    },
+    "backend_question": {
+      "description": "Questions about backend systems",
+      "keywords": ["backend", "api", "endpoint", "database", "server", "service", "microservice"],
+      "patterns": ["how does the backend work", "what endpoints are available"],
+      "prompt_type": "technical_question"
+    },
+    "code_search": {
+      "description": "Requests to find code or implementations",
+      "keywords": ["find", "search", "where is", "locate", "show me", "code for", "implementation"],
+      "patterns": ["where is the function", "find the implementation of"],
+      "prompt_type": "search_request"
+    },
+    "system_info": {
+      "description": "Questions about system configuration and status",
+      "keywords": ["system", "configuration", "settings", "environment", "status", "health"],
+      "patterns": ["what is the system status", "show configuration"],
+      "prompt_type": "system_query"
+    },
+    "debugging": {
+      "description": "Help with debugging issues",
+      "keywords": ["error", "bug", "issue", "problem", "not working", "failing", "crash"],
+      "patterns": ["why is this failing", "help me debug"],
+      "prompt_type": "debugging_help"
+    },
+    "documentation": {
+      "description": "Requests for documentation or guides",
+      "keywords": ["documentation", "docs", "how to", "tutorial", "guide", "example"],
+      "patterns": ["how do I", "show me an example"],
+      "prompt_type": "documentation_request"
+    },
+    "inventory_query": {
+      "description": "Questions about inventory, stock, products in database",
+      "keywords": ["inventory", "stock", "items", "products", "how many", "count", "available", "in stock"],
+      "patterns": ["how many items", "show inventory", "what inventory", "list products", "check stock"],
+      "prompt_type": "inventory_query"
+    },
+    "customer_query": {
+      "description": "Questions about customers in the system",
+      "keywords": ["customer", "customers", "users", "clients", "buyers"],
+      "patterns": ["how many customers", "list customers", "show customers", "customer information"],
+      "prompt_type": "customer_query"
+    },
+    "order_query": {
+      "description": "Questions about orders and transactions",
+      "keywords": ["order", "orders", "purchase", "transaction", "sale", "sales", "pending", "completed", "processing"],
+      "patterns": ["how many orders", "show orders", "list orders", "recent orders", "pending orders"],
+      "prompt_type": "order_query"
+    },
+    "general": {
+      "description": "General questions or uncategorized",
+      "keywords": [],
+      "patterns": [],
+      "prompt_type": "general"
+    }
+  },
+  "fallback_intent": "general",
+  "confidence_threshold": 0.6
+}

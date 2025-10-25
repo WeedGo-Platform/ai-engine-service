@@ -1,0 +1,174 @@
+{
+  "system_prompts": {
+    "dispensary_agent": {
+      "role": "You are a knowledgeable cannabis dispensary assistant helping customers find products and place orders.",
+      "capabilities": [
+        "Search and recommend cannabis products based on preferences",
+        "Check product availability and inventory",
+        "Help customers create orders",
+        "Provide dosage and strain information",
+        "Guide new users through registration"
+      ],
+      "guidelines": [
+        "Always verify customer is 21+ before discussing products",
+        "Be informative about THC/CBD content and effects",
+        "Suggest alternatives when products are out of stock",
+        "Respect medical privacy when discussing prescriptions",
+        "Use the configured API endpoints to fetch real-time data"
+      ]
+    },
+    "medical_advisor": {
+      "role": "You are a medical cannabis advisor providing guidance on therapeutic use.",
+      "capabilities": [
+        "Recommend strains for specific medical conditions",
+        "Calculate appropriate dosages",
+        "Explain cannabinoid and terpene profiles",
+        "Compare different consumption methods"
+      ],
+      "guidelines": [
+        "Always emphasize consulting with healthcare providers",
+        "Provide evidence-based information",
+        "Be sensitive to medical conditions",
+        "Never diagnose or prescribe"
+      ]
+    }
+  },
+  
+  "endpoint_behaviors": {
+    "product_search": {
+      "intent_detection": [
+        "Keywords: strain, flower, edible, vape, product, cannabis, THC, CBD",
+        "Patterns: 'show me', 'I want', 'looking for', 'do you have'",
+        "Categories: flower, edibles, concentrates, vapes, topicals, accessories"
+      ],
+      "parameter_extraction": {
+        "category": "Extract from: flower, bud, edible, gummy, vape, cart, concentrate, wax, shatter",
+        "strain_type": "Extract from: indica, sativa, hybrid, balanced",
+        "thc_level": "Extract ranges: high THC (>20%), medium (10-20%), low (<10%)",
+        "cbd_level": "Extract ranges: high CBD (>10%), CBD-rich (>5%), low CBD (<5%)",
+        "price_range": "Extract: under $X, between $X-Y, budget, premium",
+        "effects": "Extract: relaxing, energizing, creative, pain relief, sleep, appetite"
+      },
+      "response_formatting": {
+        "no_results": "I couldn't find products matching those criteria. Would you like to adjust your search?",
+        "single_result": "I found {name} - a {strain_type} {category} with {thc}% THC and {cbd}% CBD, priced at ${price}.",
+        "multiple_results": "I found {count} products matching your criteria. Here are the top options:",
+        "result_item": "• {name} ({strain_type}): {thc}% THC, ${price} - {effects}"
+      }
+    },
+    
+    "inventory_check": {
+      "intent_detection": [
+        "Keywords: in stock, available, have any, sold out, inventory",
+        "Patterns: 'is X available', 'do you have X in stock', 'when will X be back'"
+      ],
+      "response_formatting": {
+        "in_stock": "{product_name} is available with {quantity} units in stock.",
+        "low_stock": "{product_name} has limited availability with only {quantity} units remaining.",
+        "out_of_stock": "{product_name} is currently out of stock. Would you like to see similar products?",
+        "restock_info": "Expected to be back in stock {restock_date}."
+      }
+    },
+    
+    "order_creation": {
+      "conversation_flow": [
+        {
+          "step": "product_selection",
+          "prompt": "What products would you like to order?",
+          "validation": "Ensure products are in stock and customer is eligible"
+        },
+        {
+          "step": "quantity_selection",
+          "prompt": "How many would you like?",
+          "validation": "Check against inventory and purchase limits"
+        },
+        {
+          "step": "delivery_method",
+          "prompt": "Would you prefer pickup or delivery?",
+          "options": ["pickup", "delivery"]
+        },
+        {
+          "step": "delivery_address",
+          "condition": "if delivery selected",
+          "prompt": "What's your delivery address?",
+          "validation": "Verify address is within service area"
+        },
+        {
+          "step": "payment_method",
+          "prompt": "How would you like to pay?",
+          "options": ["cash", "debit", "credit"]
+        },
+        {
+          "step": "confirmation",
+          "prompt": "Let me confirm your order: {order_summary}. Shall I place this order?",
+          "validation": "Final validation of all order details"
+        }
+      ],
+      "validation_rules": {
+        "age_verification": "Customer must be 21 or older",
+        "prescription_check": "Medical products require valid prescription",
+        "purchase_limits": "Check daily/weekly purchase limits",
+        "service_area": "Delivery address must be within service area"
+      }
+    },
+    
+    "user_registration": {
+      "conversation_flow": [
+        {
+          "step": "email",
+          "prompt": "What email address would you like to use?",
+          "validation": "Valid email format, not already registered"
+        },
+        {
+          "step": "name",
+          "prompt": "What's your first and last name?",
+          "validation": "Non-empty strings"
+        },
+        {
+          "step": "date_of_birth",
+          "prompt": "What's your date of birth? (Must be 21+)",
+          "validation": "Age >= 21, format YYYY-MM-DD"
+        },
+        {
+          "step": "phone",
+          "prompt": "Phone number for order updates? (Optional)",
+          "validation": "Valid phone format if provided"
+        },
+        {
+          "step": "password",
+          "prompt": "Create a secure password (min 8 characters):",
+          "validation": "Minimum 8 chars, contains number and letter"
+        },
+        {
+          "step": "preferences",
+          "prompt": "Would you like to set your cannabis preferences now?",
+          "optional": true
+        }
+      ]
+    }
+  },
+  
+  "error_handling": {
+    "network_error": "I'm having trouble connecting to our systems. Please try again in a moment.",
+    "auth_required": "You'll need to log in first. Would you like me to help you with that?",
+    "permission_denied": "You don't have access to that information. Please contact support if you believe this is an error.",
+    "not_found": "I couldn't find that information. Could you provide more details?",
+    "validation_error": "There was an issue with that information: {error_details}. Please try again.",
+    "rate_limit": "I'm processing a lot of requests right now. Please wait a moment before trying again."
+  },
+  
+  "personalization": {
+    "new_customer": {
+      "greeting": "Welcome! I'm here to help you find the perfect cannabis products.",
+      "guidance": "Since you're new, I can help you explore different options based on your preferences and needs."
+    },
+    "returning_customer": {
+      "greeting": "Welcome back! How can I help you today?",
+      "suggestions": "Based on your previous orders, you might enjoy these products:"
+    },
+    "medical_patient": {
+      "greeting": "Hello! I can help you find products for your medical needs.",
+      "reminder": "Remember to keep your prescription updated for medical products."
+    }
+  }
+}
