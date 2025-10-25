@@ -1,0 +1,98 @@
+{
+  "api": {
+    "networkError": "تعذر الاتصال بالخادم. يرجى التحقق من اتصالك.",
+    "serverError": "حدث خطأ في الخادم. يرجى المحاولة مرة أخرى لاحقاً.",
+    "timeout": "انتهت مهلة الطلب. يرجى المحاولة مرة أخرى.",
+    "unauthorized": "ليس لديك صلاحية لتنفيذ هذا الإجراء.",
+    "forbidden": "تم رفض الوصول.",
+    "notFound": "لم يتم العثور على المورد المطلوب.",
+    "conflict": "حدث تعارض. قد يكون المورد موجوداً بالفعل.",
+    "validationError": "حدث خطأ في التحقق من الصحة.",
+    "tooManyRequests": "طلبات كثيرة جداً. يرجى المحاولة مرة أخرى لاحقاً.",
+    "serviceUnavailable": "الخدمة غير متاحة مؤقتاً.",
+    "badRequest": "طلب غير صالح. يرجى التحقق من إدخالك.",
+    "internalError": "حدث خطأ داخلي."
+  },
+  "auth": {
+    "loginSuccess": "تم تسجيل الدخول بنجاح! جاري إعادة التوجيه...",
+    "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة. يرجى المحاولة مرة أخرى.",
+    "sessionExpired": "انتهت صلاحية جلستك. يرجى تسجيل الدخول مرة أخرى.",
+    "accountDisabled": "حسابك معطل أو يفتقر إلى امتيازات المسؤول.",
+    "accountLocked": "تم قفل حسابك بسبب محاولات تسجيل دخول فاشلة متعددة.",
+    "tooManyAttempts": "محاولات تسجيل دخول كثيرة جداً. يرجى المحاولة مرة أخرى لاحقاً.",
+    "tokenExpired": "انتهت صلاحية رمز المصادقة.",
+    "tokenInvalid": "رمز مصادقة غير صالح.",
+    "passwordResetFailed": "فشلت إعادة تعيين كلمة المرور. يرجى المحاولة مرة أخرى.",
+    "emailNotVerified": "يرجى التحقق من عنوان بريدك الإلكتروني أولاً.",
+    "validationError": "حدث خطأ في التحقق من الصحة",
+    "loginError": "حدث خطأ أثناء تسجيل الدخول"
+  },
+  "tenant": {
+    "loadFailed": "فشل تحميل بيانات المنظمة.",
+    "createFailed": "فشل إنشاء المستأجر.",
+    "updateFailed": "فشل تحديث المستأجر.",
+    "deleteFailed": "فشل حذف المستأجر.",
+    "suspendFailed": "فشل تعليق المستأجر.",
+    "reactivateFailed": "فشل إعادة تنشيط المستأجر.",
+    "noOrganization": "لا توجد منظمة مرتبطة بالمستخدم.",
+    "limitReached": "تم الوصول إلى حد المتاجر لهذا المستأجر.",
+    "invalidSubscription": "اشتراك غير صالح أو منتهي الصلاحية."
+  },
+  "store": {
+    "loadFailed": "فشل تحميل بيانات المتجر.",
+    "createFailed": "فشل إنشاء المتجر.",
+    "updateFailed": "فشل تحديث المتجر.",
+    "deleteFailed": "فشل حذف المتجر.",
+    "suspendFailed": "فشل تعليق المتجر.",
+    "closeFailed": "فشل إغلاق المتجر.",
+    "notFound": "لم يتم العثور على المتجر.",
+    "alreadyExists": "يوجد بالفعل متجر بهذا الاسم."
+  },
+  "inventory": {
+    "loadFailed": "فشل تحميل بيانات المخزون.",
+    "createFailed": "فشل إنشاء عنصر المخزون.",
+    "updateFailed": "فشل تحديث عنصر المخزون.",
+    "deleteFailed": "فشل حذف عنصر المخزون.",
+    "stockUpdateFailed": "فشل تحديث مستويات المخزون.",
+    "lowStock": "تنبيه مخزون منخفض.",
+    "outOfStock": "العنصر غير متوفر في المخزون.",
+    "invalidQuantity": "تم تحديد كمية غير صالحة."
+  },
+  "order": {
+    "loadFailed": "فشل تحميل بيانات الطلب.",
+    "createFailed": "فشل إنشاء الطلب.",
+    "updateFailed": "فشل تحديث الطلب.",
+    "cancelFailed": "فشل إلغاء الطلب.",
+    "fulfillFailed": "فشل تنفيذ الطلب.",
+    "refundFailed": "فشل معالجة الاسترداد.",
+    "notFound": "لم يتم العثور على الطلب.",
+    "alreadyProcessed": "تم معالجة الطلب بالفعل."
+  },
+  "payment": {
+    "loadFailed": "فشل تحميل بيانات الدفع.",
+    "processingFailed": "فشلت معالجة الدفع.",
+    "refundFailed": "فشلت معالجة الاسترداد.",
+    "invalidAmount": "مبلغ دفع غير صالح.",
+    "cardDeclined": "تم رفض البطاقة.",
+    "insufficientFunds": "أموال غير كافية.",
+    "paymentMethodInvalid": "طريقة دفع غير صالحة."
+  },
+  "upload": {
+    "failed": "فشل تحميل الملف.",
+    "fileTooLarge": "حجم الملف يتجاوز الحد الأقصى المسموح به.",
+    "invalidFileType": "نوع ملف غير صالح.",
+    "corruptedFile": "يبدو أن الملف تالف.",
+    "uploadCancelled": "تم إلغاء التحميل."
+  },
+  "general": {
+    "unexpectedError": "حدث خطأ غير متوقع.",
+    "operationFailed": "فشلت العملية. يرجى المحاولة مرة أخرى.",
+    "dataLoadFailed": "فشل تحميل البيانات.",
+    "saveFailed": "فشل حفظ التغييرات.",
+    "deleteFailed": "فشل حذف العنصر.",
+    "permissionDenied": "ليس لديك إذن لتنفيذ هذا الإجراء.",
+    "invalidInput": "تم تقديم إدخال غير صالح.",
+    "requiredFieldMissing": "حقل مطلوب مفقود.",
+    "dataCorrupted": "يبدو أن البيانات تالفة."
+  }
+}

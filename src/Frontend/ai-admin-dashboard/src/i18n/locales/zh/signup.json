@@ -1,0 +1,368 @@
+{
+  "tenant": {
+    "header": {
+      "title": "WeedGo",
+      "alreadyHaveAccount": "已有账户？",
+      "signIn": "登录",
+      "backHome": "返回主页"
+    },
+    "steps": {
+      "company": "公司信息",
+      "contact": "联系方式",
+      "account": "账户设置",
+      "payment": "订阅与支付"
+    },
+    "stepDescriptions": {
+      "company": "告诉我们您的业务和品牌",
+      "contact": "提供您的联系信息和地址",
+      "account": "创建您的管理员账户凭证",
+      "payment": "选择您的计划和支付方式"
+    },
+    "companyInfo": {
+      "brandName": "品牌名称",
+      "brandNamePlaceholder": "例如：Green Valley Dispensary",
+      "website": "网站",
+      "websitePlaceholder": "www.potpalace.ca 或 potpalace.ca",
+      "websiteHelp": "您的网站网址（用于生成品牌代码）",
+      "brandCode": "品牌代码",
+      "brandCodeAuto": "品牌代码 * （自动生成）",
+      "brandCodePlaceholder": "在上方输入网站以生成",
+      "brandCodeHelp": "将用于您的商店网址：{{code}}.weedgo.com",
+      "legalCompanyName": "法定公司名称",
+      "legalCompanyPlaceholder": "例如：Green Valley Cannabis Inc.",
+      "businessNumber": "商业编号",
+      "businessNumberPlaceholder": "123456789",
+      "businessNumberHelp": "加拿大商业编号（9位数字）",
+      "gstHstNumber": "GST/HST 编号",
+      "gstHstPlaceholder": "123456789RT0001",
+      "gstHstHelp": "格式：123456789RT0001",
+      "logoUpload": "上传标志",
+      "logoUploadHelp": "最大2MB • PNG、JPG、WebP • 推荐：500x500像素正方形"
+    },
+    "contactInfo": {
+      "firstName": "名",
+      "lastName": "姓",
+      "email": "电子邮件地址",
+      "phone": "电话号码",
+      "phonePlaceholder": "(555) 123-4567",
+      "street": "街道地址",
+      "city": "城市",
+      "province": "省份",
+      "postalCode": "邮政编码",
+      "postalCodePlaceholder": "A1A 1A1"
+    },
+    "accountSetup": {
+      "password": "密码",
+      "confirmPassword": "确认密码",
+      "passwordStrength": "强度：",
+      "passwordHelp": "必须至少包含8个字符，包括大写字母、小写字母和数字",
+      "securityTitle": "账户安全",
+      "securityDescription": "您的账户将通过行业标准加密和多重身份验证选项进行保护。"
+    },
+    "subscription": {
+      "choosePlan": "选择您的订阅计划",
+      "selectedPlan": "已选择计划：{{plan}}",
+      "changePlan": "更改计划",
+      "free": "免费",
+      "perMonth": "${{price}}/月",
+      "customPricing": "定制定价",
+      "billingCycle": "计费周期",
+      "monthly": "每月",
+      "monthlyBilled": "按月计费",
+      "annual": "年度",
+      "annualSave": "节省20%",
+      "selectPlan": "选择计划",
+      "enterpriseTitle": "企业计划",
+      "enterpriseDescription": "我们的销售团队将在24小时内与您联系，讨论定制定价和设置。"
+    },
+    "payment": {
+      "cardholderName": "持卡人姓名",
+      "cardholderPlaceholder": "张三",
+      "cardNumber": "卡号",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiryDate": "到期日期",
+      "expiryPlaceholder": "MM/YY",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "postalCode": "邮政编码",
+      "postalCodePlaceholder": "12345"
+    },
+    "progress": {
+      "verifying": "正在验证可用性...",
+      "creating": "正在创建您的账户...",
+      "uploading": "正在上传标志...",
+      "complete": "账户创建成功！",
+      "processing": "处理中..."
+    },
+    "success": {
+      "welcome": "欢迎来到 WeedGo！",
+      "accountCreated": "您的账户已成功创建。",
+      "tenantCode": "租户代码：",
+      "preparing": "正在准备您的仪表板..."
+    },
+    "navigation": {
+      "previous": "上一步",
+      "next": "下一步",
+      "createAccount": "创建账户"
+    },
+    "errors": {
+      "accountCreationFailed": "账户创建失败",
+      "tryAgain": "重试",
+      "registerAsUser": "注册为用户",
+      "signInInstead": "改为登录",
+      "tenantExists": "租户代码 \"{{code}}\" 已被注册",
+      "websiteExists": "网站 \"{{website}}\" 已被使用"
+    }
+  },
+  "review": {
+    "title": "租户账户审核",
+    "description": "审核并批准标记为需要手动验证的账户",
+    "refresh": "刷新",
+    "stats": {
+      "totalPending": "待审核总数",
+      "thisWeek": "本周",
+      "avgReviewTime": "平均审核时间",
+      "approvalRate": "批准率"
+    },
+    "table": {
+      "title": "待审核账户",
+      "storeName": "店铺名称",
+      "contact": "联系人",
+      "licenseNumber": "许可证号",
+      "submitted": "提交时间",
+      "tier": "级别",
+      "actions": "操作",
+      "review": "审核",
+      "noPending": "没有待审核的账户！"
+    },
+    "modal": {
+      "title": "审核账户",
+      "storeInfo": "店铺信息",
+      "storeName": "店铺名称",
+      "licenseNumber": "许可证号",
+      "crsaAddress": "CRSA 地址",
+      "municipality": "市镇",
+      "crsaStatus": "CRSA 状态",
+      "crsaWebsite": "CRSA 网站",
+      "contactInfo": "联系信息",
+      "contactName": "联系人姓名",
+      "role": "角色",
+      "email": "电子邮件",
+      "phone": "电话",
+      "verificationContext": "验证上下文",
+      "emailDomain": "电子邮件域名",
+      "domainMatchesCrsa": "域名与 CRSA 匹配",
+      "verificationTier": "验证级别",
+      "submitted": "提交时间",
+      "adminNotes": "管理员备注（可选）",
+      "adminNotesPlaceholder": "添加关于此审核的任何备注...",
+      "reject": "拒绝",
+      "approve": "批准账户",
+      "approving": "批准中...",
+      "yes": "✓ 是",
+      "no": "✗ 否"
+    },
+    "reject": {
+      "title": "拒绝账户",
+      "description": "请提供拒绝此账户的原因。这将被记录用于审计目的。",
+      "reasonPlaceholder": "拒绝原因（至少10个字符）...",
+      "cancel": "取消",
+      "confirm": "确认拒绝",
+      "rejecting": "拒绝中...",
+      "minLength": "请提供原因（至少10个字符）"
+    },
+    "messages": {
+      "approved": "账户批准成功！",
+      "rejected": "账户拒绝成功。",
+      "approveFailed": "批准账户失败：{{error}}",
+      "rejectFailed": "拒绝账户失败：{{error}}",
+      "fetchFailed": "获取待审核账户失败",
+      "noPermission": "您没有权限审核租户账户。"
+    }
+  },
+  "userRegistration": {
+    "title": "创建您的账户",
+    "joinTenant": "加入 {{tenantName}}",
+    "tenantInfo": "租户信息",
+    "tenantName": "名称：",
+    "tenantCode": "代码：",
+    "firstName": "名",
+    "firstNamePlaceholder": "三",
+    "lastName": "姓",
+    "lastNamePlaceholder": "张",
+    "email": "电子邮件地址",
+    "emailPlaceholder": "zhang.san@example.com",
+    "phone": "电话号码",
+    "phonePlaceholder": "(555) 123-4567",
+    "password": "密码",
+    "passwordPlaceholder": "••••••••",
+    "confirmPassword": "确认密码",
+    "passwordStrength": "强度：",
+    "passwordHelp": "使用8个以上字符，包括大写字母、小写字母、数字和符号以提高安全性",
+    "createButton": "创建账户",
+    "creating": "创建账户中...",
+    "alreadyHaveAccount": "已有账户？",
+    "signIn": "登录",
+    "loading": "加载租户信息中...",
+    "tenantNotFound": "未找到租户",
+    "tenantNotFoundDescription": "无法找到指定的租户。",
+    "goToSignup": "前往注册",
+    "errors": {
+      "loadFailed": "加载租户信息失败",
+      "alreadyExists": "该电子邮件的用户已存在。请使用其他电子邮件或改为登录。",
+      "failed": "创建用户账户失败"
+    }
+  },
+  "success": {
+    "title": "欢迎来到 WeedGo！",
+    "description": "您的 {{tenantName}} 账户已成功创建。",
+    "accountDetails": {
+      "title": "您的账户详情",
+      "tenantName": "租户名称：",
+      "tenantCode": "租户代码：",
+      "storeUrl": "商店网址："
+    },
+    "nextSteps": {
+      "title": "后续步骤",
+      "checkEmail": {
+        "title": "查看您的电子邮件",
+        "description": "我们已向您发送一封欢迎邮件，其中包含重要的账户信息和设置说明。"
+      },
+      "accessDashboard": {
+        "title": "访问您的仪表板",
+        "description": "登录到您的管理仪表板以配置店铺设置、添加产品并自定义您的 AI 助手。"
+      },
+      "setupStore": {
+        "title": "设置您的第一家店铺",
+        "description": "添加您的第一个店铺位置，配置营业时间并设置产品库存。"
+      },
+      "configureAI": {
+        "title": "配置 AI 助手",
+        "description": "自定义您的 AI 大麻顾问个性并为客户设置多语言支持。"
+      }
+    },
+    "quickActions": {
+      "dashboard": {
+        "title": "访问仪表板",
+        "description": "配置您的平台"
+      },
+      "documentation": {
+        "title": "文档",
+        "description": "设置指南和教程"
+      },
+      "support": {
+        "title": "支持",
+        "description": "从我们的团队获得帮助"
+      }
+    },
+    "cta": {
+      "button": "访问您的仪表板",
+      "help": "需要帮助入门？请联系我们的支持团队：",
+      "email": "support@weedgo.com"
+    },
+    "resources": {
+      "title": "入门资源",
+      "quickSetup": {
+        "title": "快速设置指南",
+        "item1": "店铺配置和品牌",
+        "item2": "产品目录设置",
+        "item3": "支付处理配置",
+        "item4": "AI 助手自定义"
+      },
+      "training": {
+        "title": "培训和支持",
+        "item1": "视频教程和网络研讨会",
+        "item2": "24/7 客户支持聊天",
+        "item3": "社区论坛访问",
+        "item4": "专属客户经理（企业版）"
+      }
+    }
+  },
+  "validation": {
+    "required": "{{field}} 为必填项",
+    "brandNameRequired": "品牌名称为必填项",
+    "websiteRequired": "需要网站才能生成品牌代码",
+    "brandCodeRequired": "需要品牌代码（输入网站以生成）",
+    "brandCodeFormat": "品牌代码只能包含大写字母、数字、连字符和下划线",
+    "companyNameRequired": "公司名称为必填项",
+    "businessNumberRequired": "商业编号为必填项",
+    "businessNumberFormat": "商业编号必须为9位数字",
+    "gstHstRequired": "GST/HST 编号为必填项",
+    "gstHstFormat": "GST/HST 编号格式：123456789RT0001",
+    "emailRequired": "电子邮件为必填项",
+    "emailInvalid": "请输入有效的电子邮件地址",
+    "firstNameRequired": "名为必填项",
+    "lastNameRequired": "姓为必填项",
+    "streetRequired": "街道地址为必填项",
+    "cityRequired": "城市为必填项",
+    "postalCodeRequired": "邮政编码为必填项",
+    "postalCodeFormat": "请输入有效的加拿大邮政编码",
+    "passwordRequired": "密码为必填项",
+    "passwordLength": "密码必须至少包含8个字符",
+    "passwordComplexity": "密码必须包含大写字母、小写字母和数字",
+    "passwordMismatch": "密码不匹配",
+    "cardNumberRequired": "卡号为必填项",
+    "cardNumberFormat": "请输入有效的16位卡号",
+    "expiryRequired": "到期日期为必填项",
+    "expiryFormat": "请输入 MM/YY 格式",
+    "cvvRequired": "CVV 为必填项",
+    "cvvFormat": "CVV 必须为3或4位数字",
+    "cardholderRequired": "持卡人姓名为必填项"
+  },
+  "passwordStrength": {
+    "weak": "弱",
+    "fair": "一般",
+    "good": "好",
+    "strong": "强",
+    "veryStrong": "非常强"
+  },
+  "provinces": {
+    "ON": "安大略省",
+    "BC": "不列颠哥伦比亚省",
+    "AB": "阿尔伯塔省",
+    "QC": "魁北克省",
+    "MB": "曼尼托巴省",
+    "SK": "萨斯喀彻温省",
+    "NS": "新斯科舍省",
+    "NB": "新不伦瑞克省",
+    "NL": "纽芬兰与拉布拉多省",
+    "PE": "爱德华王子岛省",
+    "NT": "西北地区",
+    "YT": "育空地区",
+    "NU": "努纳武特地区"
+  },
+  "plans": {
+    "community_and_new_business": {
+      "name": "社区和新业务",
+      "features": {
+        "stores": "1 家店铺",
+        "languages": "2 种语言",
+        "personalities": "1 个 AI 个性"
+      }
+    },
+    "small_business": {
+      "name": "小型企业",
+      "features": {
+        "stores": "5 家店铺",
+        "languages": "5 种语言",
+        "personalities": "2 个 AI 个性"
+      }
+    },
+    "professional_and_growing_business": {
+      "name": "专业和成长型企业",
+      "features": {
+        "stores": "12 家店铺",
+        "languages": "10 种语言",
+        "personalities": "3 个 AI 个性"
+      }
+    },
+    "enterprise": {
+      "name": "企业版",
+      "features": {
+        "stores": "无限店铺",
+        "languages": "25+ 种语言",
+        "personalities": "5 个 AI 个性"
+      }
+    }
+  }
+}

@@ -1,0 +1,368 @@
+{
+  "tenant": {
+    "header": {
+      "title": "WeedGo",
+      "alreadyHaveAccount": "પહેલેથી ખાતું છે?",
+      "signIn": "સાઇન ઇન કરો",
+      "backHome": "હોમ પર પાછા જાઓ"
+    },
+    "steps": {
+      "company": "કંપની માહિતી",
+      "contact": "સંપર્ક વિગતો",
+      "account": "ખાતું સેટઅપ",
+      "payment": "સબ્સ્ક્રિપ્શન અને ચુકવણી"
+    },
+    "stepDescriptions": {
+      "company": "અમને તમારા વ્યવસાય અને બ્રાંડ વિશે કહો",
+      "contact": "તમારી સંપર્ક માહિતી અને સરનામું આપો",
+      "account": "તમારા એડમિન ખાતાની ઓળખપત્રો બનાવો",
+      "payment": "તમારી યોજના અને ચુકવણી પદ્ધતિ પસંદ કરો"
+    },
+    "companyInfo": {
+      "brandName": "બ્રાંડનું નામ",
+      "brandNamePlaceholder": "ઉદા., Green Valley Dispensary",
+      "website": "વેબસાઇટ",
+      "websitePlaceholder": "www.potpalace.ca અથવા potpalace.ca",
+      "websiteHelp": "તમારું વેબસાઇટ URL (બ્રાંડ કોડ જનરેટ કરવા માટે વપરાય છે)",
+      "brandCode": "બ્રાંડ કોડ",
+      "brandCodeAuto": "બ્રાંડ કોડ * (ઓટો-જનરેટેડ)",
+      "brandCodePlaceholder": "જનરેટ કરવા માટે ઉપર વેબસાઇટ દાખલ કરો",
+      "brandCodeHelp": "તમારા સ્ટોર URL માં વપરાશે: {{code}}.weedgo.com",
+      "legalCompanyName": "કાનૂની કંપની નામ",
+      "legalCompanyPlaceholder": "ઉદા., Green Valley Cannabis Inc.",
+      "businessNumber": "વ્યવસાય નંબર",
+      "businessNumberPlaceholder": "123456789",
+      "businessNumberHelp": "કેનેડિયન બિઝનેસ નંબર (9 અંકો)",
+      "gstHstNumber": "GST/HST નંબર",
+      "gstHstPlaceholder": "123456789RT0001",
+      "gstHstHelp": "ફોર્મેટ: 123456789RT0001",
+      "logoUpload": "લોગો અપલોડ",
+      "logoUploadHelp": "મહત્તમ 2MB • PNG, JPG, WebP • ભલામણ: 500x500px ચોરસ"
+    },
+    "contactInfo": {
+      "firstName": "પ્રથમ નામ",
+      "lastName": "છેલ્લું નામ",
+      "email": "ઇમેઇલ સરનામું",
+      "phone": "ફોન નંબર",
+      "phonePlaceholder": "(555) 123-4567",
+      "street": "શેરી સરનામું",
+      "city": "શહેર",
+      "province": "પ્રાંત",
+      "postalCode": "પોસ્ટલ કોડ",
+      "postalCodePlaceholder": "A1A 1A1"
+    },
+    "accountSetup": {
+      "password": "પાસવર્ડ",
+      "confirmPassword": "પાસવર્ડની પુષ્ટિ કરો",
+      "passwordStrength": "મજબૂતાઈ:",
+      "passwordHelp": "મોટા અક્ષરો, નાના અક્ષરો અને નંબર સાથે ઓછામાં ઓછા 8 અક્ષરો હોવા જોઈએ",
+      "securityTitle": "ખાતા સુરક્ષા",
+      "securityDescription": "તમારું ખાતું ઉદ્યોગ-માનક એન્ક્રિપ્શન અને મલ્ટિ-ફેક્ટર ઓથેન્ટિકેશન વિકલ્પો સાથે સુરક્ષિત રહેશે."
+    },
+    "subscription": {
+      "choosePlan": "તમારી સબ્સ્ક્રિપ્શન યોજના પસંદ કરો",
+      "selectedPlan": "પસંદ કરેલી યોજના: {{plan}}",
+      "changePlan": "યોજના બદલો",
+      "free": "મફત",
+      "perMonth": "${{price}}/મહિનો",
+      "customPricing": "કસ્ટમ કિંમત",
+      "billingCycle": "બિલિંગ ચક્ર",
+      "monthly": "માસિક",
+      "monthlyBilled": "માસિક બિલ કરવામાં આવે છે",
+      "annual": "વાર્ષિક",
+      "annualSave": "20% બચત કરો",
+      "selectPlan": "યોજના પસંદ કરો",
+      "enterpriseTitle": "એન્ટરપ્રાઇઝ યોજના",
+      "enterpriseDescription": "કસ્ટમ કિંમત અને સેટઅપની ચર્ચા કરવા માટે અમારી સેલ્સ ટીમ 24 કલાકમાં તમારો સંપર્ક કરશે."
+    },
+    "payment": {
+      "cardholderName": "કાર્ડધારક નામ",
+      "cardholderPlaceholder": "રાજેશ પટેલ",
+      "cardNumber": "કાર્ડ નંબર",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiryDate": "સમાપ્તિ તારીખ",
+      "expiryPlaceholder": "MM/YY",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "postalCode": "ZIP/પોસ્ટલ કોડ",
+      "postalCodePlaceholder": "12345"
+    },
+    "progress": {
+      "verifying": "ઉપલબ્ધતા ચકાસી રહ્યા છીએ...",
+      "creating": "તમારું ખાતું બનાવી રહ્યા છીએ...",
+      "uploading": "લોગો અપલોડ કરી રહ્યા છીએ...",
+      "complete": "ખાતું સફળતાપૂર્વક બનાવ્યું!",
+      "processing": "પ્રોસેસ કરી રહ્યા છીએ..."
+    },
+    "success": {
+      "welcome": "WeedGo માં આપનું સ્વાગત છે!",
+      "accountCreated": "તમારું ખાતું સફળતાપૂર્વક બનાવવામાં આવ્યું છે.",
+      "tenantCode": "ટેનન્ટ કોડ:",
+      "preparing": "તમારું ડેશબોર્ડ તૈયાર કરી રહ્યા છીએ..."
+    },
+    "navigation": {
+      "previous": "પાછલું",
+      "next": "આગળ",
+      "createAccount": "ખાતું બનાવો"
+    },
+    "errors": {
+      "accountCreationFailed": "ખાતું બનાવવું નિષ્ફળ",
+      "tryAgain": "ફરી પ્રયાસ કરો",
+      "registerAsUser": "વપરાશકર્તા તરીકે નોંધણી કરો",
+      "signInInstead": "તેના બદલે સાઇન ઇન કરો",
+      "tenantExists": "ટેનન્ટ કોડ \"{{code}}\" પહેલેથી નોંધાયેલ છે",
+      "websiteExists": "વેબસાઇટ \"{{website}}\" પહેલેથી ઉપયોગમાં છે"
+    }
+  },
+  "review": {
+    "title": "ટેનન્ટ ખાતા સમીક્ષા",
+    "description": "મેન્યુઅલ ચકાસણી માટે ફ્લેગ કરેલા ખાતાઓની સમીક્ષા કરો અને મંજૂર કરો",
+    "refresh": "રિફ્રેશ કરો",
+    "stats": {
+      "totalPending": "કુલ બાકી",
+      "thisWeek": "આ અઠવાડિયે",
+      "avgReviewTime": "સરેરાશ સમીક્ષા સમય",
+      "approvalRate": "મંજૂરી દર"
+    },
+    "table": {
+      "title": "બાકી ખાતાઓ",
+      "storeName": "સ્ટોરનું નામ",
+      "contact": "સંપર્ક",
+      "licenseNumber": "લાઇસન્સ નંબર",
+      "submitted": "સબમિટ કર્યું",
+      "tier": "ટાયર",
+      "actions": "ક્રિયાઓ",
+      "review": "સમીક્ષા કરો",
+      "noPending": "સમીક્ષા કરવા માટે કોઈ બાકી ખાતાં નથી!"
+    },
+    "modal": {
+      "title": "ખાતાની સમીક્ષા કરો",
+      "storeInfo": "સ્ટોર માહિતી",
+      "storeName": "સ્ટોરનું નામ",
+      "licenseNumber": "લાઇસન્સ નંબર",
+      "crsaAddress": "CRSA સરનામું",
+      "municipality": "મ્યુનિસિપાલિટી",
+      "crsaStatus": "CRSA સ્થિતિ",
+      "crsaWebsite": "CRSA વેબસાઇટ",
+      "contactInfo": "સંપર્ક માહિતી",
+      "contactName": "સંપર્ક નામ",
+      "role": "ભૂમિકા",
+      "email": "ઇમેઇલ",
+      "phone": "ફોન",
+      "verificationContext": "ચકાસણી સંદર્ભ",
+      "emailDomain": "ઇમેઇલ ડોમેન",
+      "domainMatchesCrsa": "ડોમેન CRSA સાથે મેળ ખાય છે",
+      "verificationTier": "ચકાસણી ટાયર",
+      "submitted": "સબમિટ કર્યું",
+      "adminNotes": "એડમિન નોંધો (વૈકલ્પિક)",
+      "adminNotesPlaceholder": "આ સમીક્ષા વિશે કોઈપણ નોંધ ઉમેરો...",
+      "reject": "નકારો",
+      "approve": "ખાતું મંજૂર કરો",
+      "approving": "મંજૂર કરી રહ્યા છીએ...",
+      "yes": "✓ હા",
+      "no": "✗ ના"
+    },
+    "reject": {
+      "title": "ખાતું નકારો",
+      "description": "કૃપા કરીને આ ખાતાને નકારવાનું કારણ આપો. આ ઓડિટ હેતુઓ માટે લોગ કરવામાં આવશે.",
+      "reasonPlaceholder": "નકારનું કારણ (ઓછામાં ઓછા 10 અક્ષરો)...",
+      "cancel": "રદ કરો",
+      "confirm": "નકારની પુષ્ટિ કરો",
+      "rejecting": "નકારી રહ્યા છીએ...",
+      "minLength": "કૃપા કરીને કારણ આપો (ઓછામાં ઓછા 10 અક્ષરો)"
+    },
+    "messages": {
+      "approved": "ખાતું સફળતાપૂર્વક મંજૂર કર્યું!",
+      "rejected": "ખાતું સફળતાપૂર્વક નકાર્યું.",
+      "approveFailed": "ખાતું મંજૂર કરવામાં નિષ્ફળ: {{error}}",
+      "rejectFailed": "ખાતું નકારવામાં નિષ્ફળ: {{error}}",
+      "fetchFailed": "બાકી ખાતાઓ મેળવવામાં નિષ્ફળ",
+      "noPermission": "તમારી પાસે ટેનન્ટ ખાતાઓની સમીક્ષા કરવાની પરવાનગી નથી."
+    }
+  },
+  "userRegistration": {
+    "title": "તમારું ખાતું બનાવો",
+    "joinTenant": "{{tenantName}} સાથે જોડાઓ",
+    "tenantInfo": "ટેનન્ટ માહિતી",
+    "tenantName": "નામ:",
+    "tenantCode": "કોડ:",
+    "firstName": "પ્રથમ નામ",
+    "firstNamePlaceholder": "રાજેશ",
+    "lastName": "છેલ્લું નામ",
+    "lastNamePlaceholder": "પટેલ",
+    "email": "ઇમેઇલ સરનામું",
+    "emailPlaceholder": "rajesh.patel@example.com",
+    "phone": "ફોન નંબર",
+    "phonePlaceholder": "(555) 123-4567",
+    "password": "પાસવર્ડ",
+    "passwordPlaceholder": "••••••••",
+    "confirmPassword": "પાસવર્ડની પુષ્ટિ કરો",
+    "passwordStrength": "મજબૂતાઈ:",
+    "passwordHelp": "વધુ સારી સુરક્ષા માટે મોટા અક્ષરો, નાના અક્ષરો, નંબરો અને પ્રતીકો સાથે 8+ અક્ષરોનો ઉપયોગ કરો",
+    "createButton": "ખાતું બનાવો",
+    "creating": "ખાતું બનાવી રહ્યા છીએ...",
+    "alreadyHaveAccount": "પહેલેથી ખાતું છે?",
+    "signIn": "સાઇન ઇન કરો",
+    "loading": "ટેનન્ટ માહિતી લોડ કરી રહ્યા છીએ...",
+    "tenantNotFound": "ટેનન્ટ મળ્યું નહીં",
+    "tenantNotFoundDescription": "નિર્દિષ્ટ ટેનન્ટ મળી શક્યું નહીં.",
+    "goToSignup": "સાઇનઅપ પર જાઓ",
+    "errors": {
+      "loadFailed": "ટેનન્ટ માહિતી લોડ કરવામાં નિષ્ફળ",
+      "alreadyExists": "આ ઇમેઇલ સાથે વપરાશકર્તા પહેલેથી અસ્તિત્વમાં છે. કૃપા કરીને અલગ ઇમેઇલનો ઉપયોગ કરો અથવા લોગિન કરો.",
+      "failed": "વપરાશકર્તા ખાતું બનાવવામાં નિષ્ફળ"
+    }
+  },
+  "success": {
+    "title": "WeedGo માં આપનું સ્વાગત છે!",
+    "description": "{{tenantName}} માટે તમારું ખાતું સફળતાપૂર્વક બનાવવામાં આવ્યું છે.",
+    "accountDetails": {
+      "title": "તમારા ખાતાની વિગતો",
+      "tenantName": "ટેનન્ટ નામ:",
+      "tenantCode": "ટેનન્ટ કોડ:",
+      "storeUrl": "સ્ટોર URL:"
+    },
+    "nextSteps": {
+      "title": "આગલા પગલાં",
+      "checkEmail": {
+        "title": "તમારું ઇમેઇલ તપાસો",
+        "description": "અમે તમને મહત્વપૂર્ણ ખાતા માહિતી અને સેટઅપ સૂચનાઓ સાથે સ્વાગત ઇમેઇલ મોકલ્યો છે."
+      },
+      "accessDashboard": {
+        "title": "તમારું ડેશબોર્ડ એક્સેસ કરો",
+        "description": "તમારા સ્ટોર સેટિંગ્સને ગોઠવવા, ઉત્પાદનો ઉમેરવા અને તમારા AI સહાયકોને કસ્ટમાઇઝ કરવા માટે તમારા એડમિન ડેશબોર્ડ પર લોગ ઇન કરો."
+      },
+      "setupStore": {
+        "title": "તમારો પ્રથમ સ્ટોર સેટઅપ કરો",
+        "description": "તમારું પ્રથમ સ્ટોર સ્થાન ઉમેરો, કાર્યકારી કલાકો ગોઠવો અને તમારી ઉત્પાદન ઇન્વેન્ટરી સેટ અપ કરો."
+      },
+      "configureAI": {
+        "title": "AI સહાયકોને ગોઠવો",
+        "description": "તમારા AI budtender વ્યક્તિત્વોને કસ્ટમાઇઝ કરો અને તમારા ગ્રાહકો માટે બહુભાષી સપોર્ટ સેટ અપ કરો."
+      }
+    },
+    "quickActions": {
+      "dashboard": {
+        "title": "ડેશબોર્ડ એક્સેસ કરો",
+        "description": "તમારું પ્લેટફોર્મ ગોઠવો"
+      },
+      "documentation": {
+        "title": "દસ્તાવેજીકરણ",
+        "description": "સેટઅપ માર્ગદર્શિકાઓ અને ટ્યુટોરિયલ્સ"
+      },
+      "support": {
+        "title": "સપોર્ટ",
+        "description": "અમારી ટીમ પાસેથી મદદ મેળવો"
+      }
+    },
+    "cta": {
+      "button": "તમારું ડેશબોર્ડ એક્સેસ કરો",
+      "help": "શરૂ કરવામાં મદદ જોઈએ છે? અમારી સપોર્ટ ટીમનો સંપર્ક કરો",
+      "email": "support@weedgo.com"
+    },
+    "resources": {
+      "title": "તમને શરૂ કરવા માટે સંસાધનો",
+      "quickSetup": {
+        "title": "ઝડપી સેટઅપ માર્ગદર્શિકા",
+        "item1": "સ્ટોર ગોઠવણી અને બ્રાન્ડિંગ",
+        "item2": "ઉત્પાદન સૂચિ સેટઅપ",
+        "item3": "ચુકવણી પ્રક્રિયા ગોઠવણી",
+        "item4": "AI સહાયક કસ્ટમાઇઝેશન"
+      },
+      "training": {
+        "title": "તાલીમ અને સપોર્ટ",
+        "item1": "વિડિયો ટ્યુટોરિયલ્સ અને વેબિનાર્સ",
+        "item2": "24/7 ગ્રાહક સપોર્ટ ચેટ",
+        "item3": "સમુદાય ફોરમ એક્સેસ",
+        "item4": "સમર્પિત એકાઉન્ટ મેનેજર (એન્ટરપ્રાઇઝ)"
+      }
+    }
+  },
+  "validation": {
+    "required": "{{field}} જરૂરી છે",
+    "brandNameRequired": "બ્રાંડનું નામ જરૂરી છે",
+    "websiteRequired": "બ્રાંડ કોડ જનરેટ કરવા માટે વેબસાઇટ જરૂરી છે",
+    "brandCodeRequired": "બ્રાંડ કોડ જરૂરી છે (જનરેટ કરવા માટે વેબસાઇટ દાખલ કરો)",
+    "brandCodeFormat": "બ્રાંડ કોડમાં ફક્ત મોટા અક્ષરો, નંબરો, હાઈફન્સ અને અન્ડરસ્કોર હોવા જોઈએ",
+    "companyNameRequired": "કંપનીનું નામ જરૂરી છે",
+    "businessNumberRequired": "વ્યવસાય નંબર જરૂરી છે",
+    "businessNumberFormat": "વ્યવસાય નંબર 9 અંકોનો હોવો જોઈએ",
+    "gstHstRequired": "GST/HST નંબર જરૂરી છે",
+    "gstHstFormat": "GST/HST નંબર ફોર્મેટ: 123456789RT0001",
+    "emailRequired": "ઇમેઇલ જરૂરી છે",
+    "emailInvalid": "કૃપા કરીને માન્ય ઇમેઇલ સરનામું દાખલ કરો",
+    "firstNameRequired": "પ્રથમ નામ જરૂરી છે",
+    "lastNameRequired": "છેલ્લું નામ જરૂરી છે",
+    "streetRequired": "શેરી સરનામું જરૂરી છે",
+    "cityRequired": "શહેર જરૂરી છે",
+    "postalCodeRequired": "પોસ્ટલ કોડ જરૂરી છે",
+    "postalCodeFormat": "કૃપા કરીને માન્ય કેનેડિયન પોસ્ટલ કોડ દાખલ કરો",
+    "passwordRequired": "પાસવર્ડ જરૂરી છે",
+    "passwordLength": "પાસવર્ડ ઓછામાં ઓછો 8 અક્ષરોનો હોવો જોઈએ",
+    "passwordComplexity": "પાસવર્ડમાં મોટા અક્ષરો, નાના અક્ષરો અને નંબર હોવા જોઈએ",
+    "passwordMismatch": "પાસવર્ડ્સ મેળ ખાતા નથી",
+    "cardNumberRequired": "કાર્ડ નંબર જરૂરી છે",
+    "cardNumberFormat": "કૃપા કરીને માન્ય 16-અંકનો કાર્ડ નંબર દાખલ કરો",
+    "expiryRequired": "સમાપ્તિ તારીખ જરૂરી છે",
+    "expiryFormat": "કૃપા કરીને MM/YY ફોર્મેટ દાખલ કરો",
+    "cvvRequired": "CVV જરૂરી છે",
+    "cvvFormat": "CVV 3 અથવા 4 અંકોનો હોવો જોઈએ",
+    "cardholderRequired": "કાર્ડધારક નામ જરૂરી છે"
+  },
+  "passwordStrength": {
+    "weak": "નબળું",
+    "fair": "વાજબી",
+    "good": "સારું",
+    "strong": "મજબૂત",
+    "veryStrong": "ખૂબ મજબૂત"
+  },
+  "provinces": {
+    "ON": "Ontario",
+    "BC": "British Columbia",
+    "AB": "Alberta",
+    "QC": "Quebec",
+    "MB": "Manitoba",
+    "SK": "Saskatchewan",
+    "NS": "Nova Scotia",
+    "NB": "New Brunswick",
+    "NL": "Newfoundland and Labrador",
+    "PE": "Prince Edward Island",
+    "NT": "Northwest Territories",
+    "YT": "Yukon",
+    "NU": "Nunavut"
+  },
+  "plans": {
+    "community_and_new_business": {
+      "name": "સમુદાય અને નવો વ્યવસાય",
+      "features": {
+        "stores": "1 સ્ટોર",
+        "languages": "2 ભાષાઓ",
+        "personalities": "1 AI વ્યક્તિત્વ"
+      }
+    },
+    "small_business": {
+      "name": "નાનો વ્યવસાય",
+      "features": {
+        "stores": "5 સ્ટોર્સ",
+        "languages": "5 ભાષાઓ",
+        "personalities": "2 AI વ્યક્તિત્વો"
+      }
+    },
+    "professional_and_growing_business": {
+      "name": "વ્યાવસાયિક અને વધતો વ્યવસાય",
+      "features": {
+        "stores": "12 સ્ટોર્સ",
+        "languages": "10 ભાષાઓ",
+        "personalities": "3 AI વ્યક્તિત્વો"
+      }
+    },
+    "enterprise": {
+      "name": "એન્ટરપ્રાઇઝ",
+      "features": {
+        "stores": "અમર્યાદિત સ્ટોર્સ",
+        "languages": "25+ ભાષાઓ",
+        "personalities": "5 AI વ્યક્તિત્વો"
+      }
+    }
+  }
+}

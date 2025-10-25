@@ -1,0 +1,149 @@
+{
+  "titles": {
+    "management": "إدارة الطلبات",
+    "orderDetails": "تفاصيل الطلب",
+    "assignDriver": "تعيين سائق",
+    "messageCustomer": "مراسلة العميل",
+    "deliveryConfirmation": "تأكيد التسليم"
+  },
+  "fields": {
+    "orderNumber": "الطلب",
+    "customer": "العميل",
+    "status": "الحالة",
+    "type": "النوع",
+    "items": "العناصر",
+    "cannabis": "القنب",
+    "total": "الإجمالي",
+    "verification": "التحقق",
+    "time": "الوقت",
+    "actions": "الإجراءات",
+    "product": "المنتج",
+    "brand": "العلامة التجارية",
+    "category": "الفئة",
+    "thcCbd": "THC/CBD",
+    "qty": "الكمية",
+    "price": "السعر",
+    "payment": "الدفع",
+    "paymentMethod": "طريقة الدفع",
+    "deliveryAddress": "عنوان التسليم",
+    "deliveryTime": "وقت التسليم",
+    "pickupTime": "وقت الاستلام",
+    "driver": "السائق",
+    "vehicle": "المركبة",
+    "signature": "توقيع العميل",
+    "deliveryPhoto": "صورة التسليم",
+    "dob": "DOB",
+    "loyaltyPoints": "نقاط الولاء"
+  },
+  "status": {
+    "all": "جميع الحالات",
+    "pending": "قيد الانتظار",
+    "confirmed": "مؤكد",
+    "preparing": "قيد التحضير",
+    "ready": "جاهز",
+    "outForDelivery": "قيد التوصيل",
+    "delivered": "تم التسليم",
+    "cancelled": "ملغى",
+    "refunded": "تم الاسترداد",
+    "paymentPending": "الدفع معلق",
+    "ageVerified": "تم التحقق من العمر",
+    "ageNotVerified": "لم يتم التحقق من العمر"
+  },
+  "orderTypes": {
+    "all": "جميع الأنواع",
+    "delivery": "التوصيل",
+    "pickup": "الاستلام",
+    "inStore": "في المتجر"
+  },
+  "paymentMethods": {
+    "cash": "نقداً",
+    "credit": "بطاقة ائتمان",
+    "debit": "بطاقة خصم",
+    "eTransfer": "E-Transfer"
+  },
+  "paymentStatus": {
+    "pending": "قيد الانتظار",
+    "paid": "مدفوع",
+    "refunded": "تم الاسترداد"
+  },
+  "customerTypes": {
+    "recreational": "ترفيهي",
+    "medical": "طبي"
+  },
+  "actions": {
+    "export": "تصدير",
+    "refresh": "تحديث",
+    "viewDetails": "عرض التفاصيل",
+    "confirmOrder": "تأكيد الطلب",
+    "cancelOrder": "إلغاء الطلب",
+    "startPreparing": "بدء التحضير",
+    "markReady": "وضع علامة كجاهز",
+    "assignDriver": "تعيين سائق",
+    "markPickedUp": "وضع علامة كمستلم",
+    "markDelivered": "وضع علامة كمسلم",
+    "verifyAge": "التحقق من العمر والهوية",
+    "messageCustomer": "مراسلة العميل",
+    "processRefund": "معالجة الاسترداد",
+    "assignAndDispatch": "تعيين وإرسال",
+    "sendMessage": "إرسال رسالة"
+  },
+  "messages": {
+    "searchPlaceholder": "البحث برقم الطلب، العميل، الهاتف...",
+    "selectDriver": "اختر سائقاً...",
+    "noOrders": "لم يتم العثور على طلبات",
+    "ordersWillAppear": "ستظهر الطلبات هنا عندما يقدمها العملاء.",
+    "exportMessage": "ستقوم وظيفة التصدير بتنزيل ملف CSV",
+    "assignDriverMessage": "تعيين سائق للطلب {{orderNumber}}",
+    "messageSendTo": "إرسال رسالة إلى {{firstName}} {{lastName}}",
+    "typePlaceholder": "اكتب رسالتك...",
+    "loadingError": "خطأ في تحميل الطلبات:",
+    "driedFlowerEq": "معادل الزهرة المجففة:",
+    "to": "إلى",
+    "idVerified": "ID ✓",
+    "noId": "لا توجد هوية",
+    "itemsCount": "{{count}} عنصر",
+    "orderNumber": "الطلب {{number}}",
+    "min": "دقيقة"
+  },
+  "metrics": {
+    "pending": "قيد الانتظار",
+    "preparing": "قيد التحضير",
+    "ready": "جاهز",
+    "todayRevenue": "إيرادات اليوم",
+    "avgProcessTime": "متوسط وقت المعالجة"
+  },
+  "sections": {
+    "customerInfo": "معلومات العميل",
+    "orderInfo": "معلومات الطلب",
+    "deliveryInfo": "معلومات التوصيل",
+    "pickupInfo": "معلومات الاستلام",
+    "specialInstructions": "تعليمات خاصة",
+    "orderItems": "عناصر الطلب",
+    "orderSummary": "ملخص الطلب"
+  },
+  "summary": {
+    "subtotal": "المجموع الفرعي:",
+    "tax": "الضريبة (13% HST):",
+    "delivery": "التوصيل:",
+    "discount": "الخصم:",
+    "total": "الإجمالي:"
+  },
+  "prompts": {
+    "cancelReason": "يرجى تقديم سبب الإلغاء:",
+    "refundReason": "يرجى تقديم سبب الاسترداد:"
+  },
+  "templates": {
+    "selectTemplate": "اختر قالباً...",
+    "orderConfirmed": "تم تأكيد طلبك ويتم تحضيره.",
+    "readyForPickup": "طلبك جاهز للاستلام!",
+    "outForDelivery": "طلبك في طريقه للتوصيل.",
+    "delayNotice": "هناك تأخير في طلبك. نعتذر عن الإزعاج.",
+    "orderConfirmedLabel": "تم تأكيد الطلب",
+    "readyForPickupLabel": "جاهز للاستلام",
+    "outForDeliveryLabel": "قيد التوصيل",
+    "delayNoticeLabel": "إشعار التأخير"
+  },
+  "labels": {
+    "quickTemplates": "قوالب سريعة"
+  }
+}

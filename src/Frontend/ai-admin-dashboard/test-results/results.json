@@ -1,0 +1,394 @@
+{
+  "config": {
+    "configFile": "/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/Frontend/ai-admin-dashboard/playwright.config.ts",
+    "rootDir": "/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/Frontend/ai-admin-dashboard/tests",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 4
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        {
+          "outputFolder": "playwright-report"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results/results.json"
+        }
+      ],
+      [
+        "list",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/Frontend/ai-admin-dashboard/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 4
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/Frontend/ai-admin-dashboard/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.56.1",
+    "workers": 7,
+    "webServer": {
+      "command": "npm run dev",
+      "url": "http://localhost:3003",
+      "reuseExistingServer": true,
+      "timeout": 120000,
+      "stdout": "pipe",
+      "stderr": "pipe"
+    }
+  },
+  "suites": [
+    {
+      "title": "01-language-switching.spec.ts",
+      "file": "01-language-switching.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Language Switching Tests",
+          "file": "01-language-switching.spec.ts",
+          "line": 10,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should load default language (English)",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 2511,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"en\"\u001b[39m\nReceived: \u001b[31m\"en\u001b[7m-US\u001b[27m\"\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"en\"\u001b[39m\nReceived: \u001b[31m\"en\u001b[7m-US\u001b[27m\"\u001b[39m\n    at /Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/Frontend/ai-admin-dashboard/tests/01-language-switching.spec.ts:18:22",
+                        "location": {
+                          "file": "/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/Frontend/ai-admin-dashboard/tests/01-language-switching.spec.ts",
+                          "column": 22,
+                          "line": 18
+                        },
+                        "snippet": "  16 |   test('should load default language (English)', async ({ page }) => {\n  17 |     const htmlLang = await page.locator('html').getAttribute('lang');\n> 18 |     expect(htmlLang).toBe('en');\n     |                      ^\n  19 |   });\n  20 |\n  21 |   test('should successfully switch between all 28 languages', async ({ page }) => {"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/Frontend/ai-admin-dashboard/tests/01-language-switching.spec.ts",
+                            "column": 22,
+                            "line": 18
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"en\"\u001b[39m\nReceived: \u001b[31m\"en\u001b[7m-US\u001b[27m\"\u001b[39m\n\n  16 |   test('should load default language (English)', async ({ page }) => {\n  17 |     const htmlLang = await page.locator('html').getAttribute('lang');\n> 18 |     expect(htmlLang).toBe('en');\n     |                      ^\n  19 |   });\n  20 |\n  21 |   test('should successfully switch between all 28 languages', async ({ page }) => {\n    at /Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/Frontend/ai-admin-dashboard/tests/01-language-switching.spec.ts:18:22"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-18T17:07:17.742Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/Frontend/ai-admin-dashboard/test-results/01-language-switching-Lang-1b8eb-d-default-language-English--chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/Frontend/ai-admin-dashboard/test-results/01-language-switching-Lang-1b8eb-d-default-language-English--chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/Frontend/ai-admin-dashboard/test-results/01-language-switching-Lang-1b8eb-d-default-language-English--chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/Frontend/ai-admin-dashboard/tests/01-language-switching.spec.ts",
+                        "column": 22,
+                        "line": 18
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "94415ac32a87b07bc348-350953176485e937d6ef",
+              "file": "01-language-switching.spec.ts",
+              "line": 16,
+              "column": 3
+            },
+            {
+              "title": "should successfully switch between all 28 languages",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 48386,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Switching to English (en)",
+                          "duration": 1830
+                        },
+                        {
+                          "title": "Switching to Arabic (ar)",
+                          "duration": 1651
+                        },
+                        {
+                          "title": "Switching to Bengali (bn)",
+                          "duration": 1567
+                        },
+                        {
+                          "title": "Switching to Cree (cr)",
+                          "duration": 1566
+                        },
+                        {
+                          "title": "Switching to German (de)",
+                          "duration": 1541
+                        },
+                        {
+                          "title": "Switching to Spanish (es)",
+                          "duration": 1556
+                        },
+                        {
+                          "title": "Switching to Persian (fa)",
+                          "duration": 1540
+                        },
+                        {
+                          "title": "Switching to French (fr)",
+                          "duration": 1578
+                        },
+                        {
+                          "title": "Switching to Gujarati (gu)",
+                          "duration": 1577
+                        },
+                        {
+                          "title": "Switching to Hebrew (he)",
+                          "duration": 1537
+                        },
+                        {
+                          "title": "Switching to Hindi (hi)",
+                          "duration": 1536
+                        },
+                        {
+                          "title": "Switching to Italian (it)",
+                          "duration": 1536
+                        },
+                        {
+                          "title": "Switching to Inuktitut (iu)",
+                          "duration": 1532
+                        },
+                        {
+                          "title": "Switching to Japanese (ja)",
+                          "duration": 1749
+                        },
+                        {
+                          "title": "Switching to Korean (ko)",
+                          "duration": 1553
+                        },
+                        {
+                          "title": "Switching to Dutch (nl)",
+                          "duration": 1539
+                        },
+                        {
+                          "title": "Switching to Punjabi (pa)",
+                          "duration": 1530
+                        },
+                        {
+                          "title": "Switching to Polish (pl)",
+                          "duration": 1575
+                        },
+                        {
+                          "title": "Switching to Portuguese (pt)",
+                          "duration": 1554
+                        },
+                        {
+                          "title": "Switching to Romanian (ro)",
+                          "duration": 1599
+                        },
+                        {
+                          "title": "Switching to Russian (ru)",
+                          "duration": 1549
+                        },
+                        {
+                          "title": "Switching to Somali (so)",
+                          "duration": 1578
+                        },
+                        {
+                          "title": "Switching to Tamil (ta)",
+                          "duration": 1605
+                        },
+                        {
+                          "title": "Switching to Tagalog (tl)",
+                          "duration": 1548
+                        },
+                        {
+                          "title": "Switching to Ukrainian (uk)",
+                          "duration": 1586
+                        },
+                        {
+                          "title": "Switching to Urdu (ur)",
+                          "duration": 1557
+                        },
+                        {
+                          "title": "Switching to Vietnamese (vi)",
+                          "duration": 1575
+                        },
+                        {
+                          "title": "Switching to Cantonese (yue)",
+                          "duration": 1558
+                        },
+                        {
+                          "title": "Switching to Mandarin (zh)",
+                          "duration": 1713
+                        }
+                      ],
+                      "startTime": "2025-10-18T17:07:17.739Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "94415ac32a87b07bc348-8f16ef58061b3df418e6",
+              "file": "01-language-switching.spec.ts",
+              "line": 21,
+              "column": 3
+            },
+            {
+              "title": "should persist language preference on page reload",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 4822,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-18T17:07:17.735Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "94415ac32a87b07bc348-7411bd32c686587c1854",
+              "file": "01-language-switching.spec.ts",
+              "line": 42,
+              "column": 3
+            },
+            {
+              "title": "should maintain language across navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 6870,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-18T17:07:17.738Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "94415ac32a87b07bc348-7812168ad74f34e80253",
+              "file": "01-language-switching.spec.ts",
+              "line": 58,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-10-18T17:07:17.264Z",
+    "duration": 51230.004,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

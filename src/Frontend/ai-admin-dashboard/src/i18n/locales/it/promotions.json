@@ -1,0 +1,158 @@
+{
+  "titles": {
+    "main": "Promozioni e Prezzi",
+    "activePromotions": "Promozioni Attive",
+    "analytics": "Analitiche",
+    "defaultPricing": "Prezzi Predefiniti",
+    "topPerforming": "Promozioni di Maggior Successo",
+    "overallStats": "Statistiche Generali",
+    "deletePromotion": "Elimina Promozione",
+    "createPromotion": "Crea Nuova Promozione",
+    "editPromotion": "Modifica Promozione",
+    "viewPromotion": "Visualizza Promozione",
+    "defaultPriceConfig": "Configurazione Prezzi Predefiniti",
+    "applyMarkup": "Applica Margine",
+    "storeWideMarkup": "Margine Predefinito per Tutto il Negozio"
+  },
+  "descriptions": {
+    "noStoreSelected": "Nessun Negozio Selezionato",
+    "selectStoreForPromotions": "Seleziona un negozio per gestire promozioni e prezzi",
+    "selectStoreForPricing": "Seleziona un negozio per gestire i prezzi",
+    "managingFor": "Gestione promozioni e prezzi per",
+    "pricingInstructions": "Imposta le percentuali di margine per i prodotti per categoria. Il margine viene applicato al costo unitario per calcolare il prezzo al dettaglio. Le impostazioni più specifiche sostituiscono quelle generali (ad es., la sottocategoria sostituisce la categoria).",
+    "defaultMarkupInfo": "Questo margine predefinito verrà utilizzato nel calcolo dei prezzi per i nuovi prodotti o quando non è impostato un margine di categoria specifico."
+  },
+  "table": {
+    "promotion": "Promozione",
+    "code": "Codice",
+    "discount": "Sconto",
+    "usage": "Utilizzo",
+    "duration": "Durata",
+    "status": "Stato",
+    "actions": "Azioni",
+    "min": "Min",
+    "perCustomer": "per cliente",
+    "to": "a",
+    "uses": "utilizzi",
+    "revenue": "entrate"
+  },
+  "status": {
+    "inactive": "Inattivo",
+    "scheduled": "Programmato",
+    "expired": "Scaduto",
+    "active": "Attivo"
+  },
+  "stats": {
+    "totalUses": "Utilizzi Totali",
+    "totalDiscounts": "Sconti Totali",
+    "totalRevenue": "Entrate Totali",
+    "avgOrderValue": "Valore Medio Ordine"
+  },
+  "actions": {
+    "createNew": "Crea Nuova Promozione",
+    "edit": "Modifica promozione",
+    "delete": "Elimina promozione",
+    "cancel": "Annulla",
+    "back": "Indietro",
+    "next": "Avanti",
+    "update": "Aggiorna",
+    "create": "Crea",
+    "applyMarkup": "Applica Margine",
+    "resetOverrides": "Ripristina Sostituzioni",
+    "saveDefault": "Salva come Predefinito",
+    "quickSetMarkup": "Imposta Rapidamente il Margine"
+  },
+  "search": {
+    "placeholder": "Cerca promozioni per nome o codice...",
+    "categories": "Cerca categorie..."
+  },
+  "steps": {
+    "basicInfo": {
+      "name": "Informazioni di Base",
+      "description": "Nome e descrizione"
+    },
+    "discount": {
+      "name": "Sconto",
+      "description": "Tipo e valore"
+    },
+    "scope": {
+      "name": "Ambito",
+      "description": "Dove e quando"
+    },
+    "settings": {
+      "name": "Impostazioni",
+      "description": "Limiti di utilizzo"
+    },
+    "review": {
+      "name": "Revisione",
+      "description": "Conferma dettagli"
+    }
+  },
+  "pricing": {
+    "enableDefault": "Abilita margine predefinito",
+    "default": "Predefinito",
+    "markupPercentage": "Percentuale di Margine",
+    "retailPriceFormula": "Retail Price = Cost × (1 + {markup}%)",
+    "exampleCalculation": "Esempio di Calcolo:",
+    "currentCost": "Costo attuale",
+    "currentRetail": "Dettaglio attuale",
+    "newPricing": "Nuovi prezzi con margine {markup}%:",
+    "newRetailPrice": "Nuovo prezzo al dettaglio",
+    "profitMargin": "Margine di profitto",
+    "priceChange": "Variazione di prezzo",
+    "ifCost": "Se il costo",
+    "retailPrice": "Prezzo al dettaglio",
+    "allProducts": "Tutti i Prodotti",
+    "storeWideDefault": "Predefinito per tutto il negozio",
+    "products": "prodotti",
+    "overrides": "sostituzioni",
+    "avg": "Media",
+    "productsInCategory": "Prodotti in questa categoria:",
+    "sku": "SKU",
+    "stock": "Magazzino",
+    "brand": "Marca",
+    "cost": "Costo",
+    "applyingTo": "Applicando a:",
+    "updating": "Aggiornamento:",
+    "allProductsStoreWide": "Tutti i Prodotti (Tutto il Negozio)"
+  },
+  "confirm": {
+    "deletePromotion": "Sei sicuro di voler eliminare questa promozione? Questa azione non può essere annullata.",
+    "applyAllProducts": "Questo aggiornerà il margine per TUTTI i prodotti nel negozio a {markup}%. Sei sicuro?",
+    "resetOverrides": "Questo rimuoverà tutte le sostituzioni di prezzo per {scope} e utilizzerà il margine calcolato. Sei sicuro?"
+  },
+  "warnings": {
+    "storeWideUpdate": "Questo aggiornerà i prezzi per tutti i prodotti nel negozio.",
+    "singleProductNote": "Verrà aggiornato solo questo prodotto specifico."
+  },
+  "messages": {
+    "codeCopied": "Codice copiato!",
+    "loading": {
+      "promotions": "Caricamento promozioni...",
+      "categories": "Caricamento categorie...",
+      "products": "Caricamento prodotti..."
+    },
+    "noProducts": "Nessun prodotto trovato",
+    "saving": "Salvataggio...",
+    "updating": "Aggiornamento Prezzi...",
+    "updatedSuccessfully": "Aggiornato con Successo!",
+    "resetting": "Ripristino..."
+  },
+  "success": {
+    "created": "Promozione creata con successo!",
+    "updated": "Promozione aggiornata con successo!",
+    "deleted": "Promozione eliminata con successo!",
+    "markupUpdated": "Impostazioni margine predefinito aggiornate!",
+    "priceUpdated": "{count} prodotto aggiornato con successo!",
+    "priceUpdatedPlural": "{count} prodotti aggiornati con successo!",
+    "overridesCleared": "Sostituzioni di prezzo cancellate con successo"
+  },
+  "errors": {
+    "createFailed": "Creazione promozione fallita",
+    "updateFailed": "Aggiornamento promozione fallito",
+    "deleteFailed": "Eliminazione promozione fallita",
+    "settingsUpdateFailed": "Aggiornamento impostazioni fallito",
+    "pricingUpdateFailed": "Aggiornamento prezzi fallito",
+    "resetFailed": "Ripristino sostituzioni di prezzo fallito"
+  }
+}

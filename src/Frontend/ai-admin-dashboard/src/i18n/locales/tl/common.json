@@ -1,0 +1,201 @@
+{
+  "buttons": {
+    "send": "Ipadala",
+    "close": "Isara",
+    "cancel": "Kanselahin",
+    "save": "I-save",
+    "delete": "Tanggalin",
+    "edit": "I-edit",
+    "create": "Lumikha",
+    "update": "I-update",
+    "confirm": "Kumpirmahin",
+    "back": "Bumalik",
+    "next": "Susunod",
+    "submit": "Isumite",
+    "search": "Maghanap",
+    "filter": "I-filter",
+    "export": "I-export",
+    "import": "Mag-import",
+    "refresh": "I-refresh",
+    "settings": "Mga Setting",
+    "logout": "Mag-logout",
+    "change": "Baguhin"
+  },
+  "labels": {
+    "email": "Email address",
+    "password": "Password",
+    "username": "Username",
+    "name": "Pangalan",
+    "phone": "Telepono",
+    "address": "Address",
+    "city": "Lungsod",
+    "province": "Probinsya",
+    "postalCode": "Postal Code",
+    "country": "Bansa",
+    "status": "Katayuan",
+    "actions": "Mga Aksyon",
+    "description": "Paglalarawan",
+    "notes": "Mga Tala",
+    "date": "Petsa",
+    "time": "Oras",
+    "total": "Kabuuan",
+    "subtotal": "Subtotal",
+    "tax": "Buwis",
+    "quantity": "Dami",
+    "price": "Presyo",
+    "language": "Wika"
+  },
+  "placeholders": {
+    "enterEmail": "Ilagay ang iyong email",
+    "enterPassword": "Ilagay ang iyong password",
+    "search": "Maghanap...",
+    "selectOption": "Pumili ng opsyon",
+    "typeMessage": "I-type ang iyong mensahe...",
+    "enterName": "Ilagay ang pangalan",
+    "enterPhone": "Ilagay ang numero ng telepono"
+  },
+  "messages": {
+    "loading": "Naglo-load...",
+    "saving": "Nag-se-save...",
+    "success": "Tagumpay!",
+    "error": "May naganap na error",
+    "noData": "Walang available na data",
+    "confirm": "Sigurado ka ba?",
+    "unsavedChanges": "Mayroon kang mga hindi naka-save na pagbabago"
+  },
+  "toasts": {
+    "password": {
+      "changeSuccess": "Matagumpay na nabago ang password! Mangyaring mag-log in muli.",
+      "changeFailed": "Nabigo ang pagbabago ng password. Mangyaring subukan muli."
+    },
+    "broadcast": {
+      "createSuccess": "Matagumpay na nalikha ang broadcast!",
+      "createFailed": "Nabigo ang paglikha ng broadcast"
+    },
+    "template": {
+      "fetchFailed": "Nabigo ang pagkuha ng mga template",
+      "createSuccess": "Matagumpay na nalikha ang template",
+      "createFailed": "Nabigo ang paglikha ng template",
+      "updateSuccess": "Matagumpay na na-update ang template",
+      "updateFailed": "Nabigo ang pag-update ng template",
+      "deleteSuccess": "Matagumpay na natanggal ang template",
+      "deleteFailed": "Nabigo ang pagtanggal ng template"
+    },
+    "model": {
+      "fetchFailed": "Nabigo ang pagkuha ng mga model",
+      "loadFailed": "Nabigo ang paglo-load ng model",
+      "unloadSuccess": "Matagumpay na nag-unload ng model",
+      "unloadFailed": "Nabigo ang pag-unload ng model",
+      "updateFailed": "Nabigo ang pag-update ng model"
+    },
+    "config": {
+      "fetchFailed": "Nabigo ang pagkuha ng configuration",
+      "updateSuccess": "Matagumpay na na-update ang configuration",
+      "updateFailed": "Nabigo ang pag-save ng configuration"
+    },
+    "agent": {
+      "fetchFailed": "Nabigo ang pagkuha ng mga agent"
+    },
+    "personality": {
+      "fetchFailed": "Nabigo ang pagkuha ng mga personality"
+    },
+    "router": {
+      "statsFetchFailed": "Nabigo ang pagkuha ng router stats",
+      "toggleFailed": "Nabigo ang pag-toggle ng inference mode"
+    }
+  },
+  "errors": {
+    "required": "Kinakailangan ang field na ito",
+    "invalidEmail": "Hindi valid na email address",
+    "invalidPhone": "Hindi valid na numero ng telepono",
+    "networkError": "Network error. Mangyaring subukan muli.",
+    "serverError": "Server error. Mangyaring subukan mamaya.",
+    "unauthorized": "Hindi awtorisadong access",
+    "notFound": "Hindi natagpuan",
+    "sessionExpired": "Nag-expire na ang iyong session. Mangyaring mag-log in muli.",
+    "validation": {
+      "selectStore": "Mangyaring pumili ng tindahan",
+      "selectSupplier": "Mangyaring pumili ng supplier",
+      "addAtLeastOneItem": "Mangyaring magdagdag ng kahit isang item",
+      "fillRequiredFields": "Mangyaring punan ang lahat ng required fields para sa bawat item",
+      "enterLicenseNumber": "Mangyaring maglagay ng license number",
+      "fillAllRequiredFields": "Mangyaring punan ang lahat ng required fields: {{fields}}",
+      "invalidJson": "Hindi ma-save ang invalid JSON: {{message}}",
+      "invalidCode": "Hindi valid na code",
+      "invalidVerificationCode": "Hindi valid na verification code"
+    },
+    "operations": {
+      "saveFailed": "Nabigo ang pag-save ng mga setting",
+      "validationFailed": "Nabigo ang validation",
+      "fetchFailed": "Nabigo ang pagkuha ng {{resource}}",
+      "createFailed": "Nabigo ang paglikha ng {{resource}}",
+      "updateFailed": "Nabigo ang pag-update ng {{resource}}",
+      "deleteFailed": "Nabigo ang pagtanggal ng {{resource}}",
+      "searchFailed": "Nabigo ang paghahanap ng {{resource}}",
+      "loadFailed": "Nabigo ang paglo-load ng {{resource}}. Mangyaring i-refresh ang page.",
+      "sendFailed": "Nabigo ang pagpapadala ng {{resource}}",
+      "generateFailed": "Nabigo ang pag-generate ng {{resource}}",
+      "verifyFailed": "Nabigo ang pag-verify ng {{resource}}",
+      "processFailed": "Nabigo ang pagproseso ng {{action}}. Mangyaring subukan muli.",
+      "testConnectionFailed": "Nabigo ang pagsubok ng connection. Mangyaring suriin ang iyong network."
+    }
+  },
+  "common": {
+    "yes": "Oo",
+    "no": "Hindi",
+    "or": "o",
+    "and": "at",
+    "today": "Ngayon",
+    "yesterday": "Kahapon",
+    "week": "Linggo",
+    "month": "Buwan",
+    "year": "Taon",
+    "all": "Lahat",
+    "none": "Wala",
+    "active": "Aktibo",
+    "inactive": "Hindi aktibo",
+    "pending": "Nakabinbin",
+    "completed": "Nakumpleto",
+    "failed": "Nabigo",
+    "notSpecified": "Hindi tinukoy",
+    "unknown": "Hindi alam",
+    "na": "N/A"
+  },
+  "confirmations": {
+    "deleteUser": "Sigurado ka bang gusto mong tanggalin ang user na {{email}}?",
+    "deleteUserPermanent": "Sigurado ka bang gusto mong tanggalin ang user na ito? Hindi na mababawi ang aksyon na ito.",
+    "deleteTerminal": "Sigurado ka bang gusto mong tanggalin ang terminal na ito?",
+    "passwordResetMethod": "I-click ang OK para magpadala ng password reset link sa email\nI-click ang Cancel para mag-generate at ipakita ang pansamantalang password"
+  },
+  "modals": {
+    "changePassword": {
+      "title": "Baguhin ang Password",
+      "currentPassword": "Kasalukuyang Password",
+      "newPassword": "Bagong Password",
+      "confirmPassword": "Kumpirmahin ang Bagong Password",
+      "placeholders": {
+        "currentPassword": "Ilagay ang kasalukuyang password",
+        "newPassword": "Ilagay ang bagong password",
+        "confirmPassword": "Kumpirmahin ang bagong password"
+      },
+      "requirements": {
+        "title": "Dapat may laman ang password ng:",
+        "minLength": "Hindi bababa sa 8 characters",
+        "uppercase": "Isang malaking titik",
+        "lowercase": "Isang maliit na titik",
+        "number": "Isang numero"
+      },
+      "validation": {
+        "currentRequired": "Kinakailangan ang kasalukuyang password",
+        "newRequired": "Kinakailangan ang bagong password",
+        "notMeetRequirements": "Ang password ay hindi nakakatugon sa mga kinakailangan",
+        "confirmRequired": "Mangyaring kumpirmahin ang iyong bagong password",
+        "notMatch": "Ang mga password ay hindi tugma",
+        "mustBeDifferent": "Ang bagong password ay dapat na iba sa kasalukuyang password",
+        "incorrectCurrent": "Ang kasalukuyang password ay mali"
+      },
+      "securityNotice": "Pagkatapos baguhin ang iyong password, ikaw ay mala-log out at kailangan mong mag-log in muli gamit ang iyong bagong credentials.",
+      "changing": "Binabago..."
+    }
+  }
+}

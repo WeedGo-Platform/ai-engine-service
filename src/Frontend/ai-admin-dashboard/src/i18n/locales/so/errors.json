@@ -1,0 +1,98 @@
+{
+  "api": {
+    "networkError": "Lama xiriiri karin server-ka. Fadlan hubi isku xirkaaga.",
+    "serverError": "Qalad server ah ayaa dhacay. Fadlan mar kale isku day kadib.",
+    "timeout": "Codsiga waqtigiisu wuu dhamaaday. Fadlan mar kale isku day.",
+    "unauthorized": "Ma lihid fasax aad ku samayso tallaabadan.",
+    "forbidden": "Gelitaanka waa la diiday.",
+    "notFound": "Khayraadka la codsaday lama helin.",
+    "conflict": "Isku dhac ayaa dhacay. Khayraadku wuu jiri karaa markii hore.",
+    "validationError": "Qalad xaqiijin ah ayaa dhacay.",
+    "tooManyRequests": "Codsiyada aad u badan. Fadlan mar kale isku day kadib.",
+    "serviceUnavailable": "Adeeggu si ku-meel-gaar ah uma heli karo.",
+    "badRequest": "Codsiga khaldan. Fadlan hubi gelitaanka.",
+    "internalError": "Qalad gudaha ah ayaa dhacay."
+  },
+  "auth": {
+    "loginSuccess": "Galitaanku waa guulaysatay! Dib-u-haajinta...",
+    "invalidCredentials": "Iimayl ama furaha sirta ah khaldan. Fadlan mar kale isku day.",
+    "sessionExpired": "Fadhigaagu wuu dhamaaday. Fadlan mar kale gal.",
+    "accountDisabled": "Koontadaada waa la joojiyay ama ma lihid xuquuqda maamulaha.",
+    "accountLocked": "Koontadaada waa la xiray sababo la xiriira isku dayo badan oo fashilmay.",
+    "tooManyAttempts": "Isku dayo badan oo galid ah. Fadlan mar kale isku day kadib.",
+    "tokenExpired": "Calaamadda xaqiijinta waa dhammaatay.",
+    "tokenInvalid": "Calaamadda xaqiijinta khaldan.",
+    "passwordResetFailed": "Dib-u-habaynta furahaagu waa fashilmay. Fadlan mar kale isku day.",
+    "emailNotVerified": "Fadlan marka hore xaqiiji cinwaanka iimayl-kaaga.",
+    "validationError": "Qalad xaqiijin ah ayaa dhacay",
+    "loginError": "Qalad ayaa dhacday inta lagu jiro galitaanka"
+  },
+  "tenant": {
+    "loadFailed": "Soo rarista xogta ururka waa fashilmay.",
+    "createFailed": "Abuurista kiraystaha waa fashilmay.",
+    "updateFailed": "Cusboonaysiinta kiraystaha waa fashilmay.",
+    "deleteFailed": "Tirtiridda kiraystaha waa fashilmay.",
+    "suspendFailed": "Hakinta kiraystaha waa fashilmay.",
+    "reactivateFailed": "Dib u firfircoonsiinta kiraystaha waa fashilmay.",
+    "noOrganization": "Ma jiro urur la xiriira isticmaalaha.",
+    "limitReached": "Xadka dukaamada waa la gaaray kiraystahan.",
+    "invalidSubscription": "Isdiiwaangelin khaldan ama dhacay."
+  },
+  "store": {
+    "loadFailed": "Soo rarista xogta dukaanka waa fashilmay.",
+    "createFailed": "Abuurista dukaanka waa fashilmay.",
+    "updateFailed": "Cusboonaysiinta dukaanka waa fashilmay.",
+    "deleteFailed": "Tirtiridda dukaanka waa fashilmay.",
+    "suspendFailed": "Hakinta dukaanka waa fashilmay.",
+    "closeFailed": "Xirista dukaanka waa fashilmay.",
+    "notFound": "Dukaanka lama helin.",
+    "alreadyExists": "Dukaan magacan leh ayaa jira markii hore."
+  },
+  "inventory": {
+    "loadFailed": "Soo rarista xogta agabka waa fashilmay.",
+    "createFailed": "Abuurista shayga agabka waa fashilmay.",
+    "updateFailed": "Cusboonaysiinta shayga agabka waa fashilmay.",
+    "deleteFailed": "Tirtiridda shayga agabka waa fashilmay.",
+    "stockUpdateFailed": "Cusboonaysiinta heerarka kaydka waa fashilmay.",
+    "lowStock": "Digniin kayd yar.",
+    "outOfStock": "Shaygu kaydka kama jiro.",
+    "invalidQuantity": "Tiro khaldan ayaa la sheegay."
+  },
+  "order": {
+    "loadFailed": "Soo rarista xogta dalabka waa fashilmay.",
+    "createFailed": "Abuurista dalabka waa fashilmay.",
+    "updateFailed": "Cusboonaysiinta dalabka waa fashilmay.",
+    "cancelFailed": "Joojinta dalabka waa fashilmay.",
+    "fulfillFailed": "Buuxinta dalabka waa fashilmay.",
+    "refundFailed": "Habaynta lacag celinta waa fashilmay.",
+    "notFound": "Dalabka lama helin.",
+    "alreadyProcessed": "Dalabka waa la habeeyay markii hore."
+  },
+  "payment": {
+    "loadFailed": "Soo rarista xogta lacag bixinta waa fashilmay.",
+    "processingFailed": "Habaynta lacag bixinta waa fashilmay.",
+    "refundFailed": "Habaynta lacag celinta waa fashilmay.",
+    "invalidAmount": "Lacagta lacag bixinta khaldan.",
+    "cardDeclined": "Kaardhka waa la diiday.",
+    "insufficientFunds": "Lacag la'aan.",
+    "paymentMethodInvalid": "Habka lacag bixinta khaldan."
+  },
+  "upload": {
+    "failed": "Kor u qaadista faylka waa fashilmay.",
+    "fileTooLarge": "Cabbirka faylka ayaa ka badan inta ugu badnaan.",
+    "invalidFileType": "Nooca faylka khaldan.",
+    "corruptedFile": "Faylku wuxuu u muuqdaa inuu burburay.",
+    "uploadCancelled": "Kor u qaadista waa la joojiyay."
+  },
+  "general": {
+    "unexpectedError": "Qalad la filaan waayay ayaa dhacay.",
+    "operationFailed": "Hawlgalku wuu fashilmay. Fadlan mar kale isku day.",
+    "dataLoadFailed": "Soo rarista xogta waa fashilmay.",
+    "saveFailed": "Kaydinta isbeddelada waa fashilmay.",
+    "deleteFailed": "Tirtiridda shayga waa fashilmay.",
+    "permissionDenied": "Ma lihid fasax aad ku samayso tallaabadan.",
+    "invalidInput": "Gelinta khaldan ayaa la siiyay.",
+    "requiredFieldMissing": "Goobta loo baahan yahay ayaa maqan.",
+    "dataCorrupted": "Xogtu waxay u muuqataa inay burburay."
+  }
+}

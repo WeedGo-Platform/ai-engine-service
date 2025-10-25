@@ -1,0 +1,141 @@
+{
+  "fully_translated": [
+    "ar",
+    "bn",
+    "cr",
+    "de",
+    "es",
+    "fa",
+    "fr",
+    "gu",
+    "he",
+    "hi",
+    "it",
+    "iu",
+    "ja",
+    "ko",
+    "nl",
+    "pa",
+    "pl",
+    "pt",
+    "ro",
+    "ru",
+    "so",
+    "ta",
+    "tl",
+    "uk",
+    "ur",
+    "vi",
+    "yue",
+    "zh"
+  ],
+  "incomplete": {},
+  "missing_files": {},
+  "namespace_stats": {
+    "apps": {
+      "complete": 28,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "auth": {
+      "complete": 28,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "catalog": {
+      "complete": 28,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "common": {
+      "complete": 28,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "communications": {
+      "complete": 28,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "dashboard": {
+      "complete": 28,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "database": {
+      "complete": 28,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "errors": {
+      "complete": 28,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "forms": {
+      "complete": 28,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "inventory": {
+      "complete": 28,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "landing": {
+      "complete": 28,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "modals": {
+      "complete": 28,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "orders": {
+      "complete": 28,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "payments": {
+      "complete": 28,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "pos": {
+      "complete": 28,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "promotions": {
+      "complete": 28,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "settings": {
+      "complete": 28,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "signup": {
+      "complete": 28,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "stores": {
+      "complete": 28,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "tenants": {
+      "complete": 28,
+      "incomplete": 0,
+      "missing": 0
+    },
+    "tools": {
+      "complete": 28,
+      "incomplete": 0,
+      "missing": 0
+    }
+  }
+}

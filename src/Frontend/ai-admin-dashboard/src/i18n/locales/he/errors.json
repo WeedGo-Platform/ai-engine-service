@@ -1,0 +1,98 @@
+{
+  "api": {
+    "networkError": "לא ניתן להתחבר לשרת. אנא בדוק את החיבור שלך.",
+    "serverError": "אירעה שגיאת שרת. אנא נסה שוב מאוחר יותר.",
+    "timeout": "הבקשה פגה. אנא נסה שוב.",
+    "unauthorized": "אין לך הרשאה לבצע פעולה זו.",
+    "forbidden": "הגישה נדחתה.",
+    "notFound": "המשאב המבוקש לא נמצא.",
+    "conflict": "אירע קונפליקט. המשאב כבר עשוי להתקיים.",
+    "validationError": "אירעה שגיאת אימות.",
+    "tooManyRequests": "יותר מדי בקשות. אנא נסה שוב מאוחר יותר.",
+    "serviceUnavailable": "השירות אינו זמין באופן זמני.",
+    "badRequest": "בקשה לא חוקית. אנא בדוק את הקלט שלך.",
+    "internalError": "אירעה שגיאה פנימית."
+  },
+  "auth": {
+    "loginSuccess": "התחברות הצליחה! מפנה...",
+    "invalidCredentials": "כתובת דוא״ל או סיסמה לא חוקיים. אנא נסה שוב.",
+    "sessionExpired": "תוקף ההפעלה שלך פג. אנא התחבר שוב.",
+    "accountDisabled": "החשבון שלך מושבת או חסר הרשאות מנהל.",
+    "accountLocked": "החשבון שלך ננעל עקב ניסיונות התחברות כושלים מרובים.",
+    "tooManyAttempts": "יותר מדי ניסיונות התחברות. אנא נסה שוב מאוחר יותר.",
+    "tokenExpired": "אסימון האימות פג.",
+    "tokenInvalid": "אסימון אימות לא חוקי.",
+    "passwordResetFailed": "איפוס הסיסמה נכשל. אנא נסה שוב.",
+    "emailNotVerified": "אנא אמת תחילה את כתובת הדוא״ל שלך.",
+    "validationError": "אירעה שגיאת אימות",
+    "loginError": "אירעה שגיאה במהלך ההתחברות"
+  },
+  "tenant": {
+    "loadFailed": "טעינת נתוני הארגון נכשלה.",
+    "createFailed": "יצירת השוכר נכשלה.",
+    "updateFailed": "עדכון השוכר נכשל.",
+    "deleteFailed": "מחיקת השוכר נכשלה.",
+    "suspendFailed": "השעיית השוכר נכשלה.",
+    "reactivateFailed": "הפעלה מחדש של השוכר נכשלה.",
+    "noOrganization": "אין ארגון המשויך למשתמש.",
+    "limitReached": "הגעת למגבלת החנויות עבור שוכר זה.",
+    "invalidSubscription": "מנוי לא חוקי או שפג תוקפו."
+  },
+  "store": {
+    "loadFailed": "טעינת נתוני החנות נכשלה.",
+    "createFailed": "יצירת החנות נכשלה.",
+    "updateFailed": "עדכון החנות נכשל.",
+    "deleteFailed": "מחיקת החנות נכשלה.",
+    "suspendFailed": "השעיית החנות נכשלה.",
+    "closeFailed": "סגירת החנות נכשלה.",
+    "notFound": "החנות לא נמצאה.",
+    "alreadyExists": "חנות בשם זה כבר קיימת."
+  },
+  "inventory": {
+    "loadFailed": "טעינת נתוני המלאי נכשלה.",
+    "createFailed": "יצירת פריט המלאי נכשלה.",
+    "updateFailed": "עדכון פריט המלאי נכשל.",
+    "deleteFailed": "מחיקת פריט המלאי נכשלה.",
+    "stockUpdateFailed": "עדכון רמות המלאי נכשל.",
+    "lowStock": "התראת מלאי נמוך.",
+    "outOfStock": "הפריט אזל מהמלאי.",
+    "invalidQuantity": "כמות לא חוקית צוינה."
+  },
+  "order": {
+    "loadFailed": "טעינת נתוני ההזמנה נכשלה.",
+    "createFailed": "יצירת ההזמנה נכשלה.",
+    "updateFailed": "עדכון ההזמנה נכשל.",
+    "cancelFailed": "ביטול ההזמנה נכשל.",
+    "fulfillFailed": "מילוי ההזמנה נכשל.",
+    "refundFailed": "עיבוד ההחזר נכשל.",
+    "notFound": "ההזמנה לא נמצאה.",
+    "alreadyProcessed": "ההזמנה כבר עובדה."
+  },
+  "payment": {
+    "loadFailed": "טעינת נתוני התשלום נכשלה.",
+    "processingFailed": "עיבוד התשלום נכשל.",
+    "refundFailed": "עיבוד ההחזר נכשל.",
+    "invalidAmount": "סכום תשלום לא חוקי.",
+    "cardDeclined": "הכרטיס נדחה.",
+    "insufficientFunds": "אין מספיק כספים.",
+    "paymentMethodInvalid": "אמצעי תשלום לא חוקי."
+  },
+  "upload": {
+    "failed": "העלאת הקובץ נכשלה.",
+    "fileTooLarge": "גודל הקובץ חורג מהמותר.",
+    "invalidFileType": "סוג קובץ לא חוקי.",
+    "corruptedFile": "נראה שהקובץ פגום.",
+    "uploadCancelled": "ההעלאה בוטלה."
+  },
+  "general": {
+    "unexpectedError": "אירעה שגיאה בלתי צפויה.",
+    "operationFailed": "הפעולה נכשלה. אנא נסה שוב.",
+    "dataLoadFailed": "טעינת הנתונים נכשלה.",
+    "saveFailed": "שמירת השינויים נכשלה.",
+    "deleteFailed": "מחיקת הפריט נכשלה.",
+    "permissionDenied": "אין לך הרשאה לבצע פעולה זו.",
+    "invalidInput": "סופק קלט לא חוקי.",
+    "requiredFieldMissing": "שדה חובה חסר.",
+    "dataCorrupted": "נראה שהנתונים פגומים."
+  }
+}

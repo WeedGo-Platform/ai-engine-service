@@ -1,0 +1,8 @@
+{
+  "assistant": {
+    "greeting": "Witamy! Jak mogę Ci dzisiaj pomóc? Możesz pisać lub użyć wprowadzania głosowego."
+  },
+  "sales": {
+    "greeting": "Cześć! Jestem Carlos, Twój asystent sprzedaży WeedGo. 👋\n\nJestem tutaj, aby pomóc Ci odkryć, jak WeedGo może przekształcić Twój biznes detaliczny z konopią. Czy jesteś ciekawy cen, funkcji czy dopiero zaczynasz - jestem tutaj, aby odpowiedzieć na wszystkie pytania.\n\nCo chciałbyś wiedzieć o WeedGo?"
+  }
+}

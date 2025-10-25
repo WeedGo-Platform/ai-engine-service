@@ -1,0 +1,158 @@
+{
+  "titles": {
+    "main": "العروض الترويجية والتسعير",
+    "activePromotions": "العروض الترويجية النشطة",
+    "analytics": "التحليلات",
+    "defaultPricing": "التسعير الافتراضي",
+    "topPerforming": "العروض الترويجية الأفضل أداءً",
+    "overallStats": "الإحصائيات العامة",
+    "deletePromotion": "حذف العرض الترويجي",
+    "createPromotion": "إنشاء عرض ترويجي جديد",
+    "editPromotion": "تعديل العرض الترويجي",
+    "viewPromotion": "عرض العرض الترويجي",
+    "defaultPriceConfig": "تكوين السعر الافتراضي",
+    "applyMarkup": "تطبيق الهامش",
+    "storeWideMarkup": "الهامش الافتراضي للمتجر بالكامل"
+  },
+  "descriptions": {
+    "noStoreSelected": "لم يتم اختيار متجر",
+    "selectStoreForPromotions": "يرجى اختيار متجر لإدارة العروض الترويجية والتسعير",
+    "selectStoreForPricing": "يرجى اختيار متجر لإدارة التسعير",
+    "managingFor": "إدارة العروض الترويجية والتسعير لـ",
+    "pricingInstructions": "حدد النسب المئوية للهامش للمنتجات حسب الفئة. يتم تطبيق الهامش على تكلفة الوحدة لحساب سعر التجزئة. تتجاوز الإعدادات الأكثر تحديدًا الإعدادات العامة (على سبيل المثال، تتجاوز الفئة الفرعية الفئة).",
+    "defaultMarkupInfo": "سيتم استخدام هذا الهامش الافتراضي عند حساب الأسعار للمنتجات الجديدة أو عندما لا يتم تعيين هامش فئة محدد."
+  },
+  "table": {
+    "promotion": "العرض الترويجي",
+    "code": "الكود",
+    "discount": "الخصم",
+    "usage": "الاستخدام",
+    "duration": "المدة",
+    "status": "الحالة",
+    "actions": "الإجراءات",
+    "min": "الحد الأدنى",
+    "perCustomer": "لكل عميل",
+    "to": "إلى",
+    "uses": "استخدامات",
+    "revenue": "الإيرادات"
+  },
+  "status": {
+    "inactive": "غير نشط",
+    "scheduled": "مجدول",
+    "expired": "منتهي الصلاحية",
+    "active": "نشط"
+  },
+  "stats": {
+    "totalUses": "إجمالي الاستخدامات",
+    "totalDiscounts": "إجمالي الخصومات",
+    "totalRevenue": "إجمالي الإيرادات",
+    "avgOrderValue": "متوسط قيمة الطلب"
+  },
+  "actions": {
+    "createNew": "إنشاء عرض ترويجي جديد",
+    "edit": "تعديل العرض الترويجي",
+    "delete": "حذف العرض الترويجي",
+    "cancel": "إلغاء",
+    "back": "رجوع",
+    "next": "التالي",
+    "update": "تحديث",
+    "create": "إنشاء",
+    "applyMarkup": "تطبيق الهامش",
+    "resetOverrides": "إعادة تعيين التجاوزات",
+    "saveDefault": "حفظ كافتراضي",
+    "quickSetMarkup": "تعيين الهامش بسرعة"
+  },
+  "search": {
+    "placeholder": "البحث عن العروض الترويجية بالاسم أو الكود...",
+    "categories": "البحث في الفئات..."
+  },
+  "steps": {
+    "basicInfo": {
+      "name": "المعلومات الأساسية",
+      "description": "الاسم والوصف"
+    },
+    "discount": {
+      "name": "الخصم",
+      "description": "النوع والقيمة"
+    },
+    "scope": {
+      "name": "النطاق",
+      "description": "أين ومتى"
+    },
+    "settings": {
+      "name": "الإعدادات",
+      "description": "حدود الاستخدام"
+    },
+    "review": {
+      "name": "المراجعة",
+      "description": "تأكيد التفاصيل"
+    }
+  },
+  "pricing": {
+    "enableDefault": "تمكين الهامش الافتراضي",
+    "default": "افتراضي",
+    "markupPercentage": "النسبة المئوية للهامش",
+    "retailPriceFormula": "Retail Price = Cost × (1 + {markup}%)",
+    "exampleCalculation": "مثال على الحساب:",
+    "currentCost": "التكلفة الحالية",
+    "currentRetail": "سعر التجزئة الحالي",
+    "newPricing": "التسعير الجديد مع هامش {markup}%:",
+    "newRetailPrice": "سعر التجزئة الجديد",
+    "profitMargin": "هامش الربح",
+    "priceChange": "تغيير السعر",
+    "ifCost": "إذا كانت التكلفة",
+    "retailPrice": "سعر التجزئة",
+    "allProducts": "جميع المنتجات",
+    "storeWideDefault": "الافتراضي للمتجر بالكامل",
+    "products": "المنتجات",
+    "overrides": "التجاوزات",
+    "avg": "المتوسط",
+    "productsInCategory": "المنتجات في هذه الفئة:",
+    "sku": "SKU",
+    "stock": "المخزون",
+    "brand": "العلامة التجارية",
+    "cost": "التكلفة",
+    "applyingTo": "التطبيق على:",
+    "updating": "جاري التحديث:",
+    "allProductsStoreWide": "جميع المنتجات (المتجر بالكامل)"
+  },
+  "confirm": {
+    "deletePromotion": "هل أنت متأكد من أنك تريد حذف هذا العرض الترويجي؟ لا يمكن التراجع عن هذا الإجراء.",
+    "applyAllProducts": "سيؤدي هذا إلى تحديث الهامش لجميع المنتجات في المتجر إلى {markup}%. هل أنت متأكد؟",
+    "resetOverrides": "سيؤدي هذا إلى إزالة جميع تجاوزات الأسعار لـ {scope} واستخدام الهامش المحسوب. هل أنت متأكد؟"
+  },
+  "warnings": {
+    "storeWideUpdate": "سيؤدي هذا إلى تحديث التسعير لجميع المنتجات في المتجر.",
+    "singleProductNote": "سيتم تحديث هذا المنتج المحدد فقط."
+  },
+  "messages": {
+    "codeCopied": "تم نسخ الكود!",
+    "loading": {
+      "promotions": "جاري تحميل العروض الترويجية...",
+      "categories": "جاري تحميل الفئات...",
+      "products": "جاري تحميل المنتجات..."
+    },
+    "noProducts": "لم يتم العثور على منتجات",
+    "saving": "جاري الحفظ...",
+    "updating": "جاري تحديث الأسعار...",
+    "updatedSuccessfully": "تم التحديث بنجاح!",
+    "resetting": "جاري إعادة التعيين..."
+  },
+  "success": {
+    "created": "تم إنشاء العرض الترويجي بنجاح!",
+    "updated": "تم تحديث العرض الترويجي بنجاح!",
+    "deleted": "تم حذف العرض الترويجي بنجاح!",
+    "markupUpdated": "تم تحديث إعدادات الهامش الافتراضي!",
+    "priceUpdated": "تم تحديث {count} منتج بنجاح!",
+    "priceUpdatedPlural": "تم تحديث {count} منتج بنجاح!",
+    "overridesCleared": "تم مسح تجاوزات الأسعار بنجاح"
+  },
+  "errors": {
+    "createFailed": "فشل إنشاء العرض الترويجي",
+    "updateFailed": "فشل تحديث العرض الترويجي",
+    "deleteFailed": "فشل حذف العرض الترويجي",
+    "settingsUpdateFailed": "فشل تحديث الإعدادات",
+    "pricingUpdateFailed": "فشل تحديث التسعير",
+    "resetFailed": "فشل إعادة تعيين تجاوزات الأسعار"
+  }
+}

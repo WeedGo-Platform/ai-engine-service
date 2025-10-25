@@ -1,0 +1,30 @@
+{
+  "hero": {
+    "title": "Welcome to Our Application",
+    "subtitle": "The best solution for your needs.",
+    "cta": "Get Started"
+  },
+  "features": {
+    "title": "Features",
+    "feature1": {
+      "title": "Feature One",
+      "description": "Description for feature one."
+    },
+    "feature2": {
+      "title": "Feature Two",
+      "description": "Description for feature two."
+    },
+    "feature3": {
+      "title": "Feature Three",
+      "description": "Description for feature three."
+    }
+  },
+  "about": {
+    "title": "About Us",
+    "content": "Information about the company."
+  },
+  "contact": {
+    "title": "Contact Us",
+    "content": "How to get in touch."
+  }
+}

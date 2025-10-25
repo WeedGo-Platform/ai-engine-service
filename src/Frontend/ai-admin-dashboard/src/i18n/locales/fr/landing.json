@@ -1,0 +1,247 @@
+{
+  "header": {
+    "nav": {
+      "features": "Fonctionnalités",
+      "pricing": "Tarifs",
+      "testimonials": "Témoignages",
+      "login": "Connexion"
+    },
+    "getStarted": "Commencer"
+  },
+  "hero": {
+    "title": "La Plateforme Complète de Cannabis",
+    "titleHighlight": "pour Entreprises",
+    "subtitle": "Alimentez votre dispensaire avec du commerce électronique alimenté par l'IA, un support multilingue, une protection contre la fraude et une gestion d'entreprise complète—le tout sur une seule plateforme.",
+    "startTrial": "Commencer l'Essai Gratuit",
+    "learnMore": "En Savoir Plus"
+  },
+  "stats": {
+    "products": "Produits",
+    "languages": "Langues",
+    "uptime": "Disponibilité",
+    "support": "Support"
+  },
+  "features": {
+    "heading": "Tout ce dont vous avez besoin pour dominer votre marché",
+    "subheading": "Conçu exclusivement pour les détaillants de cannabis, WeedGo combine l'IA de pointe, une infrastructure de niveau entreprise et des outils spécifiques à l'industrie pour vous aider à",
+    "subheadingHighlight": " vendre plus, mieux servir et évoluer plus rapidement",
+    "aiBudtender": {
+      "title": "Budtender IA 24/7",
+      "description": "Ne manquez jamais une vente. Votre assistant IA répond instantanément aux questions des clients dans n'importe quelle langue, recommande des produits et vérifie même l'âge automatiquement."
+    },
+    "voiceShopping": {
+      "title": "Achats Vocaux",
+      "description": "L'accessibilité rencontre la commodité. Les clients peuvent parcourir, rechercher et commander en mains libres—parfait pour les kiosques en magasin et les acheteurs mobiles."
+    },
+    "predictiveIntelligence": {
+      "title": "Intelligence Prédictive",
+      "description": "Sachez ce qui se vend avant que cela n'arrive. L'IA prédit la demande, optimise les niveaux de stock et vous alerte pour réapprovisionner au moment parfait."
+    },
+    "smartRecommendations": {
+      "title": "Recommandations Intelligentes",
+      "description": "Augmentez la valeur moyenne des commandes de 40%. L'apprentissage automatique suggère des produits complémentaires basés sur les habitudes d'achat et les préférences des clients."
+    },
+    "unifiedCommerce": {
+      "title": "Plateforme de Commerce Unifié",
+      "description": "Un système pour tout—vitrine web, point de vente en magasin, kiosque, application mobile et affichages de menu TV. Votre inventaire se synchronise en temps réel sur tous les canaux."
+    },
+    "brandedMobileApps": {
+      "title": "Applications Mobiles de Marque",
+      "description": "Vos clients téléchargent VOTRE application (iOS et Android). Fidélisez avec des notifications push, des offres exclusives et des commandes mobiles sans faille."
+    },
+    "selfServiceKiosks": {
+      "title": "Kiosques en Libre-Service",
+      "description": "Réduisez les temps d'attente et les coûts de main-d'œuvre. Les clients parcourent, commandent et paient sur des tablettes—votre personnel se concentre sur les interactions à forte valeur."
+    },
+    "deliveryEcosystem": {
+      "title": "Écosystème de Livraison",
+      "description": "Gestion complète de la livraison avec applications pour conducteurs, suivi GPS en temps réel, notifications client et optimisation d'itinéraire. Concurrencez les grands acteurs."
+    },
+    "multiLanguage": {
+      "title": "25+ Langues, Zéro Barrière",
+      "description": "Servez chaque client dans sa langue maternelle. Détection automatique, traduction en temps réel et contenu localisé—développez-vous sur n'importe quel marché instantanément."
+    },
+    "seoOptimization": {
+      "title": "SEO qui Fonctionne Vraiment",
+      "description": "Optimisation SEO dynamique alimentée par l'IA. Vos pages de produits se classent plus haut sur Google automatiquement—aucune agence SEO requise."
+    },
+    "fraudProtection": {
+      "title": "Suite de Protection contre la Fraude",
+      "description": "Arrêtez les rétrofacturations avant qu'elles ne se produisent. L'IA détecte les modèles suspects, met sur liste noire les cartes frauduleuses et capture les signatures pour chaque transaction."
+    },
+    "complianceAutopilot": {
+      "title": "Conformité Automatique",
+      "description": "Restez conforme sans tracas. Vérification automatique de l'âge, suivi CannSell, intégration OCS et rapports prêts pour l'audit à portée de main."
+    },
+    "ageVerification": {
+      "title": "Vérification d'Âge Multicouche",
+      "description": "Reconnaissance vocale, scan d'identification, correspondance faciale et remplacement manuel—vérifiez l'âge des clients par plusieurs méthodes pour une confiance réglementaire complète."
+    },
+    "businessIntelligence": {
+      "title": "Intelligence d'Affaires en Temps Réel",
+      "description": "Voyez tout dans un tableau de bord—tendances des ventes, meilleurs produits, comportement des clients, performance du personnel et marges bénéficiaires mises à jour chaque seconde."
+    },
+    "multiLocation": {
+      "title": "Centre de Commande Multi-Emplacements",
+      "description": "Gérez des magasins illimités depuis un tableau de bord. Transférez l'inventaire entre les emplacements, comparez les performances et maintenez une image de marque cohérente sans effort."
+    },
+    "customerLoyalty": {
+      "title": "Moteur de Fidélisation Client",
+      "description": "Transformez les acheteurs occasionnels en clients réguliers. Programmes de points, niveaux VIP, récompenses d'anniversaire et bonus de parrainage—le tout automatisé et personnalisable."
+    },
+    "brandCustomization": {
+      "title": "Votre Marque, Votre Façon",
+      "description": "Personnalisation complète en marque blanche. Choisissez parmi des modèles premium ou entièrement personnalisés—logos, couleurs, polices et mises en page qui crient VOUS."
+    },
+    "noCodeCustomization": {
+      "title": "Personnalisation Sans Code",
+      "description": "Changez n'importe quoi sans développeur. Constructeur de pages glisser-déposer, formulaires personnalisés, bannières promotionnelles—mettez à jour votre magasin en minutes, pas en semaines."
+    },
+    "uptimeGuarantee": {
+      "title": "Garantie de Disponibilité de 99,9%",
+      "description": "Infrastructure cloud d'entreprise qui s'adapte automatiquement. Temps de chargement ultra-rapides, CDN mondial et sauvegardes redondantes—votre magasin ne tombe jamais en panne."
+    },
+    "apiArchitecture": {
+      "title": "Architecture API-First",
+      "description": "Intégrez avec n'importe quoi. L'accès complet à l'API REST vous permet de connecter des logiciels de comptabilité, des outils marketing ou des applications personnalisées de manière transparente."
+    },
+    "cta": {
+      "heading": "Prêt à Voir ce que WeedGo Peut Faire pour Votre Entreprise?",
+      "description": "Rejoignez des centaines de détaillants de cannabis qui ont déjà fait le changement.",
+      "descriptionHighlight": " Commencez gratuitement, évoluez sans limite et transformez votre entreprise",
+      "descriptionEnd": " avec la seule plateforme construite spécifiquement pour vous.",
+      "startTrial": "Commencer l'Essai Gratuit",
+      "viewPricing": "Voir les Plans Tarifaires"
+    }
+  },
+  "pricing": {
+    "heading": "Tarification Simple et Transparente",
+    "subheading": "Choisissez le plan qui correspond aux besoins de votre entreprise",
+    "plans": {
+      "community": {
+        "name": "Communauté et Nouvelles Entreprises",
+        "price": "GRATUIT",
+        "period": "pour toujours",
+        "cta": "Commencer",
+        "everythingIn": "",
+        "features": [
+          "Emplacements de magasin illimités pour évoluer à votre rythme",
+          "Support bilingue (anglais et français)",
+          "Personnalité de budtender alimentée par l'IA",
+          "Système complet de point de vente et kiosque",
+          "Vitrine de commerce électronique personnalisable",
+          "Système d'affichage de menu numérique",
+          "Gestion de livraison intégrée",
+          "Protection avancée contre la fraude et vérification de l'âge",
+          "Support communautaire"
+        ]
+      },
+      "smallBusiness": {
+        "name": "Petite Entreprise",
+        "price": "$99",
+        "period": "/mois",
+        "cta": "Commencer",
+        "everythingIn": "Tout dans Gratuit, plus:",
+        "features": [
+          "Développez-vous sur 5 langues pour des marchés diversifiés",
+          "2 personnalités IA pour correspondre à la voix de votre marque",
+          "Point de vente de qualité professionnelle avec fonctionnalités avancées",
+          "Application de kiosque sur tablette dédiée",
+          "Modèles de commerce électronique premium",
+          "Affichage de menu prêt pour la télévision pour le marketing en magasin",
+          "Support prioritaire quand vous en avez besoin"
+        ]
+      },
+      "professional": {
+        "name": "Professionnel et Entreprise en Croissance",
+        "price": "$149",
+        "period": "/mois",
+        "cta": "Commencer",
+        "badge": "Le Plus Populaire",
+        "everythingIn": "Tout dans Petite Entreprise, plus:",
+        "features": [
+          "Atteignez les marchés mondiaux avec 10 langues",
+          "3 personnalités IA pour des expériences personnalisées",
+          "Débloquez toutes les fonctionnalités et intégrations de la plateforme",
+          "Conception de commerce électronique personnalisée (valeur de 5 000 $)",
+          "Application mobile de marque pour iOS et Android",
+          "Suivi de livraison en direct pour les clients",
+          "Application pour conducteurs pour des opérations sans faille",
+          "Accès complet à l'API pour des intégrations personnalisées",
+          "Optimisation SEO professionnelle et réécriture de contenu"
+        ]
+      },
+      "enterprise": {
+        "name": "Entreprise",
+        "price": "$299",
+        "period": "/mois",
+        "cta": "Contacter les Ventes",
+        "everythingIn": "Tout dans Professionnel, plus:",
+        "features": [
+          "25+ langues pour une véritable portée mondiale",
+          "5 personnalités IA pour servir chaque segment de clientèle",
+          "Plateforme en marque blanche - renommez complètement comme la vôtre",
+          "Serveur MVP dédié pour des performances maximales",
+          "Suite d'automatisation marketing alimentée par l'IA",
+          "Réécriture SEO dynamique pour dominer les classements de recherche",
+          "Publicités promotionnelles optimisées par l'IA ciblées sur vos clients",
+          "Développement de fonctionnalités personnalisées adapté à vos besoins",
+          "Accès direct aux ingénieurs de support",
+          "Intégrations personnalisées prioritaires avec vos systèmes",
+          "Gestionnaire de compte dédié 24/7"
+        ]
+      }
+    }
+  },
+  "testimonials": {
+    "heading": "Approuvé par les Entreprises de Cannabis du Monde Entier",
+    "subheading": "Découvrez ce que nos clients disent de WeedGo",
+    "items": [
+      {
+        "quote": "WeedGo a transformé notre entreprise. L'assistant IA a augmenté nos ventes de 40% et le support multilingue nous aide à servir notre clientèle diversifiée.",
+        "name": "Sarah Johnson",
+        "title": "Propriétaire, Green Valley Dispensary"
+      },
+      {
+        "quote": "Les fonctionnalités de protection contre la fraude et de conformité sont révolutionnaires. Nous avons évité des milliers de transactions frauduleuses et restons conformes sans effort.",
+        "name": "Mike Chen",
+        "title": "Gérant, Urban Leaf Co."
+      },
+      {
+        "quote": "Passer de 1 à 8 emplacements a été fluide avec WeedGo. L'architecture multi-locataire et les outils de gestion centralisés sont exactement ce dont nous avions besoin.",
+        "name": "Lisa Rodriguez",
+        "title": "PDG, Cannabis Collective"
+      }
+    ]
+  },
+  "cta": {
+    "heading": "Prêt à Transformer Votre Entreprise de Cannabis?",
+    "description": "Rejoignez des milliers de dispensaires qui utilisent déjà WeedGo pour augmenter les ventes, améliorer la conformité et offrir des expériences client exceptionnelles.",
+    "button": "Commencez Votre Essai Gratuit"
+  },
+  "footer": {
+    "tagline": "La plateforme complète d'affaires de cannabis alimentée par l'IA.",
+    "product": {
+      "heading": "Produit",
+      "features": "Fonctionnalités",
+      "pricing": "Tarifs",
+      "api": "API",
+      "integrations": "Intégrations"
+    },
+    "company": {
+      "heading": "Entreprise",
+      "about": "À propos",
+      "careers": "Carrières",
+      "contact": "Contact",
+      "blog": "Blog"
+    },
+    "support": {
+      "heading": "Support",
+      "helpCenter": "Centre d'Aide",
+      "documentation": "Documentation",
+      "status": "Statut",
+      "security": "Sécurité"
+    },
+    "copyright": "© 2025 WeedGo. Tous droits réservés."
+  }
+}

@@ -1,0 +1,269 @@
+{
+  "hero": {
+    "title": "Welcome to Our Application",
+    "subtitle": "The best solution for your needs.",
+    "cta": "Get Started",
+    "titleHighlight": "Business Platform",
+    "startTrial": "Start Free Trial",
+    "learnMore": "Learn More"
+  },
+  "features": {
+    "title": "Features",
+    "feature1": {
+      "title": "Feature One",
+      "description": "Description for feature one."
+    },
+    "feature2": {
+      "title": "Feature Two",
+      "description": "Description for feature two."
+    },
+    "feature3": {
+      "title": "Feature Three",
+      "description": "Description for feature three."
+    },
+    "heading": "Everything You Need to Dominate Your Market",
+    "subheading": "Built exclusively for cannabis retailers, WeedGo combines cutting-edge AI, enterprise-grade infrastructure, and industry-specific tools to help you",
+    "subheadingHighlight": " sell more, serve better, and scale faster",
+    "aiBudtender": {
+      "title": "AI Budtender 24/7",
+      "description": "Never miss a sale. Your AI assistant handles customer questions instantly in any language, recommends products, and even verifies age automatically."
+    },
+    "voiceShopping": {
+      "title": "Voice Shopping",
+      "description": "Accessibility meets convenience. Customers can browse, search, and order hands-free—perfect for in-store kiosks and mobile shoppers."
+    },
+    "predictiveIntelligence": {
+      "title": "Predictive Intelligence",
+      "description": "Know what sells before it happens. AI predicts demand, optimizes inventory levels, and alerts you to reorder at the perfect time."
+    },
+    "smartRecommendations": {
+      "title": "Smart Recommendations",
+      "description": "Boost average order value by 40%. Machine learning suggests complementary products based on purchase patterns and customer preferences."
+    },
+    "unifiedCommerce": {
+      "title": "Unified Commerce Platform",
+      "description": "One system for everything—web storefront, in-store POS, kiosk, mobile app, and TV menu displays. Your inventory syncs in real-time across all channels."
+    },
+    "brandedMobileApps": {
+      "title": "Branded Mobile Apps",
+      "description": "Your customers download YOUR app (iOS & Android). Build loyalty with push notifications, exclusive deals, and seamless mobile ordering."
+    },
+    "selfServiceKiosks": {
+      "title": "Self-Service Kiosks",
+      "description": "Reduce wait times and labor costs. Customers browse, order, and pay on tablets—your staff focuses on high-value interactions."
+    },
+    "deliveryEcosystem": {
+      "title": "Delivery Ecosystem",
+      "description": "Complete delivery management with driver apps, real-time GPS tracking, customer notifications, and route optimization. Compete with the big players."
+    },
+    "multiLanguage": {
+      "title": "25+ Languages, Zero Barriers",
+      "description": "Serve every customer in their native language. Auto-detection, real-time translation, and localized content—expand into any market instantly."
+    },
+    "seoOptimization": {
+      "title": "SEO That Actually Works",
+      "description": "Dynamic, AI-powered SEO optimization. Your product pages rank higher on Google automatically—no SEO agency required."
+    },
+    "fraudProtection": {
+      "title": "Fraud Protection Suite",
+      "description": "Stop chargebacks before they happen. AI detects suspicious patterns, blacklists fraudulent cards, and captures signatures for every transaction."
+    },
+    "complianceAutopilot": {
+      "title": "Compliance Autopilot",
+      "description": "Stay compliant without the headache. Automatic age verification, CannSell tracking, OCS integration, and audit-ready reports at your fingertips."
+    },
+    "ageVerification": {
+      "title": "Multi-Layer Age Verification",
+      "description": "Voice recognition, ID scanning, facial matching, and manual override—verify customers' age through multiple methods for complete regulatory confidence."
+    },
+    "businessIntelligence": {
+      "title": "Real-Time Business Intelligence",
+      "description": "See everything in one dashboard—sales trends, top products, customer behavior, staff performance, and profit margins updated every second."
+    },
+    "multiLocation": {
+      "title": "Multi-Location Command Center",
+      "description": "Manage unlimited stores from one dashboard. Transfer inventory between locations, compare performance, and maintain consistent branding effortlessly."
+    },
+    "customerLoyalty": {
+      "title": "Customer Loyalty Engine",
+      "description": "Turn first-time buyers into regulars. Points programs, VIP tiers, birthday rewards, and referral bonuses—all automated and customizable."
+    },
+    "brandCustomization": {
+      "title": "Your Brand, Your Way",
+      "description": "Complete white-label customization. Choose from premium templates or go fully custom—logos, colors, fonts, and layouts that scream YOU."
+    },
+    "noCodeCustomization": {
+      "title": "No-Code Customization",
+      "description": "Change anything without a developer. Drag-and-drop page builder, custom forms, promotional banners—update your store in minutes, not weeks."
+    },
+    "uptimeGuarantee": {
+      "title": "99.9% Uptime Guarantee",
+      "description": "Enterprise cloud infrastructure that scales automatically. Lightning-fast load times, global CDN, and redundant backups—your store never goes down."
+    },
+    "apiArchitecture": {
+      "title": "API-First Architecture",
+      "description": "Integrate with anything. Full REST API access lets you connect accounting software, marketing tools, or custom applications seamlessly."
+    },
+    "cta": {
+      "heading": "Ready to See What WeedGo Can Do for Your Business?",
+      "description": "Join hundreds of cannabis retailers who've already made the switch.",
+      "descriptionHighlight": " Start free, scale unlimited, and transform your business",
+      "descriptionEnd": " with the only platform built specifically for you.",
+      "startTrial": "Start Free Trial",
+      "viewPricing": "View Pricing Plans"
+    }
+  },
+  "about": {
+    "title": "About Us",
+    "content": "Information about the company."
+  },
+  "contact": {
+    "title": "Contact Us",
+    "content": "How to get in touch."
+  },
+  "header": {
+    "nav": {
+      "features": "Features",
+      "pricing": "Pricing",
+      "testimonials": "Testimonials",
+      "login": "Login"
+    },
+    "getStarted": "Get Started"
+  },
+  "stats": {
+    "products": "Products",
+    "languages": "Languages",
+    "uptime": "Uptime",
+    "support": "Support"
+  },
+  "pricing": {
+    "heading": "Simple, Transparent Pricing",
+    "subheading": "Choose the plan that fits your business needs",
+    "plans": {
+      "community": {
+        "name": "Community and New Business",
+        "price": "FREE",
+        "period": "forever",
+        "cta": "Get Started",
+        "everythingIn": "",
+        "features": [
+          "Unlimited store locations to scale at your pace",
+          "Bilingual support (English & French)",
+          "AI-powered budtender personality",
+          "Complete POS & kiosk system",
+          "Customizable e-commerce storefront",
+          "Digital menu display system",
+          "Built-in delivery management",
+          "Advanced fraud protection & age verification",
+          "Community support"
+        ]
+      },
+      "smallBusiness": {
+        "name": "Small Business",
+        "price": "$99",
+        "period": "/month",
+        "cta": "Get Started",
+        "everythingIn": "Everything in Free, plus:",
+        "features": [
+          "Expand to 5 languages for diverse markets",
+          "2 AI personalities to match your brand voice",
+          "Professional-grade POS with advanced features",
+          "Dedicated tablet kiosk application",
+          "Premium e-commerce templates",
+          "TV-ready menu display for in-store marketing",
+          "Priority support when you need it"
+        ]
+      },
+      "professional": {
+        "name": "Professional and Growing Business",
+        "price": "$149",
+        "period": "/month",
+        "cta": "Get Started",
+        "badge": "Most Popular",
+        "everythingIn": "Everything in Small Business, plus:",
+        "features": [
+          "Reach global markets with 10 languages",
+          "3 AI personalities for personalized experiences",
+          "Unlock all platform features & integrations",
+          "Custom e-commerce design ($5,000 value)",
+          "Branded mobile app for iOS & Android",
+          "Live delivery tracking for customers",
+          "Driver app for seamless operations",
+          "Complete API access for custom integrations",
+          "Professional SEO optimization & content rewrite"
+        ]
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "price": "$299",
+        "period": "/month",
+        "cta": "Contact Sales",
+        "everythingIn": "Everything in Professional, plus:",
+        "features": [
+          "25+ languages for true global reach",
+          "5 AI personalities to serve every customer segment",
+          "White-label platform - fully rebrand as your own",
+          "Dedicated MVP server for maximum performance",
+          "AI-powered marketing automation suite",
+          "Dynamic SEO rewriting to dominate search rankings",
+          "AI-optimized promotional ads targeted to your customers",
+          "Custom feature development tailored to your needs",
+          "Direct access to support engineers",
+          "Priority custom integrations with your systems",
+          "24/7 dedicated account manager"
+        ]
+      }
+    }
+  },
+  "testimonials": {
+    "heading": "Trusted by Cannabis Businesses Worldwide",
+    "subheading": "See what our customers are saying about WeedGo",
+    "items": [
+      {
+        "quote": "WeedGo transformed our business. The AI assistant has increased our sales by 40% and the multi-language support helps us serve our diverse customer base.",
+        "name": "Sarah Johnson",
+        "title": "Owner, Green Valley Dispensary"
+      },
+      {
+        "quote": "The fraud protection and compliance features are game-changers. We've prevented thousands in fraudulent transactions and stay compliant effortlessly.",
+        "name": "Mike Chen",
+        "title": "Manager, Urban Leaf Co."
+      },
+      {
+        "quote": "Scaling from 1 to 8 locations was seamless with WeedGo. The multi-tenant architecture and centralized management tools are exactly what we needed.",
+        "name": "Lisa Rodriguez",
+        "title": "CEO, Cannabis Collective"
+      }
+    ]
+  },
+  "cta": {
+    "heading": "Ready to Transform Your Cannabis Business?",
+    "description": "Join thousands of dispensaries already using WeedGo to increase sales, improve compliance, and deliver exceptional customer experiences.",
+    "button": "Start Your Free Trial"
+  },
+  "footer": {
+    "tagline": "The complete cannabis business platform powered by AI.",
+    "product": {
+      "heading": "Product",
+      "features": "Features",
+      "pricing": "Pricing",
+      "api": "API",
+      "integrations": "Integrations"
+    },
+    "company": {
+      "heading": "Company",
+      "about": "About",
+      "careers": "Careers",
+      "contact": "Contact",
+      "blog": "Blog"
+    },
+    "support": {
+      "heading": "Support",
+      "helpCenter": "Help Center",
+      "documentation": "Documentation",
+      "status": "Status",
+      "security": "Security"
+    },
+    "copyright": "© 2025 WeedGo. All rights reserved."
+  }
+}

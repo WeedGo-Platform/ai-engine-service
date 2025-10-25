@@ -1,0 +1,368 @@
+{
+  "tenant": {
+    "header": {
+      "title": "WeedGo",
+      "alreadyHaveAccount": "Masz już konto?",
+      "signIn": "Zaloguj się",
+      "backHome": "Powrót do strony głównej"
+    },
+    "steps": {
+      "company": "Informacje o firmie",
+      "contact": "Dane kontaktowe",
+      "account": "Konfiguracja konta",
+      "payment": "Subskrypcja i płatność"
+    },
+    "stepDescriptions": {
+      "company": "Powiedz nam o swoim biznesie i marce",
+      "contact": "Podaj swoje dane kontaktowe i adres",
+      "account": "Utwórz dane logowania konta administratora",
+      "payment": "Wybierz swój plan i metodę płatności"
+    },
+    "companyInfo": {
+      "brandName": "Nazwa marki",
+      "brandNamePlaceholder": "np. Green Valley Dispensary",
+      "website": "Strona internetowa",
+      "websitePlaceholder": "www.potpalace.ca lub potpalace.ca",
+      "websiteHelp": "Adres URL Twojej strony internetowej (używany do generowania kodu marki)",
+      "brandCode": "Kod marki",
+      "brandCodeAuto": "Kod marki * (generowany automatycznie)",
+      "brandCodePlaceholder": "Wprowadź stronę powyżej, aby wygenerować",
+      "brandCodeHelp": "Będzie używany w adresie URL Twojego sklepu: {{code}}.weedgo.com",
+      "legalCompanyName": "Nazwa prawna firmy",
+      "legalCompanyPlaceholder": "np. Green Valley Cannabis Inc.",
+      "businessNumber": "Numer działalności",
+      "businessNumberPlaceholder": "123456789",
+      "businessNumberHelp": "Kanadyjski numer działalności (9 cyfr)",
+      "gstHstNumber": "Numer GST/HST",
+      "gstHstPlaceholder": "123456789RT0001",
+      "gstHstHelp": "Format: 123456789RT0001",
+      "logoUpload": "Przesyłanie logo",
+      "logoUploadHelp": "Maks. 2MB • PNG, JPG, WebP • Zalecane: kwadrat 500x500px"
+    },
+    "contactInfo": {
+      "firstName": "Imię",
+      "lastName": "Nazwisko",
+      "email": "Adres e-mail",
+      "phone": "Numer telefonu",
+      "phonePlaceholder": "(555) 123-4567",
+      "street": "Adres",
+      "city": "Miasto",
+      "province": "Prowincja",
+      "postalCode": "Kod pocztowy",
+      "postalCodePlaceholder": "A1A 1A1"
+    },
+    "accountSetup": {
+      "password": "Hasło",
+      "confirmPassword": "Potwierdź hasło",
+      "passwordStrength": "Siła:",
+      "passwordHelp": "Musi zawierać co najmniej 8 znaków z dużymi i małymi literami oraz cyframi",
+      "securityTitle": "Bezpieczeństwo konta",
+      "securityDescription": "Twoje konto będzie zabezpieczone szyfrowaniem standardowym w branży oraz opcjami uwierzytelniania wieloskładnikowego."
+    },
+    "subscription": {
+      "choosePlan": "Wybierz swój plan subskrypcji",
+      "selectedPlan": "Wybrany plan: {{plan}}",
+      "changePlan": "Zmień plan",
+      "free": "BEZPŁATNY",
+      "perMonth": "${{price}}/miesiąc",
+      "customPricing": "Ceny indywidualne",
+      "billingCycle": "Cykl rozliczeniowy",
+      "monthly": "Miesięczny",
+      "monthlyBilled": "Rozliczany miesięcznie",
+      "annual": "Roczny",
+      "annualSave": "Oszczędź 20%",
+      "selectPlan": "Wybierz plan",
+      "enterpriseTitle": "Plan korporacyjny",
+      "enterpriseDescription": "Nasz zespół sprzedaży skontaktuje się z Tobą w ciągu 24 godzin, aby omówić indywidualne ceny i konfigurację."
+    },
+    "payment": {
+      "cardholderName": "Imię i nazwisko posiadacza karty",
+      "cardholderPlaceholder": "Jan Kowalski",
+      "cardNumber": "Numer karty",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiryDate": "Data ważności",
+      "expiryPlaceholder": "MM/RR",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "postalCode": "Kod pocztowy",
+      "postalCodePlaceholder": "12345"
+    },
+    "progress": {
+      "verifying": "Weryfikacja dostępności...",
+      "creating": "Tworzenie Twojego konta...",
+      "uploading": "Przesyłanie logo...",
+      "complete": "Konto utworzone pomyślnie!",
+      "processing": "Przetwarzanie..."
+    },
+    "success": {
+      "welcome": "Witamy w WeedGo!",
+      "accountCreated": "Twoje konto zostało pomyślnie utworzone.",
+      "tenantCode": "Kod najemcy:",
+      "preparing": "Przygotowywanie Twojego panelu..."
+    },
+    "navigation": {
+      "previous": "Poprzedni",
+      "next": "Następny",
+      "createAccount": "Utwórz konto"
+    },
+    "errors": {
+      "accountCreationFailed": "Tworzenie konta nie powiodło się",
+      "tryAgain": "Spróbuj ponownie",
+      "registerAsUser": "Zarejestruj się jako użytkownik",
+      "signInInstead": "Zaloguj się zamiast tego",
+      "tenantExists": "Kod najemcy \"{{code}}\" jest już zarejestrowany",
+      "websiteExists": "Strona internetowa \"{{website}}\" jest już w użyciu"
+    }
+  },
+  "review": {
+    "title": "Przegląd konta najemcy",
+    "description": "Przeglądaj i zatwierdzaj konta oznaczone do ręcznej weryfikacji",
+    "refresh": "Odśwież",
+    "stats": {
+      "totalPending": "Łącznie oczekujących",
+      "thisWeek": "W tym tygodniu",
+      "avgReviewTime": "Śr. czas przeglądu",
+      "approvalRate": "Wskaźnik zatwierdzenia"
+    },
+    "table": {
+      "title": "Oczekujące konta",
+      "storeName": "Nazwa sklepu",
+      "contact": "Kontakt",
+      "licenseNumber": "Numer licencji",
+      "submitted": "Przesłano",
+      "tier": "Poziom",
+      "actions": "Akcje",
+      "review": "Przegląd",
+      "noPending": "Brak oczekujących kont do przeglądu!"
+    },
+    "modal": {
+      "title": "Przegląd konta",
+      "storeInfo": "Informacje o sklepie",
+      "storeName": "Nazwa sklepu",
+      "licenseNumber": "Numer licencji",
+      "crsaAddress": "Adres CRSA",
+      "municipality": "Gmina",
+      "crsaStatus": "Status CRSA",
+      "crsaWebsite": "Strona CRSA",
+      "contactInfo": "Informacje kontaktowe",
+      "contactName": "Imię i nazwisko kontaktu",
+      "role": "Rola",
+      "email": "E-mail",
+      "phone": "Telefon",
+      "verificationContext": "Kontekst weryfikacji",
+      "emailDomain": "Domena e-mail",
+      "domainMatchesCrsa": "Domena pasuje do CRSA",
+      "verificationTier": "Poziom weryfikacji",
+      "submitted": "Przesłano",
+      "adminNotes": "Notatki administratora (Opcjonalne)",
+      "adminNotesPlaceholder": "Dodaj wszelkie notatki dotyczące tego przeglądu...",
+      "reject": "Odrzuć",
+      "approve": "Zatwierdź konto",
+      "approving": "Zatwierdzanie...",
+      "yes": "✓ Tak",
+      "no": "✗ Nie"
+    },
+    "reject": {
+      "title": "Odrzuć konto",
+      "description": "Podaj powód odrzucenia tego konta. Zostanie to zarejestrowane do celów audytu.",
+      "reasonPlaceholder": "Powód odrzucenia (minimum 10 znaków)...",
+      "cancel": "Anuluj",
+      "confirm": "Potwierdź odrzucenie",
+      "rejecting": "Odrzucanie...",
+      "minLength": "Podaj powód (co najmniej 10 znaków)"
+    },
+    "messages": {
+      "approved": "Konto zatwierdzone pomyślnie!",
+      "rejected": "Konto odrzucone pomyślnie.",
+      "approveFailed": "Nie udało się zatwierdzić konta: {{error}}",
+      "rejectFailed": "Nie udało się odrzucić konta: {{error}}",
+      "fetchFailed": "Nie udało się pobrać oczekujących kont",
+      "noPermission": "Nie masz uprawnień do przeglądania kont najemców."
+    }
+  },
+  "userRegistration": {
+    "title": "Utwórz swoje konto",
+    "joinTenant": "Dołącz do {{tenantName}}",
+    "tenantInfo": "Informacje o najemcy",
+    "tenantName": "Nazwa:",
+    "tenantCode": "Kod:",
+    "firstName": "Imię",
+    "firstNamePlaceholder": "Jan",
+    "lastName": "Nazwisko",
+    "lastNamePlaceholder": "Kowalski",
+    "email": "Adres e-mail",
+    "emailPlaceholder": "jan.kowalski@przyklad.pl",
+    "phone": "Numer telefonu",
+    "phonePlaceholder": "(555) 123-4567",
+    "password": "Hasło",
+    "passwordPlaceholder": "••••••••",
+    "confirmPassword": "Potwierdź hasło",
+    "passwordStrength": "Siła:",
+    "passwordHelp": "Użyj 8+ znaków z dużymi i małymi literami, cyframi i symbolami dla lepszego bezpieczeństwa",
+    "createButton": "Utwórz konto",
+    "creating": "Tworzenie konta...",
+    "alreadyHaveAccount": "Masz już konto?",
+    "signIn": "Zaloguj się",
+    "loading": "Ładowanie informacji o najemcy...",
+    "tenantNotFound": "Najemca nie został znaleziony",
+    "tenantNotFoundDescription": "Określony najemca nie mógł zostać znaleziony.",
+    "goToSignup": "Przejdź do rejestracji",
+    "errors": {
+      "loadFailed": "Nie udało się załadować informacji o najemcy",
+      "alreadyExists": "Użytkownik o tym adresie e-mail już istnieje. Użyj innego adresu e-mail lub zaloguj się.",
+      "failed": "Nie udało się utworzyć konta użytkownika"
+    }
+  },
+  "success": {
+    "title": "Witamy w WeedGo!",
+    "description": "Twoje konto dla {{tenantName}} zostało pomyślnie utworzone.",
+    "accountDetails": {
+      "title": "Szczegóły Twojego konta",
+      "tenantName": "Nazwa najemcy:",
+      "tenantCode": "Kod najemcy:",
+      "storeUrl": "Adres URL sklepu:"
+    },
+    "nextSteps": {
+      "title": "Następne kroki",
+      "checkEmail": {
+        "title": "Sprawdź swoją pocztę e-mail",
+        "description": "Wysłaliśmy Ci e-mail powitalny z ważnymi informacjami o koncie i instrukcjami konfiguracji."
+      },
+      "accessDashboard": {
+        "title": "Uzyskaj dostęp do swojego panelu",
+        "description": "Zaloguj się do swojego panelu administratora, aby skonfigurować ustawienia sklepu, dodać produkty i dostosować swoich asystentów AI."
+      },
+      "setupStore": {
+        "title": "Skonfiguruj swój pierwszy sklep",
+        "description": "Dodaj swoją pierwszą lokalizację sklepu, skonfiguruj godziny pracy i ustaw swój inwentarz produktów."
+      },
+      "configureAI": {
+        "title": "Skonfiguruj asystentów AI",
+        "description": "Dostosuj osobowości swojego budtendera AI i skonfiguruj wielojęzyczne wsparcie dla swoich klientów."
+      }
+    },
+    "quickActions": {
+      "dashboard": {
+        "title": "Uzyskaj dostęp do panelu",
+        "description": "Skonfiguruj swoją platformę"
+      },
+      "documentation": {
+        "title": "Dokumentacja",
+        "description": "Przewodniki konfiguracji i samouczki"
+      },
+      "support": {
+        "title": "Wsparcie",
+        "description": "Uzyskaj pomoc od naszego zespołu"
+      }
+    },
+    "cta": {
+      "button": "Uzyskaj dostęp do swojego panelu",
+      "help": "Potrzebujesz pomocy w rozpoczęciu? Skontaktuj się z naszym zespołem wsparcia pod adresem",
+      "email": "support@weedgo.com"
+    },
+    "resources": {
+      "title": "Zasoby, które pomogą Ci zacząć",
+      "quickSetup": {
+        "title": "Przewodnik szybkiej konfiguracji",
+        "item1": "Konfiguracja i branding sklepu",
+        "item2": "Konfiguracja katalogu produktów",
+        "item3": "Konfiguracja przetwarzania płatności",
+        "item4": "Dostosowanie asystenta AI"
+      },
+      "training": {
+        "title": "Szkolenie i wsparcie",
+        "item1": "Samouczki wideo i webinary",
+        "item2": "Czat wsparcia klienta 24/7",
+        "item3": "Dostęp do forum społeczności",
+        "item4": "Dedykowany menedżer konta (Korporacyjny)"
+      }
+    }
+  },
+  "validation": {
+    "required": "{{field}} jest wymagane",
+    "brandNameRequired": "Nazwa marki jest wymagana",
+    "websiteRequired": "Strona internetowa jest wymagana do wygenerowania kodu marki",
+    "brandCodeRequired": "Kod marki jest wymagany (wprowadź stronę, aby wygenerować)",
+    "brandCodeFormat": "Kod marki może zawierać tylko wielkie litery, cyfry, myślniki i podkreślenia",
+    "companyNameRequired": "Nazwa firmy jest wymagana",
+    "businessNumberRequired": "Numer działalności jest wymagany",
+    "businessNumberFormat": "Numer działalności musi składać się z 9 cyfr",
+    "gstHstRequired": "Numer GST/HST jest wymagany",
+    "gstHstFormat": "Format numeru GST/HST: 123456789RT0001",
+    "emailRequired": "E-mail jest wymagany",
+    "emailInvalid": "Wprowadź prawidłowy adres e-mail",
+    "firstNameRequired": "Imię jest wymagane",
+    "lastNameRequired": "Nazwisko jest wymagane",
+    "streetRequired": "Adres jest wymagany",
+    "cityRequired": "Miasto jest wymagane",
+    "postalCodeRequired": "Kod pocztowy jest wymagany",
+    "postalCodeFormat": "Wprowadź prawidłowy kanadyjski kod pocztowy",
+    "passwordRequired": "Hasło jest wymagane",
+    "passwordLength": "Hasło musi zawierać co najmniej 8 znaków",
+    "passwordComplexity": "Hasło musi zawierać wielkie i małe litery oraz cyfry",
+    "passwordMismatch": "Hasła nie pasują do siebie",
+    "cardNumberRequired": "Numer karty jest wymagany",
+    "cardNumberFormat": "Wprowadź prawidłowy 16-cyfrowy numer karty",
+    "expiryRequired": "Data ważności jest wymagana",
+    "expiryFormat": "Wprowadź format MM/RR",
+    "cvvRequired": "CVV jest wymagane",
+    "cvvFormat": "CVV musi mieć 3 lub 4 cyfry",
+    "cardholderRequired": "Imię i nazwisko posiadacza karty jest wymagane"
+  },
+  "passwordStrength": {
+    "weak": "Słabe",
+    "fair": "Dostateczne",
+    "good": "Dobre",
+    "strong": "Silne",
+    "veryStrong": "Bardzo silne"
+  },
+  "provinces": {
+    "ON": "Ontario",
+    "BC": "Kolumbia Brytyjska",
+    "AB": "Alberta",
+    "QC": "Quebec",
+    "MB": "Manitoba",
+    "SK": "Saskatchewan",
+    "NS": "Nowa Szkocja",
+    "NB": "Nowy Brunszwik",
+    "NL": "Nowa Fundlandia i Labrador",
+    "PE": "Wyspa Księcia Edwarda",
+    "NT": "Terytoria Północno-Zachodnie",
+    "YT": "Jukon",
+    "NU": "Nunavut"
+  },
+  "plans": {
+    "community_and_new_business": {
+      "name": "Społeczność i nowy biznes",
+      "features": {
+        "stores": "1 sklep",
+        "languages": "2 języki",
+        "personalities": "1 osobowość AI"
+      }
+    },
+    "small_business": {
+      "name": "Mała firma",
+      "features": {
+        "stores": "5 sklepów",
+        "languages": "5 języków",
+        "personalities": "2 osobowości AI"
+      }
+    },
+    "professional_and_growing_business": {
+      "name": "Profesjonalna i rozwijająca się firma",
+      "features": {
+        "stores": "12 sklepów",
+        "languages": "10 języków",
+        "personalities": "3 osobowości AI"
+      }
+    },
+    "enterprise": {
+      "name": "Korporacyjny",
+      "features": {
+        "stores": "Nieograniczone sklepy",
+        "languages": "25+ języków",
+        "personalities": "5 osobowości AI"
+      }
+    }
+  }
+}

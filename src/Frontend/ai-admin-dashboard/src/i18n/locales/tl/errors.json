@@ -1,0 +1,98 @@
+{
+  "api": {
+    "networkError": "Hindi makakonekta sa server. Pakisuri ang iyong koneksyon.",
+    "serverError": "May nangyaring error sa server. Subukan muli mamaya.",
+    "timeout": "Nag-timeout ang kahilingan. Subukan muli.",
+    "unauthorized": "Wala kang pahintulot na gawin ang aksyon na ito.",
+    "forbidden": "Tinanggihan ang access.",
+    "notFound": "Hindi natagpuan ang hiniling na resource.",
+    "conflict": "May nagkabanggaan. Maaaring umiiral na ang resource.",
+    "validationError": "May nagkaruon ng validation error.",
+    "tooManyRequests": "Masyadong maraming kahilingan. Subukan muli mamaya.",
+    "serviceUnavailable": "Pansamantalang hindi available ang serbisyo.",
+    "badRequest": "Di-wastong kahilingan. Pakisuri ang iyong input.",
+    "internalError": "May nagkaruon ng internal error."
+  },
+  "auth": {
+    "loginSuccess": "Matagumpay ang pag-login! Nire-redirect...",
+    "invalidCredentials": "Di-wastong email o password. Subukan muli.",
+    "sessionExpired": "Nag-expire na ang iyong session. Mag-login muli.",
+    "accountDisabled": "Naka-disable ang iyong account o walang admin privileges.",
+    "accountLocked": "Naka-lock ang iyong account dahil sa maraming failed login attempts.",
+    "tooManyAttempts": "Masyadong maraming login attempts. Subukan muli mamaya.",
+    "tokenExpired": "Nag-expire na ang authentication token.",
+    "tokenInvalid": "Di-wastong authentication token.",
+    "passwordResetFailed": "Nabigo ang pag-reset ng password. Subukan muli.",
+    "emailNotVerified": "Pakiberipikar muna ang iyong email address.",
+    "validationError": "May nagkaruon ng validation error",
+    "loginError": "May nagkaruon ng error habang nag-lo-login"
+  },
+  "tenant": {
+    "loadFailed": "Nabigong i-load ang datos ng organisasyon.",
+    "createFailed": "Nabigong lumikha ng tenant.",
+    "updateFailed": "Nabigong i-update ang tenant.",
+    "deleteFailed": "Nabigong tanggalin ang tenant.",
+    "suspendFailed": "Nabigong suspindihin ang tenant.",
+    "reactivateFailed": "Nabigong muling i-activate ang tenant.",
+    "noOrganization": "Walang organisasyong nauugnay sa user.",
+    "limitReached": "Naabot na ang limitasyon ng tindahan para sa tenant na ito.",
+    "invalidSubscription": "Di-wastong o expired na subscription."
+  },
+  "store": {
+    "loadFailed": "Nabigong i-load ang datos ng tindahan.",
+    "createFailed": "Nabigong lumikha ng tindahan.",
+    "updateFailed": "Nabigong i-update ang tindahan.",
+    "deleteFailed": "Nabigong tanggalin ang tindahan.",
+    "suspendFailed": "Nabigong suspindihin ang tindahan.",
+    "closeFailed": "Nabigong isara ang tindahan.",
+    "notFound": "Hindi natagpuan ang tindahan.",
+    "alreadyExists": "May umiiral nang tindahan na may ganitong pangalan."
+  },
+  "inventory": {
+    "loadFailed": "Nabigong i-load ang datos ng inventory.",
+    "createFailed": "Nabigong lumikha ng inventory item.",
+    "updateFailed": "Nabigong i-update ang inventory item.",
+    "deleteFailed": "Nabigong tanggalin ang inventory item.",
+    "stockUpdateFailed": "Nabigong i-update ang mga antas ng stock.",
+    "lowStock": "Babala sa mababang stock.",
+    "outOfStock": "Wala nang stock ang item.",
+    "invalidQuantity": "Di-wastong dami ang tinukoy."
+  },
+  "order": {
+    "loadFailed": "Nabigong i-load ang datos ng order.",
+    "createFailed": "Nabigong lumikha ng order.",
+    "updateFailed": "Nabigong i-update ang order.",
+    "cancelFailed": "Nabigong kanselahin ang order.",
+    "fulfillFailed": "Nabigong tuparin ang order.",
+    "refundFailed": "Nabigong iproseso ang refund.",
+    "notFound": "Hindi natagpuan ang order.",
+    "alreadyProcessed": "Naproseso na ang order."
+  },
+  "payment": {
+    "loadFailed": "Nabigong i-load ang datos ng pagbabayad.",
+    "processingFailed": "Nabigo ang pagproseso ng pagbabayad.",
+    "refundFailed": "Nabigo ang pagproseso ng refund.",
+    "invalidAmount": "Di-wastong halaga ng pagbabayad.",
+    "cardDeclined": "Tinanggihan ang card.",
+    "insufficientFunds": "Kulang ang pondo.",
+    "paymentMethodInvalid": "Di-wastong paraan ng pagbabayad."
+  },
+  "upload": {
+    "failed": "Nabigo ang pag-upload ng file.",
+    "fileTooLarge": "Lumampas ang laki ng file sa maximum na pinapayagan.",
+    "invalidFileType": "Di-wastong uri ng file.",
+    "corruptedFile": "Tila sira ang file.",
+    "uploadCancelled": "Kinansela ang pag-upload."
+  },
+  "general": {
+    "unexpectedError": "May nagkaruon ng di-inaasahang error.",
+    "operationFailed": "Nabigo ang operasyon. Subukan muli.",
+    "dataLoadFailed": "Nabigong i-load ang datos.",
+    "saveFailed": "Nabigong i-save ang mga pagbabago.",
+    "deleteFailed": "Nabigong tanggalin ang item.",
+    "permissionDenied": "Wala kang pahintulot na gawin ang aksyon na ito.",
+    "invalidInput": "Ibinigay ang di-wastong input.",
+    "requiredFieldMissing": "May kulang na kinakailangang field.",
+    "dataCorrupted": "Tila sira ang datos."
+  }
+}

@@ -1,0 +1,158 @@
+{
+  "titles": {
+    "main": "プロモーションと価格設定",
+    "activePromotions": "アクティブなプロモーション",
+    "analytics": "分析",
+    "defaultPricing": "デフォルト価格",
+    "topPerforming": "トップパフォーマンスのプロモーション",
+    "overallStats": "全体統計",
+    "deletePromotion": "プロモーションを削除",
+    "createPromotion": "新しいプロモーションを作成",
+    "editPromotion": "プロモーションを編集",
+    "viewPromotion": "プロモーションを表示",
+    "defaultPriceConfig": "デフォルト価格設定",
+    "applyMarkup": "マークアップを適用",
+    "storeWideMarkup": "店舗全体のデフォルトマークアップ"
+  },
+  "descriptions": {
+    "noStoreSelected": "店舗が選択されていません",
+    "selectStoreForPromotions": "プロモーションと価格を管理する店舗を選択してください",
+    "selectStoreForPricing": "価格を管理する店舗を選択してください",
+    "managingFor": "プロモーションと価格を管理中",
+    "pricingInstructions": "カテゴリ別に製品のマークアップ率を設定します。マークアップは単位原価に適用され、小売価格が計算されます。より具体的な設定は一般的な設定を上書きします（例：サブカテゴリがカテゴリを上書き）。",
+    "defaultMarkupInfo": "このデフォルトマークアップは、新製品の価格計算時、または特定のカテゴリマークアップが設定されていない場合に使用されます。"
+  },
+  "table": {
+    "promotion": "プロモーション",
+    "code": "コード",
+    "discount": "割引",
+    "usage": "使用状況",
+    "duration": "期間",
+    "status": "ステータス",
+    "actions": "アクション",
+    "min": "最小",
+    "perCustomer": "顧客あたり",
+    "to": "まで",
+    "uses": "使用回数",
+    "revenue": "収益"
+  },
+  "status": {
+    "inactive": "非アクティブ",
+    "scheduled": "スケジュール済み",
+    "expired": "期限切れ",
+    "active": "アクティブ"
+  },
+  "stats": {
+    "totalUses": "総使用回数",
+    "totalDiscounts": "総割引",
+    "totalRevenue": "総収益",
+    "avgOrderValue": "平均注文額"
+  },
+  "actions": {
+    "createNew": "新しいプロモーションを作成",
+    "edit": "プロモーションを編集",
+    "delete": "プロモーションを削除",
+    "cancel": "キャンセル",
+    "back": "戻る",
+    "next": "次へ",
+    "update": "更新",
+    "create": "作成",
+    "applyMarkup": "マークアップを適用",
+    "resetOverrides": "上書きをリセット",
+    "saveDefault": "デフォルトとして保存",
+    "quickSetMarkup": "マークアップを素早く設定"
+  },
+  "search": {
+    "placeholder": "名前またはコードでプロモーションを検索...",
+    "categories": "カテゴリを検索..."
+  },
+  "steps": {
+    "basicInfo": {
+      "name": "基本情報",
+      "description": "名前と説明"
+    },
+    "discount": {
+      "name": "割引",
+      "description": "タイプと値"
+    },
+    "scope": {
+      "name": "範囲",
+      "description": "場所と時期"
+    },
+    "settings": {
+      "name": "設定",
+      "description": "使用制限"
+    },
+    "review": {
+      "name": "レビュー",
+      "description": "詳細を確認"
+    }
+  },
+  "pricing": {
+    "enableDefault": "デフォルトマークアップを有効にする",
+    "default": "デフォルト",
+    "markupPercentage": "マークアップ率",
+    "retailPriceFormula": "Retail Price = Cost × (1 + {markup}%)",
+    "exampleCalculation": "計算例:",
+    "currentCost": "現在の原価",
+    "currentRetail": "現在の小売価格",
+    "newPricing": "{markup}%のマークアップでの新価格:",
+    "newRetailPrice": "新しい小売価格",
+    "profitMargin": "利益率",
+    "priceChange": "価格変更",
+    "ifCost": "原価が",
+    "retailPrice": "小売価格",
+    "allProducts": "すべての製品",
+    "storeWideDefault": "店舗全体のデフォルト",
+    "products": "製品",
+    "overrides": "上書き",
+    "avg": "平均",
+    "productsInCategory": "このカテゴリの製品:",
+    "sku": "SKU",
+    "stock": "在庫",
+    "brand": "ブランド",
+    "cost": "原価",
+    "applyingTo": "適用先:",
+    "updating": "更新中:",
+    "allProductsStoreWide": "すべての製品（店舗全体）"
+  },
+  "confirm": {
+    "deletePromotion": "このプロモーションを削除してもよろしいですか？この操作は元に戻せません。",
+    "applyAllProducts": "店舗内のすべての製品のマークアップを{markup}%に更新します。よろしいですか？",
+    "resetOverrides": "{scope}のすべての価格上書きを削除し、計算されたマークアップを使用します。よろしいですか？"
+  },
+  "warnings": {
+    "storeWideUpdate": "店舗内のすべての製品の価格が更新されます。",
+    "singleProductNote": "この特定の製品のみが更新されます。"
+  },
+  "messages": {
+    "codeCopied": "コードがコピーされました！",
+    "loading": {
+      "promotions": "プロモーションを読み込み中...",
+      "categories": "カテゴリを読み込み中...",
+      "products": "製品を読み込み中..."
+    },
+    "noProducts": "製品が見つかりません",
+    "saving": "保存中...",
+    "updating": "価格を更新中...",
+    "updatedSuccessfully": "正常に更新されました！",
+    "resetting": "リセット中..."
+  },
+  "success": {
+    "created": "プロモーションが正常に作成されました！",
+    "updated": "プロモーションが正常に更新されました！",
+    "deleted": "プロモーションが正常に削除されました！",
+    "markupUpdated": "デフォルトマークアップ設定が更新されました！",
+    "priceUpdated": "{count}製品が正常に更新されました！",
+    "priceUpdatedPlural": "{count}製品が正常に更新されました！",
+    "overridesCleared": "価格の上書きが正常にクリアされました"
+  },
+  "errors": {
+    "createFailed": "プロモーションの作成に失敗しました",
+    "updateFailed": "プロモーションの更新に失敗しました",
+    "deleteFailed": "プロモーションの削除に失敗しました",
+    "settingsUpdateFailed": "設定の更新に失敗しました",
+    "pricingUpdateFailed": "価格の更新に失敗しました",
+    "resetFailed": "価格上書きのリセットに失敗しました"
+  }
+}

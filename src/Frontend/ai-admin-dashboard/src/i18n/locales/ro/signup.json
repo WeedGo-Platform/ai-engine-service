@@ -1,0 +1,368 @@
+{
+  "tenant": {
+    "header": {
+      "title": "WeedGo",
+      "alreadyHaveAccount": "Aveți deja un cont?",
+      "signIn": "Autentificare",
+      "backHome": "Înapoi acasă"
+    },
+    "steps": {
+      "company": "Informații companie",
+      "contact": "Detalii de contact",
+      "account": "Configurare cont",
+      "payment": "Abonament și plată"
+    },
+    "stepDescriptions": {
+      "company": "Spuneți-ne despre afacerea și marca dvs.",
+      "contact": "Furnizați informațiile de contact și adresa",
+      "account": "Creați acreditările contului de administrator",
+      "payment": "Selectați planul și metoda de plată"
+    },
+    "companyInfo": {
+      "brandName": "Nume brand",
+      "brandNamePlaceholder": "ex., Green Valley Dispensary",
+      "website": "Site web",
+      "websitePlaceholder": "www.potpalace.ca sau potpalace.ca",
+      "websiteHelp": "URL-ul site-ului web (utilizat pentru generarea codului de brand)",
+      "brandCode": "Cod brand",
+      "brandCodeAuto": "Cod brand * (generat automat)",
+      "brandCodePlaceholder": "Introduceți site-ul de mai sus pentru generare",
+      "brandCodeHelp": "Va fi utilizat în URL-ul magazinului: {{code}}.weedgo.com",
+      "legalCompanyName": "Nume legal al companiei",
+      "legalCompanyPlaceholder": "ex., Green Valley Cannabis Inc.",
+      "businessNumber": "Număr de afaceri",
+      "businessNumberPlaceholder": "123456789",
+      "businessNumberHelp": "Număr de afaceri canadian (9 cifre)",
+      "gstHstNumber": "Număr GST/HST",
+      "gstHstPlaceholder": "123456789RT0001",
+      "gstHstHelp": "Format: 123456789RT0001",
+      "logoUpload": "Încărcare logo",
+      "logoUploadHelp": "Max 2MB • PNG, JPG, WebP • Recomandat: pătrat 500x500px"
+    },
+    "contactInfo": {
+      "firstName": "Prenume",
+      "lastName": "Nume",
+      "email": "Adresă de e-mail",
+      "phone": "Număr de telefon",
+      "phonePlaceholder": "(555) 123-4567",
+      "street": "Adresă stradă",
+      "city": "Oraș",
+      "province": "Provincie",
+      "postalCode": "Cod poștal",
+      "postalCodePlaceholder": "A1A 1A1"
+    },
+    "accountSetup": {
+      "password": "Parolă",
+      "confirmPassword": "Confirmă parola",
+      "passwordStrength": "Putere:",
+      "passwordHelp": "Trebuie să aibă cel puțin 8 caractere cu majuscule, minuscule și cifre",
+      "securityTitle": "Securitate cont",
+      "securityDescription": "Contul dvs. va fi securizat cu criptare standard în industrie și opțiuni de autentificare multifactor."
+    },
+    "subscription": {
+      "choosePlan": "Alegeți planul de abonament",
+      "selectedPlan": "Plan selectat: {{plan}}",
+      "changePlan": "Schimbă planul",
+      "free": "GRATUIT",
+      "perMonth": "${{price}}/lună",
+      "customPricing": "Prețuri personalizate",
+      "billingCycle": "Ciclu de facturare",
+      "monthly": "Lunar",
+      "monthlyBilled": "Facturat lunar",
+      "annual": "Anual",
+      "annualSave": "Economisiți 20%",
+      "selectPlan": "Selectează planul",
+      "enterpriseTitle": "Plan Enterprise",
+      "enterpriseDescription": "Echipa noastră de vânzări vă va contacta în 24 de ore pentru a discuta prețurile personalizate și configurarea."
+    },
+    "payment": {
+      "cardholderName": "Nume deținător card",
+      "cardholderPlaceholder": "Ion Popescu",
+      "cardNumber": "Număr card",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiryDate": "Data expirării",
+      "expiryPlaceholder": "MM/AA",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "postalCode": "Cod poștal ZIP",
+      "postalCodePlaceholder": "12345"
+    },
+    "progress": {
+      "verifying": "Verificare disponibilitate...",
+      "creating": "Crearea contului dvs...",
+      "uploading": "Încărcare logo...",
+      "complete": "Cont creat cu succes!",
+      "processing": "Se procesează..."
+    },
+    "success": {
+      "welcome": "Bun venit la WeedGo!",
+      "accountCreated": "Contul dvs. a fost creat cu succes.",
+      "tenantCode": "Cod chiriaș:",
+      "preparing": "Pregătirea tabloului de bord..."
+    },
+    "navigation": {
+      "previous": "Anterior",
+      "next": "Următorul",
+      "createAccount": "Creează cont"
+    },
+    "errors": {
+      "accountCreationFailed": "Crearea contului a eșuat",
+      "tryAgain": "Încearcă din nou",
+      "registerAsUser": "Înregistrare ca utilizator",
+      "signInInstead": "Autentifică-te în schimb",
+      "tenantExists": "Codul chiriașului \"{{code}}\" este deja înregistrat",
+      "websiteExists": "Site-ul web \"{{website}}\" este deja utilizat"
+    }
+  },
+  "review": {
+    "title": "Revizuire cont chiriaș",
+    "description": "Revizuiți și aprobați conturile marcate pentru verificare manuală",
+    "refresh": "Reîmprospătare",
+    "stats": {
+      "totalPending": "Total în așteptare",
+      "thisWeek": "Această săptămână",
+      "avgReviewTime": "Timp mediu de revizuire",
+      "approvalRate": "Rata de aprobare"
+    },
+    "table": {
+      "title": "Conturi în așteptare",
+      "storeName": "Nume magazin",
+      "contact": "Contact",
+      "licenseNumber": "Număr licență",
+      "submitted": "Trimis",
+      "tier": "Nivel",
+      "actions": "Acțiuni",
+      "review": "Revizuire",
+      "noPending": "Niciun cont în așteptare pentru revizuire!"
+    },
+    "modal": {
+      "title": "Revizuire cont",
+      "storeInfo": "Informații magazin",
+      "storeName": "Nume magazin",
+      "licenseNumber": "Număr licență",
+      "crsaAddress": "Adresă CRSA",
+      "municipality": "Municipalitate",
+      "crsaStatus": "Status CRSA",
+      "crsaWebsite": "Site web CRSA",
+      "contactInfo": "Informații de contact",
+      "contactName": "Nume contact",
+      "role": "Rol",
+      "email": "E-mail",
+      "phone": "Telefon",
+      "verificationContext": "Context verificare",
+      "emailDomain": "Domeniu e-mail",
+      "domainMatchesCrsa": "Domeniul se potrivește cu CRSA",
+      "verificationTier": "Nivel verificare",
+      "submitted": "Trimis",
+      "adminNotes": "Note administrator (opțional)",
+      "adminNotesPlaceholder": "Adăugați note despre această revizuire...",
+      "reject": "Respinge",
+      "approve": "Aprobă contul",
+      "approving": "Se aprobă...",
+      "yes": "✓ Da",
+      "no": "✗ Nu"
+    },
+    "reject": {
+      "title": "Respinge cont",
+      "description": "Vă rugăm să furnizați un motiv pentru respingerea acestui cont. Acesta va fi înregistrat în scopuri de audit.",
+      "reasonPlaceholder": "Motiv pentru respingere (minim 10 caractere)...",
+      "cancel": "Anulare",
+      "confirm": "Confirmă respingerea",
+      "rejecting": "Se respinge...",
+      "minLength": "Vă rugăm să furnizați un motiv (cel puțin 10 caractere)"
+    },
+    "messages": {
+      "approved": "Cont aprobat cu succes!",
+      "rejected": "Cont respins cu succes.",
+      "approveFailed": "Nu s-a reușit aprobarea contului: {{error}}",
+      "rejectFailed": "Nu s-a reușit respingerea contului: {{error}}",
+      "fetchFailed": "Nu s-au putut prelua conturile în așteptare",
+      "noPermission": "Nu aveți permisiunea de a revizui conturile chiriașilor."
+    }
+  },
+  "userRegistration": {
+    "title": "Creează-ți contul",
+    "joinTenant": "Alătură-te {{tenantName}}",
+    "tenantInfo": "Informații chiriaș",
+    "tenantName": "Nume:",
+    "tenantCode": "Cod:",
+    "firstName": "Prenume",
+    "firstNamePlaceholder": "Ion",
+    "lastName": "Nume",
+    "lastNamePlaceholder": "Popescu",
+    "email": "Adresă de e-mail",
+    "emailPlaceholder": "ion.popescu@example.com",
+    "phone": "Număr de telefon",
+    "phonePlaceholder": "(555) 123-4567",
+    "password": "Parolă",
+    "passwordPlaceholder": "••••••••",
+    "confirmPassword": "Confirmă parola",
+    "passwordStrength": "Putere:",
+    "passwordHelp": "Utilizați 8+ caractere cu majuscule, minuscule, cifre și simboluri pentru o securitate mai bună",
+    "createButton": "Creează cont",
+    "creating": "Se creează contul...",
+    "alreadyHaveAccount": "Aveți deja un cont?",
+    "signIn": "Autentificare",
+    "loading": "Se încarcă informațiile chiriașului...",
+    "tenantNotFound": "Chiriaș negăsit",
+    "tenantNotFoundDescription": "Chiriașul specificat nu a putut fi găsit.",
+    "goToSignup": "Mergi la înregistrare",
+    "errors": {
+      "loadFailed": "Nu s-au putut încărca informațiile chiriașului",
+      "alreadyExists": "Un utilizator cu acest e-mail există deja. Vă rugăm să utilizați un e-mail diferit sau să vă autentificați.",
+      "failed": "Nu s-a reușit crearea contului de utilizator"
+    }
+  },
+  "success": {
+    "title": "Bun venit la WeedGo!",
+    "description": "Contul dvs. pentru {{tenantName}} a fost creat cu succes.",
+    "accountDetails": {
+      "title": "Detaliile contului dvs.",
+      "tenantName": "Nume chiriaș:",
+      "tenantCode": "Cod chiriaș:",
+      "storeUrl": "URL magazin:"
+    },
+    "nextSteps": {
+      "title": "Pașii următori",
+      "checkEmail": {
+        "title": "Verificați e-mailul",
+        "description": "V-am trimis un e-mail de bun venit cu informații importante despre cont și instrucțiuni de configurare."
+      },
+      "accessDashboard": {
+        "title": "Accesați tabloul de bord",
+        "description": "Conectați-vă la tabloul de bord de administrator pentru a configura setările magazinului, a adăuga produse și a personaliza asistenții AI."
+      },
+      "setupStore": {
+        "title": "Configurați primul magazin",
+        "description": "Adăugați prima locație a magazinului, configurați orele de funcționare și configurați inventarul de produse."
+      },
+      "configureAI": {
+        "title": "Configurați asistenții AI",
+        "description": "Personalizați personalitățile budtender AI și configurați suportul multilingv pentru clienții dvs."
+      }
+    },
+    "quickActions": {
+      "dashboard": {
+        "title": "Accesează tabloul de bord",
+        "description": "Configurează platforma"
+      },
+      "documentation": {
+        "title": "Documentație",
+        "description": "Ghiduri de configurare și tutoriale"
+      },
+      "support": {
+        "title": "Asistență",
+        "description": "Obțineți ajutor de la echipa noastră"
+      }
+    },
+    "cta": {
+      "button": "Accesează tabloul de bord",
+      "help": "Aveți nevoie de ajutor pentru a începe? Contactați echipa noastră de asistență la",
+      "email": "support@weedgo.com"
+    },
+    "resources": {
+      "title": "Resurse pentru a începe",
+      "quickSetup": {
+        "title": "Ghid de configurare rapidă",
+        "item1": "Configurarea magazinului și branding",
+        "item2": "Configurarea catalogului de produse",
+        "item3": "Configurarea procesării plăților",
+        "item4": "Personalizarea asistentului AI"
+      },
+      "training": {
+        "title": "Formare și asistență",
+        "item1": "Tutoriale video și webinarii",
+        "item2": "Chat de asistență clienți 24/7",
+        "item3": "Acces la forumul comunității",
+        "item4": "Manager de cont dedicat (Enterprise)"
+      }
+    }
+  },
+  "validation": {
+    "required": "{{field}} este obligatoriu",
+    "brandNameRequired": "Numele brandului este obligatoriu",
+    "websiteRequired": "Site-ul web este necesar pentru generarea codului de brand",
+    "brandCodeRequired": "Codul brandului este obligatoriu (introduceți site-ul web pentru generare)",
+    "brandCodeFormat": "Codul brandului trebuie să conțină doar litere mari, cifre, liniuțe și underscore-uri",
+    "companyNameRequired": "Numele companiei este obligatoriu",
+    "businessNumberRequired": "Numărul de afaceri este obligatoriu",
+    "businessNumberFormat": "Numărul de afaceri trebuie să aibă 9 cifre",
+    "gstHstRequired": "Numărul GST/HST este obligatoriu",
+    "gstHstFormat": "Format număr GST/HST: 123456789RT0001",
+    "emailRequired": "E-mailul este obligatoriu",
+    "emailInvalid": "Vă rugăm să introduceți o adresă de e-mail validă",
+    "firstNameRequired": "Prenumele este obligatoriu",
+    "lastNameRequired": "Numele este obligatoriu",
+    "streetRequired": "Adresa străzii este obligatorie",
+    "cityRequired": "Orașul este obligatoriu",
+    "postalCodeRequired": "Codul poștal este obligatoriu",
+    "postalCodeFormat": "Vă rugăm să introduceți un cod poștal canadian valid",
+    "passwordRequired": "Parola este obligatorie",
+    "passwordLength": "Parola trebuie să aibă cel puțin 8 caractere",
+    "passwordComplexity": "Parola trebuie să conțină majuscule, minuscule și cifre",
+    "passwordMismatch": "Parolele nu se potrivesc",
+    "cardNumberRequired": "Numărul cardului este obligatoriu",
+    "cardNumberFormat": "Vă rugăm să introduceți un număr de card valid de 16 cifre",
+    "expiryRequired": "Data expirării este obligatorie",
+    "expiryFormat": "Vă rugăm să introduceți formatul LL/AA",
+    "cvvRequired": "CVV este obligatoriu",
+    "cvvFormat": "CVV trebuie să aibă 3 sau 4 cifre",
+    "cardholderRequired": "Numele deținătorului cardului este obligatoriu"
+  },
+  "passwordStrength": {
+    "weak": "Slabă",
+    "fair": "Corectă",
+    "good": "Bună",
+    "strong": "Puternică",
+    "veryStrong": "Foarte puternică"
+  },
+  "provinces": {
+    "ON": "Ontario",
+    "BC": "Columbia Britanică",
+    "AB": "Alberta",
+    "QC": "Quebec",
+    "MB": "Manitoba",
+    "SK": "Saskatchewan",
+    "NS": "Nova Scotia",
+    "NB": "New Brunswick",
+    "NL": "Newfoundland și Labrador",
+    "PE": "Insula Prințului Edward",
+    "NT": "Teritoriile de Nord-Vest",
+    "YT": "Yukon",
+    "NU": "Nunavut"
+  },
+  "plans": {
+    "community_and_new_business": {
+      "name": "Comunitate și afaceri noi",
+      "features": {
+        "stores": "1 magazin",
+        "languages": "2 limbi",
+        "personalities": "1 personalitate AI"
+      }
+    },
+    "small_business": {
+      "name": "Afaceri mici",
+      "features": {
+        "stores": "5 magazine",
+        "languages": "5 limbi",
+        "personalities": "2 personalități AI"
+      }
+    },
+    "professional_and_growing_business": {
+      "name": "Afaceri profesionale și în creștere",
+      "features": {
+        "stores": "12 magazine",
+        "languages": "10 limbi",
+        "personalities": "3 personalități AI"
+      }
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "features": {
+        "stores": "Magazine nelimitate",
+        "languages": "25+ limbi",
+        "personalities": "5 personalități AI"
+      }
+    }
+  }
+}

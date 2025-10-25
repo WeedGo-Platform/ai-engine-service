@@ -1,0 +1,158 @@
+{
+  "titles": {
+    "main": "Khuyến Mãi và Định Giá",
+    "activePromotions": "Khuyến Mãi Đang Hoạt Động",
+    "analytics": "Phân Tích",
+    "defaultPricing": "Định Giá Mặc Định",
+    "topPerforming": "Khuyến Mãi Hiệu Quả Nhất",
+    "overallStats": "Thống Kê Tổng Quan",
+    "deletePromotion": "Xóa Khuyến Mãi",
+    "createPromotion": "Tạo Khuyến Mãi Mới",
+    "editPromotion": "Chỉnh Sửa Khuyến Mãi",
+    "viewPromotion": "Xem Khuyến Mãi",
+    "defaultPriceConfig": "Cấu Hình Giá Mặc Định",
+    "applyMarkup": "Áp Dụng Lợi Nhuận",
+    "storeWideMarkup": "Lợi Nhuận Mặc Định Toàn Cửa Hàng"
+  },
+  "descriptions": {
+    "noStoreSelected": "Chưa Chọn Cửa Hàng",
+    "selectStoreForPromotions": "Vui lòng chọn cửa hàng để quản lý khuyến mãi và định giá",
+    "selectStoreForPricing": "Vui lòng chọn cửa hàng để quản lý định giá",
+    "managingFor": "Quản lý khuyến mãi và định giá cho",
+    "pricingInstructions": "Đặt tỷ lệ lợi nhuận cho sản phẩm theo danh mục. Lợi nhuận được áp dụng vào giá vốn đơn vị để tính giá bán lẻ. Cài đặt cụ thể hơn sẽ ghi đè cài đặt chung (ví dụ: danh mục con ghi đè danh mục).",
+    "defaultMarkupInfo": "Lợi nhuận mặc định này sẽ được sử dụng khi tính giá cho sản phẩm mới hoặc khi không có lợi nhuận danh mục cụ thể được đặt."
+  },
+  "table": {
+    "promotion": "Khuyến Mãi",
+    "code": "Mã",
+    "discount": "Giảm Giá",
+    "usage": "Sử Dụng",
+    "duration": "Thời Hạn",
+    "status": "Trạng Thái",
+    "actions": "Hành Động",
+    "min": "Tối thiểu",
+    "perCustomer": "mỗi khách hàng",
+    "to": "đến",
+    "uses": "lần sử dụng",
+    "revenue": "doanh thu"
+  },
+  "status": {
+    "inactive": "Không Hoạt Động",
+    "scheduled": "Đã Lên Lịch",
+    "expired": "Hết Hạn",
+    "active": "Đang Hoạt Động"
+  },
+  "stats": {
+    "totalUses": "Tổng Lượt Sử Dụng",
+    "totalDiscounts": "Tổng Giảm Giá",
+    "totalRevenue": "Tổng Doanh Thu",
+    "avgOrderValue": "Giá Trị Đơn Hàng Trung Bình"
+  },
+  "actions": {
+    "createNew": "Tạo Khuyến Mãi Mới",
+    "edit": "Chỉnh sửa khuyến mãi",
+    "delete": "Xóa khuyến mãi",
+    "cancel": "Hủy",
+    "back": "Quay lại",
+    "next": "Tiếp theo",
+    "update": "Cập nhật",
+    "create": "Tạo",
+    "applyMarkup": "Áp Dụng Lợi Nhuận",
+    "resetOverrides": "Đặt Lại Ghi Đè",
+    "saveDefault": "Lưu Mặc Định",
+    "quickSetMarkup": "Đặt Lợi Nhuận Nhanh"
+  },
+  "search": {
+    "placeholder": "Tìm kiếm khuyến mãi theo tên hoặc mã...",
+    "categories": "Tìm kiếm danh mục..."
+  },
+  "steps": {
+    "basicInfo": {
+      "name": "Thông Tin Cơ Bản",
+      "description": "Tên và mô tả"
+    },
+    "discount": {
+      "name": "Giảm Giá",
+      "description": "Loại và giá trị"
+    },
+    "scope": {
+      "name": "Phạm Vi",
+      "description": "Ở đâu và khi nào"
+    },
+    "settings": {
+      "name": "Cài Đặt",
+      "description": "Giới hạn sử dụng"
+    },
+    "review": {
+      "name": "Xem Xét",
+      "description": "Xác nhận chi tiết"
+    }
+  },
+  "pricing": {
+    "enableDefault": "Bật lợi nhuận mặc định",
+    "default": "Mặc định",
+    "markupPercentage": "Tỷ Lệ Lợi Nhuận",
+    "retailPriceFormula": "Retail Price = Cost × (1 + {markup}%)",
+    "exampleCalculation": "Ví Dụ Tính Toán:",
+    "currentCost": "Giá vốn hiện tại",
+    "currentRetail": "Giá bán lẻ hiện tại",
+    "newPricing": "Định giá mới với lợi nhuận {markup}%:",
+    "newRetailPrice": "Giá bán lẻ mới",
+    "profitMargin": "Biên lợi nhuận",
+    "priceChange": "Thay đổi giá",
+    "ifCost": "Nếu giá vốn",
+    "retailPrice": "Giá bán lẻ",
+    "allProducts": "Tất Cả Sản Phẩm",
+    "storeWideDefault": "Mặc định toàn cửa hàng",
+    "products": "sản phẩm",
+    "overrides": "ghi đè",
+    "avg": "Trung bình",
+    "productsInCategory": "Sản phẩm trong danh mục này:",
+    "sku": "SKU",
+    "stock": "Tồn kho",
+    "brand": "Thương hiệu",
+    "cost": "Giá vốn",
+    "applyingTo": "Áp dụng cho:",
+    "updating": "Đang cập nhật:",
+    "allProductsStoreWide": "Tất Cả Sản Phẩm (Toàn Cửa Hàng)"
+  },
+  "confirm": {
+    "deletePromotion": "Bạn có chắc chắn muốn xóa khuyến mãi này không? Hành động này không thể hoàn tác.",
+    "applyAllProducts": "Điều này sẽ cập nhật lợi nhuận cho TẤT CẢ sản phẩm trong cửa hàng thành {markup}%. Bạn có chắc không?",
+    "resetOverrides": "Điều này sẽ xóa tất cả ghi đè giá cho {scope} và sử dụng lợi nhuận đã tính. Bạn có chắc không?"
+  },
+  "warnings": {
+    "storeWideUpdate": "Điều này sẽ cập nhật định giá cho tất cả sản phẩm trong cửa hàng.",
+    "singleProductNote": "Chỉ sản phẩm cụ thể này sẽ được cập nhật."
+  },
+  "messages": {
+    "codeCopied": "Đã sao chép mã!",
+    "loading": {
+      "promotions": "Đang tải khuyến mãi...",
+      "categories": "Đang tải danh mục...",
+      "products": "Đang tải sản phẩm..."
+    },
+    "noProducts": "Không tìm thấy sản phẩm",
+    "saving": "Đang lưu...",
+    "updating": "Đang Cập Nhật Giá...",
+    "updatedSuccessfully": "Cập Nhật Thành Công!",
+    "resetting": "Đang đặt lại..."
+  },
+  "success": {
+    "created": "Đã tạo khuyến mãi thành công!",
+    "updated": "Đã cập nhật khuyến mãi thành công!",
+    "deleted": "Đã xóa khuyến mãi thành công!",
+    "markupUpdated": "Đã cập nhật cài đặt lợi nhuận mặc định!",
+    "priceUpdated": "Đã cập nhật thành công {count} sản phẩm!",
+    "priceUpdatedPlural": "Đã cập nhật thành công {count} sản phẩm!",
+    "overridesCleared": "Đã xóa ghi đè giá thành công"
+  },
+  "errors": {
+    "createFailed": "Không thể tạo khuyến mãi",
+    "updateFailed": "Không thể cập nhật khuyến mãi",
+    "deleteFailed": "Không thể xóa khuyến mãi",
+    "settingsUpdateFailed": "Không thể cập nhật cài đặt",
+    "pricingUpdateFailed": "Không thể cập nhật định giá",
+    "resetFailed": "Không thể đặt lại ghi đè giá"
+  }
+}

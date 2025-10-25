@@ -1,0 +1,489 @@
+{
+  "system": {
+    "name": "WeedGo AI Engine",
+    "version": "5.0.0",
+    "environment": "development",
+    
+    "tools": {
+      "enabled": true,
+      "use_database": true,
+      "agent_tools": {
+        "dispensary": [
+          "dosage_calculator",
+          "api_orchestrator",
+          "read_api"
+        ],
+        "medical_advisor": [
+          "dosage_calculator",
+          "read_api"
+        ],
+        "customer_service": [
+          "read_api",
+          "api_orchestrator"
+        ],
+        "inventory_manager": [
+          "read_api"
+        ]
+      }
+    },
+    
+    "context": {
+      "enabled": true,
+      "storage_type": "memory",
+      "memory_config": {
+        "max_entries_per_session": 100,
+        "ttl_seconds": 3600
+      },
+      "database_config": {
+        "host": "${DB_HOST}",
+        "port": "${DB_PORT}",
+        "database": "${DB_NAME}",
+        "user": "${DB_USER}",
+        "password": "${DB_PASSWORD}"
+      },
+      "settings": {
+        "max_context_length": 4000,
+        "summarization_threshold": 3000,
+        "preserve_intent": true
+      }
+    }
+  },
+  
+  "api": {
+    "gateway": {
+      "base_url": "http://localhost:8000",
+      "openapi_spec_path": "/openapi.json",
+      "timeout_seconds": 30,
+      "retry_attempts": 3,
+      "rate_limit_per_minute": 60
+    },
+    
+    "endpoints": {
+      "products": {
+        "search": {
+          "path": "/api/v1/products/search",
+          "method": "GET",
+          "description": "Search for cannabis products",
+          "parameters": ["query", "category", "strain_type", "min_thc", "max_thc", "min_cbd", "max_cbd", "min_price", "max_price", "limit"],
+          "prompts": {
+            "extraction": "Extract product search criteria: category (flower/edibles/vapes), strain type (indica/sativa/hybrid), THC/CBD levels, and price range.",
+            "interpretation": "Present products in a helpful way, highlighting key attributes like strain type, THC/CBD content, and price."
+          }
+        },
+        "details": {
+          "path": "/api/v1/products/{product_id}",
+          "method": "GET",
+          "description": "Get detailed product information",
+          "prompts": {
+            "interpretation": "Provide comprehensive product details including effects, terpenes, and recommendations."
+          }
+        },
+        "categories": {
+          "path": "/api/v1/products/categories",
+          "method": "GET",
+          "description": "List all product categories"
+        },
+        "trending": {
+          "path": "/api/v1/analytics/products/trending",
+          "method": "GET",
+          "description": "Get trending products",
+          "prompts": {
+            "interpretation": "Highlight why these products are popular and match them to user preferences."
+          }
+        }
+      },
+      
+      "inventory": {
+        "check": {
+          "path": "/api/v1/inventory/{product_id}",
+          "method": "GET",
+          "description": "Check product availability",
+          "prompts": {
+            "interpretation": "Clearly state availability and suggest alternatives if out of stock."
+          }
+        }
+      },
+      
+      "orders": {
+        "create": {
+          "path": "/api/v1/orders",
+          "method": "POST",
+          "description": "Create a new order",
+          "requires_auth": true,
+          "schema_ref": "#/components/schemas/OrderCreation",
+          "prompts": {
+            "collection": "Collect order items, delivery preferences, and payment method conversationally.",
+            "validation": "Ensure customer is 21+, has valid prescription if medical, and delivery address is within service area."
+          }
+        },
+        "history": {
+          "path": "/api/v1/customers/{customer_id}/orders",
+          "method": "GET",
+          "description": "Get order history",
+          "requires_auth": true,
+          "prompts": {
+            "interpretation": "Summarize order history and identify patterns for personalized recommendations."
+          }
+        },
+        "latest": {
+          "path": "/api/v1/customers/{customer_id}/orders/latest",
+          "method": "GET",
+          "description": "Get most recent order",
+          "requires_auth": true
+        }
+      },
+      
+      "users": {
+        "register": {
+          "path": "/api/v1/users/register",
+          "method": "POST",
+          "description": "Register new user",
+          "schema_ref": "#/components/schemas/UserRegistration",
+          "prompts": {
+            "collection": "Collect registration info: name, email, DOB (verify 21+), phone (optional), and create a secure password.",
+            "validation": "Verify age is 21+, email is valid, and password meets security requirements."
+          }
+        },
+        "profile": {
+          "path": "/api/v1/customers/{customer_id}/profile",
+          "method": "GET",
+          "description": "Get user profile",
+          "requires_auth": true
+        },
+        "preferences": {
+          "path": "/api/v1/customers/{customer_id}/preferences",
+          "method": "PUT",
+          "description": "Update user preferences",
+          "requires_auth": true,
+          "prompts": {
+            "collection": "Learn about preferred strains, consumption methods, desired effects, and medical conditions."
+          }
+        }
+      },
+      
+      "medical": {
+        "prescriptions": {
+          "path": "/api/v1/customers/{customer_id}/prescriptions",
+          "method": "GET",
+          "description": "Get medical prescriptions",
+          "requires_auth": true,
+          "requires_scope": "medical",
+          "prompts": {
+            "interpretation": "Handle prescription data sensitively, reminding about expiry dates and renewal processes."
+          }
+        },
+        "recommendations": {
+          "path": "/api/v1/customers/{customer_id}/recommendations",
+          "method": "GET",
+          "description": "Get personalized medical recommendations",
+          "requires_auth": true,
+          "requires_scope": "medical",
+          "prompts": {
+            "interpretation": "Provide medically-informed recommendations based on conditions and symptoms."
+          }
+        }
+      }
+    },
+    
+    "endpoint_discovery": {
+      "enabled": true,
+      "cache_ttl_seconds": 3600,
+      "fallback_to_config": true,
+      "auto_discover_new": true
+    }
+  },
+  
+  "agents": {
+    "dispensary": {
+      "name": "Cannabis Dispensary Assistant",
+      "description": "Helps customers find products, place orders, and get recommendations",
+      "personality": "friendly",
+      "capabilities": [
+        "product_search",
+        "order_creation",
+        "inventory_check",
+        "dosage_advice",
+        "strain_comparison",
+        "user_registration",
+        "order_history"
+      ]
+    },
+    "medical_advisor": {
+      "name": "Medical Cannabis Advisor",
+      "description": "Provides medical cannabis guidance and dosage recommendations",
+      "personality": "professional",
+      "capabilities": [
+        "dosage_calculation",
+        "strain_comparison",
+        "medical_consultation",
+        "prescription_verification"
+      ]
+    },
+    "customer_service": {
+      "name": "Customer Service Agent",
+      "description": "Handles customer inquiries and support requests",
+      "personality": "helpful",
+      "capabilities": [
+        "order_status",
+        "account_management",
+        "complaint_handling",
+        "general_support"
+      ]
+    }
+  },
+  
+  "models": {
+    "default": "qwen_0.5b",
+    "available": [
+      {
+        "name": "qwen_0.5b",
+        "path": "models/multilingual/qwen2.5-0.5b-instruct-q4_k_m.gguf",
+        "type": "local",
+        "context_size": 2048,
+        "enabled": true
+      },
+      {
+        "name": "llama3",
+        "path": "models/llama3-8b-instruct.gguf",
+        "type": "local",
+        "context_size": 4096,
+        "enabled": false
+      }
+    ]
+  },
+  
+  "security": {
+    "auth_required": true,
+    "token_validation": true,
+    "scope_enforcement": true,
+    "audit_logging": true,
+    "encryption": {
+      "at_rest": true,
+      "in_transit": true
+    }
+  },
+  
+  "performance": {
+    "cache": {
+      "enabled": true,
+      "ttl_seconds": 300,
+      "max_entries": 1000
+    },
+    "rate_limiting": {
+      "enabled": true,
+      "requests_per_minute": 60,
+      "burst_size": 10
+    },
+    "monitoring": {
+      "enabled": true,
+      "metrics_endpoint": "/metrics",
+      "health_endpoint": "/health"
+    }
+  },
+  
+  "logging": {
+    "level": "INFO",
+    "format": "json",
+    "outputs": ["console", "file"],
+    "file_path": "logs/ai_engine.log",
+    "rotation": {
+      "enabled": true,
+      "max_size_mb": 100,
+      "max_files": 5
+    }
+  },
+  
+  "mcp": {
+    "enabled": true,
+    "offline_fallback": true,
+    "discovery": {
+      "config_paths": [
+        "./mcp_servers",
+        "~/.mcp",
+        "/etc/mcp"
+      ],
+      "auto_discover": true,
+      "cache_enabled": true,
+      "cache_file": "~/.mcp/servers_cache.json"
+    },
+    "client": {
+      "timeout": 30,
+      "max_retries": 3,
+      "retry_delay": 1,
+      "reconnect": true,
+      "reconnect_delay": 5,
+      "max_reconnect_attempts": 5
+    },
+    "servers": {
+      "weedgo": {
+        "enabled": true,
+        "transport": "stdio",
+        "command": "./mcp_servers/weedgo_mcp_server.py",
+        "args": ["--stdio"],
+        "auto_connect": true
+      }
+    },
+    "tools": {
+      "name_prefix": "mcp_",
+      "enabled_categories": [
+        "cannabis",
+        "calculation",
+        "search",
+        "analysis",
+        "compliance"
+      ],
+      "execution": {
+        "max_execution_time": 60,
+        "parallel_execution": true,
+        "max_parallel": 5
+      }
+    },
+    "security": {
+      "validate_inputs": true,
+      "sanitize_outputs": true,
+      "allowed_tools": [
+        "^strain_.*",
+        "^dosage_.*",
+        "^compliance_.*",
+        "^terpene_.*",
+        "^lab_.*",
+        "^calculate$",
+        "^search_.*"
+      ],
+      "blocked_tools": [],
+      "max_request_size": 1048576,
+      "max_response_size": 10485760
+    },
+    "logging": {
+      "level": "INFO",
+      "log_requests": false,
+      "log_responses": false,
+      "log_file": "logs/mcp.log"
+    },
+    "performance": {
+      "cache_results": true,
+      "cache_ttl": 300,
+      "connection_pool_size": 10,
+      "batch_requests": true,
+      "batch_size": 10,
+      "batch_timeout": 100
+    }
+  },
+
+  "cloud_providers": {
+    "description": "Cloud LLM provider model configuration",
+    "groq": {
+      "default_model": "llama-3.3-70b-versatile",
+      "available_models": [
+        {
+          "name": "llama-3.3-70b-versatile",
+          "description": "Llama 3.3 70B - Ultra-fast, versatile (default)",
+          "params": "70B",
+          "speed": "0.5s",
+          "daily_limit": 14400
+        },
+        {
+          "name": "llama-3.1-70b-versatile",
+          "description": "Llama 3.1 70B - Versatile, high quality",
+          "params": "70B",
+          "speed": "0.5s",
+          "daily_limit": 14400
+        },
+        {
+          "name": "llama-3.1-8b-instant",
+          "description": "Llama 3.1 8B - Instant, efficient",
+          "params": "8B",
+          "speed": "0.3s",
+          "daily_limit": 14400
+        },
+        {
+          "name": "mixtral-8x7b-32768",
+          "description": "Mixtral 8x7B - Large context window",
+          "params": "8x7B",
+          "speed": "0.5s",
+          "daily_limit": 14400
+        },
+        {
+          "name": "gemma2-9b-it",
+          "description": "Gemma 2 9B - Instruction tuned",
+          "params": "9B",
+          "speed": "0.5s",
+          "daily_limit": 14400
+        }
+      ]
+    },
+    "openrouter": {
+      "default_model": "deepseek/deepseek-r1-distill-llama-70b:free",
+      "available_models": [
+        {
+          "name": "deepseek/deepseek-r1-distill-llama-70b:free",
+          "description": "DeepSeek R1 70B - Reasoning focused (default)",
+          "params": "70B",
+          "speed": "2.0s",
+          "daily_limit": 200
+        },
+        {
+          "name": "meta-llama/llama-3.2-3b-instruct:free",
+          "description": "Llama 3.2 3B - Fast and efficient",
+          "params": "3B",
+          "speed": "1.5s",
+          "daily_limit": 200
+        },
+        {
+          "name": "google/gemma-2-9b-it:free",
+          "description": "Gemma 2 9B - Instruction tuned",
+          "params": "9B",
+          "speed": "2.0s",
+          "daily_limit": 200
+        },
+        {
+          "name": "microsoft/phi-3-mini-128k-instruct:free",
+          "description": "Phi-3 Mini - Large context window",
+          "params": "3.8B",
+          "speed": "1.5s",
+          "daily_limit": 200
+        }
+      ]
+    },
+    "llm7": {
+      "default_model": "gpt-4o-mini",
+      "available_models": [
+        {
+          "name": "gpt-4o-mini",
+          "description": "GPT-4o Mini - Fast, efficient (default)",
+          "provider": "OpenAI",
+          "speed": "2.5s",
+          "daily_limit": 57600
+        },
+        {
+          "name": "gpt-4o",
+          "description": "GPT-4o - Most capable OpenAI model",
+          "provider": "OpenAI",
+          "speed": "3.0s",
+          "daily_limit": 57600
+        },
+        {
+          "name": "claude-3-5-sonnet-20241022",
+          "description": "Claude 3.5 Sonnet - Anthropic's best",
+          "provider": "Anthropic",
+          "speed": "2.5s",
+          "daily_limit": 57600
+        },
+        {
+          "name": "claude-3-5-haiku-20241022",
+          "description": "Claude 3.5 Haiku - Fast Anthropic model",
+          "provider": "Anthropic",
+          "speed": "2.0s",
+          "daily_limit": 57600
+        },
+        {
+          "name": "gemini-2.0-flash-exp",
+          "description": "Gemini 2.0 Flash - Google's latest",
+          "provider": "Google",
+          "speed": "2.5s",
+          "daily_limit": 57600
+        }
+      ]
+    }
+  }
+}

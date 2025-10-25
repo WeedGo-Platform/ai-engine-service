@@ -1,0 +1,98 @@
+{
+  "api": {
+    "networkError": "无法连接到服务器。请检查您的连接。",
+    "serverError": "服务器发生错误。请稍后再试。",
+    "timeout": "请求超时。请重试。",
+    "unauthorized": "您无权执行此操作。",
+    "forbidden": "访问被拒绝。",
+    "notFound": "未找到请求的资源。",
+    "conflict": "发生冲突。该资源可能已存在。",
+    "validationError": "发生验证错误。",
+    "tooManyRequests": "请求过多。请稍后再试。",
+    "serviceUnavailable": "服务暂时不可用。",
+    "badRequest": "无效请求。请检查您的输入。",
+    "internalError": "发生内部错误。"
+  },
+  "auth": {
+    "loginSuccess": "登录成功！正在重定向...",
+    "invalidCredentials": "电子邮件或密码无效。请重试。",
+    "sessionExpired": "您的会话已过期。请重新登录。",
+    "accountDisabled": "您的帐户已被禁用或缺少管理员权限。",
+    "accountLocked": "由于多次登录失败，您的帐户已被锁定。",
+    "tooManyAttempts": "登录尝试次数过多。请稍后再试。",
+    "tokenExpired": "身份验证令牌已过期。",
+    "tokenInvalid": "身份验证令牌无效。",
+    "passwordResetFailed": "密码重置失败。请重试。",
+    "emailNotVerified": "请先验证您的电子邮件地址。",
+    "validationError": "发生验证错误",
+    "loginError": "登录过程中发生错误"
+  },
+  "tenant": {
+    "loadFailed": "加载组织数据失败。",
+    "createFailed": "创建租户失败。",
+    "updateFailed": "更新租户失败。",
+    "deleteFailed": "删除租户失败。",
+    "suspendFailed": "暂停租户失败。",
+    "reactivateFailed": "重新激活租户失败。",
+    "noOrganization": "用户未关联任何组织。",
+    "limitReached": "该租户的门店限制已达到。",
+    "invalidSubscription": "订阅无效或已过期。"
+  },
+  "store": {
+    "loadFailed": "加载门店数据失败。",
+    "createFailed": "创建门店失败。",
+    "updateFailed": "更新门店失败。",
+    "deleteFailed": "删除门店失败。",
+    "suspendFailed": "暂停门店失败。",
+    "closeFailed": "关闭门店失败。",
+    "notFound": "未找到门店。",
+    "alreadyExists": "此名称的门店已存在。"
+  },
+  "inventory": {
+    "loadFailed": "加载库存数据失败。",
+    "createFailed": "创建库存项目失败。",
+    "updateFailed": "更新库存项目失败。",
+    "deleteFailed": "删除库存项目失败。",
+    "stockUpdateFailed": "更新库存水平失败。",
+    "lowStock": "库存不足警报。",
+    "outOfStock": "商品缺货。",
+    "invalidQuantity": "指定的数量无效。"
+  },
+  "order": {
+    "loadFailed": "加载订单数据失败。",
+    "createFailed": "创建订单失败。",
+    "updateFailed": "更新订单失败。",
+    "cancelFailed": "取消订单失败。",
+    "fulfillFailed": "履行订单失败。",
+    "refundFailed": "处理退款失败。",
+    "notFound": "未找到订单。",
+    "alreadyProcessed": "订单已被处理。"
+  },
+  "payment": {
+    "loadFailed": "加载支付数据失败。",
+    "processingFailed": "支付处理失败。",
+    "refundFailed": "退款处理失败。",
+    "invalidAmount": "支付金额无效。",
+    "cardDeclined": "卡被拒绝。",
+    "insufficientFunds": "余额不足。",
+    "paymentMethodInvalid": "支付方式无效。"
+  },
+  "upload": {
+    "failed": "文件上传失败。",
+    "fileTooLarge": "文件大小超过允许的最大值。",
+    "invalidFileType": "无效的文件类型。",
+    "corruptedFile": "文件似乎已损坏。",
+    "uploadCancelled": "上传已取消。"
+  },
+  "general": {
+    "unexpectedError": "发生意外错误。",
+    "operationFailed": "操作失败。请重试。",
+    "dataLoadFailed": "加载数据失败。",
+    "saveFailed": "保存更改失败。",
+    "deleteFailed": "删除项目失败。",
+    "permissionDenied": "您没有执行此操作的权限。",
+    "invalidInput": "提供的输入无效。",
+    "requiredFieldMissing": "缺少必填字段。",
+    "dataCorrupted": "数据似乎已损坏。"
+  }
+}

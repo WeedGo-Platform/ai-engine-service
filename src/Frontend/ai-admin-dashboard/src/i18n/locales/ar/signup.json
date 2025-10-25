@@ -1,0 +1,368 @@
+{
+  "tenant": {
+    "header": {
+      "title": "WeedGo",
+      "alreadyHaveAccount": "هل لديك حساب بالفعل؟",
+      "signIn": "تسجيل الدخول",
+      "backHome": "العودة إلى الصفحة الرئيسية"
+    },
+    "steps": {
+      "company": "معلومات الشركة",
+      "contact": "تفاصيل الاتصال",
+      "account": "إعداد الحساب",
+      "payment": "الاشتراك والدفع"
+    },
+    "stepDescriptions": {
+      "company": "أخبرنا عن عملك وعلامتك التجارية",
+      "contact": "قدم معلومات الاتصال والعنوان الخاص بك",
+      "account": "أنشئ بيانات اعتماد حساب المسؤول الخاص بك",
+      "payment": "اختر خطتك وطريقة الدفع"
+    },
+    "companyInfo": {
+      "brandName": "اسم العلامة التجارية",
+      "brandNamePlaceholder": "مثال: Green Valley Dispensary",
+      "website": "الموقع الإلكتروني",
+      "websitePlaceholder": "www.potpalace.ca أو potpalace.ca",
+      "websiteHelp": "عنوان URL لموقعك (يُستخدم لإنشاء رمز العلامة التجارية)",
+      "brandCode": "رمز العلامة التجارية",
+      "brandCodeAuto": "رمز العلامة التجارية * (يتم إنشاؤه تلقائيًا)",
+      "brandCodePlaceholder": "أدخل الموقع أعلاه للإنشاء",
+      "brandCodeHelp": "سيُستخدم في عنوان URL لمتجرك: {{code}}.weedgo.com",
+      "legalCompanyName": "الاسم القانوني للشركة",
+      "legalCompanyPlaceholder": "مثال: Green Valley Cannabis Inc.",
+      "businessNumber": "رقم العمل",
+      "businessNumberPlaceholder": "123456789",
+      "businessNumberHelp": "رقم العمل الكندي (9 أرقام)",
+      "gstHstNumber": "رقم GST/HST",
+      "gstHstPlaceholder": "123456789RT0001",
+      "gstHstHelp": "التنسيق: 123456789RT0001",
+      "logoUpload": "تحميل الشعار",
+      "logoUploadHelp": "حد أقصى 2 ميجابايت • PNG، JPG، WebP • مستحسن: مربع 500×500 بكسل"
+    },
+    "contactInfo": {
+      "firstName": "الاسم الأول",
+      "lastName": "اسم العائلة",
+      "email": "عنوان البريد الإلكتروني",
+      "phone": "رقم الهاتف",
+      "phonePlaceholder": "(555) 123-4567",
+      "street": "عنوان الشارع",
+      "city": "المدينة",
+      "province": "المقاطعة",
+      "postalCode": "الرمز البريدي",
+      "postalCodePlaceholder": "A1A 1A1"
+    },
+    "accountSetup": {
+      "password": "كلمة المرور",
+      "confirmPassword": "تأكيد كلمة المرور",
+      "passwordStrength": "القوة:",
+      "passwordHelp": "يجب أن تتكون من 8 أحرف على الأقل مع حروف كبيرة وصغيرة وأرقام",
+      "securityTitle": "أمان الحساب",
+      "securityDescription": "سيتم تأمين حسابك بتشفير معياري صناعي وخيارات مصادقة متعددة العوامل."
+    },
+    "subscription": {
+      "choosePlan": "اختر خطة الاشتراك الخاصة بك",
+      "selectedPlan": "الخطة المحددة: {{plan}}",
+      "changePlan": "تغيير الخطة",
+      "free": "مجاني",
+      "perMonth": "${{price}}/شهر",
+      "customPricing": "تسعير مخصص",
+      "billingCycle": "دورة الفوترة",
+      "monthly": "شهري",
+      "monthlyBilled": "يتم الفوترة شهريًا",
+      "annual": "سنوي",
+      "annualSave": "وفر 20%",
+      "selectPlan": "اختر الخطة",
+      "enterpriseTitle": "الخطة المؤسسية",
+      "enterpriseDescription": "سيتصل بك فريق المبيعات لدينا في غضون 24 ساعة لمناقشة التسعير المخصص والإعداد."
+    },
+    "payment": {
+      "cardholderName": "اسم حامل البطاقة",
+      "cardholderPlaceholder": "أحمد محمد",
+      "cardNumber": "رقم البطاقة",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiryDate": "تاريخ الانتهاء",
+      "expiryPlaceholder": "MM/YY",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "postalCode": "الرمز البريدي",
+      "postalCodePlaceholder": "12345"
+    },
+    "progress": {
+      "verifying": "التحقق من التوفر...",
+      "creating": "إنشاء حسابك...",
+      "uploading": "تحميل الشعار...",
+      "complete": "تم إنشاء الحساب بنجاح!",
+      "processing": "جارٍ المعالجة..."
+    },
+    "success": {
+      "welcome": "مرحبًا بك في WeedGo!",
+      "accountCreated": "تم إنشاء حسابك بنجاح.",
+      "tenantCode": "رمز المستأجر:",
+      "preparing": "جارٍ إعداد لوحة التحكم الخاصة بك..."
+    },
+    "navigation": {
+      "previous": "السابق",
+      "next": "التالي",
+      "createAccount": "إنشاء حساب"
+    },
+    "errors": {
+      "accountCreationFailed": "فشل إنشاء الحساب",
+      "tryAgain": "حاول مرة أخرى",
+      "registerAsUser": "التسجيل كمستخدم",
+      "signInInstead": "تسجيل الدخول بدلاً من ذلك",
+      "tenantExists": "رمز المستأجر \"{{code}}\" مسجل بالفعل",
+      "websiteExists": "الموقع الإلكتروني \"{{website}}\" قيد الاستخدام بالفعل"
+    }
+  },
+  "review": {
+    "title": "مراجعة حساب المستأجر",
+    "description": "مراجعة والموافقة على الحسابات المميزة للتحقق اليدوي",
+    "refresh": "تحديث",
+    "stats": {
+      "totalPending": "إجمالي المعلق",
+      "thisWeek": "هذا الأسبوع",
+      "avgReviewTime": "متوسط وقت المراجعة",
+      "approvalRate": "معدل الموافقة"
+    },
+    "table": {
+      "title": "الحسابات المعلقة",
+      "storeName": "اسم المتجر",
+      "contact": "جهة الاتصال",
+      "licenseNumber": "رقم الترخيص",
+      "submitted": "تم الإرسال",
+      "tier": "المستوى",
+      "actions": "الإجراءات",
+      "review": "مراجعة",
+      "noPending": "لا توجد حسابات معلقة للمراجعة!"
+    },
+    "modal": {
+      "title": "مراجعة الحساب",
+      "storeInfo": "معلومات المتجر",
+      "storeName": "اسم المتجر",
+      "licenseNumber": "رقم الترخيص",
+      "crsaAddress": "عنوان CRSA",
+      "municipality": "البلدية",
+      "crsaStatus": "حالة CRSA",
+      "crsaWebsite": "موقع CRSA",
+      "contactInfo": "معلومات الاتصال",
+      "contactName": "اسم جهة الاتصال",
+      "role": "الدور",
+      "email": "البريد الإلكتروني",
+      "phone": "الهاتف",
+      "verificationContext": "سياق التحقق",
+      "emailDomain": "نطاق البريد الإلكتروني",
+      "domainMatchesCrsa": "النطاق يطابق CRSA",
+      "verificationTier": "مستوى التحقق",
+      "submitted": "تم الإرسال",
+      "adminNotes": "ملاحظات المسؤول (اختياري)",
+      "adminNotesPlaceholder": "أضف أي ملاحظات حول هذه المراجعة...",
+      "reject": "رفض",
+      "approve": "الموافقة على الحساب",
+      "approving": "جارٍ الموافقة...",
+      "yes": "✓ نعم",
+      "no": "✗ لا"
+    },
+    "reject": {
+      "title": "رفض الحساب",
+      "description": "يرجى تقديم سبب لرفض هذا الحساب. سيتم تسجيل ذلك لأغراض التدقيق.",
+      "reasonPlaceholder": "سبب الرفض (10 أحرف على الأقل)...",
+      "cancel": "إلغاء",
+      "confirm": "تأكيد الرفض",
+      "rejecting": "جارٍ الرفض...",
+      "minLength": "يرجى تقديم سبب (10 أحرف على الأقل)"
+    },
+    "messages": {
+      "approved": "تمت الموافقة على الحساب بنجاح!",
+      "rejected": "تم رفض الحساب بنجاح.",
+      "approveFailed": "فشلت الموافقة على الحساب: {{error}}",
+      "rejectFailed": "فشل رفض الحساب: {{error}}",
+      "fetchFailed": "فشل جلب الحسابات المعلقة",
+      "noPermission": "ليس لديك إذن لمراجعة حسابات المستأجرين."
+    }
+  },
+  "userRegistration": {
+    "title": "أنشئ حسابك",
+    "joinTenant": "انضم إلى {{tenantName}}",
+    "tenantInfo": "معلومات المستأجر",
+    "tenantName": "الاسم:",
+    "tenantCode": "الرمز:",
+    "firstName": "الاسم الأول",
+    "firstNamePlaceholder": "أحمد",
+    "lastName": "اسم العائلة",
+    "lastNamePlaceholder": "محمد",
+    "email": "عنوان البريد الإلكتروني",
+    "emailPlaceholder": "ahmed.mohamed@example.com",
+    "phone": "رقم الهاتف",
+    "phonePlaceholder": "(555) 123-4567",
+    "password": "كلمة المرور",
+    "passwordPlaceholder": "••••••••",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "passwordStrength": "القوة:",
+    "passwordHelp": "استخدم 8+ أحرف مع حروف كبيرة وصغيرة وأرقام ورموز لأمان أفضل",
+    "createButton": "إنشاء حساب",
+    "creating": "جارٍ إنشاء الحساب...",
+    "alreadyHaveAccount": "هل لديك حساب بالفعل؟",
+    "signIn": "تسجيل الدخول",
+    "loading": "جارٍ تحميل معلومات المستأجر...",
+    "tenantNotFound": "لم يتم العثور على المستأجر",
+    "tenantNotFoundDescription": "تعذر العثور على المستأجر المحدد.",
+    "goToSignup": "الانتقال إلى التسجيل",
+    "errors": {
+      "loadFailed": "فشل تحميل معلومات المستأجر",
+      "alreadyExists": "يوجد مستخدم بهذا البريد الإلكتروني بالفعل. يرجى استخدام بريد إلكتروني مختلف أو تسجيل الدخول بدلاً من ذلك.",
+      "failed": "فشل إنشاء حساب المستخدم"
+    }
+  },
+  "success": {
+    "title": "مرحبًا بك في WeedGo!",
+    "description": "تم إنشاء حسابك لـ {{tenantName}} بنجاح.",
+    "accountDetails": {
+      "title": "تفاصيل حسابك",
+      "tenantName": "اسم المستأجر:",
+      "tenantCode": "رمز المستأجر:",
+      "storeUrl": "عنوان URL للمتجر:"
+    },
+    "nextSteps": {
+      "title": "الخطوات التالية",
+      "checkEmail": {
+        "title": "تحقق من بريدك الإلكتروني",
+        "description": "لقد أرسلنا لك بريدًا إلكترونيًا ترحيبيًا يحتوي على معلومات مهمة عن الحساب وتعليمات الإعداد."
+      },
+      "accessDashboard": {
+        "title": "الوصول إلى لوحة التحكم الخاصة بك",
+        "description": "سجل الدخول إلى لوحة تحكم المسؤول لتكوين إعدادات متجرك وإضافة المنتجات وتخصيص مساعدي الذكاء الاصطناعي الخاص بك."
+      },
+      "setupStore": {
+        "title": "إعداد متجرك الأول",
+        "description": "أضف موقع متجرك الأول وقم بتكوين ساعات العمل وإعداد مخزون المنتجات الخاص بك."
+      },
+      "configureAI": {
+        "title": "تكوين مساعدي الذكاء الاصطناعي",
+        "description": "خصص شخصيات budtender للذكاء الاصطناعي الخاص بك وقم بإعداد الدعم متعدد اللغات لعملائك."
+      }
+    },
+    "quickActions": {
+      "dashboard": {
+        "title": "الوصول إلى لوحة التحكم",
+        "description": "قم بتكوين منصتك"
+      },
+      "documentation": {
+        "title": "التوثيق",
+        "description": "أدلة الإعداد والبرامج التعليمية"
+      },
+      "support": {
+        "title": "الدعم",
+        "description": "احصل على المساعدة من فريقنا"
+      }
+    },
+    "cta": {
+      "button": "الوصول إلى لوحة التحكم الخاصة بك",
+      "help": "هل تحتاج إلى مساعدة للبدء؟ اتصل بفريق الدعم لدينا على",
+      "email": "support@weedgo.com"
+    },
+    "resources": {
+      "title": "الموارد لمساعدتك على البدء",
+      "quickSetup": {
+        "title": "دليل الإعداد السريع",
+        "item1": "تكوين المتجر والعلامة التجارية",
+        "item2": "إعداد كتالوج المنتجات",
+        "item3": "تكوين معالجة الدفع",
+        "item4": "تخصيص مساعد الذكاء الاصطناعي"
+      },
+      "training": {
+        "title": "التدريب والدعم",
+        "item1": "دروس فيديو وندوات عبر الإنترنت",
+        "item2": "دردشة دعم العملاء على مدار الساعة طوال أيام الأسبوع",
+        "item3": "الوصول إلى منتدى المجتمع",
+        "item4": "مدير حساب مخصص (للمؤسسات)"
+      }
+    }
+  },
+  "validation": {
+    "required": "{{field}} مطلوب",
+    "brandNameRequired": "اسم العلامة التجارية مطلوب",
+    "websiteRequired": "الموقع الإلكتروني مطلوب لإنشاء رمز العلامة التجارية",
+    "brandCodeRequired": "رمز العلامة التجارية مطلوب (أدخل الموقع للإنشاء)",
+    "brandCodeFormat": "يجب أن يحتوي رمز العلامة التجارية على أحرف كبيرة وأرقام وشرطات وشرطات سفلية فقط",
+    "companyNameRequired": "اسم الشركة مطلوب",
+    "businessNumberRequired": "رقم العمل مطلوب",
+    "businessNumberFormat": "يجب أن يكون رقم العمل 9 أرقام",
+    "gstHstRequired": "رقم GST/HST مطلوب",
+    "gstHstFormat": "تنسيق رقم GST/HST: 123456789RT0001",
+    "emailRequired": "البريد الإلكتروني مطلوب",
+    "emailInvalid": "يرجى إدخال عنوان بريد إلكتروني صالح",
+    "firstNameRequired": "الاسم الأول مطلوب",
+    "lastNameRequired": "اسم العائلة مطلوب",
+    "streetRequired": "عنوان الشارع مطلوب",
+    "cityRequired": "المدينة مطلوبة",
+    "postalCodeRequired": "الرمز البريدي مطلوب",
+    "postalCodeFormat": "يرجى إدخال رمز بريدي كندي صالح",
+    "passwordRequired": "كلمة المرور مطلوبة",
+    "passwordLength": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل",
+    "passwordComplexity": "يجب أن تحتوي كلمة المرور على أحرف كبيرة وصغيرة وأرقام",
+    "passwordMismatch": "كلمات المرور غير متطابقة",
+    "cardNumberRequired": "رقم البطاقة مطلوب",
+    "cardNumberFormat": "يرجى إدخال رقم بطاقة صالح مكون من 16 رقمًا",
+    "expiryRequired": "تاريخ الانتهاء مطلوب",
+    "expiryFormat": "يرجى إدخال تنسيق MM/YY",
+    "cvvRequired": "CVV مطلوب",
+    "cvvFormat": "يجب أن يكون CVV 3 أو 4 أرقام",
+    "cardholderRequired": "اسم حامل البطاقة مطلوب"
+  },
+  "passwordStrength": {
+    "weak": "ضعيف",
+    "fair": "مقبول",
+    "good": "جيد",
+    "strong": "قوي",
+    "veryStrong": "قوي جدًا"
+  },
+  "provinces": {
+    "ON": "أونتاريو",
+    "BC": "كولومبيا البريطانية",
+    "AB": "ألبرتا",
+    "QC": "كيبك",
+    "MB": "مانيتوبا",
+    "SK": "ساسكاتشوان",
+    "NS": "نوفا سكوشا",
+    "NB": "نيو برونزويك",
+    "NL": "نيوفاوندلاند ولابرادور",
+    "PE": "جزيرة الأمير إدوارد",
+    "NT": "الأقاليم الشمالية الغربية",
+    "YT": "يوكون",
+    "NU": "نونافوت"
+  },
+  "plans": {
+    "community_and_new_business": {
+      "name": "المجتمع والأعمال الجديدة",
+      "features": {
+        "stores": "متجر واحد",
+        "languages": "لغتان",
+        "personalities": "شخصية ذكاء اصطناعي واحدة"
+      }
+    },
+    "small_business": {
+      "name": "الأعمال الصغيرة",
+      "features": {
+        "stores": "5 متاجر",
+        "languages": "5 لغات",
+        "personalities": "شخصيتان للذكاء الاصطناعي"
+      }
+    },
+    "professional_and_growing_business": {
+      "name": "الأعمال المهنية والمتنامية",
+      "features": {
+        "stores": "12 متجرًا",
+        "languages": "10 لغات",
+        "personalities": "3 شخصيات للذكاء الاصطناعي"
+      }
+    },
+    "enterprise": {
+      "name": "المؤسسات",
+      "features": {
+        "stores": "متاجر غير محدودة",
+        "languages": "25+ لغة",
+        "personalities": "5 شخصيات للذكاء الاصطناعي"
+      }
+    }
+  }
+}

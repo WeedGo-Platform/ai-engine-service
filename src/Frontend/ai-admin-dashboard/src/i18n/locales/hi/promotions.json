@@ -1,0 +1,158 @@
+{
+  "titles": {
+    "main": "प्रचार और मूल्य निर्धारण",
+    "activePromotions": "सक्रिय प्रचार",
+    "analytics": "विश्लेषण",
+    "defaultPricing": "डिफ़ॉल्ट मूल्य निर्धारण",
+    "topPerforming": "शीर्ष प्रदर्शन करने वाले प्रचार",
+    "overallStats": "समग्र आंकड़े",
+    "deletePromotion": "प्रचार हटाएं",
+    "createPromotion": "नया प्रचार बनाएं",
+    "editPromotion": "प्रचार संपादित करें",
+    "viewPromotion": "प्रचार देखें",
+    "defaultPriceConfig": "डिफ़ॉल्ट मूल्य कॉन्फ़िगरेशन",
+    "applyMarkup": "मार्कअप लागू करें",
+    "storeWideMarkup": "स्टोर-वाइड डिफ़ॉल्ट मार्कअप"
+  },
+  "descriptions": {
+    "noStoreSelected": "कोई स्टोर चयनित नहीं",
+    "selectStoreForPromotions": "कृपया प्रचार और मूल्य निर्धारण प्रबंधित करने के लिए एक स्टोर चुनें",
+    "selectStoreForPricing": "कृपया मूल्य निर्धारण प्रबंधित करने के लिए एक स्टोर चुनें",
+    "managingFor": "प्रचार और मूल्य निर्धारण प्रबंधन",
+    "pricingInstructions": "श्रेणी के अनुसार उत्पादों के लिए मार्कअप प्रतिशत सेट करें। मार्कअप को खुदरा मूल्य की गणना करने के लिए इकाई लागत पर लागू किया जाता है। अधिक विशिष्ट सेटिंग्स सामान्य सेटिंग्स को ओवरराइड करती हैं (उदाहरण के लिए, उप-श्रेणी श्रेणी को ओवरराइड करती है)।",
+    "defaultMarkupInfo": "यह डिफ़ॉल्ट मार्कअप नए उत्पादों के लिए मूल्यों की गणना करते समय या जब कोई विशिष्ट श्रेणी मार्कअप सेट नहीं होता है तब उपयोग किया जाएगा।"
+  },
+  "table": {
+    "promotion": "प्रचार",
+    "code": "कोड",
+    "discount": "छूट",
+    "usage": "उपयोग",
+    "duration": "अवधि",
+    "status": "स्थिति",
+    "actions": "क्रियाएं",
+    "min": "न्यूनतम",
+    "perCustomer": "प्रति ग्राहक",
+    "to": "से",
+    "uses": "उपयोग",
+    "revenue": "राजस्व"
+  },
+  "status": {
+    "inactive": "निष्क्रिय",
+    "scheduled": "निर्धारित",
+    "expired": "समाप्त",
+    "active": "सक्रिय"
+  },
+  "stats": {
+    "totalUses": "कुल उपयोग",
+    "totalDiscounts": "कुल छूट",
+    "totalRevenue": "कुल राजस्व",
+    "avgOrderValue": "औसत ऑर्डर मूल्य"
+  },
+  "actions": {
+    "createNew": "नया प्रचार बनाएं",
+    "edit": "प्रचार संपादित करें",
+    "delete": "प्रचार हटाएं",
+    "cancel": "रद्द करें",
+    "back": "वापस",
+    "next": "अगला",
+    "update": "अपडेट करें",
+    "create": "बनाएं",
+    "applyMarkup": "मार्कअप लागू करें",
+    "resetOverrides": "ओवरराइड रीसेट करें",
+    "saveDefault": "डिफ़ॉल्ट सहेजें",
+    "quickSetMarkup": "त्वरित मार्कअप सेट करें"
+  },
+  "search": {
+    "placeholder": "नाम या कोड से प्रचार खोजें...",
+    "categories": "श्रेणियां खोजें..."
+  },
+  "steps": {
+    "basicInfo": {
+      "name": "मूल जानकारी",
+      "description": "नाम और विवरण"
+    },
+    "discount": {
+      "name": "छूट",
+      "description": "प्रकार और मूल्य"
+    },
+    "scope": {
+      "name": "दायरा",
+      "description": "कहां और कब"
+    },
+    "settings": {
+      "name": "सेटिंग्स",
+      "description": "उपयोग सीमाएं"
+    },
+    "review": {
+      "name": "समीक्षा",
+      "description": "विवरण पुष्टि करें"
+    }
+  },
+  "pricing": {
+    "enableDefault": "डिफ़ॉल्ट मार्कअप सक्षम करें",
+    "default": "डिफ़ॉल्ट",
+    "markupPercentage": "मार्कअप प्रतिशत",
+    "retailPriceFormula": "Retail Price = Cost × (1 + {markup}%)",
+    "exampleCalculation": "उदाहरण गणना:",
+    "currentCost": "वर्तमान लागत",
+    "currentRetail": "वर्तमान खुदरा",
+    "newPricing": "{markup}% मार्कअप के साथ नया मूल्य निर्धारण:",
+    "newRetailPrice": "नया खुदरा मूल्य",
+    "profitMargin": "लाभ मार्जिन",
+    "priceChange": "मूल्य परिवर्तन",
+    "ifCost": "यदि लागत",
+    "retailPrice": "खुदरा मूल्य",
+    "allProducts": "सभी उत्पाद",
+    "storeWideDefault": "स्टोर-वाइड डिफ़ॉल्ट",
+    "products": "उत्पाद",
+    "overrides": "ओवरराइड",
+    "avg": "औसत",
+    "productsInCategory": "इस श्रेणी में उत्पाद:",
+    "sku": "SKU",
+    "stock": "स्टॉक",
+    "brand": "ब्रांड",
+    "cost": "लागत",
+    "applyingTo": "लागू करना:",
+    "updating": "अपडेट हो रहा है:",
+    "allProductsStoreWide": "सभी उत्पाद (स्टोर-वाइड)"
+  },
+  "confirm": {
+    "deletePromotion": "क्या आप वाकई इस प्रचार को हटाना चाहते हैं? इस क्रिया को पूर्ववत नहीं किया जा सकता।",
+    "applyAllProducts": "यह स्टोर में सभी उत्पादों के लिए मार्कअप को {markup}% में अपडेट करेगा। क्या आप निश्चित हैं?",
+    "resetOverrides": "यह {scope} के लिए सभी मूल्य ओवरराइड हटा देगा और गणना किए गए मार्कअप का उपयोग करेगा। क्या आप निश्चित हैं?"
+  },
+  "warnings": {
+    "storeWideUpdate": "यह स्टोर में सभी उत्पादों के लिए मूल्य निर्धारण अपडेट करेगा।",
+    "singleProductNote": "केवल यह विशिष्ट उत्पाद अपडेट किया जाएगा।"
+  },
+  "messages": {
+    "codeCopied": "कोड कॉपी किया गया!",
+    "loading": {
+      "promotions": "प्रचार लोड हो रहे हैं...",
+      "categories": "श्रेणियां लोड हो रही हैं...",
+      "products": "उत्पाद लोड हो रहे हैं..."
+    },
+    "noProducts": "कोई उत्पाद नहीं मिला",
+    "saving": "सहेजा जा रहा है...",
+    "updating": "मूल्य अपडेट हो रहे हैं...",
+    "updatedSuccessfully": "सफलतापूर्वक अपडेट किया गया!",
+    "resetting": "रीसेट हो रहा है..."
+  },
+  "success": {
+    "created": "प्रचार सफलतापूर्वक बनाया गया!",
+    "updated": "प्रचार सफलतापूर्वक अपडेट किया गया!",
+    "deleted": "प्रचार सफलतापूर्वक हटाया गया!",
+    "markupUpdated": "डिफ़ॉल्ट मार्कअप सेटिंग्स अपडेट की गईं!",
+    "priceUpdated": "सफलतापूर्वक {count} उत्पाद अपडेट किया गया!",
+    "priceUpdatedPlural": "सफलतापूर्वक {count} उत्पाद अपडेट किए गए!",
+    "overridesCleared": "मूल्य ओवरराइड सफलतापूर्वक साफ किए गए"
+  },
+  "errors": {
+    "createFailed": "प्रचार बनाने में विफल",
+    "updateFailed": "प्रचार अपडेट करने में विफल",
+    "deleteFailed": "प्रचार हटाने में विफल",
+    "settingsUpdateFailed": "सेटिंग्स अपडेट करने में विफल",
+    "pricingUpdateFailed": "मूल्य निर्धारण अपडेट करने में विफल",
+    "resetFailed": "मूल्य ओवरराइड रीसेट करने में विफल"
+  }
+}

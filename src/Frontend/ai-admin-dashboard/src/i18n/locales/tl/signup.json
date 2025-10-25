@@ -1,0 +1,368 @@
+{
+  "tenant": {
+    "header": {
+      "title": "WeedGo",
+      "alreadyHaveAccount": "Mayroon nang account?",
+      "signIn": "Mag-sign in",
+      "backHome": "Bumalik sa Home"
+    },
+    "steps": {
+      "company": "Impormasyon ng Kumpanya",
+      "contact": "Mga Detalye ng Contact",
+      "account": "Pag-setup ng Account",
+      "payment": "Subscription at Pagbayad"
+    },
+    "stepDescriptions": {
+      "company": "Sabihin sa amin ang tungkol sa inyong negosyo at brand",
+      "contact": "Ibigay ang inyong contact information at address",
+      "account": "Gumawa ng inyong admin account credentials",
+      "payment": "Pumili ng inyong plan at paraan ng pagbayad"
+    },
+    "companyInfo": {
+      "brandName": "Pangalan ng Brand",
+      "brandNamePlaceholder": "hal., Green Valley Dispensary",
+      "website": "Website",
+      "websitePlaceholder": "www.potpalace.ca o potpalace.ca",
+      "websiteHelp": "Ang inyong website URL (ginagamit para gumawa ng brand code)",
+      "brandCode": "Brand Code",
+      "brandCodeAuto": "Brand Code * (awtomatikong nabuo)",
+      "brandCodePlaceholder": "Ilagay ang website sa itaas para mabuo",
+      "brandCodeHelp": "Gagamitin sa inyong store URL: {{code}}.weedgo.com",
+      "legalCompanyName": "Legal na Pangalan ng Kumpanya",
+      "legalCompanyPlaceholder": "hal., Green Valley Cannabis Inc.",
+      "businessNumber": "Business Number",
+      "businessNumberPlaceholder": "123456789",
+      "businessNumberHelp": "Canadian Business Number (9 digits)",
+      "gstHstNumber": "GST/HST Number",
+      "gstHstPlaceholder": "123456789RT0001",
+      "gstHstHelp": "Format: 123456789RT0001",
+      "logoUpload": "Mag-upload ng Logo",
+      "logoUploadHelp": "Max 2MB • PNG, JPG, WebP • Inirerekomenda: 500x500px square"
+    },
+    "contactInfo": {
+      "firstName": "Pangalan",
+      "lastName": "Apelyido",
+      "email": "Email Address",
+      "phone": "Numero ng Telepono",
+      "phonePlaceholder": "(555) 123-4567",
+      "street": "Street Address",
+      "city": "Lungsod",
+      "province": "Probinsya",
+      "postalCode": "Postal Code",
+      "postalCodePlaceholder": "A1A 1A1"
+    },
+    "accountSetup": {
+      "password": "Password",
+      "confirmPassword": "Kumpirmahin ang Password",
+      "passwordStrength": "Lakas:",
+      "passwordHelp": "Dapat ay may hindi bababa sa 8 characters na may uppercase, lowercase, at numero",
+      "securityTitle": "Seguridad ng Account",
+      "securityDescription": "Ang inyong account ay mapoprotektahan ng industry-standard encryption at multi-factor authentication options."
+    },
+    "subscription": {
+      "choosePlan": "Pumili ng Inyong Subscription Plan",
+      "selectedPlan": "Napiling Plan: {{plan}}",
+      "changePlan": "Palitan ang Plan",
+      "free": "LIBRE",
+      "perMonth": "${{price}}/buwan",
+      "customPricing": "Custom na Presyo",
+      "billingCycle": "Billing Cycle",
+      "monthly": "Buwanang",
+      "monthlyBilled": "Binibill buwanan",
+      "annual": "Tahunan",
+      "annualSave": "Makatipid ng 20%",
+      "selectPlan": "Pumili ng Plan",
+      "enterpriseTitle": "Enterprise Plan",
+      "enterpriseDescription": "Makikipag-ugnayan sa inyo ang aming sales team sa loob ng 24 oras para pag-usapan ang custom na presyo at setup."
+    },
+    "payment": {
+      "cardholderName": "Pangalan ng Cardholder",
+      "cardholderPlaceholder": "Juan dela Cruz",
+      "cardNumber": "Numero ng Card",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiryDate": "Petsa ng Expiry",
+      "expiryPlaceholder": "MM/YY",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "postalCode": "ZIP/Postal Code",
+      "postalCodePlaceholder": "12345"
+    },
+    "progress": {
+      "verifying": "Sinusuri ang availability...",
+      "creating": "Ginagawa ang inyong account...",
+      "uploading": "Ina-upload ang logo...",
+      "complete": "Matagumpay na nagawa ang account!",
+      "processing": "Pinoproseso..."
+    },
+    "success": {
+      "welcome": "Maligayang pagdating sa WeedGo!",
+      "accountCreated": "Matagumpay na nagawa ang inyong account.",
+      "tenantCode": "Tenant Code:",
+      "preparing": "Inihahanda ang inyong dashboard..."
+    },
+    "navigation": {
+      "previous": "Nakaraan",
+      "next": "Susunod",
+      "createAccount": "Gumawa ng Account"
+    },
+    "errors": {
+      "accountCreationFailed": "Nabigo ang Paggawa ng Account",
+      "tryAgain": "Subukan Muli",
+      "registerAsUser": "Magrehistro bilang User",
+      "signInInstead": "Mag-sign In na Lang",
+      "tenantExists": "Ang tenant code na \"{{code}}\" ay nakarehestro na",
+      "websiteExists": "Ang website na \"{{website}}\" ay ginagamit na"
+    }
+  },
+  "review": {
+    "title": "Pagsusuri ng Tenant Account",
+    "description": "Suriin at aprubahan ang mga account na naka-flag para sa manual verification",
+    "refresh": "I-refresh",
+    "stats": {
+      "totalPending": "Kabuuang Nakabinbin",
+      "thisWeek": "Linggong Ito",
+      "avgReviewTime": "Average na Oras ng Pagsusuri",
+      "approvalRate": "Rate ng Pag-apruba"
+    },
+    "table": {
+      "title": "Mga Nakabinbing Account",
+      "storeName": "Pangalan ng Store",
+      "contact": "Contact",
+      "licenseNumber": "License Number",
+      "submitted": "Isinumite",
+      "tier": "Tier",
+      "actions": "Mga Aksyon",
+      "review": "Suriin",
+      "noPending": "Walang nakabinbing account na susuriin!"
+    },
+    "modal": {
+      "title": "Suriin ang Account",
+      "storeInfo": "Impormasyon ng Store",
+      "storeName": "Pangalan ng Store",
+      "licenseNumber": "License Number",
+      "crsaAddress": "CRSA Address",
+      "municipality": "Munisipalidad",
+      "crsaStatus": "CRSA Status",
+      "crsaWebsite": "CRSA Website",
+      "contactInfo": "Contact Information",
+      "contactName": "Pangalan ng Contact",
+      "role": "Role",
+      "email": "Email",
+      "phone": "Telepono",
+      "verificationContext": "Verification Context",
+      "emailDomain": "Email Domain",
+      "domainMatchesCrsa": "Tugma ang Domain sa CRSA",
+      "verificationTier": "Verification Tier",
+      "submitted": "Isinumite",
+      "adminNotes": "Mga Tala ng Admin (Opsyonal)",
+      "adminNotesPlaceholder": "Magdagdag ng anumang tala tungkol sa pagsusuring ito...",
+      "reject": "Tanggihan",
+      "approve": "Aprubahan ang Account",
+      "approving": "Inaaprubahan...",
+      "yes": "✓ Oo",
+      "no": "✗ Hindi"
+    },
+    "reject": {
+      "title": "Tanggihan ang Account",
+      "description": "Mangyaring magbigay ng dahilan para tanggihan ang account na ito. Ito ay ire-record para sa layunin ng audit.",
+      "reasonPlaceholder": "Dahilan ng pagtanggi (minimum 10 characters)...",
+      "cancel": "Kanselahin",
+      "confirm": "Kumpirmahin ang Pagtanggi",
+      "rejecting": "Tinatanggihan...",
+      "minLength": "Mangyaring magbigay ng dahilan (hindi bababa sa 10 characters)"
+    },
+    "messages": {
+      "approved": "Matagumpay na naaprubahan ang account!",
+      "rejected": "Matagumpay na tinanggihan ang account.",
+      "approveFailed": "Nabigo ang pag-apruba ng account: {{error}}",
+      "rejectFailed": "Nabigo ang pagtanggi ng account: {{error}}",
+      "fetchFailed": "Nabigo ang pagkuha ng mga nakabinbing account",
+      "noPermission": "Wala kayong permiso na suriin ang mga tenant account."
+    }
+  },
+  "userRegistration": {
+    "title": "Gumawa ng Inyong Account",
+    "joinTenant": "Sumali sa {{tenantName}}",
+    "tenantInfo": "Impormasyon ng Tenant",
+    "tenantName": "Pangalan:",
+    "tenantCode": "Code:",
+    "firstName": "Pangalan",
+    "firstNamePlaceholder": "Juan",
+    "lastName": "Apelyido",
+    "lastNamePlaceholder": "dela Cruz",
+    "email": "Email Address",
+    "emailPlaceholder": "juan.delacruz@halimbawa.com",
+    "phone": "Numero ng Telepono",
+    "phonePlaceholder": "(555) 123-4567",
+    "password": "Password",
+    "passwordPlaceholder": "••••••••",
+    "confirmPassword": "Kumpirmahin ang Password",
+    "passwordStrength": "Lakas:",
+    "passwordHelp": "Gumamit ng 8+ characters na may uppercase, lowercase, numero, at mga simbolo para sa mas mahusay na seguridad",
+    "createButton": "Gumawa ng Account",
+    "creating": "Ginagawa ang Account...",
+    "alreadyHaveAccount": "Mayroon nang account?",
+    "signIn": "Mag-sign in",
+    "loading": "Kino-load ang impormasyon ng tenant...",
+    "tenantNotFound": "Hindi Natagpuan ang Tenant",
+    "tenantNotFoundDescription": "Hindi matagpuan ang tinukoy na tenant.",
+    "goToSignup": "Pumunta sa Signup",
+    "errors": {
+      "loadFailed": "Nabigo ang pag-load ng impormasyon ng tenant",
+      "alreadyExists": "Mayroon nang user na may email na ito. Mangyaring gumamit ng ibang email o mag-login na lang.",
+      "failed": "Nabigo ang paggawa ng user account"
+    }
+  },
+  "success": {
+    "title": "Maligayang pagdating sa WeedGo!",
+    "description": "Matagumpay na nagawa ang inyong account para sa {{tenantName}}.",
+    "accountDetails": {
+      "title": "Mga Detalye ng Inyong Account",
+      "tenantName": "Pangalan ng Tenant:",
+      "tenantCode": "Tenant Code:",
+      "storeUrl": "Store URL:"
+    },
+    "nextSteps": {
+      "title": "Mga Susunod na Hakbang",
+      "checkEmail": {
+        "title": "Tingnan ang Inyong Email",
+        "description": "Nagpadala kami sa inyo ng welcome email na may mahalagang impormasyon ng account at mga tagubilin sa setup."
+      },
+      "accessDashboard": {
+        "title": "I-access ang Inyong Dashboard",
+        "description": "Mag-log in sa inyong admin dashboard para i-configure ang mga setting ng inyong store, magdagdag ng mga produkto, at i-customize ang inyong mga AI assistant."
+      },
+      "setupStore": {
+        "title": "I-setup ang Inyong Unang Store",
+        "description": "Magdagdag ng inyong unang store location, i-configure ang mga oras ng operasyon, at i-set up ang inyong product inventory."
+      },
+      "configureAI": {
+        "title": "I-configure ang mga AI Assistant",
+        "description": "I-customize ang inyong mga AI budtender personality at i-set up ang multi-language support para sa inyong mga customer."
+      }
+    },
+    "quickActions": {
+      "dashboard": {
+        "title": "I-access ang Dashboard",
+        "description": "I-configure ang inyong platform"
+      },
+      "documentation": {
+        "title": "Documentation",
+        "description": "Mga gabay sa setup at tutorial"
+      },
+      "support": {
+        "title": "Support",
+        "description": "Humingi ng tulong sa aming team"
+      }
+    },
+    "cta": {
+      "button": "I-access ang Inyong Dashboard",
+      "help": "Kailangan ng tulong para magsimula? Makipag-ugnayan sa aming support team sa",
+      "email": "support@weedgo.com"
+    },
+    "resources": {
+      "title": "Mga Resources para Makapagsimula Kayo",
+      "quickSetup": {
+        "title": "Mabilis na Gabay sa Setup",
+        "item1": "Store configuration at branding",
+        "item2": "Product catalog setup",
+        "item3": "Payment processing configuration",
+        "item4": "AI assistant customization"
+      },
+      "training": {
+        "title": "Training at Support",
+        "item1": "Mga video tutorial at webinar",
+        "item2": "24/7 customer support chat",
+        "item3": "Access sa community forum",
+        "item4": "Dedicated account manager (Enterprise)"
+      }
+    }
+  },
+  "validation": {
+    "required": "Kinakailangan ang {{field}}",
+    "brandNameRequired": "Kinakailangan ang pangalan ng brand",
+    "websiteRequired": "Kinakailangan ang website para mabuo ang brand code",
+    "brandCodeRequired": "Kinakailangan ang brand code (ilagay ang website para mabuo)",
+    "brandCodeFormat": "Ang brand code ay dapat naglalaman lamang ng uppercase letters, numero, hyphen, at underscore",
+    "companyNameRequired": "Kinakailangan ang pangalan ng kumpanya",
+    "businessNumberRequired": "Kinakailangan ang business number",
+    "businessNumberFormat": "Ang business number ay dapat 9 digits",
+    "gstHstRequired": "Kinakailangan ang GST/HST number",
+    "gstHstFormat": "Format ng GST/HST number: 123456789RT0001",
+    "emailRequired": "Kinakailangan ang email",
+    "emailInvalid": "Mangyaring maglagay ng valid na email address",
+    "firstNameRequired": "Kinakailangan ang pangalan",
+    "lastNameRequired": "Kinakailangan ang apelyido",
+    "streetRequired": "Kinakailangan ang street address",
+    "cityRequired": "Kinakailangan ang lungsod",
+    "postalCodeRequired": "Kinakailangan ang postal code",
+    "postalCodeFormat": "Mangyaring maglagay ng valid na Canadian postal code",
+    "passwordRequired": "Kinakailangan ang password",
+    "passwordLength": "Ang password ay dapat ay hindi bababa sa 8 characters",
+    "passwordComplexity": "Ang password ay dapat naglalaman ng uppercase, lowercase, at numero",
+    "passwordMismatch": "Hindi tugma ang mga password",
+    "cardNumberRequired": "Kinakailangan ang numero ng card",
+    "cardNumberFormat": "Mangyaring maglagay ng valid na 16-digit card number",
+    "expiryRequired": "Kinakailangan ang petsa ng expiry",
+    "expiryFormat": "Mangyaring maglagay ng MM/YY format",
+    "cvvRequired": "Kinakailangan ang CVV",
+    "cvvFormat": "Ang CVV ay dapat 3 o 4 digits",
+    "cardholderRequired": "Kinakailangan ang pangalan ng cardholder"
+  },
+  "passwordStrength": {
+    "weak": "Mahina",
+    "fair": "Katamtaman",
+    "good": "Mabuti",
+    "strong": "Malakas",
+    "veryStrong": "Napakalakas"
+  },
+  "provinces": {
+    "ON": "Ontario",
+    "BC": "British Columbia",
+    "AB": "Alberta",
+    "QC": "Quebec",
+    "MB": "Manitoba",
+    "SK": "Saskatchewan",
+    "NS": "Nova Scotia",
+    "NB": "New Brunswick",
+    "NL": "Newfoundland and Labrador",
+    "PE": "Prince Edward Island",
+    "NT": "Northwest Territories",
+    "YT": "Yukon",
+    "NU": "Nunavut"
+  },
+  "plans": {
+    "community_and_new_business": {
+      "name": "Community at Bagong Negosyo",
+      "features": {
+        "stores": "1 Store",
+        "languages": "2 Wika",
+        "personalities": "1 AI Personality"
+      }
+    },
+    "small_business": {
+      "name": "Maliit na Negosyo",
+      "features": {
+        "stores": "5 Store",
+        "languages": "5 Wika",
+        "personalities": "2 AI Personality"
+      }
+    },
+    "professional_and_growing_business": {
+      "name": "Propesyonal at Lumalaking Negosyo",
+      "features": {
+        "stores": "12 Store",
+        "languages": "10 Wika",
+        "personalities": "3 AI Personality"
+      }
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "features": {
+        "stores": "Walang Limitasyong Store",
+        "languages": "25+ Wika",
+        "personalities": "5 AI Personality"
+      }
+    }
+  }
+}

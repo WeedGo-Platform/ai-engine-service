@@ -1,0 +1,149 @@
+{
+  "titles": {
+    "management": "Gestion des commandes",
+    "orderDetails": "Détails de la commande",
+    "assignDriver": "Assigner un chauffeur",
+    "messageCustomer": "Message au client",
+    "deliveryConfirmation": "Confirmation de livraison"
+  },
+  "fields": {
+    "orderNumber": "Commande",
+    "customer": "Client",
+    "status": "Statut",
+    "type": "Type",
+    "items": "Articles",
+    "cannabis": "Cannabis",
+    "total": "Total",
+    "verification": "Vérification",
+    "time": "Heure",
+    "actions": "Actions",
+    "product": "Produit",
+    "brand": "Marque",
+    "category": "Catégorie",
+    "thcCbd": "THC/CBD",
+    "qty": "Qté",
+    "price": "Prix",
+    "payment": "Paiement",
+    "paymentMethod": "Mode de paiement",
+    "deliveryAddress": "Adresse de livraison",
+    "deliveryTime": "Heure de livraison",
+    "pickupTime": "Heure de ramassage",
+    "driver": "Chauffeur",
+    "vehicle": "Véhicule",
+    "signature": "Signature du client",
+    "deliveryPhoto": "Photo de livraison",
+    "dob": "DOB",
+    "loyaltyPoints": "Points de fidélité"
+  },
+  "status": {
+    "all": "Tous les statuts",
+    "pending": "En attente",
+    "confirmed": "Confirmée",
+    "preparing": "En préparation",
+    "ready": "Prête",
+    "outForDelivery": "En livraison",
+    "delivered": "Livrée",
+    "cancelled": "Annulée",
+    "refunded": "Remboursée",
+    "paymentPending": "Paiement en attente",
+    "ageVerified": "Âge vérifié",
+    "ageNotVerified": "Âge non vérifié"
+  },
+  "orderTypes": {
+    "all": "Tous les types",
+    "delivery": "Livraison",
+    "pickup": "Ramassage",
+    "inStore": "En magasin"
+  },
+  "paymentMethods": {
+    "cash": "Espèces",
+    "credit": "Carte de crédit",
+    "debit": "Carte de débit",
+    "eTransfer": "E-Transfer"
+  },
+  "paymentStatus": {
+    "pending": "En attente",
+    "paid": "Payée",
+    "refunded": "Remboursée"
+  },
+  "customerTypes": {
+    "recreational": "Récréatif",
+    "medical": "Médical"
+  },
+  "actions": {
+    "export": "Exporter",
+    "refresh": "Actualiser",
+    "viewDetails": "Voir les détails",
+    "confirmOrder": "Confirmer la commande",
+    "cancelOrder": "Annuler la commande",
+    "startPreparing": "Commencer la préparation",
+    "markReady": "Marquer comme prête",
+    "assignDriver": "Assigner un chauffeur",
+    "markPickedUp": "Marquer comme ramassée",
+    "markDelivered": "Marquer comme livrée",
+    "verifyAge": "Vérifier l'âge et l'ID",
+    "messageCustomer": "Message au client",
+    "processRefund": "Traiter le remboursement",
+    "assignAndDispatch": "Assigner et expédier",
+    "sendMessage": "Envoyer un message"
+  },
+  "messages": {
+    "searchPlaceholder": "Rechercher par n° de commande, client, téléphone...",
+    "selectDriver": "Sélectionner un chauffeur...",
+    "noOrders": "Aucune commande trouvée",
+    "ordersWillAppear": "Les commandes apparaîtront ici lorsque les clients les passeront.",
+    "exportMessage": "La fonction d'exportation téléchargerait un fichier CSV",
+    "assignDriverMessage": "Assigner un chauffeur pour la commande {{orderNumber}}",
+    "messageSendTo": "Envoyer un message à {{firstName}} {{lastName}}",
+    "typePlaceholder": "Tapez votre message...",
+    "loadingError": "Erreur lors du chargement des commandes:",
+    "driedFlowerEq": "Équiv. fleur séchée:",
+    "to": "à",
+    "idVerified": "ID ✓",
+    "noId": "Pas d'ID",
+    "itemsCount": "{{count}} articles",
+    "orderNumber": "Commande {{number}}",
+    "min": "min"
+  },
+  "metrics": {
+    "pending": "En attente",
+    "preparing": "En préparation",
+    "ready": "Prête",
+    "todayRevenue": "Revenus du jour",
+    "avgProcessTime": "Temps de traitement moy."
+  },
+  "sections": {
+    "customerInfo": "Informations client",
+    "orderInfo": "Informations sur la commande",
+    "deliveryInfo": "Informations de livraison",
+    "pickupInfo": "Informations de ramassage",
+    "specialInstructions": "Instructions spéciales",
+    "orderItems": "Articles de la commande",
+    "orderSummary": "Résumé de la commande"
+  },
+  "summary": {
+    "subtotal": "Sous-total:",
+    "tax": "Taxe (13% HST):",
+    "delivery": "Livraison:",
+    "discount": "Rabais:",
+    "total": "Total:"
+  },
+  "prompts": {
+    "cancelReason": "Veuillez indiquer la raison de l'annulation:",
+    "refundReason": "Veuillez indiquer la raison du remboursement:"
+  },
+  "templates": {
+    "selectTemplate": "Sélectionner un modèle...",
+    "orderConfirmed": "Votre commande est confirmée et en cours de préparation.",
+    "readyForPickup": "Votre commande est prête pour le ramassage!",
+    "outForDelivery": "Votre commande est en cours de livraison.",
+    "delayNotice": "Il y a un retard avec votre commande. Nous nous excusons pour le désagrément.",
+    "orderConfirmedLabel": "Commande confirmée",
+    "readyForPickupLabel": "Prête pour ramassage",
+    "outForDeliveryLabel": "En cours de livraison",
+    "delayNoticeLabel": "Avis de retard"
+  },
+  "labels": {
+    "quickTemplates": "Modèles rapides"
+  }
+}

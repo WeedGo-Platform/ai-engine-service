@@ -1,0 +1,5225 @@
+{
+  "summary": {
+    "total_files": 64,
+    "total_routes": 499,
+    "contexts": {
+      "Product Catalog": 6,
+      "Identity & Access": 11,
+      "AI & Conversation": 7,
+      "Infrastructure": 7,
+      "API Gateway": 1,
+      "Order Management": 5,
+      "Payment Processing": 6,
+      "Communication": 1,
+      "Delivery Management": 3,
+      "Uncategorized": 1,
+      "POS/Kiosk (Order Management)": 5,
+      "Inventory Management": 3,
+      "Pricing & Promotions": 1,
+      "Customer Engagement": 2,
+      "Tenant Management": 3,
+      "Purchase Order": 1,
+      "Localization": 1
+    }
+  },
+  "by_context": {
+    "Product Catalog": {
+      "files": [
+        "accessories_endpoints.py",
+        "accessories_endpoints_simple.py",
+        "product_catalog_ocs_endpoints.py",
+        "product_details_endpoints.py",
+        "product_endpoints.py",
+        "provincial_catalog_upload_endpoints.py"
+      ],
+      "routes": 39,
+      "lines": 3619
+    },
+    "Identity & Access": {
+      "files": [
+        "admin_auth.py",
+        "admin_device_endpoints.py",
+        "admin_endpoints.py",
+        "auth_context.py",
+        "auth_otp.py",
+        "auth_voice.py",
+        "customer_auth.py",
+        "registration_integration.py",
+        "user_context_endpoints.py",
+        "user_endpoints.py",
+        "user_payment_endpoints.py"
+      ],
+      "routes": 85,
+      "lines": 6157
+    },
+    "AI & Conversation": {
+      "files": [
+        "agent_pool_endpoints.py",
+        "chat_endpoints.py",
+        "chat_integration.py",
+        "unified_chat_router.py",
+        "unified_chat_websocket.py",
+        "voice_endpoints.py",
+        "voice_websocket.py"
+      ],
+      "routes": 38,
+      "lines": 3333
+    },
+    "Infrastructure": {
+      "files": [
+        "analytics_endpoints.py",
+        "database_management.py",
+        "file_upload.py",
+        "logs_endpoints.py",
+        "robots_endpoints.py",
+        "search_endpoints.py",
+        "sitemap_endpoints.py"
+      ],
+      "routes": 25,
+      "lines": 2835
+    },
+    "API Gateway": {
+      "files": [
+        "api_gateway.py"
+      ],
+      "routes": 3,
+      "lines": 266
+    },
+    "Order Management": {
+      "files": [
+        "cart_endpoints.py",
+        "guest_checkout_endpoints.py",
+        "order_endpoints.py",
+        "order_endpoints_fixed.py",
+        "order_websocket.py"
+      ],
+      "routes": 31,
+      "lines": 1799
+    },
+    "Payment Processing": {
+      "files": [
+        "client_payment_endpoints.py",
+        "payment_endpoints.py",
+        "payment_provider_endpoints.py",
+        "payment_session_endpoints.py",
+        "payment_settings_endpoints.py",
+        "store_payment_endpoints.py"
+      ],
+      "routes": 44,
+      "lines": 3798
+    },
+    "Communication": {
+      "files": [
+        "communication_endpoints.py"
+      ],
+      "routes": 19,
+      "lines": 986
+    },
+    "Delivery Management": {
+      "files": [
+        "customer_delivery_endpoints.py",
+        "delivery_endpoints.py",
+        "geocoding_endpoints.py"
+      ],
+      "routes": 18,
+      "lines": 1203
+    },
+    "Uncategorized": {
+      "files": [
+        "customer_endpoints.py"
+      ],
+      "routes": 8,
+      "lines": 242
+    },
+    "POS/Kiosk (Order Management)": {
+      "files": [
+        "device_endpoints.py",
+        "hardware_endpoints.py",
+        "kiosk_endpoints.py",
+        "pos_endpoints.py",
+        "pos_transaction_endpoints.py"
+      ],
+      "routes": 45,
+      "lines": 2959
+    },
+    "Inventory Management": {
+      "files": [
+        "inventory_endpoints.py",
+        "shelf_location_endpoints.py",
+        "store_inventory_endpoints.py"
+      ],
+      "routes": 42,
+      "lines": 2501
+    },
+    "Pricing & Promotions": {
+      "files": [
+        "promotion_endpoints.py"
+      ],
+      "routes": 21,
+      "lines": 581
+    },
+    "Customer Engagement": {
+      "files": [
+        "review_endpoints.py",
+        "wishlist_endpoints.py"
+      ],
+      "routes": 16,
+      "lines": 1217
+    },
+    "Tenant Management": {
+      "files": [
+        "store_endpoints.py",
+        "store_hours_endpoints.py",
+        "tenant_endpoints.py"
+      ],
+      "routes": 50,
+      "lines": 3277
+    },
+    "Purchase Order": {
+      "files": [
+        "supplier_endpoints.py"
+      ],
+      "routes": 7,
+      "lines": 448
+    },
+    "Localization": {
+      "files": [
+        "translation_endpoints.py"
+      ],
+      "routes": 8,
+      "lines": 424
+    }
+  },
+  "endpoints": {
+    "accessories_endpoints.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/barcode/scan",
+          "function": "scan_barcode",
+          "tags": [
+            "accessories"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/barcode/batch-scan",
+          "function": "batch_scan_barcodes",
+          "tags": [
+            "accessories"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/ocr/extract",
+          "function": "extract_from_image",
+          "tags": [
+            "accessories"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/catalog",
+          "function": "get_accessories_catalog",
+          "tags": [
+            "accessories"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/catalog",
+          "function": "add_to_catalog",
+          "tags": [
+            "accessories"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/catalog/{accessory_id}",
+          "function": "update_catalog_item",
+          "tags": [
+            "accessories"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/inventory/intake",
+          "function": "intake_accessory",
+          "tags": [
+            "accessories"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/inventory/{store_id}",
+          "function": "get_store_inventory",
+          "tags": [
+            "accessories"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/inventory/adjust",
+          "function": "adjust_inventory",
+          "tags": [
+            "accessories"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/categories",
+          "function": "get_categories",
+          "tags": [
+            "accessories"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/categories",
+          "function": "create_category",
+          "tags": [
+            "accessories"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/reports/low-stock/{store_id}",
+          "function": "get_low_stock_report",
+          "tags": [
+            "accessories"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/reports/inventory-value/{store_id}",
+          "function": "get_inventory_value",
+          "tags": [
+            "accessories"
+          ]
+        }
+      ],
+      "services": [
+        "barcode_lookup_service"
+      ],
+      "has_router": true,
+      "prefix": "/api/accessories",
+      "tags": [
+        "accessories"
+      ],
+      "ddd_context": "Product Catalog",
+      "filename": "accessories_endpoints.py",
+      "line_count": 776
+    },
+    "accessories_endpoints_simple.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/barcode/scan",
+          "function": "scan_barcode",
+          "tags": [
+            "Accessories"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/inventory",
+          "function": "get_inventory",
+          "tags": [
+            "Accessories"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/categories",
+          "function": "get_categories",
+          "tags": [
+            "Accessories"
+          ]
+        }
+      ],
+      "services": [
+        "barcode_lookup_simple"
+      ],
+      "has_router": true,
+      "prefix": "/api/accessories",
+      "tags": [
+        "Accessories"
+      ],
+      "ddd_context": "Product Catalog",
+      "filename": "accessories_endpoints_simple.py",
+      "line_count": 143
+    },
+    "admin_auth.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/login",
+          "function": "admin_login",
+          "tags": [
+            "Admin Authentication"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/refresh",
+          "function": "refresh_token",
+          "tags": [
+            "Admin Authentication"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/logout",
+          "function": "admin_logout",
+          "tags": [
+            "Admin Authentication"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/me",
+          "function": "get_current_admin",
+          "tags": [
+            "Admin Authentication"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/verify",
+          "function": "verify_token",
+          "tags": [
+            "Admin Authentication"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/create-admin",
+          "function": "create_admin_user",
+          "tags": [
+            "Admin Authentication"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/change-password",
+          "function": "change_password",
+          "tags": [
+            "Admin Authentication"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api/v1/auth/admin",
+      "tags": [
+        "Admin Authentication"
+      ],
+      "ddd_context": "Identity & Access",
+      "filename": "admin_auth.py",
+      "line_count": 940
+    },
+    "admin_device_endpoints.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/{store_id}/devices",
+          "function": "create_device",
+          "tags": [
+            "\u2699\ufe0f Admin - Device Management"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{store_id}/devices",
+          "function": "list_devices",
+          "tags": [
+            "\u2699\ufe0f Admin - Device Management"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{store_id}/devices/{device_id}",
+          "function": "get_device",
+          "tags": [
+            "\u2699\ufe0f Admin - Device Management"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/{store_id}/devices/{device_id}",
+          "function": "update_device",
+          "tags": [
+            "\u2699\ufe0f Admin - Device Management"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/{store_id}/devices/{device_id}",
+          "function": "delete_device",
+          "tags": [
+            "\u2699\ufe0f Admin - Device Management"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api/admin/stores",
+      "tags": [
+        "\u2699\ufe0f Admin - Device Management"
+      ],
+      "ddd_context": "Identity & Access",
+      "filename": "admin_device_endpoints.py",
+      "line_count": 533
+    },
+    "admin_endpoints.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/stats",
+          "function": "get_dashboard_stats",
+          "tags": [
+            "admin"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/dashboard/stats",
+          "function": "get_dashboard_stats",
+          "tags": [
+            "admin"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/system/health",
+          "function": "get_system_health",
+          "tags": [
+            "admin"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/metrics",
+          "function": "get_metrics",
+          "tags": [
+            "admin"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/voice/status",
+          "function": "get_voice_status",
+          "tags": [
+            "admin"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/mcp/status",
+          "function": "get_mcp_status",
+          "tags": [
+            "admin"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/api/analytics",
+          "function": "get_api_analytics",
+          "tags": [
+            "admin"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/sessions",
+          "function": "get_sessions",
+          "tags": [
+            "admin"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/tools",
+          "function": "get_tools_info",
+          "tags": [
+            "admin"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/tools/test",
+          "function": "test_tool",
+          "tags": [
+            "admin"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/models",
+          "function": "get_available_models",
+          "tags": [
+            "admin"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/agents",
+          "function": "get_available_agents",
+          "tags": [
+            "admin"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/agents/{agent_id}/personalities",
+          "function": "get_agent_personalities",
+          "tags": [
+            "admin"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/agents/{agent_id}/personality",
+          "function": "update_personality",
+          "tags": [
+            "admin"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/agents/{agent_id}/config",
+          "function": "get_agent_config",
+          "tags": [
+            "admin"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/active-tools",
+          "function": "get_active_tools",
+          "tags": [
+            "admin"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/config",
+          "function": "get_configuration",
+          "tags": [
+            "admin"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/config",
+          "function": "update_configuration",
+          "tags": [
+            "admin"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/model/load",
+          "function": "load_model",
+          "tags": [
+            "admin"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/load-model",
+          "function": "load_model",
+          "tags": [
+            "admin"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/model",
+          "function": "get_current_model",
+          "tags": [
+            "admin"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/model/status",
+          "function": "get_model_status",
+          "tags": [
+            "admin"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/model/active-tools",
+          "function": "get_active_tools",
+          "tags": [
+            "admin"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/configuration",
+          "function": "get_loaded_configuration",
+          "tags": [
+            "admin"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/configuration/update",
+          "function": "update_configuration",
+          "tags": [
+            "admin"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/health",
+          "function": "get_health",
+          "tags": [
+            "admin"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/activity",
+          "function": "get_activity",
+          "tags": [
+            "admin"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/logs",
+          "function": "get_logs",
+          "tags": [
+            "admin"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/broadcast",
+          "function": "broadcast_message",
+          "tags": [
+            "admin"
+          ]
+        }
+      ],
+      "services": [
+        "smart_ai_engine_v5"
+      ],
+      "has_router": true,
+      "prefix": "/api/admin",
+      "tags": [
+        "admin"
+      ],
+      "ddd_context": "Identity & Access",
+      "filename": "admin_endpoints.py",
+      "line_count": 1392
+    },
+    "agent_pool_endpoints.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/available",
+          "function": "get_available_agents",
+          "tags": [
+            "agent-pool"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{agent_id}/personalities",
+          "function": "get_agent_personalities",
+          "tags": [
+            "agent-pool"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/session/create",
+          "function": "create_agent_session",
+          "tags": [
+            "agent-pool"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/session/{session_id}/switch-personality",
+          "function": "switch_personality",
+          "tags": [
+            "agent-pool"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/session/{session_id}/switch-agent",
+          "function": "switch_agent",
+          "tags": [
+            "agent-pool"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/metrics",
+          "function": "get_agent_pool_metrics",
+          "tags": [
+            "agent-pool"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/sessions/active",
+          "function": "get_active_sessions",
+          "tags": [
+            "agent-pool"
+          ]
+        }
+      ],
+      "services": [
+        "agent_pool_manager"
+      ],
+      "has_router": true,
+      "prefix": "/api/agent-pool",
+      "tags": [
+        "agent-pool"
+      ],
+      "ddd_context": "AI & Conversation",
+      "filename": "agent_pool_endpoints.py",
+      "line_count": 211
+    },
+    "analytics_endpoints.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/dashboard",
+          "function": "get_dashboard_analytics",
+          "tags": [
+            "Analytics"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/revenue",
+          "function": "get_revenue_analytics",
+          "tags": [
+            "Analytics"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/products",
+          "function": "get_product_analytics",
+          "tags": [
+            "Analytics"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/customers",
+          "function": "get_customer_analytics",
+          "tags": [
+            "Analytics"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api/analytics",
+      "tags": [
+        "Analytics"
+      ],
+      "ddd_context": "Infrastructure",
+      "filename": "analytics_endpoints.py",
+      "line_count": 693
+    },
+    "api_gateway.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/commerce/orders/track",
+          "function": "proxy_order_tracking",
+          "tags": []
+        },
+        {
+          "method": "GET",
+          "path": "/inventory/stock/{sku}",
+          "function": "proxy_inventory_check",
+          "tags": []
+        },
+        {
+          "method": "POST",
+          "path": "/inventory/reserve",
+          "function": "proxy_inventory_reserve",
+          "tags": []
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api",
+      "tags": [],
+      "ddd_context": "API Gateway",
+      "filename": "api_gateway.py",
+      "line_count": 266
+    },
+    "auth_context.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/login",
+          "function": "unified_login",
+          "tags": [
+            "Context Authentication"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/switch-context",
+          "function": "switch_context",
+          "tags": [
+            "Context Authentication"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/contexts",
+          "function": "get_my_contexts",
+          "tags": [
+            "Context Authentication"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/register-dual-role",
+          "function": "register_dual_role",
+          "tags": [
+            "Context Authentication"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api/v1/auth/context",
+      "tags": [
+        "Context Authentication"
+      ],
+      "ddd_context": "Identity & Access",
+      "filename": "auth_context.py",
+      "line_count": 459
+    },
+    "auth_otp.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/send",
+          "function": "send_otp",
+          "tags": [
+            "OTP Authentication"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/verify",
+          "function": "verify_otp",
+          "tags": [
+            "OTP Authentication"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/resend",
+          "function": "resend_otp",
+          "tags": [
+            "OTP Authentication"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/status/{identifier}",
+          "function": "check_otp_status",
+          "tags": [
+            "OTP Authentication"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/cleanup",
+          "function": "cleanup_expired_otps",
+          "tags": [
+            "OTP Authentication"
+          ]
+        }
+      ],
+      "services": [
+        "otp_service"
+      ],
+      "has_router": true,
+      "prefix": "/api/v1/auth/otp",
+      "tags": [
+        "OTP Authentication"
+      ],
+      "ddd_context": "Identity & Access",
+      "filename": "auth_otp.py",
+      "line_count": 408
+    },
+    "auth_voice.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/login",
+          "function": "voice_login",
+          "tags": [
+            "Voice Authentication"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/register",
+          "function": "register_voice_profile",
+          "tags": [
+            "Voice Authentication"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/verify-age",
+          "function": "verify_age",
+          "tags": [
+            "Voice Authentication"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/profile/{user_id}",
+          "function": "get_voice_profile",
+          "tags": [
+            "Voice Authentication"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/login/base64",
+          "function": "voice_login_base64",
+          "tags": [
+            "Voice Authentication"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/profile/{user_id}",
+          "function": "delete_voice_profile",
+          "tags": [
+            "Voice Authentication"
+          ]
+        }
+      ],
+      "services": [
+        "voice_auth_service_production"
+      ],
+      "has_router": true,
+      "prefix": "/api/v1/auth/voice",
+      "tags": [
+        "Voice Authentication"
+      ],
+      "ddd_context": "Identity & Access",
+      "filename": "auth_voice.py",
+      "line_count": 332
+    },
+    "cart_endpoints.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/",
+          "function": "get_cart",
+          "tags": [
+            "cart"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/items",
+          "function": "add_item_to_cart",
+          "tags": [
+            "cart"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/items/{item_id}",
+          "function": "update_item_quantity",
+          "tags": [
+            "cart"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/items/{item_id}",
+          "function": "remove_item_from_cart",
+          "tags": [
+            "cart"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/",
+          "function": "clear_cart",
+          "tags": [
+            "cart"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/discount",
+          "function": "apply_discount",
+          "tags": [
+            "cart"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/promo",
+          "function": "apply_promo",
+          "tags": [
+            "cart"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/promo",
+          "function": "remove_promo",
+          "tags": [
+            "cart"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/discounts",
+          "function": "calculate_cart_discounts",
+          "tags": [
+            "cart"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/delivery-address",
+          "function": "update_delivery_address",
+          "tags": [
+            "cart"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/merge",
+          "function": "merge_carts",
+          "tags": [
+            "cart"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/validate",
+          "function": "validate_cart",
+          "tags": [
+            "cart"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/recommendations",
+          "function": "get_cart_recommendations",
+          "tags": [
+            "cart"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/cleanup",
+          "function": "cleanup_expired_carts",
+          "tags": [
+            "cart"
+          ]
+        }
+      ],
+      "services": [
+        "recommendation_service",
+        "cart_service",
+        "promotion_service"
+      ],
+      "has_router": true,
+      "prefix": "/api/cart",
+      "tags": [
+        "cart"
+      ],
+      "ddd_context": "Order Management",
+      "filename": "cart_endpoints.py",
+      "line_count": 486
+    },
+    "chat_endpoints.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/session",
+          "function": "create_session",
+          "tags": [
+            "chat"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/session/{session_id}",
+          "function": "get_session",
+          "tags": [
+            "chat"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/message",
+          "function": "send_message",
+          "tags": [
+            "chat"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/session/{session_id}",
+          "function": "end_session",
+          "tags": [
+            "chat"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/sessions",
+          "function": "list_sessions",
+          "tags": [
+            "chat"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/history/{user_id}",
+          "function": "get_chat_history",
+          "tags": [
+            "chat"
+          ]
+        }
+      ],
+      "services": [
+        "user_context_service",
+        "smart_ai_engine_v5",
+        "agent_pool_manager"
+      ],
+      "has_router": true,
+      "prefix": "/chat",
+      "tags": [
+        "chat"
+      ],
+      "ddd_context": "AI & Conversation",
+      "filename": "chat_endpoints.py",
+      "line_count": 656
+    },
+    "chat_integration.py": {
+      "routes": [],
+      "services": [
+        "agent_pool_manager",
+        "chat"
+      ],
+      "has_router": false,
+      "prefix": "",
+      "tags": [],
+      "ddd_context": "AI & Conversation",
+      "filename": "chat_integration.py",
+      "line_count": 178
+    },
+    "client_payment_endpoints.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/charge",
+          "function": "process_payment",
+          "tags": [
+            "Client Payments"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/refund",
+          "function": "process_refund",
+          "tags": [
+            "Client Payments"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/payment-methods",
+          "function": "list_payment_methods",
+          "tags": [
+            "Client Payments"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/payment-methods",
+          "function": "save_payment_method",
+          "tags": [
+            "Client Payments"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/payment-methods/{method_id}",
+          "function": "delete_payment_method",
+          "tags": [
+            "Client Payments"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/transactions",
+          "function": "list_transactions",
+          "tags": [
+            "Client Payments"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/transactions/{transaction_id}",
+          "function": "get_transaction",
+          "tags": [
+            "Client Payments"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/health",
+          "function": "payment_health_check",
+          "tags": [
+            "Client Payments"
+          ]
+        }
+      ],
+      "services": [
+        "payment_service_v2"
+      ],
+      "has_router": true,
+      "prefix": "/api/v1/client/payments",
+      "tags": [
+        "Client Payments"
+      ],
+      "ddd_context": "Payment Processing",
+      "filename": "client_payment_endpoints.py",
+      "line_count": 805
+    },
+    "communication_endpoints.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/broadcasts",
+          "function": "create_broadcast",
+          "tags": [
+            "Communications"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/broadcasts",
+          "function": "list_broadcasts",
+          "tags": [
+            "Communications"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/broadcasts/{broadcast_id}",
+          "function": "get_broadcast_details",
+          "tags": [
+            "Communications"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/broadcasts/{broadcast_id}/execute",
+          "function": "execute_broadcast",
+          "tags": [
+            "Communications"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/broadcasts/{broadcast_id}/pause",
+          "function": "pause_broadcast",
+          "tags": [
+            "Communications"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/broadcasts/{broadcast_id}/resume",
+          "function": "resume_broadcast",
+          "tags": [
+            "Communications"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/broadcasts/{broadcast_id}",
+          "function": "cancel_broadcast",
+          "tags": [
+            "Communications"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/segments",
+          "function": "list_segments",
+          "tags": [
+            "Communications"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/segments/preview",
+          "function": "preview_segment",
+          "tags": [
+            "Communications"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/segments/save",
+          "function": "save_custom_segment",
+          "tags": [
+            "Communications"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/templates",
+          "function": "list_templates",
+          "tags": [
+            "Communications"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/templates",
+          "function": "create_template",
+          "tags": [
+            "Communications"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/templates/{template_id}/preview",
+          "function": "preview_template",
+          "tags": [
+            "Communications"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/templates/{template_id}",
+          "function": "update_template",
+          "tags": [
+            "Communications"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/templates/{template_id}",
+          "function": "delete_template",
+          "tags": [
+            "Communications"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/preferences/{customer_id}",
+          "function": "get_communication_preferences",
+          "tags": [
+            "Communications"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/preferences/{customer_id}",
+          "function": "update_communication_preferences",
+          "tags": [
+            "Communications"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/unsubscribe",
+          "function": "unsubscribe",
+          "tags": [
+            "Communications"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/analytics/overview",
+          "function": "get_communication_analytics",
+          "tags": [
+            "Communications"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api/v1/communications",
+      "tags": [
+        "Communications"
+      ],
+      "ddd_context": "Communication",
+      "filename": "communication_endpoints.py",
+      "line_count": 986
+    },
+    "customer_auth.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/register",
+          "function": "register",
+          "tags": [
+            "Customer Authentication"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/login",
+          "function": "login",
+          "tags": [
+            "Customer Authentication"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/logout",
+          "function": "logout",
+          "tags": [
+            "Customer Authentication"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/verify",
+          "function": "verify_token",
+          "tags": [
+            "Customer Authentication"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/minimum-age/{province_code}",
+          "function": "get_province_minimum_age",
+          "tags": [
+            "Customer Authentication"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/me",
+          "function": "get_current_user_info",
+          "tags": [
+            "Customer Authentication"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/users/{user_id}",
+          "function": "get_user_by_id",
+          "tags": [
+            "Customer Authentication"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/addresses",
+          "function": "get_user_addresses",
+          "tags": [
+            "Customer Authentication"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/addresses",
+          "function": "create_user_address",
+          "tags": [
+            "Customer Authentication"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/addresses/{address_id}",
+          "function": "update_user_address",
+          "tags": [
+            "Customer Authentication"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/addresses/{address_id}",
+          "function": "delete_user_address",
+          "tags": [
+            "Customer Authentication"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/addresses/{address_id}/set-default",
+          "function": "set_default_address",
+          "tags": [
+            "Customer Authentication"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api/v1/auth/customer",
+      "tags": [
+        "Customer Authentication"
+      ],
+      "ddd_context": "Identity & Access",
+      "filename": "customer_auth.py",
+      "line_count": 967
+    },
+    "customer_delivery_endpoints.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/calculate-fee",
+          "function": "calculate_delivery_fee",
+          "tags": [
+            "customer-delivery"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/check-availability",
+          "function": "check_delivery_availability",
+          "tags": [
+            "customer-delivery"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/zones/{store_id}",
+          "function": "get_delivery_zones",
+          "tags": [
+            "customer-delivery"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/delivery",
+      "tags": [
+        "customer-delivery"
+      ],
+      "ddd_context": "Delivery Management",
+      "filename": "customer_delivery_endpoints.py",
+      "line_count": 358
+    },
+    "customer_endpoints.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/",
+          "function": "create_customer",
+          "tags": [
+            "customers"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/",
+          "function": "list_customers",
+          "tags": [
+            "customers"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{customer_id}",
+          "function": "get_customer",
+          "tags": [
+            "customers"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/{customer_id}",
+          "function": "update_customer",
+          "tags": [
+            "customers"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/{customer_id}",
+          "function": "delete_customer",
+          "tags": [
+            "customers"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{customer_id}/orders",
+          "function": "get_customer_orders",
+          "tags": [
+            "customers"
+          ]
+        },
+        {
+          "method": "PATCH",
+          "path": "/{customer_id}/loyalty",
+          "function": "update_loyalty_points",
+          "tags": [
+            "customers"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{customer_id}/stats",
+          "function": "get_customer_stats",
+          "tags": [
+            "customers"
+          ]
+        }
+      ],
+      "services": [
+        "customer_service"
+      ],
+      "has_router": true,
+      "prefix": "/api/customers",
+      "tags": [
+        "customers"
+      ],
+      "ddd_context": "Uncategorized",
+      "filename": "customer_endpoints.py",
+      "line_count": 242
+    },
+    "database_management.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/tables",
+          "function": "get_all_tables",
+          "tags": [
+            "database-management"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/tables/{table_name}/schema",
+          "function": "get_table_schema",
+          "tags": [
+            "database-management"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/tables/{table_name}/data",
+          "function": "get_table_data",
+          "tags": [
+            "database-management"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/tables/{table_name}/data",
+          "function": "insert_table_row",
+          "tags": [
+            "database-management"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/tables/{table_name}/data",
+          "function": "update_table_row",
+          "tags": [
+            "database-management"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/tables/{table_name}/data",
+          "function": "delete_table_rows",
+          "tags": [
+            "database-management"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/tables/{table_name}/truncate",
+          "function": "truncate_table",
+          "tags": [
+            "database-management"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/tables/{table_name}/drop",
+          "function": "drop_table",
+          "tags": [
+            "database-management"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/query",
+          "function": "execute_query",
+          "tags": [
+            "database-management"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/connection-info",
+          "function": "get_connection_info",
+          "tags": [
+            "database-management"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api/database",
+      "tags": [
+        "database-management"
+      ],
+      "ddd_context": "Infrastructure",
+      "filename": "database_management.py",
+      "line_count": 828
+    },
+    "delivery_endpoints.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/create-from-order",
+          "function": "create_delivery_from_order",
+          "tags": [
+            "delivery"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/active",
+          "function": "get_active_deliveries",
+          "tags": [
+            "delivery"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{delivery_id}",
+          "function": "get_delivery",
+          "tags": [
+            "delivery"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/{delivery_id}/assign",
+          "function": "assign_delivery",
+          "tags": [
+            "delivery"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/batch-assign",
+          "function": "batch_assign_deliveries",
+          "tags": [
+            "delivery"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/{delivery_id}/status",
+          "function": "update_delivery_status",
+          "tags": [
+            "delivery"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/{delivery_id}/location",
+          "function": "update_delivery_location",
+          "tags": [
+            "delivery"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/{delivery_id}/proof",
+          "function": "add_proof_of_delivery",
+          "tags": [
+            "delivery"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{delivery_id}/tracking",
+          "function": "get_delivery_tracking",
+          "tags": [
+            "delivery"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/staff/available",
+          "function": "get_available_staff",
+          "tags": [
+            "delivery"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/staff/{staff_id}/deliveries",
+          "function": "get_staff_deliveries",
+          "tags": [
+            "delivery"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/staff/{staff_id}/status",
+          "function": "update_staff_status",
+          "tags": [
+            "delivery"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api/v1/delivery",
+      "tags": [
+        "delivery"
+      ],
+      "ddd_context": "Delivery Management",
+      "filename": "delivery_endpoints.py",
+      "line_count": 675
+    },
+    "device_endpoints.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/pair",
+          "function": "pair_device",
+          "tags": [
+            "\ud83d\udda5\ufe0f Device Management"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/heartbeat",
+          "function": "device_heartbeat",
+          "tags": [
+            "\ud83d\udda5\ufe0f Device Management"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/info",
+          "function": "get_device_info",
+          "tags": [
+            "\ud83d\udda5\ufe0f Device Management"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api/kiosk/device",
+      "tags": [
+        "\ud83d\udda5\ufe0f Device Management"
+      ],
+      "ddd_context": "POS/Kiosk (Order Management)",
+      "filename": "device_endpoints.py",
+      "line_count": 522
+    },
+    "file_upload.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/tenant/{tenant_id}/logo",
+          "function": "upload_tenant_logo",
+          "tags": [
+            "uploads"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/tenants/{tenant_id}/logo{file_ext}",
+          "function": "get_tenant_logo",
+          "tags": [
+            "uploads"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/tenant/{tenant_id}/logo",
+          "function": "delete_tenant_logo",
+          "tags": [
+            "uploads"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/logo-specs",
+          "function": "get_logo_specifications",
+          "tags": [
+            "uploads"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api/uploads",
+      "tags": [
+        "uploads"
+      ],
+      "ddd_context": "Infrastructure",
+      "filename": "file_upload.py",
+      "line_count": 270
+    },
+    "geocoding_endpoints.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/autocomplete",
+          "function": "autocomplete_address",
+          "tags": [
+            "geocoding"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/autocomplete",
+          "function": "autocomplete_address_post",
+          "tags": [
+            "geocoding"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/health",
+          "function": "health_check",
+          "tags": [
+            "geocoding"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api/geocoding",
+      "tags": [
+        "geocoding"
+      ],
+      "ddd_context": "Delivery Management",
+      "filename": "geocoding_endpoints.py",
+      "line_count": 170
+    },
+    "guest_checkout_endpoints.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/guest-user",
+          "function": "create_guest_checkout_user",
+          "tags": [
+            "Guest Checkout"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/check-user/{email}",
+          "function": "check_user_exists",
+          "tags": [
+            "Guest Checkout"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api/checkout",
+      "tags": [
+        "Guest Checkout"
+      ],
+      "ddd_context": "Order Management",
+      "filename": "guest_checkout_endpoints.py",
+      "line_count": 195
+    },
+    "hardware_endpoints.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/scanners/detect",
+          "function": "detect_scanners",
+          "tags": [
+            "hardware"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/scanners/{scanner_id}/test",
+          "function": "test_scanner",
+          "tags": [
+            "hardware"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/scanners/{scanner_id}/configure",
+          "function": "configure_scanner",
+          "tags": [
+            "hardware"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/printers/detect",
+          "function": "detect_printers",
+          "tags": [
+            "hardware"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/terminals/detect",
+          "function": "detect_payment_terminals",
+          "tags": [
+            "hardware"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/cash-drawers/detect",
+          "function": "detect_cash_drawers",
+          "tags": [
+            "hardware"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/all",
+          "function": "detect_all_hardware",
+          "tags": [
+            "hardware"
+          ]
+        }
+      ],
+      "services": [
+        "hardware_detection"
+      ],
+      "has_router": true,
+      "prefix": "/api/hardware",
+      "tags": [
+        "hardware"
+      ],
+      "ddd_context": "POS/Kiosk (Order Management)",
+      "filename": "hardware_endpoints.py",
+      "line_count": 155
+    },
+    "inventory_endpoints.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/status/{sku}",
+          "function": "get_inventory_status",
+          "tags": [
+            "inventory"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/update",
+          "function": "update_inventory",
+          "tags": [
+            "inventory"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/purchase-orders",
+          "function": "create_purchase_order",
+          "tags": [
+            "inventory"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/purchase-orders/{po_id}/receive",
+          "function": "receive_purchase_order",
+          "tags": [
+            "inventory"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/low-stock",
+          "function": "get_low_stock_items",
+          "tags": [
+            "inventory"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/value-report",
+          "function": "get_inventory_value_report",
+          "tags": [
+            "inventory"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/check",
+          "function": "check_inventory_exists",
+          "tags": [
+            "inventory"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/batch/{batch_lot}",
+          "function": "get_batch_details",
+          "tags": [
+            "inventory"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/search",
+          "function": "search_inventory_products",
+          "tags": [
+            "inventory"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/suppliers",
+          "function": "get_suppliers",
+          "tags": [
+            "inventory"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/purchase-orders/{po_id}",
+          "function": "get_purchase_order_details",
+          "tags": [
+            "inventory"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/purchase-orders",
+          "function": "get_purchase_orders",
+          "tags": [
+            "inventory"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/purchase-orders/{po_id}/status",
+          "function": "update_purchase_order_status",
+          "tags": [
+            "inventory"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/asn/check-duplicate",
+          "function": "check_asn_duplicate",
+          "tags": [
+            "inventory"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/asn/mark-imported",
+          "function": "mark_asn_imported",
+          "tags": [
+            "inventory"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/products/{sku}/image",
+          "function": "get_product_image",
+          "tags": [
+            "inventory"
+          ]
+        }
+      ],
+      "services": [
+        "inventory_service"
+      ],
+      "has_router": true,
+      "prefix": "/api/inventory",
+      "tags": [
+        "inventory"
+      ],
+      "ddd_context": "Inventory Management",
+      "filename": "inventory_endpoints.py",
+      "line_count": 785
+    },
+    "kiosk_endpoints.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/auth/send-code",
+          "function": "send_verification_code",
+          "tags": [
+            "kiosk"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/auth/verify",
+          "function": "verify_code",
+          "tags": [
+            "kiosk"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/auth/qr-generate",
+          "function": "generate_qr_session",
+          "tags": [
+            "kiosk"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/auth/check-qr/{session_code}",
+          "function": "check_qr_session",
+          "tags": [
+            "kiosk"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/auth/manual-code",
+          "function": "verify_manual_code",
+          "tags": [
+            "kiosk"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/products/browse",
+          "function": "browse_products",
+          "tags": [
+            "kiosk"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/products/recommendations",
+          "function": "get_recommendations",
+          "tags": [
+            "kiosk"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/cart/add",
+          "function": "add_to_cart",
+          "tags": [
+            "kiosk"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/order/create",
+          "function": "create_kiosk_order",
+          "tags": [
+            "kiosk"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/session/{session_id}",
+          "function": "get_session_info",
+          "tags": [
+            "kiosk"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/categories",
+          "function": "get_categories",
+          "tags": [
+            "kiosk"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/brands",
+          "function": "get_brands",
+          "tags": [
+            "kiosk"
+          ]
+        }
+      ],
+      "services": [
+        "profile_service",
+        "cart_service",
+        "inventory_service",
+        "user_context_service",
+        "otp_service",
+        "store_inventory_service",
+        "order_service"
+      ],
+      "has_router": true,
+      "prefix": "/api/kiosk",
+      "tags": [
+        "kiosk"
+      ],
+      "ddd_context": "POS/Kiosk (Order Management)",
+      "filename": "kiosk_endpoints.py",
+      "line_count": 1103
+    },
+    "logs_endpoints.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/search",
+          "function": "search_logs",
+          "tags": [
+            "logs"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/stats",
+          "function": "get_log_stats",
+          "tags": [
+            "logs"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/health",
+          "function": "check_elasticsearch_health",
+          "tags": [
+            "logs"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api/logs",
+      "tags": [
+        "logs"
+      ],
+      "ddd_context": "Infrastructure",
+      "filename": "logs_endpoints.py",
+      "line_count": 207
+    },
+    "order_endpoints.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/",
+          "function": "create_order_mobile",
+          "tags": [
+            "orders"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/create",
+          "function": "create_order",
+          "tags": [
+            "orders"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{order_id}",
+          "function": "get_order",
+          "tags": [
+            "orders"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{order_id}/status",
+          "function": "get_order_status",
+          "tags": [
+            "orders"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/by-number/{order_number}",
+          "function": "get_order_by_number",
+          "tags": [
+            "orders"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/{order_id}/status",
+          "function": "update_order_status",
+          "tags": [
+            "orders"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/{order_id}/cancel",
+          "function": "cancel_order",
+          "tags": [
+            "orders"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/",
+          "function": "list_orders",
+          "tags": [
+            "orders"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{order_id}/history",
+          "function": "get_order_history",
+          "tags": [
+            "orders"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/analytics/summary",
+          "function": "get_order_analytics",
+          "tags": [
+            "orders"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/webhook/payment",
+          "function": "payment_webhook",
+          "tags": [
+            "orders"
+          ]
+        }
+      ],
+      "services": [
+        "inventory",
+        "cart",
+        "order_service"
+      ],
+      "has_router": true,
+      "prefix": "/api/orders",
+      "tags": [
+        "orders"
+      ],
+      "ddd_context": "Order Management",
+      "filename": "order_endpoints.py",
+      "line_count": 561
+    },
+    "order_endpoints_fixed.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/",
+          "function": "list_orders",
+          "tags": [
+            "orders"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{order_id}",
+          "function": "get_order",
+          "tags": [
+            "orders"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/create",
+          "function": "create_order",
+          "tags": [
+            "orders"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/track",
+          "function": "track_order",
+          "tags": [
+            "orders"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api/orders",
+      "tags": [
+        "orders"
+      ],
+      "ddd_context": "Order Management",
+      "filename": "order_endpoints_fixed.py",
+      "line_count": 303
+    },
+    "order_websocket.py": {
+      "routes": [],
+      "services": [],
+      "has_router": true,
+      "prefix": "/orders",
+      "tags": [
+        "order-tracking"
+      ],
+      "ddd_context": "Order Management",
+      "filename": "order_websocket.py",
+      "line_count": 254
+    },
+    "payment_endpoints.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/process",
+          "function": "process_payment",
+          "tags": [
+            "payments"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/refund",
+          "function": "process_refund",
+          "tags": [
+            "payments"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/methods",
+          "function": "get_payment_methods",
+          "tags": [
+            "payments"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/methods",
+          "function": "save_payment_method",
+          "tags": [
+            "payments"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/methods/{method_id}",
+          "function": "delete_payment_method",
+          "tags": [
+            "payments"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/transactions",
+          "function": "get_transaction_history",
+          "tags": [
+            "payments"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/transactions/{transaction_id}",
+          "function": "get_transaction_details",
+          "tags": [
+            "payments"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/webhook/{provider}",
+          "function": "handle_webhook",
+          "tags": [
+            "payments"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/analytics",
+          "function": "get_payment_analytics",
+          "tags": [
+            "payments"
+          ]
+        }
+      ],
+      "services": [
+        "payment_service"
+      ],
+      "has_router": true,
+      "prefix": "/api/payments",
+      "tags": [
+        "payments"
+      ],
+      "ddd_context": "Payment Processing",
+      "filename": "payment_endpoints.py",
+      "line_count": 653
+    },
+    "payment_provider_endpoints.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/tenants/{tenant_id}/clover/credentials",
+          "function": "configure_clover_credentials",
+          "tags": [
+            "Payment Providers"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/tenants/{tenant_id}/clover/status",
+          "function": "get_clover_status",
+          "tags": [
+            "Payment Providers"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/tenants/{tenant_id}/clover/credentials",
+          "function": "revoke_clover_credentials",
+          "tags": [
+            "Payment Providers"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/tenants/{tenant_id}/clover/oauth/authorize",
+          "function": "initiate_clover_oauth",
+          "tags": [
+            "Payment Providers"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/tenants/{tenant_id}/clover/oauth/callback",
+          "function": "handle_clover_oauth_callback",
+          "tags": [
+            "Payment Providers"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/tenants/{tenant_id}/health",
+          "function": "check_all_providers_health",
+          "tags": [
+            "Payment Providers"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/tenants/{tenant_id}/{provider_type}/health-check",
+          "function": "trigger_provider_health_check",
+          "tags": [
+            "Payment Providers"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api/v1/payment-providers",
+      "tags": [
+        "Payment Providers"
+      ],
+      "ddd_context": "Payment Processing",
+      "filename": "payment_provider_endpoints.py",
+      "line_count": 723
+    },
+    "payment_session_endpoints.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/create-card-token",
+          "function": "create_card_token",
+          "tags": [
+            "payment-session"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/create-charge",
+          "function": "create_charge",
+          "tags": [
+            "payment-session"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/create-session",
+          "function": "create_payment_session",
+          "tags": [
+            "payment-session"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api/payment",
+      "tags": [
+        "payment-session"
+      ],
+      "ddd_context": "Payment Processing",
+      "filename": "payment_session_endpoints.py",
+      "line_count": 278
+    },
+    "payment_settings_endpoints.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/tenants/{tenant_id}/payment-settings",
+          "function": "get_tenant_payment_settings",
+          "tags": [
+            "payment-settings"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/tenants/{tenant_id}/payment-settings",
+          "function": "update_tenant_payment_settings",
+          "tags": [
+            "payment-settings"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/tenants/{tenant_id}/payment-settings/validate",
+          "function": "validate_payment_settings",
+          "tags": [
+            "payment-settings"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/stores/{store_id}/pos-terminals",
+          "function": "get_store_pos_settings",
+          "tags": [
+            "payment-settings"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/stores/{store_id}/pos-terminals",
+          "function": "update_store_pos_settings",
+          "tags": [
+            "payment-settings"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/stores/{store_id}/pos-terminals/{terminal_id}/ping",
+          "function": "ping_pos_terminal",
+          "tags": [
+            "payment-settings"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api",
+      "tags": [
+        "payment-settings"
+      ],
+      "ddd_context": "Payment Processing",
+      "filename": "payment_settings_endpoints.py",
+      "line_count": 522
+    },
+    "pos_endpoints.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/customers/search",
+          "function": "search_customers",
+          "tags": [
+            "pos"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/customers",
+          "function": "create_customer",
+          "tags": [
+            "pos"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/customers/verify-age",
+          "function": "verify_customer_age",
+          "tags": [
+            "pos"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/customers/{customer_id}",
+          "function": "update_customer",
+          "tags": [
+            "pos"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/customers/{customer_id}",
+          "function": "get_customer_by_id",
+          "tags": [
+            "pos"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/transactions",
+          "function": "create_transaction",
+          "tags": [
+            "pos"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/transactions/park",
+          "function": "park_transaction",
+          "tags": [
+            "pos"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/stores/{store_id}/transactions/parked",
+          "function": "get_parked_transactions",
+          "tags": [
+            "pos"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/transactions/{transaction_id}/resume",
+          "function": "resume_transaction",
+          "tags": [
+            "pos"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/stores/{store_id}/transactions",
+          "function": "get_transaction_history",
+          "tags": [
+            "pos"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/transactions/{transaction_id}/refund",
+          "function": "refund_transaction",
+          "tags": [
+            "pos"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/transactions/{transaction_id}/receipt/print",
+          "function": "print_receipt",
+          "tags": [
+            "pos"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/transactions/{transaction_id}/receipt/email",
+          "function": "email_receipt",
+          "tags": [
+            "pos"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/hardware/scanner/{scanner_id}/test",
+          "function": "test_scanner",
+          "tags": [
+            "pos"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/hardware/printer/{printer_id}/test",
+          "function": "test_printer",
+          "tags": [
+            "pos"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/hardware/terminal/{terminal_id}/test",
+          "function": "test_terminal",
+          "tags": [
+            "pos"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/products/barcode/{barcode}",
+          "function": "get_product_by_barcode",
+          "tags": [
+            "pos"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api",
+      "tags": [
+        "pos"
+      ],
+      "ddd_context": "POS/Kiosk (Order Management)",
+      "filename": "pos_endpoints.py",
+      "line_count": 743
+    },
+    "pos_transaction_endpoints.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/pos/transactions",
+          "function": "create_pos_transaction",
+          "tags": [
+            "pos-transactions"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/pos/transactions",
+          "function": "get_pos_transactions",
+          "tags": [
+            "pos-transactions"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/pos/transactions/park",
+          "function": "park_pos_transaction",
+          "tags": [
+            "pos-transactions"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/pos/transactions/parked",
+          "function": "get_parked_transactions",
+          "tags": [
+            "pos-transactions"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/pos/transactions/{transaction_id}/resume",
+          "function": "resume_pos_transaction",
+          "tags": [
+            "pos-transactions"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/pos/transactions/{transaction_id}/refund",
+          "function": "refund_pos_transaction",
+          "tags": [
+            "pos-transactions"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api",
+      "tags": [
+        "pos-transactions"
+      ],
+      "ddd_context": "POS/Kiosk (Order Management)",
+      "filename": "pos_transaction_endpoints.py",
+      "line_count": 436
+    },
+    "product_catalog_ocs_endpoints.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/{province}",
+          "function": "get_provincial_catalog",
+          "tags": [
+            "Provincial Product Catalog"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{province}/categories",
+          "function": "get_provincial_categories",
+          "tags": [
+            "Provincial Product Catalog"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{province}/brands",
+          "function": "get_provincial_brands",
+          "tags": [
+            "Provincial Product Catalog"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{province}/stats",
+          "function": "get_provincial_catalog_stats",
+          "tags": [
+            "Provincial Product Catalog"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{province}/all",
+          "function": "get_all_provincial_products",
+          "tags": [
+            "Provincial Product Catalog"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{province}/product/{ocs_variant_number}",
+          "function": "get_provincial_product_by_variant",
+          "tags": [
+            "Provincial Product Catalog"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api/province/catalog",
+      "tags": [
+        "Provincial Product Catalog"
+      ],
+      "ddd_context": "Product Catalog",
+      "filename": "product_catalog_ocs_endpoints.py",
+      "line_count": 711
+    },
+    "product_details_endpoints.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/by-slug",
+          "function": "get_product_by_slug",
+          "tags": [
+            "product-details"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/details/{product_id}",
+          "function": "get_product_details",
+          "tags": [
+            "product-details"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/details",
+          "function": "search_product_details",
+          "tags": [
+            "product-details"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api/products",
+      "tags": [
+        "product-details"
+      ],
+      "ddd_context": "Product Catalog",
+      "filename": "product_details_endpoints.py",
+      "line_count": 370
+    },
+    "product_endpoints.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/categories",
+          "function": "get_categories",
+          "tags": [
+            "products"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/sub-categories",
+          "function": "get_sub_categories",
+          "tags": [
+            "products"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/search",
+          "function": "search_products_alt",
+          "tags": [
+            "products"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/featured",
+          "function": "get_featured_products",
+          "tags": [
+            "products"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/bestsellers",
+          "function": "get_bestsellers",
+          "tags": [
+            "products"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/new-arrivals",
+          "function": "get_new_arrivals",
+          "tags": [
+            "products"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/recommended",
+          "function": "get_recommended_products",
+          "tags": [
+            "products"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/trending",
+          "function": "get_trending_products",
+          "tags": [
+            "products"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/batch",
+          "function": "get_products_by_ids",
+          "tags": [
+            "products"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{product_id}/related",
+          "function": "get_related_products",
+          "tags": [
+            "products"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{product_id}/frequently-bought",
+          "function": "get_frequently_bought",
+          "tags": [
+            "products"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{product_id}/reviews",
+          "function": "get_product_reviews",
+          "tags": [
+            "products"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{id_or_slug}",
+          "function": "get_product_detail",
+          "tags": [
+            "products"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api/products",
+      "tags": [
+        "products"
+      ],
+      "ddd_context": "Product Catalog",
+      "filename": "product_endpoints.py",
+      "line_count": 1261
+    },
+    "promotion_endpoints.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/active",
+          "function": "get_active_promotions",
+          "tags": [
+            "promotions"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/create",
+          "function": "create_promotion",
+          "tags": [
+            "promotions"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/validate-code",
+          "function": "validate_discount_code",
+          "tags": [
+            "promotions"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/calculate-price",
+          "function": "calculate_product_price",
+          "tags": [
+            "promotions"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/cart-discounts",
+          "function": "calculate_cart_discounts",
+          "tags": [
+            "promotions"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/bundles",
+          "function": "get_bundle_deals",
+          "tags": [
+            "promotions"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/tiers",
+          "function": "get_price_tiers",
+          "tags": [
+            "promotions"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/customer-tier/{tenant_id}",
+          "function": "get_customer_tier",
+          "tags": [
+            "promotions"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/assign-tier",
+          "function": "assign_price_tier",
+          "tags": [
+            "promotions"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/list",
+          "function": "list_all_promotions",
+          "tags": [
+            "promotions"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/analytics",
+          "function": "get_promotion_analytics",
+          "tags": [
+            "promotions"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{promotion_id}",
+          "function": "get_promotion",
+          "tags": [
+            "promotions"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/{promotion_id}",
+          "function": "update_promotion",
+          "tags": [
+            "promotions"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/{promotion_id}",
+          "function": "delete_promotion",
+          "tags": [
+            "promotions"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/recommendations/similar/{product_id}",
+          "function": "get_similar_products",
+          "tags": [
+            "promotions"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/recommendations/complementary/{product_id}",
+          "function": "get_complementary_products",
+          "tags": [
+            "promotions"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/recommendations/trending",
+          "function": "get_trending_products",
+          "tags": [
+            "promotions"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/recommendations/personalized/{tenant_id}",
+          "function": "get_personalized_recommendations",
+          "tags": [
+            "promotions"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/recommendations/upsell/{product_id}",
+          "function": "get_upsell_products",
+          "tags": [
+            "promotions"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/recommendations/frequently-bought/{product_id}",
+          "function": "get_frequently_bought_together",
+          "tags": [
+            "promotions"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/recommendations/analytics",
+          "function": "get_recommendation_analytics",
+          "tags": [
+            "promotions"
+          ]
+        }
+      ],
+      "services": [
+        "recommendation_service",
+        "promotion_service"
+      ],
+      "has_router": true,
+      "prefix": "/api/promotions",
+      "tags": [
+        "promotions"
+      ],
+      "ddd_context": "Pricing & Promotions",
+      "filename": "promotion_endpoints.py",
+      "line_count": 581
+    },
+    "provincial_catalog_upload_endpoints.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/upload",
+          "function": "upload_provincial_catalog",
+          "tags": []
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "",
+      "tags": [],
+      "ddd_context": "Product Catalog",
+      "filename": "provincial_catalog_upload_endpoints.py",
+      "line_count": 358
+    },
+    "registration_integration.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/register-with-voice",
+          "function": "register_user_with_voice",
+          "tags": [
+            "registration"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/setup-voice-after-registration",
+          "function": "setup_voice_after_registration",
+          "tags": [
+            "registration"
+          ]
+        }
+      ],
+      "services": [
+        "voice_auth_service"
+      ],
+      "has_router": true,
+      "prefix": "/api/registration",
+      "tags": [
+        "registration"
+      ],
+      "ddd_context": "Identity & Access",
+      "filename": "registration_integration.py",
+      "line_count": 286
+    },
+    "review_endpoints.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/products/{sku}/ratings",
+          "function": "get_product_ratings",
+          "tags": [
+            "reviews"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/products/{sku}/reviews",
+          "function": "get_product_reviews",
+          "tags": [
+            "reviews"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/submit",
+          "function": "submit_review",
+          "tags": [
+            "reviews"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/reviews/{review_id}",
+          "function": "update_review",
+          "tags": [
+            "reviews"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/reviews/{review_id}",
+          "function": "delete_review",
+          "tags": [
+            "reviews"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/reviews/{review_id}/vote",
+          "function": "vote_on_review",
+          "tags": [
+            "reviews"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/reviews/{review_id}/media",
+          "function": "upload_review_media",
+          "tags": [
+            "reviews"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/user/reviews",
+          "function": "get_user_reviews",
+          "tags": [
+            "reviews"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api/v1/reviews",
+      "tags": [
+        "reviews"
+      ],
+      "ddd_context": "Customer Engagement",
+      "filename": "review_endpoints.py",
+      "line_count": 830
+    },
+    "robots_endpoints.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/robots.txt",
+          "function": "get_robots_txt",
+          "tags": [
+            "seo"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "",
+      "tags": [
+        "seo"
+      ],
+      "ddd_context": "Infrastructure",
+      "filename": "robots_endpoints.py",
+      "line_count": 114
+    },
+    "search_endpoints.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/products",
+          "function": "search_products",
+          "tags": [
+            "search"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api/search",
+      "tags": [
+        "search"
+      ],
+      "ddd_context": "Infrastructure",
+      "filename": "search_endpoints.py",
+      "line_count": 418
+    },
+    "shelf_location_endpoints.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/locations",
+          "function": "create_location",
+          "tags": [
+            "shelf-locations"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/locations/{location_id}",
+          "function": "get_location",
+          "tags": [
+            "shelf-locations"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/locations",
+          "function": "list_locations",
+          "tags": [
+            "shelf-locations"
+          ]
+        },
+        {
+          "method": "PATCH",
+          "path": "/locations/{location_id}/availability",
+          "function": "update_location_availability",
+          "tags": [
+            "shelf-locations"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/assign-inventory",
+          "function": "assign_inventory_to_location",
+          "tags": [
+            "shelf-locations"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/transfer-inventory",
+          "function": "transfer_inventory",
+          "tags": [
+            "shelf-locations"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/pick-inventory",
+          "function": "pick_inventory",
+          "tags": [
+            "shelf-locations"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/inventory-locations",
+          "function": "get_inventory_locations",
+          "tags": [
+            "shelf-locations"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/suggest-location/{sku}",
+          "function": "suggest_location_for_sku",
+          "tags": [
+            "shelf-locations"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/movement-history",
+          "function": "get_movement_history",
+          "tags": [
+            "shelf-locations"
+          ]
+        }
+      ],
+      "services": [
+        "shelf_location_service"
+      ],
+      "has_router": true,
+      "prefix": "/api/shelf-locations",
+      "tags": [
+        "shelf-locations"
+      ],
+      "ddd_context": "Inventory Management",
+      "filename": "shelf_location_endpoints.py",
+      "line_count": 549
+    },
+    "sitemap_endpoints.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/sitemap.xml",
+          "function": "generate_sitemap",
+          "tags": [
+            "seo"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/sitemap-index.xml",
+          "function": "generate_sitemap_index",
+          "tags": [
+            "seo"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api/seo",
+      "tags": [
+        "seo"
+      ],
+      "ddd_context": "Infrastructure",
+      "filename": "sitemap_endpoints.py",
+      "line_count": 305
+    },
+    "store_endpoints.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/",
+          "function": "list_all_stores",
+          "tags": [
+            "stores"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/",
+          "function": "create_store",
+          "tags": [
+            "stores"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/provinces",
+          "function": "get_provinces",
+          "tags": [
+            "stores"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{store_id}",
+          "function": "get_store",
+          "tags": [
+            "stores"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/by-code/{code}",
+          "function": "get_store_by_code",
+          "tags": [
+            "stores"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/{store_id}",
+          "function": "update_store",
+          "tags": [
+            "stores"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/{store_id}/suspend",
+          "function": "suspend_store",
+          "tags": [
+            "stores"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/{store_id}/reactivate",
+          "function": "reactivate_store",
+          "tags": [
+            "stores"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/{store_id}/close",
+          "function": "close_store",
+          "tags": [
+            "stores"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/tenant/active",
+          "function": "get_active_stores_by_tenant",
+          "tags": [
+            "stores"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/tenant/{tenant_id}",
+          "function": "list_stores_by_tenant",
+          "tags": [
+            "stores"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{store_id}/validate-license",
+          "function": "validate_license",
+          "tags": [
+            "stores"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/nearest",
+          "function": "find_nearest_stores",
+          "tags": [
+            "stores"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{store_id}/delivery-availability",
+          "function": "check_delivery_availability",
+          "tags": [
+            "stores"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/{store_id}/select",
+          "function": "select_store_for_session",
+          "tags": [
+            "stores"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/geocode",
+          "function": "geocode_address",
+          "tags": [
+            "stores"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{store_id}/inventory/stats",
+          "function": "get_store_inventory_stats",
+          "tags": [
+            "stores"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api/stores",
+      "tags": [
+        "stores"
+      ],
+      "ddd_context": "Tenant Management",
+      "filename": "store_endpoints.py",
+      "line_count": 1323
+    },
+    "store_hours_endpoints.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/holidays",
+          "function": "get_holidays",
+          "tags": [
+            "store-hours"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{store_id}/hours",
+          "function": "get_store_hours",
+          "tags": [
+            "store-hours"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/{store_id}/hours/regular",
+          "function": "update_regular_hours",
+          "tags": [
+            "store-hours"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{store_id}/hours/holidays",
+          "function": "get_holiday_hours",
+          "tags": [
+            "store-hours"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/{store_id}/hours/holidays",
+          "function": "add_holiday_hours",
+          "tags": [
+            "store-hours"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{store_id}/hours/special",
+          "function": "get_special_hours",
+          "tags": [
+            "store-hours"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/{store_id}/hours/special",
+          "function": "add_special_hours",
+          "tags": [
+            "store-hours"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/{store_id}/hours/special/{date}",
+          "function": "delete_special_hours",
+          "tags": [
+            "store-hours"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{store_id}/hours/settings",
+          "function": "get_hours_settings",
+          "tags": [
+            "store-hours"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/{store_id}/hours/settings",
+          "function": "update_hours_settings",
+          "tags": [
+            "store-hours"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{store_id}/hours/status",
+          "function": "get_store_status",
+          "tags": [
+            "store-hours"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api/stores",
+      "tags": [
+        "store-hours"
+      ],
+      "ddd_context": "Tenant Management",
+      "filename": "store_hours_endpoints.py",
+      "line_count": 665
+    },
+    "store_inventory_endpoints.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/",
+          "function": "get_inventory_by_category",
+          "tags": [
+            "store-inventory"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/status/{sku}",
+          "function": "get_inventory_status",
+          "tags": [
+            "store-inventory"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/list",
+          "function": "list_store_inventory",
+          "tags": [
+            "store-inventory"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/stats",
+          "function": "get_inventory_statistics",
+          "tags": [
+            "store-inventory"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/update",
+          "function": "update_inventory",
+          "tags": [
+            "store-inventory"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/adjust",
+          "function": "adjust_inventory",
+          "tags": [
+            "store-inventory"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/batch-adjust",
+          "function": "batch_adjust_inventory",
+          "tags": [
+            "store-inventory"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/purchase-orders",
+          "function": "create_purchase_order",
+          "tags": [
+            "store-inventory"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/purchase-orders/{po_id}/receive",
+          "function": "receive_purchase_order",
+          "tags": [
+            "store-inventory"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/transfers",
+          "function": "create_inventory_transfer",
+          "tags": [
+            "store-inventory"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/batch-update",
+          "function": "batch_update_inventory",
+          "tags": [
+            "store-inventory"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/pricing/settings",
+          "function": "get_pricing_settings",
+          "tags": [
+            "store-inventory"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/pricing/settings",
+          "function": "update_pricing_settings",
+          "tags": [
+            "store-inventory"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/pricing/categories",
+          "function": "get_pricing_categories",
+          "tags": [
+            "store-inventory"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/pricing/update",
+          "function": "update_pricing_rule",
+          "tags": [
+            "store-inventory"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/product-pricing/{sku}",
+          "function": "get_product_pricing",
+          "tags": [
+            "store-inventory"
+          ]
+        }
+      ],
+      "services": [
+        "store_inventory_service"
+      ],
+      "has_router": true,
+      "prefix": "/api/store-inventory",
+      "tags": [
+        "store-inventory"
+      ],
+      "ddd_context": "Inventory Management",
+      "filename": "store_inventory_endpoints.py",
+      "line_count": 1167
+    },
+    "store_payment_endpoints.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/stores/{store_id}/payment-terminals",
+          "function": "get_store_payment_terminals",
+          "tags": [
+            "store-payment"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/stores/{store_id}/payment-terminals",
+          "function": "update_store_payment_terminals",
+          "tags": [
+            "store-payment"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/stores/{store_id}/devices",
+          "function": "get_store_devices",
+          "tags": [
+            "store-payment"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/stores/{store_id}/devices",
+          "function": "update_store_devices",
+          "tags": [
+            "store-payment"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/stores/{store_id}/devices/register",
+          "function": "register_device",
+          "tags": [
+            "store-payment"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/stores/{store_id}/devices/{device_id}",
+          "function": "unregister_device",
+          "tags": [
+            "store-payment"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/stores/{store_id}/payment-config",
+          "function": "get_store_payment_config",
+          "tags": [
+            "store-payment"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/stores/{store_id}/payment-config",
+          "function": "update_store_payment_config",
+          "tags": [
+            "store-payment"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/stores/{store_id}/online-payment",
+          "function": "get_store_online_payment_config",
+          "tags": [
+            "store-payment"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/stores/{store_id}/online-payment",
+          "function": "update_store_online_payment_config",
+          "tags": [
+            "store-payment"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/stores/{store_id}/payment/test",
+          "function": "test_payment_configuration",
+          "tags": [
+            "store-payment"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api",
+      "tags": [
+        "store-payment"
+      ],
+      "ddd_context": "Payment Processing",
+      "filename": "store_payment_endpoints.py",
+      "line_count": 817
+    },
+    "supplier_endpoints.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/",
+          "function": "get_suppliers",
+          "tags": [
+            "suppliers"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/by-province/{province_code}",
+          "function": "get_supplier_by_province",
+          "tags": [
+            "suppliers"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/by-province-territory-id/{province_territory_id}",
+          "function": "get_supplier_by_province_territory_id",
+          "tags": [
+            "suppliers"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{supplier_id}",
+          "function": "get_supplier_by_id",
+          "tags": [
+            "suppliers"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/",
+          "function": "create_supplier",
+          "tags": [
+            "suppliers"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/{supplier_id}",
+          "function": "update_supplier",
+          "tags": [
+            "suppliers"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/{supplier_id}",
+          "function": "delete_supplier",
+          "tags": [
+            "suppliers"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api/suppliers",
+      "tags": [
+        "suppliers"
+      ],
+      "ddd_context": "Purchase Order",
+      "filename": "supplier_endpoints.py",
+      "line_count": 448
+    },
+    "tenant_endpoints.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/check-exists",
+          "function": "check_tenant_exists",
+          "tags": [
+            "tenants"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/signup",
+          "function": "create_tenant_with_admin",
+          "tags": [
+            "tenants"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/",
+          "function": "create_tenant",
+          "tags": [
+            "tenants"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{tenant_id}",
+          "function": "get_tenant",
+          "tags": [
+            "tenants"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/by-code/{code}",
+          "function": "get_tenant_by_code",
+          "tags": [
+            "tenants"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/{tenant_id}",
+          "function": "update_tenant",
+          "tags": [
+            "tenants"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/{tenant_id}/upgrade",
+          "function": "upgrade_subscription",
+          "tags": [
+            "tenants"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/{tenant_id}/suspend",
+          "function": "suspend_tenant",
+          "tags": [
+            "tenants"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/{tenant_id}/reactivate",
+          "function": "reactivate_tenant",
+          "tags": [
+            "tenants"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/",
+          "function": "list_tenants",
+          "tags": [
+            "tenants"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{tenant_id}/can-add-store",
+          "function": "can_add_store",
+          "tags": [
+            "tenants"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{tenant_id}/users",
+          "function": "get_tenant_users",
+          "tags": [
+            "tenants"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/{tenant_id}/users",
+          "function": "create_tenant_user",
+          "tags": [
+            "tenants"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/{tenant_id}/users/{user_id}",
+          "function": "update_tenant_user",
+          "tags": [
+            "tenants"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/{tenant_id}/users/{user_id}/reset-password",
+          "function": "reset_tenant_user_password",
+          "tags": [
+            "tenants"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/{tenant_id}/users/{user_id}",
+          "function": "delete_tenant_user",
+          "tags": [
+            "tenants"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/{tenant_id}/users/add-existing",
+          "function": "add_existing_user_to_tenant",
+          "tags": [
+            "tenants"
+          ]
+        },
+        {
+          "method": "PATCH",
+          "path": "/{tenant_id}/users/{user_id}/toggle-active",
+          "function": "toggle_tenant_user_active",
+          "tags": [
+            "tenants"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{tenant_id}/communication-settings",
+          "function": "get_tenant_communication_settings",
+          "tags": [
+            "tenants"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/{tenant_id}/communication-settings",
+          "function": "update_tenant_communication_settings",
+          "tags": [
+            "tenants"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/{tenant_id}/communication-settings/validate",
+          "function": "validate_communication_channel",
+          "tags": [
+            "tenants"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{tenant_id}/metrics",
+          "function": "get_tenant_metrics",
+          "tags": [
+            "tenants"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api/tenants",
+      "tags": [
+        "tenants"
+      ],
+      "ddd_context": "Tenant Management",
+      "filename": "tenant_endpoints.py",
+      "line_count": 1289
+    },
+    "translation_endpoints.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/",
+          "function": "translate_single",
+          "tags": [
+            "translation"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/bulk",
+          "function": "translate_bulk",
+          "tags": [
+            "translation"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/languages",
+          "function": "get_supported_languages",
+          "tags": [
+            "translation"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/stats",
+          "function": "get_translation_stats",
+          "tags": [
+            "translation"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/override",
+          "function": "create_translation_override",
+          "tags": [
+            "translation"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/warm-cache/{language}",
+          "function": "warm_cache",
+          "tags": [
+            "translation"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/cache",
+          "function": "clear_cache",
+          "tags": [
+            "translation"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/health",
+          "function": "health_check",
+          "tags": [
+            "translation"
+          ]
+        }
+      ],
+      "services": [
+        "translation_service"
+      ],
+      "has_router": true,
+      "prefix": "/api/translate",
+      "tags": [
+        "translation"
+      ],
+      "ddd_context": "Localization",
+      "filename": "translation_endpoints.py",
+      "line_count": 424
+    },
+    "unified_chat_router.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/message",
+          "function": "send_message",
+          "tags": [
+            "chat"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/stream",
+          "function": "send_message_stream",
+          "tags": [
+            "chat"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/sessions",
+          "function": "create_session",
+          "tags": [
+            "chat"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/sessions/{session_id}",
+          "function": "get_session",
+          "tags": [
+            "chat"
+          ]
+        },
+        {
+          "method": "PATCH",
+          "path": "/sessions/{session_id}",
+          "function": "update_session",
+          "tags": [
+            "chat"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/sessions/{session_id}",
+          "function": "delete_session",
+          "tags": [
+            "chat"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/sessions",
+          "function": "list_sessions",
+          "tags": [
+            "chat"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/history/{user_id}",
+          "function": "get_user_history",
+          "tags": [
+            "chat"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/sessions/{session_id}/history",
+          "function": "get_session_history",
+          "tags": [
+            "chat"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/health",
+          "function": "health_check",
+          "tags": [
+            "chat"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/metrics",
+          "function": "get_metrics",
+          "tags": [
+            "chat"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/cache/invalidate/{session_id}",
+          "function": "invalidate_cache",
+          "tags": [
+            "chat"
+          ]
+        }
+      ],
+      "services": [
+        "chat"
+      ],
+      "has_router": true,
+      "prefix": "/api/v1/chat",
+      "tags": [
+        "chat"
+      ],
+      "ddd_context": "AI & Conversation",
+      "filename": "unified_chat_router.py",
+      "line_count": 659
+    },
+    "unified_chat_websocket.py": {
+      "routes": [],
+      "services": [
+        "chat"
+      ],
+      "has_router": false,
+      "prefix": "",
+      "tags": [],
+      "ddd_context": "AI & Conversation",
+      "filename": "unified_chat_websocket.py",
+      "line_count": 430
+    },
+    "user_context_endpoints.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/chat/history/{user_id}",
+          "function": "get_chat_history",
+          "tags": [
+            "user-context"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/user/context/{user_id}",
+          "function": "get_user_context",
+          "tags": [
+            "user-context"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/chat/conversation/{session_id}",
+          "function": "get_conversation_context",
+          "tags": [
+            "user-context"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/chat/message",
+          "function": "save_chat_message",
+          "tags": [
+            "user-context"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/user/preferences/{user_id}",
+          "function": "get_user_preferences",
+          "tags": [
+            "user-context"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/user/purchase-history/{user_id}",
+          "function": "get_purchase_history",
+          "tags": [
+            "user-context"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/user/profile/{user_id}",
+          "function": "get_user_profile",
+          "tags": [
+            "user-context"
+          ]
+        }
+      ],
+      "services": [
+        "user_context_service"
+      ],
+      "has_router": true,
+      "prefix": "/api",
+      "tags": [
+        "user-context"
+      ],
+      "ddd_context": "Identity & Access",
+      "filename": "user_context_endpoints.py",
+      "line_count": 271
+    },
+    "user_endpoints.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/register",
+          "function": "register_user",
+          "tags": [
+            "users"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{user_id}",
+          "function": "get_user",
+          "tags": [
+            "users"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/{user_id}/preferences",
+          "function": "get_user_preferences",
+          "tags": [
+            "users"
+          ]
+        }
+      ],
+      "services": [
+        "user_preference_service",
+        "otp_service"
+      ],
+      "has_router": true,
+      "prefix": "/api/users",
+      "tags": [
+        "users"
+      ],
+      "ddd_context": "Identity & Access",
+      "filename": "user_endpoints.py",
+      "line_count": 246
+    },
+    "user_payment_endpoints.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/user-payment-methods",
+          "function": "get_payment_methods",
+          "tags": [
+            "User Payment Methods"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/user-payment-methods",
+          "function": "add_payment_method",
+          "tags": [
+            "User Payment Methods"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/user-payment-methods/{payment_id}",
+          "function": "update_payment_method",
+          "tags": [
+            "User Payment Methods"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/user-payment-methods/{payment_id}",
+          "function": "delete_payment_method",
+          "tags": [
+            "User Payment Methods"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/user-payment-methods/{payment_id}/default",
+          "function": "set_default_payment",
+          "tags": [
+            "User Payment Methods"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api",
+      "tags": [
+        "User Payment Methods"
+      ],
+      "ddd_context": "Identity & Access",
+      "filename": "user_payment_endpoints.py",
+      "line_count": 323
+    },
+    "voice_endpoints.py": {
+      "routes": [
+        {
+          "method": "POST",
+          "path": "/transcribe",
+          "function": "transcribe_audio",
+          "tags": [
+            "voice"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/synthesize",
+          "function": "synthesize_speech",
+          "tags": [
+            "voice"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/wake_word/detect",
+          "function": "detect_wake_word",
+          "tags": [
+            "voice"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/wake_word/models",
+          "function": "get_wake_word_models",
+          "tags": [
+            "voice"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/wake_word/configure",
+          "function": "configure_wake_word",
+          "tags": [
+            "voice"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/detect_speech",
+          "function": "detect_speech",
+          "tags": [
+            "voice"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/process",
+          "function": "process_voice",
+          "tags": [
+            "voice"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/voices",
+          "function": "get_available_voices",
+          "tags": [
+            "voice"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/voice",
+          "function": "set_voice",
+          "tags": [
+            "voice"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/voice",
+          "function": "get_current_voice",
+          "tags": [
+            "voice"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/metrics",
+          "function": "get_voice_metrics",
+          "tags": [
+            "voice"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/status",
+          "function": "get_voice_status",
+          "tags": [
+            "voice"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api/voice",
+      "tags": [
+        "voice"
+      ],
+      "ddd_context": "AI & Conversation",
+      "filename": "voice_endpoints.py",
+      "line_count": 585
+    },
+    "voice_websocket.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/sessions",
+          "function": "get_active_sessions",
+          "tags": [
+            "voice-websocket"
+          ]
+        }
+      ],
+      "services": [],
+      "has_router": true,
+      "prefix": "/api/voice/ws",
+      "tags": [
+        "voice-websocket"
+      ],
+      "ddd_context": "AI & Conversation",
+      "filename": "voice_websocket.py",
+      "line_count": 614
+    },
+    "wishlist_endpoints.py": {
+      "routes": [
+        {
+          "method": "GET",
+          "path": "/",
+          "function": "get_wishlist",
+          "tags": [
+            "wishlist"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/add",
+          "function": "add_to_wishlist",
+          "tags": [
+            "wishlist"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/{product_id}",
+          "function": "remove_from_wishlist",
+          "tags": [
+            "wishlist"
+          ]
+        },
+        {
+          "method": "PUT",
+          "path": "/{product_id}",
+          "function": "update_wishlist_item",
+          "tags": [
+            "wishlist"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/stats",
+          "function": "get_wishlist_stats",
+          "tags": [
+            "wishlist"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/check",
+          "function": "check_products_in_wishlist",
+          "tags": [
+            "wishlist"
+          ]
+        },
+        {
+          "method": "DELETE",
+          "path": "/clear/all",
+          "function": "clear_wishlist",
+          "tags": [
+            "wishlist"
+          ]
+        },
+        {
+          "method": "POST",
+          "path": "/move-to-cart/{product_id}",
+          "function": "move_to_cart",
+          "tags": [
+            "wishlist"
+          ]
+        }
+      ],
+      "services": [
+        "wishlist_service"
+      ],
+      "has_router": true,
+      "prefix": "/api/wishlist",
+      "tags": [
+        "wishlist"
+      ],
+      "ddd_context": "Customer Engagement",
+      "filename": "wishlist_endpoints.py",
+      "line_count": 387
+    }
+  },
+  "duplicates": {
+    "POST /barcode/scan": [
+      "accessories_endpoints.py",
+      "accessories_endpoints_simple.py"
+    ],
+    "GET /categories": [
+      "accessories_endpoints.py",
+      "accessories_endpoints_simple.py",
+      "kiosk_endpoints.py",
+      "product_endpoints.py"
+    ],
+    "POST /login": [
+      "admin_auth.py",
+      "auth_context.py",
+      "auth_voice.py",
+      "customer_auth.py"
+    ],
+    "POST /logout": [
+      "admin_auth.py",
+      "customer_auth.py"
+    ],
+    "GET /me": [
+      "admin_auth.py",
+      "customer_auth.py"
+    ],
+    "POST /verify": [
+      "admin_auth.py",
+      "auth_otp.py"
+    ],
+    "GET /stats": [
+      "admin_endpoints.py",
+      "logs_endpoints.py",
+      "store_inventory_endpoints.py",
+      "translation_endpoints.py",
+      "wishlist_endpoints.py"
+    ],
+    "GET /metrics": [
+      "admin_endpoints.py",
+      "agent_pool_endpoints.py",
+      "unified_chat_router.py",
+      "voice_endpoints.py"
+    ],
+    "GET /sessions": [
+      "admin_endpoints.py",
+      "chat_endpoints.py",
+      "unified_chat_router.py",
+      "voice_websocket.py"
+    ],
+    "GET /health": [
+      "admin_endpoints.py",
+      "client_payment_endpoints.py",
+      "geocoding_endpoints.py",
+      "logs_endpoints.py",
+      "translation_endpoints.py",
+      "unified_chat_router.py"
+    ],
+    "GET /products": [
+      "analytics_endpoints.py",
+      "search_endpoints.py"
+    ],
+    "POST /register": [
+      "auth_voice.py",
+      "customer_auth.py",
+      "user_endpoints.py"
+    ],
+    "GET /": [
+      "cart_endpoints.py",
+      "customer_endpoints.py",
+      "order_endpoints.py",
+      "order_endpoints_fixed.py",
+      "store_endpoints.py",
+      "store_inventory_endpoints.py",
+      "supplier_endpoints.py",
+      "tenant_endpoints.py",
+      "wishlist_endpoints.py"
+    ],
+    "GET /session/{session_id}": [
+      "chat_endpoints.py",
+      "kiosk_endpoints.py"
+    ],
+    "POST /message": [
+      "chat_endpoints.py",
+      "unified_chat_router.py"
+    ],
+    "GET /history/{user_id}": [
+      "chat_endpoints.py",
+      "unified_chat_router.py"
+    ],
+    "POST /refund": [
+      "client_payment_endpoints.py",
+      "payment_endpoints.py"
+    ],
+    "GET /transactions": [
+      "client_payment_endpoints.py",
+      "payment_endpoints.py"
+    ],
+    "GET /transactions/{transaction_id}": [
+      "client_payment_endpoints.py",
+      "payment_endpoints.py"
+    ],
+    "POST /": [
+      "customer_endpoints.py",
+      "order_endpoints.py",
+      "store_endpoints.py",
+      "supplier_endpoints.py",
+      "tenant_endpoints.py",
+      "translation_endpoints.py"
+    ],
+    "GET /active": [
+      "delivery_endpoints.py",
+      "promotion_endpoints.py"
+    ],
+    "GET /status/{sku}": [
+      "inventory_endpoints.py",
+      "store_inventory_endpoints.py"
+    ],
+    "POST /update": [
+      "inventory_endpoints.py",
+      "store_inventory_endpoints.py"
+    ],
+    "POST /purchase-orders": [
+      "inventory_endpoints.py",
+      "store_inventory_endpoints.py"
+    ],
+    "POST /purchase-orders/{po_id}/receive": [
+      "inventory_endpoints.py",
+      "store_inventory_endpoints.py"
+    ],
+    "GET /search": [
+      "inventory_endpoints.py",
+      "product_endpoints.py"
+    ],
+    "POST /create": [
+      "order_endpoints.py",
+      "order_endpoints_fixed.py",
+      "promotion_endpoints.py"
+    ],
+    "GET /{order_id}": [
+      "order_endpoints.py",
+      "order_endpoints_fixed.py"
+    ],
+    "POST /process": [
+      "payment_endpoints.py",
+      "voice_endpoints.py"
+    ],
+    "GET /analytics": [
+      "payment_endpoints.py",
+      "promotion_endpoints.py"
+    ],
+    "GET /list": [
+      "promotion_endpoints.py",
+      "store_inventory_endpoints.py"
+    ],
+    "GET /by-code/{code}": [
+      "store_endpoints.py",
+      "tenant_endpoints.py"
+    ]
+  }
+}

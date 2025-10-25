@@ -1,0 +1,201 @@
+{
+  "buttons": {
+    "send": "傳送",
+    "close": "關閉",
+    "cancel": "取消",
+    "save": "儲存",
+    "delete": "刪除",
+    "edit": "編輯",
+    "create": "建立",
+    "update": "更新",
+    "confirm": "確認",
+    "back": "返回",
+    "next": "下一步",
+    "submit": "提交",
+    "search": "搜尋",
+    "filter": "篩選",
+    "export": "匯出",
+    "import": "匯入",
+    "refresh": "重新整理",
+    "settings": "設定",
+    "logout": "登出",
+    "change": "更改"
+  },
+  "labels": {
+    "email": "電郵地址",
+    "password": "密碼",
+    "username": "用戶名稱",
+    "name": "姓名",
+    "phone": "電話",
+    "address": "地址",
+    "city": "城市",
+    "province": "省份",
+    "postalCode": "郵政編號",
+    "country": "國家",
+    "status": "狀態",
+    "actions": "操作",
+    "description": "描述",
+    "notes": "備註",
+    "date": "日期",
+    "time": "時間",
+    "total": "總計",
+    "subtotal": "小計",
+    "tax": "稅項",
+    "quantity": "數量",
+    "price": "價格",
+    "language": "語言"
+  },
+  "placeholders": {
+    "enterEmail": "請輸入您嘅電郵",
+    "enterPassword": "請輸入您嘅密碼",
+    "search": "搜尋...",
+    "selectOption": "請選擇一個選項",
+    "typeMessage": "輸入您嘅訊息...",
+    "enterName": "請輸入姓名",
+    "enterPhone": "請輸入電話號碼"
+  },
+  "messages": {
+    "loading": "載入中...",
+    "saving": "儲存中...",
+    "success": "成功！",
+    "error": "發生錯誤",
+    "noData": "冇可用數據",
+    "confirm": "您確定嗎？",
+    "unsavedChanges": "您有未儲存嘅更改"
+  },
+  "toasts": {
+    "password": {
+      "changeSuccess": "密碼修改成功！請重新登入。",
+      "changeFailed": "密碼修改失敗。請重試。"
+    },
+    "broadcast": {
+      "createSuccess": "廣播建立成功！",
+      "createFailed": "建立廣播失敗"
+    },
+    "template": {
+      "fetchFailed": "獲取範本失敗",
+      "createSuccess": "範本建立成功",
+      "createFailed": "建立範本失敗",
+      "updateSuccess": "範本更新成功",
+      "updateFailed": "更新範本失敗",
+      "deleteSuccess": "範本刪除成功",
+      "deleteFailed": "刪除範本失敗"
+    },
+    "model": {
+      "fetchFailed": "獲取模型失敗",
+      "loadFailed": "載入模型失敗",
+      "unloadSuccess": "模型卸載成功",
+      "unloadFailed": "卸載模型失敗",
+      "updateFailed": "更新模型失敗"
+    },
+    "config": {
+      "fetchFailed": "獲取設定失敗",
+      "updateSuccess": "設定更新成功",
+      "updateFailed": "儲存設定失敗"
+    },
+    "agent": {
+      "fetchFailed": "獲取代理失敗"
+    },
+    "personality": {
+      "fetchFailed": "獲取個性失敗"
+    },
+    "router": {
+      "statsFetchFailed": "獲取路由器統計資訊失敗",
+      "toggleFailed": "切換推理模式失敗"
+    }
+  },
+  "errors": {
+    "required": "此欄位為必填",
+    "invalidEmail": "無效嘅電郵地址",
+    "invalidPhone": "無效嘅電話號碼",
+    "networkError": "網絡錯誤。請重試。",
+    "serverError": "伺服器錯誤。請稍後重試。",
+    "unauthorized": "未獲授權訪問",
+    "notFound": "搵唔到",
+    "sessionExpired": "您嘅會話已過期。請重新登入。",
+    "validation": {
+      "selectStore": "請選擇商店",
+      "selectSupplier": "請選擇供應商",
+      "addAtLeastOneItem": "請至少添加一項",
+      "fillRequiredFields": "請填寫每項嘅所有必填欄位",
+      "enterLicenseNumber": "請輸入牌照號碼",
+      "fillAllRequiredFields": "請填寫所有必填欄位：{{fields}}",
+      "invalidJson": "無法儲存無效嘅 JSON：{{message}}",
+      "invalidCode": "無效嘅代碼",
+      "invalidVerificationCode": "無效嘅驗證碼"
+    },
+    "operations": {
+      "saveFailed": "儲存設定失敗",
+      "validationFailed": "驗證失敗",
+      "fetchFailed": "獲取{{resource}}失敗",
+      "createFailed": "建立{{resource}}失敗",
+      "updateFailed": "更新{{resource}}失敗",
+      "deleteFailed": "刪除{{resource}}失敗",
+      "searchFailed": "搜尋{{resource}}失敗",
+      "loadFailed": "載入{{resource}}失敗。請重新整理頁面。",
+      "sendFailed": "傳送{{resource}}失敗",
+      "generateFailed": "生成{{resource}}失敗",
+      "verifyFailed": "驗證{{resource}}失敗",
+      "processFailed": "處理{{action}}失敗。請重試。",
+      "testConnectionFailed": "測試連線失敗。請檢查您嘅網絡。"
+    }
+  },
+  "common": {
+    "yes": "係",
+    "no": "唔係",
+    "or": "或者",
+    "and": "同埋",
+    "today": "今日",
+    "yesterday": "尋日",
+    "week": "星期",
+    "month": "月",
+    "year": "年",
+    "all": "全部",
+    "none": "冇",
+    "active": "活躍",
+    "inactive": "唔活躍",
+    "pending": "待處理",
+    "completed": "已完成",
+    "failed": "失敗",
+    "notSpecified": "未指定",
+    "unknown": "未知",
+    "na": "不適用"
+  },
+  "confirmations": {
+    "deleteUser": "您確定要刪除用戶 {{email}} 嗎？",
+    "deleteUserPermanent": "您確定要刪除此用戶嗎？此操作無法撤銷。",
+    "deleteTerminal": "您確定要刪除此終端嗎？",
+    "passwordResetMethod": "撳確定透過電郵傳送密碼重設連結\n撳取消生成並顯示臨時密碼"
+  },
+  "modals": {
+    "changePassword": {
+      "title": "更改密碼",
+      "currentPassword": "目前密碼",
+      "newPassword": "新密碼",
+      "confirmPassword": "確認新密碼",
+      "placeholders": {
+        "currentPassword": "請輸入目前密碼",
+        "newPassword": "請輸入新密碼",
+        "confirmPassword": "確認新密碼"
+      },
+      "requirements": {
+        "title": "密碼必須包含：",
+        "minLength": "至少 8 個字元",
+        "uppercase": "一個大寫字母",
+        "lowercase": "一個小寫字母",
+        "number": "一個數字"
+      },
+      "validation": {
+        "currentRequired": "需要目前密碼",
+        "newRequired": "需要新密碼",
+        "notMeetRequirements": "密碼唔符合要求",
+        "confirmRequired": "請確認您嘅新密碼",
+        "notMatch": "密碼唔匹配",
+        "mustBeDifferent": "新密碼必須同目前密碼唔同",
+        "incorrectCurrent": "目前密碼唔正確"
+      },
+      "securityNotice": "更改密碼後，您將被登出，需要使用新憑證重新登入。",
+      "changing": "更改中..."
+    }
+  }
+}

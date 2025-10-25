@@ -1,0 +1,368 @@
+{
+  "tenant": {
+    "header": {
+      "title": "WeedGo",
+      "alreadyHaveAccount": "پہلے سے اکاؤنٹ ہے؟",
+      "signIn": "سائن ان کریں",
+      "backHome": "ہوم پر واپس"
+    },
+    "steps": {
+      "company": "کمپنی کی معلومات",
+      "contact": "رابطے کی تفصیلات",
+      "account": "اکاؤنٹ سیٹ اپ",
+      "payment": "سبسکرپشن اور ادائیگی"
+    },
+    "stepDescriptions": {
+      "company": "اپنے کاروبار اور برانڈ کے بارے میں ہمیں بتائیں",
+      "contact": "اپنی رابطے کی معلومات اور پتہ فراہم کریں",
+      "account": "اپنے ایڈمن اکاؤنٹ کی اسناد بنائیں",
+      "payment": "اپنا منصوبہ اور ادائیگی کا طریقہ منتخب کریں"
+    },
+    "companyInfo": {
+      "brandName": "برانڈ کا نام",
+      "brandNamePlaceholder": "مثال: Green Valley Dispensary",
+      "website": "ویب سائٹ",
+      "websitePlaceholder": "www.potpalace.ca یا potpalace.ca",
+      "websiteHelp": "آپ کا ویب سائٹ URL (برانڈ کوڈ بنانے کے لیے استعمال ہوتا ہے)",
+      "brandCode": "برانڈ کوڈ",
+      "brandCodeAuto": "برانڈ کوڈ * (خودکار طور پر بنایا گیا)",
+      "brandCodePlaceholder": "بنانے کے لیے اوپر ویب سائٹ درج کریں",
+      "brandCodeHelp": "آپ کے سٹور URL میں استعمال ہوگا: {{code}}.weedgo.com",
+      "legalCompanyName": "قانونی کمپنی کا نام",
+      "legalCompanyPlaceholder": "مثال: Green Valley Cannabis Inc.",
+      "businessNumber": "کاروباری نمبر",
+      "businessNumberPlaceholder": "123456789",
+      "businessNumberHelp": "کینیڈین بزنس نمبر (9 ہندسے)",
+      "gstHstNumber": "GST/HST نمبر",
+      "gstHstPlaceholder": "123456789RT0001",
+      "gstHstHelp": "فارمیٹ: 123456789RT0001",
+      "logoUpload": "لوگو اپ لوڈ",
+      "logoUploadHelp": "زیادہ سے زیادہ 2MB • PNG, JPG, WebP • تجویز کردہ: 500x500px مربع"
+    },
+    "contactInfo": {
+      "firstName": "پہلا نام",
+      "lastName": "آخری نام",
+      "email": "ای میل ایڈریس",
+      "phone": "فون نمبر",
+      "phonePlaceholder": "(555) 123-4567",
+      "street": "گلی کا پتہ",
+      "city": "شہر",
+      "province": "صوبہ",
+      "postalCode": "پوسٹل کوڈ",
+      "postalCodePlaceholder": "A1A 1A1"
+    },
+    "accountSetup": {
+      "password": "پاس ورڈ",
+      "confirmPassword": "پاس ورڈ کی تصدیق کریں",
+      "passwordStrength": "طاقت:",
+      "passwordHelp": "بڑے حروف، چھوٹے حروف اور نمبر کے ساتھ کم از کم 8 حروف ہونے چاہئیں",
+      "securityTitle": "اکاؤنٹ کی سیکیورٹی",
+      "securityDescription": "آپ کا اکاؤنٹ صنعتی معیار کی خفیہ کاری اور کثیر عنصری تصدیق کے اختیارات کے ساتھ محفوظ ہوگا۔"
+    },
+    "subscription": {
+      "choosePlan": "اپنا سبسکرپشن منصوبہ منتخب کریں",
+      "selectedPlan": "منتخب شدہ منصوبہ: {{plan}}",
+      "changePlan": "منصوبہ تبدیل کریں",
+      "free": "مفت",
+      "perMonth": "${{price}}/ماہ",
+      "customPricing": "اپنی مرضی کی قیمت",
+      "billingCycle": "بلنگ سائیکل",
+      "monthly": "ماہانہ",
+      "monthlyBilled": "ماہانہ بل کیا جاتا ہے",
+      "annual": "سالانہ",
+      "annualSave": "20% بچائیں",
+      "selectPlan": "منصوبہ منتخب کریں",
+      "enterpriseTitle": "انٹرپرائز منصوبہ",
+      "enterpriseDescription": "ہماری سیلز ٹیم اپنی مرضی کی قیمت اور سیٹ اپ پر بات کرنے کے لیے 24 گھنٹوں میں آپ سے رابطہ کرے گی۔"
+    },
+    "payment": {
+      "cardholderName": "کارڈ ہولڈر کا نام",
+      "cardholderPlaceholder": "احمد خان",
+      "cardNumber": "کارڈ نمبر",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiryDate": "میعاد ختم ہونے کی تاریخ",
+      "expiryPlaceholder": "MM/YY",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "postalCode": "ZIP/پوسٹل کوڈ",
+      "postalCodePlaceholder": "12345"
+    },
+    "progress": {
+      "verifying": "دستیابی کی تصدیق ہو رہی ہے...",
+      "creating": "آپ کا اکاؤنٹ بنایا جا رہا ہے...",
+      "uploading": "لوگو اپ لوڈ ہو رہا ہے...",
+      "complete": "اکاؤنٹ کامیابی سے بن گیا!",
+      "processing": "پروسیسنگ..."
+    },
+    "success": {
+      "welcome": "WeedGo میں خوش آمدید!",
+      "accountCreated": "آپ کا اکاؤنٹ کامیابی سے بنا دیا گیا ہے۔",
+      "tenantCode": "ٹینینٹ کوڈ:",
+      "preparing": "آپ کا ڈیش بورڈ تیار کیا جا رہا ہے..."
+    },
+    "navigation": {
+      "previous": "پچھلا",
+      "next": "اگلا",
+      "createAccount": "اکاؤنٹ بنائیں"
+    },
+    "errors": {
+      "accountCreationFailed": "اکاؤنٹ بنانا ناکام",
+      "tryAgain": "دوبارہ کوشش کریں",
+      "registerAsUser": "صارف کے طور پر رجسٹر کریں",
+      "signInInstead": "اس کے بجائے سائن ان کریں",
+      "tenantExists": "ٹینینٹ کوڈ \"{{code}}\" پہلے سے رجسٹرڈ ہے",
+      "websiteExists": "ویب سائٹ \"{{website}}\" پہلے سے استعمال میں ہے"
+    }
+  },
+  "review": {
+    "title": "ٹینینٹ اکاؤنٹ کا جائزہ",
+    "description": "دستی تصدیق کے لیے نشان زد اکاؤنٹس کا جائزہ لیں اور منظور کریں",
+    "refresh": "ریفریش کریں",
+    "stats": {
+      "totalPending": "کل زیر التواء",
+      "thisWeek": "اس ہفتے",
+      "avgReviewTime": "اوسط جائزے کا وقت",
+      "approvalRate": "منظوری کی شرح"
+    },
+    "table": {
+      "title": "زیر التواء اکاؤنٹس",
+      "storeName": "سٹور کا نام",
+      "contact": "رابطہ",
+      "licenseNumber": "لائسنس نمبر",
+      "submitted": "جمع کرایا گیا",
+      "tier": "ٹیئر",
+      "actions": "اقدامات",
+      "review": "جائزہ لیں",
+      "noPending": "جائزہ لینے کے لیے کوئی زیر التواء اکاؤنٹس نہیں!"
+    },
+    "modal": {
+      "title": "اکاؤنٹ کا جائزہ لیں",
+      "storeInfo": "سٹور کی معلومات",
+      "storeName": "سٹور کا نام",
+      "licenseNumber": "لائسنس نمبر",
+      "crsaAddress": "CRSA پتہ",
+      "municipality": "میونسپلٹی",
+      "crsaStatus": "CRSA حیثیت",
+      "crsaWebsite": "CRSA ویب سائٹ",
+      "contactInfo": "رابطے کی معلومات",
+      "contactName": "رابطے کا نام",
+      "role": "کردار",
+      "email": "ای میل",
+      "phone": "فون",
+      "verificationContext": "تصدیق کا سیاق و سباق",
+      "emailDomain": "ای میل ڈومین",
+      "domainMatchesCrsa": "ڈومین CRSA سے مماثل ہے",
+      "verificationTier": "تصدیق ٹیئر",
+      "submitted": "جمع کرایا گیا",
+      "adminNotes": "ایڈمن نوٹس (اختیاری)",
+      "adminNotesPlaceholder": "اس جائزے کے بارے میں کوئی نوٹ شامل کریں...",
+      "reject": "مسترد کریں",
+      "approve": "اکاؤنٹ منظور کریں",
+      "approving": "منظور کیا جا رہا ہے...",
+      "yes": "✓ ہاں",
+      "no": "✗ نہیں"
+    },
+    "reject": {
+      "title": "اکاؤنٹ مسترد کریں",
+      "description": "براہ کرم اس اکاؤنٹ کو مسترد کرنے کی وجہ فراہم کریں۔ یہ آڈٹ کے مقاصد کے لیے لاگ کیا جائے گا۔",
+      "reasonPlaceholder": "مسترد کرنے کی وجہ (کم از کم 10 حروف)...",
+      "cancel": "منسوخ کریں",
+      "confirm": "مسترد کرنے کی تصدیق کریں",
+      "rejecting": "مسترد کیا جا رہا ہے...",
+      "minLength": "براہ کرم ایک وجہ فراہم کریں (کم از کم 10 حروف)"
+    },
+    "messages": {
+      "approved": "اکاؤنٹ کامیابی سے منظور ہو گیا!",
+      "rejected": "اکاؤنٹ کامیابی سے مسترد کر دیا گیا۔",
+      "approveFailed": "اکاؤنٹ منظور کرنے میں ناکامی: {{error}}",
+      "rejectFailed": "اکاؤنٹ مسترد کرنے میں ناکامی: {{error}}",
+      "fetchFailed": "زیر التواء اکاؤنٹس حاصل کرنے میں ناکامی",
+      "noPermission": "آپ کو ٹینینٹ اکاؤنٹس کا جائزہ لینے کی اجازت نہیں ہے۔"
+    }
+  },
+  "userRegistration": {
+    "title": "اپنا اکاؤنٹ بنائیں",
+    "joinTenant": "{{tenantName}} میں شامل ہوں",
+    "tenantInfo": "ٹینینٹ معلومات",
+    "tenantName": "نام:",
+    "tenantCode": "کوڈ:",
+    "firstName": "پہلا نام",
+    "firstNamePlaceholder": "احمد",
+    "lastName": "آخری نام",
+    "lastNamePlaceholder": "خان",
+    "email": "ای میل ایڈریس",
+    "emailPlaceholder": "ahmad.khan@example.com",
+    "phone": "فون نمبر",
+    "phonePlaceholder": "(555) 123-4567",
+    "password": "پاس ورڈ",
+    "passwordPlaceholder": "••••••••",
+    "confirmPassword": "پاس ورڈ کی تصدیق کریں",
+    "passwordStrength": "طاقت:",
+    "passwordHelp": "بہتر سیکیورٹی کے لیے بڑے حروف، چھوٹے حروف، نمبر اور علامات کے ساتھ 8+ حروف استعمال کریں",
+    "createButton": "اکاؤنٹ بنائیں",
+    "creating": "اکاؤنٹ بنایا جا رہا ہے...",
+    "alreadyHaveAccount": "پہلے سے اکاؤنٹ ہے؟",
+    "signIn": "سائن ان کریں",
+    "loading": "ٹینینٹ معلومات لوڈ ہو رہی ہیں...",
+    "tenantNotFound": "ٹینینٹ نہیں ملا",
+    "tenantNotFoundDescription": "مخصوص ٹینینٹ نہیں مل سکا۔",
+    "goToSignup": "سائن اپ پر جائیں",
+    "errors": {
+      "loadFailed": "ٹینینٹ معلومات لوڈ کرنے میں ناکامی",
+      "alreadyExists": "اس ای میل کا حامل صارف پہلے سے موجود ہے۔ براہ کرم ایک مختلف ای میل استعمال کریں یا لاگ ان کریں۔",
+      "failed": "صارف اکاؤنٹ بنانے میں ناکامی"
+    }
+  },
+  "success": {
+    "title": "WeedGo میں خوش آمدید!",
+    "description": "{{tenantName}} کے لیے آپ کا اکاؤنٹ کامیابی سے بن گیا ہے۔",
+    "accountDetails": {
+      "title": "آپ کے اکاؤنٹ کی تفصیلات",
+      "tenantName": "ٹینینٹ کا نام:",
+      "tenantCode": "ٹینینٹ کوڈ:",
+      "storeUrl": "سٹور URL:"
+    },
+    "nextSteps": {
+      "title": "اگلے اقدامات",
+      "checkEmail": {
+        "title": "اپنی ای میل چیک کریں",
+        "description": "ہم نے آپ کو اہم اکاؤنٹ کی معلومات اور سیٹ اپ کی ہدایات کے ساتھ ایک خوش آمدید ای میل بھیجی ہے۔"
+      },
+      "accessDashboard": {
+        "title": "اپنا ڈیش بورڈ استعمال کریں",
+        "description": "اپنے سٹور کی ترتیبات کو ترتیب دینے، مصنوعات شامل کرنے اور اپنے AI معاونین کو اپنی مرضی کے مطابق بنانے کے لیے اپنے ایڈمن ڈیش بورڈ میں لاگ ان کریں۔"
+      },
+      "setupStore": {
+        "title": "اپنا پہلا سٹور سیٹ اپ کریں",
+        "description": "اپنے پہلے سٹور کی جگہ شامل کریں، کام کے اوقات ترتیب دیں اور اپنی مصنوعات کی فہرست سیٹ اپ کریں۔"
+      },
+      "configureAI": {
+        "title": "AI معاونین کو ترتیب دیں",
+        "description": "اپنے AI budtender شخصیات کو اپنی مرضی کے مطابق بنائیں اور اپنے گاہکوں کے لیے کثیر لسانی مدد سیٹ اپ کریں۔"
+      }
+    },
+    "quickActions": {
+      "dashboard": {
+        "title": "ڈیش بورڈ استعمال کریں",
+        "description": "اپنا پلیٹ فارم ترتیب دیں"
+      },
+      "documentation": {
+        "title": "دستاویزات",
+        "description": "سیٹ اپ گائیڈز اور ٹیوٹوریلز"
+      },
+      "support": {
+        "title": "مدد",
+        "description": "ہماری ٹیم سے مدد حاصل کریں"
+      }
+    },
+    "cta": {
+      "button": "اپنا ڈیش بورڈ استعمال کریں",
+      "help": "شروع کرنے میں مدد کی ضرورت ہے؟ ہماری سپورٹ ٹیم سے رابطہ کریں",
+      "email": "support@weedgo.com"
+    },
+    "resources": {
+      "title": "آپ کو شروع کرنے کے لیے وسائل",
+      "quickSetup": {
+        "title": "فوری سیٹ اپ گائیڈ",
+        "item1": "سٹور کی ترتیب اور برانڈنگ",
+        "item2": "مصنوعات کی فہرست سیٹ اپ",
+        "item3": "ادائیگی کی پروسیسنگ کی ترتیب",
+        "item4": "AI معاون کی اپنی مرضی کے مطابق بنانا"
+      },
+      "training": {
+        "title": "تربیت اور مدد",
+        "item1": "ویڈیو ٹیوٹوریلز اور ویبینارز",
+        "item2": "24/7 کسٹمر سپورٹ چیٹ",
+        "item3": "کمیونٹی فورم تک رسائی",
+        "item4": "مخصوص اکاؤنٹ منیجر (انٹرپرائز)"
+      }
+    }
+  },
+  "validation": {
+    "required": "{{field}} ضروری ہے",
+    "brandNameRequired": "برانڈ کا نام ضروری ہے",
+    "websiteRequired": "برانڈ کوڈ بنانے کے لیے ویب سائٹ ضروری ہے",
+    "brandCodeRequired": "برانڈ کوڈ ضروری ہے (بنانے کے لیے ویب سائٹ درج کریں)",
+    "brandCodeFormat": "برانڈ کوڈ میں صرف بڑے حروف، نمبر، ہائفن اور انڈر اسکور ہونے چاہئیں",
+    "companyNameRequired": "کمپنی کا نام ضروری ہے",
+    "businessNumberRequired": "کاروباری نمبر ضروری ہے",
+    "businessNumberFormat": "کاروباری نمبر 9 ہندسوں کا ہونا چاہیے",
+    "gstHstRequired": "GST/HST نمبر ضروری ہے",
+    "gstHstFormat": "GST/HST نمبر فارمیٹ: 123456789RT0001",
+    "emailRequired": "ای میل ضروری ہے",
+    "emailInvalid": "براہ کرم ایک درست ای میل ایڈریس درج کریں",
+    "firstNameRequired": "پہلا نام ضروری ہے",
+    "lastNameRequired": "آخری نام ضروری ہے",
+    "streetRequired": "گلی کا پتہ ضروری ہے",
+    "cityRequired": "شہر ضروری ہے",
+    "postalCodeRequired": "پوسٹل کوڈ ضروری ہے",
+    "postalCodeFormat": "براہ کرم ایک درست کینیڈین پوسٹل کوڈ درج کریں",
+    "passwordRequired": "پاس ورڈ ضروری ہے",
+    "passwordLength": "پاس ورڈ کم از کم 8 حروف کا ہونا چاہیے",
+    "passwordComplexity": "پاس ورڈ میں بڑے حروف، چھوٹے حروف اور نمبر ہونے چاہئیں",
+    "passwordMismatch": "پاس ورڈ مماثل نہیں ہیں",
+    "cardNumberRequired": "کارڈ نمبر ضروری ہے",
+    "cardNumberFormat": "براہ کرم ایک درست 16 ہندسوں کا کارڈ نمبر درج کریں",
+    "expiryRequired": "میعاد ختم ہونے کی تاریخ ضروری ہے",
+    "expiryFormat": "براہ کرم MM/YY فارمیٹ درج کریں",
+    "cvvRequired": "CVV ضروری ہے",
+    "cvvFormat": "CVV 3 یا 4 ہندسوں کا ہونا چاہیے",
+    "cardholderRequired": "کارڈ ہولڈر کا نام ضروری ہے"
+  },
+  "passwordStrength": {
+    "weak": "کمزور",
+    "fair": "منصفانہ",
+    "good": "اچھا",
+    "strong": "مضبوط",
+    "veryStrong": "بہت مضبوط"
+  },
+  "provinces": {
+    "ON": "Ontario",
+    "BC": "British Columbia",
+    "AB": "Alberta",
+    "QC": "Quebec",
+    "MB": "Manitoba",
+    "SK": "Saskatchewan",
+    "NS": "Nova Scotia",
+    "NB": "New Brunswick",
+    "NL": "Newfoundland and Labrador",
+    "PE": "Prince Edward Island",
+    "NT": "Northwest Territories",
+    "YT": "Yukon",
+    "NU": "Nunavut"
+  },
+  "plans": {
+    "community_and_new_business": {
+      "name": "کمیونٹی اور نیا کاروبار",
+      "features": {
+        "stores": "1 سٹور",
+        "languages": "2 زبانیں",
+        "personalities": "1 AI شخصیت"
+      }
+    },
+    "small_business": {
+      "name": "چھوٹا کاروبار",
+      "features": {
+        "stores": "5 سٹورز",
+        "languages": "5 زبانیں",
+        "personalities": "2 AI شخصیات"
+      }
+    },
+    "professional_and_growing_business": {
+      "name": "پیشہ ورانہ اور بڑھتا ہوا کاروبار",
+      "features": {
+        "stores": "12 سٹورز",
+        "languages": "10 زبانیں",
+        "personalities": "3 AI شخصیات"
+      }
+    },
+    "enterprise": {
+      "name": "انٹرپرائز",
+      "features": {
+        "stores": "لامحدود سٹورز",
+        "languages": "25+ زبانیں",
+        "personalities": "5 AI شخصیات"
+      }
+    }
+  }
+}

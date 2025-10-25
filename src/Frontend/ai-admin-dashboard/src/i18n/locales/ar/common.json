@@ -1,0 +1,228 @@
+{
+  "buttons": {
+    "send": "إرسال",
+    "close": "إغلاق",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "delete": "حذف",
+    "edit": "تحرير",
+    "create": "إنشاء",
+    "update": "تحديث",
+    "confirm": "تأكيد",
+    "back": "رجوع",
+    "next": "التالي",
+    "submit": "إرسال",
+    "search": "بحث",
+    "filter": "تصفية",
+    "export": "تصدير",
+    "import": "استيراد",
+    "refresh": "تحديث",
+    "settings": "الإعدادات",
+    "logout": "تسجيل الخروج",
+    "change": "تغيير"
+  },
+  "labels": {
+    "email": "عنوان البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "username": "اسم المستخدم",
+    "name": "الاسم",
+    "phone": "الهاتف",
+    "address": "العنوان",
+    "city": "المدينة",
+    "province": "المحافظة",
+    "postalCode": "الرمز البريدي",
+    "country": "البلد",
+    "status": "الحالة",
+    "actions": "الإجراءات",
+    "description": "الوصف",
+    "notes": "ملاحظات",
+    "date": "التاريخ",
+    "time": "الوقت",
+    "total": "المجموع",
+    "subtotal": "المجموع الفرعي",
+    "tax": "الضريبة",
+    "quantity": "الكمية",
+    "price": "السعر",
+    "language": "اللغة"
+  },
+  "placeholders": {
+    "enterEmail": "أدخل بريدك الإلكتروني",
+    "enterPassword": "أدخل كلمة المرور",
+    "search": "بحث...",
+    "selectOption": "اختر خياراً",
+    "typeMessage": "اكتب رسالتك...",
+    "enterName": "أدخل الاسم",
+    "enterPhone": "أدخل رقم الهاتف"
+  },
+  "messages": {
+    "loading": "جارٍ التحميل...",
+    "saving": "جارٍ الحفظ...",
+    "success": "نجح!",
+    "error": "حدث خطأ",
+    "noData": "لا توجد بيانات متاحة",
+    "confirm": "هل أنت متأكد؟",
+    "unsavedChanges": "لديك تغييرات غير محفوظة"
+  },
+  "toasts": {
+    "password": {
+      "changeSuccess": "تم تغيير كلمة المرور بنجاح! الرجاء تسجيل الدخول مرة أخرى.",
+      "changeFailed": "فشل تغيير كلمة المرور. يرجى المحاولة مرة أخرى."
+    },
+    "broadcast": {
+      "createSuccess": "تم إنشاء البث بنجاح!",
+      "createFailed": "فشل إنشاء البث"
+    },
+    "template": {
+      "fetchFailed": "فشل جلب القوالب",
+      "createSuccess": "تم إنشاء القالب بنجاح",
+      "createFailed": "فشل إنشاء القالب",
+      "updateSuccess": "تم تحديث القالب بنجاح",
+      "updateFailed": "فشل تحديث القالب",
+      "deleteSuccess": "تم حذف القالب بنجاح",
+      "deleteFailed": "فشل حذف القالب"
+    },
+    "model": {
+      "fetchFailed": "فشل جلب النماذج",
+      "loadFailed": "فشل تحميل النموذج",
+      "unloadSuccess": "تم إلغاء تحميل النموذج بنجاح",
+      "unloadFailed": "فشل إلغاء تحميل النموذج",
+      "updateFailed": "فشل تحديث النموذج"
+    },
+    "config": {
+      "fetchFailed": "فشل جلب التكوين",
+      "updateSuccess": "تم تحديث التكوين بنجاح",
+      "updateFailed": "فشل حفظ التكوين"
+    },
+    "agent": {
+      "fetchFailed": "فشل جلب الوكلاء"
+    },
+    "personality": {
+      "fetchFailed": "فشل جلب الشخصيات"
+    },
+    "router": {
+      "statsFetchFailed": "فشل جلب إحصائيات الموجه",
+      "toggleFailed": "فشل تبديل وضع الاستدلال"
+    }
+  },
+  "errors": {
+    "required": "هذا الحقل مطلوب",
+    "invalidEmail": "عنوان بريد إلكتروني غير صالح",
+    "invalidPhone": "رقم هاتف غير صالح",
+    "networkError": "خطأ في الشبكة. يرجى المحاولة مرة أخرى.",
+    "serverError": "خطأ في الخادم. يرجى المحاولة لاحقاً.",
+    "unauthorized": "وصول غير مصرح به",
+    "notFound": "غير موجود",
+    "sessionExpired": "انتهت صلاحية جلستك. الرجاء تسجيل الدخول مرة أخرى.",
+    "validation": {
+      "selectStore": "يرجى اختيار متجر",
+      "selectSupplier": "يرجى اختيار مورد",
+      "addAtLeastOneItem": "يرجى إضافة عنصر واحد على الأقل",
+      "fillRequiredFields": "يرجى ملء جميع الحقول المطلوبة لكل عنصر",
+      "enterLicenseNumber": "يرجى إدخال رقم الترخيص",
+      "fillAllRequiredFields": "يرجى ملء جميع الحقول المطلوبة: {{fields}}",
+      "invalidJson": "لا يمكن حفظ JSON غير صالح: {{message}}",
+      "invalidCode": "رمز غير صالح",
+      "invalidVerificationCode": "رمز التحقق غير صالح"
+    },
+    "operations": {
+      "saveFailed": "فشل حفظ الإعدادات",
+      "validationFailed": "فشل التحقق",
+      "fetchFailed": "فشل جلب {{resource}}",
+      "createFailed": "فشل إنشاء {{resource}}",
+      "updateFailed": "فشل تحديث {{resource}}",
+      "deleteFailed": "فشل حذف {{resource}}",
+      "searchFailed": "فشل البحث عن {{resource}}",
+      "loadFailed": "فشل تحميل {{resource}}. يرجى تحديث الصفحة.",
+      "sendFailed": "فشل إرسال {{resource}}",
+      "generateFailed": "فشل توليد {{resource}}",
+      "verifyFailed": "فشل التحقق من {{resource}}",
+      "processFailed": "فشل معالجة {{action}}. يرجى المحاولة مرة أخرى.",
+      "testConnectionFailed": "فشل اختبار الاتصال. يرجى التحقق من شبكتك."
+    }
+  },
+  "common": {
+    "yes": "نعم",
+    "no": "لا",
+    "or": "أو",
+    "and": "و",
+    "today": "اليوم",
+    "yesterday": "أمس",
+    "week": "أسبوع",
+    "month": "شهر",
+    "year": "سنة",
+    "all": "الكل",
+    "none": "لا شيء",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "pending": "قيد الانتظار",
+    "completed": "مكتمل",
+    "failed": "فشل",
+    "notSpecified": "غير محدد",
+    "unknown": "غير معروف",
+    "na": "غير متوفر"
+  },
+  "confirmations": {
+    "deleteUser": "هل أنت متأكد من أنك تريد حذف المستخدم {{email}}؟",
+    "deleteUserPermanent": "هل أنت متأكد من أنك تريد حذف هذا المستخدم؟ لا يمكن التراجع عن هذا الإجراء.",
+    "deleteTerminal": "هل أنت متأكد من أنك تريد حذف هذا الطرفية؟",
+    "passwordResetMethod": "انقر فوق موافق لإرسال رابط إعادة تعيين كلمة المرور عبر البريد الإلكتروني\nانقر فوق إلغاء لإنشاء وعرض كلمة مرور مؤقتة"
+  },
+  "modals": {
+    "changePassword": {
+      "title": "تغيير كلمة المرور",
+      "currentPassword": "كلمة المرور الحالية",
+      "newPassword": "كلمة المرور الجديدة",
+      "confirmPassword": "تأكيد كلمة المرور الجديدة",
+      "placeholders": {
+        "currentPassword": "أدخل كلمة المرور الحالية",
+        "newPassword": "أدخل كلمة المرور الجديدة",
+        "confirmPassword": "تأكيد كلمة المرور الجديدة"
+      },
+      "requirements": {
+        "title": "يجب أن تحتوي كلمة المرور على:",
+        "minLength": "8 أحرف على الأقل",
+        "uppercase": "حرف كبير واحد",
+        "lowercase": "حرف صغير واحد",
+        "number": "رقم واحد"
+      },
+      "validation": {
+        "currentRequired": "كلمة المرور الحالية مطلوبة",
+        "newRequired": "كلمة المرور الجديدة مطلوبة",
+        "notMeetRequirements": "كلمة المرور لا تلبي المتطلبات",
+        "confirmRequired": "يرجى تأكيد كلمة المرور الجديدة",
+        "notMatch": "كلمات المرور غير متطابقة",
+        "mustBeDifferent": "يجب أن تكون كلمة المرور الجديدة مختلفة عن كلمة المرور الحالية",
+        "incorrectCurrent": "كلمة المرور الحالية غير صحيحة"
+      },
+      "securityNotice": "بعد تغيير كلمة المرور، سيتم تسجيل خروجك وستحتاج إلى تسجيل الدخول مرة أخرى باستخدام بيانات الاعتماد الجديدة.",
+      "changing": "جارٍ التغيير..."
+    }
+  },
+  "navigation": {
+    "dashboard": "لوحة التحكم",
+    "apps": "التطبيقات",
+    "organization": "المنظمة",
+    "tenants": "المستأجرون",
+    "products": "المنتجات",
+    "inventory": "المخزون",
+    "accessories": "الملحقات",
+    "orders": "الطلبات",
+    "customers": "العملاء",
+    "purchaseOrders": "طلبات الشراء",
+    "promotions": "العروض الترويجية",
+    "recommendations": "التوصيات",
+    "communications": "الاتصالات",
+    "deliveries": "التسليمات",
+    "aiConfiguration": "تكوين الذكاء الاصطناعي",
+    "provincialCatalog": "الكتالوج الإقليمي",
+    "database": "قاعدة البيانات",
+    "systemLogs": "سجلات النظام"
+  },
+  "roles": {
+    "superAdmin": "مسؤول متقدم",
+    "tenantAdmin": "مسؤول المستأجر",
+    "storeManager": "مدير المتجر",
+    "staff": "الموظفين",
+    "user": "مستخدم"
+  }
+}

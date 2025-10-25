@@ -1,0 +1,30 @@
+{
+  "mcp": {
+    "name": "weedgo",
+    "version": "1.0.0",
+    "protocolVersion": "1.0",
+    "description": "WeedGo cannabis industry MCP server",
+    "command": "./weedgo_mcp_server.py",
+    "args": ["--stdio"],
+    "env": {
+      "PYTHONPATH": ".."
+    },
+    "capabilities": {
+      "tools": true,
+      "resources": true,
+      "prompts": true,
+      "sampling": false,
+      "roots": false,
+      "experimental": {
+        "cannabis_specific": true,
+        "compliance_aware": true
+      }
+    },
+    "metadata": {
+      "author": "WeedGo AI Team",
+      "category": "cannabis",
+      "tags": ["cannabis", "dispensary", "compliance", "strains", "terpenes"],
+      "icon": "🌿"
+    }
+  }
+}

@@ -1,0 +1,368 @@
+{
+  "tenant": {
+    "header": {
+      "title": "WeedGo",
+      "alreadyHaveAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "backHome": "Back to Home"
+    },
+    "steps": {
+      "company": "Company Information",
+      "contact": "Contact Details",
+      "account": "Account Setup",
+      "payment": "Subscription & Payment"
+    },
+    "stepDescriptions": {
+      "company": "Tell us about your business and brand",
+      "contact": "Provide your contact information and address",
+      "account": "Create your admin account credentials",
+      "payment": "Select your plan and payment method"
+    },
+    "companyInfo": {
+      "brandName": "Brand Name",
+      "brandNamePlaceholder": "e.g., Green Valley Dispensary",
+      "website": "Website",
+      "websitePlaceholder": "www.potpalace.ca or potpalace.ca",
+      "websiteHelp": "Your website URL (used to generate brand code)",
+      "brandCode": "Brand Code",
+      "brandCodeAuto": "Brand Code * (auto-generated)",
+      "brandCodePlaceholder": "Enter website above to generate",
+      "brandCodeHelp": "Will be used in your store URL: {{code}}.weedgo.com",
+      "legalCompanyName": "Legal Company Name",
+      "legalCompanyPlaceholder": "e.g., Green Valley Cannabis Inc.",
+      "businessNumber": "Business Number",
+      "businessNumberPlaceholder": "123456789",
+      "businessNumberHelp": "Canadian Business Number (9 digits)",
+      "gstHstNumber": "GST/HST Number",
+      "gstHstPlaceholder": "123456789RT0001",
+      "gstHstHelp": "Format: 123456789RT0001",
+      "logoUpload": "Logo Upload",
+      "logoUploadHelp": "Max 2MB • PNG, JPG, WebP • Recommended: 500x500px square"
+    },
+    "contactInfo": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "phonePlaceholder": "(555) 123-4567",
+      "street": "Street Address",
+      "city": "City",
+      "province": "Province",
+      "postalCode": "Postal Code",
+      "postalCodePlaceholder": "A1A 1A1"
+    },
+    "accountSetup": {
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "passwordStrength": "Strength:",
+      "passwordHelp": "Must be at least 8 characters with uppercase, lowercase, and number",
+      "securityTitle": "Account Security",
+      "securityDescription": "Your account will be secured with industry-standard encryption and multi-factor authentication options."
+    },
+    "subscription": {
+      "choosePlan": "Choose Your Subscription Plan",
+      "selectedPlan": "Selected Plan: {{plan}}",
+      "changePlan": "Change Plan",
+      "free": "FREE",
+      "perMonth": "${{price}}/month",
+      "customPricing": "Custom Pricing",
+      "billingCycle": "Billing Cycle",
+      "monthly": "Monthly",
+      "monthlyBilled": "Billed monthly",
+      "annual": "Annual",
+      "annualSave": "Save 20%",
+      "selectPlan": "Select Plan",
+      "enterpriseTitle": "Enterprise Plan",
+      "enterpriseDescription": "Our sales team will contact you within 24 hours to discuss custom pricing and setup."
+    },
+    "payment": {
+      "cardholderName": "Cardholder Name",
+      "cardholderPlaceholder": "John Doe",
+      "cardNumber": "Card Number",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiryDate": "Expiry Date",
+      "expiryPlaceholder": "MM/YY",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "postalCode": "ZIP/Postal Code",
+      "postalCodePlaceholder": "12345"
+    },
+    "progress": {
+      "verifying": "Verifying availability...",
+      "creating": "Creating your account...",
+      "uploading": "Uploading logo...",
+      "complete": "Account created successfully!",
+      "processing": "Processing..."
+    },
+    "success": {
+      "welcome": "Welcome to WeedGo!",
+      "accountCreated": "Your account has been created successfully.",
+      "tenantCode": "Tenant Code:",
+      "preparing": "Preparing your dashboard..."
+    },
+    "navigation": {
+      "previous": "Previous",
+      "next": "Next",
+      "createAccount": "Create Account"
+    },
+    "errors": {
+      "accountCreationFailed": "Account Creation Failed",
+      "tryAgain": "Try Again",
+      "registerAsUser": "Register as User",
+      "signInInstead": "Sign In Instead",
+      "tenantExists": "The tenant code \"{{code}}\" is already registered",
+      "websiteExists": "The website \"{{website}}\" is already in use"
+    }
+  },
+  "review": {
+    "title": "Tenant Account Review",
+    "description": "Review and approve accounts flagged for manual verification",
+    "refresh": "Refresh",
+    "stats": {
+      "totalPending": "Total Pending",
+      "thisWeek": "This Week",
+      "avgReviewTime": "Avg Review Time",
+      "approvalRate": "Approval Rate"
+    },
+    "table": {
+      "title": "Pending Accounts",
+      "storeName": "Store Name",
+      "contact": "Contact",
+      "licenseNumber": "License Number",
+      "submitted": "Submitted",
+      "tier": "Tier",
+      "actions": "Actions",
+      "review": "Review",
+      "noPending": "No pending accounts to review!"
+    },
+    "modal": {
+      "title": "Review Account",
+      "storeInfo": "Store Information",
+      "storeName": "Store Name",
+      "licenseNumber": "License Number",
+      "crsaAddress": "CRSA Address",
+      "municipality": "Municipality",
+      "crsaStatus": "CRSA Status",
+      "crsaWebsite": "CRSA Website",
+      "contactInfo": "Contact Information",
+      "contactName": "Contact Name",
+      "role": "Role",
+      "email": "Email",
+      "phone": "Phone",
+      "verificationContext": "Verification Context",
+      "emailDomain": "Email Domain",
+      "domainMatchesCrsa": "Domain Matches CRSA",
+      "verificationTier": "Verification Tier",
+      "submitted": "Submitted",
+      "adminNotes": "Admin Notes (Optional)",
+      "adminNotesPlaceholder": "Add any notes about this review...",
+      "reject": "Reject",
+      "approve": "Approve Account",
+      "approving": "Approving...",
+      "yes": "✓ Yes",
+      "no": "✗ No"
+    },
+    "reject": {
+      "title": "Reject Account",
+      "description": "Please provide a reason for rejecting this account. This will be logged for audit purposes.",
+      "reasonPlaceholder": "Reason for rejection (minimum 10 characters)...",
+      "cancel": "Cancel",
+      "confirm": "Confirm Rejection",
+      "rejecting": "Rejecting...",
+      "minLength": "Please provide a reason (at least 10 characters)"
+    },
+    "messages": {
+      "approved": "Account approved successfully!",
+      "rejected": "Account rejected successfully.",
+      "approveFailed": "Failed to approve account: {{error}}",
+      "rejectFailed": "Failed to reject account: {{error}}",
+      "fetchFailed": "Failed to fetch pending accounts",
+      "noPermission": "You don't have permission to review tenant accounts."
+    }
+  },
+  "userRegistration": {
+    "title": "Create Your Account",
+    "joinTenant": "Join {{tenantName}}",
+    "tenantInfo": "Tenant Information",
+    "tenantName": "Name:",
+    "tenantCode": "Code:",
+    "firstName": "First Name",
+    "firstNamePlaceholder": "John",
+    "lastName": "Last Name",
+    "lastNamePlaceholder": "Doe",
+    "email": "Email Address",
+    "emailPlaceholder": "john.doe@example.com",
+    "phone": "Phone Number",
+    "phonePlaceholder": "(555) 123-4567",
+    "password": "Password",
+    "passwordPlaceholder": "••••••••",
+    "confirmPassword": "Confirm Password",
+    "passwordStrength": "Strength:",
+    "passwordHelp": "Use 8+ characters with uppercase, lowercase, numbers, and symbols for better security",
+    "createButton": "Create Account",
+    "creating": "Creating Account...",
+    "alreadyHaveAccount": "Already have an account?",
+    "signIn": "Sign in",
+    "loading": "Loading tenant information...",
+    "tenantNotFound": "Tenant Not Found",
+    "tenantNotFoundDescription": "The specified tenant could not be found.",
+    "goToSignup": "Go to Signup",
+    "errors": {
+      "loadFailed": "Failed to load tenant information",
+      "alreadyExists": "A user with this email already exists. Please use a different email or login instead.",
+      "failed": "Failed to create user account"
+    }
+  },
+  "success": {
+    "title": "Welcome to WeedGo!",
+    "description": "Your account for {{tenantName}} has been successfully created.",
+    "accountDetails": {
+      "title": "Your Account Details",
+      "tenantName": "Tenant Name:",
+      "tenantCode": "Tenant Code:",
+      "storeUrl": "Store URL:"
+    },
+    "nextSteps": {
+      "title": "Next Steps",
+      "checkEmail": {
+        "title": "Check Your Email",
+        "description": "We've sent you a welcome email with important account information and setup instructions."
+      },
+      "accessDashboard": {
+        "title": "Access Your Dashboard",
+        "description": "Log in to your admin dashboard to configure your store settings, add products, and customize your AI assistants."
+      },
+      "setupStore": {
+        "title": "Setup Your First Store",
+        "description": "Add your first store location, configure operating hours, and set up your product inventory."
+      },
+      "configureAI": {
+        "title": "Configure AI Assistants",
+        "description": "Customize your AI budtender personalities and set up multi-language support for your customers."
+      }
+    },
+    "quickActions": {
+      "dashboard": {
+        "title": "Access Dashboard",
+        "description": "Configure your platform"
+      },
+      "documentation": {
+        "title": "Documentation",
+        "description": "Setup guides & tutorials"
+      },
+      "support": {
+        "title": "Support",
+        "description": "Get help from our team"
+      }
+    },
+    "cta": {
+      "button": "Access Your Dashboard",
+      "help": "Need help getting started? Contact our support team at",
+      "email": "support@weedgo.com"
+    },
+    "resources": {
+      "title": "Resources to Get You Started",
+      "quickSetup": {
+        "title": "Quick Setup Guide",
+        "item1": "Store configuration and branding",
+        "item2": "Product catalog setup",
+        "item3": "Payment processing configuration",
+        "item4": "AI assistant customization"
+      },
+      "training": {
+        "title": "Training & Support",
+        "item1": "Video tutorials and webinars",
+        "item2": "24/7 customer support chat",
+        "item3": "Community forum access",
+        "item4": "Dedicated account manager (Enterprise)"
+      }
+    }
+  },
+  "validation": {
+    "required": "{{field}} is required",
+    "brandNameRequired": "Brand name is required",
+    "websiteRequired": "Website is required to generate brand code",
+    "brandCodeRequired": "Brand code is required (enter website to generate)",
+    "brandCodeFormat": "Brand code must contain only uppercase letters, numbers, hyphens, and underscores",
+    "companyNameRequired": "Company name is required",
+    "businessNumberRequired": "Business number is required",
+    "businessNumberFormat": "Business number must be 9 digits",
+    "gstHstRequired": "GST/HST number is required",
+    "gstHstFormat": "GST/HST number format: 123456789RT0001",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Please enter a valid email address",
+    "firstNameRequired": "First name is required",
+    "lastNameRequired": "Last name is required",
+    "streetRequired": "Street address is required",
+    "cityRequired": "City is required",
+    "postalCodeRequired": "Postal code is required",
+    "postalCodeFormat": "Please enter a valid Canadian postal code",
+    "passwordRequired": "Password is required",
+    "passwordLength": "Password must be at least 8 characters",
+    "passwordComplexity": "Password must contain uppercase, lowercase, and number",
+    "passwordMismatch": "Passwords do not match",
+    "cardNumberRequired": "Card number is required",
+    "cardNumberFormat": "Please enter a valid 16-digit card number",
+    "expiryRequired": "Expiry date is required",
+    "expiryFormat": "Please enter MM/YY format",
+    "cvvRequired": "CVV is required",
+    "cvvFormat": "CVV must be 3 or 4 digits",
+    "cardholderRequired": "Cardholder name is required"
+  },
+  "passwordStrength": {
+    "weak": "Weak",
+    "fair": "Fair",
+    "good": "Good",
+    "strong": "Strong",
+    "veryStrong": "Very Strong"
+  },
+  "provinces": {
+    "ON": "Ontario",
+    "BC": "British Columbia",
+    "AB": "Alberta",
+    "QC": "Quebec",
+    "MB": "Manitoba",
+    "SK": "Saskatchewan",
+    "NS": "Nova Scotia",
+    "NB": "New Brunswick",
+    "NL": "Newfoundland and Labrador",
+    "PE": "Prince Edward Island",
+    "NT": "Northwest Territories",
+    "YT": "Yukon",
+    "NU": "Nunavut"
+  },
+  "plans": {
+    "community_and_new_business": {
+      "name": "Community and New Business",
+      "features": {
+        "stores": "1 Store",
+        "languages": "2 Languages",
+        "personalities": "1 AI Personality"
+      }
+    },
+    "small_business": {
+      "name": "Small Business",
+      "features": {
+        "stores": "5 Stores",
+        "languages": "5 Languages",
+        "personalities": "2 AI Personalities"
+      }
+    },
+    "professional_and_growing_business": {
+      "name": "Professional and Growing Business",
+      "features": {
+        "stores": "12 Stores",
+        "languages": "10 Languages",
+        "personalities": "3 AI Personalities"
+      }
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "features": {
+        "stores": "Unlimited Stores",
+        "languages": "25+ Languages",
+        "personalities": "5 AI Personalities"
+      }
+    }
+  }
+}

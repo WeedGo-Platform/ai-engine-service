@@ -1,0 +1,149 @@
+{
+  "titles": {
+    "management": "注文管理",
+    "orderDetails": "注文詳細",
+    "assignDriver": "配達員を割り当て",
+    "messageCustomer": "顧客へメッセージ",
+    "deliveryConfirmation": "配達確認"
+  },
+  "fields": {
+    "orderNumber": "注文",
+    "customer": "顧客",
+    "status": "ステータス",
+    "type": "タイプ",
+    "items": "商品",
+    "cannabis": "大麻",
+    "total": "合計",
+    "verification": "検証",
+    "time": "時間",
+    "actions": "アクション",
+    "product": "製品",
+    "brand": "ブランド",
+    "category": "カテゴリー",
+    "thcCbd": "THC/CBD",
+    "qty": "数量",
+    "price": "価格",
+    "payment": "支払い",
+    "paymentMethod": "支払い方法",
+    "deliveryAddress": "配達先住所",
+    "deliveryTime": "配達時間",
+    "pickupTime": "受取時間",
+    "driver": "配達員",
+    "vehicle": "車両",
+    "signature": "顧客の署名",
+    "deliveryPhoto": "配達写真",
+    "dob": "DOB",
+    "loyaltyPoints": "ロイヤルティポイント"
+  },
+  "status": {
+    "all": "すべてのステータス",
+    "pending": "保留中",
+    "confirmed": "確認済み",
+    "preparing": "準備中",
+    "ready": "準備完了",
+    "outForDelivery": "配達中",
+    "delivered": "配達済み",
+    "cancelled": "キャンセル",
+    "refunded": "返金済み",
+    "paymentPending": "支払い保留中",
+    "ageVerified": "年齢確認済み",
+    "ageNotVerified": "年齢未確認"
+  },
+  "orderTypes": {
+    "all": "すべてのタイプ",
+    "delivery": "配達",
+    "pickup": "受取",
+    "inStore": "店内"
+  },
+  "paymentMethods": {
+    "cash": "現金",
+    "credit": "クレジットカード",
+    "debit": "デビットカード",
+    "eTransfer": "E-Transfer"
+  },
+  "paymentStatus": {
+    "pending": "保留中",
+    "paid": "支払済み",
+    "refunded": "返金済み"
+  },
+  "customerTypes": {
+    "recreational": "レクリエーション",
+    "medical": "医療"
+  },
+  "actions": {
+    "export": "エクスポート",
+    "refresh": "更新",
+    "viewDetails": "詳細を表示",
+    "confirmOrder": "注文を確認",
+    "cancelOrder": "注文をキャンセル",
+    "startPreparing": "準備を開始",
+    "markReady": "準備完了にする",
+    "assignDriver": "配達員を割り当て",
+    "markPickedUp": "受取済みにする",
+    "markDelivered": "配達済みにする",
+    "verifyAge": "年齢とIDを確認",
+    "messageCustomer": "顧客へメッセージ",
+    "processRefund": "返金を処理",
+    "assignAndDispatch": "割り当てて発送",
+    "sendMessage": "メッセージを送信"
+  },
+  "messages": {
+    "searchPlaceholder": "注文番号、顧客、電話で検索...",
+    "selectDriver": "配達員を選択...",
+    "noOrders": "注文が見つかりません",
+    "ordersWillAppear": "顧客が注文すると、ここに表示されます。",
+    "exportMessage": "エクスポート機能はCSVファイルをダウンロードします",
+    "assignDriverMessage": "注文{{orderNumber}}に配達員を割り当て",
+    "messageSendTo": "{{firstName}} {{lastName}}にメッセージを送信",
+    "typePlaceholder": "メッセージを入力...",
+    "loadingError": "注文の読み込みエラー:",
+    "driedFlowerEq": "乾燥花換算:",
+    "to": "から",
+    "idVerified": "ID ✓",
+    "noId": "ID なし",
+    "itemsCount": "{{count}}商品",
+    "orderNumber": "注文{{number}}",
+    "min": "分"
+  },
+  "metrics": {
+    "pending": "保留中",
+    "preparing": "準備中",
+    "ready": "準備完了",
+    "todayRevenue": "本日の収益",
+    "avgProcessTime": "平均処理時間"
+  },
+  "sections": {
+    "customerInfo": "顧客情報",
+    "orderInfo": "注文情報",
+    "deliveryInfo": "配達情報",
+    "pickupInfo": "受取情報",
+    "specialInstructions": "特別な指示",
+    "orderItems": "注文商品",
+    "orderSummary": "注文概要"
+  },
+  "summary": {
+    "subtotal": "小計:",
+    "tax": "税金 (13% HST):",
+    "delivery": "配達:",
+    "discount": "割引:",
+    "total": "合計:"
+  },
+  "prompts": {
+    "cancelReason": "キャンセルの理由を入力してください:",
+    "refundReason": "返金の理由を入力してください:"
+  },
+  "templates": {
+    "selectTemplate": "テンプレートを選択...",
+    "orderConfirmed": "ご注文は確認され、準備中です。",
+    "readyForPickup": "ご注文の準備が整いました!",
+    "outForDelivery": "ご注文は配達中です。",
+    "delayNotice": "ご注文に遅延が発生しています。ご不便をおかけして申し訳ございません。",
+    "orderConfirmedLabel": "注文確認済み",
+    "readyForPickupLabel": "受取準備完了",
+    "outForDeliveryLabel": "配達中",
+    "delayNoticeLabel": "遅延通知"
+  },
+  "labels": {
+    "quickTemplates": "クイックテンプレート"
+  }
+}

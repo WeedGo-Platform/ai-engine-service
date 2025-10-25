@@ -1,0 +1,368 @@
+{
+  "tenant": {
+    "header": {
+      "title": "WeedGo",
+      "alreadyHaveAccount": "آیا قبلاً حساب کاربری دارید؟",
+      "signIn": "ورود",
+      "backHome": "بازگشت به خانه"
+    },
+    "steps": {
+      "company": "اطلاعات شرکت",
+      "contact": "جزئیات تماس",
+      "account": "راه‌اندازی حساب",
+      "payment": "اشتراک و پرداخت"
+    },
+    "stepDescriptions": {
+      "company": "درباره کسب‌وکار و برند خود به ما بگویید",
+      "contact": "اطلاعات تماس و آدرس خود را ارائه دهید",
+      "account": "اعتبارنامه حساب مدیر خود را ایجاد کنید",
+      "payment": "پلن و روش پرداخت خود را انتخاب کنید"
+    },
+    "companyInfo": {
+      "brandName": "نام برند",
+      "brandNamePlaceholder": "مثال: Green Valley Dispensary",
+      "website": "وب‌سایت",
+      "websitePlaceholder": "www.potpalace.ca یا potpalace.ca",
+      "websiteHelp": "آدرس URL وب‌سایت شما (برای تولید کد برند استفاده می‌شود)",
+      "brandCode": "کد برند",
+      "brandCodeAuto": "کد برند * (به صورت خودکار تولید می‌شود)",
+      "brandCodePlaceholder": "برای تولید، وب‌سایت بالا را وارد کنید",
+      "brandCodeHelp": "در آدرس URL فروشگاه شما استفاده خواهد شد: {{code}}.weedgo.com",
+      "legalCompanyName": "نام قانونی شرکت",
+      "legalCompanyPlaceholder": "مثال: Green Valley Cannabis Inc.",
+      "businessNumber": "شماره تجاری",
+      "businessNumberPlaceholder": "123456789",
+      "businessNumberHelp": "شماره تجاری کانادایی (9 رقم)",
+      "gstHstNumber": "شماره GST/HST",
+      "gstHstPlaceholder": "123456789RT0001",
+      "gstHstHelp": "فرمت: 123456789RT0001",
+      "logoUpload": "بارگذاری لوگو",
+      "logoUploadHelp": "حداکثر 2MB • PNG، JPG، WebP • توصیه شده: مربع 500x500px"
+    },
+    "contactInfo": {
+      "firstName": "نام",
+      "lastName": "نام خانوادگی",
+      "email": "آدرس ایمیل",
+      "phone": "شماره تلفن",
+      "phonePlaceholder": "(555) 123-4567",
+      "street": "آدرس خیابان",
+      "city": "شهر",
+      "province": "استان",
+      "postalCode": "کد پستی",
+      "postalCodePlaceholder": "A1A 1A1"
+    },
+    "accountSetup": {
+      "password": "رمز عبور",
+      "confirmPassword": "تأیید رمز عبور",
+      "passwordStrength": "قدرت:",
+      "passwordHelp": "باید حداقل 8 کاراکتر با حروف بزرگ، حروف کوچک و عدد باشد",
+      "securityTitle": "امنیت حساب",
+      "securityDescription": "حساب شما با رمزگذاری استاندارد صنعتی و گزینه‌های احراز هویت چند عاملی ایمن خواهد شد."
+    },
+    "subscription": {
+      "choosePlan": "پلن اشتراک خود را انتخاب کنید",
+      "selectedPlan": "پلن انتخاب شده: {{plan}}",
+      "changePlan": "تغییر پلن",
+      "free": "رایگان",
+      "perMonth": "${{price}}/ماه",
+      "customPricing": "قیمت‌گذاری سفارشی",
+      "billingCycle": "چرخه صورتحساب",
+      "monthly": "ماهانه",
+      "monthlyBilled": "صورتحساب ماهانه",
+      "annual": "سالانه",
+      "annualSave": "20٪ صرفه‌جویی",
+      "selectPlan": "انتخاب پلن",
+      "enterpriseTitle": "پلن سازمانی",
+      "enterpriseDescription": "تیم فروش ما ظرف 24 ساعت با شما تماس خواهد گرفت تا در مورد قیمت‌گذاری و راه‌اندازی سفارشی صحبت کند."
+    },
+    "payment": {
+      "cardholderName": "نام دارنده کارت",
+      "cardholderPlaceholder": "علی رضایی",
+      "cardNumber": "شماره کارت",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiryDate": "تاریخ انقضا",
+      "expiryPlaceholder": "MM/YY",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "postalCode": "کد پستی ZIP",
+      "postalCodePlaceholder": "12345"
+    },
+    "progress": {
+      "verifying": "در حال تأیید در دسترس بودن...",
+      "creating": "در حال ایجاد حساب شما...",
+      "uploading": "در حال بارگذاری لوگو...",
+      "complete": "حساب با موفقیت ایجاد شد!",
+      "processing": "در حال پردازش..."
+    },
+    "success": {
+      "welcome": "به WeedGo خوش آمدید!",
+      "accountCreated": "حساب شما با موفقیت ایجاد شد.",
+      "tenantCode": "کد مستأجر:",
+      "preparing": "آماده‌سازی داشبورد شما..."
+    },
+    "navigation": {
+      "previous": "قبلی",
+      "next": "بعدی",
+      "createAccount": "ایجاد حساب"
+    },
+    "errors": {
+      "accountCreationFailed": "ایجاد حساب ناموفق بود",
+      "tryAgain": "دوباره تلاش کنید",
+      "registerAsUser": "ثبت‌نام به عنوان کاربر",
+      "signInInstead": "در عوض وارد شوید",
+      "tenantExists": "کد مستأجر \"{{code}}\" قبلاً ثبت شده است",
+      "websiteExists": "وب‌سایت \"{{website}}\" در حال حاضر استفاده می‌شود"
+    }
+  },
+  "review": {
+    "title": "بررسی حساب مستأجر",
+    "description": "بررسی و تأیید حساب‌های علامت‌گذاری شده برای تأیید دستی",
+    "refresh": "بازخوانی",
+    "stats": {
+      "totalPending": "کل در انتظار",
+      "thisWeek": "این هفته",
+      "avgReviewTime": "میانگین زمان بررسی",
+      "approvalRate": "نرخ تأیید"
+    },
+    "table": {
+      "title": "حساب‌های در انتظار",
+      "storeName": "نام فروشگاه",
+      "contact": "تماس",
+      "licenseNumber": "شماره مجوز",
+      "submitted": "ارسال شده",
+      "tier": "سطح",
+      "actions": "اقدامات",
+      "review": "بررسی",
+      "noPending": "هیچ حساب در انتظاری برای بررسی وجود ندارد!"
+    },
+    "modal": {
+      "title": "بررسی حساب",
+      "storeInfo": "اطلاعات فروشگاه",
+      "storeName": "نام فروشگاه",
+      "licenseNumber": "شماره مجوز",
+      "crsaAddress": "آدرس CRSA",
+      "municipality": "شهرداری",
+      "crsaStatus": "وضعیت CRSA",
+      "crsaWebsite": "وب‌سایت CRSA",
+      "contactInfo": "اطلاعات تماس",
+      "contactName": "نام تماس",
+      "role": "نقش",
+      "email": "ایمیل",
+      "phone": "تلفن",
+      "verificationContext": "زمینه تأیید",
+      "emailDomain": "دامنه ایمیل",
+      "domainMatchesCrsa": "دامنه با CRSA مطابقت دارد",
+      "verificationTier": "سطح تأیید",
+      "submitted": "ارسال شده",
+      "adminNotes": "یادداشت‌های مدیر (اختیاری)",
+      "adminNotesPlaceholder": "هر یادداشتی درباره این بررسی اضافه کنید...",
+      "reject": "رد کردن",
+      "approve": "تأیید حساب",
+      "approving": "در حال تأیید...",
+      "yes": "✓ بله",
+      "no": "✗ خیر"
+    },
+    "reject": {
+      "title": "رد حساب",
+      "description": "لطفاً دلیل رد این حساب را ارائه دهید. این برای اهداف حسابرسی ثبت خواهد شد.",
+      "reasonPlaceholder": "دلیل رد (حداقل 10 کاراکتر)...",
+      "cancel": "لغو",
+      "confirm": "تأیید رد",
+      "rejecting": "در حال رد کردن...",
+      "minLength": "لطفاً یک دلیل ارائه دهید (حداقل 10 کاراکتر)"
+    },
+    "messages": {
+      "approved": "حساب با موفقیت تأیید شد!",
+      "rejected": "حساب با موفقیت رد شد.",
+      "approveFailed": "تأیید حساب ناموفق بود: {{error}}",
+      "rejectFailed": "رد حساب ناموفق بود: {{error}}",
+      "fetchFailed": "دریافت حساب‌های در انتظار ناموفق بود",
+      "noPermission": "شما مجوز بررسی حساب‌های مستأجر را ندارید."
+    }
+  },
+  "userRegistration": {
+    "title": "حساب خود را ایجاد کنید",
+    "joinTenant": "به {{tenantName}} بپیوندید",
+    "tenantInfo": "اطلاعات مستأجر",
+    "tenantName": "نام:",
+    "tenantCode": "کد:",
+    "firstName": "نام",
+    "firstNamePlaceholder": "علی",
+    "lastName": "نام خانوادگی",
+    "lastNamePlaceholder": "رضایی",
+    "email": "آدرس ایمیل",
+    "emailPlaceholder": "ali.rezaei@example.com",
+    "phone": "شماره تلفن",
+    "phonePlaceholder": "(555) 123-4567",
+    "password": "رمز عبور",
+    "passwordPlaceholder": "••••••••",
+    "confirmPassword": "تأیید رمز عبور",
+    "passwordStrength": "قدرت:",
+    "passwordHelp": "برای امنیت بهتر از 8+ کاراکتر با حروف بزرگ، حروف کوچک، اعداد و نمادها استفاده کنید",
+    "createButton": "ایجاد حساب",
+    "creating": "در حال ایجاد حساب...",
+    "alreadyHaveAccount": "آیا قبلاً حساب کاربری دارید؟",
+    "signIn": "ورود",
+    "loading": "بارگذاری اطلاعات مستأجر...",
+    "tenantNotFound": "مستأجر یافت نشد",
+    "tenantNotFoundDescription": "مستأجر مشخص شده یافت نشد.",
+    "goToSignup": "برو به ثبت‌نام",
+    "errors": {
+      "loadFailed": "بارگذاری اطلاعات مستأجر ناموفق بود",
+      "alreadyExists": "یک کاربر با این ایمیل قبلاً وجود دارد. لطفاً از ایمیل دیگری استفاده کنید یا وارد شوید.",
+      "failed": "ایجاد حساب کاربری ناموفق بود"
+    }
+  },
+  "success": {
+    "title": "به WeedGo خوش آمدید!",
+    "description": "حساب شما برای {{tenantName}} با موفقیت ایجاد شد.",
+    "accountDetails": {
+      "title": "جزئیات حساب شما",
+      "tenantName": "نام مستأجر:",
+      "tenantCode": "کد مستأجر:",
+      "storeUrl": "آدرس URL فروشگاه:"
+    },
+    "nextSteps": {
+      "title": "مراحل بعدی",
+      "checkEmail": {
+        "title": "ایمیل خود را بررسی کنید",
+        "description": "ما یک ایمیل خوش‌آمدگویی با اطلاعات مهم حساب و دستورالعمل‌های راه‌اندازی برای شما ارسال کرده‌ایم."
+      },
+      "accessDashboard": {
+        "title": "به داشبورد خود دسترسی پیدا کنید",
+        "description": "برای پیکربندی تنظیمات فروشگاه، افزودن محصولات و سفارشی‌سازی دستیاران هوش مصنوعی خود، به داشبورد مدیر خود وارد شوید."
+      },
+      "setupStore": {
+        "title": "اولین فروشگاه خود را راه‌اندازی کنید",
+        "description": "اولین مکان فروشگاه خود را اضافه کنید، ساعات کاری را پیکربندی کنید و موجودی محصولات خود را تنظیم کنید."
+      },
+      "configureAI": {
+        "title": "دستیاران هوش مصنوعی را پیکربندی کنید",
+        "description": "شخصیت‌های budtender هوش مصنوعی خود را سفارشی کنید و پشتیبانی چند زبانه را برای مشتریان خود راه‌اندازی کنید."
+      }
+    },
+    "quickActions": {
+      "dashboard": {
+        "title": "دسترسی به داشبورد",
+        "description": "پلتفرم خود را پیکربندی کنید"
+      },
+      "documentation": {
+        "title": "مستندات",
+        "description": "راهنماهای راه‌اندازی و آموزش‌ها"
+      },
+      "support": {
+        "title": "پشتیبانی",
+        "description": "از تیم ما کمک بگیرید"
+      }
+    },
+    "cta": {
+      "button": "به داشبورد خود دسترسی پیدا کنید",
+      "help": "برای شروع به کمک نیاز دارید؟ با تیم پشتیبانی ما تماس بگیرید",
+      "email": "support@weedgo.com"
+    },
+    "resources": {
+      "title": "منابع برای شروع",
+      "quickSetup": {
+        "title": "راهنمای راه‌اندازی سریع",
+        "item1": "پیکربندی فروشگاه و برندسازی",
+        "item2": "راه‌اندازی کاتالوگ محصولات",
+        "item3": "پیکربندی پردازش پرداخت",
+        "item4": "سفارشی‌سازی دستیار هوش مصنوعی"
+      },
+      "training": {
+        "title": "آموزش و پشتیبانی",
+        "item1": "آموزش‌های ویدئویی و وبینارها",
+        "item2": "چت پشتیبانی مشتری 24/7",
+        "item3": "دسترسی به انجمن انجمن",
+        "item4": "مدیر حساب اختصاصی (سازمانی)"
+      }
+    }
+  },
+  "validation": {
+    "required": "{{field}} الزامی است",
+    "brandNameRequired": "نام برند الزامی است",
+    "websiteRequired": "وب‌سایت برای تولید کد برند الزامی است",
+    "brandCodeRequired": "کد برند الزامی است (برای تولید وب‌سایت را وارد کنید)",
+    "brandCodeFormat": "کد برند باید فقط شامل حروف بزرگ، اعداد، خط فاصله و زیرخط باشد",
+    "companyNameRequired": "نام شرکت الزامی است",
+    "businessNumberRequired": "شماره تجاری الزامی است",
+    "businessNumberFormat": "شماره تجاری باید 9 رقمی باشد",
+    "gstHstRequired": "شماره GST/HST الزامی است",
+    "gstHstFormat": "فرمت شماره GST/HST: 123456789RT0001",
+    "emailRequired": "ایمیل الزامی است",
+    "emailInvalid": "لطفاً یک آدرس ایمیل معتبر وارد کنید",
+    "firstNameRequired": "نام الزامی است",
+    "lastNameRequired": "نام خانوادگی الزامی است",
+    "streetRequired": "آدرس خیابان الزامی است",
+    "cityRequired": "شهر الزامی است",
+    "postalCodeRequired": "کد پستی الزامی است",
+    "postalCodeFormat": "لطفاً یک کد پستی کانادایی معتبر وارد کنید",
+    "passwordRequired": "رمز عبور الزامی است",
+    "passwordLength": "رمز عبور باید حداقل 8 کاراکتر باشد",
+    "passwordComplexity": "رمز عبور باید شامل حروف بزرگ، حروف کوچک و عدد باشد",
+    "passwordMismatch": "رمزهای عبور مطابقت ندارند",
+    "cardNumberRequired": "شماره کارت الزامی است",
+    "cardNumberFormat": "لطفاً یک شماره کارت 16 رقمی معتبر وارد کنید",
+    "expiryRequired": "تاریخ انقضا الزامی است",
+    "expiryFormat": "لطفاً فرمت MM/YY را وارد کنید",
+    "cvvRequired": "CVV الزامی است",
+    "cvvFormat": "CVV باید 3 یا 4 رقمی باشد",
+    "cardholderRequired": "نام دارنده کارت الزامی است"
+  },
+  "passwordStrength": {
+    "weak": "ضعیف",
+    "fair": "متوسط",
+    "good": "خوب",
+    "strong": "قوی",
+    "veryStrong": "بسیار قوی"
+  },
+  "provinces": {
+    "ON": "انتاریو",
+    "BC": "بریتیش کلمبیا",
+    "AB": "آلبرتا",
+    "QC": "کبک",
+    "MB": "مانیتوبا",
+    "SK": "ساسکاچوان",
+    "NS": "نوا اسکوشیا",
+    "NB": "نیوبرانزویک",
+    "NL": "نیوفاندلند و لابرادور",
+    "PE": "جزیره پرنس ادوارد",
+    "NT": "سرزمین‌های شمال غربی",
+    "YT": "یوکان",
+    "NU": "نوناووت"
+  },
+  "plans": {
+    "community_and_new_business": {
+      "name": "جامعه و کسب‌وکار جدید",
+      "features": {
+        "stores": "1 فروشگاه",
+        "languages": "2 زبان",
+        "personalities": "1 شخصیت هوش مصنوعی"
+      }
+    },
+    "small_business": {
+      "name": "کسب‌وکار کوچک",
+      "features": {
+        "stores": "5 فروشگاه",
+        "languages": "5 زبان",
+        "personalities": "2 شخصیت هوش مصنوعی"
+      }
+    },
+    "professional_and_growing_business": {
+      "name": "کسب‌وکار حرفه‌ای و در حال رشد",
+      "features": {
+        "stores": "12 فروشگاه",
+        "languages": "10 زبان",
+        "personalities": "3 شخصیت هوش مصنوعی"
+      }
+    },
+    "enterprise": {
+      "name": "سازمانی",
+      "features": {
+        "stores": "فروشگاه‌های نامحدود",
+        "languages": "25+ زبان",
+        "personalities": "5 شخصیت هوش مصنوعی"
+      }
+    }
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "api": {
+    "networkError": "ᑐᑦᑕᕐᕕᒃ ᑲᑎᑎᒍᓐᓇᙱᑦᑐᖅ᙮ ᐱᖃᑎᖃᕈᑎᒃᓴᕐᒥᒃ ᖃᐅᔨᓴᕐᓗᓂ᙮",
+    "serverError": "ᑐᑦᑕᕐᕕᒃ ᐋᓐᓂᐊᖃᕐᐳᖅ᙮ ᐱᖃᑦᑕᐅᑎᓗᓂ ᐊᓯᐊᓃᑦ᙮",
+    "timeout": "ᑐᔪᕐᒥᔪᖅ ᑎᑭᑦᑐᖅ᙮ ᐱᖃᑦᑕᐅᑎᓗᓂ᙮",
+    "unauthorized": "ᐱᔪᓐᓇᐅᑎᖃᙱᑦᑐᑎᑦ ᑕᐃᒪᐃᑦᑐᒪᕆᐅᓂᕐᒧᑦ᙮",
+    "forbidden": "ᐃᓯᓐᓇᐅᑎᖃᕈᓐᓇᙱᑦᑐᑎᑦ᙮",
+    "notFound": "ᑐᑦᓯᕋᐅᑎᖓ ᓇᓂᔭᐅᙱᑦᑐᖅ᙮",
+    "conflict": "ᑭᖑᓪᓕᐅᑎᐸᒃᐳᖅ᙮ ᐃᓕᖓᔪᖅ ᐃᑦᑕᕐᓂᖃᕐᒪᑦ᙮",
+    "validationError": "ᖃᐅᔨᓴᕐᓂᒃᑯᑦ ᐋᓐᓂᐊᖃᕐᐳᖅ᙮",
+    "tooManyRequests": "ᐊᒥᓱᑦᑐᐊᖅ ᑐᑦᓯᕋᐅᑎᑦ᙮ ᐱᖃᑦᑕᐅᑎᓗᓂ ᐊᓯᐊᓃᑦ᙮",
+    "serviceUnavailable": "ᐱᔨᑦᑎᕋᐅᑎ ᐊᑐᐃᓐᓇᐅᙱᑦᑐᖅ ᐅᓪᓗᒥ᙮",
+    "badRequest": "ᐊᑐᐃᓐᓇᐅᙱᑦᑐᖅ ᑐᑦᓯᕋᐅᑎᖓ᙮ ᖃᐅᔨᓴᕐᓗᓂ ᐃᓯᓐᓇᐅᑎᒃᓴᕐᒥᒃ᙮",
+    "internalError": "ᐃᓗᐊᓃᑦᑐᖅ ᐋᓐᓂᐊᖃᕐᐳᖅ᙮"
+  },
+  "auth": {
+    "loginSuccess": "ᐃᓯᓐᓇᐅᑎᖃᕐᐳᑎᑦ! ᐊᓯᐊᓄᑦ ᐃᓯᕈᑎᖃᕐᐳᒍᑦ...",
+    "invalidCredentials": "ᐊᑐᐃᓐᓇᐅᙱᑦᑐᖅ ᐅᖃᐅᓯᕆᔭᐅᔪᖅ ᐅᕝᕙᓘᓐᓃᑦ ᑎᑎᕋᐅᔭᕐᓂᖅ᙮ ᐱᖃᑦᑕᐅᑎᓗᓂ᙮",
+    "sessionExpired": "ᐊᑐᐃᓐᓇᐅᓂᖓ ᐃᓱᓕᕐᐳᖅ᙮ ᐃᓯᓐᓇᐅᑎᖃᕐᓗᓂ ᐊᓯᐊᓂ᙮",
+    "accountDisabled": "ᐊᑐᐃᓐᓇᐅᙱᑦᑐᖅ ᐊᑐᐃᓐᓇᐅᑎᒃᓴᕐᒥᒃ ᐅᕝᕙᓘᓐᓃᑦ ᐊᖓᔪᖅᑳᖑᓂᕐᒧᑦ᙮",
+    "accountLocked": "ᒪᑐᐃᖓᔪᖅ ᐊᑐᐃᓐᓇᐅᑎᒃᓴᕐᒥᒃ ᐊᒥᓱᑦᑑᓂᖓᓄᑦ ᐃᓯᓐᓇᐅᑎᖃᕈᓐᓇᙱᓐᓂᖅ᙮",
+    "tooManyAttempts": "ᐊᒥᓱᑦᑐᐊᖅ ᐃᓯᓐᓇᐅᑎᖃᕐᓂᒃᑯᑦ᙮ ᐱᖃᑦᑕᐅᑎᓗᓂ ᐊᓯᐊᓃᑦ᙮",
+    "tokenExpired": "ᐊᑐᐃᓐᓇᐅᓂᖓ ᐃᓱᓕᕐᐳᖅ ᖃᐅᔨᓴᕐᓂᒃᑯᑦ᙮",
+    "tokenInvalid": "ᐊᑐᐃᓐᓇᐅᙱᑦᑐᖅ ᖃᐅᔨᓴᕐᓂᒃᑯᑦ᙮",
+    "passwordResetFailed": "ᑎᑎᕋᐅᔭᕐᓂᖅ ᓄᑕᕐᓂᒃᑯᑦ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮ ᐱᖃᑦᑕᐅᑎᓗᓂ᙮",
+    "emailNotVerified": "ᖃᐅᔨᓴᕐᓗᓂ ᐅᖃᐅᓯᕆᔭᐅᔪᖅ ᓯᕗᓪᓕᖅᐹᒥ᙮",
+    "validationError": "ᖃᐅᔨᓴᕐᓂᒃᑯᑦ ᐋᓐᓂᐊᖃᕐᐳᖅ",
+    "loginError": "ᐋᓐᓂᐊᖃᕐᐳᖅ ᐃᓯᓐᓇᐅᑎᖃᕐᓂᒃᑯᑦ"
+  },
+  "tenant": {
+    "loadFailed": "ᐃᑲᔪᕐᓂᖅ ᐊᐅᓚᑦᑎᔨᐅᔪᑦ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "createFailed": "ᓴᓇᔭᐅᔪᖅ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "updateFailed": "ᓄᑕᕐᓂᒃᑯᑦ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "deleteFailed": "ᐲᖅᑕᐅᔪᖅ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "suspendFailed": "ᓄᖅᑲᕈᑕᐅᔪᖅ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "reactivateFailed": "ᐊᓯᐊᓂ ᐊᑐᐃᓐᓇᐅᑎᖃᕐᓂᒃᑯᑦ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "noOrganization": "ᐊᐅᓚᑦᑎᔨᐅᔪᖅ ᐃᓕᖓᙱᑦᑐᖅ᙮",
+    "limitReached": "ᓂᐅᕕᐊᑦ ᖁᓕᓄᑦ ᑎᑭᑦᑐᖅ᙮",
+    "invalidSubscription": "ᐊᑐᐃᓐᓇᐅᙱᑦᑐᖅ ᐅᕝᕙᓘᓐᓃᑦ ᐃᓱᓕᕐᐳᖅ᙮"
+  },
+  "store": {
+    "loadFailed": "ᓂᐅᕕᐊᑦ ᐃᑲᔪᕐᓂᖅ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "createFailed": "ᓂᐅᕕᐊᑦ ᓴᓇᔭᐅᔪᖅ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "updateFailed": "ᓂᐅᕕᐊᑦ ᓄᑕᕐᓂᒃᑯᑦ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "deleteFailed": "ᓂᐅᕕᐊᑦ ᐲᖅᑕᐅᔪᖅ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "suspendFailed": "ᓂᐅᕕᐊᑦ ᓄᖅᑲᕈᑕᐅᔪᖅ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "closeFailed": "ᓂᐅᕕᐊᑦ ᒪᑐᐃᖓᔪᖅ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "notFound": "ᓂᐅᕕᐊᑦ ᓇᓂᔭᐅᙱᑦᑐᖅ᙮",
+    "alreadyExists": "ᓂᐅᕕᐊᑦ ᐃᑦᑕᕐᓂᖃᕐᒪᑦ ᐊᑎᖃᖅᑐᖅ᙮"
+  },
+  "inventory": {
+    "loadFailed": "ᐃᑲᔪᕐᓂᖅ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "createFailed": "ᓴᓇᔭᐅᔪᖅ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "updateFailed": "ᓄᑕᕐᓂᒃᑯᑦ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "deleteFailed": "ᐲᖅᑕᐅᔪᖅ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "stockUpdateFailed": "ᓄᑕᕐᓂᒃᑯᑦ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "lowStock": "ᐊᒥᓲᓐᓂᖅᓴᐅᙱᑦᑐᖅ᙮",
+    "outOfStock": "ᐃᓕᖓᔪᖅ ᐊᑐᐃᓐᓇᐅᙱᑦᑐᖅ᙮",
+    "invalidQuantity": "ᐊᑐᐃᓐᓇᐅᙱᑦᑐᖅ ᖁᓕᓄᑦ᙮"
+  },
+  "order": {
+    "loadFailed": "ᑐᑦᓯᕋᐅᑎᖓ ᐃᑲᔪᕐᓂᖅ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "createFailed": "ᑐᑦᓯᕋᐅᑎᖓ ᓴᓇᔭᐅᔪᖅ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "updateFailed": "ᑐᑦᓯᕋᐅᑎᖓ ᓄᑕᕐᓂᒃᑯᑦ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "cancelFailed": "ᑐᑦᓯᕋᐅᑎᖓ ᓄᖅᑲᕈᑕᐅᔪᖅ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "fulfillFailed": "ᑐᑦᓯᕋᐅᑎᖓ ᐱᔭᕇᕈᑕᐅᔪᖅ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "refundFailed": "ᐊᑭᓕᖅᑕᐅᔪᖅ ᐅᑎᖅᑎᑦᑎᔪᖅ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "notFound": "ᑐᑦᓯᕋᐅᑎᖓ ᓇᓂᔭᐅᙱᑦᑐᖅ᙮",
+    "alreadyProcessed": "ᑐᑦᓯᕋᐅᑎᖓ ᐱᔭᕇᕐᓯᒪᔪᖅ᙮"
+  },
+  "payment": {
+    "loadFailed": "ᐊᑭᓕᖅᑕᐅᔪᖅ ᐃᑲᔪᕐᓂᖅ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "processingFailed": "ᐊᑭᓕᖅᑕᐅᔪᖅ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "refundFailed": "ᐊᑭᓕᖅᑕᐅᔪᖅ ᐅᑎᖅᑎᑦᑎᔪᖅ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "invalidAmount": "ᐊᑐᐃᓐᓇᐅᙱᑦᑐᖅ ᐊᑭᓕᖅᑕᐅᔪᖅ᙮",
+    "cardDeclined": "ᐃᓯᓐᓇᐅᑎᖓ ᐊᑐᐃᓐᓇᐅᙱᑦᑐᖅ᙮",
+    "insufficientFunds": "ᐊᑭᓕᖅᑕᐅᔪᖅ ᐊᒥᓲᓐᓂᖅᓴᐅᙱᑦᑐᖅ᙮",
+    "paymentMethodInvalid": "ᐊᑐᐃᓐᓇᐅᙱᑦᑐᖅ ᐊᑭᓕᖅᑕᐅᔪᖅ᙮"
+  },
+  "upload": {
+    "failed": "ᐃᑲᔪᕐᓂᖅ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "fileTooLarge": "ᐊᖏᓂᖅᓴᐅᓂᖅᓴᐅᔪᖅ ᓇᓗᓇᐃᖅᑕᐅᔪᖅ᙮",
+    "invalidFileType": "ᐊᑐᐃᓐᓇᐅᙱᑦᑐᖅ ᐃᓕᖓᔪᖅ᙮",
+    "corruptedFile": "ᐃᓕᖓᔪᖅ ᐋᓐᓂᐊᖃᕐᐳᖅ᙮",
+    "uploadCancelled": "ᐃᑲᔪᕐᓂᖅ ᓄᖅᑲᕈᑕᐅᔪᖅ᙮"
+  },
+  "general": {
+    "unexpectedError": "ᐋᓐᓂᐊᖃᕐᐳᖅ ᐊᑯᓂᐊᓗᒃ᙮",
+    "operationFailed": "ᐱᔪᓐᓇᙱᓐᓂᖅ᙮ ᐱᖃᑦᑕᐅᑎᓗᓂ᙮",
+    "dataLoadFailed": "ᐃᑲᔪᕐᓂᖅ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "saveFailed": "ᑎᑎᕋᐅᔭᕐᓂᖅ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "deleteFailed": "ᐲᖅᑕᐅᔪᖅ ᐱᔪᓐᓇᙱᓐᓂᖅ᙮",
+    "permissionDenied": "ᐱᔪᓐᓇᐅᑎᖃᙱᑦᑐᑎᑦ᙮",
+    "invalidInput": "ᐊᑐᐃᓐᓇᐅᙱᑦᑐᖅ ᐃᓯᓐᓇᐅᑎᒃᓴᕐᒥᒃ᙮",
+    "requiredFieldMissing": "ᐱᔭᕆᐊᖃᖅᑐᖅ ᓇᓂᔭᐅᙱᑦᑐᖅ᙮",
+    "dataCorrupted": "ᐃᓕᖓᔪᖅ ᐋᓐᓂᐊᖃᕐᐳᖅ᙮"
+  }
+}

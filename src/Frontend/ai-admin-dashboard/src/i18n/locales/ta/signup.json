@@ -1,0 +1,368 @@
+{
+  "tenant": {
+    "header": {
+      "title": "WeedGo",
+      "alreadyHaveAccount": "ஏற்கனவே கணக்கு உள்ளதா?",
+      "signIn": "உள்நுழைய",
+      "backHome": "முகப்புக்குத் திரும்பு"
+    },
+    "steps": {
+      "company": "நிறுவனத் தகவல்",
+      "contact": "தொடர்பு விவரங்கள்",
+      "account": "கணக்கு அமைப்பு",
+      "payment": "சந்தா மற்றும் பணம் செலுத்துதல்"
+    },
+    "stepDescriptions": {
+      "company": "உங்கள் வணிகம் மற்றும் பிராண்டைப் பற்றி எங்களுக்குச் சொல்லுங்கள்",
+      "contact": "உங்கள் தொடர்பு தகவல் மற்றும் முகவரியை வழங்குங்கள்",
+      "account": "உங்கள் நிர்வாக கணக்கு சான்றுகளை உருவாக்குங்கள்",
+      "payment": "உங்கள் திட்டம் மற்றும் பணம் செலுத்தும் முறையைத் தேர்ந்தெடுங்கள்"
+    },
+    "companyInfo": {
+      "brandName": "பிராண்ட் பெயர்",
+      "brandNamePlaceholder": "எ.கா., Green Valley Dispensary",
+      "website": "வலைத்தளம்",
+      "websitePlaceholder": "www.potpalace.ca அல்லது potpalace.ca",
+      "websiteHelp": "உங்கள் வலைத்தள URL (பிராண்ட் குறியீட்டை உருவாக்க பயன்படுத்தப்படும்)",
+      "brandCode": "பிராண்ட் குறியீடு",
+      "brandCodeAuto": "பிராண்ட் குறியீடு * (தானாகவே உருவாக்கப்பட்டது)",
+      "brandCodePlaceholder": "உருவாக்க மேலே வலைத்தளத்தை உள்ளிடவும்",
+      "brandCodeHelp": "உங்கள் ஸ்டோர் URL இல் பயன்படுத்தப்படும்: {{code}}.weedgo.com",
+      "legalCompanyName": "சட்டப்பூர்வ நிறுவனப் பெயர்",
+      "legalCompanyPlaceholder": "எ.கா., Green Valley Cannabis Inc.",
+      "businessNumber": "வணிக எண்",
+      "businessNumberPlaceholder": "123456789",
+      "businessNumberHelp": "கனடிய வணிக எண் (9 இலக்கங்கள்)",
+      "gstHstNumber": "GST/HST எண்",
+      "gstHstPlaceholder": "123456789RT0001",
+      "gstHstHelp": "வடிவம்: 123456789RT0001",
+      "logoUpload": "லோகோ பதிவேற்றம்",
+      "logoUploadHelp": "அதிகபட்சம் 2MB • PNG, JPG, WebP • பரிந்துரைக்கப்பட்டது: 500x500px சதுரம்"
+    },
+    "contactInfo": {
+      "firstName": "முதல் பெயர்",
+      "lastName": "கடைசி பெயர்",
+      "email": "மின்னஞ்சல் முகவரி",
+      "phone": "தொலைபேசி எண்",
+      "phonePlaceholder": "(555) 123-4567",
+      "street": "தெரு முகவரி",
+      "city": "நகரம்",
+      "province": "மாகாணம்",
+      "postalCode": "தபால் குறியீடு",
+      "postalCodePlaceholder": "A1A 1A1"
+    },
+    "accountSetup": {
+      "password": "கடவுச்சொல்",
+      "confirmPassword": "கடவுச்சொல்லை உறுதிப்படுத்தவும்",
+      "passwordStrength": "வலிமை:",
+      "passwordHelp": "பெரிய எழுத்துகள், சிறிய எழுத்துகள் மற்றும் எண்களுடன் குறைந்தது 8 எழுத்துகள் இருக்க வேண்டும்",
+      "securityTitle": "கணக்கு பாதுகாப்பு",
+      "securityDescription": "உங்கள் கணக்கு தொழில்துறை தரநிலை குறியாக்கம் மற்றும் பல்-காரணி அங்கீகார விருப்பங்களுடன் பாதுகாக்கப்படும்."
+    },
+    "subscription": {
+      "choosePlan": "உங்கள் சந்தா திட்டத்தைத் தேர்ந்தெடுங்கள்",
+      "selectedPlan": "தேர்ந்தெடுக்கப்பட்ட திட்டம்: {{plan}}",
+      "changePlan": "திட்டத்தை மாற்றவும்",
+      "free": "இலவசம்",
+      "perMonth": "${{price}}/மாதம்",
+      "customPricing": "தனிப்பயன் விலை",
+      "billingCycle": "பில்லிங் சுழற்சி",
+      "monthly": "மாதாந்திர",
+      "monthlyBilled": "மாதாந்திரமாக பில் செய்யப்படும்",
+      "annual": "வருடாந்திர",
+      "annualSave": "20% சேமிக்கவும்",
+      "selectPlan": "திட்டத்தைத் தேர்ந்தெடுக்கவும்",
+      "enterpriseTitle": "எண்டர்பிரைஸ் திட்டம்",
+      "enterpriseDescription": "தனிப்பயன் விலை மற்றும் அமைப்பைப் பற்றி விவாதிக்க எங்கள் விற்பனை குழு 24 மணி நேரத்திற்குள் உங்களைத் தொடர்பு கொள்ளும்."
+    },
+    "payment": {
+      "cardholderName": "கார்டுதாரர் பெயர்",
+      "cardholderPlaceholder": "முருகன் குமார்",
+      "cardNumber": "கார்டு எண்",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiryDate": "காலாவதி தேதி",
+      "expiryPlaceholder": "MM/YY",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "postalCode": "ZIP/தபால் குறியீடு",
+      "postalCodePlaceholder": "12345"
+    },
+    "progress": {
+      "verifying": "கிடைக்கும் தன்மையை சரிபார்க்கிறது...",
+      "creating": "உங்கள் கணக்கை உருவாக்குகிறது...",
+      "uploading": "லோகோவை பதிவேற்றுகிறது...",
+      "complete": "கணக்கு வெற்றிகரமாக உருவாக்கப்பட்டது!",
+      "processing": "செயலாக்குகிறது..."
+    },
+    "success": {
+      "welcome": "WeedGo-க்கு வரவேற்கிறோம்!",
+      "accountCreated": "உங்கள் கணக்கு வெற்றிகரமாக உருவாக்கப்பட்டது.",
+      "tenantCode": "குத்தகைதாரர் குறியீடு:",
+      "preparing": "உங்கள் டாஷ்போர்டை தயார் செய்கிறது..."
+    },
+    "navigation": {
+      "previous": "முந்தைய",
+      "next": "அடுத்து",
+      "createAccount": "கணக்கை உருவாக்கவும்"
+    },
+    "errors": {
+      "accountCreationFailed": "கணக்கு உருவாக்கம் தோல்வியடைந்தது",
+      "tryAgain": "மீண்டும் முயற்சிக்கவும்",
+      "registerAsUser": "பயனராகப் பதிவு செய்யவும்",
+      "signInInstead": "அதற்கு பதிலாக உள்நுழையவும்",
+      "tenantExists": "குத்தகைதாரர் குறியீடு \"{{code}}\" ஏற்கனவே பதிவு செய்யப்பட்டுள்ளது",
+      "websiteExists": "வலைத்தளம் \"{{website}}\" ஏற்கனவே பயன்பாட்டில் உள்ளது"
+    }
+  },
+  "review": {
+    "title": "குத்தகைதாரர் கணக்கு மதிப்பாய்வு",
+    "description": "கைமுறை சரிபார்ப்புக்காக குறியிடப்பட்ட கணக்குகளை மதிப்பாய்வு செய்து அனுமதிக்கவும்",
+    "refresh": "புதுப்பிக்கவும்",
+    "stats": {
+      "totalPending": "மொத்த நிலுவை",
+      "thisWeek": "இந்த வாரம்",
+      "avgReviewTime": "சராசரி மதிப்பாய்வு நேரம்",
+      "approvalRate": "அனுமதி விகிதம்"
+    },
+    "table": {
+      "title": "நிலுவையில் உள்ள கணக்குகள்",
+      "storeName": "ஸ்டோர் பெயர்",
+      "contact": "தொடர்பு",
+      "licenseNumber": "உரிம எண்",
+      "submitted": "சமர்ப்பிக்கப்பட்டது",
+      "tier": "அடுக்கு",
+      "actions": "செயல்கள்",
+      "review": "மதிப்பாய்வு",
+      "noPending": "மதிப்பாய்வு செய்ய நிலுவையில் உள்ள கணக்குகள் இல்லை!"
+    },
+    "modal": {
+      "title": "கணக்கை மதிப்பாய்வு செய்யவும்",
+      "storeInfo": "ஸ்டோர் தகவல்",
+      "storeName": "ஸ்டோர் பெயர்",
+      "licenseNumber": "உரிம எண்",
+      "crsaAddress": "CRSA முகவரி",
+      "municipality": "நகராட்சி",
+      "crsaStatus": "CRSA நிலை",
+      "crsaWebsite": "CRSA வலைத்தளம்",
+      "contactInfo": "தொடர்பு தகவல்",
+      "contactName": "தொடர்பு பெயர்",
+      "role": "பங்கு",
+      "email": "மின்னஞ்சல்",
+      "phone": "தொலைபேசி",
+      "verificationContext": "சரிபார்ப்பு சூழல்",
+      "emailDomain": "மின்னஞ்சல் டொமைன்",
+      "domainMatchesCrsa": "டொமைன் CRSA உடன் பொருந்துகிறது",
+      "verificationTier": "சரிபார்ப்பு அடுக்கு",
+      "submitted": "சமர்ப்பிக்கப்பட்டது",
+      "adminNotes": "நிர்வாக குறிப்புகள் (விரும்பினால்)",
+      "adminNotesPlaceholder": "இந்த மதிப்பாய்வு பற்றிய ஏதேனும் குறிப்புகளைச் சேர்க்கவும்...",
+      "reject": "நிராகரிக்கவும்",
+      "approve": "கணக்கை அனுமதிக்கவும்",
+      "approving": "அனுமதிக்கிறது...",
+      "yes": "✓ ஆம்",
+      "no": "✗ இல்லை"
+    },
+    "reject": {
+      "title": "கணக்கை நிராகரிக்கவும்",
+      "description": "இந்த கணக்கை நிராகரிப்பதற்கான காரணத்தை வழங்கவும். இது தணிக்கை நோக்கங்களுக்காக பதிவு செய்யப்படும்.",
+      "reasonPlaceholder": "நிராகரிப்புக்கான காரணம் (குறைந்தது 10 எழுத்துகள்)...",
+      "cancel": "ரத்துசெய்",
+      "confirm": "நிராகரிப்பை உறுதிப்படுத்தவும்",
+      "rejecting": "நிராகரிக்கிறது...",
+      "minLength": "ஒரு காரணத்தை வழங்கவும் (குறைந்தது 10 எழுத்துகள்)"
+    },
+    "messages": {
+      "approved": "கணக்கு வெற்றிகரமாக அனுமதிக்கப்பட்டது!",
+      "rejected": "கணக்கு வெற்றிகரமாக நிராகரிக்கப்பட்டது.",
+      "approveFailed": "கணக்கை அனுமதிக்க தோல்வி: {{error}}",
+      "rejectFailed": "கணக்கை நிராகரிக்க தோல்வி: {{error}}",
+      "fetchFailed": "நிலுவையில் உள்ள கணக்குகளை பெற தோல்வி",
+      "noPermission": "குத்தகைதாரர் கணக்குகளை மதிப்பாய்வு செய்ய உங்களுக்கு அனுமதி இல்லை."
+    }
+  },
+  "userRegistration": {
+    "title": "உங்கள் கணக்கை உருவாக்கவும்",
+    "joinTenant": "{{tenantName}} உடன் சேரவும்",
+    "tenantInfo": "குத்தகைதாரர் தகவல்",
+    "tenantName": "பெயர்:",
+    "tenantCode": "குறியீடு:",
+    "firstName": "முதல் பெயர்",
+    "firstNamePlaceholder": "முருகன்",
+    "lastName": "கடைசி பெயர்",
+    "lastNamePlaceholder": "குமார்",
+    "email": "மின்னஞ்சல் முகவரி",
+    "emailPlaceholder": "murugan.kumar@example.com",
+    "phone": "தொலைபேசி எண்",
+    "phonePlaceholder": "(555) 123-4567",
+    "password": "கடவுச்சொல்",
+    "passwordPlaceholder": "••••••••",
+    "confirmPassword": "கடவுச்சொல்லை உறுதிப்படுத்தவும்",
+    "passwordStrength": "வலிமை:",
+    "passwordHelp": "சிறந்த பாதுகாப்புக்காக பெரிய எழுத்துகள், சிறிய எழுத்துகள், எண்கள் மற்றும் சின்னங்களுடன் 8+ எழுத்துகளைப் பயன்படுத்தவும்",
+    "createButton": "கணக்கை உருவாக்கவும்",
+    "creating": "கணக்கை உருவாக்குகிறது...",
+    "alreadyHaveAccount": "ஏற்கனவே கணக்கு உள்ளதா?",
+    "signIn": "உள்நுழைய",
+    "loading": "குத்தகைதாரர் தகவலை ஏற்றுகிறது...",
+    "tenantNotFound": "குத்தகைதாரர் கிடைக்கவில்லை",
+    "tenantNotFoundDescription": "குறிப்பிட்ட குத்தகைதாரரைக் கண்டுபிடிக்க முடியவில்லை.",
+    "goToSignup": "பதிவுக்குச் செல்லவும்",
+    "errors": {
+      "loadFailed": "குத்தகைதாரர் தகவலை ஏற்ற தோல்வி",
+      "alreadyExists": "இந்த மின்னஞ்சலுடன் ஒரு பயனர் ஏற்கனவே உள்ளார். வேறு மின்னஞ்சலைப் பயன்படுத்தவும் அல்லது உள்நுழையவும்.",
+      "failed": "பயனர் கணக்கை உருவாக்க தோல்வி"
+    }
+  },
+  "success": {
+    "title": "WeedGo-க்கு வரவேற்கிறோம்!",
+    "description": "{{tenantName}} க்கான உங்கள் கணக்கு வெற்றிகரமாக உருவாக்கப்பட்டது.",
+    "accountDetails": {
+      "title": "உங்கள் கணக்கு விவரங்கள்",
+      "tenantName": "குத்தகைதாரர் பெயர்:",
+      "tenantCode": "குத்தகைதாரர் குறியீடு:",
+      "storeUrl": "ஸ்டோர் URL:"
+    },
+    "nextSteps": {
+      "title": "அடுத்த படிகள்",
+      "checkEmail": {
+        "title": "உங்கள் மின்னஞ்சலைச் சரிபார்க்கவும்",
+        "description": "முக்கியமான கணக்கு தகவல் மற்றும் அமைப்பு வழிமுறைகளுடன் வரவேற்பு மின்னஞ்சலை உங்களுக்கு அனுப்பியுள்ளோம்."
+      },
+      "accessDashboard": {
+        "title": "உங்கள் டாஷ்போர்டை அணுகவும்",
+        "description": "உங்கள் ஸ்டோர் அமைப்புகளை கட்டமைக்க, தயாரிப்புகளைச் சேர்க்க மற்றும் உங்கள் AI உதவியாளர்களை தனிப்பயனாக்க உங்கள் நிர்வாக டாஷ்போர்டில் உள்நுழையவும்."
+      },
+      "setupStore": {
+        "title": "உங்கள் முதல் ஸ்டோரை அமைக்கவும்",
+        "description": "உங்கள் முதல் ஸ்டோர் இடத்தைச் சேர்க்கவும், இயக்க நேரத்தை கட்டமைக்கவும் மற்றும் உங்கள் தயாரிப்பு சரக்குகளை அமைக்கவும்."
+      },
+      "configureAI": {
+        "title": "AI உதவியாளர்களை கட்டமைக்கவும்",
+        "description": "உங்கள் AI budtender ஆளுமைகளை தனிப்பயனாக்கவும் மற்றும் உங்கள் வாடிக்கையாளர்களுக்கு பல மொழி ஆதரவை அமைக்கவும்."
+      }
+    },
+    "quickActions": {
+      "dashboard": {
+        "title": "டாஷ்போர்டை அணுகவும்",
+        "description": "உங்கள் தளத்தை கட்டமைக்கவும்"
+      },
+      "documentation": {
+        "title": "ஆவணங்கள்",
+        "description": "அமைப்பு வழிகாட்டிகள் மற்றும் டுடோரியல்கள்"
+      },
+      "support": {
+        "title": "ஆதரவு",
+        "description": "எங்கள் குழுவிடமிருந்து உதவி பெறுங்கள்"
+      }
+    },
+    "cta": {
+      "button": "உங்கள் டாஷ்போர்டை அணுகவும்",
+      "help": "தொடங்க உதவி தேவையா? எங்கள் ஆதரவு குழுவைத் தொடர்பு கொள்ளவும்",
+      "email": "support@weedgo.com"
+    },
+    "resources": {
+      "title": "உங்களைத் தொடங்க ஆதாரங்கள்",
+      "quickSetup": {
+        "title": "விரைவு அமைப்பு வழிகாட்டி",
+        "item1": "ஸ்டோர் கட்டமைப்பு மற்றும் பிராண்டிங்",
+        "item2": "தயாரிப்பு பட்டியல் அமைப்பு",
+        "item3": "கட்டணச் செயலாக்க கட்டமைப்பு",
+        "item4": "AI உதவியாளர் தனிப்பயனாக்கம்"
+      },
+      "training": {
+        "title": "பயிற்சி மற்றும் ஆதரவு",
+        "item1": "வீடியோ டுடோரியல்கள் மற்றும் வெபினார்கள்",
+        "item2": "24/7 வாடிக்கையாளர் ஆதரவு அரட்டை",
+        "item3": "சமூக மன்ற அணுகல்",
+        "item4": "அர்ப்பணிக்கப்பட்ட கணக்கு மேலாளர் (எண்டர்பிரைஸ்)"
+      }
+    }
+  },
+  "validation": {
+    "required": "{{field}} தேவை",
+    "brandNameRequired": "பிராண்ட் பெயர் தேவை",
+    "websiteRequired": "பிராண்ட் குறியீட்டை உருவாக்க வலைத்தளம் தேவை",
+    "brandCodeRequired": "பிராண்ட் குறியீடு தேவை (உருவாக்க வலைத்தளத்தை உள்ளிடவும்)",
+    "brandCodeFormat": "பிராண்ட் குறியீடு பெரிய எழுத்துகள், எண்கள், ஹைபன்கள் மற்றும் அண்டர்ஸ்கோர்களை மட்டுமே கொண்டிருக்க வேண்டும்",
+    "companyNameRequired": "நிறுவனப் பெயர் தேவை",
+    "businessNumberRequired": "வணிக எண் தேவை",
+    "businessNumberFormat": "வணிக எண் 9 இலக்கங்களாக இருக்க வேண்டும்",
+    "gstHstRequired": "GST/HST எண் தேவை",
+    "gstHstFormat": "GST/HST எண் வடிவம்: 123456789RT0001",
+    "emailRequired": "மின்னஞ்சல் தேவை",
+    "emailInvalid": "சரியான மின்னஞ்சல் முகவரியை உள்ளிடவும்",
+    "firstNameRequired": "முதல் பெயர் தேவை",
+    "lastNameRequired": "கடைசி பெயர் தேவை",
+    "streetRequired": "தெரு முகவரி தேவை",
+    "cityRequired": "நகரம் தேவை",
+    "postalCodeRequired": "தபால் குறியீடு தேவை",
+    "postalCodeFormat": "சரியான கனடிய தபால் குறியீட்டை உள்ளிடவும்",
+    "passwordRequired": "கடவுச்சொல் தேவை",
+    "passwordLength": "கடவுச்சொல் குறைந்தது 8 எழுத்துகளாக இருக்க வேண்டும்",
+    "passwordComplexity": "கடவுச்சொல் பெரிய எழுத்துகள், சிறிய எழுத்துகள் மற்றும் எண்களைக் கொண்டிருக்க வேண்டும்",
+    "passwordMismatch": "கடவுச்சொற்கள் பொருந்தவில்லை",
+    "cardNumberRequired": "கார்டு எண் தேவை",
+    "cardNumberFormat": "சரியான 16 இலக்க கார்டு எண்ணை உள்ளிடவும்",
+    "expiryRequired": "காலாவதி தேதி தேவை",
+    "expiryFormat": "MM/YY வடிவத்தை உள்ளிடவும்",
+    "cvvRequired": "CVV தேவை",
+    "cvvFormat": "CVV 3 அல்லது 4 இலக்கங்களாக இருக்க வேண்டும்",
+    "cardholderRequired": "கார்டுதாரர் பெயர் தேவை"
+  },
+  "passwordStrength": {
+    "weak": "பலவீனம்",
+    "fair": "சரி",
+    "good": "நல்லது",
+    "strong": "வலுவானது",
+    "veryStrong": "மிகவும் வலுவானது"
+  },
+  "provinces": {
+    "ON": "Ontario",
+    "BC": "British Columbia",
+    "AB": "Alberta",
+    "QC": "Quebec",
+    "MB": "Manitoba",
+    "SK": "Saskatchewan",
+    "NS": "Nova Scotia",
+    "NB": "New Brunswick",
+    "NL": "Newfoundland and Labrador",
+    "PE": "Prince Edward Island",
+    "NT": "Northwest Territories",
+    "YT": "Yukon",
+    "NU": "Nunavut"
+  },
+  "plans": {
+    "community_and_new_business": {
+      "name": "சமூகம் மற்றும் புதிய வணிகம்",
+      "features": {
+        "stores": "1 ஸ்டோர்",
+        "languages": "2 மொழிகள்",
+        "personalities": "1 AI ஆளுமை"
+      }
+    },
+    "small_business": {
+      "name": "சிறு வணிகம்",
+      "features": {
+        "stores": "5 ஸ்டோர்கள்",
+        "languages": "5 மொழிகள்",
+        "personalities": "2 AI ஆளுமைகள்"
+      }
+    },
+    "professional_and_growing_business": {
+      "name": "தொழில்முறை மற்றும் வளரும் வணிகம்",
+      "features": {
+        "stores": "12 ஸ்டோர்கள்",
+        "languages": "10 மொழிகள்",
+        "personalities": "3 AI ஆளுமைகள்"
+      }
+    },
+    "enterprise": {
+      "name": "எண்டர்பிரைஸ்",
+      "features": {
+        "stores": "வரம்பற்ற ஸ்டோர்கள்",
+        "languages": "25+ மொழிகள்",
+        "personalities": "5 AI ஆளுமைகள்"
+      }
+    }
+  }
+}

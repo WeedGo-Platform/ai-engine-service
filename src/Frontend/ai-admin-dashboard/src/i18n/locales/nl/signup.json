@@ -1,0 +1,368 @@
+{
+  "tenant": {
+    "header": {
+      "title": "WeedGo",
+      "alreadyHaveAccount": "Heeft u al een account?",
+      "signIn": "Inloggen",
+      "backHome": "Terug naar Home"
+    },
+    "steps": {
+      "company": "Bedrijfsinformatie",
+      "contact": "Contactgegevens",
+      "account": "Account instellen",
+      "payment": "Abonnement en betaling"
+    },
+    "stepDescriptions": {
+      "company": "Vertel ons over uw bedrijf en merk",
+      "contact": "Geef uw contactgegevens en adres op",
+      "account": "Maak uw beheerdersaccountgegevens aan",
+      "payment": "Selecteer uw abonnement en betaalmethode"
+    },
+    "companyInfo": {
+      "brandName": "Merknaam",
+      "brandNamePlaceholder": "bijv. Green Valley Dispensary",
+      "website": "Website",
+      "websitePlaceholder": "www.potpalace.ca of potpalace.ca",
+      "websiteHelp": "Uw website URL (gebruikt om merkcode te genereren)",
+      "brandCode": "Merkcode",
+      "brandCodeAuto": "Merkcode * (automatisch gegenereerd)",
+      "brandCodePlaceholder": "Voer hierboven website in om te genereren",
+      "brandCodeHelp": "Wordt gebruikt in uw winkel-URL: {{code}}.weedgo.com",
+      "legalCompanyName": "Wettelijke bedrijfsnaam",
+      "legalCompanyPlaceholder": "bijv. Green Valley Cannabis Inc.",
+      "businessNumber": "Bedrijfsnummer",
+      "businessNumberPlaceholder": "123456789",
+      "businessNumberHelp": "Canadees bedrijfsnummer (9 cijfers)",
+      "gstHstNumber": "GST/HST-nummer",
+      "gstHstPlaceholder": "123456789RT0001",
+      "gstHstHelp": "Formaat: 123456789RT0001",
+      "logoUpload": "Logo uploaden",
+      "logoUploadHelp": "Max 2MB • PNG, JPG, WebP • Aanbevolen: vierkant 500x500px"
+    },
+    "contactInfo": {
+      "firstName": "Voornaam",
+      "lastName": "Achternaam",
+      "email": "E-mailadres",
+      "phone": "Telefoonnummer",
+      "phonePlaceholder": "(555) 123-4567",
+      "street": "Straatnaam",
+      "city": "Stad",
+      "province": "Provincie",
+      "postalCode": "Postcode",
+      "postalCodePlaceholder": "A1A 1A1"
+    },
+    "accountSetup": {
+      "password": "Wachtwoord",
+      "confirmPassword": "Bevestig wachtwoord",
+      "passwordStrength": "Sterkte:",
+      "passwordHelp": "Moet minimaal 8 tekens bevatten met hoofdletters, kleine letters en cijfers",
+      "securityTitle": "Accountbeveiliging",
+      "securityDescription": "Uw account wordt beveiligd met standaard industriële versleuteling en multi-factor authenticatieopties."
+    },
+    "subscription": {
+      "choosePlan": "Kies uw abonnement",
+      "selectedPlan": "Geselecteerd abonnement: {{plan}}",
+      "changePlan": "Abonnement wijzigen",
+      "free": "GRATIS",
+      "perMonth": "${{price}}/maand",
+      "customPricing": "Aangepaste prijzen",
+      "billingCycle": "Factureringscyclus",
+      "monthly": "Maandelijks",
+      "monthlyBilled": "Maandelijks gefactureerd",
+      "annual": "Jaarlijks",
+      "annualSave": "Bespaar 20%",
+      "selectPlan": "Selecteer abonnement",
+      "enterpriseTitle": "Enterprise-abonnement",
+      "enterpriseDescription": "Ons verkoopteam neemt binnen 24 uur contact met u op om aangepaste prijzen en installatie te bespreken."
+    },
+    "payment": {
+      "cardholderName": "Naam kaarthouder",
+      "cardholderPlaceholder": "Jan de Vries",
+      "cardNumber": "Kaartnummer",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiryDate": "Vervaldatum",
+      "expiryPlaceholder": "MM/JJ",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "postalCode": "ZIP/postcode",
+      "postalCodePlaceholder": "12345"
+    },
+    "progress": {
+      "verifying": "Beschikbaarheid verifiëren...",
+      "creating": "Uw account aanmaken...",
+      "uploading": "Logo uploaden...",
+      "complete": "Account succesvol aangemaakt!",
+      "processing": "Verwerken..."
+    },
+    "success": {
+      "welcome": "Welkom bij WeedGo!",
+      "accountCreated": "Uw account is succesvol aangemaakt.",
+      "tenantCode": "Tenantcode:",
+      "preparing": "Uw dashboard voorbereiden..."
+    },
+    "navigation": {
+      "previous": "Vorige",
+      "next": "Volgende",
+      "createAccount": "Account aanmaken"
+    },
+    "errors": {
+      "accountCreationFailed": "Account aanmaken mislukt",
+      "tryAgain": "Opnieuw proberen",
+      "registerAsUser": "Registreren als gebruiker",
+      "signInInstead": "In plaats daarvan inloggen",
+      "tenantExists": "De tenantcode \"{{code}}\" is al geregistreerd",
+      "websiteExists": "De website \"{{website}}\" is al in gebruik"
+    }
+  },
+  "review": {
+    "title": "Tenantaccount beoordeling",
+    "description": "Bekijk en keur accounts goed die zijn gemarkeerd voor handmatige verificatie",
+    "refresh": "Vernieuwen",
+    "stats": {
+      "totalPending": "Totaal in behandeling",
+      "thisWeek": "Deze week",
+      "avgReviewTime": "Gem. beoordelingstijd",
+      "approvalRate": "Goedkeuringspercentage"
+    },
+    "table": {
+      "title": "Accounts in behandeling",
+      "storeName": "Winkelnaam",
+      "contact": "Contact",
+      "licenseNumber": "Licentienummer",
+      "submitted": "Ingediend",
+      "tier": "Niveau",
+      "actions": "Acties",
+      "review": "Beoordelen",
+      "noPending": "Geen accounts in behandeling om te beoordelen!"
+    },
+    "modal": {
+      "title": "Account beoordelen",
+      "storeInfo": "Winkelinformatie",
+      "storeName": "Winkelnaam",
+      "licenseNumber": "Licentienummer",
+      "crsaAddress": "CRSA-adres",
+      "municipality": "Gemeente",
+      "crsaStatus": "CRSA-status",
+      "crsaWebsite": "CRSA-website",
+      "contactInfo": "Contactinformatie",
+      "contactName": "Contactnaam",
+      "role": "Rol",
+      "email": "E-mail",
+      "phone": "Telefoon",
+      "verificationContext": "Verificatiecontext",
+      "emailDomain": "E-maildomein",
+      "domainMatchesCrsa": "Domein komt overeen met CRSA",
+      "verificationTier": "Verificatieniveau",
+      "submitted": "Ingediend",
+      "adminNotes": "Beheernotities (optioneel)",
+      "adminNotesPlaceholder": "Voeg notities toe over deze beoordeling...",
+      "reject": "Afwijzen",
+      "approve": "Account goedkeuren",
+      "approving": "Goedkeuren...",
+      "yes": "✓ Ja",
+      "no": "✗ Nee"
+    },
+    "reject": {
+      "title": "Account afwijzen",
+      "description": "Geef een reden op voor het afwijzen van dit account. Dit wordt gelogd voor auditdoeleinden.",
+      "reasonPlaceholder": "Reden voor afwijzing (minimaal 10 tekens)...",
+      "cancel": "Annuleren",
+      "confirm": "Afwijzing bevestigen",
+      "rejecting": "Afwijzen...",
+      "minLength": "Geef een reden op (minimaal 10 tekens)"
+    },
+    "messages": {
+      "approved": "Account succesvol goedgekeurd!",
+      "rejected": "Account succesvol afgewezen.",
+      "approveFailed": "Account goedkeuren mislukt: {{error}}",
+      "rejectFailed": "Account afwijzen mislukt: {{error}}",
+      "fetchFailed": "Ophalen van accounts in behandeling mislukt",
+      "noPermission": "U heeft geen toestemming om tenantaccounts te beoordelen."
+    }
+  },
+  "userRegistration": {
+    "title": "Maak uw account aan",
+    "joinTenant": "Word lid van {{tenantName}}",
+    "tenantInfo": "Tenantinformatie",
+    "tenantName": "Naam:",
+    "tenantCode": "Code:",
+    "firstName": "Voornaam",
+    "firstNamePlaceholder": "Jan",
+    "lastName": "Achternaam",
+    "lastNamePlaceholder": "de Vries",
+    "email": "E-mailadres",
+    "emailPlaceholder": "jan.devries@voorbeeld.com",
+    "phone": "Telefoonnummer",
+    "phonePlaceholder": "(555) 123-4567",
+    "password": "Wachtwoord",
+    "passwordPlaceholder": "••••••••",
+    "confirmPassword": "Bevestig wachtwoord",
+    "passwordStrength": "Sterkte:",
+    "passwordHelp": "Gebruik 8+ tekens met hoofdletters, kleine letters, cijfers en symbolen voor betere beveiliging",
+    "createButton": "Account aanmaken",
+    "creating": "Account aanmaken...",
+    "alreadyHaveAccount": "Heeft u al een account?",
+    "signIn": "Inloggen",
+    "loading": "Tenantinformatie laden...",
+    "tenantNotFound": "Tenant niet gevonden",
+    "tenantNotFoundDescription": "De opgegeven tenant kon niet worden gevonden.",
+    "goToSignup": "Ga naar registratie",
+    "errors": {
+      "loadFailed": "Laden van tenantinformatie mislukt",
+      "alreadyExists": "Een gebruiker met dit e-mailadres bestaat al. Gebruik een ander e-mailadres of log in.",
+      "failed": "Aanmaken van gebruikersaccount mislukt"
+    }
+  },
+  "success": {
+    "title": "Welkom bij WeedGo!",
+    "description": "Uw account voor {{tenantName}} is succesvol aangemaakt.",
+    "accountDetails": {
+      "title": "Uw accountgegevens",
+      "tenantName": "Tenantnaam:",
+      "tenantCode": "Tenantcode:",
+      "storeUrl": "Winkel-URL:"
+    },
+    "nextSteps": {
+      "title": "Volgende stappen",
+      "checkEmail": {
+        "title": "Controleer uw e-mail",
+        "description": "We hebben u een welkomstmail gestuurd met belangrijke accountinformatie en installatie-instructies."
+      },
+      "accessDashboard": {
+        "title": "Toegang tot uw dashboard",
+        "description": "Log in op uw beheerdashboard om uw winkelinstellingen te configureren, producten toe te voegen en uw AI-assistenten aan te passen."
+      },
+      "setupStore": {
+        "title": "Stel uw eerste winkel in",
+        "description": "Voeg uw eerste winkellocatie toe, configureer openingstijden en stel uw productvoorraad in."
+      },
+      "configureAI": {
+        "title": "Configureer AI-assistenten",
+        "description": "Pas uw AI budtender-persoonlijkheden aan en stel meertalige ondersteuning in voor uw klanten."
+      }
+    },
+    "quickActions": {
+      "dashboard": {
+        "title": "Toegang tot dashboard",
+        "description": "Configureer uw platform"
+      },
+      "documentation": {
+        "title": "Documentatie",
+        "description": "Installatiehandleidingen en tutorials"
+      },
+      "support": {
+        "title": "Ondersteuning",
+        "description": "Krijg hulp van ons team"
+      }
+    },
+    "cta": {
+      "button": "Toegang tot uw dashboard",
+      "help": "Hulp nodig om te beginnen? Neem contact op met ons ondersteuningsteam via",
+      "email": "support@weedgo.com"
+    },
+    "resources": {
+      "title": "Bronnen om u op weg te helpen",
+      "quickSetup": {
+        "title": "Snelle installatiehandleiding",
+        "item1": "Winkelconfiguratie en branding",
+        "item2": "Productcatalogus instellen",
+        "item3": "Betalingsverwerkingsconfiguratie",
+        "item4": "AI-assistent aanpassen"
+      },
+      "training": {
+        "title": "Training en ondersteuning",
+        "item1": "Videotutorials en webinars",
+        "item2": "24/7 klantenondersteuningschat",
+        "item3": "Toegang tot communityforum",
+        "item4": "Toegewezen accountmanager (Enterprise)"
+      }
+    }
+  },
+  "validation": {
+    "required": "{{field}} is verplicht",
+    "brandNameRequired": "Merknaam is verplicht",
+    "websiteRequired": "Website is vereist om merkcode te genereren",
+    "brandCodeRequired": "Merkcode is verplicht (voer website in om te genereren)",
+    "brandCodeFormat": "Merkcode mag alleen hoofdletters, cijfers, koppeltekens en underscores bevatten",
+    "companyNameRequired": "Bedrijfsnaam is verplicht",
+    "businessNumberRequired": "Bedrijfsnummer is verplicht",
+    "businessNumberFormat": "Bedrijfsnummer moet 9 cijfers bevatten",
+    "gstHstRequired": "GST/HST-nummer is verplicht",
+    "gstHstFormat": "GST/HST-nummerformaat: 123456789RT0001",
+    "emailRequired": "E-mail is verplicht",
+    "emailInvalid": "Voer een geldig e-mailadres in",
+    "firstNameRequired": "Voornaam is verplicht",
+    "lastNameRequired": "Achternaam is verplicht",
+    "streetRequired": "Straatnaam is verplicht",
+    "cityRequired": "Stad is verplicht",
+    "postalCodeRequired": "Postcode is verplicht",
+    "postalCodeFormat": "Voer een geldige Canadese postcode in",
+    "passwordRequired": "Wachtwoord is verplicht",
+    "passwordLength": "Wachtwoord moet minimaal 8 tekens bevatten",
+    "passwordComplexity": "Wachtwoord moet hoofdletters, kleine letters en cijfers bevatten",
+    "passwordMismatch": "Wachtwoorden komen niet overeen",
+    "cardNumberRequired": "Kaartnummer is verplicht",
+    "cardNumberFormat": "Voer een geldig 16-cijferig kaartnummer in",
+    "expiryRequired": "Vervaldatum is verplicht",
+    "expiryFormat": "Voer MM/JJ-formaat in",
+    "cvvRequired": "CVV is verplicht",
+    "cvvFormat": "CVV moet 3 of 4 cijfers bevatten",
+    "cardholderRequired": "Naam kaarthouder is verplicht"
+  },
+  "passwordStrength": {
+    "weak": "Zwak",
+    "fair": "Redelijk",
+    "good": "Goed",
+    "strong": "Sterk",
+    "veryStrong": "Zeer sterk"
+  },
+  "provinces": {
+    "ON": "Ontario",
+    "BC": "British Columbia",
+    "AB": "Alberta",
+    "QC": "Quebec",
+    "MB": "Manitoba",
+    "SK": "Saskatchewan",
+    "NS": "Nova Scotia",
+    "NB": "New Brunswick",
+    "NL": "Newfoundland and Labrador",
+    "PE": "Prince Edward Island",
+    "NT": "Northwest Territories",
+    "YT": "Yukon",
+    "NU": "Nunavut"
+  },
+  "plans": {
+    "community_and_new_business": {
+      "name": "Community en nieuwe bedrijven",
+      "features": {
+        "stores": "1 winkel",
+        "languages": "2 talen",
+        "personalities": "1 AI-persoonlijkheid"
+      }
+    },
+    "small_business": {
+      "name": "Kleine bedrijven",
+      "features": {
+        "stores": "5 winkels",
+        "languages": "5 talen",
+        "personalities": "2 AI-persoonlijkheden"
+      }
+    },
+    "professional_and_growing_business": {
+      "name": "Professionele en groeiende bedrijven",
+      "features": {
+        "stores": "12 winkels",
+        "languages": "10 talen",
+        "personalities": "3 AI-persoonlijkheden"
+      }
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "features": {
+        "stores": "Onbeperkt winkels",
+        "languages": "25+ talen",
+        "personalities": "5 AI-persoonlijkheden"
+      }
+    }
+  }
+}

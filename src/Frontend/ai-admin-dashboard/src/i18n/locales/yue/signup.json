@@ -1,0 +1,368 @@
+{
+  "tenant": {
+    "header": {
+      "title": "WeedGo",
+      "alreadyHaveAccount": "已經有帳戶？",
+      "signIn": "登入",
+      "backHome": "返回主頁"
+    },
+    "steps": {
+      "company": "公司資料",
+      "contact": "聯絡詳情",
+      "account": "帳戶設置",
+      "payment": "訂閱同付款"
+    },
+    "stepDescriptions": {
+      "company": "話俾我哋聽你嘅生意同品牌",
+      "contact": "提供你嘅聯絡資料同地址",
+      "account": "建立你嘅管理員帳戶憑證",
+      "payment": "揀選你嘅計劃同付款方式"
+    },
+    "companyInfo": {
+      "brandName": "品牌名稱",
+      "brandNamePlaceholder": "例如：Green Valley Dispensary",
+      "website": "網站",
+      "websitePlaceholder": "www.potpalace.ca 或 potpalace.ca",
+      "websiteHelp": "你嘅網站網址（用嚟生成品牌代碼）",
+      "brandCode": "品牌代碼",
+      "brandCodeAuto": "品牌代碼 *（自動生成）",
+      "brandCodePlaceholder": "喺上面輸入網站嚟生成",
+      "brandCodeHelp": "將會喺你嘅商店網址度用：{{code}}.weedgo.com",
+      "legalCompanyName": "法定公司名稱",
+      "legalCompanyPlaceholder": "例如：Green Valley Cannabis Inc.",
+      "businessNumber": "商業號碼",
+      "businessNumberPlaceholder": "123456789",
+      "businessNumberHelp": "加拿大商業號碼（9位數字）",
+      "gstHstNumber": "GST/HST 號碼",
+      "gstHstPlaceholder": "123456789RT0001",
+      "gstHstHelp": "格式：123456789RT0001",
+      "logoUpload": "上載標誌",
+      "logoUploadHelp": "最大 2MB • PNG、JPG、WebP • 建議：500x500像素正方形"
+    },
+    "contactInfo": {
+      "firstName": "名",
+      "lastName": "姓",
+      "email": "電郵地址",
+      "phone": "電話號碼",
+      "phonePlaceholder": "(555) 123-4567",
+      "street": "街道地址",
+      "city": "城市",
+      "province": "省份",
+      "postalCode": "郵政編碼",
+      "postalCodePlaceholder": "A1A 1A1"
+    },
+    "accountSetup": {
+      "password": "密碼",
+      "confirmPassword": "確認密碼",
+      "passwordStrength": "強度：",
+      "passwordHelp": "最少要有8個字符，包括大寫、小寫同數字",
+      "securityTitle": "帳戶安全",
+      "securityDescription": "你嘅帳戶將會用業界標準加密同多重身份驗證選項嚟保護。"
+    },
+    "subscription": {
+      "choosePlan": "揀選你嘅訂閱計劃",
+      "selectedPlan": "已選計劃：{{plan}}",
+      "changePlan": "更改計劃",
+      "free": "免費",
+      "perMonth": "${{price}}/月",
+      "customPricing": "自訂定價",
+      "billingCycle": "收費週期",
+      "monthly": "每月",
+      "monthlyBilled": "每月收費",
+      "annual": "每年",
+      "annualSave": "節省20%",
+      "selectPlan": "揀選計劃",
+      "enterpriseTitle": "企業計劃",
+      "enterpriseDescription": "我哋嘅銷售團隊會喺24小時內聯絡你，討論自訂定價同設置。"
+    },
+    "payment": {
+      "cardholderName": "持卡人姓名",
+      "cardholderPlaceholder": "陳大文",
+      "cardNumber": "卡號",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiryDate": "到期日期",
+      "expiryPlaceholder": "MM/YY",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "postalCode": "ZIP/郵政編碼",
+      "postalCodePlaceholder": "12345"
+    },
+    "progress": {
+      "verifying": "核實緊可用性...",
+      "creating": "建立緊你嘅帳戶...",
+      "uploading": "上載緊標誌...",
+      "complete": "帳戶建立成功！",
+      "processing": "處理緊..."
+    },
+    "success": {
+      "welcome": "歡迎使用 WeedGo！",
+      "accountCreated": "你嘅帳戶已經成功建立。",
+      "tenantCode": "租戶代碼：",
+      "preparing": "準備緊你嘅控制台..."
+    },
+    "navigation": {
+      "previous": "上一步",
+      "next": "下一步",
+      "createAccount": "建立帳戶"
+    },
+    "errors": {
+      "accountCreationFailed": "建立帳戶失敗",
+      "tryAgain": "再試一次",
+      "registerAsUser": "註冊成為用戶",
+      "signInInstead": "登入",
+      "tenantExists": "租戶代碼 \"{{code}}\" 已經註冊咗",
+      "websiteExists": "網站 \"{{website}}\" 已經有人用緊"
+    }
+  },
+  "review": {
+    "title": "租戶帳戶審核",
+    "description": "審核同批准標記為需要人工核實嘅帳戶",
+    "refresh": "重新整理",
+    "stats": {
+      "totalPending": "總待處理",
+      "thisWeek": "本星期",
+      "avgReviewTime": "平均審核時間",
+      "approvalRate": "批准率"
+    },
+    "table": {
+      "title": "待處理帳戶",
+      "storeName": "商店名稱",
+      "contact": "聯絡人",
+      "licenseNumber": "牌照號碼",
+      "submitted": "提交時間",
+      "tier": "級別",
+      "actions": "操作",
+      "review": "審核",
+      "noPending": "冇待審核嘅帳戶！"
+    },
+    "modal": {
+      "title": "審核帳戶",
+      "storeInfo": "商店資料",
+      "storeName": "商店名稱",
+      "licenseNumber": "牌照號碼",
+      "crsaAddress": "CRSA 地址",
+      "municipality": "市政府",
+      "crsaStatus": "CRSA 狀態",
+      "crsaWebsite": "CRSA 網站",
+      "contactInfo": "聯絡資料",
+      "contactName": "聯絡人姓名",
+      "role": "職位",
+      "email": "電郵",
+      "phone": "電話",
+      "verificationContext": "核實背景",
+      "emailDomain": "電郵域名",
+      "domainMatchesCrsa": "域名符合 CRSA",
+      "verificationTier": "核實級別",
+      "submitted": "提交時間",
+      "adminNotes": "管理員備註（可選）",
+      "adminNotesPlaceholder": "為呢個審核加入備註...",
+      "reject": "拒絕",
+      "approve": "批准帳戶",
+      "approving": "批准緊...",
+      "yes": "✓ 係",
+      "no": "✗ 唔係"
+    },
+    "reject": {
+      "title": "拒絕帳戶",
+      "description": "請提供拒絕呢個帳戶嘅原因。呢個會記錄落嚟作審計用途。",
+      "reasonPlaceholder": "拒絕原因（最少10個字符）...",
+      "cancel": "取消",
+      "confirm": "確認拒絕",
+      "rejecting": "拒絕緊...",
+      "minLength": "請提供原因（最少10個字符）"
+    },
+    "messages": {
+      "approved": "帳戶批准成功！",
+      "rejected": "帳戶拒絕成功。",
+      "approveFailed": "批准帳戶失敗：{{error}}",
+      "rejectFailed": "拒絕帳戶失敗：{{error}}",
+      "fetchFailed": "獲取待處理帳戶失敗",
+      "noPermission": "你冇權限審核租戶帳戶。"
+    }
+  },
+  "userRegistration": {
+    "title": "建立你嘅帳戶",
+    "joinTenant": "加入 {{tenantName}}",
+    "tenantInfo": "租戶資料",
+    "tenantName": "名稱：",
+    "tenantCode": "代碼：",
+    "firstName": "名",
+    "firstNamePlaceholder": "大文",
+    "lastName": "姓",
+    "lastNamePlaceholder": "陳",
+    "email": "電郵地址",
+    "emailPlaceholder": "chan.daiman@example.com",
+    "phone": "電話號碼",
+    "phonePlaceholder": "(555) 123-4567",
+    "password": "密碼",
+    "passwordPlaceholder": "••••••••",
+    "confirmPassword": "確認密碼",
+    "passwordStrength": "強度：",
+    "passwordHelp": "用8個或以上字符，包括大寫、小寫、數字同符號會更安全",
+    "createButton": "建立帳戶",
+    "creating": "建立緊帳戶...",
+    "alreadyHaveAccount": "已經有帳戶？",
+    "signIn": "登入",
+    "loading": "載入緊租戶資料...",
+    "tenantNotFound": "搵唔到租戶",
+    "tenantNotFoundDescription": "搵唔到指定嘅租戶。",
+    "goToSignup": "去註冊頁面",
+    "errors": {
+      "loadFailed": "載入租戶資料失敗",
+      "alreadyExists": "呢個電郵已經有用戶用咗。請用另一個電郵或者登入。",
+      "failed": "建立用戶帳戶失敗"
+    }
+  },
+  "success": {
+    "title": "歡迎使用 WeedGo！",
+    "description": "你喺 {{tenantName}} 嘅帳戶已經成功建立。",
+    "accountDetails": {
+      "title": "你嘅帳戶詳情",
+      "tenantName": "租戶名稱：",
+      "tenantCode": "租戶代碼：",
+      "storeUrl": "商店網址："
+    },
+    "nextSteps": {
+      "title": "下一步",
+      "checkEmail": {
+        "title": "查看你嘅電郵",
+        "description": "我哋已經發咗一封歡迎電郵俾你，入面有重要嘅帳戶資料同設置指引。"
+      },
+      "accessDashboard": {
+        "title": "存取你嘅控制台",
+        "description": "登入去你嘅管理員控制台，設定你嘅商店設置、加入產品，同自訂你嘅 AI 助理。"
+      },
+      "setupStore": {
+        "title": "設定你嘅第一間商店",
+        "description": "加入你嘅第一個商店位置，設定營業時間，同設定你嘅產品庫存。"
+      },
+      "configureAI": {
+        "title": "設定 AI 助理",
+        "description": "自訂你嘅 AI budtender 個性，同為你嘅客戶設定多語言支援。"
+      }
+    },
+    "quickActions": {
+      "dashboard": {
+        "title": "存取控制台",
+        "description": "設定你嘅平台"
+      },
+      "documentation": {
+        "title": "文件",
+        "description": "設定指南同教學"
+      },
+      "support": {
+        "title": "支援",
+        "description": "從我哋嘅團隊獲得幫助"
+      }
+    },
+    "cta": {
+      "button": "存取你嘅控制台",
+      "help": "需要幫助開始？聯絡我哋嘅支援團隊",
+      "email": "support@weedgo.com"
+    },
+    "resources": {
+      "title": "幫助你開始嘅資源",
+      "quickSetup": {
+        "title": "快速設定指南",
+        "item1": "商店設定同品牌",
+        "item2": "產品目錄設定",
+        "item3": "付款處理設定",
+        "item4": "AI 助理自訂"
+      },
+      "training": {
+        "title": "培訓同支援",
+        "item1": "視頻教學同網絡研討會",
+        "item2": "24/7 客戶支援聊天",
+        "item3": "社群論壇存取",
+        "item4": "專屬客戶經理（企業版）"
+      }
+    }
+  },
+  "validation": {
+    "required": "{{field}} 係必填",
+    "brandNameRequired": "品牌名稱係必填",
+    "websiteRequired": "需要網站嚟生成品牌代碼",
+    "brandCodeRequired": "品牌代碼係必填（輸入網站嚟生成）",
+    "brandCodeFormat": "品牌代碼只可以包含大寫字母、數字、連字號同底線",
+    "companyNameRequired": "公司名稱係必填",
+    "businessNumberRequired": "商業號碼係必填",
+    "businessNumberFormat": "商業號碼必須係9位數字",
+    "gstHstRequired": "GST/HST 號碼係必填",
+    "gstHstFormat": "GST/HST 號碼格式：123456789RT0001",
+    "emailRequired": "電郵係必填",
+    "emailInvalid": "請輸入有效嘅電郵地址",
+    "firstNameRequired": "名係必填",
+    "lastNameRequired": "姓係必填",
+    "streetRequired": "街道地址係必填",
+    "cityRequired": "城市係必填",
+    "postalCodeRequired": "郵政編碼係必填",
+    "postalCodeFormat": "請輸入有效嘅加拿大郵政編碼",
+    "passwordRequired": "密碼係必填",
+    "passwordLength": "密碼最少要有8個字符",
+    "passwordComplexity": "密碼必須包含大寫、小寫同數字",
+    "passwordMismatch": "密碼唔相符",
+    "cardNumberRequired": "卡號係必填",
+    "cardNumberFormat": "請輸入有效嘅16位卡號",
+    "expiryRequired": "到期日期係必填",
+    "expiryFormat": "請用 MM/YY 格式輸入",
+    "cvvRequired": "CVV 係必填",
+    "cvvFormat": "CVV 必須係3或4位數字",
+    "cardholderRequired": "持卡人姓名係必填"
+  },
+  "passwordStrength": {
+    "weak": "弱",
+    "fair": "一般",
+    "good": "好",
+    "strong": "強",
+    "veryStrong": "非常強"
+  },
+  "provinces": {
+    "ON": "Ontario",
+    "BC": "British Columbia",
+    "AB": "Alberta",
+    "QC": "Quebec",
+    "MB": "Manitoba",
+    "SK": "Saskatchewan",
+    "NS": "Nova Scotia",
+    "NB": "New Brunswick",
+    "NL": "Newfoundland and Labrador",
+    "PE": "Prince Edward Island",
+    "NT": "Northwest Territories",
+    "YT": "Yukon",
+    "NU": "Nunavut"
+  },
+  "plans": {
+    "community_and_new_business": {
+      "name": "社群同新生意",
+      "features": {
+        "stores": "1間商店",
+        "languages": "2種語言",
+        "personalities": "1個 AI 個性"
+      }
+    },
+    "small_business": {
+      "name": "小生意",
+      "features": {
+        "stores": "5間商店",
+        "languages": "5種語言",
+        "personalities": "2個 AI 個性"
+      }
+    },
+    "professional_and_growing_business": {
+      "name": "專業同成長中嘅生意",
+      "features": {
+        "stores": "12間商店",
+        "languages": "10種語言",
+        "personalities": "3個 AI 個性"
+      }
+    },
+    "enterprise": {
+      "name": "企業",
+      "features": {
+        "stores": "無限商店",
+        "languages": "25+種語言",
+        "personalities": "5個 AI 個性"
+      }
+    }
+  }
+}

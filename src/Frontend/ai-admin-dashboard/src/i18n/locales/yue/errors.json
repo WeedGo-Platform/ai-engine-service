@@ -1,0 +1,98 @@
+{
+  "api": {
+    "networkError": "連接唔到伺服器。請檢查你嘅連線。",
+    "serverError": "伺服器出錯啦。請稍後再試。",
+    "timeout": "請求逾時。請再試過。",
+    "unauthorized": "你冇權限執行呢個操作。",
+    "forbidden": "拒絕存取。",
+    "notFound": "搵唔到請求嘅資源。",
+    "conflict": "發生衝突。資源可能已經存在。",
+    "validationError": "驗證出錯啦。",
+    "tooManyRequests": "請求太多。請稍後再試。",
+    "serviceUnavailable": "服務暫時唔可用。",
+    "badRequest": "無效請求。請檢查你嘅輸入。",
+    "internalError": "發生內部錯誤。"
+  },
+  "auth": {
+    "loginSuccess": "登入成功！正在重新導向...",
+    "invalidCredentials": "無效嘅電郵或密碼。請再試過。",
+    "sessionExpired": "你嘅工作階段已過期。請重新登入。",
+    "accountDisabled": "你嘅帳戶已停用或冇管理員權限。",
+    "accountLocked": "因為多次登入失敗，你嘅帳戶已經鎖咗。",
+    "tooManyAttempts": "登入嘗試太多次。請稍後再試。",
+    "tokenExpired": "認證令牌已過期。",
+    "tokenInvalid": "無效嘅認證令牌。",
+    "passwordResetFailed": "密碼重設失敗。請再試過。",
+    "emailNotVerified": "請先驗證你嘅電郵地址。",
+    "validationError": "驗證出錯啦",
+    "loginError": "登入時發生錯誤"
+  },
+  "tenant": {
+    "loadFailed": "載入機構資料失敗。",
+    "createFailed": "建立租戶失敗。",
+    "updateFailed": "更新租戶失敗。",
+    "deleteFailed": "刪除租戶失敗。",
+    "suspendFailed": "暫停租戶失敗。",
+    "reactivateFailed": "重新啟用租戶失敗。",
+    "noOrganization": "冇同用戶相關聯嘅機構。",
+    "limitReached": "呢個租戶嘅商店上限已達到。",
+    "invalidSubscription": "無效或已過期嘅訂閱。"
+  },
+  "store": {
+    "loadFailed": "載入商店資料失敗。",
+    "createFailed": "建立商店失敗。",
+    "updateFailed": "更新商店失敗。",
+    "deleteFailed": "刪除商店失敗。",
+    "suspendFailed": "暫停商店失敗。",
+    "closeFailed": "關閉商店失敗。",
+    "notFound": "搵唔到商店。",
+    "alreadyExists": "呢個名嘅商店已經存在。"
+  },
+  "inventory": {
+    "loadFailed": "載入庫存資料失敗。",
+    "createFailed": "建立庫存項目失敗。",
+    "updateFailed": "更新庫存項目失敗。",
+    "deleteFailed": "刪除庫存項目失敗。",
+    "stockUpdateFailed": "更新庫存水平失敗。",
+    "lowStock": "低庫存警示。",
+    "outOfStock": "項目缺貨。",
+    "invalidQuantity": "指定咗無效嘅數量。"
+  },
+  "order": {
+    "loadFailed": "載入訂單資料失敗。",
+    "createFailed": "建立訂單失敗。",
+    "updateFailed": "更新訂單失敗。",
+    "cancelFailed": "取消訂單失敗。",
+    "fulfillFailed": "完成訂單失敗。",
+    "refundFailed": "處理退款失敗。",
+    "notFound": "搵唔到訂單。",
+    "alreadyProcessed": "訂單已經處理咗。"
+  },
+  "payment": {
+    "loadFailed": "載入付款資料失敗。",
+    "processingFailed": "付款處理失敗。",
+    "refundFailed": "退款處理失敗。",
+    "invalidAmount": "無效嘅付款金額。",
+    "cardDeclined": "卡被拒絕。",
+    "insufficientFunds": "餘額不足。",
+    "paymentMethodInvalid": "無效嘅付款方式。"
+  },
+  "upload": {
+    "failed": "檔案上傳失敗。",
+    "fileTooLarge": "檔案大小超過允許嘅上限。",
+    "invalidFileType": "無效嘅檔案類型。",
+    "corruptedFile": "檔案好似損壞咗。",
+    "uploadCancelled": "上傳已取消。"
+  },
+  "general": {
+    "unexpectedError": "發生意外錯誤。",
+    "operationFailed": "操作失敗。請再試過。",
+    "dataLoadFailed": "載入資料失敗。",
+    "saveFailed": "儲存更改失敗。",
+    "deleteFailed": "刪除項目失敗。",
+    "permissionDenied": "你冇權限執行呢個操作。",
+    "invalidInput": "提供咗無效嘅輸入。",
+    "requiredFieldMissing": "缺少必填欄位。",
+    "dataCorrupted": "資料好似損壞咗。"
+  }
+}

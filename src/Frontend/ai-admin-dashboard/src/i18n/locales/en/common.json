@@ -1,0 +1,235 @@
+{
+  "buttons": {
+    "send": "Send",
+    "close": "Close",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "update": "Update",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "import": "Import",
+    "refresh": "Refresh",
+    "settings": "Settings",
+    "logout": "Logout",
+    "change": "Change"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "apps": "Apps",
+    "organization": "Organization",
+    "tenants": "Tenants",
+    "products": "Products",
+    "inventory": "Inventory",
+    "accessories": "Accessories",
+    "orders": "Orders",
+    "payments": "Payments",
+    "customers": "Customers",
+    "purchaseOrders": "Purchase Orders",
+    "promotions": "Promotions",
+    "recommendations": "Recommendations",
+    "communications": "Communications",
+    "deliveries": "Deliveries",
+    "aiConfiguration": "AI Configuration",
+    "provincialCatalog": "Provincial Catalog",
+    "database": "Database",
+    "systemLogs": "System Logs"
+  },
+  "roles": {
+    "superAdmin": "Super Admin",
+    "tenantAdmin": "Tenant Admin",
+    "storeManager": "Store Manager",
+    "staff": "Staff",
+    "user": "User"
+  },
+  "labels": {
+    "email": "Email address",
+    "password": "Password",
+    "username": "Username",
+    "name": "Name",
+    "phone": "Phone",
+    "address": "Address",
+    "city": "City",
+    "province": "Province",
+    "postalCode": "Postal Code",
+    "country": "Country",
+    "status": "Status",
+    "actions": "Actions",
+    "description": "Description",
+    "notes": "Notes",
+    "date": "Date",
+    "time": "Time",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "tax": "Tax",
+    "quantity": "Quantity",
+    "price": "Price",
+    "language": "Language"
+  },
+  "placeholders": {
+    "enterEmail": "Enter your email",
+    "enterPassword": "Enter your password",
+    "search": "Search...",
+    "selectOption": "Select an option",
+    "typeMessage": "Type your message...",
+    "enterName": "Enter name",
+    "enterPhone": "Enter phone number"
+  },
+  "messages": {
+    "loading": "Loading...",
+    "saving": "Saving...",
+    "success": "Success!",
+    "error": "An error occurred",
+    "noData": "No data available",
+    "confirm": "Are you sure?",
+    "unsavedChanges": "You have unsaved changes"
+  },
+  "toasts": {
+    "password": {
+      "changeSuccess": "Password changed successfully! Please log in again.",
+      "changeFailed": "Failed to change password. Please try again."
+    },
+    "broadcast": {
+      "createSuccess": "Broadcast created successfully!",
+      "createFailed": "Failed to create broadcast"
+    },
+    "template": {
+      "fetchFailed": "Failed to fetch templates",
+      "createSuccess": "Template created successfully",
+      "createFailed": "Failed to create template",
+      "updateSuccess": "Template updated successfully",
+      "updateFailed": "Failed to update template",
+      "deleteSuccess": "Template deleted successfully",
+      "deleteFailed": "Failed to delete template"
+    },
+    "model": {
+      "fetchFailed": "Failed to fetch models",
+      "loadFailed": "Failed to load model",
+      "unloadSuccess": "Model unloaded successfully",
+      "unloadFailed": "Failed to unload model",
+      "updateFailed": "Failed to update model"
+    },
+    "config": {
+      "fetchFailed": "Failed to fetch configuration",
+      "updateSuccess": "Configuration updated successfully",
+      "updateFailed": "Failed to save configuration"
+    },
+    "agent": {
+      "fetchFailed": "Failed to fetch agents"
+    },
+    "personality": {
+      "fetchFailed": "Failed to fetch personalities"
+    },
+    "router": {
+      "statsFetchFailed": "Failed to fetch router stats",
+      "toggleFailed": "Failed to toggle inference mode"
+    }
+  },
+  "errors": {
+    "required": "This field is required",
+    "invalidEmail": "Invalid email address",
+    "invalidPhone": "Invalid phone number",
+    "networkError": "Network error. Please try again.",
+    "serverError": "Server error. Please try again later.",
+    "unauthorized": "Unauthorized access",
+    "notFound": "Not found",
+    "sessionExpired": "Your session has expired. Please log in again.",
+    "validation": {
+      "selectStore": "Please select a store",
+      "selectSupplier": "Please select a supplier",
+      "addAtLeastOneItem": "Please add at least one item",
+      "fillRequiredFields": "Please fill in all required fields for each item",
+      "enterLicenseNumber": "Please enter a license number",
+      "fillAllRequiredFields": "Please fill in all required fields: {{fields}}",
+      "invalidJson": "Cannot save invalid JSON: {{message}}",
+      "invalidCode": "Invalid code",
+      "invalidVerificationCode": "Invalid verification code"
+    },
+    "operations": {
+      "saveFailed": "Failed to save settings",
+      "validationFailed": "Validation failed",
+      "fetchFailed": "Failed to fetch {{resource}}",
+      "createFailed": "Failed to create {{resource}}",
+      "updateFailed": "Failed to update {{resource}}",
+      "deleteFailed": "Failed to delete {{resource}}",
+      "searchFailed": "Failed to search {{resource}}",
+      "loadFailed": "Failed to load {{resource}}. Please refresh the page.",
+      "sendFailed": "Failed to send {{resource}}",
+      "generateFailed": "Failed to generate {{resource}}",
+      "verifyFailed": "Failed to verify {{resource}}",
+      "processFailed": "Failed to process {{action}}. Please try again.",
+      "testConnectionFailed": "Failed to test connection. Please check your network."
+    }
+  },
+  "common": {
+    "yes": "Yes",
+    "no": "No",
+    "or": "or",
+    "and": "and",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "week": "Week",
+    "month": "Month",
+    "year": "Year",
+    "all": "All",
+    "none": "None",
+    "active": "Active",
+    "inactive": "Inactive",
+    "pending": "Pending",
+    "completed": "Completed",
+    "failed": "Failed",
+    "notSpecified": "Not specified",
+    "unknown": "Unknown",
+    "na": "N/A"
+  },
+  "confirmations": {
+    "deleteUser": "Are you sure you want to delete user {{email}}?",
+    "deleteUserPermanent": "Are you sure you want to delete this user? This action cannot be undone.",
+    "deleteTerminal": "Are you sure you want to delete this terminal?",
+    "passwordResetMethod": "Click OK to send a password reset link via email\nClick Cancel to generate and display a temporary password"
+  },
+  "modals": {
+    "changePassword": {
+      "title": "Change Password",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm New Password",
+      "placeholders": {
+        "currentPassword": "Enter current password",
+        "newPassword": "Enter new password",
+        "confirmPassword": "Confirm new password"
+      },
+      "requirements": {
+        "title": "Password must contain:",
+        "minLength": "At least 8 characters",
+        "uppercase": "One uppercase letter",
+        "lowercase": "One lowercase letter",
+        "number": "One number"
+      },
+      "validation": {
+        "currentRequired": "Current password is required",
+        "newRequired": "New password is required",
+        "notMeetRequirements": "Password does not meet requirements",
+        "confirmRequired": "Please confirm your new password",
+        "notMatch": "Passwords do not match",
+        "mustBeDifferent": "New password must be different from current password",
+        "incorrectCurrent": "Current password is incorrect"
+      },
+      "securityNotice": "After changing your password, you will be logged out and need to log in again with your new credentials.",
+      "changing": "Changing..."
+    }
+  },
+  "ai": {
+    "management": {
+      "title": "AI Management",
+      "subtitle": "Configure and manage AI models, inference settings, and voice capabilities"
+    }
+  }
+}

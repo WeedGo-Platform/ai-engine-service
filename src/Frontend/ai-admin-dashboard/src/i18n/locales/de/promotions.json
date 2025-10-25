@@ -1,0 +1,158 @@
+{
+  "titles": {
+    "main": "Promotionen und Preisgestaltung",
+    "activePromotions": "Aktive Promotionen",
+    "analytics": "Analysen",
+    "defaultPricing": "Standardpreise",
+    "topPerforming": "Top-Performing-Promotionen",
+    "overallStats": "Gesamtstatistiken",
+    "deletePromotion": "Promotion löschen",
+    "createPromotion": "Neue Promotion erstellen",
+    "editPromotion": "Promotion bearbeiten",
+    "viewPromotion": "Promotion anzeigen",
+    "defaultPriceConfig": "Standard-Preiskonfiguration",
+    "applyMarkup": "Aufschlag anwenden",
+    "storeWideMarkup": "Ladenweiter Standard-Aufschlag"
+  },
+  "descriptions": {
+    "noStoreSelected": "Kein Geschäft ausgewählt",
+    "selectStoreForPromotions": "Bitte wählen Sie ein Geschäft aus, um Promotionen und Preise zu verwalten",
+    "selectStoreForPricing": "Bitte wählen Sie ein Geschäft aus, um Preise zu verwalten",
+    "managingFor": "Verwaltung von Promotionen und Preisen für",
+    "pricingInstructions": "Legen Sie Aufschlagsprozentsätze für Produkte nach Kategorie fest. Der Aufschlag wird auf die Stückkosten angewendet, um den Verkaufspreis zu berechnen. Spezifischere Einstellungen überschreiben allgemeine (z. B. Unterkategorie überschreibt Kategorie).",
+    "defaultMarkupInfo": "Dieser Standardaufschlag wird bei der Preisberechnung für neue Produkte oder wenn kein spezifischer Kategorieaufschlag festgelegt ist, verwendet."
+  },
+  "table": {
+    "promotion": "Promotion",
+    "code": "Code",
+    "discount": "Rabatt",
+    "usage": "Nutzung",
+    "duration": "Dauer",
+    "status": "Status",
+    "actions": "Aktionen",
+    "min": "Min",
+    "perCustomer": "pro Kunde",
+    "to": "bis",
+    "uses": "Verwendungen",
+    "revenue": "Umsatz"
+  },
+  "status": {
+    "inactive": "Inaktiv",
+    "scheduled": "Geplant",
+    "expired": "Abgelaufen",
+    "active": "Aktiv"
+  },
+  "stats": {
+    "totalUses": "Gesamte Verwendungen",
+    "totalDiscounts": "Gesamte Rabatte",
+    "totalRevenue": "Gesamtumsatz",
+    "avgOrderValue": "Durchschn. Bestellwert"
+  },
+  "actions": {
+    "createNew": "Neue Promotion erstellen",
+    "edit": "Promotion bearbeiten",
+    "delete": "Promotion löschen",
+    "cancel": "Abbrechen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "update": "Aktualisieren",
+    "create": "Erstellen",
+    "applyMarkup": "Aufschlag anwenden",
+    "resetOverrides": "Überschreibungen zurücksetzen",
+    "saveDefault": "Als Standard speichern",
+    "quickSetMarkup": "Aufschlag schnell festlegen"
+  },
+  "search": {
+    "placeholder": "Promotionen nach Name oder Code suchen...",
+    "categories": "Kategorien durchsuchen..."
+  },
+  "steps": {
+    "basicInfo": {
+      "name": "Grundlegende Informationen",
+      "description": "Name und Beschreibung"
+    },
+    "discount": {
+      "name": "Rabatt",
+      "description": "Typ und Wert"
+    },
+    "scope": {
+      "name": "Umfang",
+      "description": "Wo und wann"
+    },
+    "settings": {
+      "name": "Einstellungen",
+      "description": "Nutzungslimits"
+    },
+    "review": {
+      "name": "Überprüfung",
+      "description": "Details bestätigen"
+    }
+  },
+  "pricing": {
+    "enableDefault": "Standardaufschlag aktivieren",
+    "default": "Standard",
+    "markupPercentage": "Aufschlagsprozentsatz",
+    "retailPriceFormula": "Retail Price = Cost × (1 + {markup}%)",
+    "exampleCalculation": "Beispielberechnung:",
+    "currentCost": "Aktuelle Kosten",
+    "currentRetail": "Aktueller Verkaufspreis",
+    "newPricing": "Neue Preisgestaltung mit {markup}% Aufschlag:",
+    "newRetailPrice": "Neuer Verkaufspreis",
+    "profitMargin": "Gewinnspanne",
+    "priceChange": "Preisänderung",
+    "ifCost": "Wenn Kosten",
+    "retailPrice": "Verkaufspreis",
+    "allProducts": "Alle Produkte",
+    "storeWideDefault": "Ladenweiter Standard",
+    "products": "Produkte",
+    "overrides": "Überschreibungen",
+    "avg": "Durchschn.",
+    "productsInCategory": "Produkte in dieser Kategorie:",
+    "sku": "SKU",
+    "stock": "Lager",
+    "brand": "Marke",
+    "cost": "Kosten",
+    "applyingTo": "Anwenden auf:",
+    "updating": "Aktualisierung:",
+    "allProductsStoreWide": "Alle Produkte (Ladenweit)"
+  },
+  "confirm": {
+    "deletePromotion": "Sind Sie sicher, dass Sie diese Promotion löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "applyAllProducts": "Dies wird den Aufschlag für ALLE Produkte im Geschäft auf {markup}% aktualisieren. Sind Sie sicher?",
+    "resetOverrides": "Dies entfernt alle Preisüberschreibungen für {scope} und verwendet den berechneten Aufschlag. Sind Sie sicher?"
+  },
+  "warnings": {
+    "storeWideUpdate": "Dies wird die Preisgestaltung für alle Produkte im Geschäft aktualisieren.",
+    "singleProductNote": "Nur dieses spezifische Produkt wird aktualisiert."
+  },
+  "messages": {
+    "codeCopied": "Code kopiert!",
+    "loading": {
+      "promotions": "Promotionen werden geladen...",
+      "categories": "Kategorien werden geladen...",
+      "products": "Produkte werden geladen..."
+    },
+    "noProducts": "Keine Produkte gefunden",
+    "saving": "Speichern...",
+    "updating": "Preise werden aktualisiert...",
+    "updatedSuccessfully": "Erfolgreich aktualisiert!",
+    "resetting": "Zurücksetzen..."
+  },
+  "success": {
+    "created": "Promotion erfolgreich erstellt!",
+    "updated": "Promotion erfolgreich aktualisiert!",
+    "deleted": "Promotion erfolgreich gelöscht!",
+    "markupUpdated": "Standardaufschlag-Einstellungen aktualisiert!",
+    "priceUpdated": "{count} Produkt erfolgreich aktualisiert!",
+    "priceUpdatedPlural": "{count} Produkte erfolgreich aktualisiert!",
+    "overridesCleared": "Preisüberschreibungen erfolgreich gelöscht"
+  },
+  "errors": {
+    "createFailed": "Erstellen der Promotion fehlgeschlagen",
+    "updateFailed": "Aktualisierung der Promotion fehlgeschlagen",
+    "deleteFailed": "Löschen der Promotion fehlgeschlagen",
+    "settingsUpdateFailed": "Aktualisierung der Einstellungen fehlgeschlagen",
+    "pricingUpdateFailed": "Aktualisierung der Preisgestaltung fehlgeschlagen",
+    "resetFailed": "Zurücksetzen der Preisüberschreibungen fehlgeschlagen"
+  }
+}
