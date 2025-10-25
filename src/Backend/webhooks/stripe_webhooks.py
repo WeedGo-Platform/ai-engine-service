@@ -141,9 +141,6 @@ async def handle_stripe_webhook(
         elif action == 'subscription_updated':
             await handle_subscription_updated(data, subscription_repo)
         
-        elif action == 'trial_ending_soon':
-            await handle_trial_ending_soon(data, subscription_repo)
-        
         logger.info(f"Successfully processed Stripe webhook: {event_type}")
         
         return {
@@ -383,47 +380,8 @@ async def handle_subscription_updated(
     await subscription_repo.save(subscription)
 
 
-async def handle_trial_ending_soon(
-    data: Dict[str, Any],
-    subscription_repo: TenantSubscriptionRepository
-):
-    """
-    Handle trial ending soon event (3 days before trial ends).
-    
-    Actions:
-    1. Find subscription
-    2. Send reminder email to customer
-    3. Ensure payment method is attached
-    
-    Args:
-        data: Trial ending data from webhook
-        subscription_repo: Subscription repository
-    """
-    stripe_subscription_id = data.get('subscription_id')
-    trial_end = data.get('trial_end')
-    
-    if not stripe_subscription_id:
-        logger.warning("Trial ending webhook missing subscription_id")
-        return
-    
-    # Find subscription
-    subscription = await subscription_repo.find_by_stripe_subscription_id(stripe_subscription_id)
-    
-    if not subscription:
-        logger.error(f"Subscription not found for Stripe subscription {stripe_subscription_id}")
-        return
-    
-    logger.info(f"Trial ending soon for subscription {subscription.id} on {trial_end}")
-    
-    # TODO: Send trial ending reminder email
-    # await send_trial_ending_email(subscription, trial_end)
-    
-    # TODO: Check if payment method is attached
-    # If not, prompt customer to add payment method
-
-
 # ==========================================
-# Helper Functions
+# Helper Functions (Email Notifications - TODO)
 # ==========================================
 
 async def send_payment_confirmation_email(subscription: TenantSubscription):
@@ -442,9 +400,3 @@ async def send_cancellation_email(subscription: TenantSubscription):
     """Send subscription cancellation confirmation email"""
     # TODO: Implement email sending
     logger.info(f"TODO: Send cancellation email for subscription {subscription.id}")
-
-
-async def send_trial_ending_email(subscription: TenantSubscription, trial_end: datetime):
-    """Send trial ending reminder email"""
-    # TODO: Implement email sending
-    logger.info(f"TODO: Send trial ending email for subscription {subscription.id}")

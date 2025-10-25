@@ -36,7 +36,6 @@ class CreateSubscriptionRequest(BaseModel):
     plan_tier: str = Field(..., description="Subscription tier: community, professional, enterprise")
     billing_frequency: str = Field(..., description="Billing frequency: monthly, quarterly, annual")
     payment_method_id: Optional[str] = Field(None, description="Stripe payment method ID (pm_...)")
-    trial_days: Optional[int] = Field(14, description="Number of trial days (default: 14)")
     customer_email: EmailStr = Field(..., description="Customer email for Stripe customer creation")
     customer_name: Optional[str] = Field(None, description="Customer name")
     metadata: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Additional metadata")
@@ -64,7 +63,6 @@ class SubscriptionResponse(BaseModel):
     billing_frequency: str
     base_price: Decimal
     next_billing_date: Optional[datetime]
-    trial_end_date: Optional[datetime]
     stripe_subscription_id: Optional[str]
     stripe_customer_id: Optional[str]
     payment_status: str
@@ -200,6 +198,13 @@ async def create_subscription(
         stripe_subscription_id = None
         
         if base_price > 0 and stripe_price_id:
+            # Only create Stripe resources for paid plans
+            if not request.payment_method_id:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Payment method required for paid plans"
+                )
+            
             # Step 1: Create Stripe customer
             customer_metadata = {
                 'tenant_id': str(request.tenant_id),
@@ -217,15 +222,14 @@ async def create_subscription(
             stripe_customer_id = customer_response['customer_id']
             logger.info(f"Created Stripe customer: {stripe_customer_id} for tenant {request.tenant_id}")
             
-            # Step 2: Attach payment method if provided
-            if request.payment_method_id:
-                await stripe.attach_payment_method_to_customer(
-                    payment_method_id=request.payment_method_id,
-                    customer_id=stripe_customer_id
-                )
-                logger.info(f"Attached payment method {request.payment_method_id} to customer {stripe_customer_id}")
+            # Step 2: Attach payment method
+            await stripe.attach_payment_method_to_customer(
+                payment_method_id=request.payment_method_id,
+                customer_id=stripe_customer_id
+            )
+            logger.info(f"Attached payment method {request.payment_method_id} to customer {stripe_customer_id}")
             
-            # Step 3: Create Stripe subscription
+            # Step 3: Create Stripe subscription (no trial)
             subscription_metadata = {
                 'tenant_id': str(request.tenant_id),
                 'plan_tier': request.plan_tier
@@ -234,7 +238,7 @@ async def create_subscription(
             stripe_sub_response = await stripe.create_subscription(
                 customer_id=stripe_customer_id,
                 price_id=stripe_price_id,
-                trial_period_days=request.trial_days,
+                trial_period_days=None,
                 metadata=subscription_metadata,
                 payment_method_id=request.payment_method_id
             )
@@ -254,7 +258,6 @@ async def create_subscription(
             tier=request.plan_tier.lower(),
             billing_frequency=frequency_map[billing_freq],
             base_price=base_price,
-            trial_days=request.trial_days,
             max_stores=pricing.get('max_stores', 1),
             max_users=pricing.get('max_users', 3),
             max_products=pricing.get('max_products', 100)
@@ -279,7 +282,6 @@ async def create_subscription(
             billing_frequency=saved_subscription.billing_frequency.value,
             base_price=saved_subscription.base_price,
             next_billing_date=saved_subscription.next_billing_date,
-            trial_end_date=saved_subscription.trial_end_date,
             stripe_subscription_id=stripe_subscription_id,
             stripe_customer_id=stripe_customer_id,
             payment_status=saved_subscription.payment_status.value,
@@ -328,7 +330,6 @@ async def get_subscription(
             billing_frequency=subscription.billing_frequency.value,
             base_price=subscription.base_price,
             next_billing_date=subscription.next_billing_date,
-            trial_end_date=subscription.trial_end_date,
             stripe_subscription_id=subscription.metadata.get('stripe_subscription_id'),
             stripe_customer_id=subscription.metadata.get('stripe_customer_id'),
             payment_status=subscription.payment_status.value,

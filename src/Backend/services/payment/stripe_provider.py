@@ -838,14 +838,6 @@ class StripeProvider(BasePaymentProvider):
                 'current_period_end': datetime.fromtimestamp(event_object.get('current_period_end', 0))
             }
         
-        elif event_type == 'customer.subscription.trial_will_end':
-            result['action'] = 'trial_ending_soon'
-            result['data'] = {
-                'subscription_id': event_object.get('id'),
-                'customer_id': event_object.get('customer'),
-                'trial_end': datetime.fromtimestamp(event_object.get('trial_end', 0))
-            }
-        
         else:
             logger.info(f"Unhandled webhook event type: {event_type}")
             result['processed'] = False
