@@ -726,3 +726,152 @@ async def get_customer_analytics(
                 "top_locations": top_locations
             }
         }
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error fetching customer analytics: {str(e)}"
+        )
+
+
+@router.get("/sales")
+async def get_sales_analytics(
+    period: str = Query("today", description="Time period: today, yesterday, week, month"),
+    start_date: Optional[str] = Query(None, description="Start date (YYYY-MM-DD)"),
+    end_date: Optional[str] = Query(None, description="End date (YYYY-MM-DD)"),
+    store_id: Optional[str] = Query(None, description="Filter by store ID"),
+    tenant_id: Optional[str] = Query(None, description="Filter by tenant ID"),
+    db_pool: asyncpg.Pool = Depends(get_db_pool)
+):
+    """
+    Get sales analytics for specified period - returns actual POS transaction data
+    
+    Returns:
+    - total_orders: Number of completed transactions
+    - total_revenue: Total sales amount
+    - average_order_value: Average transaction value
+    - top_products: Best selling products
+    """
+    try:
+        async with db_pool.acquire() as conn:
+            # Determine date range
+            now = datetime.now()
+            today = now.date()
+            
+            if start_date and end_date:
+                start = datetime.strptime(start_date, "%Y-%m-%d").date()
+                end = datetime.strptime(end_date, "%Y-%m-%d").date()
+            else:
+                if period == "today":
+                    start = today
+                    end = today
+                elif period == "yesterday":
+                    start = today - timedelta(days=1)
+                    end = today - timedelta(days=1)
+                elif period == "week":
+                    start = today - timedelta(days=7)
+                    end = today
+                elif period == "month":
+                    start = today - timedelta(days=30)
+                    end = today
+                else:
+                    start = today
+                    end = today
+            
+            # Build WHERE clause
+            where_conditions = [
+                "t.status IN ('completed', 'paid')",
+                "DATE(t.created_at) >= $1",
+                "DATE(t.created_at) <= $2"
+            ]
+            params = [start, end]
+            param_index = 3
+            
+            if tenant_id:
+                where_conditions.append(f"t.tenant_id = ${param_index}")
+                params.append(tenant_id)
+                param_index += 1
+                
+            if store_id:
+                where_conditions.append(f"t.store_id = ${param_index}")
+                params.append(store_id)
+                param_index += 1
+            
+            where_clause = " AND ".join(where_conditions)
+            
+            # Get sales summary
+            sales_query = f"""
+                SELECT 
+                    COUNT(DISTINCT t.id) as total_orders,
+                    COALESCE(SUM(t.total_amount), 0) as total_revenue,
+                    COALESCE(AVG(t.total_amount), 0) as average_order_value,
+                    COALESCE(SUM(t.tax_amount), 0) as total_tax,
+                    COALESCE(SUM(t.discount_amount), 0) as total_discounts
+                FROM pos_transactions t
+                WHERE {where_clause}
+            """
+            
+            sales_row = await conn.fetchrow(sales_query, *params)
+            
+            # Get top products
+            top_products_query = f"""
+                SELECT 
+                    ti.product_name,
+                    ti.sku,
+                    SUM(ti.quantity) as units_sold,
+                    SUM(ti.subtotal) as revenue
+                FROM pos_transaction_items ti
+                INNER JOIN pos_transactions t ON t.id = ti.transaction_id
+                WHERE {where_clause}
+                GROUP BY ti.product_name, ti.sku
+                ORDER BY revenue DESC
+                LIMIT 5
+            """
+            
+            top_products_rows = await conn.fetch(top_products_query, *params)
+            
+            return {
+                "period": {
+                    "start_date": str(start),
+                    "end_date": str(end),
+                    "period_type": period
+                },
+                "summary": {
+                    "total_orders": sales_row['total_orders'],
+                    "total_revenue": float(sales_row['total_revenue']),
+                    "average_order_value": float(sales_row['average_order_value']),
+                    "total_tax": float(sales_row['total_tax']),
+                    "total_discounts": float(sales_row['total_discounts'])
+                },
+                "top_products": [
+                    {
+                        "product_name": row['product_name'],
+                        "sku": row['sku'],
+                        "units_sold": row['units_sold'],
+                        "revenue": float(row['revenue'])
+                    }
+                    for row in top_products_rows
+                ]
+            }
+            
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error fetching sales analytics: {str(e)}"
+        )
+
+
+@router.get("/sales-today")
+async def get_sales_today(
+    store_id: str = Query(..., description="Store ID to get sales for"),
+    db_pool: asyncpg.Pool = Depends(get_db_pool)
+):
+    """
+    Get today's sales analytics - simplified endpoint for AI agents
+    Returns real-time sales data from the database for the current day.
+    """
+    return await get_sales_analytics(
+        period="today",
+        store_id=store_id,
+        db_pool=db_pool
+    )
