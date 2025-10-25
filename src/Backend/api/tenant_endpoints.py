@@ -50,6 +50,8 @@ from core.repositories.tenant_repository import TenantRepository
 from core.repositories.user_repository import UserRepository
 from core.repositories.interfaces import ISubscriptionRepository
 from core.repositories.subscription_repository import SubscriptionRepository
+from services.payment.stripe_provider import StripeProvider
+from decimal import Decimal
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/tenants", tags=["tenants"])
@@ -153,6 +155,64 @@ async def get_user_repository() -> UserRepository:
     pool = await get_db_pool()
     return UserRepository(pool)
 
+async def get_stripe_provider() -> Optional[StripeProvider]:
+    """Get configured Stripe provider instance (returns None if not configured)"""
+    import os
+    
+    stripe_config = {
+        'api_key': os.getenv('STRIPE_SECRET_KEY'),
+        'publishable_key': os.getenv('STRIPE_PUBLISHABLE_KEY'),
+        'webhook_secret': os.getenv('STRIPE_WEBHOOK_SECRET'),
+        'environment': os.getenv('STRIPE_ENVIRONMENT', 'test')
+    }
+    
+    if not stripe_config['api_key']:
+        logger.warning("Stripe not configured - skipping payment provider setup")
+        return None
+    
+    return StripeProvider(stripe_config)
+
+
+# Subscription pricing configuration (aligned with domain model)
+SUBSCRIPTION_PRICING = {
+    SubscriptionTier.COMMUNITY_AND_NEW_BUSINESS: {
+        "monthly": Decimal("0.00"),
+        "quarterly": Decimal("0.00"),
+        "annual": Decimal("0.00"),
+        "stripe_price_id": None
+    },
+    SubscriptionTier.SMALL_BUSINESS: {
+        "monthly": Decimal("99.00"),
+        "quarterly": Decimal("267.00"),
+        "annual": Decimal("990.00"),
+        "stripe_price_id": {
+            "monthly": os.getenv('STRIPE_PRICE_SMALL_BUSINESS_MONTHLY', 'price_small_business_monthly_cad'),
+            "quarterly": os.getenv('STRIPE_PRICE_SMALL_BUSINESS_QUARTERLY', 'price_small_business_quarterly_cad'),
+            "annual": os.getenv('STRIPE_PRICE_SMALL_BUSINESS_ANNUAL', 'price_small_business_annual_cad')
+        }
+    },
+    SubscriptionTier.PROFESSIONAL_AND_GROWING_BUSINESS: {
+        "monthly": Decimal("199.00"),
+        "quarterly": Decimal("537.00"),
+        "annual": Decimal("1990.00"),
+        "stripe_price_id": {
+            "monthly": os.getenv('STRIPE_PRICE_PROFESSIONAL_MONTHLY', 'price_professional_monthly_cad'),
+            "quarterly": os.getenv('STRIPE_PRICE_PROFESSIONAL_QUARTERLY', 'price_professional_quarterly_cad'),
+            "annual": os.getenv('STRIPE_PRICE_PROFESSIONAL_ANNUAL', 'price_professional_annual_cad')
+        }
+    },
+    SubscriptionTier.ENTERPRISE: {
+        "monthly": Decimal("499.00"),
+        "quarterly": Decimal("1347.00"),
+        "annual": Decimal("4990.00"),
+        "stripe_price_id": {
+            "monthly": os.getenv('STRIPE_PRICE_ENTERPRISE_MONTHLY', 'price_enterprise_monthly_cad'),
+            "quarterly": os.getenv('STRIPE_PRICE_ENTERPRISE_QUARTERLY', 'price_enterprise_quarterly_cad'),
+            "annual": os.getenv('STRIPE_PRICE_ENTERPRISE_ANNUAL', 'price_enterprise_annual_cad')
+        }
+    }
+}
+
 
 class CheckExistsRequest(BaseModel):
     code: Optional[str] = None
@@ -236,9 +296,10 @@ async def create_tenant_with_admin(
     request: CreateTenantRequest,
     service: TenantService = Depends(get_tenant_service),
     user_repo: UserRepository = Depends(get_user_repository),
-    pool: asyncpg.Pool = Depends(get_db_pool)
+    pool: asyncpg.Pool = Depends(get_db_pool),
+    stripe: Optional[StripeProvider] = Depends(get_stripe_provider)
 ):
-    """Create a new tenant with admin user - atomic operation with duplicate checking"""
+    """Create a new tenant with admin user and optional Stripe subscription - atomic operation"""
     try:
         # First check for existing tenant by code
         async with pool.acquire() as conn:
@@ -341,6 +402,86 @@ async def create_tenant_with_admin(
                         status_code=status.HTTP_400_BAD_REQUEST,
                         detail=f"Failed to create admin user: {str(user_error)}"
                     )
+                
+                # Create Stripe subscription for paid tiers
+                if request.subscription_tier != SubscriptionTier.COMMUNITY_AND_NEW_BUSINESS and stripe:
+                    try:
+                        billing_data = request.settings.get('billing', {}) if request.settings else {}
+                        billing_cycle = billing_data.get('cycle', 'monthly')
+                        payment_method_id = billing_data.get('payment_method_id')
+                        
+                        # Get pricing for this tier
+                        pricing = SUBSCRIPTION_PRICING.get(request.subscription_tier)
+                        if not pricing:
+                            logger.warning(f"No pricing configured for tier: {request.subscription_tier}")
+                        else:
+                            base_price = pricing.get(billing_cycle, pricing.get('monthly'))
+                            stripe_price_id = None
+                            
+                            if isinstance(pricing.get('stripe_price_id'), dict):
+                                stripe_price_id = pricing['stripe_price_id'].get(billing_cycle)
+                            
+                            # Only create Stripe subscription if payment method provided and price > 0
+                            if payment_method_id and base_price > 0 and stripe_price_id:
+                                logger.info(f"Creating Stripe subscription for tenant {tenant.id} - {request.subscription_tier.value} @ ${base_price}/{billing_cycle}")
+                                
+                                # Create Stripe customer
+                                customer_metadata = {
+                                    'tenant_id': str(tenant.id),
+                                    'tenant_code': tenant.code,
+                                    'subscription_tier': request.subscription_tier.value
+                                }
+                                
+                                customer_response = await stripe.create_customer(
+                                    email=request.contact_email,
+                                    name=request.company_name or request.name,
+                                    metadata=customer_metadata,
+                                    payment_method_id=payment_method_id
+                                )
+                                stripe_customer_id = customer_response['customer_id']
+                                logger.info(f"Created Stripe customer: {stripe_customer_id}")
+                                
+                                # Create Stripe subscription (no trial)
+                                subscription_metadata = {
+                                    'tenant_id': str(tenant.id),
+                                    'tenant_code': tenant.code,
+                                    'subscription_tier': request.subscription_tier.value,
+                                    'billing_cycle': billing_cycle
+                                }
+                                
+                                stripe_sub_response = await stripe.create_subscription(
+                                    customer_id=stripe_customer_id,
+                                    price_id=stripe_price_id,
+                                    trial_period_days=None,  # No trial - charge immediately
+                                    metadata=subscription_metadata,
+                                    payment_method_id=payment_method_id
+                                )
+                                stripe_subscription_id = stripe_sub_response['subscription_id']
+                                logger.info(f"Created Stripe subscription: {stripe_subscription_id}")
+                                
+                                # Update subscription record with Stripe IDs
+                                subscription_repo = SubscriptionRepository(pool)
+                                subscription = await subscription_repo.get_active_by_tenant(tenant.id)
+                                
+                                if subscription:
+                                    if not subscription.metadata:
+                                        subscription.metadata = {}
+                                    subscription.metadata['stripe_customer_id'] = stripe_customer_id
+                                    subscription.metadata['stripe_subscription_id'] = stripe_subscription_id
+                                    subscription.payment_method_id = payment_method_id
+                                    await subscription_repo.save(subscription)
+                                    logger.info(f"Updated subscription {subscription.id} with Stripe metadata")
+                            else:
+                                if not payment_method_id:
+                                    logger.warning(f"No payment method provided for paid tier {request.subscription_tier.value} - skipping Stripe")
+                                elif base_price <= 0:
+                                    logger.info(f"Free tier subscription - no Stripe needed")
+                    
+                    except Exception as stripe_error:
+                        # Log error but don't fail tenant creation
+                        # Tenant is already created, we can handle payment setup later
+                        logger.error(f"Failed to create Stripe subscription (tenant created successfully): {stripe_error}")
+                        # Could notify admin to manually set up payment
 
         return TenantResponse(
             id=tenant.id,
