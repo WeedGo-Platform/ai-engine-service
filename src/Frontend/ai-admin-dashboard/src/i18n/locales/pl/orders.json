@@ -1,0 +1,149 @@
+{
+  "titles": {
+    "management": "Zarządzanie zamówieniami",
+    "orderDetails": "Szczegóły zamówienia",
+    "assignDriver": "Przypisz kierowcę",
+    "messageCustomer": "Wiadomość do klienta",
+    "deliveryConfirmation": "Potwierdzenie dostawy"
+  },
+  "fields": {
+    "orderNumber": "Zamówienie",
+    "customer": "Klient",
+    "status": "Status",
+    "type": "Typ",
+    "items": "Pozycje",
+    "cannabis": "Konopie",
+    "total": "Suma",
+    "verification": "Weryfikacja",
+    "time": "Czas",
+    "actions": "Działania",
+    "product": "Produkt",
+    "brand": "Marka",
+    "category": "Kategoria",
+    "thcCbd": "THC/CBD",
+    "qty": "Ilość",
+    "price": "Cena",
+    "payment": "Płatność",
+    "paymentMethod": "Metoda płatności",
+    "deliveryAddress": "Adres dostawy",
+    "deliveryTime": "Czas dostawy",
+    "pickupTime": "Czas odbioru",
+    "driver": "Kierowca",
+    "vehicle": "Pojazd",
+    "signature": "Podpis klienta",
+    "deliveryPhoto": "Zdjęcie dostawy",
+    "dob": "DOB",
+    "loyaltyPoints": "Punkty lojalnościowe"
+  },
+  "status": {
+    "all": "Wszystkie statusy",
+    "pending": "Oczekujące",
+    "confirmed": "Potwierdzone",
+    "preparing": "W przygotowaniu",
+    "ready": "Gotowe",
+    "outForDelivery": "W dostawie",
+    "delivered": "Dostarczone",
+    "cancelled": "Anulowane",
+    "refunded": "Zwrócone",
+    "paymentPending": "Płatność oczekująca",
+    "ageVerified": "Wiek zweryfikowany",
+    "ageNotVerified": "Wiek niezweryfikowany"
+  },
+  "orderTypes": {
+    "all": "Wszystkie typy",
+    "delivery": "Dostawa",
+    "pickup": "Odbiór",
+    "inStore": "W sklepie"
+  },
+  "paymentMethods": {
+    "cash": "Gotówka",
+    "credit": "Karta kredytowa",
+    "debit": "Karta debetowa",
+    "eTransfer": "E-Transfer"
+  },
+  "paymentStatus": {
+    "pending": "Oczekująca",
+    "paid": "Zapłacona",
+    "refunded": "Zwrócona"
+  },
+  "customerTypes": {
+    "recreational": "Rekreacyjny",
+    "medical": "Medyczny"
+  },
+  "actions": {
+    "export": "Eksportuj",
+    "refresh": "Odśwież",
+    "viewDetails": "Zobacz szczegóły",
+    "confirmOrder": "Potwierdź zamówienie",
+    "cancelOrder": "Anuluj zamówienie",
+    "startPreparing": "Rozpocznij przygotowanie",
+    "markReady": "Oznacz jako gotowe",
+    "assignDriver": "Przypisz kierowcę",
+    "markPickedUp": "Oznacz jako odebrane",
+    "markDelivered": "Oznacz jako dostarczone",
+    "verifyAge": "Zweryfikuj wiek i dowód",
+    "messageCustomer": "Wiadomość do klienta",
+    "processRefund": "Przetwórz zwrot",
+    "assignAndDispatch": "Przypisz i wyślij",
+    "sendMessage": "Wyślij wiadomość"
+  },
+  "messages": {
+    "searchPlaceholder": "Szukaj po nr zamówienia, kliencie, telefonie...",
+    "selectDriver": "Wybierz kierowcę...",
+    "noOrders": "Nie znaleziono zamówień",
+    "ordersWillAppear": "Zamówienia pojawią się tutaj, gdy klienci je złożą.",
+    "exportMessage": "Funkcja eksportu pobierze plik CSV",
+    "assignDriverMessage": "Przypisz kierowcę do zamówienia {{orderNumber}}",
+    "messageSendTo": "Wyślij wiadomość do {{firstName}} {{lastName}}",
+    "typePlaceholder": "Wpisz swoją wiadomość...",
+    "loadingError": "Błąd ładowania zamówień:",
+    "driedFlowerEq": "Ekwiw. suszonego kwiatu:",
+    "to": "do",
+    "idVerified": "ID ✓",
+    "noId": "Brak dowodu",
+    "itemsCount": "{{count}} pozycji",
+    "orderNumber": "Zamówienie {{number}}",
+    "min": "min"
+  },
+  "metrics": {
+    "pending": "Oczekujące",
+    "preparing": "W przygotowaniu",
+    "ready": "Gotowe",
+    "todayRevenue": "Dzisiejszy przychód",
+    "avgProcessTime": "Śr. czas przetwarzania"
+  },
+  "sections": {
+    "customerInfo": "Informacje o kliencie",
+    "orderInfo": "Informacje o zamówieniu",
+    "deliveryInfo": "Informacje o dostawie",
+    "pickupInfo": "Informacje o odbiorze",
+    "specialInstructions": "Specjalne instrukcje",
+    "orderItems": "Pozycje zamówienia",
+    "orderSummary": "Podsumowanie zamówienia"
+  },
+  "summary": {
+    "subtotal": "Suma częściowa:",
+    "tax": "Podatek (13% HST):",
+    "delivery": "Dostawa:",
+    "discount": "Rabat:",
+    "total": "Suma:"
+  },
+  "prompts": {
+    "cancelReason": "Proszę podać przyczynę anulowania:",
+    "refundReason": "Proszę podać przyczynę zwrotu:"
+  },
+  "templates": {
+    "selectTemplate": "Wybierz szablon...",
+    "orderConfirmed": "Twoje zamówienie jest potwierdzone i przygotowywane.",
+    "readyForPickup": "Twoje zamówienie jest gotowe do odbioru!",
+    "outForDelivery": "Twoje zamówienie jest w dostawie.",
+    "delayNotice": "Wystąpiło opóźnienie z Twoim zamówieniem. Przepraszamy za niedogodności.",
+    "orderConfirmedLabel": "Zamówienie potwierdzone",
+    "readyForPickupLabel": "Gotowe do odbioru",
+    "outForDeliveryLabel": "W dostawie",
+    "delayNoticeLabel": "Powiadomienie o opóźnieniu"
+  },
+  "labels": {
+    "quickTemplates": "Szybkie szablony"
+  }
+}

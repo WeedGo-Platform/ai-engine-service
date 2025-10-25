@@ -1,0 +1,368 @@
+{
+  "tenant": {
+    "header": {
+      "title": "WeedGo",
+      "alreadyHaveAccount": "כבר יש לך חשבון?",
+      "signIn": "התחבר",
+      "backHome": "חזרה לדף הבית"
+    },
+    "steps": {
+      "company": "מידע על החברה",
+      "contact": "פרטי קשר",
+      "account": "הגדרת חשבון",
+      "payment": "מנוי ותשלום"
+    },
+    "stepDescriptions": {
+      "company": "ספר לנו על העסק והמותג שלך",
+      "contact": "ספק את פרטי הקשר והכתובת שלך",
+      "account": "צור את אישורי חשבון המנהל שלך",
+      "payment": "בחר את התוכנית ואמצעי התשלום שלך"
+    },
+    "companyInfo": {
+      "brandName": "שם המותג",
+      "brandNamePlaceholder": "לדוגמה, Green Valley Dispensary",
+      "website": "אתר אינטרנט",
+      "websitePlaceholder": "www.potpalace.ca או potpalace.ca",
+      "websiteHelp": "כתובת האתר שלך (משמש ליצירת קוד מותג)",
+      "brandCode": "קוד מותג",
+      "brandCodeAuto": "קוד מותג * (נוצר אוטומטית)",
+      "brandCodePlaceholder": "הזן אתר אינטרנט למעלה כדי ליצור",
+      "brandCodeHelp": "ישמש בכתובת החנות שלך: {{code}}.weedgo.com",
+      "legalCompanyName": "שם החברה המשפטי",
+      "legalCompanyPlaceholder": "לדוגמה, Green Valley Cannabis Inc.",
+      "businessNumber": "מספר עסק",
+      "businessNumberPlaceholder": "123456789",
+      "businessNumberHelp": "מספר עסק קנדי (9 ספרות)",
+      "gstHstNumber": "מספר GST/HST",
+      "gstHstPlaceholder": "123456789RT0001",
+      "gstHstHelp": "פורמט: 123456789RT0001",
+      "logoUpload": "העלאת לוגו",
+      "logoUploadHelp": "מקסימום 2MB • PNG, JPG, WebP • מומלץ: ריבוע 500x500 פיקסלים"
+    },
+    "contactInfo": {
+      "firstName": "שם פרטי",
+      "lastName": "שם משפחה",
+      "email": "כתובת אימייל",
+      "phone": "מספר טלפון",
+      "phonePlaceholder": "(555) 123-4567",
+      "street": "כתובת רחוב",
+      "city": "עיר",
+      "province": "מחוז",
+      "postalCode": "מיקוד",
+      "postalCodePlaceholder": "A1A 1A1"
+    },
+    "accountSetup": {
+      "password": "סיסמה",
+      "confirmPassword": "אשר סיסמה",
+      "passwordStrength": "חוזק:",
+      "passwordHelp": "חייבת להיות לפחות 8 תווים עם אותיות גדולות, קטנות ומספר",
+      "securityTitle": "אבטחת חשבון",
+      "securityDescription": "החשבון שלך יהיה מאובטח עם הצפנה בתקן תעשייתי ואפשרויות אימות רב-גורמי."
+    },
+    "subscription": {
+      "choosePlan": "בחר את תוכנית המנוי שלך",
+      "selectedPlan": "תוכנית נבחרת: {{plan}}",
+      "changePlan": "שנה תוכנית",
+      "free": "חינם",
+      "perMonth": "${{price}}/חודש",
+      "customPricing": "תמחור מותאם אישית",
+      "billingCycle": "מחזור חיוב",
+      "monthly": "חודשי",
+      "monthlyBilled": "חיוב חודשי",
+      "annual": "שנתי",
+      "annualSave": "חסוך 20%",
+      "selectPlan": "בחר תוכנית",
+      "enterpriseTitle": "תוכנית ארגונית",
+      "enterpriseDescription": "צוות המכירות שלנו יצור איתך קשר תוך 24 שעות כדי לדון בתמחור ובהתקנה מותאמים אישית."
+    },
+    "payment": {
+      "cardholderName": "שם בעל הכרטיס",
+      "cardholderPlaceholder": "יוסי כהן",
+      "cardNumber": "מספר כרטיס",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiryDate": "תאריך תפוגה",
+      "expiryPlaceholder": "MM/YY",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "postalCode": "ZIP/מיקוד",
+      "postalCodePlaceholder": "12345"
+    },
+    "progress": {
+      "verifying": "מאמת זמינות...",
+      "creating": "יוצר את החשבון שלך...",
+      "uploading": "מעלה לוגו...",
+      "complete": "החשבון נוצר בהצלחה!",
+      "processing": "מעבד..."
+    },
+    "success": {
+      "welcome": "ברוך הבא ל-WeedGo!",
+      "accountCreated": "החשבון שלך נוצר בהצלחה.",
+      "tenantCode": "קוד שוכר:",
+      "preparing": "מכין את לוח הבקרה שלך..."
+    },
+    "navigation": {
+      "previous": "קודם",
+      "next": "הבא",
+      "createAccount": "צור חשבון"
+    },
+    "errors": {
+      "accountCreationFailed": "יצירת החשבון נכשלה",
+      "tryAgain": "נסה שוב",
+      "registerAsUser": "הירשם כמשתמש",
+      "signInInstead": "התחבר במקום זאת",
+      "tenantExists": "קוד השוכר \"{{code}}\" כבר רשום",
+      "websiteExists": "האתר \"{{website}}\" כבר בשימוש"
+    }
+  },
+  "review": {
+    "title": "סקירת חשבון שוכר",
+    "description": "סקור ואשר חשבונות המסומנים לאימות ידני",
+    "refresh": "רענן",
+    "stats": {
+      "totalPending": "סה\"כ ממתינים",
+      "thisWeek": "השבוע",
+      "avgReviewTime": "זמן סקירה ממוצע",
+      "approvalRate": "שיעור אישורים"
+    },
+    "table": {
+      "title": "חשבונות ממתינים",
+      "storeName": "שם החנות",
+      "contact": "איש קשר",
+      "licenseNumber": "מספר רישיון",
+      "submitted": "הוגש",
+      "tier": "רמה",
+      "actions": "פעולות",
+      "review": "סקור",
+      "noPending": "אין חשבונות ממתינים לסקירה!"
+    },
+    "modal": {
+      "title": "סקור חשבון",
+      "storeInfo": "מידע על החנות",
+      "storeName": "שם החנות",
+      "licenseNumber": "מספר רישיון",
+      "crsaAddress": "כתובת CRSA",
+      "municipality": "רשות מקומית",
+      "crsaStatus": "סטטוס CRSA",
+      "crsaWebsite": "אתר CRSA",
+      "contactInfo": "פרטי קשר",
+      "contactName": "שם איש קשר",
+      "role": "תפקיד",
+      "email": "אימייל",
+      "phone": "טלפון",
+      "verificationContext": "הקשר אימות",
+      "emailDomain": "דומיין אימייל",
+      "domainMatchesCrsa": "דומיין תואם ל-CRSA",
+      "verificationTier": "רמת אימות",
+      "submitted": "הוגש",
+      "adminNotes": "הערות מנהל (אופציונלי)",
+      "adminNotesPlaceholder": "הוסף הערות לגבי סקירה זו...",
+      "reject": "דחה",
+      "approve": "אשר חשבון",
+      "approving": "מאשר...",
+      "yes": "✓ כן",
+      "no": "✗ לא"
+    },
+    "reject": {
+      "title": "דחה חשבון",
+      "description": "אנא ספק סיבה לדחיית חשבון זה. זה ירשם למטרות ביקורת.",
+      "reasonPlaceholder": "סיבה לדחייה (מינימום 10 תווים)...",
+      "cancel": "ביטול",
+      "confirm": "אשר דחייה",
+      "rejecting": "דוחה...",
+      "minLength": "אנא ספק סיבה (לפחות 10 תווים)"
+    },
+    "messages": {
+      "approved": "החשבון אושר בהצלחה!",
+      "rejected": "החשבון נדחה בהצלחה.",
+      "approveFailed": "נכשל באישור החשבון: {{error}}",
+      "rejectFailed": "נכשל בדחיית החשבון: {{error}}",
+      "fetchFailed": "נכשל באחזור חשבונות ממתינים",
+      "noPermission": "אין לך הרשאה לסקור חשבונות שוכרים."
+    }
+  },
+  "userRegistration": {
+    "title": "צור את החשבון שלך",
+    "joinTenant": "הצטרף ל-{{tenantName}}",
+    "tenantInfo": "מידע על השוכר",
+    "tenantName": "שם:",
+    "tenantCode": "קוד:",
+    "firstName": "שם פרטי",
+    "firstNamePlaceholder": "יוסי",
+    "lastName": "שם משפחה",
+    "lastNamePlaceholder": "כהן",
+    "email": "כתובת אימייל",
+    "emailPlaceholder": "yossi.cohen@example.com",
+    "phone": "מספר טלפון",
+    "phonePlaceholder": "(555) 123-4567",
+    "password": "סיסמה",
+    "passwordPlaceholder": "••••••••",
+    "confirmPassword": "אשר סיסמה",
+    "passwordStrength": "חוזק:",
+    "passwordHelp": "השתמש ב-8+ תווים עם אותיות גדולות, קטנות, מספרים וסמלים לאבטחה טובה יותר",
+    "createButton": "צור חשבון",
+    "creating": "יוצר חשבון...",
+    "alreadyHaveAccount": "כבר יש לך חשבון?",
+    "signIn": "התחבר",
+    "loading": "טוען מידע על השוכר...",
+    "tenantNotFound": "שוכר לא נמצא",
+    "tenantNotFoundDescription": "לא ניתן למצוא את השוכר שצוין.",
+    "goToSignup": "עבור להרשמה",
+    "errors": {
+      "loadFailed": "נכשל בטעינת מידע על השוכר",
+      "alreadyExists": "משתמש עם אימייל זה כבר קיים. אנא השתמש באימייל אחר או התחבר במקום זאת.",
+      "failed": "נכשל ביצירת חשבון משתמש"
+    }
+  },
+  "success": {
+    "title": "ברוך הבא ל-WeedGo!",
+    "description": "החשבון שלך עבור {{tenantName}} נוצר בהצלחה.",
+    "accountDetails": {
+      "title": "פרטי החשבון שלך",
+      "tenantName": "שם השוכר:",
+      "tenantCode": "קוד שוכר:",
+      "storeUrl": "כתובת החנות:"
+    },
+    "nextSteps": {
+      "title": "צעדים הבאים",
+      "checkEmail": {
+        "title": "בדוק את האימייל שלך",
+        "description": "שלחנו לך אימייל ברוכים הבאים עם מידע חשוב על החשבון והוראות התקנה."
+      },
+      "accessDashboard": {
+        "title": "גש ללוח הבקרה שלך",
+        "description": "התחבר ללוח הבקרה של המנהל שלך כדי להגדיר את הגדרות החנות שלך, להוסיף מוצרים ולהתאים אישית את עוזרי ה-AI שלך."
+      },
+      "setupStore": {
+        "title": "הגדר את החנות הראשונה שלך",
+        "description": "הוסף את מיקום החנות הראשון שלך, הגדר שעות פעילות והגדר את מלאי המוצרים שלך."
+      },
+      "configureAI": {
+        "title": "הגדר עוזרי AI",
+        "description": "התאם אישית את אישיות ה-AI budtender שלך והגדר תמיכה רב-לשונית עבור הלקוחות שלך."
+      }
+    },
+    "quickActions": {
+      "dashboard": {
+        "title": "גש ללוח הבקרה",
+        "description": "הגדר את הפלטפורמה שלך"
+      },
+      "documentation": {
+        "title": "תיעוד",
+        "description": "מדריכי התקנה ומדריכים"
+      },
+      "support": {
+        "title": "תמיכה",
+        "description": "קבל עזרה מהצוות שלנו"
+      }
+    },
+    "cta": {
+      "button": "גש ללוח הבקרה שלך",
+      "help": "צריך עזרה להתחיל? צור קשר עם צוות התמיכה שלנו בכתובת",
+      "email": "support@weedgo.com"
+    },
+    "resources": {
+      "title": "משאבים שיעזרו לך להתחיל",
+      "quickSetup": {
+        "title": "מדריך התקנה מהירה",
+        "item1": "הגדרת חנות ומיתוג",
+        "item2": "הגדרת קטלוג מוצרים",
+        "item3": "הגדרת עיבוד תשלומים",
+        "item4": "התאמה אישית של עוזר AI"
+      },
+      "training": {
+        "title": "הדרכה ותמיכה",
+        "item1": "מדריכי וידאו וסמינרים מקוונים",
+        "item2": "צ'אט תמיכת לקוחות 24/7",
+        "item3": "גישה לפורום קהילה",
+        "item4": "מנהל חשבון ייעודי (ארגוני)"
+      }
+    }
+  },
+  "validation": {
+    "required": "{{field}} נדרש",
+    "brandNameRequired": "שם המותג נדרש",
+    "websiteRequired": "אתר אינטרנט נדרש כדי ליצור קוד מותג",
+    "brandCodeRequired": "קוד מותג נדרש (הזן אתר אינטרנט כדי ליצור)",
+    "brandCodeFormat": "קוד מותג חייב להכיל רק אותיות גדולות, מספרים, מקפים וקו תחתון",
+    "companyNameRequired": "שם החברה נדרש",
+    "businessNumberRequired": "מספר עסק נדרש",
+    "businessNumberFormat": "מספר עסק חייב להיות 9 ספרות",
+    "gstHstRequired": "מספר GST/HST נדרש",
+    "gstHstFormat": "פורמט מספר GST/HST: 123456789RT0001",
+    "emailRequired": "אימייל נדרש",
+    "emailInvalid": "אנא הזן כתובת אימייל חוקית",
+    "firstNameRequired": "שם פרטי נדרש",
+    "lastNameRequired": "שם משפחה נדרש",
+    "streetRequired": "כתובת רחוב נדרשת",
+    "cityRequired": "עיר נדרשת",
+    "postalCodeRequired": "מיקוד נדרש",
+    "postalCodeFormat": "אנא הזן מיקוד קנדי חוקי",
+    "passwordRequired": "סיסמה נדרשת",
+    "passwordLength": "הסיסמה חייבת להיות לפחות 8 תווים",
+    "passwordComplexity": "הסיסמה חייבת להכיל אותיות גדולות, קטנות ומספר",
+    "passwordMismatch": "הסיסמאות לא תואמות",
+    "cardNumberRequired": "מספר כרטיס נדרש",
+    "cardNumberFormat": "אנא הזן מספר כרטיס חוקי בעל 16 ספרות",
+    "expiryRequired": "תאריך תפוגה נדרש",
+    "expiryFormat": "אנא הזן בפורמט MM/YY",
+    "cvvRequired": "CVV נדרש",
+    "cvvFormat": "CVV חייב להיות 3 או 4 ספרות",
+    "cardholderRequired": "שם בעל הכרטיס נדרש"
+  },
+  "passwordStrength": {
+    "weak": "חלשה",
+    "fair": "בינונית",
+    "good": "טובה",
+    "strong": "חזקה",
+    "veryStrong": "חזקה מאוד"
+  },
+  "provinces": {
+    "ON": "Ontario",
+    "BC": "British Columbia",
+    "AB": "Alberta",
+    "QC": "Quebec",
+    "MB": "Manitoba",
+    "SK": "Saskatchewan",
+    "NS": "Nova Scotia",
+    "NB": "New Brunswick",
+    "NL": "Newfoundland and Labrador",
+    "PE": "Prince Edward Island",
+    "NT": "Northwest Territories",
+    "YT": "Yukon",
+    "NU": "Nunavut"
+  },
+  "plans": {
+    "community_and_new_business": {
+      "name": "קהילה ועסק חדש",
+      "features": {
+        "stores": "חנות אחת",
+        "languages": "2 שפות",
+        "personalities": "אישיות AI אחת"
+      }
+    },
+    "small_business": {
+      "name": "עסק קטן",
+      "features": {
+        "stores": "5 חנויות",
+        "languages": "5 שפות",
+        "personalities": "2 אישיות AI"
+      }
+    },
+    "professional_and_growing_business": {
+      "name": "עסק מקצועי וצומח",
+      "features": {
+        "stores": "12 חנויות",
+        "languages": "10 שפות",
+        "personalities": "3 אישיות AI"
+      }
+    },
+    "enterprise": {
+      "name": "ארגוני",
+      "features": {
+        "stores": "חנויות ללא הגבלה",
+        "languages": "25+ שפות",
+        "personalities": "5 אישיות AI"
+      }
+    }
+  }
+}

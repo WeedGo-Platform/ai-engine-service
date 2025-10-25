@@ -1,0 +1,98 @@
+{
+  "api": {
+    "networkError": "Não foi possível conectar ao servidor. Verifique sua conexão.",
+    "serverError": "Ocorreu um erro no servidor. Tente novamente mais tarde.",
+    "timeout": "A solicitação expirou. Tente novamente.",
+    "unauthorized": "Você não está autorizado a executar esta ação.",
+    "forbidden": "Acesso negado.",
+    "notFound": "O recurso solicitado não foi encontrado.",
+    "conflict": "Ocorreu um conflito. O recurso pode já existir.",
+    "validationError": "Ocorreu um erro de validação.",
+    "tooManyRequests": "Muitas solicitações. Tente novamente mais tarde.",
+    "serviceUnavailable": "Serviço temporariamente indisponível.",
+    "badRequest": "Solicitação inválida. Verifique sua entrada.",
+    "internalError": "Ocorreu um erro interno."
+  },
+  "auth": {
+    "loginSuccess": "Login bem-sucedido! Redirecionando...",
+    "invalidCredentials": "E-mail ou senha inválidos. Tente novamente.",
+    "sessionExpired": "Sua sessão expirou. Faça login novamente.",
+    "accountDisabled": "Sua conta está desativada ou não possui privilégios de administrador.",
+    "accountLocked": "Sua conta foi bloqueada devido a várias tentativas de login falhadas.",
+    "tooManyAttempts": "Muitas tentativas de login. Tente novamente mais tarde.",
+    "tokenExpired": "O token de autenticação expirou.",
+    "tokenInvalid": "Token de autenticação inválido.",
+    "passwordResetFailed": "A redefinição de senha falhou. Tente novamente.",
+    "emailNotVerified": "Verifique seu endereço de e-mail primeiro.",
+    "validationError": "Ocorreu um erro de validação",
+    "loginError": "Ocorreu um erro durante o login"
+  },
+  "tenant": {
+    "loadFailed": "Falha ao carregar dados da organização.",
+    "createFailed": "Falha ao criar inquilino.",
+    "updateFailed": "Falha ao atualizar inquilino.",
+    "deleteFailed": "Falha ao excluir inquilino.",
+    "suspendFailed": "Falha ao suspender inquilino.",
+    "reactivateFailed": "Falha ao reativar inquilino.",
+    "noOrganization": "Nenhuma organização associada ao usuário.",
+    "limitReached": "Limite de lojas atingido para este inquilino.",
+    "invalidSubscription": "Assinatura inválida ou expirada."
+  },
+  "store": {
+    "loadFailed": "Falha ao carregar dados da loja.",
+    "createFailed": "Falha ao criar loja.",
+    "updateFailed": "Falha ao atualizar loja.",
+    "deleteFailed": "Falha ao excluir loja.",
+    "suspendFailed": "Falha ao suspender loja.",
+    "closeFailed": "Falha ao fechar loja.",
+    "notFound": "Loja não encontrada.",
+    "alreadyExists": "Uma loja com este nome já existe."
+  },
+  "inventory": {
+    "loadFailed": "Falha ao carregar dados de inventário.",
+    "createFailed": "Falha ao criar item de inventário.",
+    "updateFailed": "Falha ao atualizar item de inventário.",
+    "deleteFailed": "Falha ao excluir item de inventário.",
+    "stockUpdateFailed": "Falha ao atualizar níveis de estoque.",
+    "lowStock": "Alerta de estoque baixo.",
+    "outOfStock": "Item esgotado.",
+    "invalidQuantity": "Quantidade inválida especificada."
+  },
+  "order": {
+    "loadFailed": "Falha ao carregar dados do pedido.",
+    "createFailed": "Falha ao criar pedido.",
+    "updateFailed": "Falha ao atualizar pedido.",
+    "cancelFailed": "Falha ao cancelar pedido.",
+    "fulfillFailed": "Falha ao cumprir pedido.",
+    "refundFailed": "Falha ao processar reembolso.",
+    "notFound": "Pedido não encontrado.",
+    "alreadyProcessed": "O pedido já foi processado."
+  },
+  "payment": {
+    "loadFailed": "Falha ao carregar dados de pagamento.",
+    "processingFailed": "Falha no processamento do pagamento.",
+    "refundFailed": "Falha no processamento do reembolso.",
+    "invalidAmount": "Valor de pagamento inválido.",
+    "cardDeclined": "Cartão recusado.",
+    "insufficientFunds": "Fundos insuficientes.",
+    "paymentMethodInvalid": "Método de pagamento inválido."
+  },
+  "upload": {
+    "failed": "Falha no upload do arquivo.",
+    "fileTooLarge": "O tamanho do arquivo excede o máximo permitido.",
+    "invalidFileType": "Tipo de arquivo inválido.",
+    "corruptedFile": "O arquivo parece estar corrompido.",
+    "uploadCancelled": "O upload foi cancelado."
+  },
+  "general": {
+    "unexpectedError": "Ocorreu um erro inesperado.",
+    "operationFailed": "A operação falhou. Tente novamente.",
+    "dataLoadFailed": "Falha ao carregar dados.",
+    "saveFailed": "Falha ao salvar alterações.",
+    "deleteFailed": "Falha ao excluir item.",
+    "permissionDenied": "Você não tem permissão para executar esta ação.",
+    "invalidInput": "Entrada inválida fornecida.",
+    "requiredFieldMissing": "Um campo obrigatório está faltando.",
+    "dataCorrupted": "Os dados parecem estar corrompidos."
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "api": {
+    "networkError": "サーバーに接続できません。接続を確認してください。",
+    "serverError": "サーバーエラーが発生しました。後でもう一度お試しください。",
+    "timeout": "リクエストがタイムアウトしました。もう一度お試しください。",
+    "unauthorized": "この操作を実行する権限がありません。",
+    "forbidden": "アクセスが拒否されました。",
+    "notFound": "要求されたリソースが見つかりませんでした。",
+    "conflict": "競合が発生しました。リソースは既に存在している可能性があります。",
+    "validationError": "検証エラーが発生しました。",
+    "tooManyRequests": "リクエストが多すぎます。後でもう一度お試しください。",
+    "serviceUnavailable": "サービスが一時的に利用できません。",
+    "badRequest": "無効なリクエストです。入力を確認してください。",
+    "internalError": "内部エラーが発生しました。"
+  },
+  "auth": {
+    "loginSuccess": "ログインに成功しました！リダイレクト中...",
+    "invalidCredentials": "メールアドレスまたはパスワードが無効です。もう一度お試しください。",
+    "sessionExpired": "セッションの有効期限が切れました。もう一度ログインしてください。",
+    "accountDisabled": "アカウントが無効化されているか、管理者権限がありません。",
+    "accountLocked": "複数回のログイン失敗により、アカウントがロックされました。",
+    "tooManyAttempts": "ログイン試行回数が多すぎます。後でもう一度お試しください。",
+    "tokenExpired": "認証トークンの有効期限が切れました。",
+    "tokenInvalid": "無効な認証トークンです。",
+    "passwordResetFailed": "パスワードのリセットに失敗しました。もう一度お試しください。",
+    "emailNotVerified": "最初にメールアドレスを確認してください。",
+    "validationError": "検証エラーが発生しました",
+    "loginError": "ログイン中にエラーが発生しました"
+  },
+  "tenant": {
+    "loadFailed": "組織データの読み込みに失敗しました。",
+    "createFailed": "テナントの作成に失敗しました。",
+    "updateFailed": "テナントの更新に失敗しました。",
+    "deleteFailed": "テナントの削除に失敗しました。",
+    "suspendFailed": "テナントの一時停止に失敗しました。",
+    "reactivateFailed": "テナントの再アクティブ化に失敗しました。",
+    "noOrganization": "ユーザーに関連付けられた組織がありません。",
+    "limitReached": "このテナントの店舗制限に達しました。",
+    "invalidSubscription": "無効または期限切れのサブスクリプションです。"
+  },
+  "store": {
+    "loadFailed": "店舗データの読み込みに失敗しました。",
+    "createFailed": "店舗の作成に失敗しました。",
+    "updateFailed": "店舗の更新に失敗しました。",
+    "deleteFailed": "店舗の削除に失敗しました。",
+    "suspendFailed": "店舗の一時停止に失敗しました。",
+    "closeFailed": "店舗の閉鎖に失敗しました。",
+    "notFound": "店舗が見つかりません。",
+    "alreadyExists": "この名前の店舗は既に存在します。"
+  },
+  "inventory": {
+    "loadFailed": "在庫データの読み込みに失敗しました。",
+    "createFailed": "在庫アイテムの作成に失敗しました。",
+    "updateFailed": "在庫アイテムの更新に失敗しました。",
+    "deleteFailed": "在庫アイテムの削除に失敗しました。",
+    "stockUpdateFailed": "在庫レベルの更新に失敗しました。",
+    "lowStock": "在庫不足の警告。",
+    "outOfStock": "在庫切れです。",
+    "invalidQuantity": "無効な数量が指定されました。"
+  },
+  "order": {
+    "loadFailed": "注文データの読み込みに失敗しました。",
+    "createFailed": "注文の作成に失敗しました。",
+    "updateFailed": "注文の更新に失敗しました。",
+    "cancelFailed": "注文のキャンセルに失敗しました。",
+    "fulfillFailed": "注文の履行に失敗しました。",
+    "refundFailed": "返金処理に失敗しました。",
+    "notFound": "注文が見つかりません。",
+    "alreadyProcessed": "注文は既に処理されています。"
+  },
+  "payment": {
+    "loadFailed": "支払いデータの読み込みに失敗しました。",
+    "processingFailed": "支払い処理に失敗しました。",
+    "refundFailed": "返金処理に失敗しました。",
+    "invalidAmount": "無効な支払い金額です。",
+    "cardDeclined": "カードが拒否されました。",
+    "insufficientFunds": "資金不足です。",
+    "paymentMethodInvalid": "無効な支払い方法です。"
+  },
+  "upload": {
+    "failed": "ファイルのアップロードに失敗しました。",
+    "fileTooLarge": "ファイルサイズが許可された最大値を超えています。",
+    "invalidFileType": "無効なファイルタイプです。",
+    "corruptedFile": "ファイルが破損しているようです。",
+    "uploadCancelled": "アップロードがキャンセルされました。"
+  },
+  "general": {
+    "unexpectedError": "予期しないエラーが発生しました。",
+    "operationFailed": "操作に失敗しました。もう一度お試しください。",
+    "dataLoadFailed": "データの読み込みに失敗しました。",
+    "saveFailed": "変更の保存に失敗しました。",
+    "deleteFailed": "アイテムの削除に失敗しました。",
+    "permissionDenied": "この操作を実行する権限がありません。",
+    "invalidInput": "無効な入力が提供されました。",
+    "requiredFieldMissing": "必須フィールドが不足しています。",
+    "dataCorrupted": "データが破損しているようです。"
+  }
+}

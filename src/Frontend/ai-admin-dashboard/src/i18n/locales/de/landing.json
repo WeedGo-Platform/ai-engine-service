@@ -1,0 +1,247 @@
+{
+  "header": {
+    "nav": {
+      "features": "Funktionen",
+      "pricing": "Preise",
+      "testimonials": "Erfahrungsberichte",
+      "login": "Anmelden"
+    },
+    "getStarted": "Jetzt starten"
+  },
+  "hero": {
+    "title": "Die komplette Cannabis",
+    "titleHighlight": "Business-Plattform",
+    "subtitle": "Stärken Sie Ihre Apotheke mit KI-gesteuertem E-Commerce, mehrsprachiger Unterstützung, Betrugsprävention und vollständigem Geschäftsmanagement—alles auf einer Plattform.",
+    "startTrial": "Kostenlose Testversion starten",
+    "learnMore": "Mehr erfahren"
+  },
+  "stats": {
+    "products": "Produkte",
+    "languages": "Sprachen",
+    "uptime": "Verfügbarkeit",
+    "support": "Support"
+  },
+  "features": {
+    "heading": "Alles, was Sie brauchen, um Ihren Markt zu dominieren",
+    "subheading": "Ausschließlich für Cannabis-Einzelhändler entwickelt, kombiniert WeedGo modernste KI, Infrastruktur auf Unternehmensebene und branchenspezifische Tools, um Ihnen zu helfen",
+    "subheadingHighlight": " mehr zu verkaufen, besser zu bedienen und schneller zu skalieren",
+    "aiBudtender": {
+      "title": "KI-Budtender 24/7",
+      "description": "Verpassen Sie keinen Verkauf. Ihr KI-Assistent beantwortet Kundenfragen sofort in jeder Sprache, empfiehlt Produkte und überprüft sogar das Alter automatisch."
+    },
+    "voiceShopping": {
+      "title": "Sprach-Shopping",
+      "description": "Barrierefreiheit trifft auf Bequemlichkeit. Kunden können freihändig stöbern, suchen und bestellen—perfekt für Kioske im Geschäft und mobile Käufer."
+    },
+    "predictiveIntelligence": {
+      "title": "Vorausschauende Intelligenz",
+      "description": "Wissen Sie, was verkauft wird, bevor es passiert. KI prognostiziert die Nachfrage, optimiert Lagerbestände und warnt Sie, zur perfekten Zeit nachzubestellen."
+    },
+    "smartRecommendations": {
+      "title": "Intelligente Empfehlungen",
+      "description": "Steigern Sie den durchschnittlichen Bestellwert um 40%. Maschinelles Lernen schlägt ergänzende Produkte basierend auf Kaufmustern und Kundenpräferenzen vor."
+    },
+    "unifiedCommerce": {
+      "title": "Einheitliche Commerce-Plattform",
+      "description": "Ein System für alles—Web-Storefront, Kassen im Geschäft, Kiosk, mobile App und TV-Menüanzeigen. Ihr Inventar synchronisiert sich in Echtzeit über alle Kanäle."
+    },
+    "brandedMobileApps": {
+      "title": "Marken-Mobile-Apps",
+      "description": "Ihre Kunden laden IHRE App herunter (iOS & Android). Bauen Sie Loyalität mit Push-Benachrichtigungen, exklusiven Angeboten und nahtlosen mobilen Bestellungen auf."
+    },
+    "selfServiceKiosks": {
+      "title": "Selbstbedienungs-Kioske",
+      "description": "Reduzieren Sie Wartezeiten und Arbeitskosten. Kunden stöbern, bestellen und bezahlen an Tablets—Ihr Personal konzentriert sich auf wertvolle Interaktionen."
+    },
+    "deliveryEcosystem": {
+      "title": "Liefer-Ökosystem",
+      "description": "Komplettes Liefermanagement mit Fahrer-Apps, Echtzeit-GPS-Tracking, Kundenbenachrichtigungen und Routenoptimierung. Konkurrieren Sie mit den Großen."
+    },
+    "multiLanguage": {
+      "title": "25+ Sprachen, keine Barrieren",
+      "description": "Bedienen Sie jeden Kunden in seiner Muttersprache. Automatische Erkennung, Echtzeitübersetzung und lokalisierte Inhalte—expandieren Sie sofort in jeden Markt."
+    },
+    "seoOptimization": {
+      "title": "SEO, das wirklich funktioniert",
+      "description": "Dynamische, KI-gestützte SEO-Optimierung. Ihre Produktseiten ranken automatisch höher bei Google—keine SEO-Agentur erforderlich."
+    },
+    "fraudProtection": {
+      "title": "Betrugsprävention-Suite",
+      "description": "Stoppen Sie Rückbuchungen, bevor sie passieren. KI erkennt verdächtige Muster, sperrt betrügerische Karten und erfasst Unterschriften für jede Transaktion."
+    },
+    "complianceAutopilot": {
+      "title": "Compliance-Autopilot",
+      "description": "Bleiben Sie compliant ohne Kopfschmerzen. Automatische Altersüberprüfung, CannSell-Tracking, OCS-Integration und prüfungsbereite Berichte zur Hand."
+    },
+    "ageVerification": {
+      "title": "Mehrschichtige Altersüberprüfung",
+      "description": "Spracherkennung, ID-Scannen, Gesichtserkennung und manuelles Überschreiben—überprüfen Sie das Alter der Kunden durch mehrere Methoden für vollständige regulatorische Sicherheit."
+    },
+    "businessIntelligence": {
+      "title": "Echtzeit-Business-Intelligence",
+      "description": "Sehen Sie alles in einem Dashboard—Verkaufstrends, Top-Produkte, Kundenverhalten, Mitarbeiterleistung und Gewinnmargen werden jede Sekunde aktualisiert."
+    },
+    "multiLocation": {
+      "title": "Mehrstandort-Kommandozentrale",
+      "description": "Verwalten Sie unbegrenzt viele Geschäfte von einem Dashboard aus. Übertragen Sie Inventar zwischen Standorten, vergleichen Sie die Leistung und pflegen Sie mühelos ein einheitliches Branding."
+    },
+    "customerLoyalty": {
+      "title": "Kundenloyalitäts-Engine",
+      "description": "Verwandeln Sie Erstkäufer in Stammkunden. Punkteprogramme, VIP-Stufen, Geburtstagsbelohnungen und Empfehlungsboni—alles automatisiert und anpassbar."
+    },
+    "brandCustomization": {
+      "title": "Ihre Marke, Ihre Art",
+      "description": "Vollständige White-Label-Anpassung. Wählen Sie aus Premium-Vorlagen oder gehen Sie vollständig individuell—Logos, Farben, Schriftarten und Layouts, die SIE schreien."
+    },
+    "noCodeCustomization": {
+      "title": "No-Code-Anpassung",
+      "description": "Ändern Sie alles ohne Entwickler. Drag-and-Drop-Seitenbuilder, benutzerdefinierte Formulare, Werbebanner—aktualisieren Sie Ihren Shop in Minuten, nicht Wochen."
+    },
+    "uptimeGuarantee": {
+      "title": "99,9% Verfügbarkeitsgarantie",
+      "description": "Unternehmens-Cloud-Infrastruktur, die automatisch skaliert. Blitzschnelle Ladezeiten, globales CDN und redundante Backups—Ihr Shop geht nie offline."
+    },
+    "apiArchitecture": {
+      "title": "API-First-Architektur",
+      "description": "Integration mit allem. Vollständiger REST-API-Zugriff ermöglicht nahtlose Verbindungen zu Buchhaltungssoftware, Marketing-Tools oder benutzerdefinierten Anwendungen."
+    },
+    "cta": {
+      "heading": "Bereit zu sehen, was WeedGo für Ihr Unternehmen tun kann?",
+      "description": "Schließen Sie sich Hunderten von Cannabis-Einzelhändlern an, die bereits gewechselt haben.",
+      "descriptionHighlight": " Starten Sie kostenlos, skalieren Sie unbegrenzt und transformieren Sie Ihr Geschäft",
+      "descriptionEnd": " mit der einzigen Plattform, die speziell für Sie entwickelt wurde.",
+      "startTrial": "Kostenlose Testversion starten",
+      "viewPricing": "Preispläne anzeigen"
+    }
+  },
+  "pricing": {
+    "heading": "Einfache, transparente Preise",
+    "subheading": "Wählen Sie den Plan, der zu Ihren Geschäftsanforderungen passt",
+    "plans": {
+      "community": {
+        "name": "Community und Neues Geschäft",
+        "price": "KOSTENLOS",
+        "period": "für immer",
+        "cta": "Jetzt starten",
+        "everythingIn": "",
+        "features": [
+          "Unbegrenzte Filialstandorte für Skalierung in Ihrem Tempo",
+          "Zweisprachiger Support (Englisch & Französisch)",
+          "KI-gestützte Budtender-Persönlichkeit",
+          "Vollständiges POS- & Kiosk-System",
+          "Anpassbarer E-Commerce-Storefront",
+          "Digitales Menüanzeige-System",
+          "Integriertes Liefermanagement",
+          "Erweiterte Betrugsschutz- & Altersüberprüfung",
+          "Community-Support"
+        ]
+      },
+      "smallBusiness": {
+        "name": "Kleinunternehmen",
+        "price": "99 $",
+        "period": "/Monat",
+        "cta": "Jetzt starten",
+        "everythingIn": "Alles in Kostenlos, plus:",
+        "features": [
+          "Erweitern Sie auf 5 Sprachen für vielfältige Märkte",
+          "2 KI-Persönlichkeiten passend zu Ihrer Markenstimme",
+          "Professionelles POS mit erweiterten Funktionen",
+          "Dedizierte Tablet-Kiosk-Anwendung",
+          "Premium-E-Commerce-Vorlagen",
+          "TV-bereite Menüanzeige für In-Store-Marketing",
+          "Prioritätssupport, wenn Sie ihn brauchen"
+        ]
+      },
+      "professional": {
+        "name": "Professionell und Wachsendes Geschäft",
+        "price": "149 $",
+        "period": "/Monat",
+        "cta": "Jetzt starten",
+        "badge": "Am beliebtesten",
+        "everythingIn": "Alles in Kleinunternehmen, plus:",
+        "features": [
+          "Erreichen Sie globale Märkte mit 10 Sprachen",
+          "3 KI-Persönlichkeiten für personalisierte Erfahrungen",
+          "Schalten Sie alle Plattformfunktionen & Integrationen frei",
+          "Individuelles E-Commerce-Design (5.000 $ Wert)",
+          "Marken-Mobile-App für iOS & Android",
+          "Live-Lieferverfolgung für Kunden",
+          "Fahrer-App für nahtlose Abläufe",
+          "Vollständiger API-Zugriff für benutzerdefinierte Integrationen",
+          "Professionelle SEO-Optimierung & Content-Rewrite"
+        ]
+      },
+      "enterprise": {
+        "name": "Unternehmen",
+        "price": "299 $",
+        "period": "/Monat",
+        "cta": "Vertrieb kontaktieren",
+        "everythingIn": "Alles in Professionell, plus:",
+        "features": [
+          "25+ Sprachen für echte globale Reichweite",
+          "5 KI-Persönlichkeiten für jedes Kundensegment",
+          "White-Label-Plattform - vollständig als Ihre eigene umbenennen",
+          "Dedizierter MVP-Server für maximale Leistung",
+          "KI-gestützte Marketing-Automatisierungs-Suite",
+          "Dynamisches SEO-Rewriting zur Dominierung von Suchrankings",
+          "KI-optimierte Werbeaktionen auf Ihre Kunden ausgerichtet",
+          "Benutzerdefinierte Feature-Entwicklung auf Ihre Bedürfnisse zugeschnitten",
+          "Direkter Zugang zu Support-Ingenieuren",
+          "Priorität bei benutzerdefinierten Integrationen mit Ihren Systemen",
+          "24/7 dedizierter Account Manager"
+        ]
+      }
+    }
+  },
+  "testimonials": {
+    "heading": "Vertraut von Cannabis-Unternehmen weltweit",
+    "subheading": "Sehen Sie, was unsere Kunden über WeedGo sagen",
+    "items": [
+      {
+        "quote": "WeedGo hat unser Geschäft transformiert. Der KI-Assistent hat unsere Verkäufe um 40% gesteigert und die mehrsprachige Unterstützung hilft uns, unsere vielfältige Kundenbasis zu bedienen.",
+        "name": "Sarah Johnson",
+        "title": "Inhaberin, Green Valley Dispensary"
+      },
+      {
+        "quote": "Die Betrugsschutz- und Compliance-Funktionen sind Game-Changer. Wir haben Tausende bei betrügerischen Transaktionen verhindert und bleiben mühelos compliant.",
+        "name": "Mike Chen",
+        "title": "Manager, Urban Leaf Co."
+      },
+      {
+        "quote": "Die Skalierung von 1 auf 8 Standorte war nahtlos mit WeedGo. Die Multi-Tenant-Architektur und zentralisierten Management-Tools sind genau das, was wir brauchten.",
+        "name": "Lisa Rodriguez",
+        "title": "CEO, Cannabis Collective"
+      }
+    ]
+  },
+  "cta": {
+    "heading": "Bereit, Ihr Cannabis-Geschäft zu transformieren?",
+    "description": "Schließen Sie sich Tausenden von Apotheken an, die bereits WeedGo nutzen, um Verkäufe zu steigern, Compliance zu verbessern und außergewöhnliche Kundenerlebnisse zu liefern.",
+    "button": "Starten Sie Ihre kostenlose Testversion"
+  },
+  "footer": {
+    "tagline": "Die komplette Cannabis-Business-Plattform powered by KI.",
+    "product": {
+      "heading": "Produkt",
+      "features": "Funktionen",
+      "pricing": "Preise",
+      "api": "API",
+      "integrations": "Integrationen"
+    },
+    "company": {
+      "heading": "Unternehmen",
+      "about": "Über uns",
+      "careers": "Karriere",
+      "contact": "Kontakt",
+      "blog": "Blog"
+    },
+    "support": {
+      "heading": "Support",
+      "helpCenter": "Hilfezentrum",
+      "documentation": "Dokumentation",
+      "status": "Status",
+      "security": "Sicherheit"
+    },
+    "copyright": "© 2025 WeedGo. Alle Rechte vorbehalten."
+  }
+}

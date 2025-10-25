@@ -1,0 +1,98 @@
+{
+  "api": {
+    "networkError": "Nu se poate conecta la server. Vă rugăm să verificați conexiunea.",
+    "serverError": "A apărut o eroare de server. Vă rugăm să încercați din nou mai târziu.",
+    "timeout": "Cererea a expirat. Vă rugăm să încercați din nou.",
+    "unauthorized": "Nu sunteți autorizat să efectuați această acțiune.",
+    "forbidden": "Acces refuzat.",
+    "notFound": "Resursa solicitată nu a fost găsită.",
+    "conflict": "A apărut un conflict. Resursa poate exista deja.",
+    "validationError": "A apărut o eroare de validare.",
+    "tooManyRequests": "Prea multe solicitări. Vă rugăm să încercați din nou mai târziu.",
+    "serviceUnavailable": "Serviciul este temporar indisponibil.",
+    "badRequest": "Cerere invalidă. Vă rugăm să verificați datele introduse.",
+    "internalError": "A apărut o eroare internă."
+  },
+  "auth": {
+    "loginSuccess": "Autentificare reușită! Redirecționare...",
+    "invalidCredentials": "E-mail sau parolă invalidă. Vă rugăm să încercați din nou.",
+    "sessionExpired": "Sesiunea dvs. a expirat. Vă rugăm să vă autentificați din nou.",
+    "accountDisabled": "Contul dvs. este dezactivat sau nu are privilegii de administrator.",
+    "accountLocked": "Contul dvs. a fost blocat din cauza mai multor încercări eșuate de autentificare.",
+    "tooManyAttempts": "Prea multe încercări de autentificare. Vă rugăm să încercați din nou mai târziu.",
+    "tokenExpired": "Token-ul de autentificare a expirat.",
+    "tokenInvalid": "Token de autentificare invalid.",
+    "passwordResetFailed": "Resetarea parolei a eșuat. Vă rugăm să încercați din nou.",
+    "emailNotVerified": "Vă rugăm să verificați mai întâi adresa de e-mail.",
+    "validationError": "A apărut o eroare de validare",
+    "loginError": "A apărut o eroare în timpul autentificării"
+  },
+  "tenant": {
+    "loadFailed": "Încărcarea datelor organizației a eșuat.",
+    "createFailed": "Crearea chiriașului a eșuat.",
+    "updateFailed": "Actualizarea chiriașului a eșuat.",
+    "deleteFailed": "Ștergerea chiriașului a eșuat.",
+    "suspendFailed": "Suspendarea chiriașului a eșuat.",
+    "reactivateFailed": "Reactivarea chiriașului a eșuat.",
+    "noOrganization": "Nicio organizație asociată cu utilizatorul.",
+    "limitReached": "Limita de magazine atinsă pentru acest chiriaș.",
+    "invalidSubscription": "Abonament invalid sau expirat."
+  },
+  "store": {
+    "loadFailed": "Încărcarea datelor magazinului a eșuat.",
+    "createFailed": "Crearea magazinului a eșuat.",
+    "updateFailed": "Actualizarea magazinului a eșuat.",
+    "deleteFailed": "Ștergerea magazinului a eșuat.",
+    "suspendFailed": "Suspendarea magazinului a eșuat.",
+    "closeFailed": "Închiderea magazinului a eșuat.",
+    "notFound": "Magazinul nu a fost găsit.",
+    "alreadyExists": "Un magazin cu acest nume există deja."
+  },
+  "inventory": {
+    "loadFailed": "Încărcarea datelor de inventar a eșuat.",
+    "createFailed": "Crearea articolului de inventar a eșuat.",
+    "updateFailed": "Actualizarea articolului de inventar a eșuat.",
+    "deleteFailed": "Ștergerea articolului de inventar a eșuat.",
+    "stockUpdateFailed": "Actualizarea nivelurilor de stoc a eșuat.",
+    "lowStock": "Alertă stoc redus.",
+    "outOfStock": "Articolul este epuizat.",
+    "invalidQuantity": "Cantitate invalidă specificată."
+  },
+  "order": {
+    "loadFailed": "Încărcarea datelor comenzii a eșuat.",
+    "createFailed": "Crearea comenzii a eșuat.",
+    "updateFailed": "Actualizarea comenzii a eșuat.",
+    "cancelFailed": "Anularea comenzii a eșuat.",
+    "fulfillFailed": "Finalizarea comenzii a eșuat.",
+    "refundFailed": "Procesarea rambursării a eșuat.",
+    "notFound": "Comanda nu a fost găsită.",
+    "alreadyProcessed": "Comanda a fost deja procesată."
+  },
+  "payment": {
+    "loadFailed": "Încărcarea datelor de plată a eșuat.",
+    "processingFailed": "Procesarea plății a eșuat.",
+    "refundFailed": "Procesarea rambursării a eșuat.",
+    "invalidAmount": "Sumă de plată invalidă.",
+    "cardDeclined": "Cardul a fost refuzat.",
+    "insufficientFunds": "Fonduri insuficiente.",
+    "paymentMethodInvalid": "Metodă de plată invalidă."
+  },
+  "upload": {
+    "failed": "Încărcarea fișierului a eșuat.",
+    "fileTooLarge": "Dimensiunea fișierului depășește maximul permis.",
+    "invalidFileType": "Tip de fișier invalid.",
+    "corruptedFile": "Fișierul pare a fi corupt.",
+    "uploadCancelled": "Încărcarea a fost anulată."
+  },
+  "general": {
+    "unexpectedError": "A apărut o eroare neașteptată.",
+    "operationFailed": "Operațiunea a eșuat. Vă rugăm să încercați din nou.",
+    "dataLoadFailed": "Încărcarea datelor a eșuat.",
+    "saveFailed": "Salvarea modificărilor a eșuat.",
+    "deleteFailed": "Ștergerea articolului a eșuat.",
+    "permissionDenied": "Nu aveți permisiunea de a efectua această acțiune.",
+    "invalidInput": "Date de intrare invalide furnizate.",
+    "requiredFieldMissing": "Câmp obligatoriu lipsă.",
+    "dataCorrupted": "Datele par a fi corupte."
+  }
+}

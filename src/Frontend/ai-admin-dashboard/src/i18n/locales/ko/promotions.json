@@ -1,0 +1,158 @@
+{
+  "titles": {
+    "main": "프로모션 및 가격",
+    "activePromotions": "활성 프로모션",
+    "analytics": "분석",
+    "defaultPricing": "기본 가격",
+    "topPerforming": "최고 실적 프로모션",
+    "overallStats": "전체 통계",
+    "deletePromotion": "프로모션 삭제",
+    "createPromotion": "새 프로모션 만들기",
+    "editPromotion": "프로모션 편집",
+    "viewPromotion": "프로모션 보기",
+    "defaultPriceConfig": "기본 가격 구성",
+    "applyMarkup": "마크업 적용",
+    "storeWideMarkup": "매장 전체 기본 마크업"
+  },
+  "descriptions": {
+    "noStoreSelected": "선택된 매장 없음",
+    "selectStoreForPromotions": "프로모션 및 가격을 관리할 매장을 선택하세요",
+    "selectStoreForPricing": "가격을 관리할 매장을 선택하세요",
+    "managingFor": "프로모션 및 가격 관리 중",
+    "pricingInstructions": "카테고리별로 제품의 마크업 비율을 설정합니다. 마크업은 단위 원가에 적용되어 소매 가격이 계산됩니다. 더 구체적인 설정이 일반 설정을 재정의합니다(예: 하위 카테고리가 카테고리를 재정의).",
+    "defaultMarkupInfo": "이 기본 마크업은 새 제품의 가격 계산 시 또는 특정 카테고리 마크업이 설정되지 않은 경우 사용됩니다."
+  },
+  "table": {
+    "promotion": "프로모션",
+    "code": "코드",
+    "discount": "할인",
+    "usage": "사용",
+    "duration": "기간",
+    "status": "상태",
+    "actions": "작업",
+    "min": "최소",
+    "perCustomer": "고객당",
+    "to": "까지",
+    "uses": "사용 횟수",
+    "revenue": "수익"
+  },
+  "status": {
+    "inactive": "비활성",
+    "scheduled": "예약됨",
+    "expired": "만료됨",
+    "active": "활성"
+  },
+  "stats": {
+    "totalUses": "총 사용 횟수",
+    "totalDiscounts": "총 할인",
+    "totalRevenue": "총 수익",
+    "avgOrderValue": "평균 주문 금액"
+  },
+  "actions": {
+    "createNew": "새 프로모션 만들기",
+    "edit": "프로모션 편집",
+    "delete": "프로모션 삭제",
+    "cancel": "취소",
+    "back": "뒤로",
+    "next": "다음",
+    "update": "업데이트",
+    "create": "만들기",
+    "applyMarkup": "마크업 적용",
+    "resetOverrides": "재정의 초기화",
+    "saveDefault": "기본값으로 저장",
+    "quickSetMarkup": "마크업 빠르게 설정"
+  },
+  "search": {
+    "placeholder": "이름 또는 코드로 프로모션 검색...",
+    "categories": "카테고리 검색..."
+  },
+  "steps": {
+    "basicInfo": {
+      "name": "기본 정보",
+      "description": "이름 및 설명"
+    },
+    "discount": {
+      "name": "할인",
+      "description": "유형 및 값"
+    },
+    "scope": {
+      "name": "범위",
+      "description": "위치 및 시간"
+    },
+    "settings": {
+      "name": "설정",
+      "description": "사용 제한"
+    },
+    "review": {
+      "name": "검토",
+      "description": "세부 정보 확인"
+    }
+  },
+  "pricing": {
+    "enableDefault": "기본 마크업 활성화",
+    "default": "기본값",
+    "markupPercentage": "마크업 비율",
+    "retailPriceFormula": "Retail Price = Cost × (1 + {markup}%)",
+    "exampleCalculation": "계산 예:",
+    "currentCost": "현재 원가",
+    "currentRetail": "현재 소매 가격",
+    "newPricing": "{markup}% 마크업 적용 신규 가격:",
+    "newRetailPrice": "신규 소매 가격",
+    "profitMargin": "이익률",
+    "priceChange": "가격 변경",
+    "ifCost": "원가가",
+    "retailPrice": "소매 가격",
+    "allProducts": "모든 제품",
+    "storeWideDefault": "매장 전체 기본값",
+    "products": "제품",
+    "overrides": "재정의",
+    "avg": "평균",
+    "productsInCategory": "이 카테고리의 제품:",
+    "sku": "SKU",
+    "stock": "재고",
+    "brand": "브랜드",
+    "cost": "원가",
+    "applyingTo": "적용 대상:",
+    "updating": "업데이트 중:",
+    "allProductsStoreWide": "모든 제품(매장 전체)"
+  },
+  "confirm": {
+    "deletePromotion": "이 프로모션을 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.",
+    "applyAllProducts": "매장의 모든 제품에 대한 마크업을 {markup}%로 업데이트합니다. 계속하시겠습니까?",
+    "resetOverrides": "{scope}의 모든 가격 재정의를 제거하고 계산된 마크업을 사용합니다. 계속하시겠습니까?"
+  },
+  "warnings": {
+    "storeWideUpdate": "매장의 모든 제품에 대한 가격이 업데이트됩니다.",
+    "singleProductNote": "이 특정 제품만 업데이트됩니다."
+  },
+  "messages": {
+    "codeCopied": "코드가 복사되었습니다!",
+    "loading": {
+      "promotions": "프로모션 로드 중...",
+      "categories": "카테고리 로드 중...",
+      "products": "제품 로드 중..."
+    },
+    "noProducts": "제품을 찾을 수 없음",
+    "saving": "저장 중...",
+    "updating": "가격 업데이트 중...",
+    "updatedSuccessfully": "업데이트 성공!",
+    "resetting": "초기화 중..."
+  },
+  "success": {
+    "created": "프로모션이 성공적으로 생성되었습니다!",
+    "updated": "프로모션이 성공적으로 업데이트되었습니다!",
+    "deleted": "프로모션이 성공적으로 삭제되었습니다!",
+    "markupUpdated": "기본 마크업 설정이 업데이트되었습니다!",
+    "priceUpdated": "{count}개 제품이 성공적으로 업데이트되었습니다!",
+    "priceUpdatedPlural": "{count}개 제품이 성공적으로 업데이트되었습니다!",
+    "overridesCleared": "가격 재정의가 성공적으로 제거되었습니다"
+  },
+  "errors": {
+    "createFailed": "프로모션 생성 실패",
+    "updateFailed": "프로모션 업데이트 실패",
+    "deleteFailed": "프로모션 삭제 실패",
+    "settingsUpdateFailed": "설정 업데이트 실패",
+    "pricingUpdateFailed": "가격 업데이트 실패",
+    "resetFailed": "가격 재정의 초기화 실패"
+  }
+}

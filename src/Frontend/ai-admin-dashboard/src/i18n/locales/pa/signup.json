@@ -1,0 +1,368 @@
+{
+  "tenant": {
+    "header": {
+      "title": "WeedGo",
+      "alreadyHaveAccount": "ਪਹਿਲਾਂ ਤੋਂ ਖਾਤਾ ਹੈ?",
+      "signIn": "ਸਾਈਨ ਇਨ ਕਰੋ",
+      "backHome": "ਘਰ ਵਾਪਸ ਜਾਓ"
+    },
+    "steps": {
+      "company": "ਕੰਪਨੀ ਜਾਣਕਾਰੀ",
+      "contact": "ਸੰਪਰਕ ਵੇਰਵੇ",
+      "account": "ਖਾਤਾ ਸੈਟਅੱਪ",
+      "payment": "ਸਬਸਕ੍ਰਿਪਸ਼ਨ ਅਤੇ ਭੁਗਤਾਨ"
+    },
+    "stepDescriptions": {
+      "company": "ਸਾਨੂੰ ਆਪਣੇ ਕਾਰੋਬਾਰ ਅਤੇ ਬ੍ਰਾਂਡ ਬਾਰੇ ਦੱਸੋ",
+      "contact": "ਆਪਣੀ ਸੰਪਰਕ ਜਾਣਕਾਰੀ ਅਤੇ ਪਤਾ ਪ੍ਰਦਾਨ ਕਰੋ",
+      "account": "ਆਪਣੇ ਐਡਮਿਨ ਖਾਤੇ ਦੇ ਪ੍ਰਮਾਣ-ਪੱਤਰ ਬਣਾਓ",
+      "payment": "ਆਪਣੀ ਯੋਜਨਾ ਅਤੇ ਭੁਗਤਾਨ ਵਿਧੀ ਚੁਣੋ"
+    },
+    "companyInfo": {
+      "brandName": "ਬ੍ਰਾਂਡ ਦਾ ਨਾਮ",
+      "brandNamePlaceholder": "ਉਦਾਹਰਨ, Green Valley Dispensary",
+      "website": "ਵੈੱਬਸਾਈਟ",
+      "websitePlaceholder": "www.potpalace.ca ਜਾਂ potpalace.ca",
+      "websiteHelp": "ਤੁਹਾਡਾ ਵੈੱਬਸਾਈਟ URL (ਬ੍ਰਾਂਡ ਕੋਡ ਬਣਾਉਣ ਲਈ ਵਰਤਿਆ ਜਾਂਦਾ ਹੈ)",
+      "brandCode": "ਬ੍ਰਾਂਡ ਕੋਡ",
+      "brandCodeAuto": "ਬ੍ਰਾਂਡ ਕੋਡ * (ਆਟੋ-ਜਨਰੇਟਿਡ)",
+      "brandCodePlaceholder": "ਜਨਰੇਟ ਕਰਨ ਲਈ ਉੱਪਰ ਵੈੱਬਸਾਈਟ ਦਾਖਲ ਕਰੋ",
+      "brandCodeHelp": "ਤੁਹਾਡੇ ਸਟੋਰ URL ਵਿੱਚ ਵਰਤਿਆ ਜਾਵੇਗਾ: {{code}}.weedgo.com",
+      "legalCompanyName": "ਕਾਨੂੰਨੀ ਕੰਪਨੀ ਦਾ ਨਾਮ",
+      "legalCompanyPlaceholder": "ਉਦਾਹਰਨ, Green Valley Cannabis Inc.",
+      "businessNumber": "ਕਾਰੋਬਾਰੀ ਨੰਬਰ",
+      "businessNumberPlaceholder": "123456789",
+      "businessNumberHelp": "ਕੈਨੇਡੀਅਨ ਕਾਰੋਬਾਰੀ ਨੰਬਰ (9 ਅੰਕ)",
+      "gstHstNumber": "GST/HST ਨੰਬਰ",
+      "gstHstPlaceholder": "123456789RT0001",
+      "gstHstHelp": "ਫਾਰਮੈਟ: 123456789RT0001",
+      "logoUpload": "ਲੋਗੋ ਅੱਪਲੋਡ",
+      "logoUploadHelp": "ਅਧਿਕਤਮ 2MB • PNG, JPG, WebP • ਸਿਫਾਰਸ਼ਿਤ: 500x500px ਵਰਗ"
+    },
+    "contactInfo": {
+      "firstName": "ਪਹਿਲਾ ਨਾਮ",
+      "lastName": "ਆਖਰੀ ਨਾਮ",
+      "email": "ਈਮੇਲ ਪਤਾ",
+      "phone": "ਫੋਨ ਨੰਬਰ",
+      "phonePlaceholder": "(555) 123-4567",
+      "street": "ਗਲੀ ਦਾ ਪਤਾ",
+      "city": "ਸ਼ਹਿਰ",
+      "province": "ਸੂਬਾ",
+      "postalCode": "ਡਾਕ ਕੋਡ",
+      "postalCodePlaceholder": "A1A 1A1"
+    },
+    "accountSetup": {
+      "password": "ਪਾਸਵਰਡ",
+      "confirmPassword": "ਪਾਸਵਰਡ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ",
+      "passwordStrength": "ਤਾਕਤ:",
+      "passwordHelp": "ਘੱਟੋ-ਘੱਟ 8 ਅੱਖਰ ਹੋਣੇ ਚਾਹੀਦੇ ਹਨ ਜਿਸ ਵਿੱਚ ਵੱਡੇ ਅੱਖਰ, ਛੋਟੇ ਅੱਖਰ ਅਤੇ ਨੰਬਰ ਹੋਣ",
+      "securityTitle": "ਖਾਤਾ ਸੁਰੱਖਿਆ",
+      "securityDescription": "ਤੁਹਾਡੇ ਖਾਤੇ ਨੂੰ ਉਦਯੋਗ-ਮਿਆਰੀ ਏਨਕ੍ਰਿਪਸ਼ਨ ਅਤੇ ਮਲਟੀ-ਫੈਕਟਰ ਪ੍ਰਮਾਣਿਕਤਾ ਵਿਕਲਪਾਂ ਨਾਲ ਸੁਰੱਖਿਅਤ ਕੀਤਾ ਜਾਵੇਗਾ।"
+    },
+    "subscription": {
+      "choosePlan": "ਆਪਣੀ ਸਬਸਕ੍ਰਿਪਸ਼ਨ ਯੋਜਨਾ ਚੁਣੋ",
+      "selectedPlan": "ਚੁਣੀ ਗਈ ਯੋਜਨਾ: {{plan}}",
+      "changePlan": "ਯੋਜਨਾ ਬਦਲੋ",
+      "free": "ਮੁਫਤ",
+      "perMonth": "${{price}}/ਮਹੀਨਾ",
+      "customPricing": "ਕਸਟਮ ਕੀਮਤ",
+      "billingCycle": "ਬਿਲਿੰਗ ਚੱਕਰ",
+      "monthly": "ਮਾਸਿਕ",
+      "monthlyBilled": "ਮਾਸਿਕ ਬਿਲ ਕੀਤਾ ਗਿਆ",
+      "annual": "ਸਾਲਾਨਾ",
+      "annualSave": "20% ਬਚਤ ਕਰੋ",
+      "selectPlan": "ਯੋਜਨਾ ਚੁਣੋ",
+      "enterpriseTitle": "ਐਂਟਰਪ੍ਰਾਈਜ਼ ਯੋਜਨਾ",
+      "enterpriseDescription": "ਸਾਡੀ ਸੇਲਜ਼ ਟੀਮ ਕਸਟਮ ਕੀਮਤ ਅਤੇ ਸੈਟਅੱਪ ਬਾਰੇ ਚਰਚਾ ਕਰਨ ਲਈ 24 ਘੰਟਿਆਂ ਵਿੱਚ ਤੁਹਾਡੇ ਨਾਲ ਸੰਪਰਕ ਕਰੇਗੀ।"
+    },
+    "payment": {
+      "cardholderName": "ਕਾਰਡਧਾਰਕ ਦਾ ਨਾਮ",
+      "cardholderPlaceholder": "ਜਸਵਿੰਦਰ ਸਿੰਘ",
+      "cardNumber": "ਕਾਰਡ ਨੰਬਰ",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiryDate": "ਮਿਆਦ ਪੁੱਗਣ ਦੀ ਤਾਰੀਖ",
+      "expiryPlaceholder": "MM/YY",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "postalCode": "ZIP/ਡਾਕ ਕੋਡ",
+      "postalCodePlaceholder": "12345"
+    },
+    "progress": {
+      "verifying": "ਉਪਲਬਧਤਾ ਦੀ ਪੁਸ਼ਟੀ ਕੀਤੀ ਜਾ ਰਹੀ ਹੈ...",
+      "creating": "ਤੁਹਾਡਾ ਖਾਤਾ ਬਣਾਇਆ ਜਾ ਰਿਹਾ ਹੈ...",
+      "uploading": "ਲੋਗੋ ਅੱਪਲੋਡ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...",
+      "complete": "ਖਾਤਾ ਸਫਲਤਾਪੂਰਵਕ ਬਣਾਇਆ ਗਿਆ!",
+      "processing": "ਪ੍ਰਕਿਰਿਆ ਜਾਰੀ ਹੈ..."
+    },
+    "success": {
+      "welcome": "WeedGo ਵਿੱਚ ਤੁਹਾਡਾ ਸੁਆਗਤ ਹੈ!",
+      "accountCreated": "ਤੁਹਾਡਾ ਖਾਤਾ ਸਫਲਤਾਪੂਰਵਕ ਬਣਾਇਆ ਗਿਆ ਹੈ।",
+      "tenantCode": "ਕਿਰਾਏਦਾਰ ਕੋਡ:",
+      "preparing": "ਤੁਹਾਡਾ ਡੈਸ਼ਬੋਰਡ ਤਿਆਰ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ..."
+    },
+    "navigation": {
+      "previous": "ਪਿਛਲਾ",
+      "next": "ਅਗਲਾ",
+      "createAccount": "ਖਾਤਾ ਬਣਾਓ"
+    },
+    "errors": {
+      "accountCreationFailed": "ਖਾਤਾ ਬਣਾਉਣਾ ਅਸਫਲ ਰਿਹਾ",
+      "tryAgain": "ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ",
+      "registerAsUser": "ਉਪਭੋਗਤਾ ਵਜੋਂ ਰਜਿਸਟਰ ਕਰੋ",
+      "signInInstead": "ਇਸਦੀ ਬਜਾਏ ਸਾਈਨ ਇਨ ਕਰੋ",
+      "tenantExists": "ਕਿਰਾਏਦਾਰ ਕੋਡ \"{{code}}\" ਪਹਿਲਾਂ ਹੀ ਰਜਿਸਟਰਡ ਹੈ",
+      "websiteExists": "ਵੈੱਬਸਾਈਟ \"{{website}}\" ਪਹਿਲਾਂ ਹੀ ਵਰਤੋਂ ਵਿੱਚ ਹੈ"
+    }
+  },
+  "review": {
+    "title": "ਕਿਰਾਏਦਾਰ ਖਾਤਾ ਸਮੀਖਿਆ",
+    "description": "ਦਸਤੀ ਤਸਦੀਕ ਲਈ ਫਲੈਗ ਕੀਤੇ ਖਾਤਿਆਂ ਦੀ ਸਮੀਖਿਆ ਅਤੇ ਮਨਜ਼ੂਰੀ ਦਿਓ",
+    "refresh": "ਤਾਜ਼ਾ ਕਰੋ",
+    "stats": {
+      "totalPending": "ਕੁੱਲ ਬਕਾਇਆ",
+      "thisWeek": "ਇਸ ਹਫਤੇ",
+      "avgReviewTime": "ਔਸਤ ਸਮੀਖਿਆ ਸਮਾਂ",
+      "approvalRate": "ਮਨਜ਼ੂਰੀ ਦਰ"
+    },
+    "table": {
+      "title": "ਬਕਾਇਆ ਖਾਤੇ",
+      "storeName": "ਸਟੋਰ ਦਾ ਨਾਮ",
+      "contact": "ਸੰਪਰਕ",
+      "licenseNumber": "ਲਾਇਸੈਂਸ ਨੰਬਰ",
+      "submitted": "ਜਮ੍ਹਾ ਕੀਤਾ ਗਿਆ",
+      "tier": "ਟੀਅਰ",
+      "actions": "ਕਾਰਵਾਈਆਂ",
+      "review": "ਸਮੀਖਿਆ ਕਰੋ",
+      "noPending": "ਸਮੀਖਿਆ ਕਰਨ ਲਈ ਕੋਈ ਬਕਾਇਆ ਖਾਤੇ ਨਹੀਂ!"
+    },
+    "modal": {
+      "title": "ਖਾਤੇ ਦੀ ਸਮੀਖਿਆ ਕਰੋ",
+      "storeInfo": "ਸਟੋਰ ਜਾਣਕਾਰੀ",
+      "storeName": "ਸਟੋਰ ਦਾ ਨਾਮ",
+      "licenseNumber": "ਲਾਇਸੈਂਸ ਨੰਬਰ",
+      "crsaAddress": "CRSA ਪਤਾ",
+      "municipality": "ਨਗਰਪਾਲਿਕਾ",
+      "crsaStatus": "CRSA ਸਥਿਤੀ",
+      "crsaWebsite": "CRSA ਵੈੱਬਸਾਈਟ",
+      "contactInfo": "ਸੰਪਰਕ ਜਾਣਕਾਰੀ",
+      "contactName": "ਸੰਪਰਕ ਨਾਮ",
+      "role": "ਭੂਮਿਕਾ",
+      "email": "ਈਮੇਲ",
+      "phone": "ਫੋਨ",
+      "verificationContext": "ਤਸਦੀਕ ਸੰਦਰਭ",
+      "emailDomain": "ਈਮੇਲ ਡੋਮੇਨ",
+      "domainMatchesCrsa": "ਡੋਮੇਨ CRSA ਨਾਲ ਮੇਲ ਖਾਂਦਾ ਹੈ",
+      "verificationTier": "ਤਸਦੀਕ ਟੀਅਰ",
+      "submitted": "ਜਮ੍ਹਾ ਕੀਤਾ ਗਿਆ",
+      "adminNotes": "ਐਡਮਿਨ ਨੋਟਸ (ਵਿਕਲਪਿਕ)",
+      "adminNotesPlaceholder": "ਇਸ ਸਮੀਖਿਆ ਬਾਰੇ ਕੋਈ ਨੋਟਸ ਸ਼ਾਮਲ ਕਰੋ...",
+      "reject": "ਅਸਵੀਕਾਰ ਕਰੋ",
+      "approve": "ਖਾਤੇ ਨੂੰ ਮਨਜ਼ੂਰੀ ਦਿਓ",
+      "approving": "ਮਨਜ਼ੂਰੀ ਦਿੱਤੀ ਜਾ ਰਹੀ ਹੈ...",
+      "yes": "✓ ਹਾਂ",
+      "no": "✗ ਨਹੀਂ"
+    },
+    "reject": {
+      "title": "ਖਾਤਾ ਅਸਵੀਕਾਰ ਕਰੋ",
+      "description": "ਕਿਰਪਾ ਕਰਕੇ ਇਸ ਖਾਤੇ ਨੂੰ ਅਸਵੀਕਾਰ ਕਰਨ ਦਾ ਕਾਰਨ ਦਿਓ। ਇਹ ਆਡਿਟ ਉਦੇਸ਼ਾਂ ਲਈ ਲੌਗ ਕੀਤਾ ਜਾਵੇਗਾ।",
+      "reasonPlaceholder": "ਅਸਵੀਕਾਰ ਦਾ ਕਾਰਨ (ਘੱਟੋ-ਘੱਟ 10 ਅੱਖਰ)...",
+      "cancel": "ਰੱਦ ਕਰੋ",
+      "confirm": "ਅਸਵੀਕਾਰ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ",
+      "rejecting": "ਅਸਵੀਕਾਰ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...",
+      "minLength": "ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਕਾਰਨ ਦਿਓ (ਘੱਟੋ-ਘੱਟ 10 ਅੱਖਰ)"
+    },
+    "messages": {
+      "approved": "ਖਾਤਾ ਸਫਲਤਾਪੂਰਵਕ ਮਨਜ਼ੂਰ ਕੀਤਾ ਗਿਆ!",
+      "rejected": "ਖਾਤਾ ਸਫਲਤਾਪੂਰਵਕ ਅਸਵੀਕਾਰ ਕੀਤਾ ਗਿਆ।",
+      "approveFailed": "ਖਾਤੇ ਨੂੰ ਮਨਜ਼ੂਰੀ ਦੇਣਾ ਅਸਫਲ ਰਿਹਾ: {{error}}",
+      "rejectFailed": "ਖਾਤੇ ਨੂੰ ਅਸਵੀਕਾਰ ਕਰਨਾ ਅਸਫਲ ਰਿਹਾ: {{error}}",
+      "fetchFailed": "ਬਕਾਇਆ ਖਾਤੇ ਪ੍ਰਾਪਤ ਕਰਨੇ ਅਸਫਲ ਰਹੇ",
+      "noPermission": "ਤੁਹਾਨੂੰ ਕਿਰਾਏਦਾਰ ਖਾਤਿਆਂ ਦੀ ਸਮੀਖਿਆ ਕਰਨ ਦੀ ਇਜਾਜ਼ਤ ਨਹੀਂ ਹੈ।"
+    }
+  },
+  "userRegistration": {
+    "title": "ਆਪਣਾ ਖਾਤਾ ਬਣਾਓ",
+    "joinTenant": "{{tenantName}} ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਵੋ",
+    "tenantInfo": "ਕਿਰਾਏਦਾਰ ਜਾਣਕਾਰੀ",
+    "tenantName": "ਨਾਮ:",
+    "tenantCode": "ਕੋਡ:",
+    "firstName": "ਪਹਿਲਾ ਨਾਮ",
+    "firstNamePlaceholder": "ਜਸਵਿੰਦਰ",
+    "lastName": "ਆਖਰੀ ਨਾਮ",
+    "lastNamePlaceholder": "ਸਿੰਘ",
+    "email": "ਈਮੇਲ ਪਤਾ",
+    "emailPlaceholder": "jasvinder.singh@example.com",
+    "phone": "ਫੋਨ ਨੰਬਰ",
+    "phonePlaceholder": "(555) 123-4567",
+    "password": "ਪਾਸਵਰਡ",
+    "passwordPlaceholder": "••••••••",
+    "confirmPassword": "ਪਾਸਵਰਡ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ",
+    "passwordStrength": "ਤਾਕਤ:",
+    "passwordHelp": "ਬਿਹਤਰ ਸੁਰੱਖਿਆ ਲਈ ਵੱਡੇ ਅੱਖਰਾਂ, ਛੋਟੇ ਅੱਖਰਾਂ, ਨੰਬਰਾਂ ਅਤੇ ਚਿੰਨ੍ਹਾਂ ਦੇ ਨਾਲ 8+ ਅੱਖਰਾਂ ਦੀ ਵਰਤੋਂ ਕਰੋ",
+    "createButton": "ਖਾਤਾ ਬਣਾਓ",
+    "creating": "ਖਾਤਾ ਬਣਾਇਆ ਜਾ ਰਿਹਾ ਹੈ...",
+    "alreadyHaveAccount": "ਪਹਿਲਾਂ ਤੋਂ ਖਾਤਾ ਹੈ?",
+    "signIn": "ਸਾਈਨ ਇਨ ਕਰੋ",
+    "loading": "ਕਿਰਾਏਦਾਰ ਜਾਣਕਾਰੀ ਲੋਡ ਕੀਤੀ ਜਾ ਰਹੀ ਹੈ...",
+    "tenantNotFound": "ਕਿਰਾਏਦਾਰ ਨਹੀਂ ਮਿਲਿਆ",
+    "tenantNotFoundDescription": "ਨਿਰਧਾਰਤ ਕਿਰਾਏਦਾਰ ਨਹੀਂ ਮਿਲ ਸਕਿਆ।",
+    "goToSignup": "ਸਾਈਨਅੱਪ 'ਤੇ ਜਾਓ",
+    "errors": {
+      "loadFailed": "ਕਿਰਾਏਦਾਰ ਜਾਣਕਾਰੀ ਲੋਡ ਕਰਨਾ ਅਸਫਲ ਰਿਹਾ",
+      "alreadyExists": "ਇਸ ਈਮੇਲ ਦੇ ਨਾਲ ਇੱਕ ਉਪਭੋਗਤਾ ਪਹਿਲਾਂ ਹੀ ਮੌਜੂਦ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਵੱਖਰਾ ਈਮੇਲ ਵਰਤੋ ਜਾਂ ਲੌਗਇਨ ਕਰੋ।",
+      "failed": "ਉਪਭੋਗਤਾ ਖਾਤਾ ਬਣਾਉਣਾ ਅਸਫਲ ਰਿਹਾ"
+    }
+  },
+  "success": {
+    "title": "WeedGo ਵਿੱਚ ਤੁਹਾਡਾ ਸੁਆਗਤ ਹੈ!",
+    "description": "{{tenantName}} ਲਈ ਤੁਹਾਡਾ ਖਾਤਾ ਸਫਲਤਾਪੂਰਵਕ ਬਣਾਇਆ ਗਿਆ ਹੈ।",
+    "accountDetails": {
+      "title": "ਤੁਹਾਡੇ ਖਾਤੇ ਦੇ ਵੇਰਵੇ",
+      "tenantName": "ਕਿਰਾਏਦਾਰ ਦਾ ਨਾਮ:",
+      "tenantCode": "ਕਿਰਾਏਦਾਰ ਕੋਡ:",
+      "storeUrl": "ਸਟੋਰ URL:"
+    },
+    "nextSteps": {
+      "title": "ਅਗਲੇ ਕਦਮ",
+      "checkEmail": {
+        "title": "ਆਪਣੀ ਈਮੇਲ ਜਾਂਚੋ",
+        "description": "ਅਸੀਂ ਤੁਹਾਨੂੰ ਮਹੱਤਵਪੂਰਨ ਖਾਤਾ ਜਾਣਕਾਰੀ ਅਤੇ ਸੈਟਅੱਪ ਨਿਰਦੇਸ਼ਾਂ ਦੇ ਨਾਲ ਇੱਕ ਸਵਾਗਤ ਈਮੇਲ ਭੇਜੀ ਹੈ।"
+      },
+      "accessDashboard": {
+        "title": "ਆਪਣੇ ਡੈਸ਼ਬੋਰਡ ਤੱਕ ਪਹੁੰਚੋ",
+        "description": "ਆਪਣੇ ਸਟੋਰ ਸੈਟਿੰਗਾਂ ਨੂੰ ਕੌਂਫਿਗਰ ਕਰਨ, ਉਤਪਾਦ ਸ਼ਾਮਲ ਕਰਨ ਅਤੇ ਆਪਣੇ AI ਸਹਾਇਕਾਂ ਨੂੰ ਅਨੁਕੂਲਿਤ ਕਰਨ ਲਈ ਆਪਣੇ ਐਡਮਿਨ ਡੈਸ਼ਬੋਰਡ ਵਿੱਚ ਲੌਗ ਇਨ ਕਰੋ।"
+      },
+      "setupStore": {
+        "title": "ਆਪਣਾ ਪਹਿਲਾ ਸਟੋਰ ਸੈਟਅੱਪ ਕਰੋ",
+        "description": "ਆਪਣਾ ਪਹਿਲਾ ਸਟੋਰ ਸਥਾਨ ਸ਼ਾਮਲ ਕਰੋ, ਕੰਮ ਦੇ ਘੰਟੇ ਕੌਂਫਿਗਰ ਕਰੋ ਅਤੇ ਆਪਣੀ ਉਤਪਾਦ ਸੂਚੀ ਸੈਟ ਕਰੋ।"
+      },
+      "configureAI": {
+        "title": "AI ਸਹਾਇਕਾਂ ਨੂੰ ਕੌਂਫਿਗਰ ਕਰੋ",
+        "description": "ਆਪਣੇ AI budtender ਸ਼ਖਸੀਅਤਾਂ ਨੂੰ ਅਨੁਕੂਲਿਤ ਕਰੋ ਅਤੇ ਆਪਣੇ ਗਾਹਕਾਂ ਲਈ ਬਹੁ-ਭਾਸ਼ਾ ਸਹਾਇਤਾ ਸੈਟਅੱਪ ਕਰੋ।"
+      }
+    },
+    "quickActions": {
+      "dashboard": {
+        "title": "ਡੈਸ਼ਬੋਰਡ ਤੱਕ ਪਹੁੰਚ",
+        "description": "ਆਪਣੇ ਪਲੇਟਫਾਰਮ ਨੂੰ ਕੌਂਫਿਗਰ ਕਰੋ"
+      },
+      "documentation": {
+        "title": "ਦਸਤਾਵੇਜ਼",
+        "description": "ਸੈਟਅੱਪ ਗਾਈਡ ਅਤੇ ਟਿਊਟੋਰਿਅਲ"
+      },
+      "support": {
+        "title": "ਸਹਾਇਤਾ",
+        "description": "ਸਾਡੀ ਟੀਮ ਤੋਂ ਮਦਦ ਪ੍ਰਾਪਤ ਕਰੋ"
+      }
+    },
+    "cta": {
+      "button": "ਆਪਣੇ ਡੈਸ਼ਬੋਰਡ ਤੱਕ ਪਹੁੰਚੋ",
+      "help": "ਸ਼ੁਰੂ ਕਰਨ ਵਿੱਚ ਮਦਦ ਦੀ ਲੋੜ ਹੈ? ਸਾਡੀ ਸਹਾਇਤਾ ਟੀਮ ਨਾਲ ਸੰਪਰਕ ਕਰੋ",
+      "email": "support@weedgo.com"
+    },
+    "resources": {
+      "title": "ਤੁਹਾਨੂੰ ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਸਰੋਤ",
+      "quickSetup": {
+        "title": "ਤੁਰੰਤ ਸੈਟਅੱਪ ਗਾਈਡ",
+        "item1": "ਸਟੋਰ ਕੌਂਫਿਗਰੇਸ਼ਨ ਅਤੇ ਬ੍ਰਾਂਡਿੰਗ",
+        "item2": "ਉਤਪਾਦ ਕੈਟਾਲਾਗ ਸੈਟਅੱਪ",
+        "item3": "ਭੁਗਤਾਨ ਪ੍ਰੋਸੈਸਿੰਗ ਕੌਂਫਿਗਰੇਸ਼ਨ",
+        "item4": "AI ਸਹਾਇਕ ਅਨੁਕੂਲਨ"
+      },
+      "training": {
+        "title": "ਸਿਖਲਾਈ ਅਤੇ ਸਹਾਇਤਾ",
+        "item1": "ਵੀਡੀਓ ਟਿਊਟੋਰਿਅਲ ਅਤੇ ਵੈਬਿਨਾਰ",
+        "item2": "24/7 ਗਾਹਕ ਸਹਾਇਤਾ ਚੈਟ",
+        "item3": "ਕਮਿਊਨਿਟੀ ਫੋਰਮ ਪਹੁੰਚ",
+        "item4": "ਸਮਰਪਿਤ ਖਾਤਾ ਪ੍ਰਬੰਧਕ (ਐਂਟਰਪ੍ਰਾਈਜ਼)"
+      }
+    }
+  },
+  "validation": {
+    "required": "{{field}} ਲੋੜੀਂਦਾ ਹੈ",
+    "brandNameRequired": "ਬ੍ਰਾਂਡ ਦਾ ਨਾਮ ਲੋੜੀਂਦਾ ਹੈ",
+    "websiteRequired": "ਬ੍ਰਾਂਡ ਕੋਡ ਬਣਾਉਣ ਲਈ ਵੈੱਬਸਾਈਟ ਲੋੜੀਂਦੀ ਹੈ",
+    "brandCodeRequired": "ਬ੍ਰਾਂਡ ਕੋਡ ਲੋੜੀਂਦਾ ਹੈ (ਜਨਰੇਟ ਕਰਨ ਲਈ ਵੈੱਬਸਾਈਟ ਦਾਖਲ ਕਰੋ)",
+    "brandCodeFormat": "ਬ੍ਰਾਂਡ ਕੋਡ ਵਿੱਚ ਸਿਰਫ਼ ਵੱਡੇ ਅੱਖਰ, ਨੰਬਰ, ਹਾਈਫਨ ਅਤੇ ਅੰਡਰਸਕੋਰ ਹੋਣੇ ਚਾਹੀਦੇ ਹਨ",
+    "companyNameRequired": "ਕੰਪਨੀ ਦਾ ਨਾਮ ਲੋੜੀਂਦਾ ਹੈ",
+    "businessNumberRequired": "ਕਾਰੋਬਾਰੀ ਨੰਬਰ ਲੋੜੀਂਦਾ ਹੈ",
+    "businessNumberFormat": "ਕਾਰੋਬਾਰੀ ਨੰਬਰ 9 ਅੰਕਾਂ ਦਾ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ",
+    "gstHstRequired": "GST/HST ਨੰਬਰ ਲੋੜੀਂਦਾ ਹੈ",
+    "gstHstFormat": "GST/HST ਨੰਬਰ ਫਾਰਮੈਟ: 123456789RT0001",
+    "emailRequired": "ਈਮੇਲ ਲੋੜੀਂਦੀ ਹੈ",
+    "emailInvalid": "ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਵੈਧ ਈਮੇਲ ਪਤਾ ਦਾਖਲ ਕਰੋ",
+    "firstNameRequired": "ਪਹਿਲਾ ਨਾਮ ਲੋੜੀਂਦਾ ਹੈ",
+    "lastNameRequired": "ਆਖਰੀ ਨਾਮ ਲੋੜੀਂਦਾ ਹੈ",
+    "streetRequired": "ਗਲੀ ਦਾ ਪਤਾ ਲੋੜੀਂਦਾ ਹੈ",
+    "cityRequired": "ਸ਼ਹਿਰ ਲੋੜੀਂਦਾ ਹੈ",
+    "postalCodeRequired": "ਡਾਕ ਕੋਡ ਲੋੜੀਂਦਾ ਹੈ",
+    "postalCodeFormat": "ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਵੈਧ ਕੈਨੇਡੀਅਨ ਡਾਕ ਕੋਡ ਦਾਖਲ ਕਰੋ",
+    "passwordRequired": "ਪਾਸਵਰਡ ਲੋੜੀਂਦਾ ਹੈ",
+    "passwordLength": "ਪਾਸਵਰਡ ਘੱਟੋ-ਘੱਟ 8 ਅੱਖਰਾਂ ਦਾ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ",
+    "passwordComplexity": "ਪਾਸਵਰਡ ਵਿੱਚ ਵੱਡੇ ਅੱਖਰ, ਛੋਟੇ ਅੱਖਰ ਅਤੇ ਨੰਬਰ ਹੋਣੇ ਚਾਹੀਦੇ ਹਨ",
+    "passwordMismatch": "ਪਾਸਵਰਡ ਮੇਲ ਨਹੀਂ ਖਾਂਦੇ",
+    "cardNumberRequired": "ਕਾਰਡ ਨੰਬਰ ਲੋੜੀਂਦਾ ਹੈ",
+    "cardNumberFormat": "ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਵੈਧ 16-ਅੰਕਾਂ ਦਾ ਕਾਰਡ ਨੰਬਰ ਦਾਖਲ ਕਰੋ",
+    "expiryRequired": "ਮਿਆਦ ਪੁੱਗਣ ਦੀ ਤਾਰੀਖ ਲੋੜੀਂਦੀ ਹੈ",
+    "expiryFormat": "ਕਿਰਪਾ ਕਰਕੇ MM/YY ਫਾਰਮੈਟ ਦਾਖਲ ਕਰੋ",
+    "cvvRequired": "CVV ਲੋੜੀਂਦਾ ਹੈ",
+    "cvvFormat": "CVV 3 ਜਾਂ 4 ਅੰਕਾਂ ਦਾ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ",
+    "cardholderRequired": "ਕਾਰਡਧਾਰਕ ਦਾ ਨਾਮ ਲੋੜੀਂਦਾ ਹੈ"
+  },
+  "passwordStrength": {
+    "weak": "ਕਮਜ਼ੋਰ",
+    "fair": "ਠੀਕ ਠਾਕ",
+    "good": "ਚੰਗਾ",
+    "strong": "ਮਜ਼ਬੂਤ",
+    "veryStrong": "ਬਹੁਤ ਮਜ਼ਬੂਤ"
+  },
+  "provinces": {
+    "ON": "Ontario",
+    "BC": "British Columbia",
+    "AB": "Alberta",
+    "QC": "Quebec",
+    "MB": "Manitoba",
+    "SK": "Saskatchewan",
+    "NS": "Nova Scotia",
+    "NB": "New Brunswick",
+    "NL": "Newfoundland and Labrador",
+    "PE": "Prince Edward Island",
+    "NT": "Northwest Territories",
+    "YT": "Yukon",
+    "NU": "Nunavut"
+  },
+  "plans": {
+    "community_and_new_business": {
+      "name": "ਕਮਿਊਨਿਟੀ ਅਤੇ ਨਵਾਂ ਕਾਰੋਬਾਰ",
+      "features": {
+        "stores": "1 ਸਟੋਰ",
+        "languages": "2 ਭਾਸ਼ਾਵਾਂ",
+        "personalities": "1 AI ਸ਼ਖਸੀਅਤ"
+      }
+    },
+    "small_business": {
+      "name": "ਛੋਟਾ ਕਾਰੋਬਾਰ",
+      "features": {
+        "stores": "5 ਸਟੋਰ",
+        "languages": "5 ਭਾਸ਼ਾਵਾਂ",
+        "personalities": "2 AI ਸ਼ਖਸੀਅਤਾਂ"
+      }
+    },
+    "professional_and_growing_business": {
+      "name": "ਪੇਸ਼ੇਵਰ ਅਤੇ ਵਧ ਰਿਹਾ ਕਾਰੋਬਾਰ",
+      "features": {
+        "stores": "12 ਸਟੋਰ",
+        "languages": "10 ਭਾਸ਼ਾਵਾਂ",
+        "personalities": "3 AI ਸ਼ਖਸੀਅਤਾਂ"
+      }
+    },
+    "enterprise": {
+      "name": "ਐਂਟਰਪ੍ਰਾਈਜ਼",
+      "features": {
+        "stores": "ਅਸੀਮਤ ਸਟੋਰ",
+        "languages": "25+ ਭਾਸ਼ਾਵਾਂ",
+        "personalities": "5 AI ਸ਼ਖਸੀਅਤਾਂ"
+      }
+    }
+  }
+}

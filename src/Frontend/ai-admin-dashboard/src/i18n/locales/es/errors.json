@@ -1,0 +1,98 @@
+{
+  "api": {
+    "networkError": "No se puede conectar al servidor. Por favor, verifica tu conexión.",
+    "serverError": "Ocurrió un error en el servidor. Por favor, inténtalo de nuevo más tarde.",
+    "timeout": "La solicitud excedió el tiempo de espera. Por favor, inténtalo de nuevo.",
+    "unauthorized": "No estás autorizado para realizar esta acción.",
+    "forbidden": "Acceso denegado.",
+    "notFound": "El recurso solicitado no se encontró.",
+    "conflict": "Ocurrió un conflicto. Es posible que el recurso ya exista.",
+    "validationError": "Ocurrió un error de validación.",
+    "tooManyRequests": "Demasiadas solicitudes. Por favor, inténtalo de nuevo más tarde.",
+    "serviceUnavailable": "Servicio temporalmente no disponible.",
+    "badRequest": "Solicitud no válida. Por favor, verifica tu entrada.",
+    "internalError": "Ocurrió un error interno."
+  },
+  "auth": {
+    "loginSuccess": "¡Inicio de sesión exitoso! Redirigiendo...",
+    "invalidCredentials": "Correo electrónico o contraseña no válidos. Por favor, inténtalo de nuevo.",
+    "sessionExpired": "Tu sesión ha expirado. Por favor, inicia sesión de nuevo.",
+    "accountDisabled": "Tu cuenta está deshabilitada o carece de privilegios de administrador.",
+    "accountLocked": "Tu cuenta ha sido bloqueada debido a múltiples intentos fallidos de inicio de sesión.",
+    "tooManyAttempts": "Demasiados intentos de inicio de sesión. Por favor, inténtalo de nuevo más tarde.",
+    "tokenExpired": "El token de autenticación ha expirado.",
+    "tokenInvalid": "Token de autenticación no válido.",
+    "passwordResetFailed": "Error al restablecer la contraseña. Por favor, inténtalo de nuevo.",
+    "emailNotVerified": "Por favor, verifica tu dirección de correo electrónico primero.",
+    "validationError": "Ocurrió un error de validación",
+    "loginError": "Ocurrió un error durante el inicio de sesión"
+  },
+  "tenant": {
+    "loadFailed": "Error al cargar los datos de la organización.",
+    "createFailed": "Error al crear el inquilino.",
+    "updateFailed": "Error al actualizar el inquilino.",
+    "deleteFailed": "Error al eliminar el inquilino.",
+    "suspendFailed": "Error al suspender el inquilino.",
+    "reactivateFailed": "Error al reactivar el inquilino.",
+    "noOrganization": "No hay organización asociada con el usuario.",
+    "limitReached": "Límite de tiendas alcanzado para este inquilino.",
+    "invalidSubscription": "Suscripción no válida o expirada."
+  },
+  "store": {
+    "loadFailed": "Error al cargar los datos de la tienda.",
+    "createFailed": "Error al crear la tienda.",
+    "updateFailed": "Error al actualizar la tienda.",
+    "deleteFailed": "Error al eliminar la tienda.",
+    "suspendFailed": "Error al suspender la tienda.",
+    "closeFailed": "Error al cerrar la tienda.",
+    "notFound": "Tienda no encontrada.",
+    "alreadyExists": "Ya existe una tienda con este nombre."
+  },
+  "inventory": {
+    "loadFailed": "Error al cargar los datos del inventario.",
+    "createFailed": "Error al crear el artículo del inventario.",
+    "updateFailed": "Error al actualizar el artículo del inventario.",
+    "deleteFailed": "Error al eliminar el artículo del inventario.",
+    "stockUpdateFailed": "Error al actualizar los niveles de stock.",
+    "lowStock": "Alerta de stock bajo.",
+    "outOfStock": "Artículo agotado.",
+    "invalidQuantity": "Cantidad no válida especificada."
+  },
+  "order": {
+    "loadFailed": "Error al cargar los datos del pedido.",
+    "createFailed": "Error al crear el pedido.",
+    "updateFailed": "Error al actualizar el pedido.",
+    "cancelFailed": "Error al cancelar el pedido.",
+    "fulfillFailed": "Error al cumplir con el pedido.",
+    "refundFailed": "Error al procesar el reembolso.",
+    "notFound": "Pedido no encontrado.",
+    "alreadyProcessed": "El pedido ya ha sido procesado."
+  },
+  "payment": {
+    "loadFailed": "Error al cargar los datos del pago.",
+    "processingFailed": "Error al procesar el pago.",
+    "refundFailed": "Error al procesar el reembolso.",
+    "invalidAmount": "Monto de pago no válido.",
+    "cardDeclined": "La tarjeta fue rechazada.",
+    "insufficientFunds": "Fondos insuficientes.",
+    "paymentMethodInvalid": "Método de pago no válido."
+  },
+  "upload": {
+    "failed": "Error al cargar el archivo.",
+    "fileTooLarge": "El tamaño del archivo excede el máximo permitido.",
+    "invalidFileType": "Tipo de archivo no válido.",
+    "corruptedFile": "El archivo parece estar corrupto.",
+    "uploadCancelled": "La carga fue cancelada."
+  },
+  "general": {
+    "unexpectedError": "Ocurrió un error inesperado.",
+    "operationFailed": "La operación falló. Por favor, inténtalo de nuevo.",
+    "dataLoadFailed": "Error al cargar los datos.",
+    "saveFailed": "Error al guardar los cambios.",
+    "deleteFailed": "Error al eliminar el elemento.",
+    "permissionDenied": "No tienes permiso para realizar esta acción.",
+    "invalidInput": "Entrada no válida proporcionada.",
+    "requiredFieldMissing": "Falta un campo obligatorio.",
+    "dataCorrupted": "Los datos parecen estar corruptos."
+  }
+}

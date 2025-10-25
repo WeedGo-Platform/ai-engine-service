@@ -1,0 +1,149 @@
+{
+  "titles": {
+    "management": "주문 관리",
+    "orderDetails": "주문 세부정보",
+    "assignDriver": "배달원 배정",
+    "messageCustomer": "고객에게 메시지",
+    "deliveryConfirmation": "배달 확인"
+  },
+  "fields": {
+    "orderNumber": "주문",
+    "customer": "고객",
+    "status": "상태",
+    "type": "유형",
+    "items": "품목",
+    "cannabis": "대마초",
+    "total": "합계",
+    "verification": "확인",
+    "time": "시간",
+    "actions": "작업",
+    "product": "제품",
+    "brand": "브랜드",
+    "category": "카테고리",
+    "thcCbd": "THC/CBD",
+    "qty": "수량",
+    "price": "가격",
+    "payment": "결제",
+    "paymentMethod": "결제 방법",
+    "deliveryAddress": "배달 주소",
+    "deliveryTime": "배달 시간",
+    "pickupTime": "픽업 시간",
+    "driver": "배달원",
+    "vehicle": "차량",
+    "signature": "고객 서명",
+    "deliveryPhoto": "배달 사진",
+    "dob": "DOB",
+    "loyaltyPoints": "적립 포인트"
+  },
+  "status": {
+    "all": "모든 상태",
+    "pending": "대기 중",
+    "confirmed": "확인됨",
+    "preparing": "준비 중",
+    "ready": "준비 완료",
+    "outForDelivery": "배달 중",
+    "delivered": "배달 완료",
+    "cancelled": "취소됨",
+    "refunded": "환불됨",
+    "paymentPending": "결제 대기 중",
+    "ageVerified": "연령 확인됨",
+    "ageNotVerified": "연령 미확인"
+  },
+  "orderTypes": {
+    "all": "모든 유형",
+    "delivery": "배달",
+    "pickup": "픽업",
+    "inStore": "매장 내"
+  },
+  "paymentMethods": {
+    "cash": "현금",
+    "credit": "신용카드",
+    "debit": "직불카드",
+    "eTransfer": "E-Transfer"
+  },
+  "paymentStatus": {
+    "pending": "대기 중",
+    "paid": "결제 완료",
+    "refunded": "환불됨"
+  },
+  "customerTypes": {
+    "recreational": "기호용",
+    "medical": "의료용"
+  },
+  "actions": {
+    "export": "내보내기",
+    "refresh": "새로고침",
+    "viewDetails": "세부정보 보기",
+    "confirmOrder": "주문 확인",
+    "cancelOrder": "주문 취소",
+    "startPreparing": "준비 시작",
+    "markReady": "준비 완료로 표시",
+    "assignDriver": "배달원 배정",
+    "markPickedUp": "픽업 완료로 표시",
+    "markDelivered": "배달 완료로 표시",
+    "verifyAge": "연령 및 신분증 확인",
+    "messageCustomer": "고객에게 메시지",
+    "processRefund": "환불 처리",
+    "assignAndDispatch": "배정 및 발송",
+    "sendMessage": "메시지 전송"
+  },
+  "messages": {
+    "searchPlaceholder": "주문 번호, 고객, 전화번호로 검색...",
+    "selectDriver": "배달원 선택...",
+    "noOrders": "주문을 찾을 수 없습니다",
+    "ordersWillAppear": "고객이 주문하면 여기에 표시됩니다.",
+    "exportMessage": "내보내기 기능은 CSV 파일을 다운로드합니다",
+    "assignDriverMessage": "주문 {{orderNumber}}에 배달원 배정",
+    "messageSendTo": "{{firstName}} {{lastName}}에게 메시지 전송",
+    "typePlaceholder": "메시지를 입력하세요...",
+    "loadingError": "주문 로드 오류:",
+    "driedFlowerEq": "건조 꽃 환산:",
+    "to": "~",
+    "idVerified": "ID ✓",
+    "noId": "ID 없음",
+    "itemsCount": "{{count}}개 품목",
+    "orderNumber": "주문 {{number}}",
+    "min": "분"
+  },
+  "metrics": {
+    "pending": "대기 중",
+    "preparing": "준비 중",
+    "ready": "준비 완료",
+    "todayRevenue": "오늘의 수익",
+    "avgProcessTime": "평균 처리 시간"
+  },
+  "sections": {
+    "customerInfo": "고객 정보",
+    "orderInfo": "주문 정보",
+    "deliveryInfo": "배달 정보",
+    "pickupInfo": "픽업 정보",
+    "specialInstructions": "특별 지시사항",
+    "orderItems": "주문 품목",
+    "orderSummary": "주문 요약"
+  },
+  "summary": {
+    "subtotal": "소계:",
+    "tax": "세금 (13% HST):",
+    "delivery": "배달:",
+    "discount": "할인:",
+    "total": "합계:"
+  },
+  "prompts": {
+    "cancelReason": "취소 사유를 입력하세요:",
+    "refundReason": "환불 사유를 입력하세요:"
+  },
+  "templates": {
+    "selectTemplate": "템플릿 선택...",
+    "orderConfirmed": "주문이 확인되어 준비 중입니다.",
+    "readyForPickup": "주문이 픽업 준비되었습니다!",
+    "outForDelivery": "주문이 배달 중입니다.",
+    "delayNotice": "주문이 지연되고 있습니다. 불편을 끼쳐 드려 죄송합니다.",
+    "orderConfirmedLabel": "주문 확인됨",
+    "readyForPickupLabel": "픽업 준비 완료",
+    "outForDeliveryLabel": "배달 중",
+    "delayNoticeLabel": "지연 알림"
+  },
+  "labels": {
+    "quickTemplates": "빠른 템플릿"
+  }
+}

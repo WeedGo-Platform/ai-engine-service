@@ -1,0 +1,368 @@
+{
+  "tenant": {
+    "header": {
+      "title": "WeedGo",
+      "alreadyHaveAccount": "Đã có tài khoản?",
+      "signIn": "Đăng nhập",
+      "backHome": "Quay lại Trang chủ"
+    },
+    "steps": {
+      "company": "Thông tin Công ty",
+      "contact": "Chi tiết Liên hệ",
+      "account": "Thiết lập Tài khoản",
+      "payment": "Đăng ký & Thanh toán"
+    },
+    "stepDescriptions": {
+      "company": "Cho chúng tôi biết về doanh nghiệp và thương hiệu của bạn",
+      "contact": "Cung cấp thông tin liên hệ và địa chỉ của bạn",
+      "account": "Tạo thông tin đăng nhập tài khoản quản trị",
+      "payment": "Chọn gói và phương thức thanh toán của bạn"
+    },
+    "companyInfo": {
+      "brandName": "Tên Thương hiệu",
+      "brandNamePlaceholder": "ví dụ: Green Valley Dispensary",
+      "website": "Trang web",
+      "websitePlaceholder": "www.potpalace.ca hoặc potpalace.ca",
+      "websiteHelp": "URL trang web của bạn (được sử dụng để tạo mã thương hiệu)",
+      "brandCode": "Mã Thương hiệu",
+      "brandCodeAuto": "Mã Thương hiệu * (tạo tự động)",
+      "brandCodePlaceholder": "Nhập trang web ở trên để tạo",
+      "brandCodeHelp": "Sẽ được sử dụng trong URL cửa hàng của bạn: {{code}}.weedgo.com",
+      "legalCompanyName": "Tên Công ty Pháp lý",
+      "legalCompanyPlaceholder": "ví dụ: Green Valley Cannabis Inc.",
+      "businessNumber": "Số Doanh nghiệp",
+      "businessNumberPlaceholder": "123456789",
+      "businessNumberHelp": "Số Doanh nghiệp Canada (9 chữ số)",
+      "gstHstNumber": "Số GST/HST",
+      "gstHstPlaceholder": "123456789RT0001",
+      "gstHstHelp": "Định dạng: 123456789RT0001",
+      "logoUpload": "Tải lên Logo",
+      "logoUploadHelp": "Tối đa 2MB • PNG, JPG, WebP • Khuyến nghị: hình vuông 500x500px"
+    },
+    "contactInfo": {
+      "firstName": "Tên",
+      "lastName": "Họ",
+      "email": "Địa chỉ Email",
+      "phone": "Số Điện thoại",
+      "phonePlaceholder": "(555) 123-4567",
+      "street": "Địa chỉ Đường",
+      "city": "Thành phố",
+      "province": "Tỉnh",
+      "postalCode": "Mã Bưu điện",
+      "postalCodePlaceholder": "A1A 1A1"
+    },
+    "accountSetup": {
+      "password": "Mật khẩu",
+      "confirmPassword": "Xác nhận Mật khẩu",
+      "passwordStrength": "Độ mạnh:",
+      "passwordHelp": "Phải có ít nhất 8 ký tự với chữ hoa, chữ thường và số",
+      "securityTitle": "Bảo mật Tài khoản",
+      "securityDescription": "Tài khoản của bạn sẽ được bảo mật bằng mã hóa tiêu chuẩn ngành và các tùy chọn xác thực đa yếu tố."
+    },
+    "subscription": {
+      "choosePlan": "Chọn Gói Đăng ký của Bạn",
+      "selectedPlan": "Gói đã chọn: {{plan}}",
+      "changePlan": "Thay đổi Gói",
+      "free": "MIỄN PHÍ",
+      "perMonth": "${{price}}/tháng",
+      "customPricing": "Giá Tùy chỉnh",
+      "billingCycle": "Chu kỳ Thanh toán",
+      "monthly": "Hàng tháng",
+      "monthlyBilled": "Thanh toán hàng tháng",
+      "annual": "Hàng năm",
+      "annualSave": "Tiết kiệm 20%",
+      "selectPlan": "Chọn Gói",
+      "enterpriseTitle": "Gói Doanh nghiệp",
+      "enterpriseDescription": "Đội ngũ bán hàng của chúng tôi sẽ liên hệ với bạn trong vòng 24 giờ để thảo luận về giá tùy chỉnh và thiết lập."
+    },
+    "payment": {
+      "cardholderName": "Tên Chủ thẻ",
+      "cardholderPlaceholder": "Nguyễn Văn A",
+      "cardNumber": "Số Thẻ",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiryDate": "Ngày Hết hạn",
+      "expiryPlaceholder": "MM/YY",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "postalCode": "Mã Bưu điện",
+      "postalCodePlaceholder": "12345"
+    },
+    "progress": {
+      "verifying": "Đang xác minh tính khả dụng...",
+      "creating": "Đang tạo tài khoản của bạn...",
+      "uploading": "Đang tải lên logo...",
+      "complete": "Tài khoản đã được tạo thành công!",
+      "processing": "Đang xử lý..."
+    },
+    "success": {
+      "welcome": "Chào mừng đến với WeedGo!",
+      "accountCreated": "Tài khoản của bạn đã được tạo thành công.",
+      "tenantCode": "Mã Thuê:",
+      "preparing": "Đang chuẩn bị bảng điều khiển của bạn..."
+    },
+    "navigation": {
+      "previous": "Trước",
+      "next": "Tiếp theo",
+      "createAccount": "Tạo Tài khoản"
+    },
+    "errors": {
+      "accountCreationFailed": "Tạo Tài khoản Thất bại",
+      "tryAgain": "Thử lại",
+      "registerAsUser": "Đăng ký làm Người dùng",
+      "signInInstead": "Đăng nhập thay vào đó",
+      "tenantExists": "Mã thuê \"{{code}}\" đã được đăng ký",
+      "websiteExists": "Trang web \"{{website}}\" đã được sử dụng"
+    }
+  },
+  "review": {
+    "title": "Xem xét Tài khoản Thuê",
+    "description": "Xem xét và phê duyệt các tài khoản được đánh dấu để xác minh thủ công",
+    "refresh": "Làm mới",
+    "stats": {
+      "totalPending": "Tổng số Chờ xử lý",
+      "thisWeek": "Tuần này",
+      "avgReviewTime": "Thời gian Xem xét TB",
+      "approvalRate": "Tỷ lệ Phê duyệt"
+    },
+    "table": {
+      "title": "Tài khoản Chờ xử lý",
+      "storeName": "Tên Cửa hàng",
+      "contact": "Liên hệ",
+      "licenseNumber": "Số Giấy phép",
+      "submitted": "Đã gửi",
+      "tier": "Cấp",
+      "actions": "Hành động",
+      "review": "Xem xét",
+      "noPending": "Không có tài khoản chờ xử lý để xem xét!"
+    },
+    "modal": {
+      "title": "Xem xét Tài khoản",
+      "storeInfo": "Thông tin Cửa hàng",
+      "storeName": "Tên Cửa hàng",
+      "licenseNumber": "Số Giấy phép",
+      "crsaAddress": "Địa chỉ CRSA",
+      "municipality": "Thành phố",
+      "crsaStatus": "Trạng thái CRSA",
+      "crsaWebsite": "Trang web CRSA",
+      "contactInfo": "Thông tin Liên hệ",
+      "contactName": "Tên Liên hệ",
+      "role": "Vai trò",
+      "email": "Email",
+      "phone": "Điện thoại",
+      "verificationContext": "Bối cảnh Xác minh",
+      "emailDomain": "Tên miền Email",
+      "domainMatchesCrsa": "Tên miền Khớp với CRSA",
+      "verificationTier": "Cấp Xác minh",
+      "submitted": "Đã gửi",
+      "adminNotes": "Ghi chú Quản trị (Tùy chọn)",
+      "adminNotesPlaceholder": "Thêm bất kỳ ghi chú nào về đánh giá này...",
+      "reject": "Từ chối",
+      "approve": "Phê duyệt Tài khoản",
+      "approving": "Đang phê duyệt...",
+      "yes": "✓ Có",
+      "no": "✗ Không"
+    },
+    "reject": {
+      "title": "Từ chối Tài khoản",
+      "description": "Vui lòng cung cấp lý do từ chối tài khoản này. Điều này sẽ được ghi lại cho mục đích kiểm toán.",
+      "reasonPlaceholder": "Lý do từ chối (tối thiểu 10 ký tự)...",
+      "cancel": "Hủy",
+      "confirm": "Xác nhận Từ chối",
+      "rejecting": "Đang từ chối...",
+      "minLength": "Vui lòng cung cấp lý do (ít nhất 10 ký tự)"
+    },
+    "messages": {
+      "approved": "Tài khoản đã được phê duyệt thành công!",
+      "rejected": "Tài khoản đã được từ chối thành công.",
+      "approveFailed": "Không thể phê duyệt tài khoản: {{error}}",
+      "rejectFailed": "Không thể từ chối tài khoản: {{error}}",
+      "fetchFailed": "Không thể tìm nạp tài khoản chờ xử lý",
+      "noPermission": "Bạn không có quyền xem xét tài khoản thuê."
+    }
+  },
+  "userRegistration": {
+    "title": "Tạo Tài khoản của Bạn",
+    "joinTenant": "Tham gia {{tenantName}}",
+    "tenantInfo": "Thông tin Thuê",
+    "tenantName": "Tên:",
+    "tenantCode": "Mã:",
+    "firstName": "Tên",
+    "firstNamePlaceholder": "Văn A",
+    "lastName": "Họ",
+    "lastNamePlaceholder": "Nguyễn",
+    "email": "Địa chỉ Email",
+    "emailPlaceholder": "nguyen.vana@example.com",
+    "phone": "Số Điện thoại",
+    "phonePlaceholder": "(555) 123-4567",
+    "password": "Mật khẩu",
+    "passwordPlaceholder": "••••••••",
+    "confirmPassword": "Xác nhận Mật khẩu",
+    "passwordStrength": "Độ mạnh:",
+    "passwordHelp": "Sử dụng 8+ ký tự với chữ hoa, chữ thường, số và ký hiệu để bảo mật tốt hơn",
+    "createButton": "Tạo Tài khoản",
+    "creating": "Đang tạo Tài khoản...",
+    "alreadyHaveAccount": "Đã có tài khoản?",
+    "signIn": "Đăng nhập",
+    "loading": "Đang tải thông tin thuê...",
+    "tenantNotFound": "Không tìm thấy Thuê",
+    "tenantNotFoundDescription": "Không thể tìm thấy thuê được chỉ định.",
+    "goToSignup": "Đi tới Đăng ký",
+    "errors": {
+      "loadFailed": "Không thể tải thông tin thuê",
+      "alreadyExists": "Người dùng với email này đã tồn tại. Vui lòng sử dụng email khác hoặc đăng nhập thay vào đó.",
+      "failed": "Không thể tạo tài khoản người dùng"
+    }
+  },
+  "success": {
+    "title": "Chào mừng đến với WeedGo!",
+    "description": "Tài khoản của bạn cho {{tenantName}} đã được tạo thành công.",
+    "accountDetails": {
+      "title": "Chi tiết Tài khoản của Bạn",
+      "tenantName": "Tên Thuê:",
+      "tenantCode": "Mã Thuê:",
+      "storeUrl": "URL Cửa hàng:"
+    },
+    "nextSteps": {
+      "title": "Các Bước Tiếp theo",
+      "checkEmail": {
+        "title": "Kiểm tra Email của Bạn",
+        "description": "Chúng tôi đã gửi cho bạn email chào mừng với thông tin tài khoản quan trọng và hướng dẫn thiết lập."
+      },
+      "accessDashboard": {
+        "title": "Truy cập Bảng điều khiển của Bạn",
+        "description": "Đăng nhập vào bảng điều khiển quản trị để cấu hình cài đặt cửa hàng, thêm sản phẩm và tùy chỉnh trợ lý AI của bạn."
+      },
+      "setupStore": {
+        "title": "Thiết lập Cửa hàng Đầu tiên của Bạn",
+        "description": "Thêm vị trí cửa hàng đầu tiên của bạn, cấu hình giờ hoạt động và thiết lập kho hàng sản phẩm của bạn."
+      },
+      "configureAI": {
+        "title": "Cấu hình Trợ lý AI",
+        "description": "Tùy chỉnh tính cách budtender AI của bạn và thiết lập hỗ trợ đa ngôn ngữ cho khách hàng của bạn."
+      }
+    },
+    "quickActions": {
+      "dashboard": {
+        "title": "Truy cập Bảng điều khiển",
+        "description": "Cấu hình nền tảng của bạn"
+      },
+      "documentation": {
+        "title": "Tài liệu",
+        "description": "Hướng dẫn thiết lập & hướng dẫn"
+      },
+      "support": {
+        "title": "Hỗ trợ",
+        "description": "Nhận trợ giúp từ đội ngũ của chúng tôi"
+      }
+    },
+    "cta": {
+      "button": "Truy cập Bảng điều khiển của Bạn",
+      "help": "Cần trợ giúp để bắt đầu? Liên hệ đội ngũ hỗ trợ của chúng tôi tại",
+      "email": "support@weedgo.com"
+    },
+    "resources": {
+      "title": "Tài nguyên để Giúp Bạn Bắt đầu",
+      "quickSetup": {
+        "title": "Hướng dẫn Thiết lập Nhanh",
+        "item1": "Cấu hình và thương hiệu cửa hàng",
+        "item2": "Thiết lập danh mục sản phẩm",
+        "item3": "Cấu hình xử lý thanh toán",
+        "item4": "Tùy chỉnh trợ lý AI"
+      },
+      "training": {
+        "title": "Đào tạo & Hỗ trợ",
+        "item1": "Hướng dẫn video và hội thảo trực tuyến",
+        "item2": "Trò chuyện hỗ trợ khách hàng 24/7",
+        "item3": "Truy cập diễn đàn cộng đồng",
+        "item4": "Người quản lý tài khoản chuyên dụng (Doanh nghiệp)"
+      }
+    }
+  },
+  "validation": {
+    "required": "{{field}} là bắt buộc",
+    "brandNameRequired": "Tên thương hiệu là bắt buộc",
+    "websiteRequired": "Trang web là bắt buộc để tạo mã thương hiệu",
+    "brandCodeRequired": "Mã thương hiệu là bắt buộc (nhập trang web để tạo)",
+    "brandCodeFormat": "Mã thương hiệu chỉ được chứa chữ hoa, số, dấu gạch ngang và gạch dưới",
+    "companyNameRequired": "Tên công ty là bắt buộc",
+    "businessNumberRequired": "Số doanh nghiệp là bắt buộc",
+    "businessNumberFormat": "Số doanh nghiệp phải có 9 chữ số",
+    "gstHstRequired": "Số GST/HST là bắt buộc",
+    "gstHstFormat": "Định dạng số GST/HST: 123456789RT0001",
+    "emailRequired": "Email là bắt buộc",
+    "emailInvalid": "Vui lòng nhập địa chỉ email hợp lệ",
+    "firstNameRequired": "Tên là bắt buộc",
+    "lastNameRequired": "Họ là bắt buộc",
+    "streetRequired": "Địa chỉ đường là bắt buộc",
+    "cityRequired": "Thành phố là bắt buộc",
+    "postalCodeRequired": "Mã bưu điện là bắt buộc",
+    "postalCodeFormat": "Vui lòng nhập mã bưu điện Canada hợp lệ",
+    "passwordRequired": "Mật khẩu là bắt buộc",
+    "passwordLength": "Mật khẩu phải có ít nhất 8 ký tự",
+    "passwordComplexity": "Mật khẩu phải chứa chữ hoa, chữ thường và số",
+    "passwordMismatch": "Mật khẩu không khớp",
+    "cardNumberRequired": "Số thẻ là bắt buộc",
+    "cardNumberFormat": "Vui lòng nhập số thẻ hợp lệ gồm 16 chữ số",
+    "expiryRequired": "Ngày hết hạn là bắt buộc",
+    "expiryFormat": "Vui lòng nhập định dạng MM/YY",
+    "cvvRequired": "CVV là bắt buộc",
+    "cvvFormat": "CVV phải có 3 hoặc 4 chữ số",
+    "cardholderRequired": "Tên chủ thẻ là bắt buộc"
+  },
+  "passwordStrength": {
+    "weak": "Yếu",
+    "fair": "Khá",
+    "good": "Tốt",
+    "strong": "Mạnh",
+    "veryStrong": "Rất mạnh"
+  },
+  "provinces": {
+    "ON": "Ontario",
+    "BC": "British Columbia",
+    "AB": "Alberta",
+    "QC": "Quebec",
+    "MB": "Manitoba",
+    "SK": "Saskatchewan",
+    "NS": "Nova Scotia",
+    "NB": "New Brunswick",
+    "NL": "Newfoundland và Labrador",
+    "PE": "Đảo Prince Edward",
+    "NT": "Lãnh thổ Tây Bắc",
+    "YT": "Yukon",
+    "NU": "Nunavut"
+  },
+  "plans": {
+    "community_and_new_business": {
+      "name": "Cộng đồng và Doanh nghiệp Mới",
+      "features": {
+        "stores": "1 Cửa hàng",
+        "languages": "2 Ngôn ngữ",
+        "personalities": "1 Tính cách AI"
+      }
+    },
+    "small_business": {
+      "name": "Doanh nghiệp Nhỏ",
+      "features": {
+        "stores": "5 Cửa hàng",
+        "languages": "5 Ngôn ngữ",
+        "personalities": "2 Tính cách AI"
+      }
+    },
+    "professional_and_growing_business": {
+      "name": "Doanh nghiệp Chuyên nghiệp và Đang phát triển",
+      "features": {
+        "stores": "12 Cửa hàng",
+        "languages": "10 Ngôn ngữ",
+        "personalities": "3 Tính cách AI"
+      }
+    },
+    "enterprise": {
+      "name": "Doanh nghiệp",
+      "features": {
+        "stores": "Cửa hàng Không giới hạn",
+        "languages": "25+ Ngôn ngữ",
+        "personalities": "5 Tính cách AI"
+      }
+    }
+  }
+}

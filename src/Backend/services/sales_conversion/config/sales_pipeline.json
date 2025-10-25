@@ -1,0 +1,306 @@
+{
+  "sales_pipeline": {
+    "stages": {
+      "greeting": {
+        "description": "Initial customer greeting and engagement",
+        "next_stages": ["age_verification", "discovery", "specific_request"],
+        "timeout_seconds": 30,
+        "prompts": {
+          "new_user": "greeting_new",
+          "returning_user": "greeting_returning"
+        },
+        "data_collection": ["language", "timezone"],
+        "engagement_triggers": ["hello", "hi", "hey", "help"]
+      },
+      "age_verification": {
+        "description": "Verify customer is 21+ for legal compliance",
+        "next_stages": ["discovery", "abandoned"],
+        "required": true,
+        "prompts": {
+          "request": "age_verification_request",
+          "failure": "age_verification_failed"
+        },
+        "data_collection": ["age_verified"],
+        "compliance": true
+      },
+      "discovery": {
+        "description": "Understand customer needs and preferences",
+        "next_stages": ["needs_assessment", "recommendation", "education"],
+        "timeout_seconds": 120,
+        "prompts": {
+          "open": "discovery_open_ended",
+          "guided": "discovery_guided",
+          "medical": "discovery_medical",
+          "recreational": "discovery_recreational"
+        },
+        "data_collection": ["needs", "experience_level", "preferences", "medical_conditions"],
+        "progressive_collection": true
+      },
+      "needs_assessment": {
+        "description": "Deep dive into specific customer requirements",
+        "next_stages": ["recommendation", "education"],
+        "prompts": {
+          "effects": "assess_desired_effects",
+          "medical": "assess_medical_needs",
+          "dosage": "assess_dosage_preferences",
+          "budget": "assess_budget"
+        },
+        "data_collection": ["preferred_effects", "price_range", "consumption_method"]
+      },
+      "education": {
+        "description": "Educate customer about products and effects",
+        "next_stages": ["recommendation", "needs_assessment"],
+        "prompts": {
+          "strains": "educate_strains",
+          "cannabinoids": "educate_cannabinoids",
+          "terpenes": "educate_terpenes",
+          "consumption": "educate_consumption_methods"
+        },
+        "educational_content": true
+      },
+      "recommendation": {
+        "description": "Provide personalized product recommendations",
+        "next_stages": ["consideration", "objection_handling", "cart_building"],
+        "prompts": {
+          "single": "recommend_single_product",
+          "multiple": "recommend_multiple_products",
+          "comparison": "recommend_comparison",
+          "bundle": "recommend_bundle"
+        },
+        "strategies": ["personalized", "trending", "similar", "value"],
+        "max_recommendations": 5
+      },
+      "consideration": {
+        "description": "Customer evaluating recommendations",
+        "next_stages": ["cart_building", "objection_handling", "recommendation"],
+        "prompts": {
+          "details": "provide_product_details",
+          "comparison": "compare_products",
+          "alternatives": "suggest_alternatives"
+        },
+        "support_actions": ["product_details", "reviews", "lab_results"]
+      },
+      "objection_handling": {
+        "description": "Address customer concerns and objections",
+        "next_stages": ["recommendation", "cart_building", "abandoned"],
+        "prompts": {
+          "price": "handle_price_objection",
+          "quality": "handle_quality_objection",
+          "effects": "handle_effects_objection",
+          "safety": "handle_safety_objection",
+          "trust": "handle_trust_objection"
+        },
+        "strategies": ["reassure", "alternative", "value_prop", "social_proof"]
+      },
+      "cart_building": {
+        "description": "Adding products to shopping cart",
+        "next_stages": ["upselling", "checkout"],
+        "prompts": {
+          "add_item": "cart_add_confirmation",
+          "update_quantity": "cart_quantity_update",
+          "review": "cart_review"
+        },
+        "actions": ["add", "update", "remove", "clear"]
+      },
+      "upselling": {
+        "description": "Suggest additional or upgraded products",
+        "next_stages": ["cart_building", "checkout"],
+        "prompts": {
+          "complementary": "upsell_complementary",
+          "upgrade": "upsell_upgrade",
+          "bundle": "upsell_bundle",
+          "quantity": "upsell_quantity_discount"
+        },
+        "strategies": ["complementary", "upgrade", "bundle", "volume_discount"],
+        "max_attempts": 2
+      },
+      "checkout": {
+        "description": "Review cart and proceed to payment",
+        "next_stages": ["payment", "objection_handling"],
+        "prompts": {
+          "summary": "checkout_summary",
+          "delivery": "checkout_delivery_options",
+          "discount": "checkout_apply_discount"
+        },
+        "data_collection": ["delivery_address", "delivery_time", "special_instructions"]
+      },
+      "payment": {
+        "description": "Process payment for order",
+        "next_stages": ["order_confirmation", "abandoned"],
+        "prompts": {
+          "options": "payment_options",
+          "processing": "payment_processing",
+          "failure": "payment_failed"
+        },
+        "payment_methods": ["clover", "cash_on_delivery"],
+        "secure": true
+      },
+      "order_confirmation": {
+        "description": "Confirm order and provide details",
+        "next_stages": ["follow_up"],
+        "prompts": {
+          "success": "order_confirmation_success",
+          "details": "order_details",
+          "tracking": "order_tracking_info"
+        },
+        "notifications": ["sms", "email"],
+        "generate_receipt": true
+      },
+      "follow_up": {
+        "description": "Post-purchase engagement",
+        "next_stages": ["discovery"],
+        "prompts": {
+          "satisfaction": "follow_up_satisfaction",
+          "review": "follow_up_review_request",
+          "reorder": "follow_up_reorder"
+        },
+        "timing": {
+          "satisfaction": "1_hour",
+          "review": "1_day",
+          "reorder": "1_week"
+        }
+      },
+      "abandoned": {
+        "description": "Session abandoned or terminated",
+        "terminal": true,
+        "prompts": {
+          "age_failed": "abandoned_age_verification",
+          "timeout": "abandoned_timeout",
+          "exit": "abandoned_user_exit"
+        },
+        "recovery": {
+          "enabled": true,
+          "timing": "24_hours",
+          "channel": ["email", "sms"]
+        }
+      }
+    },
+    
+    "transitions": {
+      "rules": [
+        {
+          "from": "greeting",
+          "to": "age_verification",
+          "conditions": ["age_not_verified"],
+          "priority": 1
+        },
+        {
+          "from": "greeting",
+          "to": "discovery",
+          "conditions": ["age_verified", "no_specific_request"],
+          "priority": 2
+        },
+        {
+          "from": "discovery",
+          "to": "needs_assessment",
+          "conditions": ["needs_clarification_required"],
+          "priority": 1
+        },
+        {
+          "from": "discovery",
+          "to": "recommendation",
+          "conditions": ["sufficient_information"],
+          "priority": 2
+        },
+        {
+          "from": "recommendation",
+          "to": "cart_building",
+          "conditions": ["product_selected"],
+          "priority": 1
+        },
+        {
+          "from": "cart_building",
+          "to": "upselling",
+          "conditions": ["cart_value_below_threshold", "upsell_not_attempted"],
+          "priority": 1
+        },
+        {
+          "from": "cart_building",
+          "to": "checkout",
+          "conditions": ["ready_to_checkout"],
+          "priority": 2
+        },
+        {
+          "from": "checkout",
+          "to": "payment",
+          "conditions": ["delivery_info_complete"],
+          "priority": 1
+        },
+        {
+          "from": "payment",
+          "to": "order_confirmation",
+          "conditions": ["payment_successful"],
+          "priority": 1
+        }
+      ],
+      
+      "fallback_transitions": {
+        "timeout": "abandoned",
+        "user_exit": "abandoned",
+        "age_verification_failed": "abandoned"
+      }
+    },
+    
+    "configuration": {
+      "session_timeout_minutes": 30,
+      "max_idle_time_seconds": 300,
+      "progressive_data_collection": true,
+      "multi_language_support": true,
+      "supported_languages": ["en", "es", "fr", "pt", "zh"],
+      "default_language": "en",
+      "cart_persistence_hours": 24,
+      "abandoned_cart_recovery": true,
+      "upsell_threshold": 50.00,
+      "volume_discount_tiers": [
+        {"min_value": 100, "discount_percent": 5},
+        {"min_value": 200, "discount_percent": 10},
+        {"min_value": 500, "discount_percent": 15}
+      ],
+      "delivery_zones": {
+        "local": {"radius_miles": 5, "fee": 0},
+        "extended": {"radius_miles": 10, "fee": 10},
+        "premium": {"radius_miles": 20, "fee": 25}
+      },
+      "business_hours": {
+        "monday": {"open": "09:00", "close": "21:00"},
+        "tuesday": {"open": "09:00", "close": "21:00"},
+        "wednesday": {"open": "09:00", "close": "21:00"},
+        "thursday": {"open": "09:00", "close": "21:00"},
+        "friday": {"open": "09:00", "close": "23:00"},
+        "saturday": {"open": "10:00", "close": "23:00"},
+        "sunday": {"open": "10:00", "close": "20:00"}
+      }
+    },
+    
+    "metrics": {
+      "track_events": [
+        "stage_entry",
+        "stage_exit",
+        "product_view",
+        "add_to_cart",
+        "remove_from_cart",
+        "checkout_start",
+        "payment_attempt",
+        "order_complete",
+        "session_abandon"
+      ],
+      "conversion_goals": {
+        "primary": "order_complete",
+        "secondary": ["add_to_cart", "checkout_start"],
+        "micro": ["product_view", "needs_assessment_complete"]
+      },
+      "performance_thresholds": {
+        "stage_timeout_seconds": {
+          "greeting": 30,
+          "discovery": 120,
+          "recommendation": 60,
+          "cart_building": 180,
+          "checkout": 300,
+          "payment": 120
+        },
+        "target_conversion_rate": 0.15,
+        "target_cart_value": 75.00
+      }
+    }
+  }
+}

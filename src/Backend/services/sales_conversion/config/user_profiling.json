@@ -1,0 +1,217 @@
+{
+  "progressive_collection": {
+    "enabled": true,
+    "stages": {
+      "greeting": ["language", "timezone"],
+      "age_verification": ["age_verified"],
+      "discovery": ["needs", "experience_level", "customer_type"],
+      "needs_assessment": ["preferred_effects", "medical_conditions", "price_range", "consumption_method"],
+      "education": ["knowledge_level", "interests"],
+      "recommendation": ["preferred_categories", "brand_preferences", "potency_preference"],
+      "consideration": ["decision_factors", "comparison_criteria"],
+      "cart_building": ["quantity_preferences", "budget_flexibility"],
+      "checkout": ["email", "phone", "delivery_preferences", "special_instructions"],
+      "order_confirmation": ["communication_preferences", "follow_up_consent"]
+    },
+    "optional_fields": [
+      "medical_card_number",
+      "birthday",
+      "referral_source",
+      "marketing_consent"
+    ],
+    "sensitive_fields": [
+      "medical_conditions",
+      "medical_card_number",
+      "phone",
+      "email",
+      "delivery_address"
+    ]
+  },
+  
+  "profile_classification": {
+    "experience_levels": {
+      "beginner": {
+        "description": "New to cannabis, needs education",
+        "indicators": ["first_time", "no_experience", "questions_about_basics"]
+      },
+      "intermediate": {
+        "description": "Some experience, knows basics",
+        "indicators": ["occasional_use", "knows_strains", "has_preferences"]
+      },
+      "experienced": {
+        "description": "Regular user with clear preferences",
+        "indicators": ["regular_use", "specific_requests", "knows_terpenes"]
+      },
+      "expert": {
+        "description": "Deep knowledge and specific requirements",
+        "indicators": ["daily_use", "discusses_cannabinoids", "bulk_purchases"]
+      }
+    },
+    
+    "customer_types": {
+      "medical": {
+        "description": "Medical cannabis patient",
+        "indicators": ["has_medical_card", "mentions_conditions", "asks_about_relief"]
+      },
+      "recreational": {
+        "description": "Recreational user",
+        "indicators": ["social_use", "flavor_focus", "experience_seeking"]
+      },
+      "wellness": {
+        "description": "Wellness and health focused",
+        "indicators": ["cbd_interest", "sleep_aid", "anxiety_relief", "no_high"]
+      },
+      "connoisseur": {
+        "description": "Quality and craft focused",
+        "indicators": ["premium_products", "terpene_profiles", "cultivation_methods"]
+      }
+    },
+    
+    "price_sensitivity": {
+      "budget": {
+        "range": {"min": 0, "max": 50},
+        "indicators": ["asks_for_deals", "mentions_budget", "value_seeker"]
+      },
+      "moderate": {
+        "range": {"min": 50, "max": 150},
+        "indicators": ["quality_value_balance", "occasional_premium"]
+      },
+      "premium": {
+        "range": {"min": 150, "max": null},
+        "indicators": ["best_quality", "no_price_mention", "bulk_buyer"]
+      }
+    },
+    
+    "consumption_preferences": {
+      "flower": ["smoking", "traditional", "full_spectrum"],
+      "edibles": ["discrete", "long_lasting", "no_smoking"],
+      "concentrates": ["high_potency", "experienced", "dab_rig"],
+      "vapes": ["convenient", "discrete", "portable"],
+      "topicals": ["pain_relief", "no_psychoactive", "localized"],
+      "tinctures": ["precise_dosing", "sublingual", "medical"]
+    }
+  },
+  
+  "behavioral_patterns": {
+    "purchase_patterns": {
+      "impulse_buyer": {
+        "indicators": ["quick_decision", "new_products", "variety_seeking"],
+        "strategy": "highlight_new_trending"
+      },
+      "researcher": {
+        "indicators": ["many_questions", "comparison", "reads_reviews"],
+        "strategy": "provide_detailed_info"
+      },
+      "loyal_customer": {
+        "indicators": ["repeat_purchases", "brand_loyalty", "referrals"],
+        "strategy": "loyalty_rewards"
+      },
+      "deal_hunter": {
+        "indicators": ["asks_for_discounts", "bulk_deals", "price_comparison"],
+        "strategy": "highlight_savings"
+      }
+    },
+    
+    "engagement_levels": {
+      "high": {
+        "indicators": ["asks_questions", "provides_feedback", "long_conversations"],
+        "response_style": "detailed_conversational"
+      },
+      "moderate": {
+        "indicators": ["focused_questions", "clear_needs", "moderate_interaction"],
+        "response_style": "balanced_informative"
+      },
+      "low": {
+        "indicators": ["minimal_responses", "quick_purchase", "no_questions"],
+        "response_style": "concise_efficient"
+      }
+    }
+  },
+  
+  "data_enrichment": {
+    "inference_rules": [
+      {
+        "if": ["medical_conditions", "pain_mentioned"],
+        "then": {"preferred_effects": ["pain_relief"], "customer_type": "medical"}
+      },
+      {
+        "if": ["first_time", "nervous"],
+        "then": {"experience_level": "beginner", "needs": ["education", "guidance"]}
+      },
+      {
+        "if": ["bulk_purchase", "regular_customer"],
+        "then": {"customer_type": "bulk_buyer", "price_sensitivity": "value_focused"}
+      },
+      {
+        "if": ["asks_about_terpenes", "specific_strains"],
+        "then": {"experience_level": "experienced", "customer_type": "connoisseur"}
+      }
+    ],
+    
+    "preference_mapping": {
+      "effects_to_products": {
+        "relaxation": ["indica", "cbd_dominant", "edibles"],
+        "energy": ["sativa", "vapes", "low_dose"],
+        "creativity": ["hybrid", "sativa_dominant"],
+        "pain_relief": ["high_cbd", "topicals", "indica"],
+        "sleep": ["indica", "edibles", "tinctures"],
+        "focus": ["sativa", "low_thc", "cbd_blend"]
+      },
+      
+      "conditions_to_recommendations": {
+        "anxiety": ["cbd_dominant", "low_thc", "indica"],
+        "chronic_pain": ["high_cbd", "topicals", "full_spectrum"],
+        "insomnia": ["indica", "edibles", "cbn_products"],
+        "depression": ["sativa", "balanced_hybrid", "microdose"],
+        "inflammation": ["cbd", "topicals", "tinctures"],
+        "appetite": ["indica", "high_thc", "edibles"]
+      }
+    }
+  },
+  
+  "privacy_settings": {
+    "data_minimization": true,
+    "explicit_consent_required": ["email", "phone", "medical_conditions"],
+    "anonymization_fields": ["name", "exact_address", "medical_details"],
+    "retention_policies": {
+      "active_profile_days": 365,
+      "inactive_profile_days": 90,
+      "purchase_history_days": 730,
+      "medical_data_days": 365
+    },
+    "gdpr_compliance": {
+      "right_to_access": true,
+      "right_to_delete": true,
+      "right_to_portability": true,
+      "right_to_correction": true
+    }
+  },
+  
+  "profile_scoring": {
+    "value_score": {
+      "factors": {
+        "purchase_frequency": 0.3,
+        "average_order_value": 0.3,
+        "engagement_level": 0.2,
+        "referrals": 0.2
+      }
+    },
+    "engagement_score": {
+      "factors": {
+        "message_count": 0.2,
+        "questions_asked": 0.2,
+        "products_viewed": 0.2,
+        "time_spent": 0.2,
+        "return_visits": 0.2
+      }
+    },
+    "conversion_likelihood": {
+      "factors": {
+        "cart_additions": 0.3,
+        "price_inquiries": 0.2,
+        "specific_requests": 0.2,
+        "engagement_score": 0.3
+      }
+    }
+  }
+}

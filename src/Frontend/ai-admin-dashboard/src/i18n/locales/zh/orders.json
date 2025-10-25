@@ -1,0 +1,149 @@
+{
+  "titles": {
+    "management": "订单管理",
+    "orderDetails": "订单详情",
+    "assignDriver": "分配司机",
+    "messageCustomer": "消息客户",
+    "deliveryConfirmation": "配送确认"
+  },
+  "fields": {
+    "orderNumber": "订单",
+    "customer": "客户",
+    "status": "状态",
+    "type": "类型",
+    "items": "项目",
+    "cannabis": "大麻",
+    "total": "总计",
+    "verification": "验证",
+    "time": "时间",
+    "actions": "操作",
+    "product": "产品",
+    "brand": "品牌",
+    "category": "类别",
+    "thcCbd": "THC/CBD",
+    "qty": "数量",
+    "price": "价格",
+    "payment": "付款",
+    "paymentMethod": "付款方式",
+    "deliveryAddress": "配送地址",
+    "deliveryTime": "配送时间",
+    "pickupTime": "取货时间",
+    "driver": "司机",
+    "vehicle": "车辆",
+    "signature": "客户签名",
+    "deliveryPhoto": "配送照片",
+    "dob": "DOB",
+    "loyaltyPoints": "积分"
+  },
+  "status": {
+    "all": "全部状态",
+    "pending": "待处理",
+    "confirmed": "已确认",
+    "preparing": "准备中",
+    "ready": "准备就绪",
+    "outForDelivery": "配送中",
+    "delivered": "已送达",
+    "cancelled": "已取消",
+    "refunded": "已退款",
+    "paymentPending": "待付款",
+    "ageVerified": "年龄已验证",
+    "ageNotVerified": "年龄未验证"
+  },
+  "orderTypes": {
+    "all": "全部类型",
+    "delivery": "配送",
+    "pickup": "自取",
+    "inStore": "店内"
+  },
+  "paymentMethods": {
+    "cash": "现金",
+    "credit": "信用卡",
+    "debit": "借记卡",
+    "eTransfer": "E-Transfer"
+  },
+  "paymentStatus": {
+    "pending": "待处理",
+    "paid": "已支付",
+    "refunded": "已退款"
+  },
+  "customerTypes": {
+    "recreational": "娱乐",
+    "medical": "医疗"
+  },
+  "actions": {
+    "export": "导出",
+    "refresh": "刷新",
+    "viewDetails": "查看详情",
+    "confirmOrder": "确认订单",
+    "cancelOrder": "取消订单",
+    "startPreparing": "开始准备",
+    "markReady": "标记为准备就绪",
+    "assignDriver": "分配司机",
+    "markPickedUp": "标记为已取货",
+    "markDelivered": "标记为已送达",
+    "verifyAge": "验证年龄和身份证",
+    "messageCustomer": "消息客户",
+    "processRefund": "处理退款",
+    "assignAndDispatch": "分配并派送",
+    "sendMessage": "发送消息"
+  },
+  "messages": {
+    "searchPlaceholder": "按订单号、客户、电话搜索...",
+    "selectDriver": "选择司机...",
+    "noOrders": "未找到订单",
+    "ordersWillAppear": "客户下订单时,订单将显示在此处。",
+    "exportMessage": "导出功能将下载CSV文件",
+    "assignDriverMessage": "为订单{{orderNumber}}分配司机",
+    "messageSendTo": "发送消息给{{firstName}} {{lastName}}",
+    "typePlaceholder": "输入您的消息...",
+    "loadingError": "加载订单时出错:",
+    "driedFlowerEq": "干花当量:",
+    "to": "至",
+    "idVerified": "ID ✓",
+    "noId": "无ID",
+    "itemsCount": "{{count}}项",
+    "orderNumber": "订单{{number}}",
+    "min": "分钟"
+  },
+  "metrics": {
+    "pending": "待处理",
+    "preparing": "准备中",
+    "ready": "准备就绪",
+    "todayRevenue": "今日收入",
+    "avgProcessTime": "平均处理时间"
+  },
+  "sections": {
+    "customerInfo": "客户信息",
+    "orderInfo": "订单信息",
+    "deliveryInfo": "配送信息",
+    "pickupInfo": "取货信息",
+    "specialInstructions": "特殊说明",
+    "orderItems": "订单项目",
+    "orderSummary": "订单摘要"
+  },
+  "summary": {
+    "subtotal": "小计:",
+    "tax": "税费 (13% HST):",
+    "delivery": "配送:",
+    "discount": "折扣:",
+    "total": "总计:"
+  },
+  "prompts": {
+    "cancelReason": "请提供取消原因:",
+    "refundReason": "请提供退款原因:"
+  },
+  "templates": {
+    "selectTemplate": "选择模板...",
+    "orderConfirmed": "您的订单已确认并正在准备中。",
+    "readyForPickup": "您的订单已准备好可以取货!",
+    "outForDelivery": "您的订单正在配送中。",
+    "delayNotice": "您的订单有延迟。我们对此造成的不便表示歉意。",
+    "orderConfirmedLabel": "订单已确认",
+    "readyForPickupLabel": "准备好取货",
+    "outForDeliveryLabel": "配送中",
+    "delayNoticeLabel": "延迟通知"
+  },
+  "labels": {
+    "quickTemplates": "快速模板"
+  }
+}

@@ -1,0 +1,247 @@
+{
+  "header": {
+    "nav": {
+      "features": "功能特点",
+      "pricing": "价格方案",
+      "testimonials": "客户评价",
+      "login": "登录"
+    },
+    "getStarted": "开始使用"
+  },
+  "hero": {
+    "title": "完整的大麻",
+    "titleHighlight": "商业平台",
+    "subtitle": "通过人工智能驱动的电子商务、多语言支持、欺诈保护和完整的业务管理，为您的药房赋能——全部集成在一个平台上。",
+    "startTrial": "开始免费试用",
+    "learnMore": "了解更多"
+  },
+  "stats": {
+    "products": "产品",
+    "languages": "语言",
+    "uptime": "正常运行时间",
+    "support": "支持"
+  },
+  "features": {
+    "heading": "您主导市场所需的一切",
+    "subheading": "专为大麻零售商打造，WeedGo结合了尖端的人工智能、企业级基础设施和行业专用工具，帮助您",
+    "subheadingHighlight": " 销售更多、服务更好、扩展更快",
+    "aiBudtender": {
+      "title": "AI预算员24/7",
+      "description": "永不错过销售机会。您的AI助手能用任何语言即时回答客户问题，推荐产品，甚至自动验证年龄。"
+    },
+    "voiceShopping": {
+      "title": "语音购物",
+      "description": "无障碍与便利的结合。客户可以免提浏览、搜索和订购——非常适合店内自助终端和移动购物者。"
+    },
+    "predictiveIntelligence": {
+      "title": "预测智能",
+      "description": "在销售发生之前就知道什么会畅销。AI预测需求，优化库存水平，并在最佳时机提醒您重新订购。"
+    },
+    "smartRecommendations": {
+      "title": "智能推荐",
+      "description": "提高40%的平均订单价值。机器学习基于购买模式和客户偏好建议互补产品。"
+    },
+    "unifiedCommerce": {
+      "title": "统一商务平台",
+      "description": "一个系统满足所有需求——网上商店、店内POS、自助终端、移动应用和电视菜单显示。您的库存在所有渠道实时同步。"
+    },
+    "brandedMobileApps": {
+      "title": "品牌移动应用",
+      "description": "您的客户下载您的应用（iOS和Android）。通过推送通知、独家优惠和无缝移动订购建立忠诚度。"
+    },
+    "selfServiceKiosks": {
+      "title": "自助服务终端",
+      "description": "减少等待时间和人工成本。客户在平板电脑上浏览、订购和支付——您的员工专注于高价值互动。"
+    },
+    "deliveryEcosystem": {
+      "title": "配送生态系统",
+      "description": "完整的配送管理，包括司机应用、实时GPS跟踪、客户通知和路线优化。与大公司竞争。"
+    },
+    "multiLanguage": {
+      "title": "25+种语言，零障碍",
+      "description": "用每位客户的母语为他们服务。自动检测、实时翻译和本地化内容——即时扩展到任何市场。"
+    },
+    "seoOptimization": {
+      "title": "真正有效的SEO",
+      "description": "动态的、AI驱动的SEO优化。您的产品页面会自动在Google上获得更高排名——无需SEO代理机构。"
+    },
+    "fraudProtection": {
+      "title": "欺诈保护套件",
+      "description": "在退款发生之前阻止它们。AI检测可疑模式，将欺诈卡列入黑名单，并为每笔交易捕获签名。"
+    },
+    "complianceAutopilot": {
+      "title": "合规自动驾驶",
+      "description": "轻松保持合规。自动年龄验证、CannSell跟踪、OCS集成和随时可用的审计报告。"
+    },
+    "ageVerification": {
+      "title": "多层年龄验证",
+      "description": "语音识别、身份证扫描、面部匹配和手动覆盖——通过多种方法验证客户年龄，确保完全的监管信心。"
+    },
+    "businessIntelligence": {
+      "title": "实时商业智能",
+      "description": "在一个仪表板中查看所有内容——销售趋势、热门产品、客户行为、员工绩效和每秒更新的利润率。"
+    },
+    "multiLocation": {
+      "title": "多地点指挥中心",
+      "description": "从一个仪表板管理无限商店。在地点之间转移库存，比较绩效，轻松保持一致的品牌形象。"
+    },
+    "customerLoyalty": {
+      "title": "客户忠诚度引擎",
+      "description": "将首次购买者转变为常客。积分计划、VIP等级、生日奖励和推荐奖金——全部自动化和可定制。"
+    },
+    "brandCustomization": {
+      "title": "您的品牌，您的方式",
+      "description": "完整的白标定制。从高级模板中选择或完全自定义——展现您的标志、颜色、字体和布局。"
+    },
+    "noCodeCustomization": {
+      "title": "无代码定制",
+      "description": "无需开发人员即可更改任何内容。拖放页面构建器、自定义表单、促销横幅——在几分钟内更新您的商店，而不是几周。"
+    },
+    "uptimeGuarantee": {
+      "title": "99.9%正常运行时间保证",
+      "description": "自动扩展的企业级云基础设施。闪电般的加载时间、全球CDN和冗余备份——您的商店永不宕机。"
+    },
+    "apiArchitecture": {
+      "title": "API优先架构",
+      "description": "与任何东西集成。完整的REST API访问让您无缝连接会计软件、营销工具或自定义应用程序。"
+    },
+    "cta": {
+      "heading": "准备好看看WeedGo能为您的业务做什么了吗？",
+      "description": "加入数百家已经完成转换的大麻零售商。",
+      "descriptionHighlight": " 免费开始，无限扩展，转型您的业务",
+      "descriptionEnd": " 使用专为您打造的唯一平台。",
+      "startTrial": "开始免费试用",
+      "viewPricing": "查看定价方案"
+    }
+  },
+  "pricing": {
+    "heading": "简单透明的定价",
+    "subheading": "选择适合您业务需求的计划",
+    "plans": {
+      "community": {
+        "name": "社区和新业务",
+        "price": "免费",
+        "period": "永久",
+        "cta": "开始使用",
+        "everythingIn": "",
+        "features": [
+          "无限商店位置，按您的节奏扩展",
+          "双语支持（英语和法语）",
+          "AI驱动的预算员个性",
+          "完整的POS和自助终端系统",
+          "可定制的电子商务店面",
+          "数字菜单显示系统",
+          "内置配送管理",
+          "高级欺诈保护和年龄验证",
+          "社区支持"
+        ]
+      },
+      "smallBusiness": {
+        "name": "小型企业",
+        "price": "$99",
+        "period": "/月",
+        "cta": "开始使用",
+        "everythingIn": "免费版的所有功能，加上：",
+        "features": [
+          "扩展到5种语言，服务多元化市场",
+          "2个AI个性，匹配您的品牌声音",
+          "具有高级功能的专业级POS",
+          "专用的平板自助终端应用程序",
+          "高级电子商务模板",
+          "适用于店内营销的电视菜单显示",
+          "需要时的优先支持"
+        ]
+      },
+      "professional": {
+        "name": "专业和成长型企业",
+        "price": "$149",
+        "period": "/月",
+        "cta": "开始使用",
+        "badge": "最受欢迎",
+        "everythingIn": "小型企业的所有功能，加上：",
+        "features": [
+          "通过10种语言触及全球市场",
+          "3个AI个性，提供个性化体验",
+          "解锁所有平台功能和集成",
+          "定制电子商务设计（价值$5,000）",
+          "iOS和Android品牌移动应用",
+          "客户实时配送跟踪",
+          "用于无缝运营的司机应用",
+          "用于定制集成的完整API访问",
+          "专业的SEO优化和内容重写"
+        ]
+      },
+      "enterprise": {
+        "name": "企业版",
+        "price": "$299",
+        "period": "/月",
+        "cta": "联系销售",
+        "everythingIn": "专业版的所有功能，加上：",
+        "features": [
+          "25+种语言，实现真正的全球覆盖",
+          "5个AI个性，服务每个客户群",
+          "白标平台 - 完全重新品牌为您自己的",
+          "专用的MVP服务器，实现最大性能",
+          "AI驱动的营销自动化套件",
+          "动态SEO重写，主导搜索排名",
+          "AI优化的促销广告，针对您的客户",
+          "根据您的需求定制功能开发",
+          "直接访问支持工程师",
+          "与您的系统的优先定制集成",
+          "24/7专属客户经理"
+        ]
+      }
+    }
+  },
+  "testimonials": {
+    "heading": "受到全球大麻企业的信赖",
+    "subheading": "看看我们的客户对WeedGo的评价",
+    "items": [
+      {
+        "quote": "WeedGo改变了我们的业务。AI助手使我们的销售额增长了40%，多语言支持帮助我们服务多元化的客户群。",
+        "name": "Sarah Johnson",
+        "title": "所有者，Green Valley Dispensary"
+      },
+      {
+        "quote": "欺诈保护和合规功能改变了游戏规则。我们已经阻止了数千笔欺诈交易，并轻松保持合规。",
+        "name": "Mike Chen",
+        "title": "经理，Urban Leaf Co."
+      },
+      {
+        "quote": "从1个地点扩展到8个地点，使用WeedGo非常顺利。多租户架构和集中管理工具正是我们所需要的。",
+        "name": "Lisa Rodriguez",
+        "title": "首席执行官，Cannabis Collective"
+      }
+    ]
+  },
+  "cta": {
+    "heading": "准备好转型您的大麻业务了吗？",
+    "description": "加入已经使用WeedGo增加销售、改善合规并提供卓越客户体验的数千家药房。",
+    "button": "开始您的免费试用"
+  },
+  "footer": {
+    "tagline": "由AI驱动的完整大麻商业平台。",
+    "product": {
+      "heading": "产品",
+      "features": "功能特点",
+      "pricing": "价格方案",
+      "api": "API",
+      "integrations": "集成"
+    },
+    "company": {
+      "heading": "公司",
+      "about": "关于我们",
+      "careers": "职业机会",
+      "contact": "联系我们",
+      "blog": "博客"
+    },
+    "support": {
+      "heading": "支持",
+      "helpCenter": "帮助中心",
+      "documentation": "文档",
+      "status": "状态",
+      "security": "安全"
+    },
+    "copyright": "© 2025 WeedGo。保留所有权利。"
+  }
+}

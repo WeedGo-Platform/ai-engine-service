@@ -1,0 +1,149 @@
+{
+  "titles": {
+    "management": "Gestão de pedidos",
+    "orderDetails": "Detalhes do pedido",
+    "assignDriver": "Atribuir motorista",
+    "messageCustomer": "Mensagem ao cliente",
+    "deliveryConfirmation": "Confirmação de entrega"
+  },
+  "fields": {
+    "orderNumber": "Pedido",
+    "customer": "Cliente",
+    "status": "Status",
+    "type": "Tipo",
+    "items": "Itens",
+    "cannabis": "Cannabis",
+    "total": "Total",
+    "verification": "Verificação",
+    "time": "Hora",
+    "actions": "Ações",
+    "product": "Produto",
+    "brand": "Marca",
+    "category": "Categoria",
+    "thcCbd": "THC/CBD",
+    "qty": "Qtd",
+    "price": "Preço",
+    "payment": "Pagamento",
+    "paymentMethod": "Método de pagamento",
+    "deliveryAddress": "Endereço de entrega",
+    "deliveryTime": "Hora de entrega",
+    "pickupTime": "Hora de retirada",
+    "driver": "Motorista",
+    "vehicle": "Veículo",
+    "signature": "Assinatura do cliente",
+    "deliveryPhoto": "Foto de entrega",
+    "dob": "DOB",
+    "loyaltyPoints": "Pontos de fidelidade"
+  },
+  "status": {
+    "all": "Todos os status",
+    "pending": "Pendente",
+    "confirmed": "Confirmado",
+    "preparing": "Preparando",
+    "ready": "Pronto",
+    "outForDelivery": "Em entrega",
+    "delivered": "Entregue",
+    "cancelled": "Cancelado",
+    "refunded": "Reembolsado",
+    "paymentPending": "Pagamento pendente",
+    "ageVerified": "Idade verificada",
+    "ageNotVerified": "Idade não verificada"
+  },
+  "orderTypes": {
+    "all": "Todos os tipos",
+    "delivery": "Entrega",
+    "pickup": "Retirada",
+    "inStore": "Na loja"
+  },
+  "paymentMethods": {
+    "cash": "Dinheiro",
+    "credit": "Cartão de crédito",
+    "debit": "Cartão de débito",
+    "eTransfer": "E-Transfer"
+  },
+  "paymentStatus": {
+    "pending": "Pendente",
+    "paid": "Pago",
+    "refunded": "Reembolsado"
+  },
+  "customerTypes": {
+    "recreational": "Recreativo",
+    "medical": "Médico"
+  },
+  "actions": {
+    "export": "Exportar",
+    "refresh": "Atualizar",
+    "viewDetails": "Ver detalhes",
+    "confirmOrder": "Confirmar pedido",
+    "cancelOrder": "Cancelar pedido",
+    "startPreparing": "Iniciar preparação",
+    "markReady": "Marcar como pronto",
+    "assignDriver": "Atribuir motorista",
+    "markPickedUp": "Marcar como retirado",
+    "markDelivered": "Marcar como entregue",
+    "verifyAge": "Verificar idade e ID",
+    "messageCustomer": "Mensagem ao cliente",
+    "processRefund": "Processar reembolso",
+    "assignAndDispatch": "Atribuir e despachar",
+    "sendMessage": "Enviar mensagem"
+  },
+  "messages": {
+    "searchPlaceholder": "Pesquisar por n° do pedido, cliente, telefone...",
+    "selectDriver": "Selecionar um motorista...",
+    "noOrders": "Nenhum pedido encontrado",
+    "ordersWillAppear": "Os pedidos aparecerão aqui quando os clientes os fizerem.",
+    "exportMessage": "A funcionalidade de exportação faria download de um arquivo CSV",
+    "assignDriverMessage": "Atribuir um motorista para o pedido {{orderNumber}}",
+    "messageSendTo": "Enviar uma mensagem para {{firstName}} {{lastName}}",
+    "typePlaceholder": "Digite sua mensagem...",
+    "loadingError": "Erro ao carregar pedidos:",
+    "driedFlowerEq": "Equiv. flor seca:",
+    "to": "a",
+    "idVerified": "ID ✓",
+    "noId": "Sem ID",
+    "itemsCount": "{{count}} itens",
+    "orderNumber": "Pedido {{number}}",
+    "min": "min"
+  },
+  "metrics": {
+    "pending": "Pendentes",
+    "preparing": "Preparando",
+    "ready": "Prontos",
+    "todayRevenue": "Receita de hoje",
+    "avgProcessTime": "Tempo proc. médio"
+  },
+  "sections": {
+    "customerInfo": "Informações do cliente",
+    "orderInfo": "Informações do pedido",
+    "deliveryInfo": "Informações de entrega",
+    "pickupInfo": "Informações de retirada",
+    "specialInstructions": "Instruções especiais",
+    "orderItems": "Itens do pedido",
+    "orderSummary": "Resumo do pedido"
+  },
+  "summary": {
+    "subtotal": "Subtotal:",
+    "tax": "Taxa (13% HST):",
+    "delivery": "Entrega:",
+    "discount": "Desconto:",
+    "total": "Total:"
+  },
+  "prompts": {
+    "cancelReason": "Por favor, forneça um motivo para o cancelamento:",
+    "refundReason": "Por favor, forneça um motivo para o reembolso:"
+  },
+  "templates": {
+    "selectTemplate": "Selecionar um modelo...",
+    "orderConfirmed": "Seu pedido está confirmado e sendo preparado.",
+    "readyForPickup": "Seu pedido está pronto para retirada!",
+    "outForDelivery": "Seu pedido está a caminho.",
+    "delayNotice": "Há um atraso com seu pedido. Pedimos desculpas pelo inconveniente.",
+    "orderConfirmedLabel": "Pedido confirmado",
+    "readyForPickupLabel": "Pronto para retirada",
+    "outForDeliveryLabel": "Em entrega",
+    "delayNoticeLabel": "Aviso de atraso"
+  },
+  "labels": {
+    "quickTemplates": "Modelos rápidos"
+  }
+}

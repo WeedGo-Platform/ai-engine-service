@@ -1,0 +1,98 @@
+{
+  "api": {
+    "networkError": "Không thể kết nối với máy chủ. Vui lòng kiểm tra kết nối của bạn.",
+    "serverError": "Đã xảy ra lỗi máy chủ. Vui lòng thử lại sau.",
+    "timeout": "Yêu cầu đã hết thời gian chờ. Vui lòng thử lại.",
+    "unauthorized": "Bạn không có quyền thực hiện hành động này.",
+    "forbidden": "Truy cập bị từ chối.",
+    "notFound": "Không tìm thấy tài nguyên được yêu cầu.",
+    "conflict": "Đã xảy ra xung đột. Tài nguyên có thể đã tồn tại.",
+    "validationError": "Đã xảy ra lỗi xác thực.",
+    "tooManyRequests": "Quá nhiều yêu cầu. Vui lòng thử lại sau.",
+    "serviceUnavailable": "Dịch vụ tạm thời không khả dụng.",
+    "badRequest": "Yêu cầu không hợp lệ. Vui lòng kiểm tra đầu vào của bạn.",
+    "internalError": "Đã xảy ra lỗi nội bộ."
+  },
+  "auth": {
+    "loginSuccess": "Đăng nhập thành công! Đang chuyển hướng...",
+    "invalidCredentials": "Email hoặc mật khẩu không hợp lệ. Vui lòng thử lại.",
+    "sessionExpired": "Phiên của bạn đã hết hạn. Vui lòng đăng nhập lại.",
+    "accountDisabled": "Tài khoản của bạn đã bị vô hiệu hóa hoặc thiếu quyền quản trị viên.",
+    "accountLocked": "Tài khoản của bạn đã bị khóa do nhiều lần đăng nhập thất bại.",
+    "tooManyAttempts": "Quá nhiều lần thử đăng nhập. Vui lòng thử lại sau.",
+    "tokenExpired": "Mã xác thực đã hết hạn.",
+    "tokenInvalid": "Mã xác thực không hợp lệ.",
+    "passwordResetFailed": "Đặt lại mật khẩu thất bại. Vui lòng thử lại.",
+    "emailNotVerified": "Vui lòng xác minh địa chỉ email của bạn trước.",
+    "validationError": "Đã xảy ra lỗi xác thực",
+    "loginError": "Đã xảy ra lỗi trong khi đăng nhập"
+  },
+  "tenant": {
+    "loadFailed": "Không thể tải dữ liệu tổ chức.",
+    "createFailed": "Không thể tạo người thuê.",
+    "updateFailed": "Không thể cập nhật người thuê.",
+    "deleteFailed": "Không thể xóa người thuê.",
+    "suspendFailed": "Không thể tạm ngừng người thuê.",
+    "reactivateFailed": "Không thể kích hoạt lại người thuê.",
+    "noOrganization": "Không có tổ chức nào được liên kết với người dùng.",
+    "limitReached": "Đã đạt giới hạn cửa hàng cho người thuê này.",
+    "invalidSubscription": "Đăng ký không hợp lệ hoặc đã hết hạn."
+  },
+  "store": {
+    "loadFailed": "Không thể tải dữ liệu cửa hàng.",
+    "createFailed": "Không thể tạo cửa hàng.",
+    "updateFailed": "Không thể cập nhật cửa hàng.",
+    "deleteFailed": "Không thể xóa cửa hàng.",
+    "suspendFailed": "Không thể tạm ngừng cửa hàng.",
+    "closeFailed": "Không thể đóng cửa hàng.",
+    "notFound": "Không tìm thấy cửa hàng.",
+    "alreadyExists": "Cửa hàng có tên này đã tồn tại."
+  },
+  "inventory": {
+    "loadFailed": "Không thể tải dữ liệu hàng tồn kho.",
+    "createFailed": "Không thể tạo mục hàng tồn kho.",
+    "updateFailed": "Không thể cập nhật mục hàng tồn kho.",
+    "deleteFailed": "Không thể xóa mục hàng tồn kho.",
+    "stockUpdateFailed": "Không thể cập nhật mức tồn kho.",
+    "lowStock": "Cảnh báo hàng tồn kho thấp.",
+    "outOfStock": "Mục hàng đã hết.",
+    "invalidQuantity": "Số lượng được chỉ định không hợp lệ."
+  },
+  "order": {
+    "loadFailed": "Không thể tải dữ liệu đơn hàng.",
+    "createFailed": "Không thể tạo đơn hàng.",
+    "updateFailed": "Không thể cập nhật đơn hàng.",
+    "cancelFailed": "Không thể hủy đơn hàng.",
+    "fulfillFailed": "Không thể hoàn thành đơn hàng.",
+    "refundFailed": "Không thể xử lý hoàn tiền.",
+    "notFound": "Không tìm thấy đơn hàng.",
+    "alreadyProcessed": "Đơn hàng đã được xử lý."
+  },
+  "payment": {
+    "loadFailed": "Không thể tải dữ liệu thanh toán.",
+    "processingFailed": "Xử lý thanh toán thất bại.",
+    "refundFailed": "Xử lý hoàn tiền thất bại.",
+    "invalidAmount": "Số tiền thanh toán không hợp lệ.",
+    "cardDeclined": "Thẻ đã bị từ chối.",
+    "insufficientFunds": "Không đủ tiền.",
+    "paymentMethodInvalid": "Phương thức thanh toán không hợp lệ."
+  },
+  "upload": {
+    "failed": "Tải tệp lên thất bại.",
+    "fileTooLarge": "Kích thước tệp vượt quá mức tối đa cho phép.",
+    "invalidFileType": "Loại tệp không hợp lệ.",
+    "corruptedFile": "Tệp có vẻ bị hỏng.",
+    "uploadCancelled": "Tải lên đã bị hủy."
+  },
+  "general": {
+    "unexpectedError": "Đã xảy ra lỗi không mong đợi.",
+    "operationFailed": "Thao tác thất bại. Vui lòng thử lại.",
+    "dataLoadFailed": "Không thể tải dữ liệu.",
+    "saveFailed": "Không thể lưu thay đổi.",
+    "deleteFailed": "Không thể xóa mục.",
+    "permissionDenied": "Bạn không có quyền thực hiện hành động này.",
+    "invalidInput": "Đầu vào không hợp lệ được cung cấp.",
+    "requiredFieldMissing": "Thiếu trường bắt buộc.",
+    "dataCorrupted": "Dữ liệu có vẻ bị hỏng."
+  }
+}

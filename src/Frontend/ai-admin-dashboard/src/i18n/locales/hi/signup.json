@@ -1,0 +1,368 @@
+{
+  "tenant": {
+    "header": {
+      "title": "WeedGo",
+      "alreadyHaveAccount": "पहले से खाता है?",
+      "signIn": "साइन इन करें",
+      "backHome": "होम पर वापस जाएं"
+    },
+    "steps": {
+      "company": "कंपनी की जानकारी",
+      "contact": "संपर्क विवरण",
+      "account": "खाता सेटअप",
+      "payment": "सदस्यता और भुगतान"
+    },
+    "stepDescriptions": {
+      "company": "अपने व्यवसाय और ब्रांड के बारे में बताएं",
+      "contact": "अपनी संपर्क जानकारी और पता प्रदान करें",
+      "account": "अपने व्यवस्थापक खाते के क्रेडेंशियल बनाएं",
+      "payment": "अपनी योजना और भुगतान विधि चुनें"
+    },
+    "companyInfo": {
+      "brandName": "ब्रांड का नाम",
+      "brandNamePlaceholder": "उदाहरण, ग्रीन वैली डिस्पेंसरी",
+      "website": "वेबसाइट",
+      "websitePlaceholder": "www.potpalace.ca या potpalace.ca",
+      "websiteHelp": "आपकी वेबसाइट URL (ब्रांड कोड उत्पन्न करने के लिए उपयोग किया जाता है)",
+      "brandCode": "ब्रांड कोड",
+      "brandCodeAuto": "ब्रांड कोड * (स्वचालित रूप से उत्पन्न)",
+      "brandCodePlaceholder": "उत्पन्न करने के लिए ऊपर वेबसाइट दर्ज करें",
+      "brandCodeHelp": "आपके स्टोर URL में उपयोग किया जाएगा: {{code}}.weedgo.com",
+      "legalCompanyName": "कानूनी कंपनी का नाम",
+      "legalCompanyPlaceholder": "उदाहरण, ग्रीन वैली कैनाबिस इंक.",
+      "businessNumber": "व्यवसाय संख्या",
+      "businessNumberPlaceholder": "123456789",
+      "businessNumberHelp": "कैनेडियन व्यवसाय संख्या (9 अंक)",
+      "gstHstNumber": "GST/HST संख्या",
+      "gstHstPlaceholder": "123456789RT0001",
+      "gstHstHelp": "प्रारूप: 123456789RT0001",
+      "logoUpload": "लोगो अपलोड",
+      "logoUploadHelp": "अधिकतम 2MB • PNG, JPG, WebP • अनुशंसित: 500x500px वर्ग"
+    },
+    "contactInfo": {
+      "firstName": "पहला नाम",
+      "lastName": "अंतिम नाम",
+      "email": "ईमेल पता",
+      "phone": "फोन नंबर",
+      "phonePlaceholder": "(555) 123-4567",
+      "street": "सड़क का पता",
+      "city": "शहर",
+      "province": "प्रांत",
+      "postalCode": "पोस्टल कोड",
+      "postalCodePlaceholder": "A1A 1A1"
+    },
+    "accountSetup": {
+      "password": "पासवर्ड",
+      "confirmPassword": "पासवर्ड की पुष्टि करें",
+      "passwordStrength": "मजबूती:",
+      "passwordHelp": "कम से कम 8 वर्ण होने चाहिए जिनमें बड़े अक्षर, छोटे अक्षर और संख्या हो",
+      "securityTitle": "खाता सुरक्षा",
+      "securityDescription": "आपका खाता उद्योग-मानक एन्क्रिप्शन और बहु-कारक प्रमाणीकरण विकल्पों के साथ सुरक्षित किया जाएगा।"
+    },
+    "subscription": {
+      "choosePlan": "अपनी सदस्यता योजना चुनें",
+      "selectedPlan": "चयनित योजना: {{plan}}",
+      "changePlan": "योजना बदलें",
+      "free": "मुफ्त",
+      "perMonth": "${{price}}/माह",
+      "customPricing": "कस्टम मूल्य निर्धारण",
+      "billingCycle": "बिलिंग चक्र",
+      "monthly": "मासिक",
+      "monthlyBilled": "मासिक बिल",
+      "annual": "वार्षिक",
+      "annualSave": "20% बचाएं",
+      "selectPlan": "योजना चुनें",
+      "enterpriseTitle": "एंटरप्राइज योजना",
+      "enterpriseDescription": "हमारी बिक्री टीम कस्टम मूल्य निर्धारण और सेटअप पर चर्चा करने के लिए 24 घंटों के भीतर आपसे संपर्क करेगी।"
+    },
+    "payment": {
+      "cardholderName": "कार्डधारक का नाम",
+      "cardholderPlaceholder": "राज कुमार",
+      "cardNumber": "कार्ड नंबर",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiryDate": "समाप्ति तिथि",
+      "expiryPlaceholder": "MM/YY",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "postalCode": "ZIP/पोस्टल कोड",
+      "postalCodePlaceholder": "12345"
+    },
+    "progress": {
+      "verifying": "उपलब्धता की जाँच की जा रही है...",
+      "creating": "आपका खाता बनाया जा रहा है...",
+      "uploading": "लोगो अपलोड किया जा रहा है...",
+      "complete": "खाता सफलतापूर्वक बनाया गया!",
+      "processing": "प्रसंस्करण..."
+    },
+    "success": {
+      "welcome": "WeedGo में आपका स्वागत है!",
+      "accountCreated": "आपका खाता सफलतापूर्वक बनाया गया है।",
+      "tenantCode": "किरायेदार कोड:",
+      "preparing": "आपका डैशबोर्ड तैयार किया जा रहा है..."
+    },
+    "navigation": {
+      "previous": "पिछला",
+      "next": "अगला",
+      "createAccount": "खाता बनाएं"
+    },
+    "errors": {
+      "accountCreationFailed": "खाता निर्माण विफल",
+      "tryAgain": "पुनः प्रयास करें",
+      "registerAsUser": "उपयोगकर्ता के रूप में पंजीकरण करें",
+      "signInInstead": "इसके बजाय साइन इन करें",
+      "tenantExists": "किरायेदार कोड \"{{code}}\" पहले से पंजीकृत है",
+      "websiteExists": "वेबसाइट \"{{website}}\" पहले से उपयोग में है"
+    }
+  },
+  "review": {
+    "title": "किरायेदार खाता समीक्षा",
+    "description": "मैनुअल सत्यापन के लिए चिह्नित खातों की समीक्षा और अनुमोदन करें",
+    "refresh": "रीफ्रेश करें",
+    "stats": {
+      "totalPending": "कुल लंबित",
+      "thisWeek": "इस सप्ताह",
+      "avgReviewTime": "औसत समीक्षा समय",
+      "approvalRate": "अनुमोदन दर"
+    },
+    "table": {
+      "title": "लंबित खाते",
+      "storeName": "स्टोर का नाम",
+      "contact": "संपर्क",
+      "licenseNumber": "लाइसेंस संख्या",
+      "submitted": "सबमिट किया गया",
+      "tier": "स्तर",
+      "actions": "कार्रवाई",
+      "review": "समीक्षा करें",
+      "noPending": "समीक्षा के लिए कोई लंबित खाता नहीं!"
+    },
+    "modal": {
+      "title": "खाते की समीक्षा करें",
+      "storeInfo": "स्टोर की जानकारी",
+      "storeName": "स्टोर का नाम",
+      "licenseNumber": "लाइसेंस संख्या",
+      "crsaAddress": "CRSA पता",
+      "municipality": "नगरपालिका",
+      "crsaStatus": "CRSA स्थिति",
+      "crsaWebsite": "CRSA वेबसाइट",
+      "contactInfo": "संपर्क जानकारी",
+      "contactName": "संपर्क नाम",
+      "role": "भूमिका",
+      "email": "ईमेल",
+      "phone": "फोन",
+      "verificationContext": "सत्यापन संदर्भ",
+      "emailDomain": "ईमेल डोमेन",
+      "domainMatchesCrsa": "डोमेन CRSA से मेल खाता है",
+      "verificationTier": "सत्यापन स्तर",
+      "submitted": "सबमिट किया गया",
+      "adminNotes": "व्यवस्थापक नोट्स (वैकल्पिक)",
+      "adminNotesPlaceholder": "इस समीक्षा के बारे में कोई नोट्स जोड़ें...",
+      "reject": "अस्वीकार करें",
+      "approve": "खाते को अनुमोदित करें",
+      "approving": "अनुमोदन किया जा रहा है...",
+      "yes": "✓ हां",
+      "no": "✗ नहीं"
+    },
+    "reject": {
+      "title": "खाता अस्वीकार करें",
+      "description": "कृपया इस खाते को अस्वीकार करने का कारण प्रदान करें। यह ऑडिट उद्देश्यों के लिए लॉग किया जाएगा।",
+      "reasonPlaceholder": "अस्वीकृति का कारण (न्यूनतम 10 वर्ण)...",
+      "cancel": "रद्द करें",
+      "confirm": "अस्वीकृति की पुष्टि करें",
+      "rejecting": "अस्वीकार किया जा रहा है...",
+      "minLength": "कृपया एक कारण प्रदान करें (कम से कम 10 वर्ण)"
+    },
+    "messages": {
+      "approved": "खाता सफलतापूर्वक अनुमोदित!",
+      "rejected": "खाता सफलतापूर्वक अस्वीकार किया गया।",
+      "approveFailed": "खाते को अनुमोदित करने में विफल: {{error}}",
+      "rejectFailed": "खाते को अस्वीकार करने में विफल: {{error}}",
+      "fetchFailed": "लंबित खातों को लाने में विफल",
+      "noPermission": "आपके पास किरायेदार खातों की समीक्षा करने की अनुमति नहीं है।"
+    }
+  },
+  "userRegistration": {
+    "title": "अपना खाता बनाएं",
+    "joinTenant": "{{tenantName}} में शामिल हों",
+    "tenantInfo": "किरायेदार की जानकारी",
+    "tenantName": "नाम:",
+    "tenantCode": "कोड:",
+    "firstName": "पहला नाम",
+    "firstNamePlaceholder": "राज",
+    "lastName": "अंतिम नाम",
+    "lastNamePlaceholder": "कुमार",
+    "email": "ईमेल पता",
+    "emailPlaceholder": "raj.kumar@example.com",
+    "phone": "फोन नंबर",
+    "phonePlaceholder": "(555) 123-4567",
+    "password": "पासवर्ड",
+    "passwordPlaceholder": "••••••••",
+    "confirmPassword": "पासवर्ड की पुष्टि करें",
+    "passwordStrength": "मजबूती:",
+    "passwordHelp": "बेहतर सुरक्षा के लिए बड़े अक्षरों, छोटे अक्षरों, संख्याओं और प्रतीकों के साथ 8+ वर्णों का उपयोग करें",
+    "createButton": "खाता बनाएं",
+    "creating": "खाता बनाया जा रहा है...",
+    "alreadyHaveAccount": "पहले से खाता है?",
+    "signIn": "साइन इन करें",
+    "loading": "किरायेदार की जानकारी लोड की जा रही है...",
+    "tenantNotFound": "किरायेदार नहीं मिला",
+    "tenantNotFoundDescription": "निर्दिष्ट किरायेदार नहीं मिल सका।",
+    "goToSignup": "साइनअप पर जाएं",
+    "errors": {
+      "loadFailed": "किरायेदार की जानकारी लोड करने में विफल",
+      "alreadyExists": "इस ईमेल के साथ एक उपयोगकर्ता पहले से मौजूद है। कृपया एक अलग ईमेल का उपयोग करें या लॉगिन करें।",
+      "failed": "उपयोगकर्ता खाता बनाने में विफल"
+    }
+  },
+  "success": {
+    "title": "WeedGo में आपका स्वागत है!",
+    "description": "{{tenantName}} के लिए आपका खाता सफलतापूर्वक बनाया गया है।",
+    "accountDetails": {
+      "title": "आपके खाते का विवरण",
+      "tenantName": "किरायेदार का नाम:",
+      "tenantCode": "किरायेदार कोड:",
+      "storeUrl": "स्टोर URL:"
+    },
+    "nextSteps": {
+      "title": "अगले कदम",
+      "checkEmail": {
+        "title": "अपना ईमेल जांचें",
+        "description": "हमने आपको महत्वपूर्ण खाता जानकारी और सेटअप निर्देशों के साथ एक स्वागत ईमेल भेजा है।"
+      },
+      "accessDashboard": {
+        "title": "अपने डैशबोर्ड तक पहुंचें",
+        "description": "अपने स्टोर सेटिंग्स को कॉन्फ़िगर करने, उत्पाद जोड़ने और अपने AI सहायकों को अनुकूलित करने के लिए अपने व्यवस्थापक डैशबोर्ड में लॉगिन करें।"
+      },
+      "setupStore": {
+        "title": "अपना पहला स्टोर सेटअप करें",
+        "description": "अपना पहला स्टोर स्थान जोड़ें, संचालन घंटे कॉन्फ़िगर करें और अपनी उत्पाद सूची सेट करें।"
+      },
+      "configureAI": {
+        "title": "AI सहायकों को कॉन्फ़िगर करें",
+        "description": "अपने AI budtender व्यक्तित्व को अनुकूलित करें और अपने ग्राहकों के लिए बहु-भाषा समर्थन सेट करें।"
+      }
+    },
+    "quickActions": {
+      "dashboard": {
+        "title": "डैशबोर्ड तक पहुंचें",
+        "description": "अपने प्लेटफॉर्म को कॉन्फ़िगर करें"
+      },
+      "documentation": {
+        "title": "दस्तावेज़ीकरण",
+        "description": "सेटअप गाइड और ट्यूटोरियल"
+      },
+      "support": {
+        "title": "सहायता",
+        "description": "हमारी टीम से सहायता प्राप्त करें"
+      }
+    },
+    "cta": {
+      "button": "अपने डैशबोर्ड तक पहुंचें",
+      "help": "शुरू करने में सहायता चाहिए? हमारी सहायता टीम से संपर्क करें",
+      "email": "support@weedgo.com"
+    },
+    "resources": {
+      "title": "आरंभ करने के लिए संसाधन",
+      "quickSetup": {
+        "title": "त्वरित सेटअप गाइड",
+        "item1": "स्टोर कॉन्फ़िगरेशन और ब्रांडिंग",
+        "item2": "उत्पाद कैटलॉग सेटअप",
+        "item3": "भुगतान प्रसंस्करण कॉन्फ़िगरेशन",
+        "item4": "AI सहायक अनुकूलन"
+      },
+      "training": {
+        "title": "प्रशिक्षण और सहायता",
+        "item1": "वीडियो ट्यूटोरियल और वेबिनार",
+        "item2": "24/7 ग्राहक सहायता चैट",
+        "item3": "समुदाय फ़ोरम एक्सेस",
+        "item4": "समर्पित खाता प्रबंधक (एंटरप्राइज़)"
+      }
+    }
+  },
+  "validation": {
+    "required": "{{field}} आवश्यक है",
+    "brandNameRequired": "ब्रांड का नाम आवश्यक है",
+    "websiteRequired": "ब्रांड कोड उत्पन्न करने के लिए वेबसाइट आवश्यक है",
+    "brandCodeRequired": "ब्रांड कोड आवश्यक है (उत्पन्न करने के लिए वेबसाइट दर्ज करें)",
+    "brandCodeFormat": "ब्रांड कोड में केवल बड़े अक्षर, संख्याएं, हाइफ़न और अंडरस्कोर होने चाहिए",
+    "companyNameRequired": "कंपनी का नाम आवश्यक है",
+    "businessNumberRequired": "व्यवसाय संख्या आवश्यक है",
+    "businessNumberFormat": "व्यवसाय संख्या 9 अंकों की होनी चाहिए",
+    "gstHstRequired": "GST/HST संख्या आवश्यक है",
+    "gstHstFormat": "GST/HST संख्या प्रारूप: 123456789RT0001",
+    "emailRequired": "ईमेल आवश्यक है",
+    "emailInvalid": "कृपया एक मान्य ईमेल पता दर्ज करें",
+    "firstNameRequired": "पहला नाम आवश्यक है",
+    "lastNameRequired": "अंतिम नाम आवश्यक है",
+    "streetRequired": "सड़क का पता आवश्यक है",
+    "cityRequired": "शहर आवश्यक है",
+    "postalCodeRequired": "पोस्टल कोड आवश्यक है",
+    "postalCodeFormat": "कृपया एक मान्य कैनेडियन पोस्टल कोड दर्ज करें",
+    "passwordRequired": "पासवर्ड आवश्यक है",
+    "passwordLength": "पासवर्ड कम से कम 8 वर्णों का होना चाहिए",
+    "passwordComplexity": "पासवर्ड में बड़े अक्षर, छोटे अक्षर और संख्या होनी चाहिए",
+    "passwordMismatch": "पासवर्ड मेल नहीं खाते",
+    "cardNumberRequired": "कार्ड नंबर आवश्यक है",
+    "cardNumberFormat": "कृपया एक मान्य 16-अंकीय कार्ड नंबर दर्ज करें",
+    "expiryRequired": "समाप्ति तिथि आवश्यक है",
+    "expiryFormat": "कृपया MM/YY प्रारूप दर्ज करें",
+    "cvvRequired": "CVV आवश्यक है",
+    "cvvFormat": "CVV 3 या 4 अंकों का होना चाहिए",
+    "cardholderRequired": "कार्डधारक का नाम आवश्यक है"
+  },
+  "passwordStrength": {
+    "weak": "कमजोर",
+    "fair": "औसत",
+    "good": "अच्छा",
+    "strong": "मजबूत",
+    "veryStrong": "बहुत मजबूत"
+  },
+  "provinces": {
+    "ON": "Ontario",
+    "BC": "British Columbia",
+    "AB": "Alberta",
+    "QC": "Quebec",
+    "MB": "Manitoba",
+    "SK": "Saskatchewan",
+    "NS": "Nova Scotia",
+    "NB": "New Brunswick",
+    "NL": "Newfoundland and Labrador",
+    "PE": "Prince Edward Island",
+    "NT": "Northwest Territories",
+    "YT": "Yukon",
+    "NU": "Nunavut"
+  },
+  "plans": {
+    "community_and_new_business": {
+      "name": "समुदाय और नया व्यवसाय",
+      "features": {
+        "stores": "1 स्टोर",
+        "languages": "2 भाषाएं",
+        "personalities": "1 AI व्यक्तित्व"
+      }
+    },
+    "small_business": {
+      "name": "लघु व्यवसाय",
+      "features": {
+        "stores": "5 स्टोर",
+        "languages": "5 भाषाएं",
+        "personalities": "2 AI व्यक्तित्व"
+      }
+    },
+    "professional_and_growing_business": {
+      "name": "पेशेवर और बढ़ता व्यवसाय",
+      "features": {
+        "stores": "12 स्टोर",
+        "languages": "10 भाषाएं",
+        "personalities": "3 AI व्यक्तित्व"
+      }
+    },
+    "enterprise": {
+      "name": "एंटरप्राइज़",
+      "features": {
+        "stores": "असीमित स्टोर",
+        "languages": "25+ भाषाएं",
+        "personalities": "5 AI व्यक्तित्व"
+      }
+    }
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "api": {
+    "networkError": "Impossible de se connecter au serveur. Veuillez vérifier votre connexion.",
+    "serverError": "Une erreur serveur s'est produite. Veuillez réessayer plus tard.",
+    "timeout": "La requête a expiré. Veuillez réessayer.",
+    "unauthorized": "Vous n'êtes pas autorisé à effectuer cette action.",
+    "forbidden": "Accès refusé.",
+    "notFound": "La ressource demandée n'a pas été trouvée.",
+    "conflict": "Un conflit s'est produit. La ressource existe peut-être déjà.",
+    "validationError": "Une erreur de validation s'est produite.",
+    "tooManyRequests": "Trop de requêtes. Veuillez réessayer plus tard.",
+    "serviceUnavailable": "Service temporairement indisponible.",
+    "badRequest": "Requête invalide. Veuillez vérifier votre saisie.",
+    "internalError": "Une erreur interne s'est produite."
+  },
+  "auth": {
+    "loginSuccess": "Connexion réussie ! Redirection...",
+    "invalidCredentials": "Email ou mot de passe invalide. Veuillez réessayer.",
+    "sessionExpired": "Votre session a expiré. Veuillez vous reconnecter.",
+    "accountDisabled": "Votre compte est désactivé ou ne dispose pas de privilèges d'administrateur.",
+    "accountLocked": "Votre compte a été verrouillé en raison de plusieurs tentatives de connexion échouées.",
+    "tooManyAttempts": "Trop de tentatives de connexion. Veuillez réessayer plus tard.",
+    "tokenExpired": "Le jeton d'authentification a expiré.",
+    "tokenInvalid": "Jeton d'authentification invalide.",
+    "passwordResetFailed": "La réinitialisation du mot de passe a échoué. Veuillez réessayer.",
+    "emailNotVerified": "Veuillez d'abord vérifier votre adresse email.",
+    "validationError": "Une erreur de validation s'est produite",
+    "loginError": "Une erreur s'est produite lors de la connexion"
+  },
+  "tenant": {
+    "loadFailed": "Échec du chargement des données de l'organisation.",
+    "createFailed": "Échec de la création du locataire.",
+    "updateFailed": "Échec de la mise à jour du locataire.",
+    "deleteFailed": "Échec de la suppression du locataire.",
+    "suspendFailed": "Échec de la suspension du locataire.",
+    "reactivateFailed": "Échec de la réactivation du locataire.",
+    "noOrganization": "Aucune organisation associée à l'utilisateur.",
+    "limitReached": "Limite de magasins atteinte pour ce locataire.",
+    "invalidSubscription": "Abonnement invalide ou expiré."
+  },
+  "store": {
+    "loadFailed": "Échec du chargement des données du magasin.",
+    "createFailed": "Échec de la création du magasin.",
+    "updateFailed": "Échec de la mise à jour du magasin.",
+    "deleteFailed": "Échec de la suppression du magasin.",
+    "suspendFailed": "Échec de la suspension du magasin.",
+    "closeFailed": "Échec de la fermeture du magasin.",
+    "notFound": "Magasin non trouvé.",
+    "alreadyExists": "Un magasin avec ce nom existe déjà."
+  },
+  "inventory": {
+    "loadFailed": "Échec du chargement des données d'inventaire.",
+    "createFailed": "Échec de la création de l'article d'inventaire.",
+    "updateFailed": "Échec de la mise à jour de l'article d'inventaire.",
+    "deleteFailed": "Échec de la suppression de l'article d'inventaire.",
+    "stockUpdateFailed": "Échec de la mise à jour des niveaux de stock.",
+    "lowStock": "Alerte de stock faible.",
+    "outOfStock": "Article en rupture de stock.",
+    "invalidQuantity": "Quantité invalide spécifiée."
+  },
+  "order": {
+    "loadFailed": "Échec du chargement des données de commande.",
+    "createFailed": "Échec de la création de la commande.",
+    "updateFailed": "Échec de la mise à jour de la commande.",
+    "cancelFailed": "Échec de l'annulation de la commande.",
+    "fulfillFailed": "Échec de l'exécution de la commande.",
+    "refundFailed": "Échec du traitement du remboursement.",
+    "notFound": "Commande non trouvée.",
+    "alreadyProcessed": "La commande a déjà été traitée."
+  },
+  "payment": {
+    "loadFailed": "Échec du chargement des données de paiement.",
+    "processingFailed": "Échec du traitement du paiement.",
+    "refundFailed": "Échec du traitement du remboursement.",
+    "invalidAmount": "Montant de paiement invalide.",
+    "cardDeclined": "Carte refusée.",
+    "insufficientFunds": "Fonds insuffisants.",
+    "paymentMethodInvalid": "Méthode de paiement invalide."
+  },
+  "upload": {
+    "failed": "Échec du téléchargement du fichier.",
+    "fileTooLarge": "La taille du fichier dépasse le maximum autorisé.",
+    "invalidFileType": "Type de fichier invalide.",
+    "corruptedFile": "Le fichier semble être corrompu.",
+    "uploadCancelled": "Le téléchargement a été annulé."
+  },
+  "general": {
+    "unexpectedError": "Une erreur inattendue s'est produite.",
+    "operationFailed": "L'opération a échoué. Veuillez réessayer.",
+    "dataLoadFailed": "Échec du chargement des données.",
+    "saveFailed": "Échec de l'enregistrement des modifications.",
+    "deleteFailed": "Échec de la suppression de l'élément.",
+    "permissionDenied": "Vous n'avez pas la permission d'effectuer cette action.",
+    "invalidInput": "Saisie invalide fournie.",
+    "requiredFieldMissing": "Un champ requis est manquant.",
+    "dataCorrupted": "Les données semblent être corrompues."
+  }
+}

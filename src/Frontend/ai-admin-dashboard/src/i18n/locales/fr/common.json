@@ -1,0 +1,228 @@
+{
+  "buttons": {
+    "send": "Envoyer",
+    "close": "Fermer",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "create": "Créer",
+    "update": "Mettre à jour",
+    "confirm": "Confirmer",
+    "back": "Retour",
+    "next": "Suivant",
+    "submit": "Soumettre",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "export": "Exporter",
+    "import": "Importer",
+    "refresh": "Actualiser",
+    "settings": "Paramètres",
+    "logout": "Déconnexion",
+    "change": "Modifier"
+  },
+  "labels": {
+    "email": "Adresse e-mail",
+    "password": "Mot de passe",
+    "username": "Nom d'utilisateur",
+    "name": "Nom",
+    "phone": "Téléphone",
+    "address": "Adresse",
+    "city": "Ville",
+    "province": "Province",
+    "postalCode": "Code postal",
+    "country": "Pays",
+    "status": "Statut",
+    "actions": "Actions",
+    "description": "Description",
+    "notes": "Notes",
+    "date": "Date",
+    "time": "Heure",
+    "total": "Total",
+    "subtotal": "Sous-total",
+    "tax": "Taxe",
+    "quantity": "Quantité",
+    "price": "Prix",
+    "language": "Langue"
+  },
+  "placeholders": {
+    "enterEmail": "Entrez votre adresse e-mail",
+    "enterPassword": "Entrez votre mot de passe",
+    "search": "Rechercher...",
+    "selectOption": "Sélectionnez une option",
+    "typeMessage": "Tapez votre message...",
+    "enterName": "Entrez le nom",
+    "enterPhone": "Entrez le numéro de téléphone"
+  },
+  "messages": {
+    "loading": "Chargement...",
+    "saving": "Enregistrement...",
+    "success": "Succès !",
+    "error": "Une erreur s'est produite",
+    "noData": "Aucune donnée disponible",
+    "confirm": "Êtes-vous sûr ?",
+    "unsavedChanges": "Vous avez des modifications non enregistrées"
+  },
+  "errors": {
+    "required": "Ce champ est obligatoire",
+    "invalidEmail": "Adresse e-mail invalide",
+    "invalidPhone": "Numéro de téléphone invalide",
+    "networkError": "Erreur réseau. Veuillez réessayer.",
+    "serverError": "Erreur serveur. Veuillez réessayer plus tard.",
+    "unauthorized": "Accès non autorisé",
+    "notFound": "Non trouvé",
+    "sessionExpired": "Votre session a expiré. Veuillez vous reconnecter.",
+    "validation": {
+      "selectStore": "Veuillez sélectionner un magasin",
+      "selectSupplier": "Veuillez sélectionner un fournisseur",
+      "addAtLeastOneItem": "Veuillez ajouter au moins un article",
+      "fillRequiredFields": "Veuillez remplir tous les champs obligatoires pour chaque article",
+      "enterLicenseNumber": "Veuillez entrer un numéro de licence",
+      "fillAllRequiredFields": "Veuillez remplir tous les champs obligatoires : {{fields}}",
+      "invalidJson": "Impossible d'enregistrer un JSON invalide : {{message}}",
+      "invalidCode": "Code invalide",
+      "invalidVerificationCode": "Code de vérification invalide"
+    },
+    "operations": {
+      "saveFailed": "Échec de l'enregistrement des paramètres",
+      "validationFailed": "Échec de la validation",
+      "fetchFailed": "Échec de la récupération de {{resource}}",
+      "createFailed": "Échec de la création de {{resource}}",
+      "updateFailed": "Échec de la mise à jour de {{resource}}",
+      "deleteFailed": "Échec de la suppression de {{resource}}",
+      "searchFailed": "Échec de la recherche de {{resource}}",
+      "loadFailed": "Échec du chargement de {{resource}}. Veuillez actualiser la page.",
+      "sendFailed": "Échec de l'envoi de {{resource}}",
+      "generateFailed": "Échec de la génération de {{resource}}",
+      "verifyFailed": "Échec de la vérification de {{resource}}",
+      "processFailed": "Échec du traitement de {{action}}. Veuillez réessayer.",
+      "testConnectionFailed": "Échec du test de connexion. Veuillez vérifier votre réseau."
+    }
+  },
+  "common": {
+    "yes": "Oui",
+    "no": "Non",
+    "or": "ou",
+    "and": "et",
+    "today": "Aujourd'hui",
+    "yesterday": "Hier",
+    "week": "Semaine",
+    "month": "Mois",
+    "year": "Année",
+    "all": "Tous",
+    "none": "Aucun",
+    "active": "Actif",
+    "inactive": "Inactif",
+    "pending": "En attente",
+    "completed": "Terminé",
+    "failed": "Échec",
+    "notSpecified": "Non spécifié",
+    "unknown": "Inconnu",
+    "na": "N/D"
+  },
+  "toasts": {
+    "password": {
+      "changeSuccess": "Mot de passe modifié avec succès ! Veuillez vous reconnecter.",
+      "changeFailed": "Échec de la modification du mot de passe. Veuillez réessayer."
+    },
+    "broadcast": {
+      "createSuccess": "Diffusion créée avec succès !",
+      "createFailed": "Échec de la création de la diffusion"
+    },
+    "template": {
+      "fetchFailed": "Échec de la récupération des modèles",
+      "createSuccess": "Modèle créé avec succès",
+      "createFailed": "Échec de la création du modèle",
+      "updateSuccess": "Modèle mis à jour avec succès",
+      "updateFailed": "Échec de la mise à jour du modèle",
+      "deleteSuccess": "Modèle supprimé avec succès",
+      "deleteFailed": "Échec de la suppression du modèle"
+    },
+    "model": {
+      "fetchFailed": "Échec de la récupération des modèles",
+      "loadFailed": "Échec du chargement du modèle",
+      "unloadSuccess": "Modèle déchargé avec succès",
+      "unloadFailed": "Échec du déchargement du modèle",
+      "updateFailed": "Échec de la mise à jour du modèle"
+    },
+    "config": {
+      "fetchFailed": "Échec de la récupération de la configuration",
+      "updateSuccess": "Configuration mise à jour avec succès",
+      "updateFailed": "Échec de l'enregistrement de la configuration"
+    },
+    "agent": {
+      "fetchFailed": "Échec de la récupération des agents"
+    },
+    "personality": {
+      "fetchFailed": "Échec de la récupération des personnalités"
+    },
+    "router": {
+      "statsFetchFailed": "Échec de la récupération des statistiques du routeur",
+      "toggleFailed": "Échec du basculement du mode d'inférence"
+    }
+  },
+  "confirmations": {
+    "deleteUser": "Êtes-vous sûr de vouloir supprimer l'utilisateur {{email}} ?",
+    "deleteUserPermanent": "Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.",
+    "deleteTerminal": "Êtes-vous sûr de vouloir supprimer ce terminal ?",
+    "passwordResetMethod": "Cliquez sur OK pour envoyer un lien de réinitialisation par e-mail\nCliquez sur Annuler pour générer et afficher un mot de passe temporaire"
+  },
+  "modals": {
+    "changePassword": {
+      "title": "Modifier le mot de passe",
+      "currentPassword": "Mot de passe actuel",
+      "newPassword": "Nouveau mot de passe",
+      "confirmPassword": "Confirmer le nouveau mot de passe",
+      "placeholders": {
+        "currentPassword": "Entrez le mot de passe actuel",
+        "newPassword": "Entrez le nouveau mot de passe",
+        "confirmPassword": "Confirmez le nouveau mot de passe"
+      },
+      "requirements": {
+        "title": "Le mot de passe doit contenir :",
+        "minLength": "Au moins 8 caractères",
+        "uppercase": "Une lettre majuscule",
+        "lowercase": "Une lettre minuscule",
+        "number": "Un chiffre"
+      },
+      "validation": {
+        "currentRequired": "Le mot de passe actuel est obligatoire",
+        "newRequired": "Le nouveau mot de passe est obligatoire",
+        "notMeetRequirements": "Le mot de passe ne respecte pas les exigences",
+        "confirmRequired": "Veuillez confirmer votre nouveau mot de passe",
+        "notMatch": "Les mots de passe ne correspondent pas",
+        "mustBeDifferent": "Le nouveau mot de passe doit être différent du mot de passe actuel",
+        "incorrectCurrent": "Le mot de passe actuel est incorrect"
+      },
+      "securityNotice": "Après avoir modifié votre mot de passe, vous serez déconnecté et devrez vous reconnecter avec vos nouvelles informations d'identification.",
+      "changing": "Modification en cours..."
+    }
+  },
+  "navigation": {
+    "dashboard": "Tableau de Bord",
+    "apps": "Applications",
+    "organization": "Organisation",
+    "tenants": "Locataires",
+    "products": "Produits",
+    "inventory": "Inventaire",
+    "accessories": "Accessoires",
+    "orders": "Commandes",
+    "customers": "Clients",
+    "purchaseOrders": "Bons de Commande",
+    "promotions": "Promotions",
+    "recommendations": "Recommandations",
+    "communications": "Communications",
+    "deliveries": "Livraisons",
+    "aiConfiguration": "Configuration IA",
+    "provincialCatalog": "Catalogue Provincial",
+    "database": "Base de Données",
+    "systemLogs": "Journaux Système"
+  },
+  "roles": {
+    "superAdmin": "Super Administrateur",
+    "tenantAdmin": "Administrateur Locataire",
+    "storeManager": "Gestionnaire de Magasin",
+    "staff": "Personnel",
+    "user": "Utilisateur"
+  }
+}

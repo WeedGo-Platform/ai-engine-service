@@ -1,0 +1,368 @@
+{
+  "tenant": {
+    "header": {
+      "title": "WeedGo",
+      "alreadyHaveAccount": "Вже є обліковий запис?",
+      "signIn": "Увійти",
+      "backHome": "Повернутися на головну"
+    },
+    "steps": {
+      "company": "Інформація про компанію",
+      "contact": "Контактні дані",
+      "account": "Налаштування облікового запису",
+      "payment": "Підписка та оплата"
+    },
+    "stepDescriptions": {
+      "company": "Розкажіть нам про ваш бізнес і бренд",
+      "contact": "Надайте вашу контактну інформацію та адресу",
+      "account": "Створіть облікові дані адміністратора",
+      "payment": "Виберіть ваш план і спосіб оплати"
+    },
+    "companyInfo": {
+      "brandName": "Назва бренду",
+      "brandNamePlaceholder": "наприклад, Green Valley Dispensary",
+      "website": "Веб-сайт",
+      "websitePlaceholder": "www.potpalace.ca або potpalace.ca",
+      "websiteHelp": "URL вашого веб-сайту (використовується для генерації коду бренду)",
+      "brandCode": "Код бренду",
+      "brandCodeAuto": "Код бренду * (згенерований автоматично)",
+      "brandCodePlaceholder": "Введіть веб-сайт вище для генерації",
+      "brandCodeHelp": "Буде використовуватися в URL вашого магазину: {{code}}.weedgo.com",
+      "legalCompanyName": "Юридична назва компанії",
+      "legalCompanyPlaceholder": "наприклад, Green Valley Cannabis Inc.",
+      "businessNumber": "Номер підприємства",
+      "businessNumberPlaceholder": "123456789",
+      "businessNumberHelp": "Канадський номер підприємства (9 цифр)",
+      "gstHstNumber": "Номер GST/HST",
+      "gstHstPlaceholder": "123456789RT0001",
+      "gstHstHelp": "Формат: 123456789RT0001",
+      "logoUpload": "Завантаження логотипу",
+      "logoUploadHelp": "Макс 2МБ • PNG, JPG, WebP • Рекомендовано: квадрат 500x500px"
+    },
+    "contactInfo": {
+      "firstName": "Ім'я",
+      "lastName": "Прізвище",
+      "email": "Адреса електронної пошти",
+      "phone": "Номер телефону",
+      "phonePlaceholder": "(555) 123-4567",
+      "street": "Вулиця",
+      "city": "Місто",
+      "province": "Провінція",
+      "postalCode": "Поштовий індекс",
+      "postalCodePlaceholder": "A1A 1A1"
+    },
+    "accountSetup": {
+      "password": "Пароль",
+      "confirmPassword": "Підтвердіть пароль",
+      "passwordStrength": "Надійність:",
+      "passwordHelp": "Повинен містити щонайменше 8 символів з великими літерами, малими літерами та цифрою",
+      "securityTitle": "Безпека облікового запису",
+      "securityDescription": "Ваш обліковий запис буде захищено шифруванням відповідно до галузевих стандартів та опціями багатофакторної автентифікації."
+    },
+    "subscription": {
+      "choosePlan": "Виберіть план підписки",
+      "selectedPlan": "Обраний план: {{plan}}",
+      "changePlan": "Змінити план",
+      "free": "БЕЗКОШТОВНО",
+      "perMonth": "${{price}}/міс",
+      "customPricing": "Індивідуальне ціноутворення",
+      "billingCycle": "Цикл виставлення рахунків",
+      "monthly": "Щомісяця",
+      "monthlyBilled": "Виставляється щомісяця",
+      "annual": "Щорічно",
+      "annualSave": "Економія 20%",
+      "selectPlan": "Вибрати план",
+      "enterpriseTitle": "План Enterprise",
+      "enterpriseDescription": "Наша команда продажів зв'яжеться з вами протягом 24 годин для обговорення індивідуального ціноутворення та налаштування."
+    },
+    "payment": {
+      "cardholderName": "Ім'я власника картки",
+      "cardholderPlaceholder": "Іван Петренко",
+      "cardNumber": "Номер картки",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiryDate": "Термін дії",
+      "expiryPlaceholder": "MM/YY",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "postalCode": "ZIP/Поштовий індекс",
+      "postalCodePlaceholder": "12345"
+    },
+    "progress": {
+      "verifying": "Перевірка доступності...",
+      "creating": "Створення вашого облікового запису...",
+      "uploading": "Завантаження логотипу...",
+      "complete": "Обліковий запис успішно створено!",
+      "processing": "Обробка..."
+    },
+    "success": {
+      "welcome": "Ласкаво просимо до WeedGo!",
+      "accountCreated": "Ваш обліковий запис успішно створено.",
+      "tenantCode": "Код орендаря:",
+      "preparing": "Підготовка вашої панелі..."
+    },
+    "navigation": {
+      "previous": "Назад",
+      "next": "Далі",
+      "createAccount": "Створити обліковий запис"
+    },
+    "errors": {
+      "accountCreationFailed": "Не вдалося створити обліковий запис",
+      "tryAgain": "Спробувати знову",
+      "registerAsUser": "Зареєструватися як користувач",
+      "signInInstead": "Увійти замість цього",
+      "tenantExists": "Код орендаря \"{{code}}\" вже зареєстровано",
+      "websiteExists": "Веб-сайт \"{{website}}\" вже використовується"
+    }
+  },
+  "review": {
+    "title": "Перевірка облікового запису орендаря",
+    "description": "Перевірте та схваліть облікові записи, позначені для ручної перевірки",
+    "refresh": "Оновити",
+    "stats": {
+      "totalPending": "Всього на розгляді",
+      "thisWeek": "Цього тижня",
+      "avgReviewTime": "Середній час перевірки",
+      "approvalRate": "Рівень схвалення"
+    },
+    "table": {
+      "title": "Облікові записи на розгляді",
+      "storeName": "Назва магазину",
+      "contact": "Контакт",
+      "licenseNumber": "Номер ліцензії",
+      "submitted": "Подано",
+      "tier": "Рівень",
+      "actions": "Дії",
+      "review": "Перевірити",
+      "noPending": "Немає облікових записів на розгляді!"
+    },
+    "modal": {
+      "title": "Перевірити обліковий запис",
+      "storeInfo": "Інформація про магазин",
+      "storeName": "Назва магазину",
+      "licenseNumber": "Номер ліцензії",
+      "crsaAddress": "Адреса CRSA",
+      "municipality": "Муніципалітет",
+      "crsaStatus": "Статус CRSA",
+      "crsaWebsite": "Веб-сайт CRSA",
+      "contactInfo": "Контактна інформація",
+      "contactName": "Ім'я контакту",
+      "role": "Роль",
+      "email": "Електронна пошта",
+      "phone": "Телефон",
+      "verificationContext": "Контекст перевірки",
+      "emailDomain": "Домен електронної пошти",
+      "domainMatchesCrsa": "Домен збігається з CRSA",
+      "verificationTier": "Рівень перевірки",
+      "submitted": "Подано",
+      "adminNotes": "Примітки адміністратора (опціонально)",
+      "adminNotesPlaceholder": "Додайте будь-які примітки про цю перевірку...",
+      "reject": "Відхилити",
+      "approve": "Схвалити обліковий запис",
+      "approving": "Схвалення...",
+      "yes": "✓ Так",
+      "no": "✗ Ні"
+    },
+    "reject": {
+      "title": "Відхилити обліковий запис",
+      "description": "Будь ласка, вкажіть причину відхилення цього облікового запису. Це буде записано для цілей аудиту.",
+      "reasonPlaceholder": "Причина відхилення (мінімум 10 символів)...",
+      "cancel": "Скасувати",
+      "confirm": "Підтвердити відхилення",
+      "rejecting": "Відхилення...",
+      "minLength": "Будь ласка, вкажіть причину (щонайменше 10 символів)"
+    },
+    "messages": {
+      "approved": "Обліковий запис успішно схвалено!",
+      "rejected": "Обліковий запис успішно відхилено.",
+      "approveFailed": "Не вдалося схвалити обліковий запис: {{error}}",
+      "rejectFailed": "Не вдалося відхилити обліковий запис: {{error}}",
+      "fetchFailed": "Не вдалося отримати облікові записи на розгляді",
+      "noPermission": "У вас немає дозволу на перевірку облікових записів орендарів."
+    }
+  },
+  "userRegistration": {
+    "title": "Створіть свій обліковий запис",
+    "joinTenant": "Приєднатися до {{tenantName}}",
+    "tenantInfo": "Інформація про орендаря",
+    "tenantName": "Назва:",
+    "tenantCode": "Код:",
+    "firstName": "Ім'я",
+    "firstNamePlaceholder": "Іван",
+    "lastName": "Прізвище",
+    "lastNamePlaceholder": "Петренко",
+    "email": "Адреса електронної пошти",
+    "emailPlaceholder": "ivan.petrenko@example.com",
+    "phone": "Номер телефону",
+    "phonePlaceholder": "(555) 123-4567",
+    "password": "Пароль",
+    "passwordPlaceholder": "••••••••",
+    "confirmPassword": "Підтвердіть пароль",
+    "passwordStrength": "Надійність:",
+    "passwordHelp": "Використовуйте 8+ символів з великими літерами, малими літерами, цифрами та символами для кращої безпеки",
+    "createButton": "Створити обліковий запис",
+    "creating": "Створення облікового запису...",
+    "alreadyHaveAccount": "Вже є обліковий запис?",
+    "signIn": "Увійти",
+    "loading": "Завантаження інформації про орендаря...",
+    "tenantNotFound": "Орендаря не знайдено",
+    "tenantNotFoundDescription": "Зазначеного орендаря не вдалося знайти.",
+    "goToSignup": "Перейти до реєстрації",
+    "errors": {
+      "loadFailed": "Не вдалося завантажити інформацію про орендаря",
+      "alreadyExists": "Користувач з цією електронною поштою вже існує. Будь ласка, використовуйте іншу електронну пошту або увійдіть.",
+      "failed": "Не вдалося створити обліковий запис користувача"
+    }
+  },
+  "success": {
+    "title": "Ласкаво просимо до WeedGo!",
+    "description": "Ваш обліковий запис для {{tenantName}} успішно створено.",
+    "accountDetails": {
+      "title": "Деталі вашого облікового запису",
+      "tenantName": "Назва орендаря:",
+      "tenantCode": "Код орендаря:",
+      "storeUrl": "URL магазину:"
+    },
+    "nextSteps": {
+      "title": "Наступні кроки",
+      "checkEmail": {
+        "title": "Перевірте свою електронну пошту",
+        "description": "Ми надіслали вам лист із важливою інформацією про обліковий запис та інструкціями з налаштування."
+      },
+      "accessDashboard": {
+        "title": "Отримайте доступ до панелі",
+        "description": "Увійдіть до панелі адміністратора, щоб налаштувати параметри магазину, додати продукти та налаштувати своїх AI-асистентів."
+      },
+      "setupStore": {
+        "title": "Налаштуйте свій перший магазин",
+        "description": "Додайте своє перше розташування магазину, налаштуйте години роботи та встановіть інвентар продуктів."
+      },
+      "configureAI": {
+        "title": "Налаштуйте AI-асистентів",
+        "description": "Налаштуйте особистості вашого AI-budtender та встановіть багатомовну підтримку для ваших клієнтів."
+      }
+    },
+    "quickActions": {
+      "dashboard": {
+        "title": "Отримати доступ до панелі",
+        "description": "Налаштуйте свою платформу"
+      },
+      "documentation": {
+        "title": "Документація",
+        "description": "Посібники з налаштування та навчальні матеріали"
+      },
+      "support": {
+        "title": "Підтримка",
+        "description": "Отримайте допомогу від нашої команди"
+      }
+    },
+    "cta": {
+      "button": "Отримати доступ до панелі",
+      "help": "Потрібна допомога для початку? Зв'яжіться з нашою командою підтримки за адресою",
+      "email": "support@weedgo.com"
+    },
+    "resources": {
+      "title": "Ресурси для початку роботи",
+      "quickSetup": {
+        "title": "Посібник із швидкого налаштування",
+        "item1": "Налаштування магазину та брендинг",
+        "item2": "Налаштування каталогу продуктів",
+        "item3": "Налаштування обробки платежів",
+        "item4": "Налаштування AI-асистента"
+      },
+      "training": {
+        "title": "Навчання та підтримка",
+        "item1": "Відеоуроки та вебінари",
+        "item2": "Чат підтримки клієнтів 24/7",
+        "item3": "Доступ до форуму спільноти",
+        "item4": "Виділений менеджер облікового запису (Enterprise)"
+      }
+    }
+  },
+  "validation": {
+    "required": "{{field}} є обов'язковим",
+    "brandNameRequired": "Назва бренду є обов'язковою",
+    "websiteRequired": "Веб-сайт необхідний для генерації коду бренду",
+    "brandCodeRequired": "Код бренду є обов'язковим (введіть веб-сайт для генерації)",
+    "brandCodeFormat": "Код бренду повинен містити лише великі літери, цифри, дефіси та підкреслення",
+    "companyNameRequired": "Назва компанії є обов'язковою",
+    "businessNumberRequired": "Номер підприємства є обов'язковим",
+    "businessNumberFormat": "Номер підприємства повинен складатися з 9 цифр",
+    "gstHstRequired": "Номер GST/HST є обов'язковим",
+    "gstHstFormat": "Формат номера GST/HST: 123456789RT0001",
+    "emailRequired": "Електронна пошта є обов'язковою",
+    "emailInvalid": "Будь ласка, введіть дійсну адресу електронної пошти",
+    "firstNameRequired": "Ім'я є обов'язковим",
+    "lastNameRequired": "Прізвище є обов'язковим",
+    "streetRequired": "Адреса вулиці є обов'язковою",
+    "cityRequired": "Місто є обов'язковим",
+    "postalCodeRequired": "Поштовий індекс є обов'язковим",
+    "postalCodeFormat": "Будь ласка, введіть дійсний канадський поштовий індекс",
+    "passwordRequired": "Пароль є обов'язковим",
+    "passwordLength": "Пароль повинен містити щонайменше 8 символів",
+    "passwordComplexity": "Пароль повинен містити великі літери, малі літери та цифру",
+    "passwordMismatch": "Паролі не збігаються",
+    "cardNumberRequired": "Номер картки є обов'язковим",
+    "cardNumberFormat": "Будь ласка, введіть дійсний 16-значний номер картки",
+    "expiryRequired": "Термін дії є обов'язковим",
+    "expiryFormat": "Будь ласка, введіть формат MM/YY",
+    "cvvRequired": "CVV є обов'язковим",
+    "cvvFormat": "CVV повинен складатися з 3 або 4 цифр",
+    "cardholderRequired": "Ім'я власника картки є обов'язковим"
+  },
+  "passwordStrength": {
+    "weak": "Слабкий",
+    "fair": "Задовільний",
+    "good": "Добрий",
+    "strong": "Надійний",
+    "veryStrong": "Дуже надійний"
+  },
+  "provinces": {
+    "ON": "Онтаріо",
+    "BC": "Британська Колумбія",
+    "AB": "Альберта",
+    "QC": "Квебек",
+    "MB": "Манітоба",
+    "SK": "Саскачеван",
+    "NS": "Нова Шотландія",
+    "NB": "Нью-Брансвік",
+    "NL": "Ньюфаундленд і Лабрадор",
+    "PE": "Острів Принца Едварда",
+    "NT": "Північно-Західні Територіїї",
+    "YT": "Юкон",
+    "NU": "Нунавут"
+  },
+  "plans": {
+    "community_and_new_business": {
+      "name": "Спільнота та новий бізнес",
+      "features": {
+        "stores": "1 магазин",
+        "languages": "2 мови",
+        "personalities": "1 AI-особистість"
+      }
+    },
+    "small_business": {
+      "name": "Малий бізнес",
+      "features": {
+        "stores": "5 магазинів",
+        "languages": "5 мов",
+        "personalities": "2 AI-особистості"
+      }
+    },
+    "professional_and_growing_business": {
+      "name": "Професійний і зростаючий бізнес",
+      "features": {
+        "stores": "12 магазинів",
+        "languages": "10 мов",
+        "personalities": "3 AI-особистості"
+      }
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "features": {
+        "stores": "Необмежена кількість магазинів",
+        "languages": "Понад 25 мов",
+        "personalities": "5 AI-особистостей"
+      }
+    }
+  }
+}

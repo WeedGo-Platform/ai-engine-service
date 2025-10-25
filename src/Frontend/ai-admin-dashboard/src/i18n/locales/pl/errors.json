@@ -1,0 +1,98 @@
+{
+  "api": {
+    "networkError": "Nie można połączyć się z serwerem. Sprawdź swoje połączenie.",
+    "serverError": "Wystąpił błąd serwera. Spróbuj ponownie później.",
+    "timeout": "Upłynął limit czasu żądania. Spróbuj ponownie.",
+    "unauthorized": "Nie masz uprawnień do wykonania tej czynności.",
+    "forbidden": "Dostęp zabroniony.",
+    "notFound": "Nie znaleziono żądanego zasobu.",
+    "conflict": "Wystąpił konflikt. Zasób może już istnieć.",
+    "validationError": "Wystąpił błąd walidacji.",
+    "tooManyRequests": "Zbyt wiele żądań. Spróbuj ponownie później.",
+    "serviceUnavailable": "Usługa tymczasowo niedostępna.",
+    "badRequest": "Nieprawidłowe żądanie. Sprawdź swoje dane wejściowe.",
+    "internalError": "Wystąpił błąd wewnętrzny."
+  },
+  "auth": {
+    "loginSuccess": "Logowanie udane! Przekierowywanie...",
+    "invalidCredentials": "Nieprawidłowy adres e-mail lub hasło. Spróbuj ponownie.",
+    "sessionExpired": "Twoja sesja wygasła. Zaloguj się ponownie.",
+    "accountDisabled": "Twoje konto jest wyłączone lub nie ma uprawnień administratora.",
+    "accountLocked": "Twoje konto zostało zablokowane z powodu wielu nieudanych prób logowania.",
+    "tooManyAttempts": "Zbyt wiele prób logowania. Spróbuj ponownie później.",
+    "tokenExpired": "Token uwierzytelniania wygasł.",
+    "tokenInvalid": "Nieprawidłowy token uwierzytelniania.",
+    "passwordResetFailed": "Resetowanie hasła nie powiodło się. Spróbuj ponownie.",
+    "emailNotVerified": "Najpierw zweryfikuj swój adres e-mail.",
+    "validationError": "Wystąpił błąd walidacji",
+    "loginError": "Wystąpił błąd podczas logowania"
+  },
+  "tenant": {
+    "loadFailed": "Nie udało się załadować danych organizacji.",
+    "createFailed": "Nie udało się utworzyć najemcy.",
+    "updateFailed": "Nie udało się zaktualizować najemcy.",
+    "deleteFailed": "Nie udało się usunąć najemcy.",
+    "suspendFailed": "Nie udało się zawiesić najemcy.",
+    "reactivateFailed": "Nie udało się reaktywować najemcy.",
+    "noOrganization": "Brak organizacji powiązanej z użytkownikiem.",
+    "limitReached": "Osiągnięto limit sklepów dla tego najemcy.",
+    "invalidSubscription": "Nieprawidłowa lub wygasła subskrypcja."
+  },
+  "store": {
+    "loadFailed": "Nie udało się załadować danych sklepu.",
+    "createFailed": "Nie udało się utworzyć sklepu.",
+    "updateFailed": "Nie udało się zaktualizować sklepu.",
+    "deleteFailed": "Nie udało się usunąć sklepu.",
+    "suspendFailed": "Nie udało się zawiesić sklepu.",
+    "closeFailed": "Nie udało się zamknąć sklepu.",
+    "notFound": "Nie znaleziono sklepu.",
+    "alreadyExists": "Sklep o tej nazwie już istnieje."
+  },
+  "inventory": {
+    "loadFailed": "Nie udało się załadować danych inwentarza.",
+    "createFailed": "Nie udało się utworzyć pozycji inwentarza.",
+    "updateFailed": "Nie udało się zaktualizować pozycji inwentarza.",
+    "deleteFailed": "Nie udało się usunąć pozycji inwentarza.",
+    "stockUpdateFailed": "Nie udało się zaktualizować poziomów zapasów.",
+    "lowStock": "Ostrzeżenie o niskim stanie magazynowym.",
+    "outOfStock": "Produkt niedostępny.",
+    "invalidQuantity": "Podano nieprawidłową ilość."
+  },
+  "order": {
+    "loadFailed": "Nie udało się załadować danych zamówienia.",
+    "createFailed": "Nie udało się utworzyć zamówienia.",
+    "updateFailed": "Nie udało się zaktualizować zamówienia.",
+    "cancelFailed": "Nie udało się anulować zamówienia.",
+    "fulfillFailed": "Nie udało się zrealizować zamówienia.",
+    "refundFailed": "Nie udało się przetworzyć zwrotu.",
+    "notFound": "Nie znaleziono zamówienia.",
+    "alreadyProcessed": "Zamówienie zostało już przetworzone."
+  },
+  "payment": {
+    "loadFailed": "Nie udało się załadować danych płatności.",
+    "processingFailed": "Przetwarzanie płatności nie powiodło się.",
+    "refundFailed": "Przetwarzanie zwrotu nie powiodło się.",
+    "invalidAmount": "Nieprawidłowa kwota płatności.",
+    "cardDeclined": "Karta została odrzucona.",
+    "insufficientFunds": "Niewystarczające środki.",
+    "paymentMethodInvalid": "Nieprawidłowa metoda płatności."
+  },
+  "upload": {
+    "failed": "Przesyłanie pliku nie powiodło się.",
+    "fileTooLarge": "Rozmiar pliku przekracza maksymalną dozwoloną wielkość.",
+    "invalidFileType": "Nieprawidłowy typ pliku.",
+    "corruptedFile": "Plik wydaje się być uszkodzony.",
+    "uploadCancelled": "Przesyłanie zostało anulowane."
+  },
+  "general": {
+    "unexpectedError": "Wystąpił nieoczekiwany błąd.",
+    "operationFailed": "Operacja nie powiodła się. Spróbuj ponownie.",
+    "dataLoadFailed": "Nie udało się załadować danych.",
+    "saveFailed": "Nie udało się zapisać zmian.",
+    "deleteFailed": "Nie udało się usunąć elementu.",
+    "permissionDenied": "Nie masz uprawnień do wykonania tej czynności.",
+    "invalidInput": "Podano nieprawidłowe dane wejściowe.",
+    "requiredFieldMissing": "Brakuje wymaganego pola.",
+    "dataCorrupted": "Dane wydają się być uszkodzone."
+  }
+}

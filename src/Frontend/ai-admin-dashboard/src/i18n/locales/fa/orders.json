@@ -1,0 +1,149 @@
+{
+  "titles": {
+    "management": "Order Management",
+    "orderDetails": "Order Details",
+    "assignDriver": "Assign Driver",
+    "messageCustomer": "Message Customer",
+    "deliveryConfirmation": "Delivery Confirmation"
+  },
+  "fields": {
+    "orderNumber": "Order",
+    "customer": "Customer",
+    "status": "Status",
+    "type": "Type",
+    "items": "Items",
+    "cannabis": "Cannabis",
+    "total": "Total",
+    "verification": "Verification",
+    "time": "Time",
+    "actions": "Actions",
+    "product": "Product",
+    "brand": "Brand",
+    "category": "Category",
+    "thcCbd": "THC/CBD",
+    "qty": "Qty",
+    "price": "Price",
+    "payment": "Payment",
+    "paymentMethod": "Payment Method",
+    "deliveryAddress": "Delivery Address",
+    "deliveryTime": "Delivery Time",
+    "pickupTime": "Pickup Time",
+    "driver": "Driver",
+    "vehicle": "Vehicle",
+    "signature": "Customer Signature",
+    "deliveryPhoto": "Delivery Photo",
+    "dob": "DOB",
+    "loyaltyPoints": "Loyalty Points"
+  },
+  "status": {
+    "all": "All Status",
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "preparing": "Preparing",
+    "ready": "Ready",
+    "outForDelivery": "Out for Delivery",
+    "delivered": "Delivered",
+    "cancelled": "Cancelled",
+    "refunded": "Refunded",
+    "paymentPending": "Payment Pending",
+    "ageVerified": "Age Verified",
+    "ageNotVerified": "Age Not Verified"
+  },
+  "orderTypes": {
+    "all": "All Types",
+    "delivery": "Delivery",
+    "pickup": "Pickup",
+    "inStore": "In-Store"
+  },
+  "paymentMethods": {
+    "cash": "Cash",
+    "credit": "Credit Card",
+    "debit": "Debit Card",
+    "eTransfer": "E-Transfer"
+  },
+  "paymentStatus": {
+    "pending": "Pending",
+    "paid": "Paid",
+    "refunded": "Refunded"
+  },
+  "customerTypes": {
+    "recreational": "Recreational",
+    "medical": "Medical"
+  },
+  "actions": {
+    "export": "Export",
+    "refresh": "Refresh",
+    "viewDetails": "View Details",
+    "confirmOrder": "Confirm Order",
+    "cancelOrder": "Cancel Order",
+    "startPreparing": "Start Preparing",
+    "markReady": "Mark Ready",
+    "assignDriver": "Assign Driver",
+    "markPickedUp": "Mark Picked Up",
+    "markDelivered": "Mark Delivered",
+    "verifyAge": "Verify Age & ID",
+    "messageCustomer": "Message Customer",
+    "processRefund": "Process Refund",
+    "assignAndDispatch": "Assign & Dispatch",
+    "sendMessage": "Send Message"
+  },
+  "messages": {
+    "searchPlaceholder": "Search by order #, customer, phone...",
+    "selectDriver": "Select a driver...",
+    "noOrders": "هیچ سفارشی یافت نشد",
+    "ordersWillAppear": "سفارش‌ها هنگام ثبت توسط مشتریان اینجا نمایش داده می‌شوند.",
+    "exportMessage": "عملکرد صادرات فایل CSV را دانلود می‌کند",
+    "assignDriverMessage": "تخصیص راننده برای سفارش {{orderNumber}}",
+    "messageSendTo": "ارسال پیام به {{firstName}} {{lastName}}",
+    "typePlaceholder": "پیام خود را تایپ کنید...",
+    "loadingError": "خطا در بارگذاری سفارش‌ها:",
+    "driedFlowerEq": "Dried Flower Eq:",
+    "to": "to",
+    "idVerified": "ID ✓",
+    "noId": "No ID",
+    "itemsCount": "{{count}} items",
+    "orderNumber": "Order {{number}}",
+    "min": "min"
+  },
+  "metrics": {
+    "pending": "Pending",
+    "preparing": "Preparing",
+    "ready": "Ready",
+    "todayRevenue": "Today's Revenue",
+    "avgProcessTime": "Avg Process Time"
+  },
+  "sections": {
+    "customerInfo": "Customer Information",
+    "orderInfo": "Order Information",
+    "deliveryInfo": "Delivery Information",
+    "pickupInfo": "Pickup Information",
+    "specialInstructions": "Special Instructions",
+    "orderItems": "Order Items",
+    "orderSummary": "Order Summary"
+  },
+  "summary": {
+    "subtotal": "Subtotal:",
+    "tax": "Tax (13% HST):",
+    "delivery": "Delivery:",
+    "discount": "Discount:",
+    "total": "Total:"
+  },
+  "prompts": {
+    "cancelReason": "Please provide a reason for cancellation:",
+    "refundReason": "Please provide a reason for refund:"
+  },
+  "templates": {
+    "selectTemplate": "Select a template...",
+    "orderConfirmed": "Your order is confirmed and being prepared.",
+    "readyForPickup": "Your order is ready for pickup!",
+    "outForDelivery": "Your order is out for delivery.",
+    "delayNotice": "There's a delay with your order. We apologize for the inconvenience.",
+    "orderConfirmedLabel": "Order Confirmed",
+    "readyForPickupLabel": "Ready for Pickup",
+    "outForDeliveryLabel": "Out for Delivery",
+    "delayNoticeLabel": "Delay Notice"
+  },
+  "labels": {
+    "quickTemplates": "Quick Templates"
+  }
+}

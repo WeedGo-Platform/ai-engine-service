@@ -1,0 +1,8 @@
+{
+  "assistant": {
+    "greeting": "Welcome! How can I assist you today? You can type or use voice input."
+  },
+  "sales": {
+    "greeting": "Hi! I'm Carlos, your WeedGo sales assistant. 👋\n\nI'm here to help you discover how WeedGo can transform your cannabis retail business. Whether you're curious about pricing, features, or just getting started - I'm here to answer any questions.\n\nWhat would you like to know about WeedGo?"
+  }
+}

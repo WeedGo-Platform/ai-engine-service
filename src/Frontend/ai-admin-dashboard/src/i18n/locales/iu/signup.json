@@ -1,0 +1,368 @@
+{
+  "tenant": {
+    "header": {
+      "title": "WeedGo",
+      "alreadyHaveAccount": "ᐊᑐᐃᓐᓇᖃᖅᐱᑦ ᐊᑎᖕᒥᑦ?",
+      "signIn": "ᐃᑎᕈᑎᒃ",
+      "backHome": "ᐅᑎᕈᑎᒃ ᐃᓪᓗᖕᒧᑦ"
+    },
+    "steps": {
+      "company": "ᑮᓇᐅᔭᓕᕆᔨᒃᑯᑦ ᑐᓴᐅᒪᔾᔪᑎᖏᑦ",
+      "contact": "ᖃᐅᔨᒋᐊᕈᑎᒃᓴᑦ",
+      "account": "ᐊᑎᖕᒥᒃ ᐋᖅᑭᒃᓱᐃᓂᖅ",
+      "payment": "ᐊᑭᓕᖅᑕᐅᓂᖅ ᐊᒻᓱᒻᒪᖅᓴᐃᔾᔪᑎᒃ"
+    },
+    "stepDescriptions": {
+      "company": "ᐅᖃᐅᓯᖃᕋᑎᑦ ᑮᓇᐅᔭᓕᕆᔨᒃᑯᓐᓂᑦ ᐊᒻᒪ ᐃᓚᔭᕐᓂᑦ",
+      "contact": "ᑐᓂᓗᒍ ᖃᐅᔨᒋᐊᕈᑎᒃᓴᓂᑦ ᐊᒻᒪ ᐃᓂᕐᓂᑦ",
+      "account": "ᓴᖅᑭᑎᒋᐊᕐᓗᒍ ᐊᖓᔪᖅᑳᖑᔪᒧᑦ ᐊᑎᖕᒥᒃ",
+      "payment": "ᓂᕈᐊᕐᓗᒍ ᐸᕐᓇᒃᓯᒪᓂᕐᒥᒃ ᐊᒻᒪ ᐊᑭᓕᖅᑕᐅᓂᐊᖅᑐᒥᒃ"
+    },
+    "companyInfo": {
+      "brandName": "ᐃᓚᔮᓐ ᐊᑎᖓ",
+      "brandNamePlaceholder": "ᐆᑦᑑᑎᒋᓗᒍ: Green Valley Dispensary",
+      "website": "ᖃᕆᑕᐅᔭᒃᑯᑦ ᐅᓂᒃᑲᐅᓯᕐᓂᒃ",
+      "websitePlaceholder": "www.potpalace.ca ᐅᕝᕙᓘᓐᓃᑦ potpalace.ca",
+      "websiteHelp": "ᖃᕆᑕᐅᔭᒃᑯᑦ ᐅᓂᒃᑲᐅᓯᐊᑦ (ᐊᑐᖅᑕᐅᓂᐊᖅᑐᖅ ᐃᓚᔮᓐ ᑰᑦᒧᑦ)",
+      "brandCode": "ᐃᓚᔮᓐ ᑰᑦ",
+      "brandCodeAuto": "ᐃᓚᔮᓐ ᑰᑦ * (ᐃᓅᓕᖅᑎᑕᐅᓯᒪᔪᖅ)",
+      "brandCodePlaceholder": "ᐃᑎᕐᓗᒍ ᖃᕆᑕᐅᔭᒃᑯᑦ ᖁᓕᐊᓂ ᓴᖅᑭᑎᒋᐊᕐᓂᐊᕐᓗᒍ",
+      "brandCodeHelp": "ᐊᑐᖅᑕᐅᓂᐊᖅᑐᖅ ᓂᐅᕕᕐᕕᓕᕆᔨᒃᑯᑦ ᐅᓂᒃᑲᐅᓯᐊᓂ: {{code}}.weedgo.com",
+      "legalCompanyName": "ᒪᓕᒐᖅᑎᒍᑦ ᑮᓇᐅᔭᓕᕆᔨᒃᑯᑦ ᐊᑎᖓ",
+      "legalCompanyPlaceholder": "ᐆᑦᑑᑎᒋᓗᒍ: Green Valley Cannabis Inc.",
+      "businessNumber": "ᑮᓇᐅᔭᓕᕆᔨᒃᑯᑦ ᓈᓴᐅᑎᖓ",
+      "businessNumberPlaceholder": "123456789",
+      "businessNumberHelp": "ᑳᓇᑕᒥ ᑮᓇᐅᔭᓕᕆᔨᒃᑯᑦ ᓈᓴᐅᑎᖓ (9 ᓈᓴᐅᑎᑦ)",
+      "gstHstNumber": "GST/HST ᓈᓴᐅᑎᖓ",
+      "gstHstPlaceholder": "123456789RT0001",
+      "gstHstHelp": "ᐋᖅᑭᒃᓯᒪᓂᖓ: 123456789RT0001",
+      "logoUpload": "ᓴᖅᑭᑎᑦᓯᓗᒍ ᓴᓂᐊᑦ",
+      "logoUploadHelp": "ᐊᖏᓂᖓ 2MB • PNG, JPG, WebP • ᐃᓱᒪᒋᔭᐅᔪᖅ: 500x500 ᐱᑭᑦᓴᓪᓗᓂ"
+    },
+    "contactInfo": {
+      "firstName": "ᓯᕗᓪᓕᖅᐹᖅ ᐊᑎᖅ",
+      "lastName": "ᕿᒡᒐᖓᑦ ᐊᑎᖅ",
+      "email": "ᖃᕆᑕᐅᔭᒃᑯᑦ ᐱᕙᓪᓕᐊᔾᔪᑎᒃ",
+      "phone": "ᐅᖃᓘᑎᖓ",
+      "phonePlaceholder": "(555) 123-4567",
+      "street": "ᐊᖑᑎᒃᓴᖅ ᐃᓂᖓ",
+      "city": "ᓄᓇᓕᒃ",
+      "province": "ᐃᓕᓴᕆᔭᐅᓯᒪᔪᖅ",
+      "postalCode": "ᐃᑎᕐᕕᒃᓴᖅ ᑰᑦ",
+      "postalCodePlaceholder": "A1A 1A1"
+    },
+    "accountSetup": {
+      "password": "ᓇᓗᓇᐃᖅᓯᔾᔪᑎᒃ",
+      "confirmPassword": "ᓇᓗᓇᐃᖅᓯᔾᔪᑎᒃ ᓇᓗᓇᐃᖅᓯᓗᒍ",
+      "passwordStrength": "ᓴᓐᖕᖑᐊᓂᖓ:",
+      "passwordHelp": "8-ᓂᒃ ᑎᑎᕋᐅᓯᕐᓂᒃ ᐱᔭᕆᐊᖃᖅᑐᖅ ᐊᖏᔪᓂᒃ, ᒥᑭᔪᓂᒃ, ᐊᒻᒪ ᓈᓴᐅᑎᓂᒃ",
+      "securityTitle": "ᐊᑎᖕᒥᒃ ᓴᐳᒻᒥᔭᐅᓂᖅ",
+      "securityDescription": "ᐊᑎᖕᒥᓐᓂᑦ ᓴᐳᒻᒥᔭᐅᓂᐊᖅᑐᖅ ᐃᓕᓴᕆᔭᐅᓯᒪᔪᒥᒃ ᓴᐳᒻᒥᔭᐅᓂᐊᕐᓂᕐᒥᒃ."
+    },
+    "subscription": {
+      "choosePlan": "ᓂᕈᐊᕐᓗᒍ ᐸᕐᓇᒃᓯᒪᓂᕐᒥᒃ",
+      "selectedPlan": "ᓂᕈᐊᖅᑕᐅᓯᒪᔪᖅ: {{plan}}",
+      "changePlan": "ᐊᓯᔾᔨᕐᓗᒍ ᐸᕐᓇᒃᓯᒪᓂᖅ",
+      "free": "ᐊᑭᖃᙱᑦᑐᖅ",
+      "perMonth": "${{price}}/ᑕᕝᕙᓂ",
+      "customPricing": "ᐃᓱᒪᒋᔭᐅᓯᒪᔪᖅ ᐊᑭᑐᓂᖓ",
+      "billingCycle": "ᐊᑭᓕᖅᑕᐅᓂᖅ ᐃᓱᓕᕐᓂᖓ",
+      "monthly": "ᑕᕝᕙᓂᐊᒻᒪᕆᐊᓗᒃ",
+      "monthlyBilled": "ᑕᕝᕙᓂ ᐊᑭᓕᖅᑕᐅᓂᐊᖅᑐᖅ",
+      "annual": "ᐅᑭᐅᑕᒫᑦ",
+      "annualSave": "ᑲᒪᒋᔭᐅᓂᐊᖅᑐᖅ 20%",
+      "selectPlan": "ᓂᕈᐊᕐᓗᒍ ᐸᕐᓇᒃᓯᒪᓂᖅ",
+      "enterpriseTitle": "ᐊᖏᔪᖅ ᐸᕐᓇᒃᓯᒪᓂᖅ",
+      "enterpriseDescription": "ᓂᐅᕕᖅᑎᑦᑎᔨᒃᑯᑦ ᖃᐅᔨᒋᐊᕐᓂᐊᖅᑕᑎᑦ 24 ᐃᑲᕐᕋᓄᑦ ᐅᖃᐅᓯᖃᕐᓂᐊᕋᑎᑦ."
+    },
+    "payment": {
+      "cardholderName": "ᐃᑎᕐᕕᒃᓴᖅ ᐊᑎᖓ",
+      "cardholderPlaceholder": "ᔮᓂ ᓯᒥᑦ",
+      "cardNumber": "ᐃᑎᕐᕕᒃᓴᖅ ᓈᓴᐅᑎᖓ",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiryDate": "ᐃᓱᓕᕐᓂᖓ ᐅᓪᓗᖓ",
+      "expiryPlaceholder": "MM/YY",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "postalCode": "ZIP/ᐃᑎᕐᕕᒃᓴᖅ ᑰᑦ",
+      "postalCodePlaceholder": "12345"
+    },
+    "progress": {
+      "verifying": "ᖃᐅᔨᓴᖅᑐᒍᑦ...",
+      "creating": "ᓴᖅᑭᑎᑦᓯᓂᖅ ᐊᑎᖕᒥᓐᓂᑦ...",
+      "uploading": "ᐅᖃᓘᑎᖓ ᐊᐅᓪᓚᖅᑎᑦᓯᓂᖅ...",
+      "complete": "ᐊᑎᖕᒥᑦ ᓴᖅᑭᑎᑕᐅᓯᒪᔪᖅ!",
+      "processing": "ᐱᓕᕆᐊᖑᔪᖅ..."
+    },
+    "success": {
+      "welcome": "ᐊᕐᕌᒍᓂ WeedGo!",
+      "accountCreated": "ᐊᑎᖕᒥᑦ ᓴᖅᑭᑎᑕᐅᓯᒪᔪᖅ.",
+      "tenantCode": "ᑰᑦ:",
+      "preparing": "ᐋᖅᑭᒃᓱᐃᓂᖅ ᐊᖓᔪᖅᑳᖑᔪᒧᑦ..."
+    },
+    "navigation": {
+      "previous": "ᓯᕗᓪᓕᖅᐹᖅ",
+      "next": "ᑭᖑᓪᓕᖅᐹᖅ",
+      "createAccount": "ᓴᖅᑭᑎᑦᓯᓗᒍ ᐊᑎᖕᒥᒃ"
+    },
+    "errors": {
+      "accountCreationFailed": "ᐊᑎᖕᒥᒃ ᓴᖅᑭᑎᑦᓯᓂᖅ ᐱᔭᕆᐊᓕᒃ",
+      "tryAgain": "ᐃᓱᒫᓗᒍ",
+      "registerAsUser": "ᐊᑎᕐᓗᒍ ᐊᑐᐃᓐᓇᖅᑐᒧᑦ",
+      "signInInstead": "ᐃᑎᕈᑎᒃ ᐊᓯᐊᓂ",
+      "tenantExists": "ᑰᑦ \"{{code}}\" ᐊᑎᕐᓗᒍ ᐊᑐᐃᓐᓇᖅᑐᖅ",
+      "websiteExists": "ᖃᕆᑕᐅᔭᒃᑯᑦ \"{{website}}\" ᐊᑐᐃᓐᓇᖅᑐᖅ"
+    }
+  },
+  "review": {
+    "title": "ᐊᑎᖕᒥᒃ ᖃᐅᔨᓴᕐᓂᖅ",
+    "description": "ᖃᐅᔨᓴᕐᓗᒍ ᐊᒻᒪ ᐱᔭᕆᐊᓕᒃ ᐊᑎᖕᒥᓐᓂᑦ",
+    "refresh": "ᓄᑖᖑᖅᑎᑦᓯᓗᒍ",
+    "stats": {
+      "totalPending": "ᐃᓘᓐᓇᖏᑦ ᐱᔭᕆᐊᓕᑦ",
+      "thisWeek": "ᐅᓇ ᐱᓇᓱᐊᕈᓯᖅ",
+      "avgReviewTime": "ᐊᒻᒪᓗ ᖃᐅᔨᓴᕐᓂᖅ ᐃᓛᒃ",
+      "approvalRate": "ᐱᔭᕆᐊᓕᒃ ᐊᒥᓱᑦ"
+    },
+    "table": {
+      "title": "ᐱᔭᕆᐊᓕᑦ ᐊᑎᖕᒥᓐᓂᑦ",
+      "storeName": "ᓂᐅᕕᕐᕕᒃ ᐊᑎᖓ",
+      "contact": "ᖃᐅᔨᒋᐊᕈᑎᒃᓴᖅ",
+      "licenseNumber": "ᐱᔪᓐᓇᐅᑎᖓ ᓈᓴᐅᑎᖓ",
+      "submitted": "ᐃᓯᕈᑎᑕᐅᓯᒪᔪᖅ",
+      "tier": "ᐊᑦᔨᖓ",
+      "actions": "ᐱᓕᕆᐊᑦ",
+      "review": "ᖃᐅᔨᓴᕐᓗᒍ",
+      "noPending": "ᐊᑎᖕᒥᓐᓂᑦ ᐱᔭᕆᐊᓕᙱᑦᑐᑦ!"
+    },
+    "modal": {
+      "title": "ᖃᐅᔨᓴᕐᓗᒍ ᐊᑎᖕᒥᒃ",
+      "storeInfo": "ᓂᐅᕕᕐᕕᒃ ᑐᓴᐅᒪᔾᔪᑎᖏᑦ",
+      "storeName": "ᓂᐅᕕᕐᕕᒃ ᐊᑎᖓ",
+      "licenseNumber": "ᐱᔪᓐᓇᐅᑎᖓ ᓈᓴᐅᑎᖓ",
+      "crsaAddress": "CRSA ᐃᓂᖓ",
+      "municipality": "ᓄᓇᓕᒃ ᑲᕙᒪᖓ",
+      "crsaStatus": "CRSA ᐃᓂᖓ",
+      "crsaWebsite": "CRSA ᖃᕆᑕᐅᔭᒃᑯᑦ",
+      "contactInfo": "ᖃᐅᔨᒋᐊᕈᑎᒃᓴᑦ",
+      "contactName": "ᖃᐅᔨᒋᐊᕈᑎᒃᓴᖅ ᐊᑎᖓ",
+      "role": "ᐱᓕᕆᐊᖓ",
+      "email": "ᖃᕆᑕᐅᔭᒃᑯᑦ ᐱᕙᓪᓕᐊᔾᔪᑎᒃ",
+      "phone": "ᐅᖃᓘᑎᖓ",
+      "verificationContext": "ᖃᐅᔨᓴᕐᓂᖅ ᐃᓗᐊᓂ",
+      "emailDomain": "ᖃᕆᑕᐅᔭᒃᑯᑦ ᐃᓚᖓ",
+      "domainMatchesCrsa": "ᐃᓚᖓ CRSA-ᒥᒃ",
+      "verificationTier": "ᖃᐅᔨᓴᕐᓂᖅ ᐊᑦᔨᖓ",
+      "submitted": "ᐃᓯᕈᑎᑕᐅᓯᒪᔪᖅ",
+      "adminNotes": "ᐊᖓᔪᖅᑳᖑᔪᒧᑦ ᑎᑎᕋᐅᓯᖏᑦ",
+      "adminNotesPlaceholder": "ᑎᑎᕋᕐᓗᒍ ᑐᓴᐅᒪᔾᔪᑎᓂᒃ...",
+      "reject": "ᐱᔭᕆᐊᙱᓕᕐᓗᒍ",
+      "approve": "ᐱᔭᕆᐊᓕᒃ ᐊᑎᖕᒥᒃ",
+      "approving": "ᐱᔭᕆᐊᖅᑐᒍᑦ...",
+      "yes": "✓ ᐄ",
+      "no": "✗ ᐊᐃᑦ"
+    },
+    "reject": {
+      "title": "ᐱᔭᕆᐊᙱᓕᕐᓗᒍ ᐊᑎᖕᒥᒃ",
+      "description": "ᐅᖃᐅᓯᖃᕐᓗᒍ ᓱᒻᒪᓂᒃ ᐱᔭᕆᐊᙱᓕᕐᓂᕐᒥᒃ.",
+      "reasonPlaceholder": "ᓱᒻᒪᓂᒃ (10 ᑎᑎᕋᐅᓯᖏᑦ)...",
+      "cancel": "ᐱᔭᕆᐊᙱᓕᕐᓗᒍ",
+      "confirm": "ᓇᓗᓇᐃᖅᓯᓗᒍ ᐱᔭᕆᐊᙱᓕᕐᓂᖅ",
+      "rejecting": "ᐱᔭᕆᐊᙱᓕᕐᓂᖅ...",
+      "minLength": "ᐅᖃᐅᓯᖃᕐᓗᒍ ᓱᒻᒪᓂᒃ (10 ᑎᑎᕋᐅᓯᖏᑦ)"
+    },
+    "messages": {
+      "approved": "ᐊᑎᖕᒥᑦ ᐱᔭᕆᐊᓕᒃ!",
+      "rejected": "ᐊᑎᖕᒥᑦ ᐱᔭᕆᐊᙱᓕᕐᓯᒪᔪᖅ.",
+      "approveFailed": "ᐱᔭᕆᐊᙱᓕᕐᓯᒪᔪᖅ: {{error}}",
+      "rejectFailed": "ᐱᔭᕆᐊᙱᓕᕐᓯᒪᔪᖅ: {{error}}",
+      "fetchFailed": "ᐱᔭᕆᐊᙱᓕᕐᓯᒪᔪᖅ ᐊᑎᖕᒥᓐᓂᑦ",
+      "noPermission": "ᐱᔪᓐᓇᐅᑎᖃᙱᑦᑐᑎᑦ ᖃᐅᔨᓴᕐᓂᕐᒧᑦ."
+    }
+  },
+  "userRegistration": {
+    "title": "ᓴᖅᑭᑎᑦᓯᓗᒍ ᐊᑎᖕᒥᒃ",
+    "joinTenant": "ᐃᓚᐅᕐᓗᒍ {{tenantName}}",
+    "tenantInfo": "ᑐᓴᐅᒪᔾᔪᑎᖏᑦ",
+    "tenantName": "ᐊᑎᖓ:",
+    "tenantCode": "ᑰᑦ:",
+    "firstName": "ᓯᕗᓪᓕᖅᐹᖅ ᐊᑎᖅ",
+    "firstNamePlaceholder": "ᔮᓂ",
+    "lastName": "ᕿᒡᒐᖓᑦ ᐊᑎᖅ",
+    "lastNamePlaceholder": "ᓯᒥᑦ",
+    "email": "ᖃᕆᑕᐅᔭᒃᑯᑦ ᐱᕙᓪᓕᐊᔾᔪᑎᒃ",
+    "emailPlaceholder": "john.smith@example.com",
+    "phone": "ᐅᖃᓘᑎᖓ",
+    "phonePlaceholder": "(555) 123-4567",
+    "password": "ᓇᓗᓇᐃᖅᓯᔾᔪᑎᒃ",
+    "passwordPlaceholder": "••••••••",
+    "confirmPassword": "ᓇᓗᓇᐃᖅᓯᔾᔪᑎᒃ ᓇᓗᓇᐃᖅᓯᓗᒍ",
+    "passwordStrength": "ᓴᓐᖕᖑᐊᓂᖓ:",
+    "passwordHelp": "ᐊᑐᕐᓗᒍ 8+ ᑎᑎᕋᐅᓯᕐᓂᒃ ᐊᖏᔪᓂᒃ, ᒥᑭᔪᓂᒃ, ᓈᓴᐅᑎᓂᒃ, ᐊᒻᒪ ᐊᓯᖏᓐᓂᒃ",
+    "createButton": "ᓴᖅᑭᑎᑦᓯᓗᒍ ᐊᑎᖕᒥᒃ",
+    "creating": "ᓴᖅᑭᑎᑦᓯᓂᖅ ᐊᑎᖕᒥᒃ...",
+    "alreadyHaveAccount": "ᐊᑐᐃᓐᓇᖃᖅᐱᑦ ᐊᑎᖕᒥᑦ?",
+    "signIn": "ᐃᑎᕈᑎᒃ",
+    "loading": "ᐅᖃᓘᑎᖓ ᑐᓴᐅᒪᔾᔪᑎᖏᑦ...",
+    "tenantNotFound": "ᓇᓗᓇᐃᖅᓯᓯᒪᙱᑦᑐᖅ",
+    "tenantNotFoundDescription": "ᓇᓗᓇᐃᖅᓯᓯᒪᙱᑦᑐᖅ ᑕᐅᓐᓇ.",
+    "goToSignup": "ᐃᑎᕐᓗᒍ ᐊᑎᕐᓂᕐᒧᑦ",
+    "errors": {
+      "loadFailed": "ᐱᔭᕆᐊᙱᓕᕐᓯᒪᔪᖅ ᑐᓴᐅᒪᔾᔪᑎᖏᓐᓂᒃ",
+      "alreadyExists": "ᖃᕆᑕᐅᔭᒃᑯᑦ ᐱᕙᓪᓕᐊᔾᔪᑎᒃ ᐊᑐᐃᓐᓇᖅᑐᖅ. ᐊᑐᕐᓗᒍ ᐊᓯᐊᓂ ᐅᕝᕙᓘᓐᓃᑦ ᐃᑎᕈᑎᒃ.",
+      "failed": "ᐱᔭᕆᐊᙱᓕᕐᓯᒪᔪᖅ ᐊᑎᖕᒥᒃ ᓴᖅᑭᑎᑦᓯᓂᕐᒧᑦ"
+    }
+  },
+  "success": {
+    "title": "ᐊᕐᕌᒍᓂ WeedGo!",
+    "description": "ᐊᑎᖕᒥᑦ {{tenantName}} ᓴᖅᑭᑎᑕᐅᓯᒪᔪᖅ.",
+    "accountDetails": {
+      "title": "ᐊᑎᖕᒥᑦ ᑐᓴᐅᒪᔾᔪᑎᖏᑦ",
+      "tenantName": "ᐊᑎᖓ:",
+      "tenantCode": "ᑰᑦ:",
+      "storeUrl": "ᓂᐅᕕᕐᕕᒃ ᐅᓂᒃᑲᐅᓯᐊᖓ:"
+    },
+    "nextSteps": {
+      "title": "ᑭᖑᓪᓕᖅᐹᖅ ᐱᓕᕆᐊᑦ",
+      "checkEmail": {
+        "title": "ᖃᐅᔨᓴᕐᓗᒍ ᖃᕆᑕᐅᔭᒃᑯᑦ ᐱᕙᓪᓕᐊᔾᔪᑎᒃ",
+        "description": "ᐃᑎᕐᕕᒃᓴᖃᖅᑐᒍᑦ ᐊᕐᕌᒍᓂ ᖃᕆᑕᐅᔭᒃᑯᑦ ᐱᕙᓪᓕᐊᔾᔪᑎᒃ ᐃᓗᐊᓂ ᑐᓴᐅᒪᔾᔪᑎᓂᒃ."
+      },
+      "accessDashboard": {
+        "title": "ᐃᑎᕐᓗᒍ ᐊᖓᔪᖅᑳᖑᔪᒧᑦ",
+        "description": "ᐃᑎᕈᑎᒃ ᐊᖓᔪᖅᑳᖑᔪᒧᑦ ᐋᖅᑭᒃᓱᐃᓂᕐᒧᑦ ᓂᐅᕕᕐᕕᒃ, ᐃᓚᖃᕐᓗᒍ ᐊᑐᐃᓐᓇᕈᕈᑎᓂᒃ, ᐊᒻᒪ ᐃᓚᒋᐊᕐᓗᒍ AI."
+      },
+      "setupStore": {
+        "title": "ᐋᖅᑭᒃᓱᐃᓗᒍ ᓯᕗᓪᓕᖅᐹᖅ ᓂᐅᕕᕐᕕᒃ",
+        "description": "ᐃᓚᒋᐊᕐᓗᒍ ᓯᕗᓪᓕᖅᐹᖅ ᓂᐅᕕᕐᕕᒃ ᐃᓂᖓ, ᐋᖅᑭᒃᓱᐃᓗᒍ ᐃᑲᕐᕋᖏᑦ, ᐊᒻᒪ ᐋᖅᑭᒃᓱᐃᓗᒍ ᐊᑐᐃᓐᓇᕈᕈᑎᑦ."
+      },
+      "configureAI": {
+        "title": "ᐋᖅᑭᒃᓱᐃᓗᒍ AI ᐃᑲᔪᖅᑎᒃᓴᑦ",
+        "description": "ᐃᓱᒪᒋᔭᐅᓯᒪᔪᒥᒃ AI budtender ᐊᒻᒪ ᐋᖅᑭᒃᓱᐃᓗᒍ ᐊᒥᓱᑦ ᐅᖃᐅᓯᕐᓂᒃ."
+      }
+    },
+    "quickActions": {
+      "dashboard": {
+        "title": "ᐃᑎᕐᓗᒍ ᐊᖓᔪᖅᑳᖑᔪᒧᑦ",
+        "description": "ᐋᖅᑭᒃᓱᐃᓗᒍ ᐅᓪᓗᒃᓴᓂᒃ"
+      },
+      "documentation": {
+        "title": "ᑎᑎᕋᐅᓯᖏᑦ",
+        "description": "ᐋᖅᑭᒃᓱᐃᓂᖅ ᑭᓇᑐᐊᖅᑎᒃᓴᑦ"
+      },
+      "support": {
+        "title": "ᐃᑲᔪᖅᑎᒃᓴᑦ",
+        "description": "ᐃᑲᔪᖅᓱᐃᓂᖅ ᑭᓇᑐᐊᖅᑎᒃᓴᓂᒃ"
+      }
+    },
+    "cta": {
+      "button": "ᐃᑎᕐᓗᒍ ᐊᖓᔪᖅᑳᖑᔪᒧᑦ",
+      "help": "ᐃᑲᔪᖅᓱᐃᓂᖅ ᐱᒋᐊᕐᓂᕐᒧᑦ? ᖃᐅᔨᒋᐊᕐᓗᒍ ᐃᑲᔪᖅᑎᒃᓴᑦ",
+      "email": "support@weedgo.com"
+    },
+    "resources": {
+      "title": "ᐃᑲᔪᖅᑎᒃᓴᑦ ᐱᒋᐊᕐᓂᕐᒧᑦ",
+      "quickSetup": {
+        "title": "ᐱᒋᐊᕐᓂᖅ ᑭᓇᑐᐊᖅᑎᒃᓴᑦ",
+        "item1": "ᓂᐅᕕᕐᕕᒃ ᐋᖅᑭᒃᓱᐃᓂᖅ ᐊᒻᒪ ᐃᓚᔮᓐ",
+        "item2": "ᐊᑐᐃᓐᓇᕈᕈᑎᑦ ᐋᖅᑭᒃᓱᐃᓂᖅ",
+        "item3": "ᐊᑭᓕᖅᑕᐅᓂᖅ ᐋᖅᑭᒃᓱᐃᓂᖅ",
+        "item4": "AI ᐃᓱᒪᒋᔭᐅᓯᒪᔪᒥᒃ"
+      },
+      "training": {
+        "title": "ᐃᓕᓐᓂᐊᕐᓂᖅ ᐊᒻᒪ ᐃᑲᔪᖅᑎᒃᓴᑦ",
+        "item1": "ᑕᑯᔭᐅᔪᓂᒃ ᐃᓕᓐᓂᐊᕐᓂᖅ",
+        "item2": "24/7 ᐃᑲᔪᖅᑎᒃᓴᑦ",
+        "item3": "ᐅᖃᐅᓯᖃᕐᕕᒃ ᐃᑎᕐᓂᖅ",
+        "item4": "ᐃᓱᒪᒋᔭᐅᓯᒪᔪᒥᒃ ᐃᑲᔪᖅᑎᒃᓴᖅ"
+      }
+    }
+  },
+  "validation": {
+    "required": "{{field}} ᐱᑕᖃᕆᐊᖃᖅᑐᖅ",
+    "brandNameRequired": "ᐃᓚᔮᓐ ᐊᑎᖓ ᐱᑕᖃᕆᐊᖃᖅᑐᖅ",
+    "websiteRequired": "ᖃᕆᑕᐅᔭᒃᑯᑦ ᐱᑕᖃᕆᐊᖃᖅᑐᖅ ᑰᑦ ᓴᖅᑭᑎᑦᓯᓂᕐᒧᑦ",
+    "brandCodeRequired": "ᐃᓚᔮᓐ ᑰᑦ ᐱᑕᖃᕆᐊᖃᖅᑐᖅ",
+    "brandCodeFormat": "ᐃᓚᔮᓐ ᑰᑦ ᐊᖏᔪᓂᒃ ᑎᑎᕋᐅᓯᕐᓂᒃ, ᓈᓴᐅᑎᓂᒃ",
+    "companyNameRequired": "ᑮᓇᐅᔭᓕᕆᔨᒃᑯᑦ ᐊᑎᖓ ᐱᑕᖃᕆᐊᖃᖅᑐᖅ",
+    "businessNumberRequired": "ᑮᓇᐅᔭᓕᕆᔨᒃᑯᑦ ᓈᓴᐅᑎᖓ ᐱᑕᖃᕆᐊᖃᖅᑐᖅ",
+    "businessNumberFormat": "ᑮᓇᐅᔭᓕᕆᔨᒃᑯᑦ ᓈᓴᐅᑎᖓ 9 ᓈᓴᐅᑎᑦ",
+    "gstHstRequired": "GST/HST ᓈᓴᐅᑎᖓ ᐱᑕᖃᕆᐊᖃᖅᑐᖅ",
+    "gstHstFormat": "GST/HST ᐋᖅᑭᒃᓯᒪᓂᖓ: 123456789RT0001",
+    "emailRequired": "ᖃᕆᑕᐅᔭᒃᑯᑦ ᐱᕙᓪᓕᐊᔾᔪᑎᒃ ᐱᑕᖃᕆᐊᖃᖅᑐᖅ",
+    "emailInvalid": "ᐃᑎᕐᓗᒍ ᓇᓗᓇᐃᖅᓯᔾᔪᑎᒃ ᖃᕆᑕᐅᔭᒃᑯᑦ ᐱᕙᓪᓕᐊᔾᔪᑎᒃ",
+    "firstNameRequired": "ᓯᕗᓪᓕᖅᐹᖅ ᐊᑎᖅ ᐱᑕᖃᕆᐊᖃᖅᑐᖅ",
+    "lastNameRequired": "ᕿᒡᒐᖓᑦ ᐊᑎᖅ ᐱᑕᖃᕆᐊᖃᖅᑐᖅ",
+    "streetRequired": "ᐊᖑᑎᒃᓴᖅ ᐃᓂᖓ ᐱᑕᖃᕆᐊᖃᖅᑐᖅ",
+    "cityRequired": "ᓄᓇᓕᒃ ᐱᑕᖃᕆᐊᖃᖅᑐᖅ",
+    "postalCodeRequired": "ᐃᑎᕐᕕᒃᓴᖅ ᑰᑦ ᐱᑕᖃᕆᐊᖃᖅᑐᖅ",
+    "postalCodeFormat": "ᐃᑎᕐᓗᒍ ᓇᓗᓇᐃᖅᓯᔾᔪᑎᒃ ᑳᓇᑕᒥ ᐃᑎᕐᕕᒃᓴᖅ ᑰᑦ",
+    "passwordRequired": "ᓇᓗᓇᐃᖅᓯᔾᔪᑎᒃ ᐱᑕᖃᕆᐊᖃᖅᑐᖅ",
+    "passwordLength": "ᓇᓗᓇᐃᖅᓯᔾᔪᑎᒃ 8 ᑎᑎᕋᐅᓯᕐᓂᒃ",
+    "passwordComplexity": "ᓇᓗᓇᐃᖅᓯᔾᔪᑎᒃ ᐊᖏᔪᓂᒃ, ᒥᑭᔪᓂᒃ, ᓈᓴᐅᑎᓂᒃ",
+    "passwordMismatch": "ᓇᓗᓇᐃᖅᓯᔾᔪᑎᑦ ᐊᔾᔨᒌᙱᑦᑐᑦ",
+    "cardNumberRequired": "ᐃᑎᕐᕕᒃᓴᖅ ᓈᓴᐅᑎᖓ ᐱᑕᖃᕆᐊᖃᖅᑐᖅ",
+    "cardNumberFormat": "ᐃᑎᕐᓗᒍ ᓇᓗᓇᐃᖅᓯᔾᔪᑎᒃ 16 ᓈᓴᐅᑎᑦ",
+    "expiryRequired": "ᐃᓱᓕᕐᓂᖓ ᐅᓪᓗᖓ ᐱᑕᖃᕆᐊᖃᖅᑐᖅ",
+    "expiryFormat": "ᐃᑎᕐᓗᒍ MM/YY",
+    "cvvRequired": "CVV ᐱᑕᖃᕆᐊᖃᖅᑐᖅ",
+    "cvvFormat": "CVV 3 ᐅᕝᕙᓘᓐᓃᑦ 4 ᓈᓴᐅᑎᑦ",
+    "cardholderRequired": "ᐃᑎᕐᕕᒃᓴᖅ ᐊᑎᖓ ᐱᑕᖃᕆᐊᖃᖅᑐᖅ"
+  },
+  "passwordStrength": {
+    "weak": "ᐱᔅᑫᐤ",
+    "fair": "ᐃᓛᒃᑯᐊ",
+    "good": "ᐱᐅᔪᖅ",
+    "strong": "ᓴᓐᖕᖑᐊᔪᖅ",
+    "veryStrong": "ᐊᒻᒪᓗ ᓴᓐᖕᖑᐊᔪᖅ"
+  },
+  "provinces": {
+    "ON": "Ontario",
+    "BC": "British Columbia",
+    "AB": "Alberta",
+    "QC": "Quebec",
+    "MB": "Manitoba",
+    "SK": "Saskatchewan",
+    "NS": "Nova Scotia",
+    "NB": "New Brunswick",
+    "NL": "Newfoundland and Labrador",
+    "PE": "Prince Edward Island",
+    "NT": "Northwest Territories",
+    "YT": "Yukon",
+    "NU": "Nunavut"
+  },
+  "plans": {
+    "community_and_new_business": {
+      "name": "ᓄᓇᓕᒃ ᐊᒻᒪ ᓄᑖᖅ ᑮᓇᐅᔭᓕᕆᔨᒃ",
+      "features": {
+        "stores": "1 ᓂᐅᕕᕐᕕᒃ",
+        "languages": "2 ᐅᖃᐅᓯᑦ",
+        "personalities": "1 AI ᐃᓱᒪᒋᔭᐅᓯᒪᔪᖅ"
+      }
+    },
+    "small_business": {
+      "name": "ᒥᑭᔪᖅ ᑮᓇᐅᔭᓕᕆᔨᒃ",
+      "features": {
+        "stores": "5 ᓂᐅᕕᕐᕖᑦ",
+        "languages": "5 ᐅᖃᐅᓯᑦ",
+        "personalities": "2 AI ᐃᓱᒪᒋᔭᐅᓯᒪᔪᑦ"
+      }
+    },
+    "professional_and_growing_business": {
+      "name": "ᐃᓕᓴᕆᔭᐅᓯᒪᔪᖅ ᐊᒻᒪ ᐊᖏᓪᓕᕐᓂᖅ ᑮᓇᐅᔭᓕᕆᔨᒃ",
+      "features": {
+        "stores": "12 ᓂᐅᕕᕐᕖᑦ",
+        "languages": "10 ᐅᖃᐅᓯᑦ",
+        "personalities": "3 AI ᐃᓱᒪᒋᔭᐅᓯᒪᔪᑦ"
+      }
+    },
+    "enterprise": {
+      "name": "ᐊᖏᔪᖅ ᑮᓇᐅᔭᓕᕆᔨᒃ",
+      "features": {
+        "stores": "ᑕᒪᕐᒥᒃ ᓂᐅᕕᕐᕖᑦ",
+        "languages": "25+ ᐅᖃᐅᓯᑦ",
+        "personalities": "5 AI ᐃᓱᒪᒋᔭᐅᓯᒪᔪᑦ"
+      }
+    }
+  }
+}

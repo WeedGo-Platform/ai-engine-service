@@ -1,0 +1,8 @@
+{
+  "assistant": {
+    "greeting": "Chào mừng! Hôm nay tôi có thể giúp gì cho bạn? Bạn có thể gõ hoặc sử dụng đầu vào giọng nói."
+  },
+  "sales": {
+    "greeting": "Xin chào! Tôi là Carlos, trợ lý bán hàng WeedGo của bạn. 👋\n\nTôi ở đây để giúp bạn khám phá cách WeedGo có thể biến đổi doanh nghiệp bán lẻ cần sa của bạn. Cho dù bạn tò mò về giá cả, tính năng hay chỉ mới bắt đầu - tôi ở đây để trả lời bất kỳ câu hỏi nào.\n\nBạn muốn biết gì về WeedGo?"
+  }
+}

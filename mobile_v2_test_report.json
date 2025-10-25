@@ -1,0 +1,212 @@
+{
+  "timestamp": "2025-10-10T17:58:01.225954",
+  "summary": {
+    "total": 22,
+    "passed": 2,
+    "failed": 3,
+    "skipped": 1,
+    "info": 16,
+    "success_rate": 40.0
+  },
+  "results": [
+    {
+      "category": "Auth",
+      "endpoint": "/api/v2/identity-access/auth/check-phone",
+      "method": "POST",
+      "status": "INFO",
+      "status_code": 404,
+      "message": "Phone not found (expected)",
+      "timestamp": "2025-10-10T17:58:01.164553"
+    },
+    {
+      "category": "Auth",
+      "endpoint": "/api/v2/identity-access/users",
+      "method": "POST",
+      "status": "FAIL",
+      "status_code": 405,
+      "message": "{'detail': 'Method Not Allowed'}",
+      "timestamp": "2025-10-10T17:58:01.168857"
+    },
+    {
+      "category": "Auth",
+      "endpoint": "/api/v2/identity-access/auth/login",
+      "method": "POST",
+      "status": "PASS",
+      "status_code": 200,
+      "message": "Login successful",
+      "timestamp": "2025-10-10T17:58:01.174025"
+    },
+    {
+      "category": "Auth",
+      "endpoint": "/api/v2/identity-access/auth/validate",
+      "method": "GET",
+      "status": "FAIL",
+      "status_code": 404,
+      "message": "{'detail': 'Not Found'}",
+      "timestamp": "2025-10-10T17:58:01.178825"
+    },
+    {
+      "category": "Auth",
+      "endpoint": "/api/v2/identity-access/auth/refresh",
+      "method": "POST",
+      "status": "FAIL",
+      "status_code": 404,
+      "message": "{'detail': 'Not Found'}",
+      "timestamp": "2025-10-10T17:58:01.183096"
+    },
+    {
+      "category": "Auth",
+      "endpoint": "/api/v2/identity-access/auth/verify-otp",
+      "method": "POST",
+      "status": "INFO",
+      "status_code": 404,
+      "message": "{'detail': 'Not Found'}",
+      "timestamp": "2025-10-10T17:58:01.187315"
+    },
+    {
+      "category": "Auth",
+      "endpoint": "/api/v2/identity-access/auth/password-reset",
+      "method": "POST",
+      "status": "INFO",
+      "status_code": 404,
+      "message": "{'detail': 'Not Found'}",
+      "timestamp": "2025-10-10T17:58:01.191258"
+    },
+    {
+      "category": "Products",
+      "endpoint": "/api/v2/products/search",
+      "method": "GET",
+      "status": "INFO",
+      "status_code": 404,
+      "message": "No products found",
+      "timestamp": "2025-10-10T17:58:01.193891"
+    },
+    {
+      "category": "Products",
+      "endpoint": "/api/v2/products/{id}",
+      "method": "GET",
+      "status": "SKIP",
+      "status_code": null,
+      "message": "No product ID available",
+      "timestamp": "2025-10-10T17:58:01.193903"
+    },
+    {
+      "category": "Products",
+      "endpoint": "/api/v2/products/categories",
+      "method": "GET",
+      "status": "INFO",
+      "status_code": 404,
+      "message": "{'detail': 'Product categories not found'}",
+      "timestamp": "2025-10-10T17:58:01.195773"
+    },
+    {
+      "category": "Inventory",
+      "endpoint": "/api/v2/inventory/search",
+      "method": "GET",
+      "status": "INFO",
+      "status_code": 404,
+      "message": "No inventory found",
+      "timestamp": "2025-10-10T17:58:01.197627"
+    },
+    {
+      "category": "Inventory",
+      "endpoint": "/api/v2/inventory/low-stock",
+      "method": "GET",
+      "status": "INFO",
+      "status_code": 404,
+      "message": "{'detail': 'Inventory low-stock not found'}",
+      "timestamp": "2025-10-10T17:58:01.199862"
+    },
+    {
+      "category": "Cart",
+      "endpoint": "/api/v2/orders/cart",
+      "method": "GET",
+      "status": "INFO",
+      "status_code": 404,
+      "message": "Cart not found",
+      "timestamp": "2025-10-10T17:58:01.201696"
+    },
+    {
+      "category": "Cart",
+      "endpoint": "/api/v2/pricing-promotions/apply",
+      "method": "POST",
+      "status": "INFO",
+      "status_code": 404,
+      "message": "Promo code not found",
+      "timestamp": "2025-10-10T17:58:01.203773"
+    },
+    {
+      "category": "Orders",
+      "endpoint": "/api/v2/orders",
+      "method": "GET",
+      "status": "PASS",
+      "status_code": 200,
+      "message": "",
+      "timestamp": "2025-10-10T17:58:01.208544"
+    },
+    {
+      "category": "Stores",
+      "endpoint": "/api/v2/tenants/stores",
+      "method": "GET",
+      "status": "INFO",
+      "status_code": 400,
+      "message": "{'detail': 'Invalid tenant ID format'}",
+      "timestamp": "2025-10-10T17:58:01.210312"
+    },
+    {
+      "category": "Delivery",
+      "endpoint": "/api/v2/delivery/zones",
+      "method": "GET",
+      "status": "INFO",
+      "status_code": 404,
+      "message": "{'detail': 'Not Found'}",
+      "timestamp": "2025-10-10T17:58:01.212557"
+    },
+    {
+      "category": "Delivery",
+      "endpoint": "/api/v2/delivery/check-availability",
+      "method": "POST",
+      "status": "INFO",
+      "status_code": 404,
+      "message": "{'detail': 'Not Found'}",
+      "timestamp": "2025-10-10T17:58:01.215331"
+    },
+    {
+      "category": "Delivery",
+      "endpoint": "/api/v2/delivery/calculate-fee",
+      "method": "POST",
+      "status": "INFO",
+      "status_code": 404,
+      "message": "{'detail': 'Not Found'}",
+      "timestamp": "2025-10-10T17:58:01.218236"
+    },
+    {
+      "category": "Chat",
+      "endpoint": "/api/v2/ai-conversation/messages",
+      "method": "POST",
+      "status": "INFO",
+      "status_code": 404,
+      "message": "{'detail': 'Not Found'}",
+      "timestamp": "2025-10-10T17:58:01.220885"
+    },
+    {
+      "category": "Promotions",
+      "endpoint": "/api/v2/pricing-promotions/active",
+      "method": "GET",
+      "status": "INFO",
+      "status_code": 404,
+      "message": "{'detail': 'Not Found'}",
+      "timestamp": "2025-10-10T17:58:01.223192"
+    },
+    {
+      "category": "Promotions",
+      "endpoint": "/api/v2/pricing-promotions/validate",
+      "method": "POST",
+      "status": "INFO",
+      "status_code": 404,
+      "message": "Invalid code",
+      "timestamp": "2025-10-10T17:58:01.225573"
+    }
+  ],
+  "test_data": {}
+}

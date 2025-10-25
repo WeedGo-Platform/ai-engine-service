@@ -1,0 +1,149 @@
+{
+  "titles": {
+    "management": "Bestellverwaltung",
+    "orderDetails": "Bestelldetails",
+    "assignDriver": "Fahrer zuweisen",
+    "messageCustomer": "Kunde benachrichtigen",
+    "deliveryConfirmation": "Lieferbestätigung"
+  },
+  "fields": {
+    "orderNumber": "Bestellung",
+    "customer": "Kunde",
+    "status": "Status",
+    "type": "Typ",
+    "items": "Artikel",
+    "cannabis": "Cannabis",
+    "total": "Gesamt",
+    "verification": "Verifizierung",
+    "time": "Zeit",
+    "actions": "Aktionen",
+    "product": "Produkt",
+    "brand": "Marke",
+    "category": "Kategorie",
+    "thcCbd": "THC/CBD",
+    "qty": "Mge",
+    "price": "Preis",
+    "payment": "Zahlung",
+    "paymentMethod": "Zahlungsmethode",
+    "deliveryAddress": "Lieferadresse",
+    "deliveryTime": "Lieferzeit",
+    "pickupTime": "Abholzeit",
+    "driver": "Fahrer",
+    "vehicle": "Fahrzeug",
+    "signature": "Kundenunterschrift",
+    "deliveryPhoto": "Lieferfoto",
+    "dob": "DOB",
+    "loyaltyPoints": "Treuepunkte"
+  },
+  "status": {
+    "all": "Alle Status",
+    "pending": "Ausstehend",
+    "confirmed": "Bestätigt",
+    "preparing": "In Vorbereitung",
+    "ready": "Bereit",
+    "outForDelivery": "Unterwegs",
+    "delivered": "Geliefert",
+    "cancelled": "Storniert",
+    "refunded": "Erstattet",
+    "paymentPending": "Zahlung ausstehend",
+    "ageVerified": "Alter verifiziert",
+    "ageNotVerified": "Alter nicht verifiziert"
+  },
+  "orderTypes": {
+    "all": "Alle Typen",
+    "delivery": "Lieferung",
+    "pickup": "Abholung",
+    "inStore": "Im Geschäft"
+  },
+  "paymentMethods": {
+    "cash": "Bargeld",
+    "credit": "Kreditkarte",
+    "debit": "Debitkarte",
+    "eTransfer": "E-Transfer"
+  },
+  "paymentStatus": {
+    "pending": "Ausstehend",
+    "paid": "Bezahlt",
+    "refunded": "Erstattet"
+  },
+  "customerTypes": {
+    "recreational": "Freizeit",
+    "medical": "Medizinisch"
+  },
+  "actions": {
+    "export": "Exportieren",
+    "refresh": "Aktualisieren",
+    "viewDetails": "Details anzeigen",
+    "confirmOrder": "Bestellung bestätigen",
+    "cancelOrder": "Bestellung stornieren",
+    "startPreparing": "Vorbereitung starten",
+    "markReady": "Als bereit markieren",
+    "assignDriver": "Fahrer zuweisen",
+    "markPickedUp": "Als abgeholt markieren",
+    "markDelivered": "Als geliefert markieren",
+    "verifyAge": "Alter & Ausweis prüfen",
+    "messageCustomer": "Kunde benachrichtigen",
+    "processRefund": "Erstattung verarbeiten",
+    "assignAndDispatch": "Zuweisen und versenden",
+    "sendMessage": "Nachricht senden"
+  },
+  "messages": {
+    "searchPlaceholder": "Suche nach Bestellung #, Kunde, Telefon...",
+    "selectDriver": "Fahrer auswählen...",
+    "noOrders": "Keine Bestellungen gefunden",
+    "ordersWillAppear": "Bestellungen erscheinen hier, wenn Kunden sie aufgeben.",
+    "exportMessage": "Exportfunktion würde CSV-Datei herunterladen",
+    "assignDriverMessage": "Fahrer für Bestellung {{orderNumber}} zuweisen",
+    "messageSendTo": "Nachricht an {{firstName}} {{lastName}} senden",
+    "typePlaceholder": "Ihre Nachricht eingeben...",
+    "loadingError": "Fehler beim Laden der Bestellungen:",
+    "driedFlowerEq": "Getrocknete Blüte Äq.:",
+    "to": "bis",
+    "idVerified": "ID ✓",
+    "noId": "Kein Ausweis",
+    "itemsCount": "{{count}} Artikel",
+    "orderNumber": "Bestellung {{number}}",
+    "min": "Min"
+  },
+  "metrics": {
+    "pending": "Ausstehend",
+    "preparing": "In Vorbereitung",
+    "ready": "Bereit",
+    "todayRevenue": "Heutige Einnahmen",
+    "avgProcessTime": "Durchschn. Bearbeitungszeit"
+  },
+  "sections": {
+    "customerInfo": "Kundeninformationen",
+    "orderInfo": "Bestellinformationen",
+    "deliveryInfo": "Lieferinformationen",
+    "pickupInfo": "Abholinformationen",
+    "specialInstructions": "Besondere Anweisungen",
+    "orderItems": "Bestellartikel",
+    "orderSummary": "Bestellübersicht"
+  },
+  "summary": {
+    "subtotal": "Zwischensumme:",
+    "tax": "Steuer (13% HST):",
+    "delivery": "Lieferung:",
+    "discount": "Rabatt:",
+    "total": "Gesamt:"
+  },
+  "prompts": {
+    "cancelReason": "Bitte geben Sie einen Grund für die Stornierung an:",
+    "refundReason": "Bitte geben Sie einen Grund für die Erstattung an:"
+  },
+  "templates": {
+    "selectTemplate": "Vorlage auswählen...",
+    "orderConfirmed": "Ihre Bestellung ist bestätigt und wird vorbereitet.",
+    "readyForPickup": "Ihre Bestellung ist zur Abholung bereit!",
+    "outForDelivery": "Ihre Bestellung ist unterwegs.",
+    "delayNotice": "Es gibt eine Verzögerung bei Ihrer Bestellung. Wir entschuldigen uns für die Unannehmlichkeiten.",
+    "orderConfirmedLabel": "Bestellung bestätigt",
+    "readyForPickupLabel": "Bereit zur Abholung",
+    "outForDeliveryLabel": "Unterwegs",
+    "delayNoticeLabel": "Verzögerungsmitteilung"
+  },
+  "labels": {
+    "quickTemplates": "Schnellvorlagen"
+  }
+}

@@ -1,0 +1,158 @@
+{
+  "titles": {
+    "main": "促销与定价",
+    "activePromotions": "活跃促销",
+    "analytics": "分析",
+    "defaultPricing": "默认定价",
+    "topPerforming": "表现最佳的促销",
+    "overallStats": "总体统计",
+    "deletePromotion": "删除促销",
+    "createPromotion": "创建新促销",
+    "editPromotion": "编辑促销",
+    "viewPromotion": "查看促销",
+    "defaultPriceConfig": "默认价格配置",
+    "applyMarkup": "应用加价",
+    "storeWideMarkup": "全店默认加价"
+  },
+  "descriptions": {
+    "noStoreSelected": "未选择商店",
+    "selectStoreForPromotions": "请选择一个商店来管理促销和定价",
+    "selectStoreForPricing": "请选择一个商店来管理定价",
+    "managingFor": "正在管理促销和定价",
+    "pricingInstructions": "按类别为产品设置加价百分比。加价将应用于单位成本以计算零售价。更具体的设置会覆盖一般设置(例如，子类别覆盖类别)。",
+    "defaultMarkupInfo": "在计算新产品价格或未设置特定类别加价时，将使用此默认加价。"
+  },
+  "table": {
+    "promotion": "促销",
+    "code": "代码",
+    "discount": "折扣",
+    "usage": "使用情况",
+    "duration": "持续时间",
+    "status": "状态",
+    "actions": "操作",
+    "min": "最小",
+    "perCustomer": "每位客户",
+    "to": "至",
+    "uses": "次使用",
+    "revenue": "收入"
+  },
+  "status": {
+    "inactive": "未激活",
+    "scheduled": "已安排",
+    "expired": "已过期",
+    "active": "活跃"
+  },
+  "stats": {
+    "totalUses": "总使用次数",
+    "totalDiscounts": "总折扣",
+    "totalRevenue": "总收入",
+    "avgOrderValue": "平均订单价值"
+  },
+  "actions": {
+    "createNew": "创建新促销",
+    "edit": "编辑促销",
+    "delete": "删除促销",
+    "cancel": "取消",
+    "back": "返回",
+    "next": "下一步",
+    "update": "更新",
+    "create": "创建",
+    "applyMarkup": "应用加价",
+    "resetOverrides": "重置覆盖",
+    "saveDefault": "保存为默认",
+    "quickSetMarkup": "快速设置加价"
+  },
+  "search": {
+    "placeholder": "按名称或代码搜索促销...",
+    "categories": "搜索类别..."
+  },
+  "steps": {
+    "basicInfo": {
+      "name": "基本信息",
+      "description": "名称和描述"
+    },
+    "discount": {
+      "name": "折扣",
+      "description": "类型和价值"
+    },
+    "scope": {
+      "name": "范围",
+      "description": "何时何地"
+    },
+    "settings": {
+      "name": "设置",
+      "description": "使用限制"
+    },
+    "review": {
+      "name": "审核",
+      "description": "确认详情"
+    }
+  },
+  "pricing": {
+    "enableDefault": "启用默认加价",
+    "default": "默认",
+    "markupPercentage": "加价百分比",
+    "retailPriceFormula": "Retail Price = Cost × (1 + {markup}%)",
+    "exampleCalculation": "计算示例:",
+    "currentCost": "当前成本",
+    "currentRetail": "当前零售价",
+    "newPricing": "使用 {markup}% 加价的新定价:",
+    "newRetailPrice": "新零售价",
+    "profitMargin": "利润率",
+    "priceChange": "价格变化",
+    "ifCost": "如果成本",
+    "retailPrice": "零售价",
+    "allProducts": "所有产品",
+    "storeWideDefault": "全店默认",
+    "products": "产品",
+    "overrides": "覆盖",
+    "avg": "平均",
+    "productsInCategory": "此类别中的产品:",
+    "sku": "SKU",
+    "stock": "库存",
+    "brand": "品牌",
+    "cost": "成本",
+    "applyingTo": "应用于:",
+    "updating": "更新中:",
+    "allProductsStoreWide": "所有产品(全店)"
+  },
+  "confirm": {
+    "deletePromotion": "您确定要删除此促销吗?此操作无法撤消。",
+    "applyAllProducts": "这将把商店中所有产品的加价更新为 {markup}%。您确定吗?",
+    "resetOverrides": "这将删除 {scope} 的所有价格覆盖并使用计算的加价。您确定吗?"
+  },
+  "warnings": {
+    "storeWideUpdate": "这将更新商店中所有产品的定价。",
+    "singleProductNote": "只会更新这个特定产品。"
+  },
+  "messages": {
+    "codeCopied": "代码已复制!",
+    "loading": {
+      "promotions": "正在加载促销...",
+      "categories": "正在加载类别...",
+      "products": "正在加载产品..."
+    },
+    "noProducts": "未找到产品",
+    "saving": "正在保存...",
+    "updating": "正在更新价格...",
+    "updatedSuccessfully": "更新成功!",
+    "resetting": "正在重置..."
+  },
+  "success": {
+    "created": "促销创建成功!",
+    "updated": "促销更新成功!",
+    "deleted": "促销删除成功!",
+    "markupUpdated": "默认加价设置已更新!",
+    "priceUpdated": "成功更新了 {count} 个产品!",
+    "priceUpdatedPlural": "成功更新了 {count} 个产品!",
+    "overridesCleared": "价格覆盖已成功清除"
+  },
+  "errors": {
+    "createFailed": "创建促销失败",
+    "updateFailed": "更新促销失败",
+    "deleteFailed": "删除促销失败",
+    "settingsUpdateFailed": "更新设置失败",
+    "pricingUpdateFailed": "更新定价失败",
+    "resetFailed": "重置价格覆盖失败"
+  }
+}

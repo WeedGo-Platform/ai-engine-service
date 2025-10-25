@@ -1,0 +1,368 @@
+{
+  "tenant": {
+    "header": {
+      "title": "WeedGo",
+      "alreadyHaveAccount": "すでにアカウントをお持ちですか？",
+      "signIn": "ログイン",
+      "backHome": "ホームに戻る"
+    },
+    "steps": {
+      "company": "会社情報",
+      "contact": "連絡先詳細",
+      "account": "アカウント設定",
+      "payment": "サブスクリプションと支払い"
+    },
+    "stepDescriptions": {
+      "company": "あなたのビジネスとブランドについて教えてください",
+      "contact": "連絡先情報と住所を入力してください",
+      "account": "管理者アカウントの認証情報を作成してください",
+      "payment": "プランと支払い方法を選択してください"
+    },
+    "companyInfo": {
+      "brandName": "ブランド名",
+      "brandNamePlaceholder": "例：Green Valley Dispensary",
+      "website": "ウェブサイト",
+      "websitePlaceholder": "www.potpalace.ca または potpalace.ca",
+      "websiteHelp": "あなたのウェブサイトURL（ブランドコードの生成に使用されます）",
+      "brandCode": "ブランドコード",
+      "brandCodeAuto": "ブランドコード * （自動生成）",
+      "brandCodePlaceholder": "生成するには上記にウェブサイトを入力してください",
+      "brandCodeHelp": "あなたのストアURLで使用されます：{{code}}.weedgo.com",
+      "legalCompanyName": "法人名",
+      "legalCompanyPlaceholder": "例：Green Valley Cannabis Inc.",
+      "businessNumber": "事業者番号",
+      "businessNumberPlaceholder": "123456789",
+      "businessNumberHelp": "カナダ事業者番号（9桁）",
+      "gstHstNumber": "GST/HST番号",
+      "gstHstPlaceholder": "123456789RT0001",
+      "gstHstHelp": "形式：123456789RT0001",
+      "logoUpload": "ロゴアップロード",
+      "logoUploadHelp": "最大2MB • PNG、JPG、WebP • 推奨：500x500pxの正方形"
+    },
+    "contactInfo": {
+      "firstName": "名",
+      "lastName": "姓",
+      "email": "メールアドレス",
+      "phone": "電話番号",
+      "phonePlaceholder": "(555) 123-4567",
+      "street": "住所",
+      "city": "市区町村",
+      "province": "州",
+      "postalCode": "郵便番号",
+      "postalCodePlaceholder": "A1A 1A1"
+    },
+    "accountSetup": {
+      "password": "パスワード",
+      "confirmPassword": "パスワード確認",
+      "passwordStrength": "強度：",
+      "passwordHelp": "大文字、小文字、数字を含む8文字以上である必要があります",
+      "securityTitle": "アカウントセキュリティ",
+      "securityDescription": "あなたのアカウントは業界標準の暗号化と多要素認証オプションで保護されます。"
+    },
+    "subscription": {
+      "choosePlan": "サブスクリプションプランを選択してください",
+      "selectedPlan": "選択されたプラン：{{plan}}",
+      "changePlan": "プランを変更",
+      "free": "無料",
+      "perMonth": "${{price}}/月",
+      "customPricing": "カスタム価格",
+      "billingCycle": "請求サイクル",
+      "monthly": "月次",
+      "monthlyBilled": "毎月請求",
+      "annual": "年次",
+      "annualSave": "20%節約",
+      "selectPlan": "プランを選択",
+      "enterpriseTitle": "エンタープライズプラン",
+      "enterpriseDescription": "当社の営業チームが24時間以内に連絡し、カスタム価格と設定について話し合います。"
+    },
+    "payment": {
+      "cardholderName": "カード名義人",
+      "cardholderPlaceholder": "田中太郎",
+      "cardNumber": "カード番号",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiryDate": "有効期限",
+      "expiryPlaceholder": "MM/YY",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "postalCode": "郵便番号",
+      "postalCodePlaceholder": "12345"
+    },
+    "progress": {
+      "verifying": "利用可能性を確認中...",
+      "creating": "アカウントを作成中...",
+      "uploading": "ロゴをアップロード中...",
+      "complete": "アカウントが正常に作成されました！",
+      "processing": "処理中..."
+    },
+    "success": {
+      "welcome": "WeedGoへようこそ！",
+      "accountCreated": "アカウントが正常に作成されました。",
+      "tenantCode": "テナントコード：",
+      "preparing": "ダッシュボードを準備中..."
+    },
+    "navigation": {
+      "previous": "前へ",
+      "next": "次へ",
+      "createAccount": "アカウント作成"
+    },
+    "errors": {
+      "accountCreationFailed": "アカウント作成に失敗しました",
+      "tryAgain": "もう一度試す",
+      "registerAsUser": "ユーザーとして登録",
+      "signInInstead": "代わりにログイン",
+      "tenantExists": "テナントコード \"{{code}}\" はすでに登録されています",
+      "websiteExists": "ウェブサイト \"{{website}}\" はすでに使用されています"
+    }
+  },
+  "review": {
+    "title": "テナントアカウントレビュー",
+    "description": "手動検証のためにフラグが立てられたアカウントをレビューして承認します",
+    "refresh": "更新",
+    "stats": {
+      "totalPending": "保留中の合計",
+      "thisWeek": "今週",
+      "avgReviewTime": "平均レビュー時間",
+      "approvalRate": "承認率"
+    },
+    "table": {
+      "title": "保留中のアカウント",
+      "storeName": "ストア名",
+      "contact": "連絡先",
+      "licenseNumber": "ライセンス番号",
+      "submitted": "提出日",
+      "tier": "ティア",
+      "actions": "アクション",
+      "review": "レビュー",
+      "noPending": "レビューする保留中のアカウントはありません！"
+    },
+    "modal": {
+      "title": "アカウントをレビュー",
+      "storeInfo": "ストア情報",
+      "storeName": "ストア名",
+      "licenseNumber": "ライセンス番号",
+      "crsaAddress": "CRSAアドレス",
+      "municipality": "自治体",
+      "crsaStatus": "CRSAステータス",
+      "crsaWebsite": "CRSAウェブサイト",
+      "contactInfo": "連絡先情報",
+      "contactName": "連絡先名",
+      "role": "役割",
+      "email": "メール",
+      "phone": "電話",
+      "verificationContext": "検証コンテキスト",
+      "emailDomain": "メールドメイン",
+      "domainMatchesCrsa": "ドメインがCRSAと一致",
+      "verificationTier": "検証ティア",
+      "submitted": "提出日",
+      "adminNotes": "管理者メモ（オプション）",
+      "adminNotesPlaceholder": "このレビューに関するメモを追加...",
+      "reject": "拒否",
+      "approve": "アカウントを承認",
+      "approving": "承認中...",
+      "yes": "✓ はい",
+      "no": "✗ いいえ"
+    },
+    "reject": {
+      "title": "アカウントを拒否",
+      "description": "このアカウントを拒否する理由を入力してください。これは監査目的で記録されます。",
+      "reasonPlaceholder": "拒否の理由（最低10文字）...",
+      "cancel": "キャンセル",
+      "confirm": "拒否を確認",
+      "rejecting": "拒否中...",
+      "minLength": "理由を入力してください（最低10文字）"
+    },
+    "messages": {
+      "approved": "アカウントが正常に承認されました！",
+      "rejected": "アカウントが正常に拒否されました。",
+      "approveFailed": "アカウントの承認に失敗しました：{{error}}",
+      "rejectFailed": "アカウントの拒否に失敗しました：{{error}}",
+      "fetchFailed": "保留中のアカウントの取得に失敗しました",
+      "noPermission": "テナントアカウントをレビューする権限がありません。"
+    }
+  },
+  "userRegistration": {
+    "title": "アカウントを作成",
+    "joinTenant": "{{tenantName}}に参加",
+    "tenantInfo": "テナント情報",
+    "tenantName": "名前：",
+    "tenantCode": "コード：",
+    "firstName": "名",
+    "firstNamePlaceholder": "太郎",
+    "lastName": "姓",
+    "lastNamePlaceholder": "田中",
+    "email": "メールアドレス",
+    "emailPlaceholder": "tanaka.taro@example.com",
+    "phone": "電話番号",
+    "phonePlaceholder": "(555) 123-4567",
+    "password": "パスワード",
+    "passwordPlaceholder": "••••••••",
+    "confirmPassword": "パスワード確認",
+    "passwordStrength": "強度：",
+    "passwordHelp": "より良いセキュリティのために、大文字、小文字、数字、記号を含む8文字以上を使用してください",
+    "createButton": "アカウント作成",
+    "creating": "アカウント作成中...",
+    "alreadyHaveAccount": "すでにアカウントをお持ちですか？",
+    "signIn": "ログイン",
+    "loading": "テナント情報を読み込み中...",
+    "tenantNotFound": "テナントが見つかりません",
+    "tenantNotFoundDescription": "指定されたテナントが見つかりませんでした。",
+    "goToSignup": "登録へ移動",
+    "errors": {
+      "loadFailed": "テナント情報の読み込みに失敗しました",
+      "alreadyExists": "このメールアドレスのユーザーはすでに存在します。別のメールアドレスを使用するか、代わりにログインしてください。",
+      "failed": "ユーザーアカウントの作成に失敗しました"
+    }
+  },
+  "success": {
+    "title": "WeedGoへようこそ！",
+    "description": "{{tenantName}}のアカウントが正常に作成されました。",
+    "accountDetails": {
+      "title": "アカウント詳細",
+      "tenantName": "テナント名：",
+      "tenantCode": "テナントコード：",
+      "storeUrl": "ストアURL："
+    },
+    "nextSteps": {
+      "title": "次のステップ",
+      "checkEmail": {
+        "title": "メールを確認",
+        "description": "重要なアカウント情報とセットアップ手順を含むウェルカムメールを送信しました。"
+      },
+      "accessDashboard": {
+        "title": "ダッシュボードにアクセス",
+        "description": "管理ダッシュボードにログインして、ストアの設定を構成し、商品を追加し、AIアシスタントをカスタマイズします。"
+      },
+      "setupStore": {
+        "title": "最初のストアをセットアップ",
+        "description": "最初のストアの場所を追加し、営業時間を設定し、製品在庫を設定します。"
+      },
+      "configureAI": {
+        "title": "AIアシスタントを設定",
+        "description": "AIバドテンダーのパーソナリティをカスタマイズし、顧客向けの多言語サポートを設定します。"
+      }
+    },
+    "quickActions": {
+      "dashboard": {
+        "title": "ダッシュボードにアクセス",
+        "description": "プラットフォームを設定"
+      },
+      "documentation": {
+        "title": "ドキュメント",
+        "description": "セットアップガイドとチュートリアル"
+      },
+      "support": {
+        "title": "サポート",
+        "description": "私たちのチームからサポートを受ける"
+      }
+    },
+    "cta": {
+      "button": "ダッシュボードにアクセス",
+      "help": "始めるのにサポートが必要ですか？サポートチームにお問い合わせください",
+      "email": "support@weedgo.com"
+    },
+    "resources": {
+      "title": "始めるためのリソース",
+      "quickSetup": {
+        "title": "クイックセットアップガイド",
+        "item1": "ストアの構成とブランディング",
+        "item2": "製品カタログのセットアップ",
+        "item3": "支払い処理の構成",
+        "item4": "AIアシスタントのカスタマイズ"
+      },
+      "training": {
+        "title": "トレーニングとサポート",
+        "item1": "ビデオチュートリアルとウェビナー",
+        "item2": "24時間365日のカスタマーサポートチャット",
+        "item3": "コミュニティフォーラムへのアクセス",
+        "item4": "専任のアカウントマネージャー（エンタープライズ）"
+      }
+    }
+  },
+  "validation": {
+    "required": "{{field}}は必須です",
+    "brandNameRequired": "ブランド名は必須です",
+    "websiteRequired": "ブランドコードを生成するにはウェブサイトが必要です",
+    "brandCodeRequired": "ブランドコードは必須です（生成するにはウェブサイトを入力してください）",
+    "brandCodeFormat": "ブランドコードは大文字、数字、ハイフン、アンダースコアのみを含む必要があります",
+    "companyNameRequired": "会社名は必須です",
+    "businessNumberRequired": "事業者番号は必須です",
+    "businessNumberFormat": "事業者番号は9桁である必要があります",
+    "gstHstRequired": "GST/HST番号は必須です",
+    "gstHstFormat": "GST/HST番号の形式：123456789RT0001",
+    "emailRequired": "メールは必須です",
+    "emailInvalid": "有効なメールアドレスを入力してください",
+    "firstNameRequired": "名は必須です",
+    "lastNameRequired": "姓は必須です",
+    "streetRequired": "住所は必須です",
+    "cityRequired": "市区町村は必須です",
+    "postalCodeRequired": "郵便番号は必須です",
+    "postalCodeFormat": "有効なカナダの郵便番号を入力してください",
+    "passwordRequired": "パスワードは必須です",
+    "passwordLength": "パスワードは8文字以上である必要があります",
+    "passwordComplexity": "パスワードは大文字、小文字、数字を含む必要があります",
+    "passwordMismatch": "パスワードが一致しません",
+    "cardNumberRequired": "カード番号は必須です",
+    "cardNumberFormat": "有効な16桁のカード番号を入力してください",
+    "expiryRequired": "有効期限は必須です",
+    "expiryFormat": "MM/YY形式で入力してください",
+    "cvvRequired": "CVVは必須です",
+    "cvvFormat": "CVVは3桁または4桁である必要があります",
+    "cardholderRequired": "カード名義人は必須です"
+  },
+  "passwordStrength": {
+    "weak": "弱い",
+    "fair": "普通",
+    "good": "良い",
+    "strong": "強い",
+    "veryStrong": "とても強い"
+  },
+  "provinces": {
+    "ON": "オンタリオ州",
+    "BC": "ブリティッシュコロンビア州",
+    "AB": "アルバータ州",
+    "QC": "ケベック州",
+    "MB": "マニトバ州",
+    "SK": "サスカチュワン州",
+    "NS": "ノバスコシア州",
+    "NB": "ニューブランズウィック州",
+    "NL": "ニューファンドランド・ラブラドール州",
+    "PE": "プリンスエドワードアイランド州",
+    "NT": "ノースウエスト準州",
+    "YT": "ユーコン準州",
+    "NU": "ヌナブト準州"
+  },
+  "plans": {
+    "community_and_new_business": {
+      "name": "コミュニティと新規ビジネス",
+      "features": {
+        "stores": "1店舗",
+        "languages": "2言語",
+        "personalities": "1つのAIパーソナリティ"
+      }
+    },
+    "small_business": {
+      "name": "小規模ビジネス",
+      "features": {
+        "stores": "5店舗",
+        "languages": "5言語",
+        "personalities": "2つのAIパーソナリティ"
+      }
+    },
+    "professional_and_growing_business": {
+      "name": "プロフェッショナルおよび成長中のビジネス",
+      "features": {
+        "stores": "12店舗",
+        "languages": "10言語",
+        "personalities": "3つのAIパーソナリティ"
+      }
+    },
+    "enterprise": {
+      "name": "エンタープライズ",
+      "features": {
+        "stores": "無制限の店舗",
+        "languages": "25以上の言語",
+        "personalities": "5つのAIパーソナリティ"
+      }
+    }
+  }
+}

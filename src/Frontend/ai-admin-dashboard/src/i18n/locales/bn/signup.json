@@ -1,0 +1,368 @@
+{
+  "tenant": {
+    "header": {
+      "title": "WeedGo",
+      "alreadyHaveAccount": "ইতিমধ্যে একটি অ্যাকাউন্ট আছে?",
+      "signIn": "সাইন ইন করুন",
+      "backHome": "হোমে ফিরে যান"
+    },
+    "steps": {
+      "company": "কোম্পানির তথ্য",
+      "contact": "যোগাযোগের বিবরণ",
+      "account": "অ্যাকাউন্ট সেটআপ",
+      "payment": "সাবস্ক্রিপশন এবং পেমেন্ট"
+    },
+    "stepDescriptions": {
+      "company": "আপনার ব্যবসা এবং ব্র্যান্ড সম্পর্কে আমাদের বলুন",
+      "contact": "আপনার যোগাযোগের তথ্য এবং ঠিকানা প্রদান করুন",
+      "account": "আপনার অ্যাডমিন অ্যাকাউন্টের শংসাপত্র তৈরি করুন",
+      "payment": "আপনার প্ল্যান এবং পেমেন্ট পদ্ধতি নির্বাচন করুন"
+    },
+    "companyInfo": {
+      "brandName": "ব্র্যান্ডের নাম",
+      "brandNamePlaceholder": "যেমন, Green Valley Dispensary",
+      "website": "ওয়েবসাইট",
+      "websitePlaceholder": "www.potpalace.ca বা potpalace.ca",
+      "websiteHelp": "আপনার ওয়েবসাইট URL (ব্র্যান্ড কোড তৈরি করতে ব্যবহৃত হয়)",
+      "brandCode": "ব্র্যান্ড কোড",
+      "brandCodeAuto": "ব্র্যান্ড কোড * (স্বয়ংক্রিয়ভাবে তৈরি)",
+      "brandCodePlaceholder": "তৈরি করতে উপরে ওয়েবসাইট লিখুন",
+      "brandCodeHelp": "আপনার স্টোর URL-এ ব্যবহৃত হবে: {{code}}.weedgo.com",
+      "legalCompanyName": "আইনী কোম্পানির নাম",
+      "legalCompanyPlaceholder": "যেমন, Green Valley Cannabis Inc.",
+      "businessNumber": "ব্যবসায়িক নম্বর",
+      "businessNumberPlaceholder": "123456789",
+      "businessNumberHelp": "কানাডিয়ান ব্যবসায়িক নম্বর (৯ সংখ্যা)",
+      "gstHstNumber": "GST/HST নম্বর",
+      "gstHstPlaceholder": "123456789RT0001",
+      "gstHstHelp": "ফর্ম্যাট: 123456789RT0001",
+      "logoUpload": "লোগো আপলোড",
+      "logoUploadHelp": "সর্বোচ্চ ২MB • PNG, JPG, WebP • সুপারিশকৃত: ৫০০x৫০০px বর্গাকার"
+    },
+    "contactInfo": {
+      "firstName": "প্রথম নাম",
+      "lastName": "শেষ নাম",
+      "email": "ইমেইল ঠিকানা",
+      "phone": "ফোন নম্বর",
+      "phonePlaceholder": "(555) 123-4567",
+      "street": "রাস্তার ঠিকানা",
+      "city": "শহর",
+      "province": "প্রদেশ",
+      "postalCode": "পোস্টাল কোড",
+      "postalCodePlaceholder": "A1A 1A1"
+    },
+    "accountSetup": {
+      "password": "পাসওয়ার্ড",
+      "confirmPassword": "পাসওয়ার্ড নিশ্চিত করুন",
+      "passwordStrength": "শক্তি:",
+      "passwordHelp": "কমপক্ষে ৮টি অক্ষর থাকতে হবে বড় হাতের, ছোট হাতের এবং সংখ্যা সহ",
+      "securityTitle": "অ্যাকাউন্টের নিরাপত্তা",
+      "securityDescription": "আপনার অ্যাকাউন্ট শিল্প-মান এনক্রিপশন এবং মাল্টি-ফ্যাক্টর অথেন্টিকেশন বিকল্পগুলি দ্বারা সুরক্ষিত থাকবে।"
+    },
+    "subscription": {
+      "choosePlan": "আপনার সাবস্ক্রিপশন প্ল্যান নির্বাচন করুন",
+      "selectedPlan": "নির্বাচিত প্ল্যান: {{plan}}",
+      "changePlan": "প্ল্যান পরিবর্তন করুন",
+      "free": "বিনামূল্যে",
+      "perMonth": "${{price}}/মাস",
+      "customPricing": "কাস্টম মূল্য",
+      "billingCycle": "বিলিং চক্র",
+      "monthly": "মাসিক",
+      "monthlyBilled": "মাসিক বিল করা হয়",
+      "annual": "বার্ষিক",
+      "annualSave": "২০% সাশ্রয় করুন",
+      "selectPlan": "প্ল্যান নির্বাচন করুন",
+      "enterpriseTitle": "এন্টারপ্রাইজ প্ল্যান",
+      "enterpriseDescription": "কাস্টম মূল্য এবং সেটআপ আলোচনা করতে আমাদের বিক্রয় দল ২৪ ঘন্টার মধ্যে আপনার সাথে যোগাযোগ করবে।"
+    },
+    "payment": {
+      "cardholderName": "কার্ডহোল্ডারের নাম",
+      "cardholderPlaceholder": "রহিম আহমেদ",
+      "cardNumber": "কার্ড নম্বর",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiryDate": "মেয়াদ শেষের তারিখ",
+      "expiryPlaceholder": "MM/YY",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "postalCode": "ZIP/পোস্টাল কোড",
+      "postalCodePlaceholder": "12345"
+    },
+    "progress": {
+      "verifying": "উপলব্ধতা যাচাই করা হচ্ছে...",
+      "creating": "আপনার অ্যাকাউন্ট তৈরি করা হচ্ছে...",
+      "uploading": "লোগো আপলোড করা হচ্ছে...",
+      "complete": "সফলভাবে অ্যাকাউন্ট তৈরি হয়েছে!",
+      "processing": "প্রক্রিয়াকরণ করা হচ্ছে..."
+    },
+    "success": {
+      "welcome": "WeedGo-তে স্বাগতম!",
+      "accountCreated": "আপনার অ্যাকাউন্ট সফলভাবে তৈরি করা হয়েছে।",
+      "tenantCode": "টেন্যান্ট কোড:",
+      "preparing": "আপনার ড্যাশবোর্ড প্রস্তুত করা হচ্ছে..."
+    },
+    "navigation": {
+      "previous": "পূর্ববর্তী",
+      "next": "পরবর্তী",
+      "createAccount": "অ্যাকাউন্ট তৈরি করুন"
+    },
+    "errors": {
+      "accountCreationFailed": "অ্যাকাউন্ট তৈরি ব্যর্থ হয়েছে",
+      "tryAgain": "আবার চেষ্টা করুন",
+      "registerAsUser": "ব্যবহারকারী হিসেবে নিবন্ধন করুন",
+      "signInInstead": "পরিবর্তে সাইন ইন করুন",
+      "tenantExists": "টেন্যান্ট কোড \"{{code}}\" ইতিমধ্যে নিবন্ধিত",
+      "websiteExists": "ওয়েবসাইট \"{{website}}\" ইতিমধ্যে ব্যবহৃত হচ্ছে"
+    }
+  },
+  "review": {
+    "title": "টেন্যান্ট অ্যাকাউন্ট পর্যালোচনা",
+    "description": "ম্যানুয়াল যাচাইকরণের জন্য চিহ্নিত অ্যাকাউন্টগুলি পর্যালোচনা এবং অনুমোদন করুন",
+    "refresh": "রিফ্রেশ করুন",
+    "stats": {
+      "totalPending": "মোট মুলতুবি",
+      "thisWeek": "এই সপ্তাহে",
+      "avgReviewTime": "গড় পর্যালোচনা সময়",
+      "approvalRate": "অনুমোদনের হার"
+    },
+    "table": {
+      "title": "মুলতুবি অ্যাকাউন্টগুলি",
+      "storeName": "স্টোরের নাম",
+      "contact": "যোগাযোগ",
+      "licenseNumber": "লাইসেন্স নম্বর",
+      "submitted": "জমা দেওয়া হয়েছে",
+      "tier": "টায়ার",
+      "actions": "কর্ম",
+      "review": "পর্যালোচনা করুন",
+      "noPending": "পর্যালোচনা করার জন্য কোনো মুলতুবি অ্যাকাউন্ট নেই!"
+    },
+    "modal": {
+      "title": "অ্যাকাউন্ট পর্যালোচনা করুন",
+      "storeInfo": "স্টোরের তথ্য",
+      "storeName": "স্টোরের নাম",
+      "licenseNumber": "লাইসেন্স নম্বর",
+      "crsaAddress": "CRSA ঠিকানা",
+      "municipality": "পৌরসভা",
+      "crsaStatus": "CRSA স্ট্যাটাস",
+      "crsaWebsite": "CRSA ওয়েবসাইট",
+      "contactInfo": "যোগাযোগের তথ্য",
+      "contactName": "যোগাযোগের নাম",
+      "role": "ভূমিকা",
+      "email": "ইমেইল",
+      "phone": "ফোন",
+      "verificationContext": "যাচাইকরণ প্রসঙ্গ",
+      "emailDomain": "ইমেইল ডোমেইন",
+      "domainMatchesCrsa": "ডোমেইন CRSA-এর সাথে মেলে",
+      "verificationTier": "যাচাইকরণ টায়ার",
+      "submitted": "জমা দেওয়া হয়েছে",
+      "adminNotes": "অ্যাডমিন নোট (ঐচ্ছিক)",
+      "adminNotesPlaceholder": "এই পর্যালোচনা সম্পর্কে কোনো নোট যোগ করুন...",
+      "reject": "প্রত্যাখ্যান করুন",
+      "approve": "অ্যাকাউন্ট অনুমোদন করুন",
+      "approving": "অনুমোদন করা হচ্ছে...",
+      "yes": "✓ হ্যাঁ",
+      "no": "✗ না"
+    },
+    "reject": {
+      "title": "অ্যাকাউন্ট প্রত্যাখ্যান করুন",
+      "description": "এই অ্যাকাউন্ট প্রত্যাখ্যান করার জন্য একটি কারণ প্রদান করুন। এটি নিরীক্ষার উদ্দেশ্যে লগ করা হবে।",
+      "reasonPlaceholder": "প্রত্যাখ্যানের কারণ (ন্যূনতম ১০ অক্ষর)...",
+      "cancel": "বাতিল করুন",
+      "confirm": "প্রত্যাখ্যান নিশ্চিত করুন",
+      "rejecting": "প্রত্যাখ্যান করা হচ্ছে...",
+      "minLength": "অনুগ্রহ করে একটি কারণ প্রদান করুন (কমপক্ষে ১০ অক্ষর)"
+    },
+    "messages": {
+      "approved": "অ্যাকাউন্ট সফলভাবে অনুমোদিত হয়েছে!",
+      "rejected": "অ্যাকাউন্ট সফলভাবে প্রত্যাখ্যান করা হয়েছে।",
+      "approveFailed": "অ্যাকাউন্ট অনুমোদন করতে ব্যর্থ: {{error}}",
+      "rejectFailed": "অ্যাকাউন্ট প্রত্যাখ্যান করতে ব্যর্থ: {{error}}",
+      "fetchFailed": "মুলতুবি অ্যাকাউন্টগুলি আনতে ব্যর্থ",
+      "noPermission": "টেন্যান্ট অ্যাকাউন্টগুলি পর্যালোচনা করার অনুমতি আপনার নেই।"
+    }
+  },
+  "userRegistration": {
+    "title": "আপনার অ্যাকাউন্ট তৈরি করুন",
+    "joinTenant": "{{tenantName}}-এ যোগ দিন",
+    "tenantInfo": "টেন্যান্ট তথ্য",
+    "tenantName": "নাম:",
+    "tenantCode": "কোড:",
+    "firstName": "প্রথম নাম",
+    "firstNamePlaceholder": "রহিম",
+    "lastName": "শেষ নাম",
+    "lastNamePlaceholder": "আহমেদ",
+    "email": "ইমেইল ঠিকানা",
+    "emailPlaceholder": "rahim.ahmed@example.com",
+    "phone": "ফোন নম্বর",
+    "phonePlaceholder": "(555) 123-4567",
+    "password": "পাসওয়ার্ড",
+    "passwordPlaceholder": "••••••••",
+    "confirmPassword": "পাসওয়ার্ড নিশ্চিত করুন",
+    "passwordStrength": "শক্তি:",
+    "passwordHelp": "ভাল নিরাপত্তার জন্য বড় হাতের, ছোট হাতের, সংখ্যা এবং প্রতীক সহ ৮+ অক্ষর ব্যবহার করুন",
+    "createButton": "অ্যাকাউন্ট তৈরি করুন",
+    "creating": "অ্যাকাউন্ট তৈরি করা হচ্ছে...",
+    "alreadyHaveAccount": "ইতিমধ্যে একটি অ্যাকাউন্ট আছে?",
+    "signIn": "সাইন ইন করুন",
+    "loading": "টেন্যান্ট তথ্য লোড করা হচ্ছে...",
+    "tenantNotFound": "টেন্যান্ট পাওয়া যায়নি",
+    "tenantNotFoundDescription": "নির্দিষ্ট টেন্যান্ট খুঁজে পাওয়া যায়নি।",
+    "goToSignup": "সাইনআপে যান",
+    "errors": {
+      "loadFailed": "টেন্যান্ট তথ্য লোড করতে ব্যর্থ",
+      "alreadyExists": "এই ইমেইলের সাথে একজন ব্যবহারকারী ইতিমধ্যে বিদ্যমান। অনুগ্রহ করে একটি ভিন্ন ইমেইল ব্যবহার করুন বা লগইন করুন।",
+      "failed": "ব্যবহারকারী অ্যাকাউন্ট তৈরি করতে ব্যর্থ"
+    }
+  },
+  "success": {
+    "title": "WeedGo-তে স্বাগতম!",
+    "description": "{{tenantName}}-এর জন্য আপনার অ্যাকাউন্ট সফলভাবে তৈরি করা হয়েছে।",
+    "accountDetails": {
+      "title": "আপনার অ্যাকাউন্টের বিবরণ",
+      "tenantName": "টেন্যান্ট নাম:",
+      "tenantCode": "টেন্যান্ট কোড:",
+      "storeUrl": "স্টোর URL:"
+    },
+    "nextSteps": {
+      "title": "পরবর্তী পদক্ষেপ",
+      "checkEmail": {
+        "title": "আপনার ইমেইল পরীক্ষা করুন",
+        "description": "আমরা আপনাকে গুরুত্বপূর্ণ অ্যাকাউন্ট তথ্য এবং সেটআপ নির্দেশাবলী সহ একটি স্বাগত ইমেইল পাঠিয়েছি।"
+      },
+      "accessDashboard": {
+        "title": "আপনার ড্যাশবোর্ড অ্যাক্সেস করুন",
+        "description": "আপনার স্টোর সেটিংস কনফিগার করতে, পণ্য যোগ করতে এবং আপনার AI সহায়কদের কাস্টমাইজ করতে আপনার অ্যাডমিন ড্যাশবোর্ডে লগ ইন করুন।"
+      },
+      "setupStore": {
+        "title": "আপনার প্রথম স্টোর সেটআপ করুন",
+        "description": "আপনার প্রথম স্টোর অবস্থান যোগ করুন, অপারেটিং সময় কনফিগার করুন এবং আপনার পণ্য ইনভেন্টরি সেট আপ করুন।"
+      },
+      "configureAI": {
+        "title": "AI সহায়ক কনফিগার করুন",
+        "description": "আপনার AI budtender ব্যক্তিত্ব কাস্টমাইজ করুন এবং আপনার গ্রাহকদের জন্য মাল্টি-ভাষা সমর্থন সেট আপ করুন।"
+      }
+    },
+    "quickActions": {
+      "dashboard": {
+        "title": "ড্যাশবোর্ড অ্যাক্সেস করুন",
+        "description": "আপনার প্ল্যাটফর্ম কনফিগার করুন"
+      },
+      "documentation": {
+        "title": "ডকুমেন্টেশন",
+        "description": "সেটআপ গাইড এবং টিউটোরিয়াল"
+      },
+      "support": {
+        "title": "সহায়তা",
+        "description": "আমাদের টিম থেকে সাহায্য পান"
+      }
+    },
+    "cta": {
+      "button": "আপনার ড্যাশবোর্ড অ্যাক্সেস করুন",
+      "help": "শুরু করতে সাহায্য প্রয়োজন? আমাদের সাপোর্ট টিমের সাথে যোগাযোগ করুন",
+      "email": "support@weedgo.com"
+    },
+    "resources": {
+      "title": "শুরু করার জন্য সংস্থান",
+      "quickSetup": {
+        "title": "দ্রুত সেটআপ গাইড",
+        "item1": "স্টোর কনফিগারেশন এবং ব্র্যান্ডিং",
+        "item2": "পণ্য ক্যাটালগ সেটআপ",
+        "item3": "পেমেন্ট প্রক্রিয়াকরণ কনফিগারেশন",
+        "item4": "AI সহায়ক কাস্টমাইজেশন"
+      },
+      "training": {
+        "title": "প্রশিক্ষণ এবং সহায়তা",
+        "item1": "ভিডিও টিউটোরিয়াল এবং ওয়েবিনার",
+        "item2": "২৪/৭ গ্রাহক সহায়তা চ্যাট",
+        "item3": "কমিউনিটি ফোরাম অ্যাক্সেস",
+        "item4": "ডেডিকেটেড অ্যাকাউন্ট ম্যানেজার (এন্টারপ্রাইজ)"
+      }
+    }
+  },
+  "validation": {
+    "required": "{{field}} প্রয়োজন",
+    "brandNameRequired": "ব্র্যান্ডের নাম প্রয়োজন",
+    "websiteRequired": "ব্র্যান্ড কোড তৈরি করতে ওয়েবসাইট প্রয়োজন",
+    "brandCodeRequired": "ব্র্যান্ড কোড প্রয়োজন (তৈরি করতে ওয়েবসাইট লিখুন)",
+    "brandCodeFormat": "ব্র্যান্ড কোডে শুধুমাত্র বড় হাতের অক্ষর, সংখ্যা, হাইফেন এবং আন্ডারস্কোর থাকতে হবে",
+    "companyNameRequired": "কোম্পানির নাম প্রয়োজন",
+    "businessNumberRequired": "ব্যবসায়িক নম্বর প্রয়োজন",
+    "businessNumberFormat": "ব্যবসায়িক নম্বর অবশ্যই ৯ সংখ্যার হতে হবে",
+    "gstHstRequired": "GST/HST নম্বর প্রয়োজন",
+    "gstHstFormat": "GST/HST নম্বর ফর্ম্যাট: 123456789RT0001",
+    "emailRequired": "ইমেইল প্রয়োজন",
+    "emailInvalid": "অনুগ্রহ করে একটি বৈধ ইমেইল ঠিকানা লিখুন",
+    "firstNameRequired": "প্রথম নাম প্রয়োজন",
+    "lastNameRequired": "শেষ নাম প্রয়োজন",
+    "streetRequired": "রাস্তার ঠিকানা প্রয়োজন",
+    "cityRequired": "শহর প্রয়োজন",
+    "postalCodeRequired": "পোস্টাল কোড প্রয়োজন",
+    "postalCodeFormat": "অনুগ্রহ করে একটি বৈধ কানাডিয়ান পোস্টাল কোড লিখুন",
+    "passwordRequired": "পাসওয়ার্ড প্রয়োজন",
+    "passwordLength": "পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে",
+    "passwordComplexity": "পাসওয়ার্ডে বড় হাতের, ছোট হাতের এবং সংখ্যা থাকতে হবে",
+    "passwordMismatch": "পাসওয়ার্ড মিলছে না",
+    "cardNumberRequired": "কার্ড নম্বর প্রয়োজন",
+    "cardNumberFormat": "অনুগ্রহ করে একটি বৈধ ১৬-সংখ্যার কার্ড নম্বর লিখুন",
+    "expiryRequired": "মেয়াদ শেষের তারিখ প্রয়োজন",
+    "expiryFormat": "অনুগ্রহ করে MM/YY ফর্ম্যাট লিখুন",
+    "cvvRequired": "CVV প্রয়োজন",
+    "cvvFormat": "CVV অবশ্যই ৩ বা ৪ সংখ্যার হতে হবে",
+    "cardholderRequired": "কার্ডহোল্ডারের নাম প্রয়োজন"
+  },
+  "passwordStrength": {
+    "weak": "দুর্বল",
+    "fair": "মোটামুটি",
+    "good": "ভালো",
+    "strong": "শক্তিশালী",
+    "veryStrong": "অত্যন্ত শক্তিশালী"
+  },
+  "provinces": {
+    "ON": "Ontario",
+    "BC": "British Columbia",
+    "AB": "Alberta",
+    "QC": "Quebec",
+    "MB": "Manitoba",
+    "SK": "Saskatchewan",
+    "NS": "Nova Scotia",
+    "NB": "New Brunswick",
+    "NL": "Newfoundland and Labrador",
+    "PE": "Prince Edward Island",
+    "NT": "Northwest Territories",
+    "YT": "Yukon",
+    "NU": "Nunavut"
+  },
+  "plans": {
+    "community_and_new_business": {
+      "name": "কমিউনিটি এবং নতুন ব্যবসা",
+      "features": {
+        "stores": "১টি স্টোর",
+        "languages": "২টি ভাষা",
+        "personalities": "১টি AI ব্যক্তিত্ব"
+      }
+    },
+    "small_business": {
+      "name": "ছোট ব্যবসা",
+      "features": {
+        "stores": "৫টি স্টোর",
+        "languages": "৫টি ভাষা",
+        "personalities": "২টি AI ব্যক্তিত্ব"
+      }
+    },
+    "professional_and_growing_business": {
+      "name": "পেশাদার এবং ক্রমবর্ধমান ব্যবসা",
+      "features": {
+        "stores": "১২টি স্টোর",
+        "languages": "১০টি ভাষা",
+        "personalities": "৩টি AI ব্যক্তিত্ব"
+      }
+    },
+    "enterprise": {
+      "name": "এন্টারপ্রাইজ",
+      "features": {
+        "stores": "সীমাহীন স্টোর",
+        "languages": "২৫+ ভাষা",
+        "personalities": "৫টি AI ব্যক্তিত্ব"
+      }
+    }
+  }
+}

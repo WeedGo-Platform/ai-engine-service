@@ -1,0 +1,149 @@
+{
+  "titles": {
+    "management": "Управление заказами",
+    "orderDetails": "Детали заказа",
+    "assignDriver": "Назначить водителя",
+    "messageCustomer": "Сообщение клиенту",
+    "deliveryConfirmation": "Подтверждение доставки"
+  },
+  "fields": {
+    "orderNumber": "Заказ",
+    "customer": "Клиент",
+    "status": "Статус",
+    "type": "Тип",
+    "items": "Товары",
+    "cannabis": "Канн абис",
+    "total": "Итого",
+    "verification": "Проверка",
+    "time": "Время",
+    "actions": "Действия",
+    "product": "Продукт",
+    "brand": "Бренд",
+    "category": "Категория",
+    "thcCbd": "THC/CBD",
+    "qty": "Кол-во",
+    "price": "Цена",
+    "payment": "Оплата",
+    "paymentMethod": "Способ оплаты",
+    "deliveryAddress": "Адрес доставки",
+    "deliveryTime": "Время доставки",
+    "pickupTime": "Время самовывоза",
+    "driver": "Водитель",
+    "vehicle": "Транспорт",
+    "signature": "Подпись клиента",
+    "deliveryPhoto": "Фото доставки",
+    "dob": "DOB",
+    "loyaltyPoints": "Баллы лояльности"
+  },
+  "status": {
+    "all": "Все статусы",
+    "pending": "Ожидание",
+    "confirmed": "Подтвержден",
+    "preparing": "Готовится",
+    "ready": "Готов",
+    "outForDelivery": "В доставке",
+    "delivered": "Доставлен",
+    "cancelled": "Отменен",
+    "refunded": "Возвращен",
+    "paymentPending": "Ожидание оплаты",
+    "ageVerified": "Возраст подтвержден",
+    "ageNotVerified": "Возраст не подтвержден"
+  },
+  "orderTypes": {
+    "all": "Все типы",
+    "delivery": "Доставка",
+    "pickup": "Самовывоз",
+    "inStore": "В магазине"
+  },
+  "paymentMethods": {
+    "cash": "Наличные",
+    "credit": "Кредитная карта",
+    "debit": "Дебетовая карта",
+    "eTransfer": "E-Transfer"
+  },
+  "paymentStatus": {
+    "pending": "Ожидание",
+    "paid": "Оплачено",
+    "refunded": "Возвращено"
+  },
+  "customerTypes": {
+    "recreational": "Рекреационный",
+    "medical": "Медицинский"
+  },
+  "actions": {
+    "export": "Экспорт",
+    "refresh": "Обновить",
+    "viewDetails": "Просмотреть детали",
+    "confirmOrder": "Подтвердить заказ",
+    "cancelOrder": "Отменить заказ",
+    "startPreparing": "Начать приготовление",
+    "markReady": "Отметить готовым",
+    "assignDriver": "Назначить водителя",
+    "markPickedUp": "Отметить как забранный",
+    "markDelivered": "Отметить как доставленный",
+    "verifyAge": "Проверить возраст и ID",
+    "messageCustomer": "Сообщение клиенту",
+    "processRefund": "Обработать возврат",
+    "assignAndDispatch": "Назначить и отправить",
+    "sendMessage": "Отправить сообщение"
+  },
+  "messages": {
+    "searchPlaceholder": "Поиск по № заказа, клиенту, телефону...",
+    "selectDriver": "Выберите водителя...",
+    "noOrders": "Заказы не найдены",
+    "ordersWillAppear": "Заказы появятся здесь, когда клиенты их разместят.",
+    "exportMessage": "Функция экспорта загрузит файл CSV",
+    "assignDriverMessage": "Назначить водителя для заказа {{orderNumber}}",
+    "messageSendTo": "Отправить сообщение {{firstName}} {{lastName}}",
+    "typePlaceholder": "Введите ваше сообщение...",
+    "loadingError": "Ошибка загрузки заказов:",
+    "driedFlowerEq": "Экв. сушеных цветов:",
+    "to": "до",
+    "idVerified": "ID ✓",
+    "noId": "Нет ID",
+    "itemsCount": "{{count}} товаров",
+    "orderNumber": "Заказ {{number}}",
+    "min": "мин"
+  },
+  "metrics": {
+    "pending": "Ожидание",
+    "preparing": "Готовится",
+    "ready": "Готов",
+    "todayRevenue": "Доход за сегодня",
+    "avgProcessTime": "Ср. время обработки"
+  },
+  "sections": {
+    "customerInfo": "Информация о клиенте",
+    "orderInfo": "Информация о заказе",
+    "deliveryInfo": "Информация о доставке",
+    "pickupInfo": "Информация о самовывозе",
+    "specialInstructions": "Особые указания",
+    "orderItems": "Товары заказа",
+    "orderSummary": "Итоги заказа"
+  },
+  "summary": {
+    "subtotal": "Промежуточный итог:",
+    "tax": "Налог (13% HST):",
+    "delivery": "Доставка:",
+    "discount": "Скидка:",
+    "total": "Итого:"
+  },
+  "prompts": {
+    "cancelReason": "Пожалуйста, укажите причину отмены:",
+    "refundReason": "Пожалуйста, укажите причину возврата:"
+  },
+  "templates": {
+    "selectTemplate": "Выберите шаблон...",
+    "orderConfirmed": "Ваш заказ подтвержден и готовится.",
+    "readyForPickup": "Ваш заказ готов к самовывозу!",
+    "outForDelivery": "Ваш заказ в доставке.",
+    "delayNotice": "Задержка с вашим заказом. Приносим извинения за неудобства.",
+    "orderConfirmedLabel": "Заказ подтвержден",
+    "readyForPickupLabel": "Готов к самовывозу",
+    "outForDeliveryLabel": "В доставке",
+    "delayNoticeLabel": "Уведомление о задержке"
+  },
+  "labels": {
+    "quickTemplates": "Быстрые шаблоны"
+  }
+}

@@ -1,0 +1,368 @@
+{
+  "tenant": {
+    "header": {
+      "title": "WeedGo",
+      "alreadyHaveAccount": "Hore ma leedahay akoon?",
+      "signIn": "Gal",
+      "backHome": "Dib ugu noqo Bogga Hore"
+    },
+    "steps": {
+      "company": "Macluumaadka Shirkadda",
+      "contact": "Faahfaahinta Xiriirka",
+      "account": "Dejinta Akoon",
+      "payment": "Isdiiwaangelin iyo Bixinta"
+    },
+    "stepDescriptions": {
+      "company": "Noo sheeg ganacsigaaga iyo summaddaada",
+      "contact": "Bixi macluumaadka xiriirkaaga iyo cinwaankaaga",
+      "account": "Samee aqoonsiga akoonkaaga admin",
+      "payment": "Dooro qorshaddaada iyo habka lacag bixinta"
+    },
+    "companyInfo": {
+      "brandName": "Magaca Summadda",
+      "brandNamePlaceholder": "tusaale ahaan, Green Valley Dispensary",
+      "website": "Mareegta",
+      "websitePlaceholder": "www.potpalace.ca ama potpalace.ca",
+      "websiteHelp": "URL-ka mareegta (loo isticmaalo in lagu sameeyo summad code)",
+      "brandCode": "Code-ka Summadda",
+      "brandCodeAuto": "Code-ka Summadda * (si toos ah loo sameeyey)",
+      "brandCodePlaceholder": "Geli mareegta kore si aad u sameyso",
+      "brandCodeHelp": "Waxa lagu isticmaali doonaa URL-ka dukaanka: {{code}}.weedgo.com",
+      "legalCompanyName": "Magaca Shirkadda ee Sharciga ah",
+      "legalCompanyPlaceholder": "tusaale ahaan, Green Valley Cannabis Inc.",
+      "businessNumber": "Lambarka Ganacsiga",
+      "businessNumberPlaceholder": "123456789",
+      "businessNumberHelp": "Lambarka Ganacsiga Kanadiyaanka (9 nambar)",
+      "gstHstNumber": "Lambarka GST/HST",
+      "gstHstPlaceholder": "123456789RT0001",
+      "gstHstHelp": "Qaabka: 123456789RT0001",
+      "logoUpload": "Soo geynta Sumad",
+      "logoUploadHelp": "Ugu badan 2MB • PNG, JPG, WebP • Lagu taliyey: 500x500px square"
+    },
+    "contactInfo": {
+      "firstName": "Magaca Hore",
+      "lastName": "Magaca Danbe",
+      "email": "Cinwaanka Iimeylka",
+      "phone": "Lambarka Taleefanka",
+      "phonePlaceholder": "(555) 123-4567",
+      "street": "Cinwaanka Wadadda",
+      "city": "Magaalada",
+      "province": "Gobolka",
+      "postalCode": "Code-ka Boostada",
+      "postalCodePlaceholder": "A1A 1A1"
+    },
+    "accountSetup": {
+      "password": "Furaha Sirta ah",
+      "confirmPassword": "Xaqiiji Furaha Sirta ah",
+      "passwordStrength": "Xoogga:",
+      "passwordHelp": "Waa inay ahaato ugu yaraan 8 xaraf oo leh xarfo waaweyn, xarfo yaryar, iyo nambar",
+      "securityTitle": "Amniga Akoonka",
+      "securityDescription": "Akoonkaaga waxa lagu ilaalin doonaa encryption-ka heerka warshadda iyo ikhtiyaarada xaqiijinta badan."
+    },
+    "subscription": {
+      "choosePlan": "Dooro Qorshaha Isdiiwaan Gelintaada",
+      "selectedPlan": "Qorshaha la Doortay: {{plan}}",
+      "changePlan": "Bedel Qorshaha",
+      "free": "BILAASH",
+      "perMonth": "${{price}}/bil",
+      "customPricing": "Qiimo Gaar ah",
+      "billingCycle": "Wareegga Biilasha",
+      "monthly": "Bil kasta",
+      "monthlyBilled": "Biil kasta loo qaadaa",
+      "annual": "Sannad",
+      "annualSave": "Badbaadi 20%",
+      "selectPlan": "Dooro Qorshaha",
+      "enterpriseTitle": "Qorshaha Enterprise",
+      "enterpriseDescription": "Kooxda iibka waxay kula soo xiriiri doontaa 24 saacadood gudahood si ay uga wada hadlaan qiimaha gaarka ah iyo dejinta."
+    },
+    "payment": {
+      "cardholderName": "Magaca Haysta Kaarka",
+      "cardholderPlaceholder": "Mohamed Ahmed",
+      "cardNumber": "Lambarka Kaarka",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiryDate": "Taariikhda Dhammaadka",
+      "expiryPlaceholder": "MM/YY",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "postalCode": "ZIP/Code-ka Boostada",
+      "postalCodePlaceholder": "12345"
+    },
+    "progress": {
+      "verifying": "Xaqiijinta helitaanka...",
+      "creating": "Samaynta akoonkaaga...",
+      "uploading": "Soo geynta sumadda...",
+      "complete": "Akoonka si guul leh ayaa loo sameeyey!",
+      "processing": "Habaynta..."
+    },
+    "success": {
+      "welcome": "Ku soo dhawoow WeedGo!",
+      "accountCreated": "Akoonkaaga si guul leh ayaa loo sameeyey.",
+      "tenantCode": "Code-ka Tenant:",
+      "preparing": "Diyaarinta dashboard-kaaga..."
+    },
+    "navigation": {
+      "previous": "Ka Hore",
+      "next": "Xiga",
+      "createAccount": "Samee Akoon"
+    },
+    "errors": {
+      "accountCreationFailed": "Abuurista Akoonka Ayaa Fashilantay",
+      "tryAgain": "Mar labaad isku day",
+      "registerAsUser": "U diiwaangeli Isticmaale ahaan",
+      "signInInstead": "Taa beddelkeeda gal",
+      "tenantExists": "Code-ka tenant \"{{code}}\" horeba ayaa loo diiwaangeliyey",
+      "websiteExists": "Mareegta \"{{website}}\" horeba ayaa loo isticmaalayaa"
+    }
+  },
+  "review": {
+    "title": "Dib u Eegista Akoonka Tenant",
+    "description": "Dib u eeg oo ansax akoonada loogu calaamadeeyey xaqiijinta gacanta",
+    "refresh": "Cusbooneysii",
+    "stats": {
+      "totalPending": "Wadarta Sugaysa",
+      "thisWeek": "Todobaadkan",
+      "avgReviewTime": "Celceliska Wakhtiga Dib-u-eegista",
+      "approvalRate": "Qiimeynta Oggolaanshaha"
+    },
+    "table": {
+      "title": "Akoonadka Sugaya",
+      "storeName": "Magaca Dukaanka",
+      "contact": "Xiriir",
+      "licenseNumber": "Lambarka Shatiga",
+      "submitted": "La soo gudbiyey",
+      "tier": "Heer",
+      "actions": "Ficillada",
+      "review": "Dib u eeg",
+      "noPending": "Ma jiraan akoonno sugaya oo la dib u eego!"
+    },
+    "modal": {
+      "title": "Dib u eeg Akoonka",
+      "storeInfo": "Macluumaadka Dukaanka",
+      "storeName": "Magaca Dukaanka",
+      "licenseNumber": "Lambarka Shatiga",
+      "crsaAddress": "Cinwaanka CRSA",
+      "municipality": "Degmada",
+      "crsaStatus": "Xaaladda CRSA",
+      "crsaWebsite": "Mareegta CRSA",
+      "contactInfo": "Macluumaadka Xiriirka",
+      "contactName": "Magaca Xiriirka",
+      "role": "Doorka",
+      "email": "Iimeylka",
+      "phone": "Taleefan",
+      "verificationContext": "Macnaha Xaqiijinta",
+      "emailDomain": "Domain-ka Iimeylka",
+      "domainMatchesCrsa": "Domain-ku waxa uu la mid yahay CRSA",
+      "verificationTier": "Heerta Xaqiijinta",
+      "submitted": "La soo gudbiyey",
+      "adminNotes": "Qoraallada Admin (Ikhtiyaari)",
+      "adminNotesPlaceholder": "Ku dar qoraal kasta oo ku saabsan dib-u-eegista...",
+      "reject": "Diid",
+      "approve": "Ansax Akoonka",
+      "approving": "Ansixinta...",
+      "yes": "✓ Haa",
+      "no": "✗ Maya"
+    },
+    "reject": {
+      "title": "Diid Akoonka",
+      "description": "Fadlan bixi sababta ka diidista akoonkan. Tan waxa loo diiwaan gelin doonaa ujeedooyinka xisaabaadka.",
+      "reasonPlaceholder": "Sababta diidmada (ugu yaraan 10 xaraf)...",
+      "cancel": "Jooji",
+      "confirm": "Xaqiiji Diidmada",
+      "rejecting": "Diidida...",
+      "minLength": "Fadlan bixi sabab (ugu yaraan 10 xaraf)"
+    },
+    "messages": {
+      "approved": "Akoonka si guul leh ayaa loo ansixiyey!",
+      "rejected": "Akoonka si guul leh ayaa loo diiday.",
+      "approveFailed": "Ansixinta akoonka way fashilantay: {{error}}",
+      "rejectFailed": "Diidmada akoonka way fashilantay: {{error}}",
+      "fetchFailed": "Soo qaadista akoonadka sugaya way fashilantay",
+      "noPermission": "Maad leh ogolaansho aad u dib u eegto akoonadka tenant."
+    }
+  },
+  "userRegistration": {
+    "title": "Samee Akoonkaaga",
+    "joinTenant": "Ku biir {{tenantName}}",
+    "tenantInfo": "Macluumaadka Tenant",
+    "tenantName": "Magaca:",
+    "tenantCode": "Code-ka:",
+    "firstName": "Magaca Hore",
+    "firstNamePlaceholder": "Mohamed",
+    "lastName": "Magaca Danbe",
+    "lastNamePlaceholder": "Ahmed",
+    "email": "Cinwaanka Iimeylka",
+    "emailPlaceholder": "mohamed.ahmed@example.com",
+    "phone": "Lambarka Taleefanka",
+    "phonePlaceholder": "(555) 123-4567",
+    "password": "Furaha Sirta ah",
+    "passwordPlaceholder": "••••••••",
+    "confirmPassword": "Xaqiiji Furaha Sirta ah",
+    "passwordStrength": "Xoogga:",
+    "passwordHelp": "Isticmaal 8+ xaraf oo leh xarfo waaweyn, xarfo yaryar, nambarada, iyo calaamado si aad u hesho amaanka fiican",
+    "createButton": "Samee Akoon",
+    "creating": "Samaynta Akoonka...",
+    "alreadyHaveAccount": "Hore ma leedahay akoon?",
+    "signIn": "Gal",
+    "loading": "Rarinta macluumaadka tenant...",
+    "tenantNotFound": "Tenant Lama Helin",
+    "tenantNotFoundDescription": "Tenant-ka la cayimay lama heli karo.",
+    "goToSignup": "Aad isdiiwaangelinta",
+    "errors": {
+      "loadFailed": "Rarinta macluumaadka tenant way fashilantay",
+      "alreadyExists": "Isticmaale leh iimeylkan horeba wuu jiray. Fadlan isticmaal iimey kale ama gal.",
+      "failed": "Abuurista akoonka isticmaalaha way fashilantay"
+    }
+  },
+  "success": {
+    "title": "Ku soo dhawoow WeedGo!",
+    "description": "Akoonkaaga {{tenantName}} si guul leh ayaa loo sameeyey.",
+    "accountDetails": {
+      "title": "Faahfaahinta Akoonkaaga",
+      "tenantName": "Magaca Tenant:",
+      "tenantCode": "Code-ka Tenant:",
+      "storeUrl": "URL-ka Dukaanka:"
+    },
+    "nextSteps": {
+      "title": "Tallaabooyinka Xiga",
+      "checkEmail": {
+        "title": "Hubi Iimeylkaaga",
+        "description": "Waxaan kuu soo dirnay iimeel soo dhaweyn ah oo leh macluumaad muhiim ah oo akoon iyo tilmaamo dejin."
+      },
+      "accessDashboard": {
+        "title": "Gal Dashboard-kaaga",
+        "description": "Gal dashboard-ka admin si aad u dejiso dejinta dukaankaaga, u darto alaabta, oo u habeeso kaaliyayaasha AI."
+      },
+      "setupStore": {
+        "title": "Deji Dukaankaaga Ugu Horreeya",
+        "description": "Ku dar goobta dukaankaaga ugu horeysa, deji saacadaha howlgalka, oo dhiso qoyskaaga alaabta."
+      },
+      "configureAI": {
+        "title": "Deji Kaaliyayaasha AI",
+        "description": "U habeeso shakhsiyaadka AI budtender-kaaga oo deji taageerada luuqado badan macaamiishaada."
+      }
+    },
+    "quickActions": {
+      "dashboard": {
+        "title": "Gal Dashboard",
+        "description": "Deji madal-kaaga"
+      },
+      "documentation": {
+        "title": "Dukumeentiyada",
+        "description": "Hagayaal dejin iyo casharada"
+      },
+      "support": {
+        "title": "Taageero",
+        "description": "Ka hel caawimo kooxda"
+      }
+    },
+    "cta": {
+      "button": "Gal Dashboard-kaaga",
+      "help": "Ma u baahan tahay caawimo si aad u bilowdo? Xiriir kooxda taageerada",
+      "email": "support@weedgo.com"
+    },
+    "resources": {
+      "title": "Agabyo Si Aad U Bilowdo",
+      "quickSetup": {
+        "title": "Hagaha Dejinta Degdega ah",
+        "item1": "Dejinta dukaanka iyo summadaynta",
+        "item2": "Dejinta liiska alaabooyinka",
+        "item3": "Dejinta habsameynta lacag bixinta",
+        "item4": "Habeynta kaaliyaha AI"
+      },
+      "training": {
+        "title": "Tababbar iyo Taageero",
+        "item1": "Tusaalooyinka muuqaalka iyo webinaar-yada",
+        "item2": "Sheeko taageerada macaamiil 24/7",
+        "item3": "Marin u helitaan forum-ka bulshada",
+        "item4": "Maareeyaha akoonka u go'an (Enterprise)"
+      }
+    }
+  },
+  "validation": {
+    "required": "{{field}} waa lagama maarmaan",
+    "brandNameRequired": "Magaca summadda waa lagama maarmaan",
+    "websiteRequired": "Mareegtu waa lagama maarmaan si loo sameeyo code-ka summadda",
+    "brandCodeRequired": "Code-ka summadda waa lagama maarmaan (geli mareegta si aad u sameyso)",
+    "brandCodeFormat": "Code-ka summaddu waa inuu kaliya ka kooban yahay xarfo waaweyn, nambarada, xargaha, iyo hoosweynaha",
+    "companyNameRequired": "Magaca shirkadda waa lagama maarmaan",
+    "businessNumberRequired": "Lambarka ganacsiga waa lagama maarmaan",
+    "businessNumberFormat": "Lambarka ganacsiga waa inuu ahaadaa 9 nambar",
+    "gstHstRequired": "Lambarka GST/HST waa lagama maarmaan",
+    "gstHstFormat": "Qaabka lambarka GST/HST: 123456789RT0001",
+    "emailRequired": "Iimeylku waa lagama maarmaan",
+    "emailInvalid": "Fadlan geli cinwaan iimeel sax ah",
+    "firstNameRequired": "Magaca hore waa lagama maarmaan",
+    "lastNameRequired": "Magaca danbe waa lagama maarmaan",
+    "streetRequired": "Cinwaanka wadadda waa lagama maarmaan",
+    "cityRequired": "Magaaladu waa lagama maarmaan",
+    "postalCodeRequired": "Code-ka boostadu waa lagama maarmaan",
+    "postalCodeFormat": "Fadlan geli code boosta Kanadiyaan ah oo sax ah",
+    "passwordRequired": "Furaha sirta ahu waa lagama maarmaan",
+    "passwordLength": "Furaha sirtu waa inuu ahaadaa ugu yaraan 8 xaraf",
+    "passwordComplexity": "Furaha sirtu waa inuu ka kooban yahay xarfo waaweyn, xarfo yaryar, iyo nambar",
+    "passwordMismatch": "Furahooyinka sirta ah isma le'eka",
+    "cardNumberRequired": "Lambarka kaarka waa lagama maarmaan",
+    "cardNumberFormat": "Fadlan geli lambar kaarka 16-nambar ah oo sax ah",
+    "expiryRequired": "Taariikhda dhammaadku waa lagama maarmaan",
+    "expiryFormat": "Fadlan geli qaabka MM/YY",
+    "cvvRequired": "CVV waa lagama maarmaan",
+    "cvvFormat": "CVV waa inay ahaato 3 ama 4 nambar",
+    "cardholderRequired": "Magaca haysta kaarka waa lagama maarmaan"
+  },
+  "passwordStrength": {
+    "weak": "Daciif",
+    "fair": "Deg deg",
+    "good": "Wanaagsan",
+    "strong": "Xoog",
+    "veryStrong": "Aad u Xoog Badan"
+  },
+  "provinces": {
+    "ON": "Ontario",
+    "BC": "British Columbia",
+    "AB": "Alberta",
+    "QC": "Quebec",
+    "MB": "Manitoba",
+    "SK": "Saskatchewan",
+    "NS": "Nova Scotia",
+    "NB": "New Brunswick",
+    "NL": "Newfoundland and Labrador",
+    "PE": "Prince Edward Island",
+    "NT": "Northwest Territories",
+    "YT": "Yukon",
+    "NU": "Nunavut"
+  },
+  "plans": {
+    "community_and_new_business": {
+      "name": "Bulshada iyo Ganacsi Cusub",
+      "features": {
+        "stores": "1 Dukaan",
+        "languages": "2 Luqad",
+        "personalities": "1 Shakhsi AI"
+      }
+    },
+    "small_business": {
+      "name": "Ganacsi Yar",
+      "features": {
+        "stores": "5 Dukaan",
+        "languages": "5 Luqad",
+        "personalities": "2 Shakhsi AI"
+      }
+    },
+    "professional_and_growing_business": {
+      "name": "Ganacsi Xirfad iyo Koraya",
+      "features": {
+        "stores": "12 Dukaan",
+        "languages": "10 Luqad",
+        "personalities": "3 Shakhsi AI"
+      }
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "features": {
+        "stores": "Dukaammo Aan Xad Lahayn",
+        "languages": "25+ Luqad",
+        "personalities": "5 Shakhsi AI"
+      }
+    }
+  }
+}

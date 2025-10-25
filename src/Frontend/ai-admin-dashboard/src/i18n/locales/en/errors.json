@@ -1,0 +1,98 @@
+{
+  "api": {
+    "networkError": "Unable to connect to server. Please check your connection.",
+    "serverError": "Server error occurred. Please try again later.",
+    "timeout": "Request timed out. Please try again.",
+    "unauthorized": "You are not authorized to perform this action.",
+    "forbidden": "Access denied.",
+    "notFound": "The requested resource was not found.",
+    "conflict": "A conflict occurred. The resource may already exist.",
+    "validationError": "Validation error occurred.",
+    "tooManyRequests": "Too many requests. Please try again later.",
+    "serviceUnavailable": "Service temporarily unavailable.",
+    "badRequest": "Invalid request. Please check your input.",
+    "internalError": "An internal error occurred."
+  },
+  "auth": {
+    "loginSuccess": "Login successful! Redirecting...",
+    "invalidCredentials": "Invalid email or password. Please try again.",
+    "sessionExpired": "Your session has expired. Please log in again.",
+    "accountDisabled": "Your account is disabled or lacks admin privileges.",
+    "accountLocked": "Your account has been locked due to multiple failed login attempts.",
+    "tooManyAttempts": "Too many login attempts. Please try again later.",
+    "tokenExpired": "Authentication token has expired.",
+    "tokenInvalid": "Invalid authentication token.",
+    "passwordResetFailed": "Password reset failed. Please try again.",
+    "emailNotVerified": "Please verify your email address first.",
+    "validationError": "Validation error occurred",
+    "loginError": "An error occurred during login"
+  },
+  "tenant": {
+    "loadFailed": "Failed to load organization data.",
+    "createFailed": "Failed to create tenant.",
+    "updateFailed": "Failed to update tenant.",
+    "deleteFailed": "Failed to delete tenant.",
+    "suspendFailed": "Failed to suspend tenant.",
+    "reactivateFailed": "Failed to reactivate tenant.",
+    "noOrganization": "No organization associated with user.",
+    "limitReached": "Store limit reached for this tenant.",
+    "invalidSubscription": "Invalid or expired subscription."
+  },
+  "store": {
+    "loadFailed": "Failed to load store data.",
+    "createFailed": "Failed to create store.",
+    "updateFailed": "Failed to update store.",
+    "deleteFailed": "Failed to delete store.",
+    "suspendFailed": "Failed to suspend store.",
+    "closeFailed": "Failed to close store.",
+    "notFound": "Store not found.",
+    "alreadyExists": "A store with this name already exists."
+  },
+  "inventory": {
+    "loadFailed": "Failed to load inventory data.",
+    "createFailed": "Failed to create inventory item.",
+    "updateFailed": "Failed to update inventory item.",
+    "deleteFailed": "Failed to delete inventory item.",
+    "stockUpdateFailed": "Failed to update stock levels.",
+    "lowStock": "Low stock alert.",
+    "outOfStock": "Item is out of stock.",
+    "invalidQuantity": "Invalid quantity specified."
+  },
+  "order": {
+    "loadFailed": "Failed to load order data.",
+    "createFailed": "Failed to create order.",
+    "updateFailed": "Failed to update order.",
+    "cancelFailed": "Failed to cancel order.",
+    "fulfillFailed": "Failed to fulfill order.",
+    "refundFailed": "Failed to process refund.",
+    "notFound": "Order not found.",
+    "alreadyProcessed": "Order has already been processed."
+  },
+  "payment": {
+    "loadFailed": "Failed to load payment data.",
+    "processingFailed": "Payment processing failed.",
+    "refundFailed": "Refund processing failed.",
+    "invalidAmount": "Invalid payment amount.",
+    "cardDeclined": "Card was declined.",
+    "insufficientFunds": "Insufficient funds.",
+    "paymentMethodInvalid": "Invalid payment method."
+  },
+  "upload": {
+    "failed": "File upload failed.",
+    "fileTooLarge": "File size exceeds maximum allowed.",
+    "invalidFileType": "Invalid file type.",
+    "corruptedFile": "File appears to be corrupted.",
+    "uploadCancelled": "Upload was cancelled."
+  },
+  "general": {
+    "unexpectedError": "An unexpected error occurred.",
+    "operationFailed": "Operation failed. Please try again.",
+    "dataLoadFailed": "Failed to load data.",
+    "saveFailed": "Failed to save changes.",
+    "deleteFailed": "Failed to delete item.",
+    "permissionDenied": "You don't have permission to perform this action.",
+    "invalidInput": "Invalid input provided.",
+    "requiredFieldMissing": "Required field is missing.",
+    "dataCorrupted": "Data appears to be corrupted."
+  }
+}

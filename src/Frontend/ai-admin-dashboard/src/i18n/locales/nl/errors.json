@@ -1,0 +1,98 @@
+{
+  "api": {
+    "networkError": "Kan geen verbinding maken met server. Controleer uw verbinding.",
+    "serverError": "Serverfout opgetreden. Probeer het later opnieuw.",
+    "timeout": "Verzoek verlopen. Probeer het opnieuw.",
+    "unauthorized": "U bent niet geautoriseerd om deze actie uit te voeren.",
+    "forbidden": "Toegang geweigerd.",
+    "notFound": "De gevraagde resource is niet gevonden.",
+    "conflict": "Er is een conflict opgetreden. De resource bestaat mogelijk al.",
+    "validationError": "Validatiefout opgetreden.",
+    "tooManyRequests": "Te veel verzoeken. Probeer het later opnieuw.",
+    "serviceUnavailable": "Service tijdelijk niet beschikbaar.",
+    "badRequest": "Ongeldig verzoek. Controleer uw invoer.",
+    "internalError": "Er is een interne fout opgetreden."
+  },
+  "auth": {
+    "loginSuccess": "Inloggen geslaagd! Doorverwijzen...",
+    "invalidCredentials": "Ongeldig e-mailadres of wachtwoord. Probeer het opnieuw.",
+    "sessionExpired": "Uw sessie is verlopen. Log opnieuw in.",
+    "accountDisabled": "Uw account is uitgeschakeld of heeft geen beheerdersrechten.",
+    "accountLocked": "Uw account is vergrendeld vanwege meerdere mislukte inlogpogingen.",
+    "tooManyAttempts": "Te veel inlogpogingen. Probeer het later opnieuw.",
+    "tokenExpired": "Authenticatietoken is verlopen.",
+    "tokenInvalid": "Ongeldig authenticatietoken.",
+    "passwordResetFailed": "Wachtwoord resetten mislukt. Probeer het opnieuw.",
+    "emailNotVerified": "Verifieer eerst uw e-mailadres.",
+    "validationError": "Validatiefout opgetreden",
+    "loginError": "Er is een fout opgetreden tijdens het inloggen"
+  },
+  "tenant": {
+    "loadFailed": "Laden van organisatiegegevens mislukt.",
+    "createFailed": "Huurder aanmaken mislukt.",
+    "updateFailed": "Huurder bijwerken mislukt.",
+    "deleteFailed": "Huurder verwijderen mislukt.",
+    "suspendFailed": "Huurder opschorten mislukt.",
+    "reactivateFailed": "Huurder heractiveren mislukt.",
+    "noOrganization": "Geen organisatie gekoppeld aan gebruiker.",
+    "limitReached": "Winkellimiet bereikt voor deze huurder.",
+    "invalidSubscription": "Ongeldig of verlopen abonnement."
+  },
+  "store": {
+    "loadFailed": "Laden van winkelgegevens mislukt.",
+    "createFailed": "Winkel aanmaken mislukt.",
+    "updateFailed": "Winkel bijwerken mislukt.",
+    "deleteFailed": "Winkel verwijderen mislukt.",
+    "suspendFailed": "Winkel opschorten mislukt.",
+    "closeFailed": "Winkel sluiten mislukt.",
+    "notFound": "Winkel niet gevonden.",
+    "alreadyExists": "Een winkel met deze naam bestaat al."
+  },
+  "inventory": {
+    "loadFailed": "Laden van voorraadgegevens mislukt.",
+    "createFailed": "Voorraadartikel aanmaken mislukt.",
+    "updateFailed": "Voorraadartikel bijwerken mislukt.",
+    "deleteFailed": "Voorraadartikel verwijderen mislukt.",
+    "stockUpdateFailed": "Voorraadniveaus bijwerken mislukt.",
+    "lowStock": "Waarschuwing lage voorraad.",
+    "outOfStock": "Artikel is niet op voorraad.",
+    "invalidQuantity": "Ongeldige hoeveelheid opgegeven."
+  },
+  "order": {
+    "loadFailed": "Laden van bestellingsgegevens mislukt.",
+    "createFailed": "Bestelling aanmaken mislukt.",
+    "updateFailed": "Bestelling bijwerken mislukt.",
+    "cancelFailed": "Bestelling annuleren mislukt.",
+    "fulfillFailed": "Bestelling uitvoeren mislukt.",
+    "refundFailed": "Terugbetaling verwerken mislukt.",
+    "notFound": "Bestelling niet gevonden.",
+    "alreadyProcessed": "Bestelling is al verwerkt."
+  },
+  "payment": {
+    "loadFailed": "Laden van betalingsgegevens mislukt.",
+    "processingFailed": "Betalingsverwerking mislukt.",
+    "refundFailed": "Terugbetalingsverwerking mislukt.",
+    "invalidAmount": "Ongeldig betalingsbedrag.",
+    "cardDeclined": "Kaart is geweigerd.",
+    "insufficientFunds": "Onvoldoende saldo.",
+    "paymentMethodInvalid": "Ongeldige betaalmethode."
+  },
+  "upload": {
+    "failed": "Bestand uploaden mislukt.",
+    "fileTooLarge": "Bestandsgrootte overschrijdt het maximaal toegestane.",
+    "invalidFileType": "Ongeldig bestandstype.",
+    "corruptedFile": "Bestand lijkt beschadigd.",
+    "uploadCancelled": "Upload is geannuleerd."
+  },
+  "general": {
+    "unexpectedError": "Er is een onverwachte fout opgetreden.",
+    "operationFailed": "Bewerking mislukt. Probeer het opnieuw.",
+    "dataLoadFailed": "Laden van gegevens mislukt.",
+    "saveFailed": "Wijzigingen opslaan mislukt.",
+    "deleteFailed": "Item verwijderen mislukt.",
+    "permissionDenied": "U heeft geen toestemming om deze actie uit te voeren.",
+    "invalidInput": "Ongeldige invoer verstrekt.",
+    "requiredFieldMissing": "Verplicht veld ontbreekt.",
+    "dataCorrupted": "Gegevens lijken beschadigd."
+  }
+}

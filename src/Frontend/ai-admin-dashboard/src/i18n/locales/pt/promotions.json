@@ -1,0 +1,158 @@
+{
+  "titles": {
+    "main": "Promoções e Preços",
+    "activePromotions": "Promoções Ativas",
+    "analytics": "Análises",
+    "defaultPricing": "Preços Padrão",
+    "topPerforming": "Promoções de Melhor Desempenho",
+    "overallStats": "Estatísticas Gerais",
+    "deletePromotion": "Excluir Promoção",
+    "createPromotion": "Criar Nova Promoção",
+    "editPromotion": "Editar Promoção",
+    "viewPromotion": "Visualizar Promoção",
+    "defaultPriceConfig": "Configuração de Preços Padrão",
+    "applyMarkup": "Aplicar Margem",
+    "storeWideMarkup": "Margem Padrão para Toda a Loja"
+  },
+  "descriptions": {
+    "noStoreSelected": "Nenhuma Loja Selecionada",
+    "selectStoreForPromotions": "Por favor, selecione uma loja para gerenciar promoções e preços",
+    "selectStoreForPricing": "Por favor, selecione uma loja para gerenciar preços",
+    "managingFor": "Gerenciando promoções e preços para",
+    "pricingInstructions": "Defina porcentagens de margem para produtos por categoria. A margem é aplicada ao custo unitário para calcular o preço de varejo. Configurações mais específicas substituem as gerais (por exemplo, subcategoria substitui categoria).",
+    "defaultMarkupInfo": "Esta margem padrão será usada ao calcular preços para novos produtos ou quando nenhuma margem de categoria específica for definida."
+  },
+  "table": {
+    "promotion": "Promoção",
+    "code": "Código",
+    "discount": "Desconto",
+    "usage": "Uso",
+    "duration": "Duração",
+    "status": "Status",
+    "actions": "Ações",
+    "min": "Mín",
+    "perCustomer": "por cliente",
+    "to": "até",
+    "uses": "usos",
+    "revenue": "receita"
+  },
+  "status": {
+    "inactive": "Inativo",
+    "scheduled": "Agendado",
+    "expired": "Expirado",
+    "active": "Ativo"
+  },
+  "stats": {
+    "totalUses": "Usos Totais",
+    "totalDiscounts": "Descontos Totais",
+    "totalRevenue": "Receita Total",
+    "avgOrderValue": "Valor Médio do Pedido"
+  },
+  "actions": {
+    "createNew": "Criar Nova Promoção",
+    "edit": "Editar promoção",
+    "delete": "Excluir promoção",
+    "cancel": "Cancelar",
+    "back": "Voltar",
+    "next": "Próximo",
+    "update": "Atualizar",
+    "create": "Criar",
+    "applyMarkup": "Aplicar Margem",
+    "resetOverrides": "Redefinir Substituições",
+    "saveDefault": "Salvar como Padrão",
+    "quickSetMarkup": "Definir Margem Rapidamente"
+  },
+  "search": {
+    "placeholder": "Pesquisar promoções por nome ou código...",
+    "categories": "Pesquisar categorias..."
+  },
+  "steps": {
+    "basicInfo": {
+      "name": "Informações Básicas",
+      "description": "Nome e descrição"
+    },
+    "discount": {
+      "name": "Desconto",
+      "description": "Tipo e valor"
+    },
+    "scope": {
+      "name": "Escopo",
+      "description": "Onde e quando"
+    },
+    "settings": {
+      "name": "Configurações",
+      "description": "Limites de uso"
+    },
+    "review": {
+      "name": "Revisar",
+      "description": "Confirmar detalhes"
+    }
+  },
+  "pricing": {
+    "enableDefault": "Habilitar margem padrão",
+    "default": "Padrão",
+    "markupPercentage": "Porcentagem de Margem",
+    "retailPriceFormula": "Retail Price = Cost × (1 + {markup}%)",
+    "exampleCalculation": "Exemplo de Cálculo:",
+    "currentCost": "Custo atual",
+    "currentRetail": "Varejo atual",
+    "newPricing": "Novo preço com {markup}% de margem:",
+    "newRetailPrice": "Novo preço de varejo",
+    "profitMargin": "Margem de lucro",
+    "priceChange": "Mudança de preço",
+    "ifCost": "Se o custo",
+    "retailPrice": "Preço de varejo",
+    "allProducts": "Todos os Produtos",
+    "storeWideDefault": "Padrão para toda a loja",
+    "products": "produtos",
+    "overrides": "substituições",
+    "avg": "Média",
+    "productsInCategory": "Produtos nesta categoria:",
+    "sku": "SKU",
+    "stock": "Estoque",
+    "brand": "Marca",
+    "cost": "Custo",
+    "applyingTo": "Aplicando a:",
+    "updating": "Atualizando:",
+    "allProductsStoreWide": "Todos os Produtos (Toda a Loja)"
+  },
+  "confirm": {
+    "deletePromotion": "Tem certeza de que deseja excluir esta promoção? Esta ação não pode ser desfeita.",
+    "applyAllProducts": "Isto atualizará a margem para TODOS os produtos na loja para {markup}%. Tem certeza?",
+    "resetOverrides": "Isto removerá todas as substituições de preço para {scope} e usará a margem calculada. Tem certeza?"
+  },
+  "warnings": {
+    "storeWideUpdate": "Isto atualizará os preços de todos os produtos na loja.",
+    "singleProductNote": "Apenas este produto específico será atualizado."
+  },
+  "messages": {
+    "codeCopied": "Código copiado!",
+    "loading": {
+      "promotions": "Carregando promoções...",
+      "categories": "Carregando categorias...",
+      "products": "Carregando produtos..."
+    },
+    "noProducts": "Nenhum produto encontrado",
+    "saving": "Salvando...",
+    "updating": "Atualizando Preços...",
+    "updatedSuccessfully": "Atualizado com Sucesso!",
+    "resetting": "Redefinindo..."
+  },
+  "success": {
+    "created": "Promoção criada com sucesso!",
+    "updated": "Promoção atualizada com sucesso!",
+    "deleted": "Promoção excluída com sucesso!",
+    "markupUpdated": "Configurações de margem padrão atualizadas!",
+    "priceUpdated": "{count} produto atualizado com sucesso!",
+    "priceUpdatedPlural": "{count} produtos atualizados com sucesso!",
+    "overridesCleared": "Substituições de preço removidas com sucesso"
+  },
+  "errors": {
+    "createFailed": "Falha ao criar promoção",
+    "updateFailed": "Falha ao atualizar promoção",
+    "deleteFailed": "Falha ao excluir promoção",
+    "settingsUpdateFailed": "Falha ao atualizar configurações",
+    "pricingUpdateFailed": "Falha ao atualizar preços",
+    "resetFailed": "Falha ao redefinir substituições de preço"
+  }
+}

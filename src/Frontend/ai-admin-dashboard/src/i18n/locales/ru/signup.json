@@ -1,0 +1,368 @@
+{
+  "tenant": {
+    "header": {
+      "title": "WeedGo",
+      "alreadyHaveAccount": "Уже есть аккаунт?",
+      "signIn": "Войти",
+      "backHome": "Вернуться на главную"
+    },
+    "steps": {
+      "company": "Информация о компании",
+      "contact": "Контактные данные",
+      "account": "Настройка аккаунта",
+      "payment": "Подписка и оплата"
+    },
+    "stepDescriptions": {
+      "company": "Расскажите нам о вашем бизнесе и бренде",
+      "contact": "Предоставьте вашу контактную информацию и адрес",
+      "account": "Создайте учетные данные администратора",
+      "payment": "Выберите ваш тариф и способ оплаты"
+    },
+    "companyInfo": {
+      "brandName": "Название бренда",
+      "brandNamePlaceholder": "например, Green Valley Dispensary",
+      "website": "Веб-сайт",
+      "websitePlaceholder": "www.potpalace.ca или potpalace.ca",
+      "websiteHelp": "URL вашего веб-сайта (используется для генерации кода бренда)",
+      "brandCode": "Код бренда",
+      "brandCodeAuto": "Код бренда * (генерируется автоматически)",
+      "brandCodePlaceholder": "Введите веб-сайт выше для генерации",
+      "brandCodeHelp": "Будет использоваться в URL вашего магазина: {{code}}.weedgo.com",
+      "legalCompanyName": "Юридическое название компании",
+      "legalCompanyPlaceholder": "например, Green Valley Cannabis Inc.",
+      "businessNumber": "Номер предприятия",
+      "businessNumberPlaceholder": "123456789",
+      "businessNumberHelp": "Канадский номер предприятия (9 цифр)",
+      "gstHstNumber": "Номер GST/HST",
+      "gstHstPlaceholder": "123456789RT0001",
+      "gstHstHelp": "Формат: 123456789RT0001",
+      "logoUpload": "Загрузка логотипа",
+      "logoUploadHelp": "Макс 2 МБ • PNG, JPG, WebP • Рекомендуется: квадрат 500x500 пикселей"
+    },
+    "contactInfo": {
+      "firstName": "Имя",
+      "lastName": "Фамилия",
+      "email": "Адрес электронной почты",
+      "phone": "Номер телефона",
+      "phonePlaceholder": "(555) 123-4567",
+      "street": "Адрес улицы",
+      "city": "Город",
+      "province": "Провинция",
+      "postalCode": "Почтовый индекс",
+      "postalCodePlaceholder": "A1A 1A1"
+    },
+    "accountSetup": {
+      "password": "Пароль",
+      "confirmPassword": "Подтвердите пароль",
+      "passwordStrength": "Сила:",
+      "passwordHelp": "Должен содержать не менее 8 символов с заглавными и строчными буквами и цифрами",
+      "securityTitle": "Безопасность аккаунта",
+      "securityDescription": "Ваш аккаунт будет защищен шифрованием промышленного стандарта и опциями многофакторной аутентификации."
+    },
+    "subscription": {
+      "choosePlan": "Выберите ваш тарифный план",
+      "selectedPlan": "Выбранный план: {{plan}}",
+      "changePlan": "Изменить план",
+      "free": "БЕСПЛАТНО",
+      "perMonth": "${{price}}/месяц",
+      "customPricing": "Индивидуальные цены",
+      "billingCycle": "Платежный цикл",
+      "monthly": "Ежемесячно",
+      "monthlyBilled": "Оплачивается ежемесячно",
+      "annual": "Ежегодно",
+      "annualSave": "Экономия 20%",
+      "selectPlan": "Выбрать план",
+      "enterpriseTitle": "Корпоративный план",
+      "enterpriseDescription": "Наша команда продаж свяжется с вами в течение 24 часов для обсуждения индивидуальных цен и настройки."
+    },
+    "payment": {
+      "cardholderName": "Имя держателя карты",
+      "cardholderPlaceholder": "Иван Петров",
+      "cardNumber": "Номер карты",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiryDate": "Срок действия",
+      "expiryPlaceholder": "MM/YY",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "postalCode": "Почтовый индекс",
+      "postalCodePlaceholder": "12345"
+    },
+    "progress": {
+      "verifying": "Проверка доступности...",
+      "creating": "Создание вашего аккаунта...",
+      "uploading": "Загрузка логотипа...",
+      "complete": "Аккаунт успешно создан!",
+      "processing": "Обработка..."
+    },
+    "success": {
+      "welcome": "Добро пожаловать в WeedGo!",
+      "accountCreated": "Ваш аккаунт успешно создан.",
+      "tenantCode": "Код арендатора:",
+      "preparing": "Подготовка вашей панели управления..."
+    },
+    "navigation": {
+      "previous": "Назад",
+      "next": "Далее",
+      "createAccount": "Создать аккаунт"
+    },
+    "errors": {
+      "accountCreationFailed": "Не удалось создать аккаунт",
+      "tryAgain": "Попробовать снова",
+      "registerAsUser": "Зарегистрироваться как пользователь",
+      "signInInstead": "Войти вместо этого",
+      "tenantExists": "Код арендатора \"{{code}}\" уже зарегистрирован",
+      "websiteExists": "Веб-сайт \"{{website}}\" уже используется"
+    }
+  },
+  "review": {
+    "title": "Проверка аккаунта арендатора",
+    "description": "Проверка и одобрение аккаунтов, отмеченных для ручной верификации",
+    "refresh": "Обновить",
+    "stats": {
+      "totalPending": "Всего ожидающих",
+      "thisWeek": "На этой неделе",
+      "avgReviewTime": "Среднее время проверки",
+      "approvalRate": "Процент одобрения"
+    },
+    "table": {
+      "title": "Ожидающие аккаунты",
+      "storeName": "Название магазина",
+      "contact": "Контакт",
+      "licenseNumber": "Номер лицензии",
+      "submitted": "Отправлено",
+      "tier": "Уровень",
+      "actions": "Действия",
+      "review": "Проверить",
+      "noPending": "Нет ожидающих проверки аккаунтов!"
+    },
+    "modal": {
+      "title": "Проверить аккаунт",
+      "storeInfo": "Информация о магазине",
+      "storeName": "Название магазина",
+      "licenseNumber": "Номер лицензии",
+      "crsaAddress": "Адрес CRSA",
+      "municipality": "Муниципалитет",
+      "crsaStatus": "Статус CRSA",
+      "crsaWebsite": "Веб-сайт CRSA",
+      "contactInfo": "Контактная информация",
+      "contactName": "Контактное лицо",
+      "role": "Роль",
+      "email": "Электронная почта",
+      "phone": "Телефон",
+      "verificationContext": "Контекст верификации",
+      "emailDomain": "Домен электронной почты",
+      "domainMatchesCrsa": "Домен соответствует CRSA",
+      "verificationTier": "Уровень верификации",
+      "submitted": "Отправлено",
+      "adminNotes": "Заметки администратора (необязательно)",
+      "adminNotesPlaceholder": "Добавьте любые заметки об этой проверке...",
+      "reject": "Отклонить",
+      "approve": "Одобрить аккаунт",
+      "approving": "Одобрение...",
+      "yes": "✓ Да",
+      "no": "✗ Нет"
+    },
+    "reject": {
+      "title": "Отклонить аккаунт",
+      "description": "Пожалуйста, укажите причину отклонения этого аккаунта. Это будет записано в целях аудита.",
+      "reasonPlaceholder": "Причина отклонения (минимум 10 символов)...",
+      "cancel": "Отмена",
+      "confirm": "Подтвердить отклонение",
+      "rejecting": "Отклонение...",
+      "minLength": "Пожалуйста, укажите причину (не менее 10 символов)"
+    },
+    "messages": {
+      "approved": "Аккаунт успешно одобрен!",
+      "rejected": "Аккаунт успешно отклонен.",
+      "approveFailed": "Не удалось одобрить аккаунт: {{error}}",
+      "rejectFailed": "Не удалось отклонить аккаунт: {{error}}",
+      "fetchFailed": "Не удалось получить ожидающие аккаунты",
+      "noPermission": "У вас нет разрешения на проверку аккаунтов арендаторов."
+    }
+  },
+  "userRegistration": {
+    "title": "Создайте ваш аккаунт",
+    "joinTenant": "Присоединиться к {{tenantName}}",
+    "tenantInfo": "Информация об арендаторе",
+    "tenantName": "Название:",
+    "tenantCode": "Код:",
+    "firstName": "Имя",
+    "firstNamePlaceholder": "Иван",
+    "lastName": "Фамилия",
+    "lastNamePlaceholder": "Петров",
+    "email": "Адрес электронной почты",
+    "emailPlaceholder": "ivan.petrov@example.com",
+    "phone": "Номер телефона",
+    "phonePlaceholder": "(555) 123-4567",
+    "password": "Пароль",
+    "passwordPlaceholder": "••••••••",
+    "confirmPassword": "Подтвердите пароль",
+    "passwordStrength": "Сила:",
+    "passwordHelp": "Используйте 8+ символов с заглавными и строчными буквами, цифрами и символами для лучшей безопасности",
+    "createButton": "Создать аккаунт",
+    "creating": "Создание аккаунта...",
+    "alreadyHaveAccount": "Уже есть аккаунт?",
+    "signIn": "Войти",
+    "loading": "Загрузка информации об арендаторе...",
+    "tenantNotFound": "Арендатор не найден",
+    "tenantNotFoundDescription": "Указанный арендатор не найден.",
+    "goToSignup": "Перейти к регистрации",
+    "errors": {
+      "loadFailed": "Не удалось загрузить информацию об арендаторе",
+      "alreadyExists": "Пользователь с таким адресом электронной почты уже существует. Пожалуйста, используйте другой адрес или войдите.",
+      "failed": "Не удалось создать аккаунт пользователя"
+    }
+  },
+  "success": {
+    "title": "Добро пожаловать в WeedGo!",
+    "description": "Ваш аккаунт для {{tenantName}} успешно создан.",
+    "accountDetails": {
+      "title": "Детали вашего аккаунта",
+      "tenantName": "Название арендатора:",
+      "tenantCode": "Код арендатора:",
+      "storeUrl": "URL магазина:"
+    },
+    "nextSteps": {
+      "title": "Следующие шаги",
+      "checkEmail": {
+        "title": "Проверьте вашу электронную почту",
+        "description": "Мы отправили вам приветственное письмо с важной информацией об аккаунте и инструкциями по настройке."
+      },
+      "accessDashboard": {
+        "title": "Доступ к вашей панели управления",
+        "description": "Войдите в вашу панель администратора, чтобы настроить параметры магазина, добавить продукты и настроить ваших AI-ассистентов."
+      },
+      "setupStore": {
+        "title": "Настройте ваш первый магазин",
+        "description": "Добавьте ваше первое местоположение магазина, настройте часы работы и установите ваш инвентарь продуктов."
+      },
+      "configureAI": {
+        "title": "Настройте AI-ассистентов",
+        "description": "Настройте личности вашего AI-бюдтендера и установите многоязычную поддержку для ваших клиентов."
+      }
+    },
+    "quickActions": {
+      "dashboard": {
+        "title": "Доступ к панели управления",
+        "description": "Настройте вашу платформу"
+      },
+      "documentation": {
+        "title": "Документация",
+        "description": "Руководства по настройке и учебные материалы"
+      },
+      "support": {
+        "title": "Поддержка",
+        "description": "Получите помощь от нашей команды"
+      }
+    },
+    "cta": {
+      "button": "Доступ к вашей панели управления",
+      "help": "Нужна помощь для начала? Свяжитесь с нашей службой поддержки по адресу",
+      "email": "support@weedgo.com"
+    },
+    "resources": {
+      "title": "Ресурсы для начала работы",
+      "quickSetup": {
+        "title": "Руководство по быстрой настройке",
+        "item1": "Настройка и брендинг магазина",
+        "item2": "Настройка каталога продуктов",
+        "item3": "Настройка обработки платежей",
+        "item4": "Настройка AI-ассистента"
+      },
+      "training": {
+        "title": "Обучение и поддержка",
+        "item1": "Видеоуроки и вебинары",
+        "item2": "Чат поддержки клиентов 24/7",
+        "item3": "Доступ к форуму сообщества",
+        "item4": "Выделенный менеджер аккаунта (Корпоративный)"
+      }
+    }
+  },
+  "validation": {
+    "required": "{{field}} обязательно",
+    "brandNameRequired": "Название бренда обязательно",
+    "websiteRequired": "Веб-сайт необходим для генерации кода бренда",
+    "brandCodeRequired": "Код бренда обязателен (введите веб-сайт для генерации)",
+    "brandCodeFormat": "Код бренда должен содержать только заглавные буквы, цифры, дефисы и подчеркивания",
+    "companyNameRequired": "Название компании обязательно",
+    "businessNumberRequired": "Номер предприятия обязателен",
+    "businessNumberFormat": "Номер предприятия должен состоять из 9 цифр",
+    "gstHstRequired": "Номер GST/HST обязателен",
+    "gstHstFormat": "Формат номера GST/HST: 123456789RT0001",
+    "emailRequired": "Электронная почта обязательна",
+    "emailInvalid": "Пожалуйста, введите действительный адрес электронной почты",
+    "firstNameRequired": "Имя обязательно",
+    "lastNameRequired": "Фамилия обязательна",
+    "streetRequired": "Адрес улицы обязателен",
+    "cityRequired": "Город обязателен",
+    "postalCodeRequired": "Почтовый индекс обязателен",
+    "postalCodeFormat": "Пожалуйста, введите действительный канадский почтовый индекс",
+    "passwordRequired": "Пароль обязателен",
+    "passwordLength": "Пароль должен содержать не менее 8 символов",
+    "passwordComplexity": "Пароль должен содержать заглавные и строчные буквы и цифры",
+    "passwordMismatch": "Пароли не совпадают",
+    "cardNumberRequired": "Номер карты обязателен",
+    "cardNumberFormat": "Пожалуйста, введите действительный 16-значный номер карты",
+    "expiryRequired": "Срок действия обязателен",
+    "expiryFormat": "Пожалуйста, введите формат MM/YY",
+    "cvvRequired": "CVV обязателен",
+    "cvvFormat": "CVV должен быть 3 или 4 цифры",
+    "cardholderRequired": "Имя держателя карты обязательно"
+  },
+  "passwordStrength": {
+    "weak": "Слабый",
+    "fair": "Удовлетворительный",
+    "good": "Хороший",
+    "strong": "Сильный",
+    "veryStrong": "Очень сильный"
+  },
+  "provinces": {
+    "ON": "Онтарио",
+    "BC": "Британская Колумбия",
+    "AB": "Альберта",
+    "QC": "Квебек",
+    "MB": "Манитоба",
+    "SK": "Саскачеван",
+    "NS": "Новая Шотландия",
+    "NB": "Нью-Брансуик",
+    "NL": "Ньюфаундленд и Лабрадор",
+    "PE": "Остров Принца Эдуарда",
+    "NT": "Северо-Западные территории",
+    "YT": "Юкон",
+    "NU": "Нунавут"
+  },
+  "plans": {
+    "community_and_new_business": {
+      "name": "Сообщество и новый бизнес",
+      "features": {
+        "stores": "1 магазин",
+        "languages": "2 языка",
+        "personalities": "1 AI-личность"
+      }
+    },
+    "small_business": {
+      "name": "Малый бизнес",
+      "features": {
+        "stores": "5 магазинов",
+        "languages": "5 языков",
+        "personalities": "2 AI-личности"
+      }
+    },
+    "professional_and_growing_business": {
+      "name": "Профессиональный и растущий бизнес",
+      "features": {
+        "stores": "12 магазинов",
+        "languages": "10 языков",
+        "personalities": "3 AI-личности"
+      }
+    },
+    "enterprise": {
+      "name": "Корпоративный",
+      "features": {
+        "stores": "Неограниченное количество магазинов",
+        "languages": "25+ языков",
+        "personalities": "5 AI-личностей"
+      }
+    }
+  }
+}

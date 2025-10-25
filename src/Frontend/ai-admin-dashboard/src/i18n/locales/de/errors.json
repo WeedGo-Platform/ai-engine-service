@@ -1,0 +1,98 @@
+{
+  "api": {
+    "networkError": "Verbindung zum Server nicht möglich. Bitte überprüfen Sie Ihre Verbindung.",
+    "serverError": "Ein Serverfehler ist aufgetreten. Bitte versuchen Sie es später erneut.",
+    "timeout": "Anfrage hat Zeitlimit überschritten. Bitte erneut versuchen.",
+    "unauthorized": "Sie sind nicht berechtigt, diese Aktion auszuführen.",
+    "forbidden": "Zugriff verweigert.",
+    "notFound": "Die angeforderte Ressource wurde nicht gefunden.",
+    "conflict": "Ein Konflikt ist aufgetreten. Die Ressource existiert möglicherweise bereits.",
+    "validationError": "Ein Validierungsfehler ist aufgetreten.",
+    "tooManyRequests": "Zu viele Anfragen. Bitte versuchen Sie es später erneut.",
+    "serviceUnavailable": "Dienst vorübergehend nicht verfügbar.",
+    "badRequest": "Ungültige Anfrage. Bitte überprüfen Sie Ihre Eingabe.",
+    "internalError": "Ein interner Fehler ist aufgetreten."
+  },
+  "auth": {
+    "loginSuccess": "Anmeldung erfolgreich! Weiterleitung...",
+    "invalidCredentials": "Ungültige E-Mail oder Passwort. Bitte erneut versuchen.",
+    "sessionExpired": "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
+    "accountDisabled": "Ihr Konto ist deaktiviert oder verfügt nicht über Administratorrechte.",
+    "accountLocked": "Ihr Konto wurde aufgrund mehrerer fehlgeschlagener Anmeldeversuche gesperrt.",
+    "tooManyAttempts": "Zu viele Anmeldeversuche. Bitte versuchen Sie es später erneut.",
+    "tokenExpired": "Authentifizierungstoken ist abgelaufen.",
+    "tokenInvalid": "Ungültiges Authentifizierungstoken.",
+    "passwordResetFailed": "Passwort-Zurücksetzung fehlgeschlagen. Bitte erneut versuchen.",
+    "emailNotVerified": "Bitte verifizieren Sie zuerst Ihre E-Mail-Adresse.",
+    "validationError": "Ein Validierungsfehler ist aufgetreten",
+    "loginError": "Bei der Anmeldung ist ein Fehler aufgetreten"
+  },
+  "tenant": {
+    "loadFailed": "Laden der Organisationsdaten fehlgeschlagen.",
+    "createFailed": "Erstellen des Mandanten fehlgeschlagen.",
+    "updateFailed": "Aktualisieren des Mandanten fehlgeschlagen.",
+    "deleteFailed": "Löschen des Mandanten fehlgeschlagen.",
+    "suspendFailed": "Aussetzen des Mandanten fehlgeschlagen.",
+    "reactivateFailed": "Reaktivieren des Mandanten fehlgeschlagen.",
+    "noOrganization": "Keine Organisation mit dem Benutzer verknüpft.",
+    "limitReached": "Geschäftslimit für diesen Mandanten erreicht.",
+    "invalidSubscription": "Ungültiges oder abgelaufenes Abonnement."
+  },
+  "store": {
+    "loadFailed": "Laden der Geschäftsdaten fehlgeschlagen.",
+    "createFailed": "Erstellen des Geschäfts fehlgeschlagen.",
+    "updateFailed": "Aktualisieren des Geschäfts fehlgeschlagen.",
+    "deleteFailed": "Löschen des Geschäfts fehlgeschlagen.",
+    "suspendFailed": "Aussetzen des Geschäfts fehlgeschlagen.",
+    "closeFailed": "Schließen des Geschäfts fehlgeschlagen.",
+    "notFound": "Geschäft nicht gefunden.",
+    "alreadyExists": "Ein Geschäft mit diesem Namen existiert bereits."
+  },
+  "inventory": {
+    "loadFailed": "Laden der Bestandsdaten fehlgeschlagen.",
+    "createFailed": "Erstellen des Bestandsartikels fehlgeschlagen.",
+    "updateFailed": "Aktualisieren des Bestandsartikels fehlgeschlagen.",
+    "deleteFailed": "Löschen des Bestandsartikels fehlgeschlagen.",
+    "stockUpdateFailed": "Aktualisieren der Lagerbestände fehlgeschlagen.",
+    "lowStock": "Warnung bei niedrigem Lagerbestand.",
+    "outOfStock": "Artikel nicht vorrätig.",
+    "invalidQuantity": "Ungültige Menge angegeben."
+  },
+  "order": {
+    "loadFailed": "Laden der Bestelldaten fehlgeschlagen.",
+    "createFailed": "Erstellen der Bestellung fehlgeschlagen.",
+    "updateFailed": "Aktualisieren der Bestellung fehlgeschlagen.",
+    "cancelFailed": "Stornieren der Bestellung fehlgeschlagen.",
+    "fulfillFailed": "Ausführen der Bestellung fehlgeschlagen.",
+    "refundFailed": "Verarbeiten der Rückerstattung fehlgeschlagen.",
+    "notFound": "Bestellung nicht gefunden.",
+    "alreadyProcessed": "Bestellung wurde bereits verarbeitet."
+  },
+  "payment": {
+    "loadFailed": "Laden der Zahlungsdaten fehlgeschlagen.",
+    "processingFailed": "Zahlungsabwicklung fehlgeschlagen.",
+    "refundFailed": "Rückerstattungsabwicklung fehlgeschlagen.",
+    "invalidAmount": "Ungültiger Zahlungsbetrag.",
+    "cardDeclined": "Karte wurde abgelehnt.",
+    "insufficientFunds": "Unzureichende Mittel.",
+    "paymentMethodInvalid": "Ungültige Zahlungsmethode."
+  },
+  "upload": {
+    "failed": "Datei-Upload fehlgeschlagen.",
+    "fileTooLarge": "Dateigröße überschreitet das zulässige Maximum.",
+    "invalidFileType": "Ungültiger Dateityp.",
+    "corruptedFile": "Datei scheint beschädigt zu sein.",
+    "uploadCancelled": "Upload wurde abgebrochen."
+  },
+  "general": {
+    "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten.",
+    "operationFailed": "Vorgang fehlgeschlagen. Bitte erneut versuchen.",
+    "dataLoadFailed": "Laden der Daten fehlgeschlagen.",
+    "saveFailed": "Speichern der Änderungen fehlgeschlagen.",
+    "deleteFailed": "Löschen des Elements fehlgeschlagen.",
+    "permissionDenied": "Sie haben keine Berechtigung, diese Aktion auszuführen.",
+    "invalidInput": "Ungültige Eingabe.",
+    "requiredFieldMissing": "Erforderliches Feld fehlt.",
+    "dataCorrupted": "Daten scheinen beschädigt zu sein."
+  }
+}

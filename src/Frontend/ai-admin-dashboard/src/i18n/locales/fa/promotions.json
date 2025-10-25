@@ -1,0 +1,158 @@
+{
+  "titles": {
+    "main": "Promotions & Pricing",
+    "activePromotions": "Active Promotions",
+    "analytics": "Analytics",
+    "defaultPricing": "Default Pricing",
+    "topPerforming": "Top Performing Promotions",
+    "overallStats": "Overall Stats",
+    "deletePromotion": "Delete Promotion",
+    "createPromotion": "Create New Promotion",
+    "editPromotion": "Edit Promotion",
+    "viewPromotion": "View Promotion",
+    "defaultPriceConfig": "Default Price Configuration",
+    "applyMarkup": "Apply Markup",
+    "storeWideMarkup": "Store-wide Default Markup"
+  },
+  "descriptions": {
+    "noStoreSelected": "No Store Selected",
+    "selectStoreForPromotions": "Please select a store to manage promotions and pricing",
+    "selectStoreForPricing": "Please select a store to manage pricing",
+    "managingFor": "Managing promotions and pricing for",
+    "pricingInstructions": "Set markup percentages for products by category. The markup is applied to the unit cost to calculate the retail price. More specific settings override general ones (e.g., sub-category overrides category).",
+    "defaultMarkupInfo": "This default markup will be used when calculating prices for new products or when no specific category markup is set."
+  },
+  "table": {
+    "promotion": "Promotion",
+    "code": "Code",
+    "discount": "Discount",
+    "usage": "Usage",
+    "duration": "Duration",
+    "status": "Status",
+    "actions": "Actions",
+    "min": "Min",
+    "perCustomer": "per customer",
+    "to": "to",
+    "uses": "uses",
+    "revenue": "revenue"
+  },
+  "status": {
+    "inactive": "Inactive",
+    "scheduled": "Scheduled",
+    "expired": "Expired",
+    "active": "Active"
+  },
+  "stats": {
+    "totalUses": "Total Uses",
+    "totalDiscounts": "Total Discounts",
+    "totalRevenue": "Total Revenue",
+    "avgOrderValue": "Avg Order Value"
+  },
+  "actions": {
+    "createNew": "Create New Promotion",
+    "edit": "Edit promotion",
+    "delete": "Delete promotion",
+    "cancel": "Cancel",
+    "back": "Back",
+    "next": "Next",
+    "update": "Update",
+    "create": "Create",
+    "applyMarkup": "Apply Markup",
+    "resetOverrides": "Reset Overrides",
+    "saveDefault": "Save Default",
+    "quickSetMarkup": "Quick Set Markup"
+  },
+  "search": {
+    "placeholder": "Search promotions by name or code...",
+    "categories": "Search categories..."
+  },
+  "steps": {
+    "basicInfo": {
+      "name": "Basic Info",
+      "description": "Name and description"
+    },
+    "discount": {
+      "name": "Discount",
+      "description": "Type and value"
+    },
+    "scope": {
+      "name": "Scope",
+      "description": "Where and when"
+    },
+    "settings": {
+      "name": "Settings",
+      "description": "Usage limits"
+    },
+    "review": {
+      "name": "Review",
+      "description": "Confirm details"
+    }
+  },
+  "pricing": {
+    "enableDefault": "Enable default markup",
+    "default": "Default",
+    "markupPercentage": "Markup Percentage",
+    "retailPriceFormula": "Retail Price = Cost × (1 + {markup}%)",
+    "exampleCalculation": "Example Calculation:",
+    "currentCost": "Current cost",
+    "currentRetail": "Current retail",
+    "newPricing": "New pricing with {markup}% markup:",
+    "newRetailPrice": "New retail price",
+    "profitMargin": "Profit margin",
+    "priceChange": "Price change",
+    "ifCost": "If cost",
+    "retailPrice": "Retail price",
+    "allProducts": "All Products",
+    "storeWideDefault": "Store-wide default",
+    "products": "products",
+    "overrides": "overrides",
+    "avg": "Avg",
+    "productsInCategory": "Products in this category:",
+    "sku": "SKU",
+    "stock": "Stock",
+    "brand": "Brand",
+    "cost": "Cost",
+    "applyingTo": "Applying to:",
+    "updating": "Updating:",
+    "allProductsStoreWide": "All Products (Store-wide)"
+  },
+  "confirm": {
+    "deletePromotion": "Are you sure you want to delete this promotion? This action cannot be undone.",
+    "applyAllProducts": "This will update the markup for ALL products in the store to {markup}%. Are you sure?",
+    "resetOverrides": "This will remove all price overrides for {scope} and use the calculated markup. Are you sure?"
+  },
+  "warnings": {
+    "storeWideUpdate": "This will update pricing for all products in the store.",
+    "singleProductNote": "Only this specific product will be updated."
+  },
+  "messages": {
+    "codeCopied": "Code copied!",
+    "loading": {
+      "promotions": "در حال بارگذاری تبلیغات...",
+      "categories": "در حال بارگذاری دسته‌بندی‌ها...",
+      "products": "در حال بارگذاری محصولات..."
+    },
+    "noProducts": "هیچ محصولی یافت نشد",
+    "saving": "Saving...",
+    "updating": "Updating Prices...",
+    "updatedSuccessfully": "Updated Successfully!",
+    "resetting": "Resetting..."
+  },
+  "success": {
+    "created": "Promotion created successfully!",
+    "updated": "Promotion updated successfully!",
+    "deleted": "Promotion deleted successfully!",
+    "markupUpdated": "Default markup settings updated!",
+    "priceUpdated": "Successfully updated {count} product!",
+    "priceUpdatedPlural": "Successfully updated {count} products!",
+    "overridesCleared": "Price overrides cleared successfully"
+  },
+  "errors": {
+    "createFailed": "Failed to create promotion",
+    "updateFailed": "Failed to update promotion",
+    "deleteFailed": "Failed to delete promotion",
+    "settingsUpdateFailed": "Failed to update settings",
+    "pricingUpdateFailed": "Failed to update pricing",
+    "resetFailed": "Failed to reset price overrides"
+  }
+}

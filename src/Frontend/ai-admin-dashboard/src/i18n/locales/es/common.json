@@ -1,0 +1,228 @@
+{
+  "buttons": {
+    "send": "Enviar",
+    "close": "Cerrar",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "create": "Crear",
+    "update": "Actualizar",
+    "confirm": "Confirmar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "submit": "Enviar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "export": "Exportar",
+    "import": "Importar",
+    "refresh": "Actualizar",
+    "settings": "Configuración",
+    "logout": "Cerrar sesión",
+    "change": "Cambiar"
+  },
+  "labels": {
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "username": "Nombre de usuario",
+    "name": "Nombre",
+    "phone": "Teléfono",
+    "address": "Dirección",
+    "city": "Ciudad",
+    "province": "Provincia",
+    "postalCode": "Código postal",
+    "country": "País",
+    "status": "Estado",
+    "actions": "Acciones",
+    "description": "Descripción",
+    "notes": "Notas",
+    "date": "Fecha",
+    "time": "Hora",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "tax": "Impuesto",
+    "quantity": "Cantidad",
+    "price": "Precio",
+    "language": "Idioma"
+  },
+  "placeholders": {
+    "enterEmail": "Ingresa tu correo electrónico",
+    "enterPassword": "Ingresa tu contraseña",
+    "search": "Buscar...",
+    "selectOption": "Selecciona una opción",
+    "typeMessage": "Escribe tu mensaje...",
+    "enterName": "Ingresa el nombre",
+    "enterPhone": "Ingresa el número de teléfono"
+  },
+  "messages": {
+    "loading": "Cargando...",
+    "saving": "Guardando...",
+    "success": "¡Éxito!",
+    "error": "Ocurrió un error",
+    "noData": "No hay datos disponibles",
+    "confirm": "¿Estás seguro?",
+    "unsavedChanges": "Tienes cambios sin guardar"
+  },
+  "errors": {
+    "required": "Este campo es obligatorio",
+    "invalidEmail": "Correo electrónico inválido",
+    "invalidPhone": "Número de teléfono inválido",
+    "networkError": "Error de red. Por favor, intenta de nuevo.",
+    "serverError": "Error del servidor. Por favor, intenta más tarde.",
+    "unauthorized": "Acceso no autorizado",
+    "notFound": "No encontrado",
+    "sessionExpired": "Tu sesión ha expirado. Por favor, inicia sesión de nuevo.",
+    "validation": {
+      "selectStore": "Por favor, selecciona una tienda",
+      "selectSupplier": "Por favor, selecciona un proveedor",
+      "addAtLeastOneItem": "Por favor, agrega al menos un artículo",
+      "fillRequiredFields": "Por favor, completa todos los campos obligatorios para cada artículo",
+      "enterLicenseNumber": "Por favor, ingresa un número de licencia",
+      "fillAllRequiredFields": "Por favor, completa todos los campos obligatorios: {{fields}}",
+      "invalidJson": "No se puede guardar JSON inválido: {{message}}",
+      "invalidCode": "Código inválido",
+      "invalidVerificationCode": "Código de verificación inválido"
+    },
+    "operations": {
+      "saveFailed": "Error al guardar la configuración",
+      "validationFailed": "Error de validación",
+      "fetchFailed": "Error al obtener {{resource}}",
+      "createFailed": "Error al crear {{resource}}",
+      "updateFailed": "Error al actualizar {{resource}}",
+      "deleteFailed": "Error al eliminar {{resource}}",
+      "searchFailed": "Error al buscar {{resource}}",
+      "loadFailed": "Error al cargar {{resource}}. Por favor, actualiza la página.",
+      "sendFailed": "Error al enviar {{resource}}",
+      "generateFailed": "Error al generar {{resource}}",
+      "verifyFailed": "Error al verificar {{resource}}",
+      "processFailed": "Error al procesar {{action}}. Por favor, intenta de nuevo.",
+      "testConnectionFailed": "Error al probar la conexión. Por favor, verifica tu red."
+    }
+  },
+  "common": {
+    "yes": "Sí",
+    "no": "No",
+    "or": "o",
+    "and": "y",
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "week": "Semana",
+    "month": "Mes",
+    "year": "Año",
+    "all": "Todos",
+    "none": "Ninguno",
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "pending": "Pendiente",
+    "completed": "Completado",
+    "failed": "Fallido",
+    "notSpecified": "No especificado",
+    "unknown": "Desconocido",
+    "na": "N/A"
+  },
+  "toasts": {
+    "password": {
+      "changeSuccess": "¡Contraseña cambiada exitosamente! Por favor, inicia sesión de nuevo.",
+      "changeFailed": "Error al cambiar la contraseña. Por favor, intenta de nuevo."
+    },
+    "broadcast": {
+      "createSuccess": "¡Difusión creada exitosamente!",
+      "createFailed": "Error al crear la difusión"
+    },
+    "template": {
+      "fetchFailed": "Error al obtener las plantillas",
+      "createSuccess": "Plantilla creada exitosamente",
+      "createFailed": "Error al crear la plantilla",
+      "updateSuccess": "Plantilla actualizada exitosamente",
+      "updateFailed": "Error al actualizar la plantilla",
+      "deleteSuccess": "Plantilla eliminada exitosamente",
+      "deleteFailed": "Error al eliminar la plantilla"
+    },
+    "model": {
+      "fetchFailed": "Error al obtener los modelos",
+      "loadFailed": "Error al cargar el modelo",
+      "unloadSuccess": "Modelo descargado exitosamente",
+      "unloadFailed": "Error al descargar el modelo",
+      "updateFailed": "Error al actualizar el modelo"
+    },
+    "config": {
+      "fetchFailed": "Error al obtener la configuración",
+      "updateSuccess": "Configuración actualizada exitosamente",
+      "updateFailed": "Error al guardar la configuración"
+    },
+    "agent": {
+      "fetchFailed": "Error al obtener los agentes"
+    },
+    "personality": {
+      "fetchFailed": "Error al obtener las personalidades"
+    },
+    "router": {
+      "statsFetchFailed": "Error al obtener las estadísticas del enrutador",
+      "toggleFailed": "Error al cambiar el modo de inferencia"
+    }
+  },
+  "confirmations": {
+    "deleteUser": "¿Estás seguro de que quieres eliminar al usuario {{email}}?",
+    "deleteUserPermanent": "¿Estás seguro de que quieres eliminar este usuario? Esta acción no se puede deshacer.",
+    "deleteTerminal": "¿Estás seguro de que quieres eliminar esta terminal?",
+    "passwordResetMethod": "Haz clic en Aceptar para enviar un enlace de restablecimiento de contraseña por correo electrónico\nHaz clic en Cancelar para generar y mostrar una contraseña temporal"
+  },
+  "modals": {
+    "changePassword": {
+      "title": "Cambiar contraseña",
+      "currentPassword": "Contraseña actual",
+      "newPassword": "Nueva contraseña",
+      "confirmPassword": "Confirmar nueva contraseña",
+      "placeholders": {
+        "currentPassword": "Ingresa la contraseña actual",
+        "newPassword": "Ingresa la nueva contraseña",
+        "confirmPassword": "Confirma la nueva contraseña"
+      },
+      "requirements": {
+        "title": "La contraseña debe contener:",
+        "minLength": "Al menos 8 caracteres",
+        "uppercase": "Una letra mayúscula",
+        "lowercase": "Una letra minúscula",
+        "number": "Un número"
+      },
+      "validation": {
+        "currentRequired": "La contraseña actual es obligatoria",
+        "newRequired": "La nueva contraseña es obligatoria",
+        "notMeetRequirements": "La contraseña no cumple con los requisitos",
+        "confirmRequired": "Por favor, confirma tu nueva contraseña",
+        "notMatch": "Las contraseñas no coinciden",
+        "mustBeDifferent": "La nueva contraseña debe ser diferente de la contraseña actual",
+        "incorrectCurrent": "La contraseña actual es incorrecta"
+      },
+      "securityNotice": "Después de cambiar tu contraseña, se cerrará tu sesión y deberás iniciar sesión nuevamente con tus nuevas credenciales.",
+      "changing": "Cambiando..."
+    }
+  },
+  "navigation": {
+    "dashboard": "Panel de Control",
+    "apps": "Aplicaciones",
+    "organization": "Organización",
+    "tenants": "Inquilinos",
+    "products": "Productos",
+    "inventory": "Inventario",
+    "accessories": "Accesorios",
+    "orders": "Pedidos",
+    "customers": "Clientes",
+    "purchaseOrders": "Órdenes de Compra",
+    "promotions": "Promociones",
+    "recommendations": "Recomendaciones",
+    "communications": "Comunicaciones",
+    "deliveries": "Entregas",
+    "aiConfiguration": "Configuración de IA",
+    "provincialCatalog": "Catálogo Provincial",
+    "database": "Base de Datos",
+    "systemLogs": "Registros del Sistema"
+  },
+  "roles": {
+    "superAdmin": "Super Administrador",
+    "tenantAdmin": "Administrador de Inquilino",
+    "storeManager": "Gerente de Tienda",
+    "staff": "Personal",
+    "user": "Usuario"
+  }
+}

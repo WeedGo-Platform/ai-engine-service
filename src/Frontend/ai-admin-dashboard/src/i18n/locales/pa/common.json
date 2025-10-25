@@ -1,0 +1,201 @@
+{
+  "buttons": {
+    "send": "ਭੇਜੋ",
+    "close": "ਬੰਦ ਕਰੋ",
+    "cancel": "ਰੱਦ ਕਰੋ",
+    "save": "ਸੁਰੱਖਿਅਤ ਕਰੋ",
+    "delete": "ਮਿਟਾਓ",
+    "edit": "ਸੋਧੋ",
+    "create": "ਬਣਾਓ",
+    "update": "ਅੱਪਡੇਟ ਕਰੋ",
+    "confirm": "ਪੁਸ਼ਟੀ ਕਰੋ",
+    "back": "ਪਿੱਛੇ",
+    "next": "ਅੱਗੇ",
+    "submit": "ਜਮ੍ਹਾਂ ਕਰੋ",
+    "search": "ਖੋਜੋ",
+    "filter": "ਫਿਲਟਰ",
+    "export": "ਨਿਰਯਾਤ",
+    "import": "ਆਯਾਤ",
+    "refresh": "ਤਾਜ਼ਾ ਕਰੋ",
+    "settings": "ਸੈਟਿੰਗਾਂ",
+    "logout": "ਲਾਗਆਉਟ",
+    "change": "ਬਦਲੋ"
+  },
+  "labels": {
+    "email": "ਈਮੇਲ ਪਤਾ",
+    "password": "ਪਾਸਵਰਡ",
+    "username": "ਉਪਭੋਗਤਾ ਨਾਮ",
+    "name": "ਨਾਮ",
+    "phone": "ਫ਼ੋਨ",
+    "address": "ਪਤਾ",
+    "city": "ਸ਼ਹਿਰ",
+    "province": "ਸੂਬਾ",
+    "postalCode": "ਡਾਕ ਕੋਡ",
+    "country": "ਦੇਸ਼",
+    "status": "ਸਥਿਤੀ",
+    "actions": "ਕਾਰਵਾਈਆਂ",
+    "description": "ਵੇਰਵਾ",
+    "notes": "ਨੋਟਸ",
+    "date": "ਤਾਰੀਖ",
+    "time": "ਸਮਾਂ",
+    "total": "ਕੁੱਲ",
+    "subtotal": "ਉਪ-ਕੁੱਲ",
+    "tax": "ਟੈਕਸ",
+    "quantity": "ਮਾਤਰਾ",
+    "price": "ਕੀਮਤ",
+    "language": "ਭਾਸ਼ਾ"
+  },
+  "placeholders": {
+    "enterEmail": "ਆਪਣਾ ਈਮੇਲ ਦਰਜ ਕਰੋ",
+    "enterPassword": "ਆਪਣਾ ਪਾਸਵਰਡ ਦਰਜ ਕਰੋ",
+    "search": "ਖੋਜੋ...",
+    "selectOption": "ਇੱਕ ਵਿਕਲਪ ਚੁਣੋ",
+    "typeMessage": "ਆਪਣਾ ਸੁਨੇਹਾ ਲਿਖੋ...",
+    "enterName": "ਨਾਮ ਦਰਜ ਕਰੋ",
+    "enterPhone": "ਫ਼ੋਨ ਨੰਬਰ ਦਰਜ ਕਰੋ"
+  },
+  "messages": {
+    "loading": "ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...",
+    "saving": "ਸੁਰੱਖਿਅਤ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...",
+    "success": "ਸਫਲਤਾ!",
+    "error": "ਇੱਕ ਗਲਤੀ ਆਈ",
+    "noData": "ਕੋਈ ਡੇਟਾ ਉਪਲਬਧ ਨਹੀਂ",
+    "confirm": "ਕੀ ਤੁਸੀਂ ਯਕੀਨੀ ਹੋ?",
+    "unsavedChanges": "ਤੁਹਾਡੇ ਕੋਲ ਅਣ-ਸੁਰੱਖਿਅਤ ਤਬਦੀਲੀਆਂ ਹਨ"
+  },
+  "toasts": {
+    "password": {
+      "changeSuccess": "ਪਾਸਵਰਡ ਸਫਲਤਾਪੂਰਵਕ ਬਦਲਿਆ ਗਿਆ! ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਲਾਗਇਨ ਕਰੋ।",
+      "changeFailed": "ਪਾਸਵਰਡ ਬਦਲਣ ਵਿੱਚ ਅਸਫਲ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।"
+    },
+    "broadcast": {
+      "createSuccess": "ਪ੍ਰਸਾਰਣ ਸਫਲਤਾਪੂਰਵਕ ਬਣਾਇਆ ਗਿਆ!",
+      "createFailed": "ਪ੍ਰਸਾਰਣ ਬਣਾਉਣ ਵਿੱਚ ਅਸਫਲ"
+    },
+    "template": {
+      "fetchFailed": "ਟੈਂਪਲੇਟ ਪ੍ਰਾਪਤ ਕਰਨ ਵਿੱਚ ਅਸਫਲ",
+      "createSuccess": "ਟੈਂਪਲੇਟ ਸਫਲਤਾਪੂਰਵਕ ਬਣਾਇਆ ਗਿਆ",
+      "createFailed": "ਟੈਂਪਲੇਟ ਬਣਾਉਣ ਵਿੱਚ ਅਸਫਲ",
+      "updateSuccess": "ਟੈਂਪਲੇਟ ਸਫਲਤਾਪੂਰਵਕ ਅੱਪਡੇਟ ਕੀਤਾ ਗਿਆ",
+      "updateFailed": "ਟੈਂਪਲੇਟ ਅੱਪਡੇਟ ਕਰਨ ਵਿੱਚ ਅਸਫਲ",
+      "deleteSuccess": "ਟੈਂਪਲੇਟ ਸਫਲਤਾਪੂਰਵਕ ਮਿਟਾਇਆ ਗਿਆ",
+      "deleteFailed": "ਟੈਂਪਲੇਟ ਮਿਟਾਉਣ ਵਿੱਚ ਅਸਫਲ"
+    },
+    "model": {
+      "fetchFailed": "ਮਾਡਲ ਪ੍ਰਾਪਤ ਕਰਨ ਵਿੱਚ ਅਸਫਲ",
+      "loadFailed": "ਮਾਡਲ ਲੋਡ ਕਰਨ ਵਿੱਚ ਅਸਫਲ",
+      "unloadSuccess": "ਮਾਡਲ ਸਫਲਤਾਪੂਰਵਕ ਅਨਲੋਡ ਕੀਤਾ ਗਿਆ",
+      "unloadFailed": "ਮਾਡਲ ਅਨਲੋਡ ਕਰਨ ਵਿੱਚ ਅਸਫਲ",
+      "updateFailed": "ਮਾਡਲ ਅੱਪਡੇਟ ਕਰਨ ਵਿੱਚ ਅਸਫਲ"
+    },
+    "config": {
+      "fetchFailed": "ਸੰਰਚਨਾ ਪ੍ਰਾਪਤ ਕਰਨ ਵਿੱਚ ਅਸਫਲ",
+      "updateSuccess": "ਸੰਰਚਨਾ ਸਫਲਤਾਪੂਰਵਕ ਅੱਪਡੇਟ ਕੀਤੀ ਗਈ",
+      "updateFailed": "ਸੰਰਚਨਾ ਸੁਰੱਖਿਅਤ ਕਰਨ ਵਿੱਚ ਅਸਫਲ"
+    },
+    "agent": {
+      "fetchFailed": "ਏਜੰਟ ਪ੍ਰਾਪਤ ਕਰਨ ਵਿੱਚ ਅਸਫਲ"
+    },
+    "personality": {
+      "fetchFailed": "ਸ਼ਖਸੀਅਤਾਂ ਪ੍ਰਾਪਤ ਕਰਨ ਵਿੱਚ ਅਸਫਲ"
+    },
+    "router": {
+      "statsFetchFailed": "ਰਾਊਟਰ ਅੰਕੜੇ ਪ੍ਰਾਪਤ ਕਰਨ ਵਿੱਚ ਅਸਫਲ",
+      "toggleFailed": "ਇਨਫਰੰਸ ਮੋਡ ਟੌਗਲ ਕਰਨ ਵਿੱਚ ਅਸਫਲ"
+    }
+  },
+  "errors": {
+    "required": "ਇਹ ਖੇਤਰ ਲੋੜੀਂਦਾ ਹੈ",
+    "invalidEmail": "ਅਵੈਧ ਈਮੇਲ ਪਤਾ",
+    "invalidPhone": "ਅਵੈਧ ਫ਼ੋਨ ਨੰਬਰ",
+    "networkError": "ਨੈੱਟਵਰਕ ਗਲਤੀ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+    "serverError": "ਸਰਵਰ ਗਲਤੀ। ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+    "unauthorized": "ਅਣਅਧਿਕਾਰਤ ਪਹੁੰਚ",
+    "notFound": "ਨਹੀਂ ਮਿਲਿਆ",
+    "sessionExpired": "ਤੁਹਾਡਾ ਸੈਸ਼ਨ ਸਮਾਪਤ ਹੋ ਗਿਆ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਲਾਗਇਨ ਕਰੋ।",
+    "validation": {
+      "selectStore": "ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਸਟੋਰ ਚੁਣੋ",
+      "selectSupplier": "ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਸਪਲਾਇਰ ਚੁਣੋ",
+      "addAtLeastOneItem": "ਕਿਰਪਾ ਕਰਕੇ ਘੱਟੋ-ਘੱਟ ਇੱਕ ਆਈਟਮ ਸ਼ਾਮਲ ਕਰੋ",
+      "fillRequiredFields": "ਕਿਰਪਾ ਕਰਕੇ ਹਰੇਕ ਆਈਟਮ ਲਈ ਸਾਰੇ ਲੋੜੀਂਦੇ ਖੇਤਰ ਭਰੋ",
+      "enterLicenseNumber": "ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਲਾਇਸੰਸ ਨੰਬਰ ਦਰਜ ਕਰੋ",
+      "fillAllRequiredFields": "ਕਿਰਪਾ ਕਰਕੇ ਸਾਰੇ ਲੋੜੀਂਦੇ ਖੇਤਰ ਭਰੋ: {{fields}}",
+      "invalidJson": "ਅਵੈਧ JSON ਸੁਰੱਖਿਅਤ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ: {{message}}",
+      "invalidCode": "ਅਵੈਧ ਕੋਡ",
+      "invalidVerificationCode": "ਅਵੈਧ ਤਸਦੀਕ ਕੋਡ"
+    },
+    "operations": {
+      "saveFailed": "ਸੈਟਿੰਗਾਂ ਸੁਰੱਖਿਅਤ ਕਰਨ ਵਿੱਚ ਅਸਫਲ",
+      "validationFailed": "ਤਸਦੀਕ ਅਸਫਲ",
+      "fetchFailed": "{{resource}} ਪ੍ਰਾਪਤ ਕਰਨ ਵਿੱਚ ਅਸਫਲ",
+      "createFailed": "{{resource}} ਬਣਾਉਣ ਵਿੱਚ ਅਸਫਲ",
+      "updateFailed": "{{resource}} ਅੱਪਡੇਟ ਕਰਨ ਵਿੱਚ ਅਸਫਲ",
+      "deleteFailed": "{{resource}} ਮਿਟਾਉਣ ਵਿੱਚ ਅਸਫਲ",
+      "searchFailed": "{{resource}} ਖੋਜਣ ਵਿੱਚ ਅਸਫਲ",
+      "loadFailed": "{{resource}} ਲੋਡ ਕਰਨ ਵਿੱਚ ਅਸਫਲ। ਕਿਰਪਾ ਕਰਕੇ ਪੰਨਾ ਤਾਜ਼ਾ ਕਰੋ।",
+      "sendFailed": "{{resource}} ਭੇਜਣ ਵਿੱਚ ਅਸਫਲ",
+      "generateFailed": "{{resource}} ਜਨਰੇਟ ਕਰਨ ਵਿੱਚ ਅਸਫਲ",
+      "verifyFailed": "{{resource}} ਤਸਦੀਕ ਕਰਨ ਵਿੱਚ ਅਸਫਲ",
+      "processFailed": "{{action}} ਪ੍ਰਕਿਰਿਆ ਕਰਨ ਵਿੱਚ ਅਸਫਲ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+      "testConnectionFailed": "ਕੁਨੈਕਸ਼ਨ ਟੈਸਟ ਕਰਨ ਵਿੱਚ ਅਸਫਲ। ਕਿਰਪਾ ਕਰਕੇ ਆਪਣਾ ਨੈੱਟਵਰਕ ਜਾਂਚੋ।"
+    }
+  },
+  "common": {
+    "yes": "ਹਾਂ",
+    "no": "ਨਹੀਂ",
+    "or": "ਜਾਂ",
+    "and": "ਅਤੇ",
+    "today": "ਅੱਜ",
+    "yesterday": "ਕੱਲ੍ਹ",
+    "week": "ਹਫ਼ਤਾ",
+    "month": "ਮਹੀਨਾ",
+    "year": "ਸਾਲ",
+    "all": "ਸਾਰੇ",
+    "none": "ਕੋਈ ਨਹੀਂ",
+    "active": "ਸਰਗਰਮ",
+    "inactive": "ਨਿਸ਼ਕਿਰਿਅ",
+    "pending": "ਲੰਬਿਤ",
+    "completed": "ਪੂਰਾ ਹੋਇਆ",
+    "failed": "ਅਸਫਲ",
+    "notSpecified": "ਨਿਰਧਾਰਿਤ ਨਹੀਂ",
+    "unknown": "ਅਣਜਾਣ",
+    "na": "ਲਾਗੂ ਨਹੀਂ"
+  },
+  "confirmations": {
+    "deleteUser": "ਕੀ ਤੁਸੀਂ ਯਕੀਨੀ ਤੌਰ 'ਤੇ ਉਪਭੋਗਤਾ {{email}} ਨੂੰ ਮਿਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?",
+    "deleteUserPermanent": "ਕੀ ਤੁਸੀਂ ਯਕੀਨੀ ਤੌਰ 'ਤੇ ਇਸ ਉਪਭੋਗਤਾ ਨੂੰ ਮਿਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ? ਇਸ ਕਾਰਵਾਈ ਨੂੰ ਵਾਪਸ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ।",
+    "deleteTerminal": "ਕੀ ਤੁਸੀਂ ਯਕੀਨੀ ਤੌਰ 'ਤੇ ਇਸ ਟਰਮੀਨਲ ਨੂੰ ਮਿਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?",
+    "passwordResetMethod": "ਈਮੇਲ ਰਾਹੀਂ ਪਾਸਵਰਡ ਰੀਸੈੱਟ ਲਿੰਕ ਭੇਜਣ ਲਈ ਠੀਕ ਤੇ ਕਲਿੱਕ ਕਰੋ\nਅਸਥਾਈ ਪਾਸਵਰਡ ਜਨਰੇਟ ਅਤੇ ਪ੍ਰਦਰਸ਼ਿਤ ਕਰਨ ਲਈ ਰੱਦ ਕਰੋ ਤੇ ਕਲਿੱਕ ਕਰੋ"
+  },
+  "modals": {
+    "changePassword": {
+      "title": "ਪਾਸਵਰਡ ਬਦਲੋ",
+      "currentPassword": "ਮੌਜੂਦਾ ਪਾਸਵਰਡ",
+      "newPassword": "ਨਵਾਂ ਪਾਸਵਰਡ",
+      "confirmPassword": "ਨਵੇਂ ਪਾਸਵਰਡ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ",
+      "placeholders": {
+        "currentPassword": "ਮੌਜੂਦਾ ਪਾਸਵਰਡ ਦਰਜ ਕਰੋ",
+        "newPassword": "ਨਵਾਂ ਪਾਸਵਰਡ ਦਰਜ ਕਰੋ",
+        "confirmPassword": "ਨਵੇਂ ਪਾਸਵਰਡ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ"
+      },
+      "requirements": {
+        "title": "ਪਾਸਵਰਡ ਵਿੱਚ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ:",
+        "minLength": "ਘੱਟੋ-ਘੱਟ 8 ਅੱਖਰ",
+        "uppercase": "ਇੱਕ ਵੱਡਾ ਅੱਖਰ",
+        "lowercase": "ਇੱਕ ਛੋਟਾ ਅੱਖਰ",
+        "number": "ਇੱਕ ਨੰਬਰ"
+      },
+      "validation": {
+        "currentRequired": "ਮੌਜੂਦਾ ਪਾਸਵਰਡ ਲੋੜੀਂਦਾ ਹੈ",
+        "newRequired": "ਨਵਾਂ ਪਾਸਵਰਡ ਲੋੜੀਂਦਾ ਹੈ",
+        "notMeetRequirements": "ਪਾਸਵਰਡ ਲੋੜਾਂ ਨੂੰ ਪੂਰਾ ਨਹੀਂ ਕਰਦਾ",
+        "confirmRequired": "ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਨਵੇਂ ਪਾਸਵਰਡ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ",
+        "notMatch": "ਪਾਸਵਰਡ ਮੇਲ ਨਹੀਂ ਖਾਂਦੇ",
+        "mustBeDifferent": "ਨਵਾਂ ਪਾਸਵਰਡ ਮੌਜੂਦਾ ਪਾਸਵਰਡ ਤੋਂ ਵੱਖਰਾ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ",
+        "incorrectCurrent": "ਮੌਜੂਦਾ ਪਾਸਵਰਡ ਗਲਤ ਹੈ"
+      },
+      "securityNotice": "ਆਪਣਾ ਪਾਸਵਰਡ ਬਦਲਣ ਤੋਂ ਬਾਅਦ, ਤੁਹਾਨੂੰ ਲਾਗਆਉਟ ਕੀਤਾ ਜਾਵੇਗਾ ਅਤੇ ਆਪਣੇ ਨਵੇਂ ਪ੍ਰਮਾਣ ਪੱਤਰਾਂ ਨਾਲ ਦੁਬਾਰਾ ਲਾਗਇਨ ਕਰਨ ਦੀ ਲੋੜ ਹੋਵੇਗੀ।",
+      "changing": "ਬਦਲਿਆ ਜਾ ਰਿਹਾ ਹੈ..."
+    }
+  }
+}

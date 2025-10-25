@@ -1,0 +1,158 @@
+{
+  "titles": {
+    "main": "Promotions et Tarification",
+    "activePromotions": "Promotions Actives",
+    "analytics": "Analytique",
+    "defaultPricing": "Tarification par Défaut",
+    "topPerforming": "Promotions les Plus Performantes",
+    "overallStats": "Statistiques Globales",
+    "deletePromotion": "Supprimer la Promotion",
+    "createPromotion": "Créer une Nouvelle Promotion",
+    "editPromotion": "Modifier la Promotion",
+    "viewPromotion": "Voir la Promotion",
+    "defaultPriceConfig": "Configuration de Prix par Défaut",
+    "applyMarkup": "Appliquer la Marge",
+    "storeWideMarkup": "Marge par Défaut pour Tout le Magasin"
+  },
+  "descriptions": {
+    "noStoreSelected": "Aucun Magasin Sélectionné",
+    "selectStoreForPromotions": "Veuillez sélectionner un magasin pour gérer les promotions et la tarification",
+    "selectStoreForPricing": "Veuillez sélectionner un magasin pour gérer la tarification",
+    "managingFor": "Gestion des promotions et de la tarification pour",
+    "pricingInstructions": "Définissez les pourcentages de marge pour les produits par catégorie. La marge est appliquée au coût unitaire pour calculer le prix de détail. Les paramètres plus spécifiques remplacent les paramètres généraux (par exemple, la sous-catégorie remplace la catégorie).",
+    "defaultMarkupInfo": "Cette marge par défaut sera utilisée lors du calcul des prix pour les nouveaux produits ou lorsqu'aucune marge de catégorie spécifique n'est définie."
+  },
+  "table": {
+    "promotion": "Promotion",
+    "code": "Code",
+    "discount": "Réduction",
+    "usage": "Utilisation",
+    "duration": "Durée",
+    "status": "Statut",
+    "actions": "Actions",
+    "min": "Min",
+    "perCustomer": "par client",
+    "to": "à",
+    "uses": "utilisations",
+    "revenue": "revenus"
+  },
+  "status": {
+    "inactive": "Inactif",
+    "scheduled": "Programmé",
+    "expired": "Expiré",
+    "active": "Actif"
+  },
+  "stats": {
+    "totalUses": "Utilisations Totales",
+    "totalDiscounts": "Réductions Totales",
+    "totalRevenue": "Revenu Total",
+    "avgOrderValue": "Valeur Moyenne de Commande"
+  },
+  "actions": {
+    "createNew": "Créer une Nouvelle Promotion",
+    "edit": "Modifier la promotion",
+    "delete": "Supprimer la promotion",
+    "cancel": "Annuler",
+    "back": "Retour",
+    "next": "Suivant",
+    "update": "Mettre à jour",
+    "create": "Créer",
+    "applyMarkup": "Appliquer la Marge",
+    "resetOverrides": "Réinitialiser les Remplacements",
+    "saveDefault": "Enregistrer par Défaut",
+    "quickSetMarkup": "Définir Rapidement la Marge"
+  },
+  "search": {
+    "placeholder": "Rechercher des promotions par nom ou code...",
+    "categories": "Rechercher des catégories..."
+  },
+  "steps": {
+    "basicInfo": {
+      "name": "Informations de Base",
+      "description": "Nom et description"
+    },
+    "discount": {
+      "name": "Réduction",
+      "description": "Type et valeur"
+    },
+    "scope": {
+      "name": "Portée",
+      "description": "Où et quand"
+    },
+    "settings": {
+      "name": "Paramètres",
+      "description": "Limites d'utilisation"
+    },
+    "review": {
+      "name": "Révision",
+      "description": "Confirmer les détails"
+    }
+  },
+  "pricing": {
+    "enableDefault": "Activer la marge par défaut",
+    "default": "Par défaut",
+    "markupPercentage": "Pourcentage de Marge",
+    "retailPriceFormula": "Retail Price = Cost × (1 + {markup}%)",
+    "exampleCalculation": "Exemple de Calcul:",
+    "currentCost": "Coût actuel",
+    "currentRetail": "Détail actuel",
+    "newPricing": "Nouvelle tarification avec {markup}% de marge:",
+    "newRetailPrice": "Nouveau prix de détail",
+    "profitMargin": "Marge bénéficiaire",
+    "priceChange": "Changement de prix",
+    "ifCost": "Si le coût",
+    "retailPrice": "Prix de détail",
+    "allProducts": "Tous les Produits",
+    "storeWideDefault": "Par défaut pour tout le magasin",
+    "products": "produits",
+    "overrides": "remplacements",
+    "avg": "Moy",
+    "productsInCategory": "Produits dans cette catégorie:",
+    "sku": "SKU",
+    "stock": "Stock",
+    "brand": "Marque",
+    "cost": "Coût",
+    "applyingTo": "Application à:",
+    "updating": "Mise à jour:",
+    "allProductsStoreWide": "Tous les Produits (Tout le Magasin)"
+  },
+  "confirm": {
+    "deletePromotion": "Êtes-vous sûr de vouloir supprimer cette promotion? Cette action ne peut pas être annulée.",
+    "applyAllProducts": "Cela mettra à jour la marge pour TOUS les produits du magasin à {markup}%. Êtes-vous sûr?",
+    "resetOverrides": "Cela supprimera tous les remplacements de prix pour {scope} et utilisera la marge calculée. Êtes-vous sûr?"
+  },
+  "warnings": {
+    "storeWideUpdate": "Cela mettra à jour la tarification pour tous les produits du magasin.",
+    "singleProductNote": "Seul ce produit spécifique sera mis à jour."
+  },
+  "messages": {
+    "codeCopied": "Code copié!",
+    "loading": {
+      "promotions": "Chargement des promotions...",
+      "categories": "Chargement des catégories...",
+      "products": "Chargement des produits..."
+    },
+    "noProducts": "Aucun produit trouvé",
+    "saving": "Enregistrement...",
+    "updating": "Mise à Jour des Prix...",
+    "updatedSuccessfully": "Mis à Jour avec Succès!",
+    "resetting": "Réinitialisation..."
+  },
+  "success": {
+    "created": "Promotion créée avec succès!",
+    "updated": "Promotion mise à jour avec succès!",
+    "deleted": "Promotion supprimée avec succès!",
+    "markupUpdated": "Paramètres de marge par défaut mis à jour!",
+    "priceUpdated": "{count} produit mis à jour avec succès!",
+    "priceUpdatedPlural": "{count} produits mis à jour avec succès!",
+    "overridesCleared": "Remplacements de prix effacés avec succès"
+  },
+  "errors": {
+    "createFailed": "Échec de la création de la promotion",
+    "updateFailed": "Échec de la mise à jour de la promotion",
+    "deleteFailed": "Échec de la suppression de la promotion",
+    "settingsUpdateFailed": "Échec de la mise à jour des paramètres",
+    "pricingUpdateFailed": "Échec de la mise à jour de la tarification",
+    "resetFailed": "Échec de la réinitialisation des remplacements de prix"
+  }
+}

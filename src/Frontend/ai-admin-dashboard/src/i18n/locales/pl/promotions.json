@@ -1,0 +1,158 @@
+{
+  "titles": {
+    "main": "Promocje i Ceny",
+    "activePromotions": "Aktywne Promocje",
+    "analytics": "Analityka",
+    "defaultPricing": "Domyślne Ceny",
+    "topPerforming": "Najlepiej Działające Promocje",
+    "overallStats": "Statystyki Ogólne",
+    "deletePromotion": "Usuń Promocję",
+    "createPromotion": "Utwórz Nową Promocję",
+    "editPromotion": "Edytuj Promocję",
+    "viewPromotion": "Wyświetl Promocję",
+    "defaultPriceConfig": "Domyślna Konfiguracja Cen",
+    "applyMarkup": "Zastosuj Marżę",
+    "storeWideMarkup": "Domyślna Marża dla Całego Sklepu"
+  },
+  "descriptions": {
+    "noStoreSelected": "Nie Wybrano Sklepu",
+    "selectStoreForPromotions": "Proszę wybrać sklep do zarządzania promocjami i cenami",
+    "selectStoreForPricing": "Proszę wybrać sklep do zarządzania cenami",
+    "managingFor": "Zarządzanie promocjami i cenami dla",
+    "pricingInstructions": "Ustaw procentowe marże dla produktów według kategorii. Marża jest stosowana do kosztu jednostkowego w celu obliczenia ceny detalicznej. Bardziej szczegółowe ustawienia zastępują ogólne (np. podkategoria zastępuje kategorię).",
+    "defaultMarkupInfo": "Ta domyślna marża będzie używana przy obliczaniu cen dla nowych produktów lub gdy nie ustawiono określonej marży kategorii."
+  },
+  "table": {
+    "promotion": "Promocja",
+    "code": "Kod",
+    "discount": "Rabat",
+    "usage": "Użycie",
+    "duration": "Czas trwania",
+    "status": "Status",
+    "actions": "Działania",
+    "min": "Min",
+    "perCustomer": "na klienta",
+    "to": "do",
+    "uses": "użycia",
+    "revenue": "przychód"
+  },
+  "status": {
+    "inactive": "Nieaktywny",
+    "scheduled": "Zaplanowany",
+    "expired": "Wygasły",
+    "active": "Aktywny"
+  },
+  "stats": {
+    "totalUses": "Całkowite Użycia",
+    "totalDiscounts": "Całkowite Rabaty",
+    "totalRevenue": "Całkowity Przychód",
+    "avgOrderValue": "Średnia Wartość Zamówienia"
+  },
+  "actions": {
+    "createNew": "Utwórz Nową Promocję",
+    "edit": "Edytuj promocję",
+    "delete": "Usuń promocję",
+    "cancel": "Anuluj",
+    "back": "Wstecz",
+    "next": "Dalej",
+    "update": "Aktualizuj",
+    "create": "Utwórz",
+    "applyMarkup": "Zastosuj Marżę",
+    "resetOverrides": "Zresetuj Nadpisania",
+    "saveDefault": "Zapisz jako Domyślne",
+    "quickSetMarkup": "Szybko Ustaw Marżę"
+  },
+  "search": {
+    "placeholder": "Wyszukaj promocje po nazwie lub kodzie...",
+    "categories": "Wyszukaj kategorie..."
+  },
+  "steps": {
+    "basicInfo": {
+      "name": "Podstawowe Informacje",
+      "description": "Nazwa i opis"
+    },
+    "discount": {
+      "name": "Rabat",
+      "description": "Typ i wartość"
+    },
+    "scope": {
+      "name": "Zakres",
+      "description": "Gdzie i kiedy"
+    },
+    "settings": {
+      "name": "Ustawienia",
+      "description": "Limity użycia"
+    },
+    "review": {
+      "name": "Przegląd",
+      "description": "Potwierdź szczegóły"
+    }
+  },
+  "pricing": {
+    "enableDefault": "Włącz domyślną marżę",
+    "default": "Domyślne",
+    "markupPercentage": "Procent Marży",
+    "retailPriceFormula": "Retail Price = Cost × (1 + {markup}%)",
+    "exampleCalculation": "Przykładowe Obliczenie:",
+    "currentCost": "Obecny koszt",
+    "currentRetail": "Obecna cena detaliczna",
+    "newPricing": "Nowa cena z {markup}% marżą:",
+    "newRetailPrice": "Nowa cena detaliczna",
+    "profitMargin": "Marża zysku",
+    "priceChange": "Zmiana ceny",
+    "ifCost": "Jeśli koszt",
+    "retailPrice": "Cena detaliczna",
+    "allProducts": "Wszystkie Produkty",
+    "storeWideDefault": "Domyślne dla całego sklepu",
+    "products": "produkty",
+    "overrides": "nadpisania",
+    "avg": "Śred",
+    "productsInCategory": "Produkty w tej kategorii:",
+    "sku": "SKU",
+    "stock": "Zapas",
+    "brand": "Marka",
+    "cost": "Koszt",
+    "applyingTo": "Stosowanie do:",
+    "updating": "Aktualizowanie:",
+    "allProductsStoreWide": "Wszystkie Produkty (Cały Sklep)"
+  },
+  "confirm": {
+    "deletePromotion": "Czy na pewno chcesz usunąć tę promocję? Tej czynności nie można cofnąć.",
+    "applyAllProducts": "Spowoduje to aktualizację marży dla WSZYSTKICH produktów w sklepie do {markup}%. Czy na pewno?",
+    "resetOverrides": "Spowoduje to usunięcie wszystkich nadpisań cen dla {scope} i użycie obliczonej marży. Czy na pewno?"
+  },
+  "warnings": {
+    "storeWideUpdate": "Spowoduje to aktualizację cen wszystkich produktów w sklepie.",
+    "singleProductNote": "Zostanie zaktualizowany tylko ten konkretny produkt."
+  },
+  "messages": {
+    "codeCopied": "Kod skopiowany!",
+    "loading": {
+      "promotions": "Ładowanie promocji...",
+      "categories": "Ładowanie kategorii...",
+      "products": "Ładowanie produktów..."
+    },
+    "noProducts": "Nie znaleziono produktów",
+    "saving": "Zapisywanie...",
+    "updating": "Aktualizowanie Cen...",
+    "updatedSuccessfully": "Zaktualizowano Pomyślnie!",
+    "resetting": "Resetowanie..."
+  },
+  "success": {
+    "created": "Promocja została utworzona pomyślnie!",
+    "updated": "Promocja została zaktualizowana pomyślnie!",
+    "deleted": "Promocja została usunięta pomyślnie!",
+    "markupUpdated": "Ustawienia domyślnej marży zaktualizowane!",
+    "priceUpdated": "Pomyślnie zaktualizowano {count} produkt!",
+    "priceUpdatedPlural": "Pomyślnie zaktualizowano {count} produktów!",
+    "overridesCleared": "Nadpisania cen zostały pomyślnie usunięte"
+  },
+  "errors": {
+    "createFailed": "Nie udało się utworzyć promocji",
+    "updateFailed": "Nie udało się zaktualizować promocji",
+    "deleteFailed": "Nie udało się usunąć promocji",
+    "settingsUpdateFailed": "Nie udało się zaktualizować ustawień",
+    "pricingUpdateFailed": "Nie udało się zaktualizować cen",
+    "resetFailed": "Nie udało się zresetować nadpisań cen"
+  }
+}
