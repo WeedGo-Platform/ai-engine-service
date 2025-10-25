@@ -410,10 +410,11 @@ setup_logging_with_correlation_id()
 # Add Performance Logging Middleware with correlation ID tracking
 app.add_middleware(PerformanceLoggingMiddleware, log_body=False, slow_request_threshold=1.0)
 
-# Add CORS middleware - allow localhost on any port
+# Add CORS middleware - allow localhost and production URLs
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        # Local development
         "http://localhost:3000",
         "http://localhost:3001",  # Pot Palace template port
         "http://localhost:3002",  # Modern template port
@@ -424,7 +425,12 @@ app.add_middleware(
         "http://localhost:3007",  # Headless template
         "http://localhost:5024",
         "http://localhost:5173",
-        "http://localhost:5174"
+        "http://localhost:5174",
+        # UAT Environment - Vercel deployments
+        "https://weedgo-commerce-nbdrk9nk8-charles-projects-ea31abca.vercel.app",
+        "https://weedgo-admin-2d0ofgy0o-charles-projects-ea31abca.vercel.app",
+        # Vercel preview deployments (*.vercel.app)
+        "https://*.vercel.app"
     ],  # Allow all commerce app ports
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
