@@ -410,28 +410,36 @@ setup_logging_with_correlation_id()
 # Add Performance Logging Middleware with correlation ID tracking
 app.add_middleware(PerformanceLoggingMiddleware, log_body=False, slow_request_threshold=1.0)
 
-# Add CORS middleware - allow localhost and production URLs
+# Add CORS middleware - read allowed origins from environment variable
+# Format: Comma-separated list of origins (e.g., "http://localhost:3000,https://app.vercel.app")
+# Default: localhost ports for local development
+default_cors_origins = [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "http://localhost:3002",
+    "http://localhost:3003",
+    "http://localhost:3004",
+    "http://localhost:3005",
+    "http://localhost:3006",
+    "http://localhost:3007",
+    "http://localhost:5024",
+    "http://localhost:5173",
+    "http://localhost:5174"
+]
+
+cors_origins_str = os.getenv("CORS_ALLOWED_ORIGINS", "")
+if cors_origins_str:
+    # Parse comma-separated origins from environment
+    cors_origins = [origin.strip() for origin in cors_origins_str.split(",") if origin.strip()]
+    logger.info(f"Using CORS origins from environment: {cors_origins}")
+else:
+    # Fall back to defaults for local development
+    cors_origins = default_cors_origins
+    logger.info(f"Using default CORS origins for local development: {cors_origins}")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        # Local development
-        "http://localhost:3000",
-        "http://localhost:3001",  # Pot Palace template port
-        "http://localhost:3002",  # Modern template port
-        "http://localhost:3003",
-        "http://localhost:3004",
-        "http://localhost:3005",
-        "http://localhost:3006",
-        "http://localhost:3007",  # Headless template
-        "http://localhost:5024",
-        "http://localhost:5173",
-        "http://localhost:5174",
-        # UAT Environment - Vercel deployments
-        "https://weedgo-commerce-nbdrk9nk8-charles-projects-ea31abca.vercel.app",
-        "https://weedgo-admin-2d0ofgy0o-charles-projects-ea31abca.vercel.app",
-        # Vercel preview deployments (*.vercel.app)
-        "https://*.vercel.app"
-    ],  # Allow all commerce app ports
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
