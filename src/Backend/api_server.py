@@ -429,8 +429,9 @@ default_cors_origins = [
 
 cors_origins_str = os.getenv("CORS_ALLOWED_ORIGINS", "")
 if cors_origins_str:
-    # Parse comma-separated origins from environment
-    cors_origins = [origin.strip() for origin in cors_origins_str.split(",") if origin.strip()]
+    # Support both comma and semicolon as delimiters (semicolon for Koyeb CLI compatibility)
+    delimiter = ";" if ";" in cors_origins_str else ","
+    cors_origins = [origin.strip() for origin in cors_origins_str.split(delimiter) if origin.strip()]
     logger.info(f"Using CORS origins from environment: {cors_origins}")
 else:
     # Fall back to defaults for local development
