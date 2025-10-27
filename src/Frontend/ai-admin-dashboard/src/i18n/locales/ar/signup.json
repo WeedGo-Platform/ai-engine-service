@@ -20,7 +20,7 @@
     },
     "companyInfo": {
       "brandName": "اسم العلامة التجارية",
-      "brandNamePlaceholder": "مثال: Green Valley Dispensary",
+      "brandNamePlaceholder": "مثال: Pot Palace Cannabis",
       "website": "الموقع الإلكتروني",
       "websitePlaceholder": "www.potpalace.ca أو potpalace.ca",
       "websiteHelp": "عنوان URL لموقعك (يُستخدم لإنشاء رمز العلامة التجارية)",
@@ -29,7 +29,7 @@
       "brandCodePlaceholder": "أدخل الموقع أعلاه للإنشاء",
       "brandCodeHelp": "سيُستخدم في عنوان URL لمتجرك: {{code}}.weedgo.com",
       "legalCompanyName": "الاسم القانوني للشركة",
-      "legalCompanyPlaceholder": "مثال: Green Valley Cannabis Inc.",
+      "legalCompanyPlaceholder": "مثال: Pot Palace Holdings Inc.",
       "businessNumber": "رقم العمل",
       "businessNumberPlaceholder": "123456789",
       "businessNumberHelp": "رقم العمل الكندي (9 أرقام)",

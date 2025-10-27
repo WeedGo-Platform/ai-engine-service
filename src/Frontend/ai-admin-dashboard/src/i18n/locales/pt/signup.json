@@ -20,7 +20,7 @@
     },
     "companyInfo": {
       "brandName": "Nome da marca",
-      "brandNamePlaceholder": "ex., Green Valley Dispensary",
+      "brandNamePlaceholder": "ex., Pot Palace Cannabis",
       "website": "Website",
       "websitePlaceholder": "www.potpalace.ca ou potpalace.ca",
       "websiteHelp": "URL do seu website (usado para gerar o código da marca)",
@@ -29,7 +29,7 @@
       "brandCodePlaceholder": "Digite o website acima para gerar",
       "brandCodeHelp": "Será usado no URL da sua loja: {{code}}.weedgo.com",
       "legalCompanyName": "Nome legal da empresa",
-      "legalCompanyPlaceholder": "ex., Green Valley Cannabis Inc.",
+      "legalCompanyPlaceholder": "ex., Pot Palace Holdings Inc.",
       "businessNumber": "Número da empresa",
       "businessNumberPlaceholder": "123456789",
       "businessNumberHelp": "Número da empresa canadense (9 dígitos)",

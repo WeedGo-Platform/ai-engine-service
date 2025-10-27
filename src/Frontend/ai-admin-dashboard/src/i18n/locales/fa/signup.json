@@ -20,7 +20,7 @@
     },
     "companyInfo": {
       "brandName": "نام برند",
-      "brandNamePlaceholder": "مثال: Green Valley Dispensary",
+      "brandNamePlaceholder": "مثال: Pot Palace Cannabis",
       "website": "وب‌سایت",
       "websitePlaceholder": "www.potpalace.ca یا potpalace.ca",
       "websiteHelp": "آدرس URL وب‌سایت شما (برای تولید کد برند استفاده می‌شود)",
@@ -29,7 +29,7 @@
       "brandCodePlaceholder": "برای تولید، وب‌سایت بالا را وارد کنید",
       "brandCodeHelp": "در آدرس URL فروشگاه شما استفاده خواهد شد: {{code}}.weedgo.com",
       "legalCompanyName": "نام قانونی شرکت",
-      "legalCompanyPlaceholder": "مثال: Green Valley Cannabis Inc.",
+      "legalCompanyPlaceholder": "مثال: Pot Palace Holdings Inc.",
       "businessNumber": "شماره تجاری",
       "businessNumberPlaceholder": "123456789",
       "businessNumberHelp": "شماره تجاری کانادایی (9 رقم)",

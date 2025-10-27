@@ -20,7 +20,7 @@
     },
     "companyInfo": {
       "brandName": "Nume brand",
-      "brandNamePlaceholder": "ex., Green Valley Dispensary",
+      "brandNamePlaceholder": "ex., Pot Palace Cannabis",
       "website": "Site web",
       "websitePlaceholder": "www.potpalace.ca sau potpalace.ca",
       "websiteHelp": "URL-ul site-ului web (utilizat pentru generarea codului de brand)",
@@ -29,7 +29,7 @@
       "brandCodePlaceholder": "Introduceți site-ul de mai sus pentru generare",
       "brandCodeHelp": "Va fi utilizat în URL-ul magazinului: {{code}}.weedgo.com",
       "legalCompanyName": "Nume legal al companiei",
-      "legalCompanyPlaceholder": "ex., Green Valley Cannabis Inc.",
+      "legalCompanyPlaceholder": "ex., Pot Palace Holdings Inc.",
       "businessNumber": "Număr de afaceri",
       "businessNumberPlaceholder": "123456789",
       "businessNumberHelp": "Număr de afaceri canadian (9 cifre)",

@@ -20,7 +20,7 @@
     },
     "companyInfo": {
       "brandName": "品牌名稱",
-      "brandNamePlaceholder": "例如：Green Valley Dispensary",
+      "brandNamePlaceholder": "例如：Pot Palace Cannabis",
       "website": "網站",
       "websitePlaceholder": "www.potpalace.ca 或 potpalace.ca",
       "websiteHelp": "你嘅網站網址（用嚟生成品牌代碼）",
@@ -29,7 +29,7 @@
       "brandCodePlaceholder": "喺上面輸入網站嚟生成",
       "brandCodeHelp": "將會喺你嘅商店網址度用：{{code}}.weedgo.com",
       "legalCompanyName": "法定公司名稱",
-      "legalCompanyPlaceholder": "例如：Green Valley Cannabis Inc.",
+      "legalCompanyPlaceholder": "例如：Pot Palace Holdings Inc.",
       "businessNumber": "商業號碼",
       "businessNumberPlaceholder": "123456789",
       "businessNumberHelp": "加拿大商業號碼（9位數字）",

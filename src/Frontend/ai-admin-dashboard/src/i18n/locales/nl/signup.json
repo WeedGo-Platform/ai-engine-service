@@ -20,7 +20,7 @@
     },
     "companyInfo": {
       "brandName": "Merknaam",
-      "brandNamePlaceholder": "bijv. Green Valley Dispensary",
+      "brandNamePlaceholder": "bijv. Pot Palace Cannabis",
       "website": "Website",
       "websitePlaceholder": "www.potpalace.ca of potpalace.ca",
       "websiteHelp": "Uw website URL (gebruikt om merkcode te genereren)",
@@ -29,7 +29,7 @@
       "brandCodePlaceholder": "Voer hierboven website in om te genereren",
       "brandCodeHelp": "Wordt gebruikt in uw winkel-URL: {{code}}.weedgo.com",
       "legalCompanyName": "Wettelijke bedrijfsnaam",
-      "legalCompanyPlaceholder": "bijv. Green Valley Cannabis Inc.",
+      "legalCompanyPlaceholder": "bijv. Pot Palace Holdings Inc.",
       "businessNumber": "Bedrijfsnummer",
       "businessNumberPlaceholder": "123456789",
       "businessNumberHelp": "Canadees bedrijfsnummer (9 cijfers)",
