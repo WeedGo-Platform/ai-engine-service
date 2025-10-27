@@ -1,0 +1,46 @@
+name: Deploy UAT (Simple)
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Koyeb
+        env:
+          KOYEB_TOKEN: ${{ secrets.KOYEB_TOKEN }}
+          SERVICE_ID: ${{ secrets.KOYEB_SERVICE_ID_UAT }}
+        run: |
+          echo "Deploying backend to Koyeb..."
+          curl -X POST "https://app.koyeb.com/v1/services/${SERVICE_ID}/redeploy" \
+            -H "Authorization: Bearer ${KOYEB_TOKEN}"
+          echo "Backend deployment triggered!"
+
+  build-admin-dashboard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build Admin Dashboard
+        working-directory: src/Frontend/ai-admin-dashboard
+        run: |
+          npm ci
+          cp .env.uat .env.production
+          npm run build
+
+      - name: Deploy to Cloudflare Pages
+        working-directory: src/Frontend/ai-admin-dashboard
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          npx wrangler pages deploy dist --project-name=weedgo-uat-admin
