@@ -9,12 +9,14 @@
     "steps": {
       "company": "Información de la Empresa",
       "contact": "Detalles de Contacto",
+      "ontario": "Ontario Licensing",
       "account": "Configuración de Cuenta",
       "payment": "Suscripción y Pago"
     },
     "stepDescriptions": {
       "company": "Cuéntanos sobre tu negocio y marca",
       "contact": "Proporciona tu información de contacto y dirección",
+      "ontario": "Validate your Ontario cannabis retail licenses (CROL and CRSA)",
       "account": "Crea las credenciales de tu cuenta de administrador",
       "payment": "Selecciona tu plan y método de pago"
     },

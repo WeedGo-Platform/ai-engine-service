@@ -1456,7 +1456,7 @@ const TenantSignup = () => {
   const stepTitles = [
     t('signup:tenant.steps.company'),
     t('signup:tenant.steps.contact'),
-    'Ontario Licensing',  // New step 3
+    t('signup:tenant.steps.ontario'),
     t('signup:tenant.steps.account'),
     t('signup:tenant.steps.payment')
   ];
@@ -1567,7 +1567,7 @@ const TenantSignup = () => {
               <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-400">
                 {currentStep === 1 && t('signup:tenant.stepDescriptions.company')}
                 {currentStep === 2 && t('signup:tenant.stepDescriptions.contact')}
-                {currentStep === 3 && 'Validate your Ontario cannabis retail licenses (CROL and CRSA)'}
+                {currentStep === 3 && t('signup:tenant.stepDescriptions.ontario')}
                 {currentStep === 4 && t('signup:tenant.stepDescriptions.account')}
                 {currentStep === 5 && t('signup:tenant.stepDescriptions.payment')}
               </p>

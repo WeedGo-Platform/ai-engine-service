@@ -9,12 +9,14 @@
     "steps": {
       "company": "કંપની માહિતી",
       "contact": "સંપર્ક વિગતો",
+      "ontario": "Ontario Licensing",
       "account": "ખાતું સેટઅપ",
       "payment": "સબ્સ્ક્રિપ્શન અને ચુકવણી"
     },
     "stepDescriptions": {
       "company": "અમને તમારા વ્યવસાય અને બ્રાંડ વિશે કહો",
       "contact": "તમારી સંપર્ક માહિતી અને સરનામું આપો",
+      "ontario": "Validate your Ontario cannabis retail licenses (CROL and CRSA)",
       "account": "તમારા એડમિન ખાતાની ઓળખપત્રો બનાવો",
       "payment": "તમારી યોજના અને ચુકવણી પદ્ધતિ પસંદ કરો"
     },

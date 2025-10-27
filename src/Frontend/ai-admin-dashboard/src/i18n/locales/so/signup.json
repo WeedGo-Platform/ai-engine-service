@@ -9,12 +9,14 @@
     "steps": {
       "company": "Macluumaadka Shirkadda",
       "contact": "Faahfaahinta Xiriirka",
+      "ontario": "Ontario Licensing",
       "account": "Dejinta Akoon",
       "payment": "Isdiiwaangelin iyo Bixinta"
     },
     "stepDescriptions": {
       "company": "Noo sheeg ganacsigaaga iyo summaddaada",
       "contact": "Bixi macluumaadka xiriirkaaga iyo cinwaankaaga",
+      "ontario": "Validate your Ontario cannabis retail licenses (CROL and CRSA)",
       "account": "Samee aqoonsiga akoonkaaga admin",
       "payment": "Dooro qorshaddaada iyo habka lacag bixinta"
     },
