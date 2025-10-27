@@ -11,6 +11,11 @@ aiohttp==3.9.1
 asyncio==3.4.3
 asyncpg==0.29.0
 
+# Web Scraping (for AGCO CRSA data sync)
+beautifulsoup4==4.12.2
+lxml==5.1.0
+schedule==1.2.0
+
 # Authentication & Security
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4

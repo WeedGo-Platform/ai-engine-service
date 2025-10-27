@@ -317,6 +317,17 @@ async def lifespan(app: FastAPI):
         # Schedule translation cache warmup (non-blocking)
         asyncio.create_task(warmup_translation_cache_on_startup())
         
+        # Initialize CRSA sync service
+        logger.info("Initializing Ontario CRSA sync service...")
+        try:
+            from services.ontario_crsa_sync_service import initialize_sync_service
+            sync_service = await initialize_sync_service(start_scheduler=True)
+            app.state.crsa_sync_service = sync_service
+            logger.info("✅ CRSA sync service initialized (scheduled daily at 3:00 AM)")
+        except Exception as e:
+            logger.error(f"❌ Failed to initialize CRSA sync service: {e}")
+            logger.warning("CRSA sync will need to be run manually")
+        
         yield
         
     except Exception as e:
