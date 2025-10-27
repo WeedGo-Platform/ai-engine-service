@@ -20,7 +20,7 @@
     },
     "companyInfo": {
       "brandName": "பிராண்ட் பெயர்",
-      "brandNamePlaceholder": "எ.கா., Green Valley Dispensary",
+      "brandNamePlaceholder": "எ.கா., Pot Palace Cannabis",
       "website": "வலைத்தளம்",
       "websitePlaceholder": "www.potpalace.ca அல்லது potpalace.ca",
       "websiteHelp": "உங்கள் வலைத்தள URL (பிராண்ட் குறியீட்டை உருவாக்க பயன்படுத்தப்படும்)",
@@ -29,7 +29,7 @@
       "brandCodePlaceholder": "உருவாக்க மேலே வலைத்தளத்தை உள்ளிடவும்",
       "brandCodeHelp": "உங்கள் ஸ்டோர் URL இல் பயன்படுத்தப்படும்: {{code}}.weedgo.com",
       "legalCompanyName": "சட்டப்பூர்வ நிறுவனப் பெயர்",
-      "legalCompanyPlaceholder": "எ.கா., Green Valley Cannabis Inc.",
+      "legalCompanyPlaceholder": "எ.கா., Pot Palace Holdings Inc.",
       "businessNumber": "வணிக எண்",
       "businessNumberPlaceholder": "123456789",
       "businessNumberHelp": "கனடிய வணிக எண் (9 இலக்கங்கள்)",

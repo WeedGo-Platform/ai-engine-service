@@ -20,7 +20,7 @@
     },
     "companyInfo": {
       "brandName": "Pangalan ng Brand",
-      "brandNamePlaceholder": "hal., Green Valley Dispensary",
+      "brandNamePlaceholder": "hal., Pot Palace Cannabis",
       "website": "Website",
       "websitePlaceholder": "www.potpalace.ca o potpalace.ca",
       "websiteHelp": "Ang inyong website URL (ginagamit para gumawa ng brand code)",
@@ -29,7 +29,7 @@
       "brandCodePlaceholder": "Ilagay ang website sa itaas para mabuo",
       "brandCodeHelp": "Gagamitin sa inyong store URL: {{code}}.weedgo.com",
       "legalCompanyName": "Legal na Pangalan ng Kumpanya",
-      "legalCompanyPlaceholder": "hal., Green Valley Cannabis Inc.",
+      "legalCompanyPlaceholder": "hal., Pot Palace Holdings Inc.",
       "businessNumber": "Business Number",
       "businessNumberPlaceholder": "123456789",
       "businessNumberHelp": "Canadian Business Number (9 digits)",

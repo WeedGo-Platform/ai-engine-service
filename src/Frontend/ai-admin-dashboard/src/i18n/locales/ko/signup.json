@@ -20,7 +20,7 @@
     },
     "companyInfo": {
       "brandName": "브랜드 이름",
-      "brandNamePlaceholder": "예: Green Valley Dispensary",
+      "brandNamePlaceholder": "예: Pot Palace Cannabis",
       "website": "웹사이트",
       "websitePlaceholder": "www.potpalace.ca 또는 potpalace.ca",
       "websiteHelp": "귀하의 웹사이트 URL (브랜드 코드 생성에 사용됩니다)",
@@ -29,7 +29,7 @@
       "brandCodePlaceholder": "생성하려면 위에 웹사이트를 입력하세요",
       "brandCodeHelp": "귀하의 스토어 URL에 사용됩니다: {{code}}.weedgo.com",
       "legalCompanyName": "법인명",
-      "legalCompanyPlaceholder": "예: Green Valley Cannabis Inc.",
+      "legalCompanyPlaceholder": "예: Pot Palace Holdings Inc.",
       "businessNumber": "사업자 번호",
       "businessNumberPlaceholder": "123456789",
       "businessNumberHelp": "캐나다 사업자 번호 (9자리)",

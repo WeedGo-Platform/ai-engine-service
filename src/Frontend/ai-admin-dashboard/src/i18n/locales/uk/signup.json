@@ -20,7 +20,7 @@
     },
     "companyInfo": {
       "brandName": "Назва бренду",
-      "brandNamePlaceholder": "наприклад, Green Valley Dispensary",
+      "brandNamePlaceholder": "наприклад, Pot Palace Cannabis",
       "website": "Веб-сайт",
       "websitePlaceholder": "www.potpalace.ca або potpalace.ca",
       "websiteHelp": "URL вашого веб-сайту (використовується для генерації коду бренду)",
@@ -29,7 +29,7 @@
       "brandCodePlaceholder": "Введіть веб-сайт вище для генерації",
       "brandCodeHelp": "Буде використовуватися в URL вашого магазину: {{code}}.weedgo.com",
       "legalCompanyName": "Юридична назва компанії",
-      "legalCompanyPlaceholder": "наприклад, Green Valley Cannabis Inc.",
+      "legalCompanyPlaceholder": "наприклад, Pot Palace Holdings Inc.",
       "businessNumber": "Номер підприємства",
       "businessNumberPlaceholder": "123456789",
       "businessNumberHelp": "Канадський номер підприємства (9 цифр)",

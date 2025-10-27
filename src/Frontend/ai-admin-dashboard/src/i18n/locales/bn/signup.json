@@ -20,7 +20,7 @@
     },
     "companyInfo": {
       "brandName": "ব্র্যান্ডের নাম",
-      "brandNamePlaceholder": "যেমন, Green Valley Dispensary",
+      "brandNamePlaceholder": "যেমন, Pot Palace Cannabis",
       "website": "ওয়েবসাইট",
       "websitePlaceholder": "www.potpalace.ca বা potpalace.ca",
       "websiteHelp": "আপনার ওয়েবসাইট URL (ব্র্যান্ড কোড তৈরি করতে ব্যবহৃত হয়)",
@@ -29,7 +29,7 @@
       "brandCodePlaceholder": "তৈরি করতে উপরে ওয়েবসাইট লিখুন",
       "brandCodeHelp": "আপনার স্টোর URL-এ ব্যবহৃত হবে: {{code}}.weedgo.com",
       "legalCompanyName": "আইনী কোম্পানির নাম",
-      "legalCompanyPlaceholder": "যেমন, Green Valley Cannabis Inc.",
+      "legalCompanyPlaceholder": "যেমন, Pot Palace Holdings Inc.",
       "businessNumber": "ব্যবসায়িক নম্বর",
       "businessNumberPlaceholder": "123456789",
       "businessNumberHelp": "কানাডিয়ান ব্যবসায়িক নম্বর (৯ সংখ্যা)",

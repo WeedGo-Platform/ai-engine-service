@@ -20,7 +20,7 @@
     },
     "companyInfo": {
       "brandName": "Tên Thương hiệu",
-      "brandNamePlaceholder": "ví dụ: Green Valley Dispensary",
+      "brandNamePlaceholder": "ví dụ: Pot Palace Cannabis",
       "website": "Trang web",
       "websitePlaceholder": "www.potpalace.ca hoặc potpalace.ca",
       "websiteHelp": "URL trang web của bạn (được sử dụng để tạo mã thương hiệu)",
@@ -29,7 +29,7 @@
       "brandCodePlaceholder": "Nhập trang web ở trên để tạo",
       "brandCodeHelp": "Sẽ được sử dụng trong URL cửa hàng của bạn: {{code}}.weedgo.com",
       "legalCompanyName": "Tên Công ty Pháp lý",
-      "legalCompanyPlaceholder": "ví dụ: Green Valley Cannabis Inc.",
+      "legalCompanyPlaceholder": "ví dụ: Pot Palace Holdings Inc.",
       "businessNumber": "Số Doanh nghiệp",
       "businessNumberPlaceholder": "123456789",
       "businessNumberHelp": "Số Doanh nghiệp Canada (9 chữ số)",
