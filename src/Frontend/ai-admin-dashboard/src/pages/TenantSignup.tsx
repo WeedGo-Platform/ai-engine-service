@@ -582,7 +582,7 @@ const TenantSignup = () => {
     switch (currentStep) {
       case 1:
         return (
-          <div className="space-y-7">
+          <div className="space-y-5 sm:space-y-7">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t('signup:tenant.companyInfo.brandName')} *
@@ -659,7 +659,7 @@ const TenantSignup = () => {
               )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-8">
               <div>
                 <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('signup:tenant.companyInfo.businessNumber')} *
@@ -744,8 +744,8 @@ const TenantSignup = () => {
 
       case 2:
         return (
-          <div className="space-y-6 sm:space-y-7">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+          <div className="space-y-5 sm:space-y-7">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-8">
               <div>
                 <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('signup:tenant.contactInfo.firstName')} *
@@ -781,7 +781,7 @@ const TenantSignup = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-8">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('signup:tenant.contactInfo.email')} *
@@ -846,7 +846,7 @@ const TenantSignup = () => {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6 sm:gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-8">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('signup:tenant.contactInfo.city')} *
@@ -907,12 +907,12 @@ const TenantSignup = () => {
           return null; // Skip for non-Ontario provinces
         }
         return (
-          <div className="space-y-7">
+          <div className="space-y-5 sm:space-y-7">
             <div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-2 sm:mb-3">
                 Ontario Cannabis Licensing
               </h3>
-              <p className="text-base text-gray-600 dark:text-gray-400">
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
                 Required for Ontario cannabis retailers. CROL is your tenant-level operating license, 
                 CRSA is your store-level retail authorization.
               </p>
@@ -941,8 +941,8 @@ const TenantSignup = () => {
             </div>
 
             {/* CRSA Validator */}
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 sm:p-8">
-              <h4 className="text-base font-semibold text-gray-900 dark:text-white mb-5">
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 sm:p-8">
+              <h4 className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white mb-4 sm:mb-5">
                 CRSA Validation (Cannabis Retail Store Authorization)
               </h4>
               <OntarioLicenseValidator
@@ -978,7 +978,7 @@ const TenantSignup = () => {
 
       case 4:
         return (
-          <div className="space-y-7">
+          <div className="space-y-5 sm:space-y-7">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t('signup:tenant.accountSetup.password')} *
@@ -1082,8 +1082,8 @@ const TenantSignup = () => {
         // Show error message prominently at the top if there's a submit error
         if (errors.submit) {
           return (
-            <div className="space-y-7">
-              <div className="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 rounded-lg p-6">
+            <div className="space-y-5 sm:space-y-7">
+              <div className="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 rounded-lg p-4 sm:p-6">
                 <div className="flex items-start">
                   <AlertCircle className="h-5 w-5 text-red-500 mt-0.5 mr-3 flex-shrink-0" />
                   <div>
@@ -1162,33 +1162,33 @@ const TenantSignup = () => {
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       {t('signup:tenant.subscription.billingCycle')}
                     </label>
-                    <div className="grid grid-cols-2 gap-6">
-                      <label className="flex items-center p-6 border rounded-lg cursor-pointer hover:bg-gray-50">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                      <label className="flex items-center p-4 sm:p-6 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 active:scale-95 transition-all">
                         <input
                           type="radio"
                           name="billingCycle"
                           value="monthly"
                           checked={formData.billingCycle === 'monthly'}
                           onChange={(e) => handleInputChange('billingCycle', e.target.value)}
-                          className="mr-3"
+                          className="mr-3 flex-shrink-0"
                         />
                         <div>
-                          <div className="font-medium">{t('signup:tenant.subscription.monthly')}</div>
-                          <div className="text-sm text-gray-500">{t('signup:tenant.subscription.monthlyBilled')}</div>
+                          <div className="font-medium text-gray-900 dark:text-white">{t('signup:tenant.subscription.monthly')}</div>
+                          <div className="text-sm text-gray-500 dark:text-gray-400">{t('signup:tenant.subscription.monthlyBilled')}</div>
                         </div>
                       </label>
-                      <label className="flex items-center p-6 border rounded-lg cursor-pointer hover:bg-gray-50">
+                      <label className="flex items-center p-4 sm:p-6 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 active:scale-95 transition-all">
                         <input
                           type="radio"
                           name="billingCycle"
                           value="annual"
                           checked={formData.billingCycle === 'annual'}
                           onChange={(e) => handleInputChange('billingCycle', e.target.value)}
-                          className="mr-3"
+                          className="mr-3 flex-shrink-0"
                         />
                         <div>
-                          <div className="font-medium">{t('signup:tenant.subscription.annual')}</div>
-                          <div className="text-sm text-gray-500">{t('signup:tenant.subscription.annualSave')}</div>
+                          <div className="font-medium text-gray-900 dark:text-white">{t('signup:tenant.subscription.annual')}</div>
+                          <div className="text-sm text-gray-500 dark:text-gray-400">{t('signup:tenant.subscription.annualSave')}</div>
                         </div>
                       </label>
                     </div>
@@ -1262,14 +1262,14 @@ const TenantSignup = () => {
 
         if (!selectedPlanInfo) {
           return (
-            <div className="space-y-7">
-              <h3 className="text-xl font-semibold mb-5">{t('signup:tenant.subscription.choosePlan')}</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+            <div className="space-y-5 sm:space-y-7">
+              <h3 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-5">{t('signup:tenant.subscription.choosePlan')}</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                 {Object.entries(subscriptionPlans).map(([key, plan]) => (
                   <div
                     key={key}
                     onClick={() => handleInputChange('subscriptionTier', key)}
-                    className="border-2 border-gray-200 dark:border-gray-700 rounded-lg p-5 sm:p-6 cursor-pointer hover:border-primary-500 dark:hover:border-primary-400 hover:shadow-lg transition-all bg-white dark:bg-gray-800"
+                    className="border-2 border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-6 cursor-pointer hover:border-primary-500 dark:hover:border-primary-400 hover:shadow-lg transition-all bg-white dark:bg-gray-800 active:scale-95"
                   >
                     <h4 className="font-semibold text-lg mb-2">{plan.name}</h4>
                     <div className="text-2xl font-bold text-primary-600 mb-3">
@@ -1297,10 +1297,10 @@ const TenantSignup = () => {
         }
 
         return (
-          <div className="space-y-7">
+          <div className="space-y-5 sm:space-y-7">
             {/* Plan Summary */}
-            <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 sm:p-8">
-              <div className="flex justify-between items-start mb-3">
+            <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 sm:p-8">
+              <div className="flex flex-col sm:flex-row justify-between items-start gap-2 sm:gap-0 mb-3">
                 <h3 className="text-lg font-semibold">{t('signup:tenant.subscription.selectedPlan', { plan: selectedPlanInfo.name })}</h3>
                 <button
                   type="button"
@@ -1329,33 +1329,33 @@ const TenantSignup = () => {
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t('signup:tenant.subscription.billingCycle')}
               </label>
-              <div className="grid grid-cols-2 gap-6">
-                <label className="flex items-center p-6 border rounded-lg cursor-pointer hover:bg-gray-50">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                <label className="flex items-center p-4 sm:p-6 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 active:scale-95 transition-all">
                   <input
                     type="radio"
                     name="billingCycle"
                     value="monthly"
                     checked={formData.billingCycle === 'monthly'}
                     onChange={(e) => handleInputChange('billingCycle', e.target.value)}
-                    className="mr-3"
+                    className="mr-3 flex-shrink-0"
                   />
                   <div>
-                    <div className="font-medium">{t('signup:tenant.subscription.monthly')}</div>
-                    <div className="text-sm text-gray-500">{t('signup:tenant.subscription.monthlyBilled')}</div>
+                    <div className="font-medium text-gray-900 dark:text-white">{t('signup:tenant.subscription.monthly')}</div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">{t('signup:tenant.subscription.monthlyBilled')}</div>
                   </div>
                 </label>
-                <label className="flex items-center p-6 border rounded-lg cursor-pointer hover:bg-gray-50">
+                <label className="flex items-center p-4 sm:p-6 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 active:scale-95 transition-all">
                   <input
                     type="radio"
                     name="billingCycle"
                     value="annual"
                     checked={formData.billingCycle === 'annual'}
                     onChange={(e) => handleInputChange('billingCycle', e.target.value)}
-                    className="mr-3"
+                    className="mr-3 flex-shrink-0"
                   />
                   <div>
-                    <div className="font-medium">{t('signup:tenant.subscription.annual')}</div>
-                    <div className="text-sm text-gray-500">{t('signup:tenant.subscription.annualSave')}</div>
+                    <div className="font-medium text-gray-900 dark:text-white">{t('signup:tenant.subscription.annual')}</div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">{t('signup:tenant.subscription.annualSave')}</div>
                   </div>
                 </label>
               </div>
@@ -1506,12 +1506,12 @@ const TenantSignup = () => {
 
       {/* Header */}
       <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 transition-colors duration-200">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between py-4 sm:py-6 gap-3 sm:gap-0">
+        <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between py-3 sm:py-6 gap-2 sm:gap-0">
             <Link to="/" className="flex items-center">
-              <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 dark:text-gray-500 mr-2 flex-shrink-0" />
-              <Leaf className="h-6 w-6 sm:h-8 sm:w-8 text-primary-600 dark:text-primary-400 flex-shrink-0" />
-              <span className="ml-2 text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">{t('signup:tenant.header.title')}</span>
+              <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 dark:text-gray-500 mr-1.5 sm:mr-2 flex-shrink-0" />
+              <Leaf className="h-5 w-5 sm:h-8 sm:w-8 text-primary-600 dark:text-primary-400 flex-shrink-0" />
+              <span className="ml-1.5 sm:ml-2 text-base sm:text-2xl font-bold text-gray-900 dark:text-white">{t('signup:tenant.header.title')}</span>
             </Link>
             <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
               {t('signup:tenant.header.alreadyHaveAccount')} <Link to="/login" className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors">{t('signup:tenant.header.signIn')}</Link>
@@ -1521,10 +1521,10 @@ const TenantSignup = () => {
       </header>
 
       {/* Main Content */}
-      <div className="flex-1 py-8 sm:py-10 lg:py-16">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="flex-1 py-6 sm:py-10 lg:py-16">
+        <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-8">
           {/* Progress Bar */}
-          <div className="mb-8 sm:mb-10 lg:mb-12">
+          <div className="mb-6 sm:mb-10 lg:mb-12">
             <div className="flex items-center justify-between">
               {stepTitles.map((title, index) => (
                 <div key={index} className="flex items-center">
@@ -1547,9 +1547,9 @@ const TenantSignup = () => {
                 </div>
               ))}
             </div>
-            <div className="flex justify-between mt-2">
+            <div className="flex justify-between mt-2 sm:mt-3">
               {stepTitles.map((title, index) => (
-                <div key={index} className={`text-xs sm:text-sm transition-colors ${
+                <div key={index} className={`text-xs sm:text-sm lg:text-base transition-colors ${
                   index + 1 === currentStep ? 'text-primary-600 dark:text-primary-400 font-medium' : 'text-gray-500 dark:text-gray-400'
                 }`}>
                   <span className="hidden sm:inline">{title}</span>
@@ -1560,12 +1560,12 @@ const TenantSignup = () => {
           </div>
 
           {/* Form */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 sm:p-8 lg:p-12 transition-colors duration-200">
-            <div className="mb-8 sm:mb-10">
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3">
+          <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-8 lg:p-12 transition-colors duration-200">
+            <div className="mb-6 sm:mb-10">
+              <h1 className="text-xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-3">
                 {stepTitles[currentStep - 1]}
               </h1>
-              <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400">
+              <p className="text-sm sm:text-lg text-gray-600 dark:text-gray-400">
                 {currentStep === 1 && t('signup:tenant.stepDescriptions.company')}
                 {currentStep === 2 && t('signup:tenant.stepDescriptions.contact')}
                 {currentStep === 3 && 'Validate your Ontario cannabis retail licenses (CROL and CRSA)'}
@@ -1579,7 +1579,7 @@ const TenantSignup = () => {
             </div>
 
             {/* Navigation Buttons */}
-            <div className="flex flex-col-reverse sm:flex-row justify-between gap-4 sm:gap-0 pt-8 sm:pt-10 mt-8 sm:mt-10 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex flex-col-reverse sm:flex-row justify-between gap-3 sm:gap-4 pt-6 sm:pt-10 mt-6 sm:mt-10 border-t border-gray-200 dark:border-gray-700">
               <button
                 onClick={prevStep}
                 disabled={currentStep === 1}

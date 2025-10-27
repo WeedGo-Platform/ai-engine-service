@@ -107,7 +107,7 @@ koyeb service create weedgo-uat-backend \
    ```bash
    git add .
    git commit -m "feat: UAT deployment configuration"
-   git push origin develop
+   git push origin main
    ```
 
 2. **GitHub Actions will automatically** (pushes to main branch):
