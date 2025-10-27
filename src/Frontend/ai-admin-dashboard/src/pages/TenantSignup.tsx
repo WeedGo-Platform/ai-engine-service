@@ -2,8 +2,9 @@ import React, { useState, useRef } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   ArrowLeft, ArrowRight, CheckCircle, AlertCircle, Leaf,
-  Eye, EyeOff, Shield, Loader2, UserPlus, LogIn, CheckCircle2
+  Eye, EyeOff, Shield, Loader2, UserPlus, LogIn, CheckCircle2, CreditCard
 } from 'lucide-react';
+import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { useTranslation } from 'react-i18next';
 import tenantService from '../services/tenantService';
 import '../styles/signup-animations.css';
@@ -38,9 +39,6 @@ interface FormData {
   billingCycle: string;
   
   // Payment
-  cardNumber: string;
-  expiryDate: string;
-  cvv: string;
   billingName: string;
 }
 
@@ -53,6 +51,8 @@ const TenantSignup = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const selectedPlan = searchParams.get('plan') || 'community';
+  const stripe = useStripe();
+  const elements = useElements();
   
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -83,9 +83,6 @@ const TenantSignup = () => {
     confirmPassword: '',
     subscriptionTier: selectedPlan,
     billingCycle: 'monthly',
-    cardNumber: '',
-    expiryDate: '',
-    cvv: '',
     billingName: ''
   });
   
@@ -199,19 +196,8 @@ const TenantSignup = () => {
         break;
 
       case 4: // Payment
+        // For paid tiers, only validate billing name (Stripe handles card validation)
         if (formData.subscriptionTier !== 'enterprise' && formData.subscriptionTier !== 'community_and_new_business') {
-          if (!formData.cardNumber.trim()) newErrors.cardNumber = t('signup:validation.cardNumberRequired');
-          else if (!/^\d{16}$/.test(formData.cardNumber.replace(/\s/g, ''))) {
-            newErrors.cardNumber = t('signup:validation.cardNumberFormat');
-          }
-          if (!formData.expiryDate.trim()) newErrors.expiryDate = t('signup:validation.expiryRequired');
-          else if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(formData.expiryDate)) {
-            newErrors.expiryDate = t('signup:validation.expiryFormat');
-          }
-          if (!formData.cvv.trim()) newErrors.cvv = t('signup:validation.cvvRequired');
-          else if (!/^\d{3,4}$/.test(formData.cvv)) {
-            newErrors.cvv = t('signup:validation.cvvFormat');
-          }
           if (!formData.billingName.trim()) newErrors.billingName = t('signup:validation.cardholderRequired');
         }
         break;
@@ -291,15 +277,6 @@ const TenantSignup = () => {
       if (formattedValue.length > 3) {
         formattedValue = formattedValue.slice(0, 3) + ' ' + formattedValue.slice(3, 6);
       }
-    } else if (field === 'cardNumber') {
-      formattedValue = value.replace(/\D/g, '').replace(/(\d{4})(?=\d)/g, '$1 ');
-    } else if (field === 'expiryDate') {
-      formattedValue = value.replace(/\D/g, '');
-      if (formattedValue.length >= 2) {
-        formattedValue = formattedValue.slice(0, 2) + '/' + formattedValue.slice(2, 4);
-      }
-    } else if (field === 'cvv') {
-      formattedValue = value.replace(/\D/g, '').slice(0, 4);
     }
     
     // Update password strength when password changes
@@ -364,6 +341,42 @@ const TenantSignup = () => {
 
       // Update progress
       setSubmitProgress({ step: 'creating', message: t('signup:tenant.progress.creating') });
+      
+      // Create Stripe payment method for paid tiers
+      let paymentMethodId = null;
+      const isPaidTier = formData.subscriptionTier !== 'community_and_new_business';
+      
+      if (isPaidTier && stripe && elements) {
+        setSubmitProgress({ step: 'checking', message: 'Processing payment method...' });
+        
+        const cardElement = elements.getElement(CardElement);
+        if (!cardElement) {
+          setErrors({ submit: 'Payment details required for paid plans' });
+          setIsSubmitting(false);
+          return;
+        }
+        
+        const { error, paymentMethod } = await stripe.createPaymentMethod({
+          type: 'card',
+          card: cardElement,
+          billing_details: {
+            name: formData.billingName || `${formData.firstName} ${formData.lastName}`,
+            email: formData.contactEmail,
+            phone: formData.contactPhone || undefined,
+          },
+        });
+        
+        if (error) {
+          console.error('Stripe payment method error:', error);
+          setErrors({ submit: error.message || 'Failed to process payment method' });
+          setIsSubmitting(false);
+          return;
+        }
+        
+        paymentMethodId = paymentMethod.id;
+        console.log('Stripe payment method created:', paymentMethodId);
+      }
+      
       // Prepare the payload according to backend API
       const payload = {
         name: formData.tenantName,
@@ -391,7 +404,7 @@ const TenantSignup = () => {
           },
           billing: {
             cycle: formData.billingCycle,
-            card_last_four: formData.cardNumber.slice(-4),
+            payment_method_id: paymentMethodId,
             cardholder_name: formData.billingName
           }
         }
@@ -1034,88 +1047,62 @@ const TenantSignup = () => {
                   {/* Payment fields for non-free plans */}
                   {selectedPlanInfo.price !== 0 && (
                     <>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            {t('signup:tenant.payment.cardholderName')} <span className="text-red-500">*</span>
-                          </label>
-                          <input
-                            type="text"
-                            value={formData.billingName}
-                            onChange={(e) => handleInputChange('billingName', e.target.value)}
-                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                              errors.billingName ? 'border-red-500' : 'border-gray-300'
-                            }`}
-                            placeholder={t('signup:tenant.payment.cardholderPlaceholder')}
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            {t('signup:tenant.payment.cardNumber')} <span className="text-red-500">*</span>
-                          </label>
-                          <input
-                            type="text"
-                            value={formData.cardNumber}
-                            onChange={(e) => handleInputChange('cardNumber', e.target.value.replace(/\s/g, '').replace(/(.{4})/g, '$1 ').trim())}
-                            maxLength={19}
-                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                              errors.cardNumber ? 'border-red-500' : 'border-gray-300'
-                            }`}
-                            placeholder={t('signup:tenant.payment.cardNumberPlaceholder')}
-                          />
-                        </div>
+                      <div className="mb-6">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          {t('signup:tenant.payment.cardholderName')} <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.billingName}
+                          onChange={(e) => handleInputChange('billingName', e.target.value)}
+                          className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                            errors.billingName ? 'border-red-500' : 'border-gray-300'
+                          }`}
+                          placeholder={t('signup:tenant.payment.cardholderPlaceholder')}
+                        />
                       </div>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            {t('signup:tenant.payment.expiryDate')} <span className="text-red-500">*</span>
-                          </label>
-                          <input
-                            type="text"
-                            value={formData.expiryDate}
-                            onChange={(e) => {
-                              let value = e.target.value.replace(/\D/g, '');
-                              if (value.length >= 2) {
-                                value = value.substring(0, 2) + '/' + value.substring(2, 4);
-                              }
-                              handleInputChange('expiryDate', value);
+
+                      <div className="mb-6">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                          <CreditCard className="inline w-5 h-5 mr-2" />
+                          Card Details <span className="text-red-500">*</span>
+                        </label>
+                        <div className="border rounded-lg p-4 bg-white dark:bg-gray-700">
+                          <CardElement
+                            options={{
+                              style: {
+                                base: {
+                                  fontSize: '16px',
+                                  color: '#424770',
+                                  '::placeholder': {
+                                    color: '#aab7c4',
+                                  },
+                                },
+                                invalid: {
+                                  color: '#9e2146',
+                                },
+                              },
                             }}
-                            maxLength={5}
-                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                              errors.expiryDate ? 'border-red-500' : 'border-gray-300'
-                            }`}
-                            placeholder={t('signup:tenant.payment.expiryPlaceholder')}
                           />
                         </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            {t('signup:tenant.payment.cvv')} <span className="text-red-500">*</span>
-                          </label>
-                          <input
-                            type="text"
-                            value={formData.cvv}
-                            onChange={(e) => handleInputChange('cvv', e.target.value.replace(/\D/g, '').substring(0, 4))}
-                            maxLength={4}
-                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                              errors.cvv ? 'border-red-500' : 'border-gray-300'
-                            }`}
-                            placeholder={t('signup:tenant.payment.cvvPlaceholder')}
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            {t('signup:tenant.payment.postalCode')}
-                          </label>
-                          <input
-                            type="text"
-                            value={formData.billingPostalCode}
-                            onChange={(e) => handleInputChange('billingPostalCode', e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                            placeholder={t('signup:tenant.payment.postalCodePlaceholder')}
-                          />
-                        </div>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                          🔒 Secured by Stripe • Your card will be charged immediately
+                        </p>
                       </div>
                     </>
+                  )}
+
+                  {/* Free tier message */}
+                  {selectedPlanInfo.price === 0 && (
+                    <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg p-6 text-center">
+                      <CheckCircle className="w-12 h-12 text-green-600 dark:text-green-400 mx-auto mb-3" />
+                      <h3 className="text-green-800 dark:text-green-300 text-xl font-semibold">
+                        🎉 {t('signup:tenant.subscription.freeSelected')}
+                      </h3>
+                      <p className="text-green-700 dark:text-green-400 mt-2">
+                        {t('signup:tenant.subscription.noPaymentRequired')}
+                      </p>
+                    </div>
                   )}
                 </>
               )}
@@ -1245,63 +1232,45 @@ const TenantSignup = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    {t('signup:tenant.payment.cardNumber')} *
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                    <CreditCard className="inline w-5 h-5 mr-2" />
+                    Card Details *
                   </label>
-                  <input
-                    type="text"
-                    value={formData.cardNumber}
-                    onChange={(e) => handleInputChange('cardNumber', e.target.value)}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                      errors.cardNumber ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
-                    }`}
-                    placeholder={t('signup:tenant.payment.cardNumberPlaceholder')}
-                    maxLength={19}
-                  />
-                  {errors.cardNumber && (
-                    <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.cardNumber}</p>
-                  )}
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      {t('signup:tenant.payment.expiryDate')} *
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.expiryDate}
-                      onChange={(e) => handleInputChange('expiryDate', e.target.value)}
-                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                        errors.expiryDate ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
-                      }`}
-                      placeholder={t('signup:tenant.payment.expiryPlaceholder')}
-                      maxLength={5}
+                  <div className="border rounded-lg p-4 bg-white dark:bg-gray-700">
+                    <CardElement
+                      options={{
+                        style: {
+                          base: {
+                            fontSize: '16px',
+                            color: '#424770',
+                            '::placeholder': {
+                              color: '#aab7c4',
+                            },
+                          },
+                          invalid: {
+                            color: '#9e2146',
+                          },
+                        },
+                      }}
                     />
-                    {errors.expiryDate && (
-                      <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.expiryDate}</p>
-                    )}
                   </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      {t('signup:tenant.payment.cvv')} *
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.cvv}
-                      onChange={(e) => handleInputChange('cvv', e.target.value)}
-                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                        errors.cvv ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
-                      }`}
-                      placeholder={t('signup:tenant.payment.cvvPlaceholder')}
-                    />
-                    {errors.cvv && (
-                      <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.cvv}</p>
-                    )}
-                  </div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                    🔒 Secured by Stripe • Your card will be charged immediately
+                  </p>
                 </div>
               </>
+            )}
+
+            {formData.subscriptionTier === 'community_and_new_business' && (
+              <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg p-6 text-center">
+                <CheckCircle className="w-12 h-12 text-green-600 dark:text-green-400 mx-auto mb-3" />
+                <h3 className="text-green-800 dark:text-green-300 text-xl font-semibold">
+                  🎉 Free Tier Selected
+                </h3>
+                <p className="text-green-700 dark:text-green-400 mt-2">
+                  No payment required - continue to create your account!
+                </p>
+              </div>
             )}
 
             {formData.subscriptionTier === 'enterprise' && (

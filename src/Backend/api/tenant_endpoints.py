@@ -184,31 +184,31 @@ SUBSCRIPTION_PRICING = {
     SubscriptionTier.SMALL_BUSINESS: {
         "monthly": Decimal("99.00"),
         "quarterly": Decimal("267.00"),
-        "annual": Decimal("990.00"),
+        "annual": Decimal("950.00"),
         "stripe_price_id": {
-            "monthly": os.getenv('STRIPE_PRICE_SMALL_BUSINESS_MONTHLY', 'price_small_business_monthly_cad'),
-            "quarterly": os.getenv('STRIPE_PRICE_SMALL_BUSINESS_QUARTERLY', 'price_small_business_quarterly_cad'),
-            "annual": os.getenv('STRIPE_PRICE_SMALL_BUSINESS_ANNUAL', 'price_small_business_annual_cad')
+            "monthly": "price_1SMdJnFGOg7NVT1jxAJyXHPF",
+            "quarterly": "price_1SMdJnFGOg7NVT1jzHW8xLbU",
+            "annual": "price_1SMdJnFGOg7NVT1jnOcaCSK5"
         }
     },
     SubscriptionTier.PROFESSIONAL_AND_GROWING_BUSINESS: {
         "monthly": Decimal("199.00"),
-        "quarterly": Decimal("537.00"),
-        "annual": Decimal("1990.00"),
+        "quarterly": Decimal("199.00"),  # Only monthly available
+        "annual": Decimal("199.00"),  # Only monthly available
         "stripe_price_id": {
-            "monthly": os.getenv('STRIPE_PRICE_PROFESSIONAL_MONTHLY', 'price_professional_monthly_cad'),
-            "quarterly": os.getenv('STRIPE_PRICE_PROFESSIONAL_QUARTERLY', 'price_professional_quarterly_cad'),
-            "annual": os.getenv('STRIPE_PRICE_PROFESSIONAL_ANNUAL', 'price_professional_annual_cad')
+            "monthly": "price_1SMd4jFGOg7NVT1jRPXgTTUi",
+            "quarterly": "price_1SMd4jFGOg7NVT1jRPXgTTUi",  # Fallback to monthly
+            "annual": "price_1SMd4jFGOg7NVT1jRPXgTTUi"  # Fallback to monthly
         }
     },
     SubscriptionTier.ENTERPRISE: {
-        "monthly": Decimal("499.00"),
-        "quarterly": Decimal("1347.00"),
-        "annual": Decimal("4990.00"),
+        "monthly": Decimal("299.00"),
+        "quarterly": Decimal("299.00"),  # Only monthly available
+        "annual": Decimal("299.00"),  # Only monthly available
         "stripe_price_id": {
-            "monthly": os.getenv('STRIPE_PRICE_ENTERPRISE_MONTHLY', 'price_enterprise_monthly_cad'),
-            "quarterly": os.getenv('STRIPE_PRICE_ENTERPRISE_QUARTERLY', 'price_enterprise_quarterly_cad'),
-            "annual": os.getenv('STRIPE_PRICE_ENTERPRISE_ANNUAL', 'price_enterprise_annual_cad')
+            "monthly": "price_1SMdduFGOg7NVT1ji6Mhhhcq",
+            "quarterly": "price_1SMdduFGOg7NVT1ji6Mhhhcq",  # Fallback to monthly
+            "annual": "price_1SMdduFGOg7NVT1ji6Mhhhcq"  # Fallback to monthly
         }
     }
 }
