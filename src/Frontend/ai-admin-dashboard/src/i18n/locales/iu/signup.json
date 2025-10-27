@@ -9,12 +9,14 @@
     "steps": {
       "company": "ᑮᓇᐅᔭᓕᕆᔨᒃᑯᑦ ᑐᓴᐅᒪᔾᔪᑎᖏᑦ",
       "contact": "ᖃᐅᔨᒋᐊᕈᑎᒃᓴᑦ",
+      "ontario": "Ontario Licensing",
       "account": "ᐊᑎᖕᒥᒃ ᐋᖅᑭᒃᓱᐃᓂᖅ",
       "payment": "ᐊᑭᓕᖅᑕᐅᓂᖅ ᐊᒻᓱᒻᒪᖅᓴᐃᔾᔪᑎᒃ"
     },
     "stepDescriptions": {
       "company": "ᐅᖃᐅᓯᖃᕋᑎᑦ ᑮᓇᐅᔭᓕᕆᔨᒃᑯᓐᓂᑦ ᐊᒻᒪ ᐃᓚᔭᕐᓂᑦ",
       "contact": "ᑐᓂᓗᒍ ᖃᐅᔨᒋᐊᕈᑎᒃᓴᓂᑦ ᐊᒻᒪ ᐃᓂᕐᓂᑦ",
+      "ontario": "Validate your Ontario cannabis retail licenses (CROL and CRSA)",
       "account": "ᓴᖅᑭᑎᒋᐊᕐᓗᒍ ᐊᖓᔪᖅᑳᖑᔪᒧᑦ ᐊᑎᖕᒥᒃ",
       "payment": "ᓂᕈᐊᕐᓗᒍ ᐸᕐᓇᒃᓯᒪᓂᕐᒥᒃ ᐊᒻᒪ ᐊᑭᓕᖅᑕᐅᓂᐊᖅᑐᒥᒃ"
     },

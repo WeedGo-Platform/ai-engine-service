@@ -9,12 +9,14 @@
     "steps": {
       "company": "Informații companie",
       "contact": "Detalii de contact",
+      "ontario": "Ontario Licensing",
       "account": "Configurare cont",
       "payment": "Abonament și plată"
     },
     "stepDescriptions": {
       "company": "Spuneți-ne despre afacerea și marca dvs.",
       "contact": "Furnizați informațiile de contact și adresa",
+      "ontario": "Validate your Ontario cannabis retail licenses (CROL and CRSA)",
       "account": "Creați acreditările contului de administrator",
       "payment": "Selectați planul și metoda de plată"
     },
