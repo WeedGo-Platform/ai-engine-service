@@ -8,10 +8,12 @@ from typing import List, Optional, Dict, Any
 from uuid import UUID
 from datetime import datetime
 
-from fastapi import APIRouter, HTTPException, Depends, status
+from fastapi import APIRouter, HTTPException, Depends, status, UploadFile, File
 from pydantic import BaseModel, Field
 import asyncpg
 import os
+import tempfile
+import subprocess
 
 from core.domain.models import CRSAVerificationStatus
 from core.repositories.ontario_crsa_repository import OntarioCRSARepository
@@ -604,6 +606,301 @@ async def trigger_manual_sync(csv_path: Optional[str] = None):
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to trigger manual sync: {str(e)}"
+        )
+
+
+@router.post("/sync/manual")
+async def trigger_manual_sync_alias():
+    """Alias for /admin/sync/manual for backward compatibility"""
+    return await trigger_manual_sync()
+
+
+@router.post("/upload-csv")
+async def upload_csv_file(file: UploadFile = File(...)):
+    """
+    Upload and import a CRSA CSV file
+
+    Accepts a CSV file upload and imports it into the database.
+    The file must have the correct columns: License Number, Municipality or First Nation,
+    Store Name, Address, Store Application Status, Website
+
+    Args:
+        file: CSV file upload
+
+    Returns:
+        Import results including success status and statistics
+    """
+    try:
+        # Validate file type
+        if not file.filename.endswith('.csv'):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Only CSV files are accepted"
+            )
+
+        # Save uploaded file to temporary location
+        with tempfile.NamedTemporaryFile(mode='wb', suffix='.csv', delete=False) as temp_file:
+            content = await file.read()
+            temp_file.write(content)
+            temp_path = temp_file.name
+
+        logger.info(f"CSV file uploaded: {file.filename}, saved to {temp_path}")
+
+        # Run the import script
+        # Use absolute path from Backend directory
+        backend_dir = os.path.dirname(os.path.dirname(__file__))
+        script_path = os.path.join(backend_dir, 'scripts', 'import_crsa_data.py')
+        
+        if not os.path.exists(script_path):
+            logger.error(f"Import script not found at: {script_path}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Import script not found: {script_path}"
+            )
+        
+        logger.info(f"Running import script: {script_path}")
+        result = subprocess.run(
+            ['python3', script_path, temp_path],  # Positional argument, not --csv flag
+            capture_output=True,
+            text=True,
+            timeout=300  # 5 minute timeout
+        )
+
+        # Clean up temp file
+        try:
+            os.unlink(temp_path)
+        except Exception as e:
+            logger.warning(f"Failed to delete temp file {temp_path}: {e}")
+
+        # Check if import was successful
+        if result.returncode != 0:
+            logger.error(f"CSV import failed: {result.stderr}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"CSV import failed: {result.stderr}"
+            )
+
+        # Parse the output for statistics
+        output_lines = result.stdout.strip().split('\n')
+        records_imported = 0
+        
+        for line in output_lines:
+            if 'records imported' in line.lower():
+                try:
+                    records_imported = int(line.split()[0])
+                except:
+                    pass
+
+        logger.info(f"CSV import completed: {file.filename}, {records_imported} records")
+
+        return {
+            "success": True,
+            "message": "CSV imported successfully",
+            "filename": file.filename,
+            "records_imported": records_imported,
+            "output": result.stdout
+        }
+
+    except subprocess.TimeoutExpired:
+        logger.error("CSV import timed out")
+        raise HTTPException(
+            status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+            detail="CSV import took too long and was cancelled"
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"CSV upload failed: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to upload and import CSV: {str(e)}"
+        )
+
+
+@router.get("/records")
+async def get_crsa_records(
+    limit: int = 100,
+    offset: int = 0,
+    search: str = "",
+    status_filter: str = "",
+    municipality_filter: str = "",
+    service: OntarioCRSAService = Depends(get_crsa_service)
+):
+    """
+    Get recent CRSA records for preview
+
+    Args:
+        limit: Maximum number of records to return (default: 10)
+        offset: Number of records to skip (default: 0)
+
+    Returns:
+        List of CRSA records
+    """
+    try:
+        pool = await get_db_pool()
+        async with pool.acquire() as conn:
+            # Build WHERE clause dynamically
+            where_clauses = ["is_active = TRUE"]
+            params = []
+            param_idx = 1
+            
+            if search:
+                search_clause = (
+                    f"(license_number ILIKE ${param_idx} OR "
+                    f"store_name ILIKE ${param_idx} OR "
+                    f"address ILIKE ${param_idx} OR "
+                    f"municipality ILIKE ${param_idx} OR "
+                    f"first_nation ILIKE ${param_idx})"
+                )
+                where_clauses.append(search_clause)
+                params.append(f"%{search}%")
+                param_idx += 1
+            
+            if status_filter:
+                where_clauses.append(f"store_application_status ILIKE ${param_idx}")
+                params.append(f"%{status_filter}%")
+                param_idx += 1
+            
+            if municipality_filter:
+                municipality_clause = (
+                    f"(municipality ILIKE ${param_idx} OR "
+                    f"first_nation ILIKE ${param_idx})"
+                )
+                where_clauses.append(municipality_clause)
+                params.append(f"%{municipality_filter}%")
+                param_idx += 1
+            
+            where_clause = " AND ".join(where_clauses)
+            
+            # Add limit and offset to params
+            params.extend([limit, offset])
+            
+            rows = await conn.fetch(f"""
+                SELECT
+                    license_number,
+                    municipality,
+                    first_nation,
+                    store_name,
+                    address,
+                    store_application_status as status,
+                    website,
+                    last_synced_at as last_updated
+                FROM ontario_crsa_status
+                WHERE {where_clause}
+                ORDER BY last_synced_at DESC
+                LIMIT ${param_idx} OFFSET ${param_idx + 1}
+            """, *params)
+
+            records = [
+                {
+                    "license_number": row["license_number"],
+                    "municipality": row["municipality"] or row["first_nation"] or "",
+                    "store_name": row["store_name"],
+                    "address": row["address"],
+                    "status": row["status"],
+                    "website": row["website"] or "",
+                    "last_updated": row["last_updated"].isoformat() if row["last_updated"] else None
+                }
+                for row in rows
+            ]
+
+            return records
+
+    except Exception as e:
+        logger.error(f"Failed to get CRSA records: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve CRSA records"
+        )
+
+
+@router.get("/sync/stats")
+async def get_sync_stats():
+    """
+    Get comprehensive CRSA sync statistics for the admin dashboard
+
+    Returns:
+        Statistics including total records, active stores, authorized stores, etc.
+    """
+    try:
+        pool = await get_db_pool()
+        async with pool.acquire() as conn:
+            # Get overall statistics
+            stats_row = await conn.fetchrow("""
+                SELECT
+                    COUNT(*) as total_records,
+                    COUNT(*) FILTER (
+                        WHERE store_application_status ILIKE '%authorized%' 
+                        AND is_active = TRUE
+                    ) as active_stores,
+                    COUNT(*) FILTER (
+                        WHERE store_application_status ILIKE '%authorized%' 
+                        AND is_active = TRUE
+                    ) as authorized_stores,
+                    COUNT(*) FILTER (
+                        WHERE store_application_status ILIKE '%in progress%' 
+                        AND is_active = TRUE
+                    ) as in_progress_stores,
+                    COUNT(*) FILTER (
+                        WHERE store_application_status ILIKE '%public notice%' 
+                        AND is_active = TRUE
+                    ) as public_notice_stores,
+                    COUNT(*) FILTER (
+                        WHERE store_application_status ILIKE '%cancelled%' 
+                        AND is_active = TRUE
+                    ) as cancelled_stores,
+                    COUNT(*) FILTER (WHERE linked_tenant_id IS NOT NULL) as linked_tenants
+                FROM ontario_crsa_status
+            """)
+
+            # Get last sync time
+            last_sync_row = await conn.fetchrow("""
+                SELECT sync_date, success, records_processed
+                FROM crsa_sync_history
+                WHERE success = TRUE
+                ORDER BY sync_date DESC
+                LIMIT 1
+            """)
+
+            # Get sync history
+            history_rows = await conn.fetch("""
+                SELECT
+                    sync_date as timestamp,
+                    CASE WHEN success THEN 'success' ELSE 'failed' END as status,
+                    records_processed,
+                    COALESCE(duration_seconds, 0)::int as duration_seconds
+                FROM crsa_sync_history
+                ORDER BY sync_date DESC
+                LIMIT 10
+            """)
+
+            sync_history = [
+                {
+                    "timestamp": row["timestamp"].isoformat() if row["timestamp"] else None,
+                    "status": row["status"],
+                    "records_processed": row["records_processed"] or 0,
+                    "duration_seconds": row["duration_seconds"] or 0
+                }
+                for row in history_rows
+            ]
+
+            return {
+                "total_records": stats_row["total_records"] or 0,
+                "active_stores": stats_row["active_stores"] or 0,
+                "authorized_stores": stats_row["authorized_stores"] or 0,
+                "in_progress_stores": stats_row["in_progress_stores"] or 0,
+                "public_notice_stores": stats_row["public_notice_stores"] or 0,
+                "cancelled_stores": stats_row["cancelled_stores"] or 0,
+                "linked_tenants": stats_row["linked_tenants"] or 0,
+                "last_sync": last_sync_row["sync_date"].isoformat() if last_sync_row and last_sync_row["sync_date"] else None,
+                "sync_history": sync_history
+            }
+
+    except Exception as e:
+        logger.error(f"Failed to get sync stats: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve sync statistics"
         )
 
 

@@ -259,31 +259,26 @@ class TranslationService:
     ) -> Optional[Dict[str, Any]]:
         """Get translation from database"""
         try:
+            # Generate translation_key from source_text and namespace
+            translation_key = f"{namespace or 'common'}.{source_text}".replace(" ", "_").lower()
+            
             query = """
                 SELECT 
-                    t.translated_text,
-                    t.is_verified,
-                    t.confidence_score,
-                    COALESCE(o.override_text, t.translated_text) as final_text
-                FROM translations t
-                LEFT JOIN translation_overrides o ON t.id = o.translation_id AND o.is_active = TRUE
-                WHERE t.source_text = $1
-                AND t.source_language = $2
-                AND t.target_language = $3
-                AND ($4::text IS NULL OR t.context = $4)
-                AND ($5::text IS NULL OR t.namespace = $5)
+                    translation_value,
+                    is_approved
+                FROM translations
+                WHERE translation_key = $1
+                AND language_code = $2
                 LIMIT 1
             """
             
-            row = await self.db.fetchrow(
-                query, source_text, source_language, target_language, context, namespace
-            )
+            row = await self.db.fetchrow(query, translation_key, target_language)
             
             if row:
                 return {
-                    'translated_text': row['final_text'],
-                    'is_verified': row['is_verified'],
-                    'confidence_score': float(row['confidence_score']) if row['confidence_score'] else None
+                    'translated_text': row['translation_value'],
+                    'is_verified': row['is_approved'],
+                    'confidence_score': 0.9 if row['is_approved'] else 0.8
                 }
             return None
             
@@ -303,23 +298,24 @@ class TranslationService:
     ):
         """Save translation to database"""
         try:
+            # Generate translation_key from source_text and namespace
+            translation_key = f"{namespace or 'common'}.{source_text}".replace(" ", "_").lower()
+            
             query = """
                 INSERT INTO translations (
-                    source_text, source_language, target_language,
-                    translated_text, context, namespace,
-                    confidence_score, model_version
-                ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-                ON CONFLICT (source_text, source_language, target_language, context, namespace)
+                    translation_key, language_code, translation_value,
+                    context, is_approved
+                ) VALUES ($1, $2, $3, $4, $5)
+                ON CONFLICT (translation_key, language_code)
                 DO UPDATE SET
-                    usage_count = translations.usage_count + 1,
-                    last_used_at = CURRENT_TIMESTAMP
+                    translation_value = EXCLUDED.translation_value,
+                    updated_at = CURRENT_TIMESTAMP
             """
             
             await self.db.execute(
                 query,
-                source_text, source_language, target_language,
-                translated_text, context, namespace,
-                confidence_score, "claude-3"
+                translation_key, target_language, translated_text,
+                context, False  # Not approved by default (AI-generated)
             )
             
         except Exception as e:
@@ -334,17 +330,17 @@ class TranslationService:
     ):
         """Update usage statistics for a translation"""
         try:
+            # Generate translation_key from source_text and namespace
+            translation_key = f"{namespace or 'common'}.{source_text}".replace(" ", "_").lower()
+            
             query = """
                 UPDATE translations
-                SET usage_count = usage_count + 1,
-                    last_used_at = CURRENT_TIMESTAMP
-                WHERE source_text = $1
-                AND target_language = $2
-                AND ($3::text IS NULL OR context = $3)
-                AND ($4::text IS NULL OR namespace = $4)
+                SET updated_at = CURRENT_TIMESTAMP
+                WHERE translation_key = $1
+                AND language_code = $2
             """
             
-            await self.db.execute(query, source_text, target_language, context, namespace)
+            await self.db.execute(query, translation_key, target_language)
             
         except Exception as e:
             logger.warning(f"Failed to update usage stats: {e}")
@@ -361,7 +357,7 @@ class TranslationService:
         """
         try:
             # Import here to avoid circular dependency
-            from services.llm_router import LLMRouter
+            from services.llm_gateway.router import LLMRouter
             
             # Get or create LLM Router instance
             router = LLMRouter()

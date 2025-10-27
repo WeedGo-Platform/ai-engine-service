@@ -836,12 +836,32 @@ const TenantSignup = () => {
               <AddressAutocomplete
                 value={formData.street}
                 onChange={(addressComponents: AddressComponents) => {
+                  // Map province names to codes
+                  const provinceMap: { [key: string]: string } = {
+                    'Ontario': 'ON',
+                    'Quebec': 'QC',
+                    'British Columbia': 'BC',
+                    'Alberta': 'AB',
+                    'Manitoba': 'MB',
+                    'Saskatchewan': 'SK',
+                    'Nova Scotia': 'NS',
+                    'New Brunswick': 'NB',
+                    'Newfoundland and Labrador': 'NL',
+                    'Prince Edward Island': 'PE',
+                    'Northwest Territories': 'NT',
+                    'Yukon': 'YT',
+                    'Nunavut': 'NU'
+                  };
+                  
+                  // Convert province name to code
+                  const provinceCode = provinceMap[addressComponents.province] || addressComponents.province;
+                  
                   // Update all address fields at once from autocomplete
                   setFormData({
                     ...formData,
                     street: addressComponents.street,
                     city: addressComponents.city,
-                    province: addressComponents.province,
+                    province: provinceCode,
                     postalCode: addressComponents.postal_code
                   });
                   // Clear address-related errors

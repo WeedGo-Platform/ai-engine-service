@@ -60,6 +60,7 @@ import Apps from './pages/Apps';
 import Communications from './pages/Communications';
 import LogViewer from './pages/LogViewer';
 import Payments from './pages/Payments';
+import CRSAManagement from './pages/SystemSettings/CRSAManagement';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -148,6 +149,7 @@ function Layout() {
         { name: t('navigation.aiConfiguration'), href: '/dashboard/ai', icon: Settings, permission: 'all' },
         { name: t('navigation.provincialCatalog'), href: '/dashboard/provincial-catalog', icon: Upload, permission: 'super_admin' },
         { name: t('navigation.database'), href: '/dashboard/database', icon: Database, permission: 'super_admin' },
+        { name: 'CRSA Management', href: '/dashboard/system/crsa', icon: Database, permission: 'super_admin' },
         { name: t('navigation.systemLogs'), href: '/dashboard/logs', icon: ScrollText, permission: 'super_admin' },
       ];
     }
@@ -499,6 +501,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute requiredPermissions={['system:super_admin']}>
             <DatabaseManagement />
+          </ProtectedRoute>
+        )
+      },
+      {
+        path: 'system/crsa',
+        element: (
+          <ProtectedRoute requiredPermissions={['system:super_admin']}>
+            <CRSAManagement />
           </ProtectedRoute>
         )
       },
