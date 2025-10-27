@@ -66,23 +66,37 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [hasSelected, setHasSelected] = useState(false);
+  const [userIsTyping, setUserIsTyping] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
+  // Initialize hasSelected if value is already populated (navigating back to page)
+  useEffect(() => {
+    if (value && value.length > 0) {
+      setHasSelected(true);
+      setUserIsTyping(false);
+    }
+  }, []); // Only on mount
+
   // Sync external value changes
   useEffect(() => {
-    if (value !== query && !hasSelected) {
+    if (value !== query) {
       setQuery(value);
+      // If external value is being set (not empty), mark as selected
+      if (value && value.length > 0) {
+        setHasSelected(true);
+        setUserIsTyping(false);
+      }
     }
   }, [value]);
 
   // Debounced search
   useEffect(() => {
-    // Reset selected state when typing
-    if (hasSelected && query !== value) {
-      setHasSelected(false);
+    // Don't search if user just selected an address
+    if (hasSelected && !userIsTyping) {
+      return;
     }
 
     // Don't search if query is too short
@@ -136,7 +150,7 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
         abortControllerRef.current.abort();
       }
     };
-  }, [query]);
+  }, [query, hasSelected, userIsTyping]);
 
   // Handle suggestion selection
   const handleSelect = (suggestion: Suggestion) => {
@@ -153,6 +167,7 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
     setShowDropdown(false);
     setSuggestions([]);
     setHasSelected(true);
+    setUserIsTyping(false); // Mark as not typing
 
     // Blur input to close dropdown
     if (inputRef.current) {
@@ -252,9 +267,13 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
           ref={inputRef}
           type="text"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setUserIsTyping(true);  // User is actively typing
+            setHasSelected(false);  // Reset selection state
+          }}
           onFocus={() => {
-            if (suggestions.length > 0) {
+            if (suggestions.length > 0 && !hasSelected) {
               setShowDropdown(true);
             }
           }}

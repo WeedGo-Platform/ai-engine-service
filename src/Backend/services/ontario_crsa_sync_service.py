@@ -6,6 +6,7 @@ Handles automated synchronization of AGCO cannabis retail store data
 import asyncio
 import logging
 import os
+import subprocess
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional, Dict, Any
@@ -62,6 +63,59 @@ class CRSASyncService:
         self.last_sync_time: Optional[datetime] = None
         self.is_running = False
         self.scheduler_thread: Optional[Thread] = None
+
+    async def run_download_scraper(self) -> Optional[Path]:
+        """
+        Run the download_agco_crsa.py scraper to get latest data
+
+        Returns:
+            Path to downloaded CSV file, or None if scraping failed
+        """
+        try:
+            logger.info("Running AGCO scraper to download latest CRSA data...")
+
+            # Path to the scraper script
+            script_dir = Path(__file__).parent.parent / "scripts"
+            scraper_script = script_dir / "download_agco_crsa.py"
+
+            if not scraper_script.exists():
+                logger.error(f"Scraper script not found: {scraper_script}")
+                return None
+
+            # Run the scraper asynchronously
+            proc = await asyncio.create_subprocess_exec(
+                "python3", str(scraper_script),
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
+                cwd=str(script_dir)
+            )
+
+            stdout, stderr = await proc.communicate()
+
+            if proc.returncode != 0:
+                logger.error(f"Scraper failed with code {proc.returncode}")
+                logger.error(f"Error output: {stderr.decode()}")
+                return None
+
+            # Parse output to find CSV path
+            output = stdout.decode()
+            logger.info(f"Scraper output:\n{output}")
+
+            # Find the most recent CSV file in the download directory
+            csv_files = list(self.csv_download_dir.glob("crsa_data_*.csv"))
+            if not csv_files:
+                logger.error("No CSV files found after scraper run")
+                return None
+
+            # Get the most recent file
+            latest_csv = max(csv_files, key=lambda p: p.stat().st_mtime)
+            logger.info(f"Using latest scraped CSV: {latest_csv}")
+
+            return latest_csv
+
+        except Exception as e:
+            logger.error(f"Error running scraper: {e}")
+            return None
 
     async def download_csv(self) -> Optional[Path]:
         """
@@ -247,13 +301,12 @@ class CRSASyncService:
         start_time = datetime.now()
 
         try:
-            # Step 1: Download CSV (if URL configured)
-            csv_path = None
-            if self.agco_csv_url:
-                csv_path = await self.download_csv()
+            # Step 1: Run the download scraper to get latest data from AGCO
+            csv_path = await self.run_download_scraper()
 
-            # Step 2: If download failed or not configured, use latest existing CSV
+            # Step 2: If scraper failed, try to use latest existing CSV as fallback
             if not csv_path:
+                logger.warning("Scraper failed, trying to use latest existing CSV")
                 csv_path = await self.get_latest_csv()
 
             if not csv_path:
@@ -286,6 +339,7 @@ class CRSASyncService:
             return {
                 'success': import_result.get('success', False),
                 'csv_path': str(csv_path),
+                'records_processed': import_result.get('records_processed', 0),
                 'duration_seconds': duration,
                 'timestamp': datetime.now().isoformat()
             }
