@@ -3,6 +3,8 @@ import { createBrowserRouter, RouterProvider, Link, Outlet, useLocation, Navigat
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Toaster } from 'react-hot-toast';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 import {
   Home, Package, ShoppingCart, Users, FileText, Leaf, Menu, X, LogOut, Settings,
   Building2, Store, Tag, Sparkles, Upload, ChevronRight, PanelLeftClose, PanelLeft, Database, Truck, AppWindow, MessageSquare, ScrollText, Moon, Sun, CreditCard
@@ -19,6 +21,9 @@ import PaymentErrorBoundary from './components/PaymentErrorBoundary';
 import LanguageSelector from './components/LanguageSelector';
 import './i18n/config'; // Initialize i18n
 import { useTranslation } from 'react-i18next';
+
+// Initialize Stripe
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '');
 
 // Import pages
 import Login from './pages/Login';
@@ -518,7 +523,9 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <StoreProvider>
-          <RouterProvider router={router} />
+          <Elements stripe={stripePromise}>
+            <RouterProvider router={router} />
+          </Elements>
           <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
           <Toaster
             position="top-right"
