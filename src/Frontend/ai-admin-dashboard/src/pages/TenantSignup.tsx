@@ -336,16 +336,30 @@ const TenantSignup = () => {
 
   const nextStep = () => {
     if (validateStep(currentStep)) {
-      setCurrentStep(prev => Math.min(prev + 1, 4));
+      let nextStepNum = currentStep + 1;
+      
+      // Auto-skip step 3 (Ontario Licensing) if province is not Ontario
+      if (nextStepNum === 3 && formData.province !== 'ON') {
+        nextStepNum = 4;
+      }
+      
+      setCurrentStep(prev => Math.min(nextStepNum, 5));
     }
   };
 
   const prevStep = () => {
-    setCurrentStep(prev => Math.max(prev - 1, 1));
+    let prevStepNum = currentStep - 1;
+    
+    // Auto-skip step 3 (Ontario Licensing) if province is not Ontario when going back
+    if (prevStepNum === 3 && formData.province !== 'ON') {
+      prevStepNum = 2;
+    }
+    
+    setCurrentStep(prev => Math.max(prevStepNum, 1));
   };
 
   const handleSubmit = async () => {
-    if (!validateStep(4)) return;
+    if (!validateStep(5)) return;
 
     setIsSubmitting(true);
     setSubmitProgress({ step: 'checking', message: t('signup:tenant.progress.verifying') });
