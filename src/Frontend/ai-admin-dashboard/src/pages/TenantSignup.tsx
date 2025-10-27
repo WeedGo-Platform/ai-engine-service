@@ -209,6 +209,9 @@ const TenantSignup = () => {
         else if (!/^[A-Z]\d[A-Z]\s?\d[A-Z]\d$/.test(formData.postalCode.toUpperCase())) {
           newErrors.postalCode = t('signup:validation.postalCodeFormat');
         }
+        break;
+
+      case 3: // Ontario Licensing
         // Ontario-specific validation
         if (formData.province === 'ON') {
           if (!formData.crolNumber.trim()) {
@@ -222,7 +225,7 @@ const TenantSignup = () => {
         }
         break;
 
-      case 3: // Account Setup
+      case 4: // Account Setup
         if (!formData.password) newErrors.password = t('signup:validation.passwordRequired');
         else if (formData.password.length < 8) {
           newErrors.password = t('signup:validation.passwordLength');
@@ -234,7 +237,7 @@ const TenantSignup = () => {
         }
         break;
 
-      case 4: // Payment
+      case 5: // Payment
         // For paid tiers, only validate billing name (Stripe handles card validation)
         if (formData.subscriptionTier !== 'enterprise' && formData.subscriptionTier !== 'community_and_new_business') {
           if (!formData.billingName.trim()) newErrors.billingName = t('signup:validation.cardholderRequired');
@@ -895,81 +898,85 @@ const TenantSignup = () => {
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Auto-filled</p>
               </div>
             </div>
-
-            {/* Ontario Licensing Section */}
-            {formData.province === 'ON' && (
-              <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
-                <div className="mb-6">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                    Ontario Cannabis Licensing
-                  </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Required for Ontario cannabis retailers. CROL is your tenant-level operating license, 
-                    CRSA is your store-level retail authorization.
-                  </p>
-                </div>
-
-                {/* CROL Number Input */}
-                <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    CROL Number (Cannabis Retail Operating License) *
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.crolNumber}
-                    onChange={(e) => handleInputChange('crolNumber', e.target.value)}
-                    className={`w-full px-4 py-3 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 transition-colors ${
-                      errors.crolNumber ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
-                    }`}
-                    placeholder="Enter your OCS CROL number"
-                  />
-                  {errors.crolNumber && (
-                    <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.crolNumber}</p>
-                  )}
-                  <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                    Your tenant-level OCS operating license number
-                  </p>
-                </div>
-
-                {/* CRSA Validator */}
-                <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
-                  <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">
-                    CRSA Validation (Cannabis Retail Store Authorization)
-                  </h4>
-                  <OntarioLicenseValidator
-                    email={formData.contactEmail}
-                    onValidationSuccess={(result) => {
-                      setCrsaValidation(result);
-                      // Clear any previous validation errors
-                      if (errors.crsaValidation) {
-                        const newErrors = { ...errors };
-                        delete newErrors.crsaValidation;
-                        setErrors(newErrors);
-                      }
-                    }}
-                  />
-                  {errors.crsaValidation && (
-                    <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border-2 border-red-500 dark:border-red-400 rounded-lg">
-                      <p className="text-sm text-red-700 dark:text-red-400">
-                        ⚠️ {errors.crsaValidation}
-                      </p>
-                    </div>
-                  )}
-                  {crsaValidation?.is_valid && crsaValidation?.verification_tier === 'auto_approved' && (
-                    <div className="mt-4 p-4 bg-green-50 dark:bg-green-900/20 border-2 border-green-500 dark:border-green-400 rounded-lg">
-                      <p className="text-sm text-green-700 dark:text-green-400 font-semibold">
-                        ✓ Domain Verified - Your email domain matches the CRSA website. 
-                        Your first store will be created automatically from this license.
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
           </div>
         );
 
       case 3:
+        // Step 3: Ontario Licensing (conditional)
+        if (formData.province !== 'ON') {
+          return null; // Skip for non-Ontario provinces
+        }
+        return (
+          <div className="space-y-6">
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                Ontario Cannabis Licensing
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Required for Ontario cannabis retailers. CROL is your tenant-level operating license, 
+                CRSA is your store-level retail authorization.
+              </p>
+            </div>
+
+            {/* CROL Number Input */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                CROL Number (Cannabis Retail Operating License) *
+              </label>
+              <input
+                type="text"
+                value={formData.crolNumber}
+                onChange={(e) => handleInputChange('crolNumber', e.target.value)}
+                className={`w-full px-4 py-3 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 transition-colors ${
+                  errors.crolNumber ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
+                }`}
+                placeholder="Enter your OCS CROL number"
+              />
+              {errors.crolNumber && (
+                <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.crolNumber}</p>
+              )}
+              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                Your tenant-level OCS operating license number
+              </p>
+            </div>
+
+            {/* CRSA Validator */}
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
+              <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">
+                CRSA Validation (Cannabis Retail Store Authorization)
+              </h4>
+              <OntarioLicenseValidator
+                email={formData.contactEmail}
+                onValidationSuccess={(result) => {
+                  setCrsaValidation(result);
+                  // Clear any previous validation errors
+                  if (errors.crsaValidation) {
+                    const newErrors = { ...errors };
+                    delete newErrors.crsaValidation;
+                    setErrors(newErrors);
+                  }
+                }}
+              />
+              {errors.crsaValidation && (
+                <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border-2 border-red-500 dark:border-red-400 rounded-lg">
+                  <p className="text-sm text-red-700 dark:text-red-400">
+                    ⚠️ {errors.crsaValidation}
+                  </p>
+                </div>
+              )}
+              {crsaValidation?.is_valid && crsaValidation?.verification_tier === 'auto_approved' && (
+                <div className="mt-4 p-4 bg-green-50 dark:bg-green-900/20 border-2 border-green-500 dark:border-green-400 rounded-lg">
+                  <p className="text-sm text-green-700 dark:text-green-400 font-semibold">
+                    ✓ Domain Verified - Your email domain matches the CRSA website. 
+                    Your first store will be created automatically from this license.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+
+      case 4:
         return (
           <div className="space-y-6">
             <div>
@@ -1069,7 +1076,7 @@ const TenantSignup = () => {
           </div>
         );
 
-      case 4:
+      case 5:
         const selectedPlanInfo = subscriptionPlans[formData.subscriptionTier as keyof typeof subscriptionPlans];
 
         // Show error message prominently at the top if there's a submit error
@@ -1449,6 +1456,7 @@ const TenantSignup = () => {
   const stepTitles = [
     t('signup:tenant.steps.company'),
     t('signup:tenant.steps.contact'),
+    'Ontario Licensing',  // New step 3
     t('signup:tenant.steps.account'),
     t('signup:tenant.steps.payment')
   ];
@@ -1560,8 +1568,9 @@ const TenantSignup = () => {
               <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
                 {currentStep === 1 && t('signup:tenant.stepDescriptions.company')}
                 {currentStep === 2 && t('signup:tenant.stepDescriptions.contact')}
-                {currentStep === 3 && t('signup:tenant.stepDescriptions.account')}
-                {currentStep === 4 && t('signup:tenant.stepDescriptions.payment')}
+                {currentStep === 3 && 'Validate your Ontario cannabis retail licenses (CROL and CRSA)'}
+                {currentStep === 4 && t('signup:tenant.stepDescriptions.account')}
+                {currentStep === 5 && t('signup:tenant.stepDescriptions.payment')}
               </p>
             </div>
 
@@ -1585,7 +1594,7 @@ const TenantSignup = () => {
                 <span className="sm:hidden">{t('signup:tenant.navigation.back')}</span>
               </button>
 
-              {currentStep < 4 ? (
+              {currentStep < 5 ? (
                 <button
                   onClick={nextStep}
                   className="flex items-center justify-center sm:justify-start px-4 sm:px-6 py-2.5 sm:py-3 bg-primary-600 dark:bg-primary-500 text-white rounded-lg font-medium text-sm sm:text-base hover:bg-primary-700 dark:hover:bg-primary-600 transition-all active:scale-95 touch-manipulation"
