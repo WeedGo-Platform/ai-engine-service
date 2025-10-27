@@ -10,14 +10,24 @@ jobs:
   deploy-backend:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to Koyeb
+      - name: Install Koyeb CLI
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/koyeb/koyeb-cli/master/install.sh | bash
+          echo "$HOME/.koyeb/bin" >> $GITHUB_PATH
+
+      - name: Update Service with CORS Configuration
         env:
           KOYEB_TOKEN: ${{ secrets.KOYEB_TOKEN }}
           SERVICE_ID: ${{ secrets.KOYEB_SERVICE_ID_UAT }}
         run: |
-          echo "Deploying backend to Koyeb..."
-          curl -X POST "https://app.koyeb.com/v1/services/${SERVICE_ID}/redeploy" \
-            -H "Authorization: Bearer ${KOYEB_TOKEN}"
+          echo "Updating service with CORS configuration..."
+          koyeb service update $SERVICE_ID \
+            --env "CORS_ALLOWED_ORIGINS=https://weedgo-uat-admin.pages.dev;https://weedgo-uat-commerce-headless.pages.dev;https://weedgo-uat-commerce-pot-palace.pages.dev;https://weedgo-uat-commerce-modern.pages.dev" \
+            --env "CORS_ORIGIN_REGEX=https://.*\.weedgo-uat-admin\.pages\.dev|https://.*\.weedgo-uat-commerce-.*\.pages\.dev" \
+            --token $KOYEB_TOKEN
+          echo "Service updated! Redeploying..."
+          sleep 5
+          koyeb service redeploy $SERVICE_ID --token $KOYEB_TOKEN
           echo "Backend deployment triggered!"
 
   build-admin-dashboard:
