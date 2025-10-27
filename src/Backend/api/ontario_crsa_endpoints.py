@@ -55,6 +55,7 @@ async def get_crsa_service() -> OntarioCRSAService:
 class LicenseValidationRequest(BaseModel):
     """Request model for license validation"""
     license_number: str = Field(..., description="Ontario cannabis retail license number")
+    email: Optional[str] = Field(None, description="Email for domain matching verification")
 
 
 class LicenseValidationResponse(BaseModel):
@@ -67,6 +68,8 @@ class LicenseValidationResponse(BaseModel):
     store_status: Optional[str] = None
     website: Optional[str] = None
     error_message: Optional[str] = None
+    verification_tier: Optional[str] = Field(None, description="auto_approved or manual_review")
+    domain_match: Optional[bool] = Field(None, description="Whether email domain matches CRSA website")
     auto_fill_data: Optional[Dict[str, Any]] = None
 
 
@@ -141,8 +144,9 @@ async def validate_license(
     - License exists in AGCO database
     - Store is authorized to open
     - License is not already linked to another tenant
+    - (Optional) Email domain matches CRSA website for auto-approval
 
-    Returns auto-fill data if validation succeeds.
+    Returns auto-fill data and verification tier if validation succeeds.
     """
     try:
         # Validate license
@@ -150,13 +154,41 @@ async def validate_license(
 
         # If valid, get auto-fill data
         auto_fill_data = None
+        verification_tier = None
+        domain_match = None
+        
         if validation.is_valid and validation.crsa_record:
             auto_fill_data = await service.auto_fill_tenant_info(request.license_number)
+            
+            # Perform domain matching if email provided
+            if request.email and validation.crsa_record.website:
+                from urllib.parse import urlparse
+                
+                # Extract domains
+                email_domain = request.email.split('@')[1].lower() if '@' in request.email else ''
+                
+                website_url = validation.crsa_record.website
+                parsed = urlparse(website_url)
+                website_domain = (parsed.netloc or parsed.path).lower()
+                if website_domain.startswith('www.'):
+                    website_domain = website_domain[4:]
+                website_domain = website_domain.rstrip('/')
+                
+                # Check exact match or subdomain match
+                domain_match = (email_domain == website_domain) or \
+                               (email_domain.endswith(f'.{website_domain}')) or \
+                               (website_domain.endswith(f'.{email_domain}'))
+                
+                verification_tier = "auto_approved" if domain_match else "manual_review"
+                
+                logger.info(f"Domain matching for {request.license_number}: email={email_domain}, website={website_domain}, match={domain_match}")
 
         # Build response
         response = {
             "is_valid": validation.is_valid,
-            "error_message": validation.error_message
+            "error_message": validation.error_message,
+            "verification_tier": verification_tier,
+            "domain_match": domain_match
         }
 
         if validation.crsa_record:

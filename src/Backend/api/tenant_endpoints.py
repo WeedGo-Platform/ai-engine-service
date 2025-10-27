@@ -78,6 +78,8 @@ class CreateTenantRequest(BaseModel):
     contact_phone: Optional[str] = Field(None, max_length=20)
     website: Optional[str] = Field(None, max_length=200)
     logo_url: Optional[str] = Field(None, max_length=500)
+    crol_number: Optional[str] = Field(None, max_length=50, description="Ontario Cannabis Retail Operating License (tenant-level)")
+    crsa_license: Optional[Dict[str, Any]] = Field(None, description="CRSA license validation data for store creation")
     settings: Optional[Dict[str, Any]] = Field(default_factory=dict)
 
 
@@ -369,6 +371,62 @@ async def create_tenant_with_admin(
                     logo_url=request.logo_url,
                     settings=request.settings
                 )
+                
+                # Add CROL number for Ontario tenants
+                if request.crol_number:
+                    await conn.execute("""
+                        UPDATE tenants 
+                        SET crol_number = $1 
+                        WHERE id = $2
+                    """, request.crol_number, tenant.id)
+                    logger.info(f"Updated tenant {tenant.id} with CROL number")
+                
+                # Create first store from CRSA validation for Ontario tenants
+                created_store_id = None
+                if request.crsa_license and request.address:
+                    try:
+                        crsa_data = request.crsa_license
+                        
+                        # Create store from CRSA data
+                        created_store = await conn.fetchrow("""
+                            INSERT INTO stores (
+                                tenant_id, name, address, city, province, postal_code,
+                                phone, status, license_number, is_primary, created_at, updated_at
+                            ) VALUES (
+                                $1, $2, $3, $4, $5, $6, $7, 'active', $8, true, NOW(), NOW()
+                            ) RETURNING id
+                        """,
+                            tenant.id,
+                            crsa_data.get('store_name', request.name),
+                            crsa_data.get('address', request.address.street if request.address else ''),
+                            crsa_data.get('municipality', request.address.city if request.address else ''),
+                            request.address.province if request.address else 'ON',
+                            request.address.postal_code if request.address else '',
+                            request.contact_phone or '',
+                            crsa_data.get('license_number')
+                        )
+                        created_store_id = created_store['id']
+                        logger.info(f"Created primary store {created_store_id} from CRSA {crsa_data.get('license_number')}")
+                        
+                        # Link CRSA to store (not tenant)
+                        await conn.execute("""
+                            UPDATE ontario_crsa_status 
+                            SET linked_tenant_id = $1,
+                                verification_status = 'verified',
+                                verification_date = NOW(),
+                                notes = $2
+                            WHERE license_number = $3
+                        """,
+                            tenant.id,
+                            f"Auto-verified during signup. Domain match tier: {crsa_data.get('verification_tier', 'unknown')}",
+                            crsa_data.get('license_number')
+                        )
+                        logger.info(f"Linked CRSA {crsa_data.get('license_number')} to tenant {tenant.id}")
+                        
+                    except Exception as store_error:
+                        logger.error(f"Failed to create store from CRSA: {store_error}")
+                        # Don't fail signup, but log for manual follow-up
+                        # Admin can create store manually later
 
                 # Create admin user
                 try:

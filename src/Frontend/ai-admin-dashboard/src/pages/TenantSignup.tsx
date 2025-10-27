@@ -7,7 +7,29 @@ import {
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { useTranslation } from 'react-i18next';
 import tenantService from '../services/tenantService';
+import OntarioLicenseValidator from '../components/OntarioLicenseValidator';
 import '../styles/signup-animations.css';
+
+interface LicenseValidationResult {
+  is_valid: boolean;
+  license_number?: string;
+  store_name?: string;
+  address?: string;
+  municipality?: string;
+  store_status?: string;
+  website?: string;
+  error_message?: string;
+  verification_tier?: string;
+  domain_match?: boolean;
+  auto_fill_data?: {
+    store_name: string;
+    address: string;
+    municipality: string;
+    website?: string;
+    license_number: string;
+    license_status: string;
+  };
+}
 
 interface FormData {
   // Company Information
@@ -27,6 +49,9 @@ interface FormData {
   contactPhone: string;
   firstName: string;
   lastName: string;
+  
+  // Ontario Licensing (required for ON only)
+  crolNumber: string;
   
   // Account Setup
   tenantName: string;
@@ -63,6 +88,7 @@ const TenantSignup = () => {
   const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [crsaValidation, setCrsaValidation] = useState<LicenseValidationResult | null>(null);
   
   const [formData, setFormData] = useState<FormData>({
     companyName: '',
@@ -77,6 +103,7 @@ const TenantSignup = () => {
     contactPhone: '',
     firstName: '',
     lastName: '',
+    crolNumber: '',
     tenantName: '',
     tenantCode: '',
     password: '',
@@ -180,6 +207,17 @@ const TenantSignup = () => {
         if (!formData.postalCode.trim()) newErrors.postalCode = t('signup:validation.postalCodeRequired');
         else if (!/^[A-Z]\d[A-Z]\s?\d[A-Z]\d$/.test(formData.postalCode.toUpperCase())) {
           newErrors.postalCode = t('signup:validation.postalCodeFormat');
+        }
+        // Ontario-specific validation
+        if (formData.province === 'ON') {
+          if (!formData.crolNumber.trim()) {
+            newErrors.crolNumber = 'CROL number is required for Ontario tenants';
+          }
+          if (!crsaValidation || !crsaValidation.is_valid) {
+            newErrors.crsaValidation = 'Valid CRSA license is required for Ontario tenants';
+          } else if (crsaValidation.verification_tier === 'manual_review') {
+            newErrors.crsaValidation = 'Your email domain does not match the CRSA website. Please contact support for manual verification.';
+          }
         }
         break;
 
@@ -378,7 +416,7 @@ const TenantSignup = () => {
       }
       
       // Prepare the payload according to backend API
-      const payload = {
+      const payload: any = {
         name: formData.tenantName,
         code: formData.tenantCode,
         company_name: formData.companyName,
@@ -409,6 +447,24 @@ const TenantSignup = () => {
           }
         }
       };
+
+      // Add Ontario-specific data if province is ON
+      if (formData.province === 'ON') {
+        payload.crol_number = formData.crolNumber;
+        
+        // Add CRSA validation data for store creation
+        if (crsaValidation?.is_valid && crsaValidation.auto_fill_data) {
+          payload.crsa_license = {
+            license_number: crsaValidation.license_number,
+            store_name: crsaValidation.auto_fill_data.store_name,
+            address: crsaValidation.auto_fill_data.address,
+            municipality: crsaValidation.auto_fill_data.municipality,
+            website: crsaValidation.auto_fill_data.website,
+            verification_tier: crsaValidation.verification_tier || 'auto_approved'
+          };
+        }
+      }
+
 
       // Create tenant with admin user (now uses atomic signup endpoint)
       const result = await tenantService.createTenant(payload);
@@ -823,6 +879,77 @@ const TenantSignup = () => {
                 )}
               </div>
             </div>
+
+            {/* Ontario Licensing Section */}
+            {formData.province === 'ON' && (
+              <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                    Ontario Cannabis Licensing
+                  </h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Required for Ontario cannabis retailers. CROL is your tenant-level operating license, 
+                    CRSA is your store-level retail authorization.
+                  </p>
+                </div>
+
+                {/* CROL Number Input */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    CROL Number (Cannabis Retail Operating License) *
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.crolNumber}
+                    onChange={(e) => handleInputChange('crolNumber', e.target.value)}
+                    className={`w-full px-4 py-3 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 transition-colors ${
+                      errors.crolNumber ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
+                    }`}
+                    placeholder="Enter your OCS CROL number"
+                  />
+                  {errors.crolNumber && (
+                    <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.crolNumber}</p>
+                  )}
+                  <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    Your tenant-level OCS operating license number
+                  </p>
+                </div>
+
+                {/* CRSA Validator */}
+                <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
+                  <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">
+                    CRSA Validation (Cannabis Retail Store Authorization)
+                  </h4>
+                  <OntarioLicenseValidator
+                    email={formData.contactEmail}
+                    onValidationSuccess={(result) => {
+                      setCrsaValidation(result);
+                      // Clear any previous validation errors
+                      if (errors.crsaValidation) {
+                        const newErrors = { ...errors };
+                        delete newErrors.crsaValidation;
+                        setErrors(newErrors);
+                      }
+                    }}
+                  />
+                  {errors.crsaValidation && (
+                    <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border-2 border-red-500 dark:border-red-400 rounded-lg">
+                      <p className="text-sm text-red-700 dark:text-red-400">
+                        ⚠️ {errors.crsaValidation}
+                      </p>
+                    </div>
+                  )}
+                  {crsaValidation?.is_valid && crsaValidation?.verification_tier === 'auto_approved' && (
+                    <div className="mt-4 p-4 bg-green-50 dark:bg-green-900/20 border-2 border-green-500 dark:border-green-400 rounded-lg">
+                      <p className="text-sm text-green-700 dark:text-green-400 font-semibold">
+                        ✓ Domain Verified - Your email domain matches the CRSA website. 
+                        Your first store will be created automatically from this license.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         );
 

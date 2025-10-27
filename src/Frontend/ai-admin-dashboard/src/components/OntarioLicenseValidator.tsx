@@ -10,6 +10,8 @@ interface LicenseValidationResult {
   store_status?: string;
   website?: string;
   error_message?: string;
+  verification_tier?: string;
+  domain_match?: boolean;
   auto_fill_data?: {
     store_name: string;
     address: string;
@@ -23,11 +25,13 @@ interface LicenseValidationResult {
 interface OntarioLicenseValidatorProps {
   onValidationSuccess: (data: LicenseValidationResult) => void;
   initialLicenseNumber?: string;
+  email?: string;
 }
 
 const OntarioLicenseValidator: React.FC<OntarioLicenseValidatorProps> = ({
   onValidationSuccess,
-  initialLicenseNumber = ''
+  initialLicenseNumber = '',
+  email
 }) => {
   const [licenseNumber, setLicenseNumber] = useState(initialLicenseNumber);
   const [isValidating, setIsValidating] = useState(false);
@@ -53,7 +57,8 @@ const OntarioLicenseValidator: React.FC<OntarioLicenseValidatorProps> = ({
 
     try {
       const response = await axios.post(`${API_BASE_URL}/api/crsa/validate`, {
-        license_number: licenseNumber.trim()
+        license_number: licenseNumber.trim(),
+        email: email || undefined
       });
 
       const result = response.data as LicenseValidationResult;
