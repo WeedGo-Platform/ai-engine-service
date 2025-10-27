@@ -300,7 +300,7 @@ jobs:
   #############################################################################
 
   health-check:
-    needs: [deploy-uat-backend, deploy-beta-backend, deploy-preprod-backend]
+    needs: [setup, deploy-uat-backend, deploy-beta-backend, deploy-preprod-backend]
     if: always()
     runs-on: ubuntu-latest
     steps:
