@@ -110,7 +110,7 @@ koyeb service create weedgo-uat-backend \
    git push origin develop
    ```
 
-2. **GitHub Actions will automatically:**
+2. **GitHub Actions will automatically** (pushes to main branch):
    - Build Docker image
    - Deploy to Koyeb
    - Run health checks
