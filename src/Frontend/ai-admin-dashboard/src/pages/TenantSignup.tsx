@@ -8,6 +8,7 @@ import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { useTranslation } from 'react-i18next';
 import tenantService from '../services/tenantService';
 import OntarioLicenseValidator from '../components/OntarioLicenseValidator';
+import AddressAutocomplete, { AddressComponents } from '../components/AddressAutocomplete';
 import '../styles/signup-animations.css';
 
 interface LicenseValidationResult {
@@ -813,17 +814,33 @@ const TenantSignup = () => {
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t('signup:tenant.contactInfo.street')} *
               </label>
-              <input
-                type="text"
+              <AddressAutocomplete
                 value={formData.street}
-                onChange={(e) => handleInputChange('street', e.target.value)}
-                className={`w-full px-4 py-3 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 transition-colors ${
-                  errors.street ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
-                }`}
+                onChange={(addressComponents: AddressComponents) => {
+                  // Update all address fields at once from autocomplete
+                  setFormData({
+                    ...formData,
+                    street: addressComponents.street,
+                    city: addressComponents.city,
+                    province: addressComponents.province,
+                    postalCode: addressComponents.postal_code
+                  });
+                  // Clear address-related errors
+                  const newErrors = { ...errors };
+                  delete newErrors.street;
+                  delete newErrors.city;
+                  delete newErrors.postalCode;
+                  setErrors(newErrors);
+                }}
+                placeholder={t('signup:tenant.contactInfo.streetPlaceholder') || 'Start typing an address (e.g., 123 Main St, Toronto)'}
+                required
               />
               {errors.street && (
                 <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.street}</p>
               )}
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                💡 Start typing to see address suggestions - city and postal code will auto-fill
+              </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
@@ -834,14 +851,14 @@ const TenantSignup = () => {
                 <input
                   type="text"
                   value={formData.city}
-                  onChange={(e) => handleInputChange('city', e.target.value)}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                    errors.city ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
-                  }`}
+                  readOnly
+                  className="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white cursor-not-allowed"
+                  placeholder={t('signup:tenant.contactInfo.cityPlaceholder') || 'Auto-filled from address'}
                 />
                 {errors.city && (
                   <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.city}</p>
                 )}
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Auto-filled</p>
               </div>
 
               <div>
@@ -868,15 +885,14 @@ const TenantSignup = () => {
                 <input
                   type="text"
                   value={formData.postalCode}
-                  onChange={(e) => handleInputChange('postalCode', e.target.value)}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                    errors.postalCode ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
-                  }`}
-                  placeholder={t('signup:tenant.contactInfo.postalCodePlaceholder')}
+                  readOnly
+                  className="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white cursor-not-allowed"
+                  placeholder={t('signup:tenant.contactInfo.postalCodePlaceholder') || 'Auto-filled from address'}
                 />
                 {errors.postalCode && (
                   <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.postalCode}</p>
                 )}
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Auto-filled</p>
               </div>
             </div>
 
