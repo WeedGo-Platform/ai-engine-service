@@ -601,44 +601,46 @@ const TenantSignup = () => {
               )}
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                {t('signup:tenant.companyInfo.website')} *
-              </label>
-              <input
-                type="text"
-                value={formData.website}
-                onChange={(e) => handleInputChange('website', e.target.value)}
-                className={`w-full px-4 py-3 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 transition-colors ${
-                  errors.website ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
-                }`}
-                placeholder={t('signup:tenant.companyInfo.websitePlaceholder')}
-              />
-              <p className="mt-1 text-sm text-gray-500">
-                {t('signup:tenant.companyInfo.websiteHelp')}
-              </p>
-              {errors.website && (
-                <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.website}</p>
-              )}
-            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-8">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  {t('signup:tenant.companyInfo.website')} *
+                </label>
+                <input
+                  type="text"
+                  value={formData.website}
+                  onChange={(e) => handleInputChange('website', e.target.value)}
+                  className={`w-full px-4 py-3 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 transition-colors ${
+                    errors.website ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
+                  }`}
+                  placeholder={t('signup:tenant.companyInfo.websitePlaceholder')}
+                />
+                <p className="mt-1 text-sm text-gray-500">
+                  {t('signup:tenant.companyInfo.websiteHelp')}
+                </p>
+                {errors.website && (
+                  <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.website}</p>
+                )}
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                {t('signup:tenant.companyInfo.brandCodeAuto')}
-              </label>
-              <input
-                type="text"
-                value={formData.tenantCode}
-                readOnly
-                className="w-full px-4 py-3 border rounded-lg bg-gray-50 cursor-not-allowed border-gray-200"
-                placeholder={t('signup:tenant.companyInfo.brandCodePlaceholder')}
-              />
-              <p className="mt-1 text-sm text-gray-500">
-                {t('signup:tenant.companyInfo.brandCodeHelp', { code: formData.tenantCode.toLowerCase() || 'your-code' })}
-              </p>
-              {errors.tenantCode && (
-                <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.tenantCode}</p>
-              )}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  {t('signup:tenant.companyInfo.brandCodeAuto')}
+                </label>
+                <input
+                  type="text"
+                  value={formData.tenantCode}
+                  readOnly
+                  className="w-full px-4 py-3 border rounded-lg bg-gray-50 dark:bg-gray-700 cursor-not-allowed border-gray-200 dark:border-gray-600"
+                  placeholder={t('signup:tenant.companyInfo.brandCodePlaceholder')}
+                />
+                <p className="mt-1 text-sm text-gray-500">
+                  {t('signup:tenant.companyInfo.brandCodeHelp', { code: formData.tenantCode.toLowerCase() || 'your-code' })}
+                </p>
+                {errors.tenantCode && (
+                  <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.tenantCode}</p>
+                )}
+              </div>
             </div>
 
             <div>
