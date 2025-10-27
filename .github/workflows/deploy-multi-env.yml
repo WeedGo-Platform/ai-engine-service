@@ -3,7 +3,7 @@ name: Multi-Environment Deployment
 on:
   push:
     branches:
-      - develop    # Triggers UAT deployment
+      - main       # Triggers UAT deployment
       - staging    # Triggers Beta deployment
       - release    # Triggers Pre-PROD deployment
 
@@ -41,7 +41,7 @@ jobs:
             echo "deploy_beta=$([[ $ENV == 'beta' || $ENV == 'all' ]] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
             echo "deploy_preprod=$([[ $ENV == 'preprod' || $ENV == 'all' ]] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
           else
-            echo "deploy_uat=$([[ ${{ github.ref }} == 'refs/heads/develop' ]] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+            echo "deploy_uat=$([[ ${{ github.ref }} == 'refs/heads/main' ]] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
             echo "deploy_beta=$([[ ${{ github.ref }} == 'refs/heads/staging' ]] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
             echo "deploy_preprod=$([[ ${{ github.ref }} == 'refs/heads/release' ]] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
           fi
@@ -307,7 +307,7 @@ jobs:
       - name: Check UAT health
         if: needs.setup.outputs.deploy_uat == 'true'
         run: |
-          curl -f https://weedgo-uat.koyeb.app/health || exit 1
+          curl -f https://weedgo-uat-weedgo-c07d9ce5.koyeb.app/health || exit 1
 
       - name: Check Beta health
         if: needs.setup.outputs.deploy_beta == 'true'
