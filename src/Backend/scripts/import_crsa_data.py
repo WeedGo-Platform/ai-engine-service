@@ -212,9 +212,23 @@ async def import_csv(file_path: str, is_initial_load: bool = False):
                 status = clean_csv_value(row.get('Store Application Status'))
 
                 # Skip rows without required fields
-                if not license_num or not store_name or not address or not status:
-                    logger.warning(f"Row {row_num}: Skipping incomplete record")
+                # Note: "In Progress" and "Public Notice" applications may not have license numbers yet
+                if not store_name or not address or not status:
+                    logger.warning(f"Row {row_num}: Skipping incomplete record (missing store name, address, or status)")
                     continue
+                
+                # Generate placeholder license number for pending applications
+                if not license_num:
+                    if status in ['In Progress', 'Public Notice']:
+                        # Use hash of store name + address as unique identifier
+                        import hashlib
+                        unique_str = f"{store_name}|{address}".lower()
+                        hash_val = hashlib.md5(unique_str.encode()).hexdigest()[:12]
+                        license_num = f"PENDING-{hash_val}"
+                        logger.info(f"Row {row_num}: Generated placeholder license for {status} application: {license_num}")
+                    else:
+                        logger.warning(f"Row {row_num}: Skipping record without license number (status: {status})")
+                        continue
 
                 # Parse municipality/first nation
                 muni_fn = clean_csv_value(row.get('Municipality or First Nation'))
