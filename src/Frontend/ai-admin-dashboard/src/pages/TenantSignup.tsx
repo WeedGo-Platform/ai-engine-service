@@ -1547,13 +1547,12 @@ const TenantSignup = () => {
                 </div>
               ))}
             </div>
-            <div className="flex justify-between mt-2 sm:mt-3">
+            <div className="hidden sm:flex justify-between mt-2 sm:mt-3">
               {stepTitles.map((title, index) => (
                 <div key={index} className={`text-xs sm:text-sm lg:text-base transition-colors ${
                   index + 1 === currentStep ? 'text-primary-600 dark:text-primary-400 font-medium' : 'text-gray-500 dark:text-gray-400'
                 }`}>
-                  <span className="hidden sm:inline">{title}</span>
-                  <span className="sm:hidden">{index + 1}</span>
+                  {title}
                 </div>
               ))}
             </div>
