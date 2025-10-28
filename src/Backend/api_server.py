@@ -1716,7 +1716,8 @@ async def general_exception_handler(request: Request, exc: Exception):
 
 def main():
     """Run the V5 API server"""
-    port = int(os.environ.get('V5_PORT', 5024))
+    # Support Cloud Run's PORT env var (takes precedence), fallback to V5_PORT, then default to 5024
+    port = int(os.environ.get('PORT', os.environ.get('V5_PORT', '5024')))
     host = os.environ.get('V5_HOST', '0.0.0.0')
     
     # Create .env file if it doesn't exist
