@@ -17,8 +17,14 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
-COPY . .
+# Copy application code selectively (exclude models/, data/, storage/)
+COPY api_server.py .
+COPY api/ ./api/
+COPY utils/ ./utils/
+COPY services/ ./services/
+COPY config/ ./config/
+COPY *.json ./
+COPY *.yaml ./
 
 # Create non-root user
 RUN useradd -m -u 1000 appuser && \
