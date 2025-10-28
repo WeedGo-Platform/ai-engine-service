@@ -366,5 +366,35 @@
         "personalities": "5 Tính cách AI"
       }
     }
+  },
+  "legal": {
+    "title": "Thỏa thuận pháp lý và xác nhận",
+    "description": "Vui lòng xem xét và chấp nhận các thỏa thuận sau để hoàn tất đăng ký của bạn",
+    "termsOfService": {
+      "label": "Tôi đồng ý với Điều khoản Dịch vụ",
+      "linkText": "Điều khoản Dịch vụ",
+      "required": "Bạn phải chấp nhận Điều khoản Dịch vụ để tiếp tục"
+    },
+    "privacyPolicy": {
+      "label": "Tôi đồng ý với Chính sách Bảo mật",
+      "linkText": "Chính sách Bảo mật",
+      "required": "Bạn phải chấp nhận Chính sách Bảo mật để tiếp tục"
+    },
+    "dataUsage": {
+      "label": "Tôi đồng ý xử lý dữ liệu cho quảng cáo được nhắm mục tiêu AI từ các nhà sản xuất cần sa được cấp phép",
+      "description": "WeedGo tạo doanh thu thông qua quảng cáo được nhắm mục tiêu AI từ các nhà sản xuất cần sa được cấp phép. Dữ liệu sử dụng của bạn sẽ được xử lý để cung cấp các đề xuất sản phẩm phù hợp và nội dung khuyến mại.",
+      "required": "Bạn phải đồng ý với việc sử dụng dữ liệu để tiếp tục"
+    },
+    "accurateInfo": {
+      "label": "Tôi xác nhận rằng tất cả thông tin được cung cấp là chính xác và đầy đủ",
+      "description": "Bạn xác nhận rằng tất cả thông tin được gửi trong biểu mẫu đăng ký này là đúng sự thật, chính xác và đầy đủ theo hiểu biết tốt nhất của bạn.",
+      "required": "Bạn phải xác nhận độ chính xác của thông tin của bạn"
+    },
+    "authorization": {
+      "label": "Tôi được tổ chức của tôi ủy quyền để tạo tài khoản này",
+      "description": "Bạn xác nhận rằng bạn có thẩm quyền pháp lý và sự ủy quyền từ tổ chức của bạn để đăng ký dịch vụ WeedGo và ký kết thỏa thuận này thay mặt cho công ty của bạn.",
+      "required": "Bạn phải xác nhận sự ủy quyền của bạn để tiếp tục"
+    },
+    "allRequired": "Tất cả các xác nhận phải được chấp nhận để tạo tài khoản của bạn"
   }
 }

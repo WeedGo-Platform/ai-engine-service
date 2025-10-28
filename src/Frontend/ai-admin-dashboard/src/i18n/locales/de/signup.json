@@ -366,5 +366,35 @@
         "personalities": "5 KI-Persönlichkeiten"
       }
     }
+  },
+  "legal": {
+    "title": "Rechtliche Vereinbarungen und Bescheinigungen",
+    "description": "Bitte lesen und akzeptieren Sie die folgenden Vereinbarungen, um Ihre Registrierung abzuschließen",
+    "termsOfService": {
+      "label": "Ich stimme den Nutzungsbedingungen zu",
+      "linkText": "Nutzungsbedingungen",
+      "required": "Sie müssen die Nutzungsbedingungen akzeptieren, um fortzufahren"
+    },
+    "privacyPolicy": {
+      "label": "Ich stimme der Datenschutzerklärung zu",
+      "linkText": "Datenschutzerklärung",
+      "required": "Sie müssen die Datenschutzerklärung akzeptieren, um fortzufahren"
+    },
+    "dataUsage": {
+      "label": "Ich stimme der Datenverarbeitung für KI-gesteuerte Werbung von lizenzierten Cannabis-Produzenten zu",
+      "description": "WeedGo generiert Einnahmen durch KI-gesteuerte Werbung von lizenzierten Cannabis-Produzenten. Ihre Nutzungsdaten werden verarbeitet, um relevante Produktempfehlungen und Werbeinhalte bereitzustellen.",
+      "required": "Sie müssen der Datennutzung zustimmen, um fortzufahren"
+    },
+    "accurateInfo": {
+      "label": "Ich bestätige, dass alle bereitgestellten Informationen korrekt und vollständig sind",
+      "description": "Sie bestätigen, dass alle in diesem Registrierungsformular eingereichten Informationen nach bestem Wissen und Gewissen wahr, korrekt und vollständig sind.",
+      "required": "Sie müssen die Richtigkeit Ihrer Informationen bestätigen"
+    },
+    "authorization": {
+      "label": "Ich bin von meiner Organisation autorisiert, dieses Konto zu erstellen",
+      "description": "Sie bestätigen, dass Sie die rechtliche Befugnis und Autorisierung Ihrer Organisation haben, sich für WeedGo-Dienste zu registrieren und diese Vereinbarung im Namen Ihres Unternehmens einzugehen.",
+      "required": "Sie müssen Ihre Autorisierung bestätigen, um fortzufahren"
+    },
+    "allRequired": "Alle Bescheinigungen müssen akzeptiert werden, um Ihr Konto zu erstellen"
   }
 }
