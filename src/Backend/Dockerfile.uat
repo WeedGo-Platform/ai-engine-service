@@ -18,13 +18,17 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code selectively (exclude models/, data/, storage/)
+# Only copy essential directories - .dockerignore handles exclusions
 COPY api_server.py .
 COPY api/ ./api/
-COPY utils/ ./utils/
-COPY services/ ./services/
 COPY config/ ./config/
+COPY core/ ./core/
+COPY database/ ./database/
+COPY domain/ ./domain/
+COPY middleware/ ./middleware/
+COPY monitoring/ ./monitoring/
+COPY prompts/ ./prompts/
 COPY *.json ./
-COPY *.yaml ./
 
 # Create non-root user
 RUN useradd -m -u 1000 appuser && \
