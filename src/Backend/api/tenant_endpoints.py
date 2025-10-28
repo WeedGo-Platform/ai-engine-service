@@ -381,6 +381,36 @@ async def create_tenant_with_admin(
                     """, request.crol_number, tenant.id)
                     logger.info(f"Updated tenant {tenant.id} with CROL number")
                 
+                # Store terms acceptance data
+                terms_data = request.settings.get('terms_acceptance') if request.settings else None
+                if not terms_data:
+                    # For backward compatibility, create default terms acceptance record
+                    terms_data = {
+                        'accepted_at': datetime.utcnow().isoformat(),
+                        'version': '1.0',
+                        'accepted_by': request.contact_email
+                    }
+                
+                if terms_data:
+                    # Get client IP from request if available (will be added via middleware)
+                    client_ip = terms_data.get('ip_address')
+                    
+                    await conn.execute("""
+                        UPDATE tenants 
+                        SET terms_accepted_at = $1,
+                            terms_accepted_version = $2,
+                            terms_accepted_by = $3,
+                            terms_ip_address = $4
+                        WHERE id = $5
+                    """,
+                        datetime.fromisoformat(terms_data['accepted_at'].replace('Z', '+00:00')) if isinstance(terms_data['accepted_at'], str) else terms_data['accepted_at'],
+                        terms_data.get('version', '1.0'),
+                        terms_data.get('accepted_by', request.contact_email),
+                        client_ip,
+                        tenant.id
+                    )
+                    logger.info(f"Recorded terms acceptance for tenant {tenant.id} by {terms_data.get('accepted_by')}")
+                
                 # Create first store from CRSA validation for Ontario tenants
                 created_store_id = None
                 if request.crsa_license and request.address:

@@ -366,5 +366,35 @@
         "personalities": "5 personalități AI"
       }
     }
+  },
+  "legal": {
+    "title": "Acorduri legale și atestații",
+    "description": "Vă rugăm să examinați și să acceptați următoarele acorduri pentru a finaliza înregistrarea",
+    "termsOfService": {
+      "label": "Sunt de acord cu Termenii de Serviciu",
+      "linkText": "Termenii de Serviciu",
+      "required": "Trebuie să acceptați Termenii de Serviciu pentru a continua"
+    },
+    "privacyPolicy": {
+      "label": "Sunt de acord cu Politica de Confidențialitate",
+      "linkText": "Politica de Confidențialitate",
+      "required": "Trebuie să acceptați Politica de Confidențialitate pentru a continua"
+    },
+    "dataUsage": {
+      "label": "Consimț la prelucrarea datelor pentru publicitate țintită AI de la producătorii licențiați de canabis",
+      "description": "WeedGo generează venituri prin anunțuri țintite AI de la producătorii licențiați de canabis. Datele dvs. de utilizare vor fi prelucrate pentru a oferi recomandări de produse relevante și conținut promoțional.",
+      "required": "Trebuie să consimțiți la utilizarea datelor pentru a continua"
+    },
+    "accurateInfo": {
+      "label": "Confirm că toate informațiile furnizate sunt corecte și complete",
+      "description": "Certificați că toate informațiile trimise în acest formular de înregistrare sunt adevărate, corecte și complete după cunoștințele dvs.",
+      "required": "Trebuie să confirmați acuratețea informațiilor dvs."
+    },
+    "authorization": {
+      "label": "Sunt autorizat de organizația mea să creez acest cont",
+      "description": "Confirmați că aveți autoritatea legală și autorizarea organizației dvs. pentru a vă înregistra la serviciile WeedGo și pentru a încheia acest acord în numele companiei dvs.",
+      "required": "Trebuie să confirmați autorizarea dvs. pentru a continua"
+    },
+    "allRequired": "Toate atestațiile trebuie acceptate pentru a crea contul dvs."
   }
 }

@@ -366,5 +366,35 @@
         "personalities": "5 AI Personality"
       }
     }
+  },
+  "legal": {
+    "title": "Mga Legal na Kasunduan at Patunay",
+    "description": "Mangyaring suriin at tanggapin ang mga sumusunod na kasunduan upang makumpleto ang iyong pagpaparehistro",
+    "termsOfService": {
+      "label": "Sumasang-ayon ako sa Mga Tuntunin ng Serbisyo",
+      "linkText": "Mga Tuntunin ng Serbisyo",
+      "required": "Kailangan mong tanggapin ang Mga Tuntunin ng Serbisyo upang magpatuloy"
+    },
+    "privacyPolicy": {
+      "label": "Sumasang-ayon ako sa Patakaran sa Pagkapribado",
+      "linkText": "Patakaran sa Pagkapribado",
+      "required": "Kailangan mong tanggapin ang Patakaran sa Pagkapribado upang magpatuloy"
+    },
+    "dataUsage": {
+      "label": "Pumapayag ako sa pagproseso ng data para sa AI-targeted advertising mula sa mga lisensyadong producer ng cannabis",
+      "description": "Ang WeedGo ay bumubuo ng kita sa pamamagitan ng mga AI-targeted na advertisement mula sa mga lisensyadong producer ng cannabis. Ang iyong data sa paggamit ay ipoproseso upang magbigay ng mga kaugnay na rekomendasyon ng produkto at promosyonal na nilalaman.",
+      "required": "Kailangan mong pumayag sa paggamit ng data upang magpatuloy"
+    },
+    "accurateInfo": {
+      "label": "Kinukumpirma ko na ang lahat ng ibinigay na impormasyon ay tumpak at kumpleto",
+      "description": "Pinapatunayan mo na ang lahat ng impormasyong isinumite sa form ng pagpaparehistrong ito ay totoo, tumpak, at kumpleto ayon sa iyong pinakamahusay na kaalaman.",
+      "required": "Kailangan mong kumpirmahin ang katumpakan ng iyong impormasyon"
+    },
+    "authorization": {
+      "label": "Awtorisado ako ng aking organisasyon na lumikha ng account na ito",
+      "description": "Kinukumpirma mo na mayroon kang legal na awtoridad at pahintulot mula sa iyong organisasyon upang magrehistro para sa mga serbisyo ng WeedGo at pumasok sa kasunduang ito sa ngalan ng iyong kumpanya.",
+      "required": "Kailangan mong kumpirmahin ang iyong awtorisasyon upang magpatuloy"
+    },
+    "allRequired": "Lahat ng mga patunay ay dapat tanggapin upang makalikha ng iyong account"
   }
 }

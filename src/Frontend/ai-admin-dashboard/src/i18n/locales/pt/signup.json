@@ -366,5 +366,35 @@
         "personalities": "5 personalidades de IA"
       }
     }
+  },
+  "legal": {
+    "title": "Acordos Legais e Atestações",
+    "description": "Por favor, revise e aceite os seguintes acordos para concluir seu registro",
+    "termsOfService": {
+      "label": "Concordo com os Termos de Serviço",
+      "linkText": "Termos de Serviço",
+      "required": "Você deve aceitar os Termos de Serviço para continuar"
+    },
+    "privacyPolicy": {
+      "label": "Concordo com a Política de Privacidade",
+      "linkText": "Política de Privacidade",
+      "required": "Você deve aceitar a Política de Privacidade para continuar"
+    },
+    "dataUsage": {
+      "label": "Consinto com o processamento de dados para publicidade direcionada por IA de produtores de cannabis licenciados",
+      "description": "WeedGo gera receita através de anúncios direcionados por IA de produtores de cannabis licenciados. Seus dados de uso serão processados para fornecer recomendações de produtos e conteúdo promocional relevantes.",
+      "required": "Você deve consentir com o uso de dados para continuar"
+    },
+    "accurateInfo": {
+      "label": "Confirmo que todas as informações fornecidas são precisas e completas",
+      "description": "Você certifica que todas as informações enviadas neste formulário de registro são verdadeiras, precisas e completas ao seu conhecimento.",
+      "required": "Você deve confirmar a precisão de suas informações"
+    },
+    "authorization": {
+      "label": "Estou autorizado por minha organização a criar esta conta",
+      "description": "Você confirma que possui autoridade legal e autorização de sua organização para se registrar nos serviços WeedGo e celebrar este acordo em nome de sua empresa.",
+      "required": "Você deve confirmar sua autorização para continuar"
+    },
+    "allRequired": "Todas as atestações devem ser aceitas para criar sua conta"
   }
 }
