@@ -47,7 +47,9 @@
       "email": "Email Address",
       "phone": "Phone Number",
       "phonePlaceholder": "(555) 123-4567",
+      "phoneOptional": "Optional - Verify to enable SMS notifications",
       "street": "Street Address",
+      "streetPlaceholder": "Start typing an address (e.g., 123 Main St, Toronto)",
       "city": "City",
       "province": "Province",
       "postalCode": "Postal Code",
@@ -293,6 +295,8 @@
     "gstHstFormat": "GST/HST number format: 123456789RT0001",
     "emailRequired": "Email is required",
     "emailInvalid": "Please enter a valid email address",
+    "emailNotVerified": "Email must be verified before proceeding",
+    "phoneNotVerified": "Phone must be verified before proceeding",
     "firstNameRequired": "First name is required",
     "lastNameRequired": "Last name is required",
     "streetRequired": "Street address is required",
@@ -310,6 +314,23 @@
     "cvvRequired": "CVV is required",
     "cvvFormat": "CVV must be 3 or 4 digits",
     "cardholderRequired": "Cardholder name is required"
+  },
+  "verification": {
+    "verify": "Verify",
+    "verified": "Verified ✓",
+    "verifying": "Verifying...",
+    "sending": "Sending verification code...",
+    "emailSent": "We've sent a 6-digit code to {{email}}",
+    "smsSent": "We've sent a 6-digit code to {{phone}}",
+    "sendFailed": "Failed to send verification code",
+    "sendError": "Error sending verification code",
+    "verifyFailed": "Verification failed. Please check your code.",
+    "verifyError": "Error verifying code",
+    "invalidCode": "Please enter a 6-digit code",
+    "resend": "Resend Code",
+    "resendIn": "Resend in {{seconds}}s",
+    "cancel": "Cancel",
+    "expiryInfo": "Code expires in 10 minutes"
   },
   "passwordStrength": {
     "weak": "Weak",
@@ -366,5 +387,35 @@
         "personalities": "5 AI Personalities"
       }
     }
+  },
+  "legal": {
+    "title": "Legal Agreements & Attestations",
+    "description": "Please review and accept the following agreements to complete your registration",
+    "termsOfService": {
+      "label": "I agree to the Terms of Service",
+      "linkText": "Terms of Service",
+      "required": "You must accept the Terms of Service to continue"
+    },
+    "privacyPolicy": {
+      "label": "I agree to the Privacy Policy",
+      "linkText": "Privacy Policy",
+      "required": "You must accept the Privacy Policy to continue"
+    },
+    "dataUsage": {
+      "label": "I consent to data processing for AI-targeted advertising from licensed cannabis producers",
+      "description": "WeedGo generates revenue through curated, AI-targeted advertisements from licensed cannabis producers. Your usage data will be processed to deliver relevant product recommendations and promotional content.",
+      "required": "You must consent to data usage to continue"
+    },
+    "accurateInfo": {
+      "label": "I confirm that all information provided is accurate and complete",
+      "description": "You certify that all information submitted in this registration form is true, accurate, and complete to the best of your knowledge.",
+      "required": "You must confirm the accuracy of your information"
+    },
+    "authorization": {
+      "label": "I am authorized by my organization to create this account",
+      "description": "You confirm that you have the legal authority and authorization from your organization to register for WeedGo services and enter into this agreement on behalf of your company.",
+      "required": "You must confirm your authorization to continue"
+    },
+    "allRequired": "All attestations must be accepted to create your account"
   }
 }

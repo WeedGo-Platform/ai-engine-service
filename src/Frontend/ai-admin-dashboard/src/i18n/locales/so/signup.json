@@ -366,5 +366,35 @@
         "personalities": "5 Shakhsi AI"
       }
     }
+  },
+  "legal": {
+    "title": "Heshiisyada Sharciga iyo Caddaynta",
+    "description": "Fadlan dib u eeg oo ogolow heshiisyada soo socda si aad u dhammaystirto diiwaangelinkaaga",
+    "termsOfService": {
+      "label": "Waxaan aqbalay Shuruudaha Adeega",
+      "linkText": "Shuruudaha Adeega",
+      "required": "Waa inaad aqbashaa Shuruudaha Adeega si aad u sii waddo"
+    },
+    "privacyPolicy": {
+      "label": "Waxaan aqbalay Qaanuunka Sirta",
+      "linkText": "Qaanuunka Sirta",
+      "required": "Waa inaad aqbashaa Qaanuunka Sirta si aad u sii waddo"
+    },
+    "dataUsage": {
+      "label": "Waxaan oggolaadey in macluumaadka loo isticmaalo xayaysiisyada AI-ku-bartilmaameedka ah ee soo-saarayaasha khannadda ee shatiga leh",
+      "description": "WeedGo waxay dakhli ka heshaa xayaysiisyo AI-ku-bartilmaameedka ah oo ka imanaya soo-saarayaasha khannadda ee shatiga leh. Macluumaadka isticmaalkaaga ayaa la sii wadi doonaa si loo bixiyo talooyinka badeecada ku habboon iyo waxyaabaha xayaysiinta.",
+      "required": "Waa inaad oggolaataa isticmaalka xogta si aad u sii waddo"
+    },
+    "accurateInfo": {
+      "label": "Waxaan xaqiijinayaa in dhammaan macluumaadka la bixiyey uu sax yahay oo dhammaystiran yahay",
+      "description": "Waxaad caddaynaysaa in dhammaan macluumaadka la gudbiyey foomkan diiwaan-gelinta uu run yahay, sax yahay, oo dhammaystiran yahay ilaa inta aad ogtahay.",
+      "required": "Waa inaad xaqiijisaa saxnaanta macluumaadkaaga"
+    },
+    "authorization": {
+      "label": "Waxaa iga fasaxay ururkaygii inaan abuurto akoonkan",
+      "description": "Waxaad xaqiijinaysaa inaad leedahay awood sharci ah iyo ogolaansho ka timid ururkaaga si aad ugu diiwaangashid adeegyada WeedGo oo aad u gasho heshiiskan magaca shirkaddaada.",
+      "required": "Waa inaad xaqiijisaa ogolaanshahaaga si aad u sii waddo"
+    },
+    "allRequired": "Dhammaan caddayntu waa in la aqbalaa si loo abuuro akoonkaaga"
   }
 }
