@@ -423,34 +423,70 @@ app.add_middleware(PerformanceLoggingMiddleware, log_body=False, slow_request_th
 
 # Add CORS middleware - read allowed origins from environment variable
 # Format: Comma-separated list of origins (e.g., "http://localhost:3000,https://app.vercel.app")
-# Default: localhost ports for local development
-default_cors_origins = [
-    "http://localhost:3000",
-    "http://localhost:3001",
-    "http://localhost:3002",
-    "http://localhost:3003",
-    "http://localhost:3004",
-    "http://localhost:3005",
-    "http://localhost:3006",
-    "http://localhost:3007",
-    "http://localhost:5024",
-    "http://localhost:5173",
-    "http://localhost:5174"
-]
+# Auto-detect environment and use appropriate defaults
+environment = os.getenv("ENVIRONMENT", "development")
+
+# Environment-specific CORS defaults
+environment_cors_defaults = {
+    "uat": {
+        "origins": [
+            "https://weedgo-uat-admin.pages.dev",
+            "https://weedgo-uat-commerce-headless.pages.dev",
+            "https://weedgo-uat-commerce-pot-palace.pages.dev",
+            "https://weedgo-uat-commerce-modern.pages.dev"
+        ],
+        "regex": r"https://.*\.weedgo-uat-.*\.pages\.dev"
+    },
+    "beta": {
+        "origins": [
+            "https://weedgo-beta-admin.netlify.app",
+            "https://weedgo-beta-commerce.netlify.app"
+        ],
+        "regex": r"https://.*\.netlify\.app"
+    },
+    "preprod": {
+        "origins": [
+            "https://weedgo-preprod-admin.vercel.app",
+            "https://weedgo-preprod-commerce.vercel.app"
+        ],
+        "regex": r"https://.*\.vercel\.app"
+    },
+    "development": {
+        "origins": [
+            "http://localhost:3000",
+            "http://localhost:3001",
+            "http://localhost:3002",
+            "http://localhost:3003",
+            "http://localhost:3004",
+            "http://localhost:3005",
+            "http://localhost:3006",
+            "http://localhost:3007",
+            "http://localhost:5024",
+            "http://localhost:5173",
+            "http://localhost:5174"
+        ],
+        "regex": r"https://.*\.vercel\.app"
+    }
+}
 
 cors_origins_str = os.getenv("CORS_ALLOWED_ORIGINS", "")
 if cors_origins_str:
     # Support both comma and semicolon as delimiters (semicolon for Koyeb CLI compatibility)
     delimiter = ";" if ";" in cors_origins_str else ","
     cors_origins = [origin.strip() for origin in cors_origins_str.split(delimiter) if origin.strip()]
-    logger.info(f"Using CORS origins from environment: {cors_origins}")
+    logger.info(f"Using CORS origins from CORS_ALLOWED_ORIGINS environment variable: {cors_origins}")
 else:
-    # Fall back to defaults for local development
-    cors_origins = default_cors_origins
-    logger.info(f"Using default CORS origins for local development: {cors_origins}")
+    # Use environment-specific defaults
+    env_config = environment_cors_defaults.get(environment, environment_cors_defaults["development"])
+    cors_origins = env_config["origins"]
+    logger.info(f"Using CORS origins for {environment} environment: {cors_origins}")
 
-# Use allow_origin_regex for Vercel deployments (all *.vercel.app subdomains)
-cors_origin_regex = os.getenv("CORS_ORIGIN_REGEX", r"https://.*\.vercel\.app")
+# Use allow_origin_regex - environment-specific or from env var
+cors_origin_regex = os.getenv("CORS_ORIGIN_REGEX", "")
+if not cors_origin_regex:
+    env_config = environment_cors_defaults.get(environment, environment_cors_defaults["development"])
+    cors_origin_regex = env_config["regex"]
+    logger.info(f"Using CORS regex for {environment} environment: {cors_origin_regex}")
 
 app.add_middleware(
     CORSMiddleware,
