@@ -366,5 +366,35 @@
         "personalities": "5 个 AI 个性"
       }
     }
+  },
+  "legal": {
+    "title": "法律协议和声明",
+    "description": "请审阅并接受以下协议以完成您的注册",
+    "termsOfService": {
+      "label": "我同意服务条款",
+      "linkText": "服务条款",
+      "required": "您必须接受服务条款才能继续"
+    },
+    "privacyPolicy": {
+      "label": "我同意隐私政策",
+      "linkText": "隐私政策",
+      "required": "您必须接受隐私政策才能继续"
+    },
+    "dataUsage": {
+      "label": "我同意处理数据用于来自持证大麻生产商的AI定向广告",
+      "description": "WeedGo通过来自持证大麻生产商的AI定向广告产生收入。您的使用数据将被处理以提供相关的产品推荐和促销内容。",
+      "required": "您必须同意数据使用才能继续"
+    },
+    "accurateInfo": {
+      "label": "我确认所提供的所有信息准确完整",
+      "description": "您证明在此注册表格中提交的所有信息据您所知是真实、准确和完整的。",
+      "required": "您必须确认信息的准确性"
+    },
+    "authorization": {
+      "label": "我已获得组织授权创建此账户",
+      "description": "您确认您拥有法律授权和您组织的授权,可以注册WeedGo服务并代表您的公司签订此协议。",
+      "required": "您必须确认您的授权才能继续"
+    },
+    "allRequired": "必须接受所有声明才能创建您的账户"
   }
 }

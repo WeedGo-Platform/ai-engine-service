@@ -366,5 +366,35 @@
         "personalities": "5 AI-persoonlijkheden"
       }
     }
+  },
+  "legal": {
+    "title": "Juridische overeenkomsten en verklaringen",
+    "description": "Lees en accepteer de volgende overeenkomsten om uw registratie te voltooien",
+    "termsOfService": {
+      "label": "Ik ga akkoord met de Servicevoorwaarden",
+      "linkText": "Servicevoorwaarden",
+      "required": "U moet de Servicevoorwaarden accepteren om door te gaan"
+    },
+    "privacyPolicy": {
+      "label": "Ik ga akkoord met het Privacybeleid",
+      "linkText": "Privacybeleid",
+      "required": "U moet het Privacybeleid accepteren om door te gaan"
+    },
+    "dataUsage": {
+      "label": "Ik stem in met gegevensverwerking voor AI-gerichte advertenties van gelicentieerde cannabisproducenten",
+      "description": "WeedGo genereert inkomsten via AI-gerichte advertenties van gelicentieerde cannabisproducenten. Uw gebruiksgegevens worden verwerkt om relevante productaanbevelingen en promotionele inhoud te leveren.",
+      "required": "U moet instemmen met gegevensgebruik om door te gaan"
+    },
+    "accurateInfo": {
+      "label": "Ik bevestig dat alle verstrekte informatie nauwkeurig en volledig is",
+      "description": "U verklaart dat alle informatie die in dit registratieformulier is ingediend, naar uw beste weten waar, nauwkeurig en volledig is.",
+      "required": "U moet de nauwkeurigheid van uw informatie bevestigen"
+    },
+    "authorization": {
+      "label": "Ik ben door mijn organisatie gemachtigd om dit account aan te maken",
+      "description": "U bevestigt dat u de wettelijke bevoegdheid en autorisatie van uw organisatie heeft om u te registreren voor WeedGo-diensten en deze overeenkomst namens uw bedrijf aan te gaan.",
+      "required": "U moet uw autorisatie bevestigen om door te gaan"
+    },
+    "allRequired": "Alle verklaringen moeten worden geaccepteerd om uw account aan te maken"
   }
 }

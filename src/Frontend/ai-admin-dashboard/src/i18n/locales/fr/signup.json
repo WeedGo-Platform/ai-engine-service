@@ -366,5 +366,35 @@
         "personalities": "5 personnalités IA"
       }
     }
+  },
+  "legal": {
+    "title": "Accords juridiques et attestations",
+    "description": "Veuillez examiner et accepter les accords suivants pour compléter votre inscription",
+    "termsOfService": {
+      "label": "J'accepte les Conditions d'utilisation",
+      "linkText": "Conditions d'utilisation",
+      "required": "Vous devez accepter les Conditions d'utilisation pour continuer"
+    },
+    "privacyPolicy": {
+      "label": "J'accepte la Politique de confidentialité",
+      "linkText": "Politique de confidentialité",
+      "required": "Vous devez accepter la Politique de confidentialité pour continuer"
+    },
+    "dataUsage": {
+      "label": "Je consens au traitement des données pour la publicité ciblée par IA de producteurs de cannabis licenciés",
+      "description": "WeedGo génère des revenus grâce à des publicités ciblées par IA provenant de producteurs de cannabis licenciés. Vos données d'utilisation seront traitées pour fournir des recommandations de produits et du contenu promotionnel pertinents.",
+      "required": "Vous devez consentir à l'utilisation des données pour continuer"
+    },
+    "accurateInfo": {
+      "label": "Je confirme que toutes les informations fournies sont exactes et complètes",
+      "description": "Vous certifiez que toutes les informations soumises dans ce formulaire d'inscription sont vraies, exactes et complètes à votre connaissance.",
+      "required": "Vous devez confirmer l'exactitude de vos informations"
+    },
+    "authorization": {
+      "label": "Je suis autorisé par mon organisation à créer ce compte",
+      "description": "Vous confirmez que vous avez l'autorité légale et l'autorisation de votre organisation pour vous inscrire aux services WeedGo et conclure cet accord au nom de votre entreprise.",
+      "required": "Vous devez confirmer votre autorisation pour continuer"
+    },
+    "allRequired": "Toutes les attestations doivent être acceptées pour créer votre compte"
   }
 }

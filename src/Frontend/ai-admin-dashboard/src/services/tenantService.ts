@@ -280,6 +280,82 @@ class TenantService {
   async deleteTenantUser(tenantId: string, userId: string): Promise<void> {
     await this.api.delete(`/api/tenants/${tenantId}/users/${userId}`);
   }
+
+  // OTP Verification operations
+  async sendOTP(identifier: string, identifierType: 'email' | 'phone'): Promise<{
+    success: boolean;
+    message?: string;
+    expiresIn?: number;
+  }> {
+    try {
+      const response = await this.api.post('/api/v1/auth/otp/send', {
+        identifier,
+        identifier_type: identifierType,
+        purpose: 'signup'
+      });
+      return {
+        success: true,
+        message: response.data.message,
+        expiresIn: response.data.expires_in
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.response?.data?.detail || error.message || 'Failed to send OTP'
+      };
+    }
+  }
+
+  async verifyOTP(identifier: string, identifierType: 'email' | 'phone', code: string): Promise<{
+    success: boolean;
+    message?: string;
+    accessToken?: string;
+    user?: any;
+  }> {
+    try {
+      const response = await this.api.post('/api/v1/auth/otp/verify', {
+        identifier,
+        identifier_type: identifierType,
+        code,
+        purpose: 'signup'
+      });
+      return {
+        success: true,
+        message: response.data.message,
+        accessToken: response.data.access_token,
+        user: response.data.user
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.response?.data?.detail || error.message || 'Failed to verify OTP'
+      };
+    }
+  }
+
+  async resendOTP(identifier: string, identifierType: 'email' | 'phone'): Promise<{
+    success: boolean;
+    message?: string;
+    expiresIn?: number;
+  }> {
+    try {
+      const response = await this.api.post('/api/v1/auth/otp/resend', {
+        identifier,
+        identifier_type: identifierType,
+        purpose: 'signup'
+      });
+      return {
+        success: true,
+        message: response.data.message,
+        expiresIn: response.data.expires_in
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.response?.data?.detail || error.message || 'Failed to resend OTP'
+      };
+    }
+  }
 }
 
 export default new TenantService();

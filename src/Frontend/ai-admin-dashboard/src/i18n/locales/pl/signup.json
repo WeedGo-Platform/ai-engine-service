@@ -366,5 +366,35 @@
         "personalities": "5 osobowości AI"
       }
     }
+  },
+  "legal": {
+    "title": "Umowy prawne i oświadczenia",
+    "description": "Proszę przeczytać i zaakceptować następujące umowy, aby zakończyć rejestrację",
+    "termsOfService": {
+      "label": "Akceptuję Warunki Świadczenia Usług",
+      "linkText": "Warunki Świadczenia Usług",
+      "required": "Musisz zaakceptować Warunki Świadczenia Usług, aby kontynuować"
+    },
+    "privacyPolicy": {
+      "label": "Akceptuję Politykę Prywatności",
+      "linkText": "Polityka Prywatności",
+      "required": "Musisz zaakceptować Politykę Prywatności, aby kontynuować"
+    },
+    "dataUsage": {
+      "label": "Wyrażam zgodę na przetwarzanie danych do reklam ukierunkowanych AI od licencjonowanych producentw konopi",
+      "description": "WeedGo generuje przychody za pośrednictwem reklam ukierunkowanych AI od licencjonowanych producentw konopi. Twoje dane użytkowania będą przetwarzane w celu dostarczania istotnych rekomendacji produktw i treści promocyjnych.",
+      "required": "Musisz wyrazić zgodę na użycie danych, aby kontynuować"
+    },
+    "accurateInfo": {
+      "label": "Potwierdzam, że wszystkie podane informacje są dokładne i kompletne",
+      "description": "Potwierdzasz, że wszystkie informacje przesłane w tym formularzu rejestracyjnym są zgodne z prawdą, dokładne i kompletne według twojej najlepszej wiedzy.",
+      "required": "Musisz potwierdzić dokładność swoich informacji"
+    },
+    "authorization": {
+      "label": "Jestem upoważniony przez moją organizację do utworzenia tego konta",
+      "description": "Potwierdzasz, że masz uprawnienia prawne i upoważnienie od swojej organizacji do rejestracji w usługach WeedGo i zawarcia tej umowy w imieniu swojej firmy.",
+      "required": "Musisz potwierdzić swoje upoważnienie, aby kontynuować"
+    },
+    "allRequired": "Wszystkie oświadczenia muszą zostać zaakceptowane, aby utworzyć konto"
   }
 }

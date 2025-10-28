@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import tenantService from '../services/tenantService';
 import OntarioLicenseValidator from '../components/OntarioLicenseValidator';
 import AddressAutocomplete, { AddressComponents } from '../components/AddressAutocomplete';
+import OTPVerification from '../components/OTPVerification';
 import '../styles/signup-animations.css';
 
 interface LicenseValidationResult {
@@ -50,6 +51,8 @@ interface FormData {
   contactPhone: string;
   firstName: string;
   lastName: string;
+  emailVerified: boolean;
+  phoneVerified: boolean;
   
   // Ontario Licensing (required for ON only)
   crolNumber: string;
@@ -90,6 +93,12 @@ const TenantSignup = () => {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [crsaValidation, setCrsaValidation] = useState<LicenseValidationResult | null>(null);
+  const [showEmailVerification, setShowEmailVerification] = useState(false);
+  const [showPhoneVerification, setShowPhoneVerification] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [accuracyAttested, setAccuracyAttested] = useState(false);
+  const [authorizationAttested, setAuthorizationAttested] = useState(false);
   
   const [formData, setFormData] = useState<FormData>({
     companyName: '',
@@ -104,6 +113,8 @@ const TenantSignup = () => {
     contactPhone: '',
     firstName: '',
     lastName: '',
+    emailVerified: false,
+    phoneVerified: false,
     crolNumber: '',
     tenantName: '',
     tenantCode: '',
@@ -177,6 +188,22 @@ const TenantSignup = () => {
   const validateStep = (step: number): boolean => {
     const newErrors: FormErrors = {};
     
+    // Validate terms acceptance on step 5
+    if (step === 5) {
+      if (!termsAccepted) {
+        newErrors.terms = t('signup:tenant.legal.termsRequired');
+      }
+      if (!privacyAccepted) {
+        newErrors.privacy = t('signup:tenant.legal.privacyRequired');
+      }
+      if (!accuracyAttested) {
+        newErrors.accuracy = t('signup:tenant.legal.accuracyRequired');
+      }
+      if (!authorizationAttested) {
+        newErrors.authorization = t('signup:tenant.legal.authorizationRequired');
+      }
+    }
+    
     switch (step) {
       case 1: // Company Information
         if (!formData.tenantName.trim()) newErrors.tenantName = t('signup:validation.brandNameRequired');
@@ -200,6 +227,14 @@ const TenantSignup = () => {
         if (!formData.contactEmail.trim()) newErrors.contactEmail = t('signup:validation.emailRequired');
         else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.contactEmail)) {
           newErrors.contactEmail = t('signup:validation.emailInvalid');
+        }
+        // Require email verification
+        if (!formData.emailVerified) {
+          newErrors.contactEmail = t('signup:validation.emailNotVerified', 'Email must be verified before proceeding');
+        }
+        // Require phone verification if phone is provided
+        if (formData.contactPhone.trim() && !formData.phoneVerified) {
+          newErrors.contactPhone = t('signup:validation.phoneNotVerified', 'Phone must be verified before proceeding');
         }
         if (!formData.firstName.trim()) newErrors.firstName = t('signup:validation.firstNameRequired');
         if (!formData.lastName.trim()) newErrors.lastName = t('signup:validation.lastNameRequired');
@@ -451,6 +486,15 @@ const TenantSignup = () => {
         contact_phone: formData.contactPhone || undefined,
         website: formData.website || undefined,
         subscription_tier: formData.subscriptionTier as 'community_and_new_business' | 'small_business' | 'professional_and_growing_business' | 'enterprise',
+        terms_acceptance: {
+          accepted_at: new Date().toISOString(),
+          version: '1.0',
+          accepted_by: formData.contactEmail,
+          terms_accepted: termsAccepted,
+          privacy_accepted: privacyAccepted,
+          accuracy_attested: accuracyAttested,
+          authorization_attested: authorizationAttested
+        },
         settings: {
           admin_user: {
             first_name: formData.firstName,
@@ -798,34 +842,142 @@ const TenantSignup = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-8">
+              {/* Email Field with Verification */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('signup:tenant.contactInfo.email')} *
                 </label>
-                <input
-                  type="email"
-                  value={formData.contactEmail}
-                  onChange={(e) => handleInputChange('contactEmail', e.target.value)}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                    errors.contactEmail ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
-                  }`}
-                />
-                {errors.contactEmail && (
-                  <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.contactEmail}</p>
-                )}
+                <div className="space-y-2">
+                  <div className="flex gap-2">
+                    <input
+                      type="email"
+                      value={formData.contactEmail}
+                      onChange={(e) => {
+                        handleInputChange('contactEmail', e.target.value);
+                        // Reset verification if email changes
+                        if (formData.emailVerified && e.target.value !== formData.contactEmail) {
+                          setFormData(prev => ({ ...prev, emailVerified: false }));
+                        }
+                      }}
+                      disabled={showEmailVerification}
+                      className={`flex-1 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors ${
+                        errors.contactEmail ? 'border-red-500 dark:border-red-400' : 
+                        formData.emailVerified ? 'border-green-500 dark:border-green-400' :
+                        'border-gray-200 dark:border-gray-600'
+                      } ${showEmailVerification ? 'opacity-60' : ''}`}
+                    />
+                    {formData.emailVerified ? (
+                      <div className="flex items-center px-3 py-2 bg-green-50 dark:bg-green-900/20 border border-green-500 dark:border-green-400 rounded-lg">
+                        <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          // Validate email first
+                          if (!formData.contactEmail.trim()) {
+                            setErrors(prev => ({ ...prev, contactEmail: t('signup:validation.emailRequired') }));
+                            return;
+                          }
+                          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.contactEmail)) {
+                            setErrors(prev => ({ ...prev, contactEmail: t('signup:validation.emailInvalid') }));
+                            return;
+                          }
+                          setShowEmailVerification(true);
+                        }}
+                        disabled={!formData.contactEmail || showEmailVerification}
+                        className="px-4 py-2 bg-primary-600 hover:bg-primary-700 disabled:bg-gray-300 dark:disabled:bg-gray-600 text-white text-sm rounded-lg font-medium transition-colors disabled:cursor-not-allowed whitespace-nowrap"
+                      >
+                        {t('signup:verification.verify')}
+                      </button>
+                    )}
+                  </div>
+                  {errors.contactEmail && (
+                    <p className="text-sm text-danger-600 dark:text-danger-400">{errors.contactEmail}</p>
+                  )}
+                  {showEmailVerification && (
+                    <div className="border border-gray-200 dark:border-gray-600 rounded-lg p-4 bg-gray-50 dark:bg-gray-800">
+                      <OTPVerification
+                        identifier={formData.contactEmail}
+                        identifierType="email"
+                        onVerified={() => {
+                          setFormData(prev => ({ ...prev, emailVerified: true }));
+                          setShowEmailVerification(false);
+                          setErrors(prev => {
+                            const newErrors = { ...prev };
+                            delete newErrors.contactEmail;
+                            return newErrors;
+                          });
+                        }}
+                        onCancel={() => setShowEmailVerification(false)}
+                        onSendOTP={(identifier, type) => tenantService.sendOTP(identifier, type)}
+                        onVerifyOTP={(identifier, type, code) => tenantService.verifyOTP(identifier, type, code)}
+                        onResendOTP={(identifier, type) => tenantService.resendOTP(identifier, type)}
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
 
+              {/* Phone Field with Verification */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('signup:tenant.contactInfo.phone')}
                 </label>
-                <input
-                  type="tel"
-                  value={formData.contactPhone}
-                  onChange={(e) => handleInputChange('contactPhone', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 transition-colors"
-                  placeholder={t('signup:tenant.contactInfo.phonePlaceholder')}
-                />
+                <div className="space-y-2">
+                  <div className="flex gap-2">
+                    <input
+                      type="tel"
+                      value={formData.contactPhone}
+                      onChange={(e) => {
+                        handleInputChange('contactPhone', e.target.value);
+                        // Reset verification if phone changes
+                        if (formData.phoneVerified && e.target.value !== formData.contactPhone) {
+                          setFormData(prev => ({ ...prev, phoneVerified: false }));
+                        }
+                      }}
+                      disabled={showPhoneVerification}
+                      className={`flex-1 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors ${
+                        formData.phoneVerified ? 'border-green-500 dark:border-green-400' :
+                        'border-gray-200 dark:border-gray-600'
+                      } ${showPhoneVerification ? 'opacity-60' : ''}`}
+                      placeholder={t('signup:tenant.contactInfo.phonePlaceholder')}
+                    />
+                    {formData.phoneVerified ? (
+                      <div className="flex items-center px-3 py-2 bg-green-50 dark:bg-green-900/20 border border-green-500 dark:border-green-400 rounded-lg">
+                        <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
+                      </div>
+                    ) : formData.contactPhone.trim() ? (
+                      <button
+                        type="button"
+                        onClick={() => setShowPhoneVerification(true)}
+                        disabled={!formData.contactPhone || showPhoneVerification}
+                        className="px-4 py-2 bg-primary-600 hover:bg-primary-700 disabled:bg-gray-300 dark:disabled:bg-gray-600 text-white text-sm rounded-lg font-medium transition-colors disabled:cursor-not-allowed whitespace-nowrap"
+                      >
+                        {t('signup:verification.verify')}
+                      </button>
+                    ) : null}
+                  </div>
+                  {showPhoneVerification && formData.contactPhone && (
+                    <div className="border border-gray-200 dark:border-gray-600 rounded-lg p-4 bg-gray-50 dark:bg-gray-800">
+                      <OTPVerification
+                        identifier={formData.contactPhone}
+                        identifierType="phone"
+                        onVerified={() => {
+                          setFormData(prev => ({ ...prev, phoneVerified: true }));
+                          setShowPhoneVerification(false);
+                        }}
+                        onCancel={() => setShowPhoneVerification(false)}
+                        onSendOTP={(identifier, type) => tenantService.sendOTP(identifier, type)}
+                        onVerifyOTP={(identifier, type, code) => tenantService.verifyOTP(identifier, type, code)}
+                        onResendOTP={(identifier, type) => tenantService.resendOTP(identifier, type)}
+                      />
+                    </div>
+                  )}
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    {t('signup:tenant.contactInfo.phoneOptional')}
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -1472,6 +1624,140 @@ const TenantSignup = () => {
                 </div>
               </div>
             )}
+
+            {/* Legal Attestations and Terms Acceptance */}
+            <div className="border-t-2 border-gray-200 dark:border-gray-700 pt-6 mt-6">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                <Shield className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400" />
+                Legal Agreements & Attestations
+              </h3>
+              
+              <div className="space-y-4">
+                {/* Terms of Service */}
+                <label className={`flex items-start p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                  termsAccepted 
+                    ? 'border-primary-500 dark:border-primary-400 bg-primary-50 dark:bg-primary-900/10' 
+                    : errors.terms 
+                      ? 'border-red-500 dark:border-red-400 bg-red-50 dark:bg-red-900/10'
+                      : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
+                }`}>
+                  <input
+                    type="checkbox"
+                    checked={termsAccepted}
+                    onChange={(e) => setTermsAccepted(e.target.checked)}
+                    className="mt-1 mr-3 h-4 w-4 text-primary-600 focus:ring-primary-500 rounded flex-shrink-0"
+                  />
+                  <div className="text-sm">
+                    <span className="text-gray-700 dark:text-gray-300">I accept the </span>
+                    <a 
+                      href="/TERMS_OF_SERVICE.md" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary-600 dark:text-primary-400 hover:underline font-medium"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Terms of Service
+                    </a>
+                    <span className="text-gray-700 dark:text-gray-300">, including AI-targeted advertising from Licensed Producers</span>
+                  </div>
+                </label>
+                {errors.terms && (
+                  <p className="text-sm text-red-600 dark:text-red-400 ml-7">{errors.terms}</p>
+                )}
+
+                {/* Privacy Policy */}
+                <label className={`flex items-start p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                  privacyAccepted 
+                    ? 'border-primary-500 dark:border-primary-400 bg-primary-50 dark:bg-primary-900/10' 
+                    : errors.privacy 
+                      ? 'border-red-500 dark:border-red-400 bg-red-50 dark:bg-red-900/10'
+                      : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
+                }`}>
+                  <input
+                    type="checkbox"
+                    checked={privacyAccepted}
+                    onChange={(e) => setPrivacyAccepted(e.target.checked)}
+                    className="mt-1 mr-3 h-4 w-4 text-primary-600 focus:ring-primary-500 rounded flex-shrink-0"
+                  />
+                  <div className="text-sm">
+                    <span className="text-gray-700 dark:text-gray-300">I accept the </span>
+                    <a 
+                      href="/PRIVACY_POLICY.md" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary-600 dark:text-primary-400 hover:underline font-medium"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Privacy Policy
+                    </a>
+                    <span className="text-gray-700 dark:text-gray-300"> and consent to data collection and usage for advertising purposes</span>
+                  </div>
+                </label>
+                {errors.privacy && (
+                  <p className="text-sm text-red-600 dark:text-red-400 ml-7">{errors.privacy}</p>
+                )}
+
+                {/* Accuracy Attestation */}
+                <label className={`flex items-start p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                  accuracyAttested 
+                    ? 'border-primary-500 dark:border-primary-400 bg-primary-50 dark:bg-primary-900/10' 
+                    : errors.accuracy 
+                      ? 'border-red-500 dark:border-red-400 bg-red-50 dark:bg-red-900/10'
+                      : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
+                }`}>
+                  <input
+                    type="checkbox"
+                    checked={accuracyAttested}
+                    onChange={(e) => setAccuracyAttested(e.target.checked)}
+                    className="mt-1 mr-3 h-4 w-4 text-primary-600 focus:ring-primary-500 rounded flex-shrink-0"
+                  />
+                  <div className="text-sm text-gray-700 dark:text-gray-300">
+                    <strong>I certify that all information provided in this registration is accurate, complete, and current.</strong> I understand that providing false or misleading information may result in account suspension or termination.
+                  </div>
+                </label>
+                {errors.accuracy && (
+                  <p className="text-sm text-red-600 dark:text-red-400 ml-7">{errors.accuracy}</p>
+                )}
+
+                {/* Authorization Attestation */}
+                <label className={`flex items-start p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                  authorizationAttested 
+                    ? 'border-primary-500 dark:border-primary-400 bg-primary-50 dark:bg-primary-900/10' 
+                    : errors.authorization 
+                      ? 'border-red-500 dark:border-red-400 bg-red-50 dark:bg-red-900/10'
+                      : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
+                }`}>
+                  <input
+                    type="checkbox"
+                    checked={authorizationAttested}
+                    onChange={(e) => setAuthorizationAttested(e.target.checked)}
+                    className="mt-1 mr-3 h-4 w-4 text-primary-600 focus:ring-primary-500 rounded flex-shrink-0"
+                  />
+                  <div className="text-sm text-gray-700 dark:text-gray-300">
+                    <strong>I am duly authorized by my organization to create this account and bind the organization to these Terms.</strong> I have the legal authority to enter into agreements on behalf of the company listed above.
+                  </div>
+                </label>
+                {errors.authorization && (
+                  <p className="text-sm text-red-600 dark:text-red-400 ml-7">{errors.authorization}</p>
+                )}
+
+                {/* Information Notice */}
+                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4 mt-4">
+                  <div className="flex items-start">
+                    <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-3 flex-shrink-0" />
+                    <div className="text-sm text-blue-800 dark:text-blue-300">
+                      <p className="font-medium mb-1">Important Notice:</p>
+                      <ul className="list-disc list-inside space-y-1 text-xs">
+                        <li>Your acceptance will be recorded with timestamp and IP address for legal compliance</li>
+                        <li>Revenue is generated through AI-targeted advertising from Licensed Producers</li>
+                        <li>Customer data will be used (anonymized) to improve product recommendations</li>
+                        <li>You must comply with all cannabis laws and regulations in your jurisdiction</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             {errors.submit && (
               <div className="bg-danger-50 border border-red-200 rounded-lg p-6">

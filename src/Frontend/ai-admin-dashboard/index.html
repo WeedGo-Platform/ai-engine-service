@@ -5,6 +5,19 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WeedGo Admin Dashboard - Pot Palace</title>
+    <!-- Prevent flash of unstyled content by applying theme before React loads -->
+    <script>
+      (function() {
+        // Check user's manual preference first, then system preference
+        const savedTheme = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const isDark = savedTheme ? savedTheme === 'dark' : systemPrefersDark;
+        
+        if (isDark) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
