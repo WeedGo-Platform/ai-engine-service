@@ -162,6 +162,7 @@ cython_debug/
 
 # Model files
 models/
+models-minimal/
 checkpoints/
 *.pth
 *.pt
@@ -169,6 +170,9 @@ checkpoints/
 *.pb
 *.tflite
 *.keras
+*.gguf
+*.bin
+*.safetensors
 
 # Data files
 data/raw/
