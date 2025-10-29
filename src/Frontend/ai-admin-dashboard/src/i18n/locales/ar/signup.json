@@ -105,7 +105,8 @@
     "navigation": {
       "previous": "السابق",
       "next": "التالي",
-      "createAccount": "إنشاء حساب"
+      "createAccount": "إنشاء حساب",
+      "back": "عودة"
     },
     "errors": {
       "accountCreationFailed": "فشل إنشاء الحساب",

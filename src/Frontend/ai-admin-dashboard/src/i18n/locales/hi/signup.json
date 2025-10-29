@@ -105,7 +105,8 @@
     "navigation": {
       "previous": "पिछला",
       "next": "अगला",
-      "createAccount": "खाता बनाएं"
+      "createAccount": "खाता बनाएं",
+      "back": "वापस"
     },
     "errors": {
       "accountCreationFailed": "खाता निर्माण विफल",
