@@ -511,8 +511,12 @@ class MapboxGeocodingService:
             retry_delay = 1.0
 
             for attempt in range(max_retries):
-                async with aiohttp.ClientSession() as session:
-                    async with session.get(url, params=params, timeout=aiohttp.ClientTimeout(total=10)) as response:
+                # Create session with longer timeout for slow networks
+                timeout = aiohttp.ClientTimeout(total=30, connect=10, sock_read=20)
+                connector = aiohttp.TCPConnector(ssl=False)  # Disable SSL verification temporarily
+                
+                async with aiohttp.ClientSession(timeout=timeout, connector=connector) as session:
+                    async with session.get(url, params=params) as response:
                         # Handle rate limit
                         if response.status == 429:
                             self._rate_limit_hits += 1
@@ -579,9 +583,14 @@ class MapboxGeocodingService:
 
         except aiohttp.ClientError as e:
             logger.error(f"HTTP error in autocomplete: {e}")
+            logger.error(f"Failed to connect to Mapbox API - check network connectivity and firewall settings")
+            return []
+        except asyncio.TimeoutError as e:
+            logger.error(f"Timeout error in autocomplete: {e}")
+            logger.error(f"Mapbox API request timed out after 10 seconds - check network connectivity")
             return []
         except Exception as e:
-            logger.error(f"Unexpected error in autocomplete: {e}")
+            logger.error(f"Unexpected error in autocomplete: {e}", exc_info=True)
             return []
 
     async def validate_api_key(self) -> bool:

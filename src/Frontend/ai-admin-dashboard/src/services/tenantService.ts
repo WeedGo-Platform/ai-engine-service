@@ -286,19 +286,57 @@ class TenantService {
     success: boolean;
     message?: string;
     expiresIn?: number;
+    rateLimited?: boolean;
+    retryAfter?: number;
   }> {
     try {
-      const response = await this.api.post('/api/v1/auth/otp/send', {
+      const payload = {
         identifier,
         identifier_type: identifierType,
-        purpose: 'signup'
+        purpose: 'verification'
+      };
+      
+      console.log('Sending OTP request:', {
+        payload,
+        identifierLength: identifier?.length,
+        identifierType,
+        identifierValue: identifier
       });
+
+      const response = await this.api.post('/api/v1/auth/otp/send', payload);
+      
+      console.log('OTP send success:', response.data);
+      
       return {
         success: true,
         message: response.data.message,
         expiresIn: response.data.expires_in
       };
     } catch (error: any) {
+      console.error('OTP send error:', {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        detail: error.response?.data?.detail,
+        data: error.response?.data,
+        identifier,
+        identifierType
+      });
+      
+      // Handle rate limiting with specific message
+      if (error.response?.status === 429) {
+        const retryAfter = error.response?.headers?.['retry-after'];
+        const detail = error.response?.data?.detail || 'Too many requests. Please try again later.';
+        
+        return {
+          success: false,
+          message: retryAfter 
+            ? `${detail} Please wait ${retryAfter} seconds.`
+            : detail,
+          rateLimited: true,
+          retryAfter: retryAfter ? parseInt(retryAfter) : undefined
+        };
+      }
+      
       return {
         success: false,
         message: error.response?.data?.detail || error.message || 'Failed to send OTP'
@@ -317,7 +355,7 @@ class TenantService {
         identifier,
         identifier_type: identifierType,
         code,
-        purpose: 'signup'
+        purpose: 'verification'
       });
       return {
         success: true,
@@ -337,24 +375,11 @@ class TenantService {
     success: boolean;
     message?: string;
     expiresIn?: number;
+    rateLimited?: boolean;
+    retryAfter?: number;
   }> {
-    try {
-      const response = await this.api.post('/api/v1/auth/otp/resend', {
-        identifier,
-        identifier_type: identifierType,
-        purpose: 'signup'
-      });
-      return {
-        success: true,
-        message: response.data.message,
-        expiresIn: response.data.expires_in
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        message: error.response?.data?.detail || error.message || 'Failed to resend OTP'
-      };
-    }
+    // Just delegate to sendOTP which has all the rate limiting logic
+    return this.sendOTP(identifier, identifierType);
   }
 }
 
