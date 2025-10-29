@@ -163,12 +163,13 @@ class UnifiedMessagingService:
                 sendgrid_config = ChannelConfig(
                     enabled=True,
                     rate_limit=10,
-                    cost_per_message=0.0,  # Free tier
+                    cost_per_message=0.0,  # Free tier (100/day)
                     api_key=os.getenv('SENDGRID_API_KEY'),
-                    timeout=30
+                    timeout=30,
+                    retry_attempts=0  # Don't retry SendGrid - fail fast
                 )
                 sendgrid_provider = EmailService(sendgrid_config, provider="sendgrid")
-                circuit_breaker = CircuitBreaker(failure_threshold=3, timeout_seconds=180)
+                circuit_breaker = CircuitBreaker(failure_threshold=1, timeout_seconds=300)  # Fail after 1 attempt
                 self.email_providers.append((sendgrid_provider, ProviderPriority.SECONDARY, circuit_breaker))
                 logger.info("SendGrid initialized as SECONDARY email provider")
             except Exception as e:
