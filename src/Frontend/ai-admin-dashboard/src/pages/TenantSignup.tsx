@@ -10,6 +10,7 @@ import tenantService from '../services/tenantService';
 import OntarioLicenseValidator from '../components/OntarioLicenseValidator';
 import AddressAutocomplete, { AddressComponents } from '../components/AddressAutocomplete';
 import OTPVerification from '../components/OTPVerification';
+import ErrorBoundary from '../components/ErrorBoundary';
 import '../styles/signup-animations.css';
 
 interface LicenseValidationResult {
@@ -874,12 +875,12 @@ const TenantSignup = () => {
                       <button
                         type="button"
                         onClick={() => {
-                          // Validate email first
+                          // Validate email first - use same regex as backend Pydantic validator
                           if (!formData.contactEmail.trim()) {
                             setErrors(prev => ({ ...prev, contactEmail: t('signup:validation.emailRequired') }));
                             return;
                           }
-                          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.contactEmail)) {
+                          if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.contactEmail)) {
                             setErrors(prev => ({ ...prev, contactEmail: t('signup:validation.emailInvalid') }));
                             return;
                           }
@@ -895,7 +896,7 @@ const TenantSignup = () => {
                   {errors.contactEmail && (
                     <p className="text-sm text-danger-600 dark:text-danger-400">{errors.contactEmail}</p>
                   )}
-                  {showEmailVerification && (
+                  {showEmailVerification && formData.contactEmail && (
                     <div className="border border-gray-200 dark:border-gray-600 rounded-lg p-4 bg-gray-50 dark:bg-gray-800">
                       <OTPVerification
                         identifier={formData.contactEmail}
@@ -985,47 +986,57 @@ const TenantSignup = () => {
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t('signup:tenant.contactInfo.street')} *
               </label>
-              <AddressAutocomplete
-                value={formData.street}
-                onChange={(addressComponents: AddressComponents) => {
-                  // Map province names to codes
-                  const provinceMap: { [key: string]: string } = {
-                    'Ontario': 'ON',
-                    'Quebec': 'QC',
-                    'British Columbia': 'BC',
-                    'Alberta': 'AB',
-                    'Manitoba': 'MB',
-                    'Saskatchewan': 'SK',
-                    'Nova Scotia': 'NS',
-                    'New Brunswick': 'NB',
-                    'Newfoundland and Labrador': 'NL',
-                    'Prince Edward Island': 'PE',
-                    'Northwest Territories': 'NT',
-                    'Yukon': 'YT',
-                    'Nunavut': 'NU'
-                  };
-                  
-                  // Convert province name to code
-                  const provinceCode = provinceMap[addressComponents.province] || addressComponents.province;
-                  
-                  // Update all address fields at once from autocomplete
-                  setFormData({
-                    ...formData,
-                    street: addressComponents.street,
-                    city: addressComponents.city,
-                    province: provinceCode,
-                    postalCode: addressComponents.postal_code
-                  });
-                  // Clear address-related errors
-                  const newErrors = { ...errors };
-                  delete newErrors.street;
-                  delete newErrors.city;
-                  delete newErrors.postalCode;
-                  setErrors(newErrors);
-                }}
-                placeholder={t('signup:tenant.contactInfo.streetPlaceholder') || 'Start typing an address (e.g., 123 Main St, Toronto)'}
-                required
-              />
+              <ErrorBoundary fallback={
+                <input
+                  type="text"
+                  value={formData.street}
+                  onChange={(e) => handleInputChange('street', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:bg-gray-700 dark:text-white"
+                  placeholder={t('signup:tenant.contactInfo.streetPlaceholder')}
+                />
+              }>
+                <AddressAutocomplete
+                  value={formData.street}
+                  onChange={(addressComponents: AddressComponents) => {
+                    // Map province names to codes
+                    const provinceMap: { [key: string]: string } = {
+                      'Ontario': 'ON',
+                      'Quebec': 'QC',
+                      'British Columbia': 'BC',
+                      'Alberta': 'AB',
+                      'Manitoba': 'MB',
+                      'Saskatchewan': 'SK',
+                      'Nova Scotia': 'NS',
+                      'New Brunswick': 'NB',
+                      'Newfoundland and Labrador': 'NL',
+                      'Prince Edward Island': 'PE',
+                      'Northwest Territories': 'NT',
+                      'Yukon': 'YT',
+                      'Nunavut': 'NU'
+                    };
+                    
+                    // Convert province name to code
+                    const provinceCode = provinceMap[addressComponents.province] || addressComponents.province;
+                    
+                    // Update all address fields at once from autocomplete
+                    setFormData({
+                      ...formData,
+                      street: addressComponents.street,
+                      city: addressComponents.city,
+                      province: provinceCode,
+                      postalCode: addressComponents.postal_code
+                    });
+                    // Clear address-related errors
+                    const newErrors = { ...errors };
+                    delete newErrors.street;
+                    delete newErrors.city;
+                    delete newErrors.postalCode;
+                    setErrors(newErrors);
+                  }}
+                  placeholder={t('signup:tenant.contactInfo.streetPlaceholder') || 'Start typing an address (e.g., 123 Main St, Toronto)'}
+                  required
+                />
+              </ErrorBoundary>
               {errors.street && (
                 <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.street}</p>
               )}
