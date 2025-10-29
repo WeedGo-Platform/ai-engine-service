@@ -41,6 +41,14 @@ class DeliveryStatus(Enum):
     UNSUBSCRIBED = "unsubscribed"
 
 
+class ProviderStatus(Enum):
+    """Provider health status"""
+    HEALTHY = "healthy"
+    DEGRADED = "degraded"
+    DOWN = "down"
+    UNKNOWN = "unknown"
+
+
 @dataclass
 class Recipient:
     """Recipient information"""
@@ -89,6 +97,17 @@ class DeliveryResult:
     delivered_at: Optional[datetime] = None
     error_message: Optional[str] = None
     cost: float = 0.0
+    metadata: Optional[Dict[str, Any]] = None
+
+
+@dataclass
+class ProviderHealth:
+    """Health status of a provider"""
+    provider_name: str
+    status: ProviderStatus
+    last_check: datetime
+    error_count: int = 0
+    last_error: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
 
 

@@ -6,9 +6,9 @@ interface OTPVerificationProps {
   identifierType: 'email' | 'phone';
   onVerified: () => void;
   onCancel?: () => void;
-  onSendOTP: (identifier: string, type: 'email' | 'phone') => Promise<{ success: boolean; message?: string; expiresIn?: number }>;
+  onSendOTP: (identifier: string, type: 'email' | 'phone') => Promise<{ success: boolean; message?: string; expiresIn?: number; rateLimited?: boolean; retryAfter?: number }>;
   onVerifyOTP: (identifier: string, type: 'email' | 'phone', code: string) => Promise<{ success: boolean; message?: string }>;
-  onResendOTP: (identifier: string, type: 'email' | 'phone') => Promise<{ success: boolean; message?: string; expiresIn?: number }>;
+  onResendOTP: (identifier: string, type: 'email' | 'phone') => Promise<{ success: boolean; message?: string; expiresIn?: number; rateLimited?: boolean; retryAfter?: number }>;
 }
 
 const OTPVerification: React.FC<OTPVerificationProps> = ({
@@ -28,10 +28,19 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({
   const [resendCountdown, setResendCountdown] = useState(0);
   const [otpSent, setOtpSent] = useState(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const sendAttemptedRef = useRef(false); // Prevent double-send in StrictMode
 
-  // Auto-send OTP on mount
+  // Auto-send OTP on mount with validation and double-send protection
   useEffect(() => {
-    if (!otpSent && identifier) {
+    // Validate identifier before sending - use same regex as backend Pydantic validator
+    const isValidEmail = identifierType === 'email' && /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(identifier);
+    const cleanedPhone = identifierType === 'phone' ? identifier.replace(/\D/g, '') : '';
+    const isValidPhone = identifierType === 'phone' && cleanedPhone.length >= 10 && cleanedPhone.length <= 15;
+    const isValid = isValidEmail || isValidPhone;
+
+    // Only send if: not already sent, identifier is valid, and not already attempted
+    if (!otpSent && identifier && isValid && !sendAttemptedRef.current) {
+      sendAttemptedRef.current = true; // Mark as attempted immediately
       handleSendOTP();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -46,6 +55,26 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({
   }, [resendCountdown]);
 
   const handleSendOTP = async () => {
+    // Validate identifier before sending
+    if (!identifier || !identifier.trim()) {
+      setError(t('signup:verification.invalidIdentifier'));
+      return;
+    }
+
+    // Additional format validation - use same regex as backend Pydantic validator
+    if (identifierType === 'email' && !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(identifier)) {
+      setError(t('signup:validation.emailInvalid') || 'Invalid email format');
+      return;
+    }
+
+    if (identifierType === 'phone') {
+      const cleanedPhone = identifier.replace(/\D/g, '');
+      if (cleanedPhone.length < 10 || cleanedPhone.length > 15) {
+        setError(t('signup:validation.phoneInvalid') || 'Invalid phone number (must be 10-15 digits)');
+        return;
+      }
+    }
+
     setLoading(true);
     setError(null);
     try {
@@ -56,7 +85,31 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({
         // Focus first input
         setTimeout(() => inputRefs.current[0]?.focus(), 100);
       } else {
-        setError(result.message || t('signup:verification.sendFailed'));
+        // Handle rate limiting with longer countdown
+        if (result.rateLimited && result.retryAfter) {
+          setResendCountdown(result.retryAfter);
+          const minutes = Math.ceil(result.retryAfter / 60);
+          const hours = Math.floor(minutes / 60);
+          const remainingMinutes = minutes % 60;
+          
+          let timeMsg = '';
+          if (hours > 0) {
+            timeMsg = hours === 1 ? '1 hour' : `${hours} hours`;
+            if (remainingMinutes > 0) {
+              timeMsg += ` ${remainingMinutes} min`;
+            }
+          } else {
+            timeMsg = `${minutes} minute${minutes !== 1 ? 's' : ''}`;
+          }
+          
+          setError(
+            `⏱️ Rate limit exceeded. You've sent too many verification codes. ` +
+            `Please wait ${timeMsg} before trying again. ` +
+            `(Limit: 5 requests per hour)`
+          );
+        } else {
+          setError(result.message || t('signup:verification.sendFailed'));
+        }
       }
     } catch (err: any) {
       setError(err.message || t('signup:verification.sendError'));
@@ -77,7 +130,31 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({
         setResendCountdown(60);
         setTimeout(() => inputRefs.current[0]?.focus(), 100);
       } else {
-        setError(result.message || t('signup:verification.sendFailed'));
+        // Handle rate limiting with longer countdown
+        if (result.rateLimited && result.retryAfter) {
+          setResendCountdown(result.retryAfter);
+          const minutes = Math.ceil(result.retryAfter / 60);
+          const hours = Math.floor(minutes / 60);
+          const remainingMinutes = minutes % 60;
+          
+          let timeMsg = '';
+          if (hours > 0) {
+            timeMsg = hours === 1 ? '1 hour' : `${hours} hours`;
+            if (remainingMinutes > 0) {
+              timeMsg += ` ${remainingMinutes} min`;
+            }
+          } else {
+            timeMsg = `${minutes} minute${minutes !== 1 ? 's' : ''}`;
+          }
+          
+          setError(
+            `⏱️ Rate limit exceeded. You've sent too many verification codes. ` +
+            `Please wait ${timeMsg} before trying again. ` +
+            `(Limit: 5 requests per hour)`
+          );
+        } else {
+          setError(result.message || t('signup:verification.sendFailed'));
+        }
       }
     } catch (err: any) {
       setError(err.message || t('signup:verification.sendError'));

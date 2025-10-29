@@ -105,7 +105,8 @@
     "navigation": {
       "previous": "Précédent",
       "next": "Suivant",
-      "createAccount": "Créer un compte"
+      "createAccount": "Créer un compte",
+      "back": "Retour"
     },
     "errors": {
       "accountCreationFailed": "Échec de la création du compte",
