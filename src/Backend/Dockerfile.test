@@ -1,0 +1,54 @@
+# Test Environment Dockerfile (Local Docker deployment)
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install minimal system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    make \
+    postgresql-client \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements and install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code selectively (exclude data/, storage/)
+# Only copy essential directories - .dockerignore handles exclusions
+COPY api_server.py .
+COPY api/ ./api/
+COPY config/ ./config/
+COPY core/ ./core/
+COPY database/ ./database/
+COPY domain/ ./domain/
+COPY middleware/ ./middleware/
+COPY monitoring/ ./monitoring/
+COPY prompts/ ./prompts/
+COPY services/ ./services/
+COPY ddd_refactored/ ./ddd_refactored/
+COPY models/ ./models/
+COPY *.json ./
+
+# Copy .env.test as .env (will be overridden by docker-compose if needed)
+COPY .env.test .env
+
+# Create non-root user
+RUN useradd -m -u 1000 appuser && \
+    chown -R appuser:appuser /app
+
+# Switch to non-root user
+USER appuser
+
+# Health check (uses test port 6024)
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:6024/health || exit 1
+
+# Expose test port
+EXPOSE 6024
+
+# Run the application (reads PORT from .env.test = 6024)
+CMD ["python", "api_server.py"]

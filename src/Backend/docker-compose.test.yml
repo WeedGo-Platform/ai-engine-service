@@ -1,0 +1,83 @@
+version: '3.8'
+
+# Test Environment Docker Compose
+# Ports: Backend 6024, Postgres 5434, Redis 6380
+# Uses .env.test for all configuration
+
+services:
+  postgres-test:
+    image: postgres:16-alpine
+    container_name: weedgo-postgres-test
+    environment:
+      POSTGRES_USER: ${DB_USER:-weedgo}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-your_password_here}
+      POSTGRES_DB: ${DB_NAME:-ai_engine_test}
+    ports:
+      - "${DB_PORT:-5434}:5432"
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d
+    networks:
+      - weedgo-test-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-weedgo} -d ${DB_NAME:-ai_engine_test}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis-test:
+    image: redis:7-alpine
+    container_name: weedgo-redis-test
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_test_data:/data
+    networks:
+      - weedgo-test-network
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ai-engine-test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    container_name: weedgo-ai-engine-test
+    ports:
+      - "${PORT:-6024}:6024"
+    env_file:
+      - .env.test
+    environment:
+      # Override database URL to use docker network hostname
+      DATABASE_URL: postgresql://${DB_USER:-weedgo}:${DB_PASSWORD:-your_password_here}@postgres-test:5432/${DB_NAME:-ai_engine_test}
+      REDIS_URL: redis://redis-test:6379/0
+      ENVIRONMENT: test
+      PORT: 6024
+      V5_PORT: 6024
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+      redis-test:
+        condition: service_healthy
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - weedgo-test-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6024/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 40s
+      retries: 3
+
+networks:
+  weedgo-test-network:
+    driver: bridge
+
+volumes:
+  postgres_test_data:
+  redis_test_data:
