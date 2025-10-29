@@ -318,6 +318,7 @@ class UnifiedMessagingService:
     ) -> DeliveryResult:
         """
         Send message with automatic failover through provider chain
+        Strategy: Try PRIMARY → wait 2s → try SECONDARY once → TERTIARY (only on network errors)
         """
         if not providers:
             return DeliveryResult(
@@ -330,35 +331,69 @@ class UnifiedMessagingService:
             )
 
         errors = []
-
+        sorted_providers = sorted(providers, key=lambda x: x[1].value)
+        
         # Try each provider in priority order
-        for provider, priority, circuit_breaker in sorted(providers, key=lambda x: x[1].value):
+        for idx, (provider, priority, circuit_breaker) in enumerate(sorted_providers):
             # Check circuit breaker
             if not circuit_breaker.can_attempt():
                 logger.warning(f"Skipping provider {provider.__class__.__name__} - circuit breaker open")
                 continue
 
+            # Add delay between providers (2 seconds after PRIMARY fails)
+            if idx > 0:
+                await asyncio.sleep(2.0)
+                logger.info(f"Waiting 2 seconds before trying {provider.__class__.__name__}")
+
             try:
                 # Attempt to send
+                logger.info(f"Attempting to send via {provider.__class__.__name__} ({priority.name})")
                 result = await provider.send_single(recipient, message)
 
                 if result.status == DeliveryStatus.SENT:
                     # Success!
                     circuit_breaker.record_success()
-                    logger.info(f"Message sent via {provider.__class__.__name__} ({priority.name})")
+                    logger.info(f"✅ Message sent via {provider.__class__.__name__} ({priority.name})")
                     return result
                 else:
                     # Provider returned failure
                     circuit_breaker.record_failure()
-                    errors.append(f"{provider.__class__.__name__}: {result.error_message}")
-                    logger.warning(f"Provider {provider.__class__.__name__} failed: {result.error_message}")
+                    error_msg = result.error_message or "Unknown error"
+                    errors.append(f"{provider.__class__.__name__}: {error_msg}")
+                    logger.warning(f"❌ Provider {provider.__class__.__name__} failed: {error_msg}")
+                    
+                    # Check if it's a network error (retryable with next provider)
+                    is_network_error = any([
+                        'timeout' in error_msg.lower(),
+                        'connection' in error_msg.lower(),
+                        'network' in error_msg.lower(),
+                        '5' in error_msg and error_msg.index('5') < 3,  # 5xx errors
+                    ])
+                    
+                    # Stop failover chain if not a network error and we've tried PRIMARY and SECONDARY
+                    if not is_network_error and priority.value >= ProviderPriority.SECONDARY.value:
+                        logger.info(f"Stopping failover - non-network error from {priority.name} provider")
+                        break
 
             except Exception as e:
                 # Provider threw exception
                 circuit_breaker.record_failure()
                 error_msg = str(e)
                 errors.append(f"{provider.__class__.__name__}: {error_msg}")
-                logger.error(f"Provider {provider.__class__.__name__} exception: {e}")
+                logger.error(f"❌ Provider {provider.__class__.__name__} exception: {e}")
+                
+                # Check if it's a network error
+                is_network_error = any([
+                    'timeout' in error_msg.lower(),
+                    'connection' in error_msg.lower(),
+                    'network' in error_msg.lower(),
+                    'timed out' in error_msg.lower(),
+                ])
+                
+                # Stop failover chain if not a network error and we've tried PRIMARY and SECONDARY
+                if not is_network_error and priority.value >= ProviderPriority.SECONDARY.value:
+                    logger.info(f"Stopping failover - non-network exception from {priority.name} provider")
+                    break
 
         # All providers failed
         return DeliveryResult(
@@ -368,7 +403,7 @@ class UnifiedMessagingService:
             channel=ChannelType.EMAIL if channel_type == "email" else ChannelType.SMS,
             error_message=f"All providers failed: {'; '.join(errors)}",
             sent_at=datetime.now(),
-            metadata={'attempted_providers': len(providers), 'errors': errors}
+            metadata={'attempted_providers': len(errors), 'errors': errors}
         )
 
     async def get_provider_health(self) -> Dict[str, Any]:
