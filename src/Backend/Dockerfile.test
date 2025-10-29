@@ -30,11 +30,11 @@ COPY monitoring/ ./monitoring/
 COPY prompts/ ./prompts/
 COPY services/ ./services/
 COPY ddd_refactored/ ./ddd_refactored/
-COPY models/ ./models/
+# models/ excluded in .dockerignore (use cloud inference for test)
 COPY *.json ./
 
-# Copy .env.test as .env (will be overridden by docker-compose if needed)
-COPY .env.test .env
+# Environment variables will be provided by docker-compose via env_file
+# No need to copy .env here
 
 # Create non-root user
 RUN useradd -m -u 1000 appuser && \
