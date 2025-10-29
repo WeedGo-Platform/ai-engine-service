@@ -77,6 +77,8 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({
 
     setLoading(true);
     setError(null);
+    setSuccess(false); // Clear success state
+    
     try {
       const result = await onSendOTP(identifier, identifierType);
       if (result.success) {
@@ -108,11 +110,21 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({
             `(Limit: 5 requests per hour)`
           );
         } else {
+          // Show detailed error message from service
           setError(result.message || t('signup:verification.sendFailed'));
         }
+        // Don't mark as sent if failed
+        setOtpSent(false);
       }
     } catch (err: any) {
-      setError(err.message || t('signup:verification.sendError'));
+      console.error('OTP send exception:', err);
+      setError(
+        err.message || 
+        identifierType === 'email' 
+          ? 'Failed to send verification email. Please check your email address and try again.'
+          : 'Failed to send verification SMS. Please check your phone number and try again.'
+      );
+      setOtpSent(false);
     } finally {
       setLoading(false);
     }
@@ -252,11 +264,40 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({
   if (!otpSent) {
     return (
       <div className="flex items-center justify-center p-4">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-2"></div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            {t('signup:verification.sending')}
-          </p>
+        <div className="text-center space-y-3">
+          {loading ? (
+            <>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-2"></div>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                {t('signup:verification.sending')}
+              </p>
+            </>
+          ) : error ? (
+            <>
+              <div className="text-red-600 dark:text-red-400 mb-3">
+                <svg className="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-sm font-medium mb-1">Failed to Send Verification Code</p>
+                <p className="text-xs text-gray-600 dark:text-gray-400 max-w-md mx-auto">{error}</p>
+              </div>
+              <button
+                onClick={handleSendOTP}
+                disabled={loading || resendCountdown > 0}
+                className="px-4 py-2 bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {resendCountdown > 0 ? `Try Again (${resendCountdown}s)` : 'Try Again'}
+              </button>
+              {onCancel && (
+                <button
+                  onClick={onCancel}
+                  className="ml-2 px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium transition-colors"
+                >
+                  Cancel
+                </button>
+              )}
+            </>
+          ) : null}
         </div>
       </div>
     );
