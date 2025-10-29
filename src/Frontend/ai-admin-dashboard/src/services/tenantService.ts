@@ -288,22 +288,96 @@ class TenantService {
     success: boolean;
     message?: string;
     expiresIn?: number;
+    rateLimited?: boolean;
+    retryAfter?: number;
   }> {
     try {
-      const response = await this.api.post('/api/v1/auth/otp/send', {
+      const payload = {
         identifier,
         identifier_type: identifierType,
-        purpose: 'signup'
-      });
-      return {
-        success: true,
-        message: response.data.message,
-        expiresIn: response.data.expires_in
+        purpose: 'verification'
       };
+      
+      console.log('Sending OTP request:', {
+        payload,
+        identifierLength: identifier?.length,
+        identifierType,
+        identifierValue: identifier
+      });
+
+      // Add timeout to prevent infinite loading
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout
+
+      try {
+        const response = await this.api.post('/api/v1/auth/otp/send', payload, {
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        
+        console.log('OTP send success:', response.data);
+        
+        return {
+          success: true,
+          message: response.data.message,
+          expiresIn: response.data.expires_in
+        };
+      } catch (error: any) {
+        clearTimeout(timeoutId);
+        throw error;
+      }
     } catch (error: any) {
+      console.error('OTP send error:', {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        detail: error.response?.data?.detail,
+        data: error.response?.data,
+        identifier,
+        identifierType,
+        isTimeout: error.name === 'AbortError'
+      });
+      
+      // Handle timeout
+      if (error.name === 'AbortError' || error.code === 'ECONNABORTED') {
+        return {
+          success: false,
+          message: `⏱️ Request timed out. The verification service is taking longer than expected. Please try again in a moment.`
+        };
+      }
+      
+      // Handle rate limiting with specific message
+      if (error.response?.status === 429) {
+        const retryAfter = error.response?.headers?.['retry-after'];
+        const detail = error.response?.data?.detail || 'Too many requests. Please try again later.';
+        
+        return {
+          success: false,
+          message: retryAfter 
+            ? `${detail} Please wait ${retryAfter} seconds.`
+            : detail,
+          rateLimited: true,
+          retryAfter: retryAfter ? parseInt(retryAfter) : undefined
+        };
+      }
+      
+      // Handle 500 errors (all providers failed)
+      if (error.response?.status === 500) {
+        const detail = error.response?.data?.detail || '';
+        if (detail.includes('All providers failed') || detail.includes('provider')) {
+          return {
+            success: false,
+            message: identifierType === 'email'
+              ? `⚠️ We're experiencing temporary issues with our email service. Please try again in a few moments, or contact support if the issue persists.`
+              : `⚠️ We're experiencing temporary issues with our SMS service. Please try again in a few moments, or skip phone verification for now.`
+          };
+        }
+      }
+      
+      // Generic error with helpful message
+      const userMessage = error.response?.data?.detail || error.message || 'Failed to send verification code';
       return {
         success: false,
-        message: error.response?.data?.detail || error.message || 'Failed to send OTP'
+        message: `Unable to send verification code: ${userMessage}. Please try again.`
       };
     }
   }

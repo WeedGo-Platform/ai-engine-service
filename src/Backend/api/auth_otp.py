@@ -201,9 +201,29 @@ async def send_otp(request: Request, otp_request: OTPRequest):
             )
         
         if not result['success']:
+            error_msg = result.get('error', 'Failed to send OTP')
+            
+            # Check if it's a provider failure (all providers failed)
+            if 'All providers failed' in error_msg or 'provider' in error_msg.lower():
+                # More user-friendly message for provider failures
+                if otp_request.identifier_type == 'email':
+                    detail = (
+                        "We're experiencing temporary issues with our email service. "
+                        "Our backup providers (AWS SES, SendGrid, Gmail SMTP) are all unavailable. "
+                        "Please try again in a few moments, or contact support if this persists."
+                    )
+                else:
+                    detail = (
+                        "We're experiencing temporary issues with our SMS service. "
+                        "Please try again in a few moments, or skip phone verification for now. "
+                        "You can add your phone number later from your account settings."
+                    )
+            else:
+                detail = error_msg
+            
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=result.get('error', 'Failed to send OTP')
+                detail=detail
             )
         
         return OTPResponse(
