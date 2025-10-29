@@ -189,9 +189,13 @@ async def send_otp(request: Request, otp_request: OTPRequest):
         )
         
         if result.get('rate_limited'):
+            # Calculate retry-after time (default to 5 minutes if not specified)
+            retry_after = result.get('retry_after_seconds', 300)
+            
             raise HTTPException(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-                detail=result.get('error', 'Too many requests')
+                detail=f"Too many OTP requests. Please try again in {retry_after // 60} minutes.",
+                headers={"Retry-After": str(retry_after)}
             )
         
         if not result['success']:

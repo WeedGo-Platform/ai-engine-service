@@ -131,13 +131,26 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
           }
         );
 
+        console.log('Autocomplete response:', {
+          query,
+          status: response.status,
+          dataLength: response.data?.length,
+          data: response.data
+        });
+
         setSuggestions(response.data);
         setShowDropdown(true);
         setSelectedIndex(-1);
       } catch (err: any) {
         if (err.name !== 'CanceledError') {
           setError('Failed to fetch address suggestions');
-          console.error('Autocomplete error:', err);
+          console.error('Autocomplete error:', {
+            query,
+            error: err,
+            message: err.message,
+            response: err.response?.data,
+            status: err.response?.status
+          });
         }
       } finally {
         setLoading(false);
@@ -233,15 +246,24 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
     }
   };
 
-  // Click outside to close dropdown
+  // Click outside to close dropdown with null checks
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node) &&
-        !inputRef.current?.contains(event.target as Node)
-      ) {
-        setShowDropdown(false);
+      try {
+        const dropdownElement = dropdownRef.current;
+        const inputElement = inputRef.current;
+        
+        if (
+          dropdownElement &&
+          !dropdownElement.contains(event.target as Node) &&
+          inputElement &&
+          !inputElement.contains(event.target as Node)
+        ) {
+          setShowDropdown(false);
+        }
+      } catch (error) {
+        // Handle edge case where elements were unmounted
+        console.debug('Click outside handler error (safe to ignore):', error);
       }
     };
 
@@ -249,12 +271,17 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Scroll selected item into view
+  // Scroll selected item into view with null checks
   useEffect(() => {
-    if (selectedIndex >= 0 && dropdownRef.current) {
-      const selectedElement = dropdownRef.current.children[selectedIndex] as HTMLElement;
-      if (selectedElement) {
-        selectedElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    if (selectedIndex >= 0 && dropdownRef.current && dropdownRef.current.children) {
+      try {
+        const selectedElement = dropdownRef.current.children[selectedIndex] as HTMLElement;
+        if (selectedElement && typeof selectedElement.scrollIntoView === 'function') {
+          selectedElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }
+      } catch (error) {
+        // Silently handle if element was unmounted during scroll
+        console.debug('Scroll error (safe to ignore):', error);
       }
     }
   }, [selectedIndex]);
@@ -363,12 +390,12 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
         <div className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg p-3">
           <div className="flex items-center gap-2">
             <AlertCircle className="w-4 h-4 text-gray-400 flex-shrink-0" />
-            <div>
+            <div className="flex-1">
               <p className="text-sm text-gray-600 dark:text-gray-300 font-medium">
                 No addresses found
               </p>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                Try a different search or check your spelling
+                Type your address manually - city and postal code will need to be filled separately
               </p>
             </div>
           </div>

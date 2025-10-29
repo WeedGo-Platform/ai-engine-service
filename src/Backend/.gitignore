@@ -3,20 +3,30 @@
 agi/api/_deprecated_*.py
 agi/api/server.py
 
-# Model files (too large for GitHub, should be downloaded or stored externally)
-models/
-*.bin
-*.onnx
-*.pt
-*.pth
-*.pkl
-*.h5
-*.pb
+# Model files (exclude large files but keep folder structure and .py files)
+# Keep models/ folder structure for imports
+models/**/*.bin
+models/**/*.onnx
+models/**/*.pt
+models/**/*.pth
+models/**/*.pkl
+models/**/*.h5
+models/**/*.pb
+models/**/*.safetensors
+models/**/*.msgpack
+models/**/*.gguf
+models/**/*.wav
+models/**/*.mp3
+models/**/*.json
+models/**/*.txt
+# But keep Python files and structure
+!models/**/*.py
+!models/**/.gitkeep
 
-# Large data files
-*.safetensors
-*.msgpack
-*.gguf
+# Large data files (global patterns)
+data/**/*.bin
+data/**/*.safetensors
+data/**/*.faiss
 
 # Backup files (should never be in git!)
 *_backup_*.tar.gz

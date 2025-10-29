@@ -18,6 +18,7 @@ schedule==1.2.0
 
 # Authentication & Security
 python-jose[cryptography]==3.3.0
+PyJWT==2.8.0
 passlib[bcrypt]==1.7.4
 python-multipart==0.0.6
 cryptography==41.0.7
@@ -26,11 +27,15 @@ cryptography==41.0.7
 asyncpg==0.29.0
 redis[hiredis]==5.0.1
 sqlalchemy==2.0.23
+psycopg2-binary==2.9.10  # PostgreSQL adapter
+elasticsearch==8.19.1  # Elasticsearch client for search
 
 # AI/ML
 llama-cpp-python==0.2.20
 numpy==1.26.4  # Updated: coqui-tts requires >=1.26.0, scikit-learn requires <2.0
 scikit-learn==1.3.2
+pandas==2.3.1  # Data analysis and manipulation
+onnxruntime==1.22.1  # ONNX runtime for ML model inference
 
 # RAG & Embeddings
 sentence-transformers==2.2.2  # Embedding models for semantic search
@@ -41,9 +46,12 @@ spacy==3.7.2  # Advanced NLP for document processing
 
 # Voice/TTS
 pydub==0.25.1  # Audio format conversion (portable, uses ffmpeg if available)
+openai-whisper==20250625  # OpenAI Whisper for speech-to-text
 coqui-tts==0.27.2  # XTTS v2 voice cloning (17 languages)
 # styletts2==0.1.6  # REMOVED: Conflicts with coqui-tts dependencies (can add back later if needed)
 google-cloud-texttospeech  # Google Cloud TTS (100+ languages, cloud backup)
+pyttsx3==2.99  # Offline text-to-speech engine
+librosa>=0.11.0  # Audio analysis and feature extraction (required by coqui-tts)
 
 # Input Validation
 jsonschema==4.20.0
@@ -66,13 +74,29 @@ pyyaml==6.0.1
 python-json-logger==2.0.7
 tenacity==8.2.3
 httpx==0.25.2
+pillow==11.0.0  # Image processing (PIL)
+python-Levenshtein==0.27.1  # String similarity and distance calculations
+aiofiles==24.1.0  # Async file operations
+stripe==12.5.1  # Stripe payment processing integration
+twilio==9.8.0  # Twilio SMS/Phone services
+phonenumbers==9.0.15  # Phone number parsing and validation
+sendgrid==6.12.4  # SendGrid email service
+jinja2==3.1.6  # Template engine
+pytz==2025.2  # Timezone library
+requests==2.32.5  # HTTP library
+joblib==1.5.1  # Joblib for scikit-learn
+scipy==1.16.1  # Scientific computing library
+soundfile==0.12.1  # Audio file I/O
+bcrypt==4.3.0  # Password hashing
+websocket-client==1.8.0  # WebSocket client
+websockets==15.0.1  # Async WebSocket library
 
 # Development
 pytest==7.4.3
 pytest-asyncio==0.21.1
 black==23.12.0
 mypy==1.7.1
-coverage==7.3.3
+# coverage==7.3.3  # REMOVED: Conflicts with numba (production doesn't need coverage)
 
 # Documentation
 mkdocs==1.5.3

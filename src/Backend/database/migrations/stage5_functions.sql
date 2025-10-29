@@ -343,8 +343,8 @@ BEGIN
     
     -- If no record exists, create one
     IF v_rate_limit.id IS NULL THEN
-        INSERT INTO otp_rate_limits (identifier, identifier_type)
-        VALUES (p_identifier, p_identifier_type);
+        INSERT INTO otp_rate_limits (identifier, identifier_type, window_end, first_request_at, last_request_at)
+        VALUES (p_identifier, p_identifier_type, CURRENT_TIMESTAMP + (p_window_minutes || ' minutes')::INTERVAL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
         RETURN TRUE;
     END IF;
     
@@ -354,6 +354,7 @@ BEGIN
         SET request_count = 1,
             first_request_at = CURRENT_TIMESTAMP,
             last_request_at = CURRENT_TIMESTAMP,
+            window_end = CURRENT_TIMESTAMP + (p_window_minutes || ' minutes')::INTERVAL,
             blocked_until = NULL
         WHERE id = v_rate_limit.id;
         RETURN TRUE;

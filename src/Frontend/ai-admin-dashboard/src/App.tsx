@@ -22,6 +22,70 @@ import LanguageSelector from './components/LanguageSelector';
 import './i18n/config'; // Initialize i18n
 import { useTranslation } from 'react-i18next';
 
+// Suppress errors from browser extensions and third-party scripts
+if (typeof window !== 'undefined') {
+  // Suppress console.error
+  const originalError = console.error;
+  console.error = (...args) => {
+    const errorString = args.join(' ');
+    if (
+      errorString.includes('general.js') ||
+      errorString.includes('this.element.parentElement was null') ||
+      errorString.includes('destroyUiReactRoot') ||
+      errorString.includes('MutationObserver') ||
+      errorString.includes('LaunchDarkly')
+    ) {
+      return; // Silently ignore browser extension errors
+    }
+    originalError.apply(console, args);
+  };
+
+  // Suppress console.warn for extension warnings
+  const originalWarn = console.warn;
+  console.warn = (...args) => {
+    const warnString = args.join(' ');
+    if (
+      warnString.includes('general.js') ||
+      warnString.includes('LaunchDarkly')
+    ) {
+      return;
+    }
+    originalWarn.apply(console, args);
+  };
+
+  // Suppress unhandled promise rejections from extensions
+  window.addEventListener('unhandledrejection', (event) => {
+    const error = event.reason;
+    const errorString = error?.toString?.() || '';
+    const stackTrace = error?.stack || '';
+    
+    if (
+      errorString.includes('general.js') ||
+      errorString.includes('this.element.parentElement was null') ||
+      stackTrace.includes('general.js') ||
+      stackTrace.includes('destroyUiReactRoot')
+    ) {
+      event.preventDefault(); // Prevent error from showing in console
+      return;
+    }
+  });
+
+  // Suppress global errors from extensions
+  window.addEventListener('error', (event) => {
+    const errorString = event.message || '';
+    const filename = event.filename || '';
+    
+    if (
+      errorString.includes('general.js') ||
+      errorString.includes('this.element.parentElement was null') ||
+      filename.includes('general.js')
+    ) {
+      event.preventDefault(); // Prevent error from showing in console
+      return true;
+    }
+  });
+}
+
 // Initialize Stripe
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '');
 
