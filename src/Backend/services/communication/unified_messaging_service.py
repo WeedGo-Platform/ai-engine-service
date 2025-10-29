@@ -28,6 +28,7 @@ from .aws_sns_provider import AWSSNSProvider
 from .email_service import EmailService
 from .sms_service import SMSService
 from .console_sms_provider import ConsoleSMSProvider
+from .smtp_email_provider import SMTPEmailProvider
 
 logger = logging.getLogger(__name__)
 
@@ -173,17 +174,19 @@ class UnifiedMessagingService:
             except Exception as e:
                 logger.warning(f"Failed to initialize SendGrid: {e}")
 
-        # 3. Gmail SMTP (Tertiary) - Last resort
+        # 3. Gmail SMTP (Tertiary) - Last resort fallback
         if os.getenv('SMTP_USER') and os.getenv('SMTP_PASSWORD'):
             try:
                 smtp_config = ChannelConfig(
                     enabled=True,
-                    rate_limit=1,  # Conservative rate for SMTP
+                    rate_limit=1,  # Conservative rate for SMTP (1 email/sec)
                     cost_per_message=0.0,  # Free
                     timeout=30
                 )
-                # SMTP provider would be implemented in email_service.py
-                logger.info("SMTP configured as TERTIARY email provider")
+                smtp_provider = SMTPEmailProvider(smtp_config)
+                circuit_breaker = CircuitBreaker(failure_threshold=3, timeout_seconds=180)
+                self.email_providers.append((smtp_provider, ProviderPriority.TERTIARY, circuit_breaker))
+                logger.info("SMTP initialized as TERTIARY email provider")
             except Exception as e:
                 logger.warning(f"Failed to initialize SMTP: {e}")
 
