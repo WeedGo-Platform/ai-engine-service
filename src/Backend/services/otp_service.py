@@ -10,6 +10,9 @@ import asyncio
 import logging
 import os
 import socket
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from datetime import datetime, timedelta
 from typing import Optional, Dict, Any, Literal
 from uuid import UUID
@@ -27,22 +30,30 @@ class OTPService:
     """Service for managing OTP generation, sending, and verification"""
 
     def __init__(self, tenant_id: Optional[str] = None, db_pool: Optional[asyncpg.Pool] = None):
-        """Initialize OTP service with Twilio and SendGrid from tenant settings"""
+        """Initialize OTP service with Twilio and SendGrid from tenant settings or environment"""
         self.tenant_id = tenant_id
         self.db_pool = db_pool
         self.tenant_settings = {}
 
-        # Initialize with empty values - will be populated from tenant settings
-        self.twilio_account_sid = None
-        self.twilio_auth_token = None
-        self.twilio_phone_number = None
-        self.twilio_verify_service_sid = None
+        # Initialize from environment variables (fallback for global service)
+        self.twilio_account_sid = os.getenv('TWILIO_ACCOUNT_SID')
+        self.twilio_auth_token = os.getenv('TWILIO_AUTH_TOKEN')
+        self.twilio_phone_number = os.getenv('TWILIO_PHONE_NUMBER')
+        self.twilio_verify_service_sid = os.getenv('TWILIO_VERIFY_SERVICE_SID')
 
-        self.sendgrid_api_key = None
-        self.sendgrid_from_email = 'noreply@weedgo.com'
-        self.sendgrid_from_name = 'WeedGo'
+        self.sendgrid_api_key = os.getenv('SENDGRID_API_KEY')
+        self.sendgrid_from_email = os.getenv('SENDGRID_FROM_EMAIL', 'noreply@weedgo.com')
+        self.sendgrid_from_name = os.getenv('SENDGRID_FROM_NAME', 'WeedGo')
 
-        # Load tenant settings if available
+        # SMTP Configuration (fallback for email)
+        self.smtp_host = os.getenv('SMTP_HOST', 'smtp.gmail.com')
+        self.smtp_port = int(os.getenv('SMTP_PORT', 587))
+        self.smtp_user = os.getenv('SMTP_USER')
+        self.smtp_password = os.getenv('SMTP_PASSWORD')
+        self.smtp_from_email = os.getenv('SMTP_FROM_EMAIL', self.smtp_user)
+        self.smtp_from_name = os.getenv('SMTP_FROM_NAME', 'WeedGo')
+
+        # Load tenant settings if available (will override environment variables)
         if self.tenant_id and self.db_pool:
             asyncio.create_task(self._load_tenant_settings())
         
@@ -73,6 +84,12 @@ class OTPService:
                 logger.info("SendGrid client initialized successfully")
             except Exception as e:
                 logger.error(f"Failed to initialize SendGrid client: {e}")
+        
+        # Log SMTP configuration status
+        if self.smtp_user and self.smtp_password:
+            logger.info(f"SMTP fallback configured: {self.smtp_host}:{self.smtp_port} (user: {self.smtp_user})")
+        elif not self.sendgrid_client:
+            logger.warning("No email service configured (neither SendGrid nor SMTP)")
 
     async def _load_tenant_settings(self):
         """Load tenant communication settings from database"""
@@ -150,30 +167,48 @@ class OTPService:
             user=os.getenv('DB_USER', 'weedgo'),
             password=os.getenv('DB_PASSWORD', 'your_password_here')
         )
+        return conn
     
     async def check_rate_limit(
         self, 
         identifier: str, 
         identifier_type: Literal['email', 'phone']
-    ) -> bool:
+    ) -> Dict[str, Any]:
         """Check if identifier has exceeded rate limit"""
         conn = None
         try:
             conn = await self.get_db_connection()
             
             # Call the stored procedure
-            result = await conn.fetchval(
+            allowed = await conn.fetchval(
                 "SELECT check_otp_rate_limit($1, $2, $3, $4)",
                 identifier, identifier_type, 
                 self.rate_limit_max_requests, 
                 self.rate_limit_window_minutes
             )
             
-            return result
+            # Get additional rate limit info if blocked
+            if not allowed:
+                rate_limit_info = await conn.fetchrow(
+                    """SELECT blocked_until, request_count, first_request_at 
+                       FROM otp_rate_limits 
+                       WHERE identifier = $1 AND identifier_type = $2""",
+                    identifier, identifier_type
+                )
+                
+                if rate_limit_info and rate_limit_info['blocked_until']:
+                    retry_seconds = int((rate_limit_info['blocked_until'] - datetime.now()).total_seconds())
+                    return {
+                        'allowed': False,
+                        'blocked_until': rate_limit_info['blocked_until'].isoformat(),
+                        'retry_after_seconds': max(retry_seconds, 60)  # Minimum 1 minute
+                    }
+            
+            return {'allowed': allowed, 'retry_after_seconds': 0}
             
         except Exception as e:
             logger.error(f"Rate limit check failed: {e}")
-            return False
+            return {'allowed': True, 'retry_after_seconds': 0}  # Fail open
         finally:
             if conn:
                 await conn.close()
@@ -284,48 +319,73 @@ class OTPService:
         otp: str,
         user_id: Optional[str] = None
     ) -> Dict[str, Any]:
-        """Send OTP via email using SendGrid"""
-        if not self.sendgrid_client:
-            logger.error("SendGrid client not initialized")
-            return {
-                'success': False,
-                'error': 'Email service not configured'
-            }
-        
+        """Send OTP via email using SendGrid or SMTP fallback"""
         conn = None
+        validated_email = None
+        
         try:
             # Validate email
             validated_email = self.validate_email(email)
             
+            # Try SendGrid first if available
+            if self.sendgrid_client:
+                try:
+                    return await self._send_via_sendgrid(validated_email, otp, user_id)
+                except Exception as e:
+                    logger.warning(f"SendGrid failed, trying SMTP fallback: {e}")
+            
+            # Fallback to SMTP if SendGrid failed or not configured
+            if self.smtp_user and self.smtp_password:
+                return await self._send_via_smtp(validated_email, otp, user_id)
+            
+            # No email service configured
+            logger.error("No email service available (neither SendGrid nor SMTP)")
+            return {
+                'success': False,
+                'error': 'Email service not configured'
+            }
+            
+        except Exception as e:
+            logger.error(f"Email sending failed: {e}")
+            
+            # Log failed attempt
+            if conn:
+                await conn.execute(
+                    """
+                    INSERT INTO communication_logs (
+                        user_id, recipient, communication_type, provider,
+                        subject, content, status, error_message
+                    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+                    """,
+                    user_id, validated_email or email, 'email', 'failed',
+                    "Verification Code", f"OTP: {otp}", 'failed', str(e)
+                )
+            
+            return {
+                'success': False,
+                'error': 'Failed to send email'
+            }
+        finally:
+            if conn:
+                await conn.close()
+    
+    async def _send_via_sendgrid(
+        self,
+        email: str,
+        otp: str,
+        user_id: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """Send email via SendGrid"""
+        conn = None
+        try:
             # Create email content
             subject = "Your WeedGo Verification Code"
-            html_content = f"""
-            <html>
-                <body style="font-family: Arial, sans-serif; padding: 20px;">
-                    <div style="max-width: 600px; margin: 0 auto; background: #f5f5f5; padding: 30px; border-radius: 10px;">
-                        <h1 style="color: #2e7d32; text-align: center;">WeedGo</h1>
-                        <h2 style="color: #333; text-align: center;">Verification Code</h2>
-                        <div style="background: white; padding: 20px; border-radius: 5px; margin: 20px 0;">
-                            <p style="font-size: 16px; color: #555;">Your verification code is:</p>
-                            <div style="font-size: 32px; font-weight: bold; color: #2e7d32; text-align: center; padding: 20px; background: #f0f7f0; border-radius: 5px; letter-spacing: 5px;">
-                                {otp}
-                            </div>
-                            <p style="font-size: 14px; color: #777; margin-top: 20px;">
-                                This code will expire in {self.otp_expiry_minutes} minutes.
-                            </p>
-                        </div>
-                        <p style="font-size: 12px; color: #999; text-align: center;">
-                            If you didn't request this code, please ignore this email.
-                        </p>
-                    </div>
-                </body>
-            </html>
-            """
+            html_content = self._generate_otp_html(otp)
             
             # Create message
             message = Mail(
                 from_email=Email(self.sendgrid_from_email, self.sendgrid_from_name),
-                to_emails=To(validated_email),
+                to_emails=To(email),
                 subject=subject,
                 html_content=Content("text/html", html_content)
             )
@@ -342,44 +402,121 @@ class OTPService:
                     subject, content, status, provider_message_id, provider_response, sent_at
                 ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
                 """,
-                user_id, validated_email, 'email', 'sendgrid',
+                user_id, email, 'email', 'sendgrid',
                 subject, html_content, 'sent',
                 response.headers.get('X-Message-Id'),
                 json.dumps({'status_code': response.status_code}),
                 datetime.now()
             )
             
-            logger.info(f"OTP email sent to {validated_email}")
+            logger.info(f"OTP email sent via SendGrid to {email}")
             
             return {
                 'success': True,
                 'message_id': response.headers.get('X-Message-Id'),
-                'status_code': response.status_code
-            }
-            
-        except Exception as e:
-            logger.error(f"Email sending failed: {e}")
-            
-            # Log failed attempt
-            if conn:
-                await conn.execute(
-                    """
-                    INSERT INTO communication_logs (
-                        user_id, recipient, communication_type, provider,
-                        subject, content, status, error_message
-                    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-                    """,
-                    user_id, email, 'email', 'sendgrid',
-                    "Verification Code", f"OTP: {otp}", 'failed', str(e)
-                )
-            
-            return {
-                'success': False,
-                'error': 'Failed to send email'
+                'status_code': response.status_code,
+                'provider': 'sendgrid'
             }
         finally:
             if conn:
                 await conn.close()
+    
+    async def _send_via_smtp(
+        self,
+        email: str,
+        otp: str,
+        user_id: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """Send email via SMTP (Gmail or custom SMTP server)"""
+        conn = None
+        try:
+            # Create email content
+            subject = "Your WeedGo Verification Code"
+            html_content = self._generate_otp_html(otp)
+            
+            # Create message
+            msg = MIMEMultipart('alternative')
+            msg['Subject'] = subject
+            msg['From'] = f"{self.smtp_from_name} <{self.smtp_from_email}>"
+            msg['To'] = email
+            
+            # Plain text version
+            text_content = f"""
+            WeedGo Verification Code
+            
+            Your verification code is: {otp}
+            
+            This code will expire in {self.otp_expiry_minutes} minutes.
+            
+            If you didn't request this code, please ignore this email.
+            """
+            
+            # Attach both plain text and HTML
+            part1 = MIMEText(text_content, 'plain')
+            part2 = MIMEText(html_content, 'html')
+            msg.attach(part1)
+            msg.attach(part2)
+            
+            # Send email via SMTP
+            with smtplib.SMTP(self.smtp_host, self.smtp_port, timeout=10) as server:
+                server.starttls()
+                server.login(self.smtp_user, self.smtp_password)
+                server.send_message(msg)
+            
+            logger.info(f"OTP email sent via SMTP to {email}")
+            
+            # Try to log communication (non-critical - don't fail if logging fails)
+            try:
+                conn = await self.get_db_connection()
+                await conn.execute(
+                    """
+                    INSERT INTO communication_logs (
+                        user_id, recipient, communication_type, provider,
+                        subject, content, status, sent_at
+                    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+                    """,
+                    user_id, email, 'email', 'smtp',
+                    subject, html_content, 'sent', datetime.now()
+                )
+            except Exception as log_error:
+                logger.warning(f"Failed to log SMTP email (non-critical): {log_error}")
+            
+            return {
+                'success': True,
+                'message_id': f"smtp-{datetime.now().timestamp()}",
+                'provider': 'smtp'
+            }
+        except Exception as e:
+            logger.error(f"SMTP email failed: {e}")
+            raise
+        finally:
+            if conn:
+                await conn.close()
+    
+    def _generate_otp_html(self, otp: str) -> str:
+        """Generate HTML content for OTP email"""
+        return f"""
+        <html>
+            <body style="font-family: Arial, sans-serif; padding: 20px;">
+                <div style="max-width: 600px; margin: 0 auto; background: #f5f5f5; padding: 30px; border-radius: 10px;">
+                    <h1 style="color: #2e7d32; text-align: center;">WeedGo</h1>
+                    <h2 style="color: #333; text-align: center;">Verification Code</h2>
+                    <div style="background: white; padding: 20px; border-radius: 5px; margin: 20px 0;">
+                        <p style="font-size: 16px; color: #555;">Your verification code is:</p>
+                        <div style="font-size: 32px; font-weight: bold; color: #2e7d32; text-align: center; padding: 20px; background: #f0f7f0; border-radius: 5px; letter-spacing: 5px;">
+                            {otp}
+                        </div>
+                        <p style="font-size: 14px; color: #777; margin-top: 20px;">
+                            This code will expire in {self.otp_expiry_minutes} minutes.
+                        </p>
+                    </div>
+                    <p style="font-size: 12px; color: #999; text-align: center;">
+                        If you didn't request this code, please ignore this email.
+                    </p>
+                </div>
+            </body>
+        </html>
+        """
     
     async def create_otp(
         self,
@@ -394,11 +531,17 @@ class OTPService:
         conn = None
         try:
             # Check rate limit
-            if not await self.check_rate_limit(identifier, identifier_type):
+            rate_limit_result = await self.check_rate_limit(identifier, identifier_type)
+            if not rate_limit_result['allowed']:
+                blocked_until = rate_limit_result.get('blocked_until')
+                retry_seconds = rate_limit_result.get('retry_after_seconds', 300)
+                
                 return {
                     'success': False,
-                    'error': 'Too many requests. Please try again later.',
-                    'rate_limited': True
+                    'error': f'Too many OTP requests. Please try again in {retry_seconds // 60} minutes.',
+                    'rate_limited': True,
+                    'retry_after_seconds': retry_seconds,
+                    'blocked_until': blocked_until
                 }
             
             # Generate OTP
@@ -422,15 +565,21 @@ class OTPService:
             )
             
             # Create new OTP
+            # Hash the OTP code for storage
+            import hashlib
+            code_hash = hashlib.sha256(otp_code.encode()).hexdigest()
+            
             await conn.execute(
                 """
                 INSERT INTO otp_codes (
                     user_id, identifier, identifier_type, code, purpose,
-                    expires_at, ip_address, user_agent
-                ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+                    expires_at, ip_address, user_agent, otp_type, code_hash,
+                    delivery_method, delivery_address
+                ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
                 """,
                 user_id, identifier, identifier_type, otp_code, purpose,
-                expires_at, ip_address, user_agent
+                expires_at, ip_address, user_agent, purpose, code_hash,
+                identifier_type, identifier
             )
             
             logger.info(f"OTP created for {identifier_type}: {identifier}")
