@@ -103,13 +103,21 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+# Virtual environments
 .venv
 env/
 venv/
 ENV/
 env.bak/
 venv.bak/
+
+# Environment files
+# NOTE: .env and .env.[mode] are tracked in git (contain non-secret config)
+# Only .env.local and .env.*.local are ignored (developer-specific overrides)
+# Pattern: .env (base) → .env.[mode] (overrides) → .env.local (local dev overrides)
+*.local.env
+.env.backup
+.env.original
 
 # Spyder project settings
 .spyderproject
