@@ -421,77 +421,49 @@ setup_logging_with_correlation_id()
 # Add Performance Logging Middleware with correlation ID tracking
 app.add_middleware(PerformanceLoggingMiddleware, log_body=False, slow_request_threshold=1.0)
 
-# Add CORS middleware - read allowed origins from environment variable
-# Format: Comma-separated list of origins (e.g., "http://localhost:3000,https://app.vercel.app")
-# Auto-detect environment and use appropriate defaults
+# ============================================================================
+# CORS Configuration - Environment Variable Driven
+# ============================================================================
+# All CORS configuration must be provided via environment variables.
+# No hardcoded defaults to ensure explicit configuration per environment.
+#
+# Required Environment Variables:
+#   CORS_ALLOWED_ORIGINS: Comma or semicolon-separated list of allowed origins
+#                        Example: "http://localhost:3003,http://localhost:5024"
+#   CORS_ORIGIN_REGEX: (Optional) Regex pattern for dynamic origin matching
+#                     Example: "https://.*\.vercel\.app"
+# ============================================================================
+
 environment = os.getenv("ENVIRONMENT", "development")
 
-# Environment-specific CORS defaults
-environment_cors_defaults = {
-    "uat": {
-        "origins": [
-            "https://weedgo-uat-admin.pages.dev",
-            "https://weedgo-uat-commerce-headless.pages.dev",
-            "https://weedgo-uat-commerce-pot-palace.pages.dev",
-            "https://weedgo-uat-commerce-modern.pages.dev"
-        ],
-        "regex": r"https://.*\.weedgo-uat-.*\.pages\.dev"
-    },
-    "beta": {
-        "origins": [
-            "https://weedgo-beta-admin.netlify.app",
-            "https://weedgo-beta-commerce.netlify.app"
-        ],
-        "regex": r"https://.*\.netlify\.app"
-    },
-    "preprod": {
-        "origins": [
-            "https://weedgo-preprod-admin.vercel.app",
-            "https://weedgo-preprod-commerce.vercel.app"
-        ],
-        "regex": r"https://.*\.vercel\.app"
-    },
-    "development": {
-        "origins": [
-            "http://localhost:3000",
-            "http://localhost:3001",
-            "http://localhost:3002",
-            "http://localhost:3003",
-            "http://localhost:3004",
-            "http://localhost:3005",
-            "http://localhost:3006",
-            "http://localhost:3007",
-            "http://localhost:5024",
-            "http://localhost:5173",
-            "http://localhost:5174"
-        ],
-        "regex": r"https://.*\.vercel\.app"
-    }
-}
-
+# Read CORS origins from environment variable (required)
 cors_origins_str = os.getenv("CORS_ALLOWED_ORIGINS", "")
-if cors_origins_str:
+if not cors_origins_str:
+    logger.warning(
+        "⚠️  CORS_ALLOWED_ORIGINS not set! CORS will block all cross-origin requests. "
+        "Set CORS_ALLOWED_ORIGINS in your .env file (e.g., CORS_ALLOWED_ORIGINS=http://localhost:3003,http://localhost:5024)"
+    )
+    cors_origins = []
+else:
     # Support both comma and semicolon as delimiters (semicolon for Koyeb CLI compatibility)
     delimiter = ";" if ";" in cors_origins_str else ","
     cors_origins = [origin.strip() for origin in cors_origins_str.split(delimiter) if origin.strip()]
-    logger.info(f"Using CORS origins from CORS_ALLOWED_ORIGINS environment variable: {cors_origins}")
-else:
-    # Use environment-specific defaults
-    env_config = environment_cors_defaults.get(environment, environment_cors_defaults["development"])
-    cors_origins = env_config["origins"]
-    logger.info(f"Using CORS origins for {environment} environment: {cors_origins}")
+    logger.info(f"✅ CORS origins loaded from environment: {cors_origins}")
 
-# Use allow_origin_regex - environment-specific or from env var
+# Read CORS origin regex from environment variable (optional)
 cors_origin_regex = os.getenv("CORS_ORIGIN_REGEX", "")
-if not cors_origin_regex:
-    env_config = environment_cors_defaults.get(environment, environment_cors_defaults["development"])
-    cors_origin_regex = env_config["regex"]
-    logger.info(f"Using CORS regex for {environment} environment: {cors_origin_regex}")
+if cors_origin_regex:
+    logger.info(f"✅ CORS origin regex loaded from environment: {cors_origin_regex}")
+else:
+    logger.info("ℹ️  CORS_ORIGIN_REGEX not set - only exact origin matches will be allowed")
+
+# Store CORS origins globally for use in error handlers
+ALLOWED_CORS_ORIGINS = cors_origins
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=cors_origins,
-    allow_origin_regex=cors_origin_regex,
+    allow_origin_regex=cors_origin_regex if cors_origin_regex else None,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
@@ -908,16 +880,21 @@ async def rate_limit_middleware(request: Request, call_next):
 
     if not allowed:
         # Create response with CORS headers to prevent browser blocking
-        response = JSONResponse(
-            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-            content={"detail": "Too many requests", **info},
-            headers={
-                "Retry-After": str(info.get('retry_after', 60)),
-                "Access-Control-Allow-Origin": request.headers.get("origin", "http://localhost:3003"),
+        # Create response with CORS headers using environment-configured origins
+        origin = request.headers.get("origin")
+        headers = {"Retry-After": str(info.get('retry_after', 60))}
+        if origin and origin in ALLOWED_CORS_ORIGINS:
+            headers.update({
+                "Access-Control-Allow-Origin": origin,
                 "Access-Control-Allow-Credentials": "true",
                 "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS, PATCH",
                 "Access-Control-Allow-Headers": "*"
-            }
+            })
+
+        response = JSONResponse(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            content={"detail": "Too many requests", **info},
+            headers=headers
         )
         return response
     
@@ -1678,17 +1655,17 @@ async def update_models_config(req: Request):
         )
 
 
-# Error handlers
+# Error handlers with environment-driven CORS support
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
-    """Handle HTTP exceptions"""
+    """Handle HTTP exceptions with CORS support"""
     response = JSONResponse(
         status_code=exc.status_code,
         content={"detail": exc.detail}
     )
-    # Add CORS headers to error responses
+    # Add CORS headers to error responses using environment-configured origins
     origin = request.headers.get("origin")
-    if origin in ["http://localhost:3003", "http://localhost:3004", "http://localhost:3000", "http://localhost:5024", "http://localhost:5173", "http://localhost:5174"]:
+    if origin and origin in ALLOWED_CORS_ORIGINS:
         response.headers["Access-Control-Allow-Origin"] = origin
         response.headers["Access-Control-Allow-Credentials"] = "true"
         response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS, PATCH"
@@ -1698,15 +1675,15 @@ async def http_exception_handler(request: Request, exc: HTTPException):
 
 @app.exception_handler(Exception)
 async def general_exception_handler(request: Request, exc: Exception):
-    """Handle general exceptions"""
+    """Handle general exceptions with CORS support"""
     logger.error(f"Unhandled exception: {exc}")
     response = JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content={"detail": "Internal server error"}
     )
-    # Add CORS headers to error responses
+    # Add CORS headers to error responses using environment-configured origins
     origin = request.headers.get("origin")
-    if origin in ["http://localhost:3003", "http://localhost:3004", "http://localhost:3000", "http://localhost:5024", "http://localhost:5173", "http://localhost:5174"]:
+    if origin and origin in ALLOWED_CORS_ORIGINS:
         response.headers["Access-Control-Allow-Origin"] = origin
         response.headers["Access-Control-Allow-Credentials"] = "true"
         response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS, PATCH"
