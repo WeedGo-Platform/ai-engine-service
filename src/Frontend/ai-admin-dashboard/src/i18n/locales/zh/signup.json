@@ -105,7 +105,8 @@
     "navigation": {
       "previous": "上一步",
       "next": "下一步",
-      "createAccount": "创建账户"
+      "createAccount": "创建账户",
+      "back": "返回"
     },
     "errors": {
       "accountCreationFailed": "账户创建失败",

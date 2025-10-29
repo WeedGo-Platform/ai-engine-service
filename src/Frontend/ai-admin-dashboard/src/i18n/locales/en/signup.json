@@ -51,6 +51,7 @@
       "street": "Street Address",
       "streetPlaceholder": "Start typing an address (e.g., 123 Main St, Toronto)",
       "city": "City",
+      "cityPlaceholder": "e.g., Toronto",
       "province": "Province",
       "postalCode": "Postal Code",
       "postalCodePlaceholder": "A1A 1A1"
@@ -107,7 +108,8 @@
     "navigation": {
       "previous": "Previous",
       "next": "Next",
-      "createAccount": "Create Account"
+      "createAccount": "Create Account",
+      "back": "Back"
     },
     "errors": {
       "accountCreationFailed": "Account Creation Failed",
