@@ -318,7 +318,7 @@ class UnifiedMessagingService:
     ) -> DeliveryResult:
         """
         Send message with automatic failover through provider chain
-        Strategy: Try PRIMARY → wait 2s → try SECONDARY once → TERTIARY (only on network errors)
+        Strategy: Try PRIMARY → wait 2s → try SECONDARY once → TERTIARY (SMTP backup always tried)
         """
         if not providers:
             return DeliveryResult(
@@ -361,19 +361,6 @@ class UnifiedMessagingService:
                     error_msg = result.error_message or "Unknown error"
                     errors.append(f"{provider.__class__.__name__}: {error_msg}")
                     logger.warning(f"❌ Provider {provider.__class__.__name__} failed: {error_msg}")
-                    
-                    # Check if it's a network error (retryable with next provider)
-                    is_network_error = any([
-                        'timeout' in error_msg.lower(),
-                        'connection' in error_msg.lower(),
-                        'network' in error_msg.lower(),
-                        '5' in error_msg and error_msg.index('5') < 3,  # 5xx errors
-                    ])
-                    
-                    # Stop failover chain if not a network error and we've tried PRIMARY and SECONDARY
-                    if not is_network_error and priority.value >= ProviderPriority.SECONDARY.value:
-                        logger.info(f"Stopping failover - non-network error from {priority.name} provider")
-                        break
 
             except Exception as e:
                 # Provider threw exception
@@ -381,19 +368,6 @@ class UnifiedMessagingService:
                 error_msg = str(e)
                 errors.append(f"{provider.__class__.__name__}: {error_msg}")
                 logger.error(f"❌ Provider {provider.__class__.__name__} exception: {e}")
-                
-                # Check if it's a network error
-                is_network_error = any([
-                    'timeout' in error_msg.lower(),
-                    'connection' in error_msg.lower(),
-                    'network' in error_msg.lower(),
-                    'timed out' in error_msg.lower(),
-                ])
-                
-                # Stop failover chain if not a network error and we've tried PRIMARY and SECONDARY
-                if not is_network_error and priority.value >= ProviderPriority.SECONDARY.value:
-                    logger.info(f"Stopping failover - non-network exception from {priority.name} provider")
-                    break
 
         # All providers failed
         return DeliveryResult(
