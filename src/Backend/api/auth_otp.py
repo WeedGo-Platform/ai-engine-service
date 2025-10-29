@@ -41,12 +41,14 @@ class OTPRequest(BaseModel):
             if values['identifier_type'] == 'email':
                 # Basic email validation
                 if not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', v):
-                    raise ValueError('Invalid email format')
+                    raise ValueError('Invalid email format. Please provide a valid email address.')
             elif values['identifier_type'] == 'phone':
                 # Basic phone validation - just check if it has digits
                 cleaned = re.sub(r'\D', '', v)
-                if len(cleaned) < 10 or len(cleaned) > 15:
-                    raise ValueError('Invalid phone number')
+                if len(cleaned) < 10:
+                    raise ValueError(f'Phone number too short. Must be at least 10 digits. Received: {len(cleaned)} digits')
+                if len(cleaned) > 15:
+                    raise ValueError(f'Phone number too long. Maximum 15 digits allowed. Received: {len(cleaned)} digits')
         return v
 
 
@@ -208,11 +210,17 @@ async def send_otp(request: Request, otp_request: OTPRequest):
         
     except HTTPException:
         raise
+    except ValueError as ve:
+        logger.error(f"OTP validation error: {ve}")
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=str(ve)
+        )
     except Exception as e:
-        logger.error(f"OTP send failed: {e}")
+        logger.error(f"OTP send failed: {type(e).__name__}: {e}", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to send verification code"
+            detail=f"Failed to send verification code: {type(e).__name__}"
         )
 
 

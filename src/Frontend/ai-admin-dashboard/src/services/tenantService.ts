@@ -291,7 +291,7 @@ class TenantService {
       const response = await this.api.post('/api/v1/auth/otp/send', {
         identifier,
         identifier_type: identifierType,
-        purpose: 'signup'
+        purpose: 'verification'
       });
       return {
         success: true,
@@ -317,7 +317,7 @@ class TenantService {
         identifier,
         identifier_type: identifierType,
         code,
-        purpose: 'signup'
+        purpose: 'verification'
       });
       return {
         success: true,
@@ -342,7 +342,7 @@ class TenantService {
       const response = await this.api.post('/api/v1/auth/otp/resend', {
         identifier,
         identifier_type: identifierType,
-        purpose: 'signup'
+        purpose: 'verification'
       });
       return {
         success: true,
