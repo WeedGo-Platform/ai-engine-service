@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 
 interface LicenseValidationResult {
   is_valid: boolean;
@@ -33,6 +34,7 @@ const OntarioLicenseValidator: React.FC<OntarioLicenseValidatorProps> = ({
   initialLicenseNumber = '',
   email
 }) => {
+  const { t } = useTranslation('signup');
   const [licenseNumber, setLicenseNumber] = useState(initialLicenseNumber);
   const [isValidating, setIsValidating] = useState(false);
   const [validationResult, setValidationResult] = useState<LicenseValidationResult | null>(null);
@@ -121,7 +123,7 @@ const OntarioLicenseValidator: React.FC<OntarioLicenseValidatorProps> = ({
       {/* License Number Input */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Ontario Cannabis Retail License Number <span className="text-red-500">*</span>
+          {t('tenant.ontario.licenseLabel')} <span className="text-red-500">*</span>
         </label>
         <div className="flex gap-2">
           <input
@@ -135,7 +137,7 @@ const OntarioLicenseValidator: React.FC<OntarioLicenseValidatorProps> = ({
                 validateLicense();
               }
             }}
-            placeholder="e.g., LCBO-1234"
+            placeholder={t('tenant.ontario.licensePlaceholder')}
             className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
           <button
@@ -153,15 +155,15 @@ const OntarioLicenseValidator: React.FC<OntarioLicenseValidatorProps> = ({
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                 </svg>
-                <span>Validating...</span>
+                <span>{t('tenant.ontario.validating')}</span>
               </div>
             ) : (
-              'Validate'
+              t('tenant.ontario.validate')
             )}
           </button>
         </div>
         <p className="text-xs text-gray-500 mt-1">
-          Enter your Ontario cannabis retail license number from AGCO
+          {t('tenant.ontario.licenseHelpText')}
         </p>
       </div>
 
@@ -180,25 +182,25 @@ const OntarioLicenseValidator: React.FC<OntarioLicenseValidatorProps> = ({
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span>✓ License Validated Successfully</span>
+                <span>{t('tenant.ontario.validatedSuccess')}</span>
               </div>
               {validationResult.store_name && (
                 <div className="grid grid-cols-2 gap-2 text-sm mt-3">
                   <div>
-                    <p className="text-gray-600">Store Name:</p>
+                    <p className="text-gray-600">{t('tenant.ontario.storeNameLabel')}</p>
                     <p className="font-semibold text-gray-900">{validationResult.store_name}</p>
                   </div>
                   <div>
-                    <p className="text-gray-600">Municipality:</p>
+                    <p className="text-gray-600">{t('tenant.ontario.municipalityLabel')}</p>
                     <p className="font-semibold text-gray-900">{validationResult.municipality}</p>
                   </div>
                   <div className="col-span-2">
-                    <p className="text-gray-600">Address:</p>
+                    <p className="text-gray-600">{t('tenant.ontario.addressLabel')}</p>
                     <p className="font-semibold text-gray-900">{validationResult.address}</p>
                   </div>
                   {validationResult.website && (
                     <div className="col-span-2">
-                      <p className="text-gray-600">Website:</p>
+                      <p className="text-gray-600">{t('tenant.ontario.websiteLabel')}</p>
                       <p className="font-semibold text-blue-600">{validationResult.website}</p>
                     </div>
                   )}
@@ -211,7 +213,7 @@ const OntarioLicenseValidator: React.FC<OntarioLicenseValidatorProps> = ({
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                 </svg>
-                <span>Validation Failed</span>
+                <span>{t('tenant.ontario.validationFailed')}</span>
               </div>
               <p className="text-red-700 text-sm">{validationResult.error_message}</p>
             </div>
@@ -222,7 +224,7 @@ const OntarioLicenseValidator: React.FC<OntarioLicenseValidatorProps> = ({
       {/* Store Search Alternative */}
       <div className="border-t pt-4">
         <p className="text-sm text-gray-600 mb-2">
-          Don't know your license number? Search for your store:
+          {t('tenant.ontario.searchIntro')}
         </p>
         <div className="flex gap-2">
           <input
@@ -235,7 +237,7 @@ const OntarioLicenseValidator: React.FC<OntarioLicenseValidatorProps> = ({
                 searchStores();
               }
             }}
-            placeholder="Search by store name or address..."
+            placeholder={t('tenant.ontario.searchPlaceholder')}
             className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
           />
           <button
@@ -247,7 +249,7 @@ const OntarioLicenseValidator: React.FC<OntarioLicenseValidatorProps> = ({
                 : 'bg-gray-600 text-white hover:bg-gray-700'
             }`}
           >
-            {isSearching ? 'Searching...' : 'Search'}
+            {isSearching ? t('tenant.ontario.searching') : t('tenant.ontario.search')}
           </button>
         </div>
 
@@ -265,15 +267,15 @@ const OntarioLicenseValidator: React.FC<OntarioLicenseValidatorProps> = ({
                     <p className="font-semibold text-gray-900">{store.store_name}</p>
                     <p className="text-sm text-gray-600">{store.address}</p>
                     <p className="text-xs text-gray-500 mt-1">
-                      License: {store.license_number} • {store.municipality}
+                      {t('tenant.ontario.licenseField')} {store.license_number} • {store.municipality}
                     </p>
                     {store.is_available ? (
                       <span className="inline-block mt-1 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">
-                        Available for Signup
+                        {t('tenant.ontario.availableForSignup')}
                       </span>
                     ) : (
                       <span className="inline-block mt-1 text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded">
-                        Already Registered
+                        {t('tenant.ontario.alreadyRegistered')}
                       </span>
                     )}
                   </button>
@@ -281,7 +283,7 @@ const OntarioLicenseValidator: React.FC<OntarioLicenseValidatorProps> = ({
               </div>
             ) : (
               <p className="p-4 text-sm text-gray-500 text-center">
-                No stores found. Try a different search term.
+                {t('tenant.ontario.noStoresFound')}
               </p>
             )}
           </div>
@@ -291,8 +293,7 @@ const OntarioLicenseValidator: React.FC<OntarioLicenseValidatorProps> = ({
       {/* Help Text */}
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
         <p className="text-sm text-blue-800">
-          <strong>Need help?</strong> Your Ontario cannabis retail license number can be found on your
-          AGCO authorization documents. It typically starts with "LCBO" followed by a number.
+          <strong>{t('tenant.ontario.needHelp')}</strong> {t('tenant.ontario.helpText')}
         </p>
       </div>
     </div>
