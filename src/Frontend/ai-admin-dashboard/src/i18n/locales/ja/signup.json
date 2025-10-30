@@ -127,7 +127,7 @@
       "crsaTitle": "CRSA検証（大麻小売店認可）",
       "domainVerifiedSuccess": "✓ ドメイン検証済み - メールドメインがCRSAウェブサイトと一致します。最初の店舗はこのライセンスから自動的に作成されます。",
       "licenseLabel": "オンタリオ州大麻小売ライセンス番号",
-      "licensePlaceholder": "例：LCBO-1234",
+      "licensePlaceholder": "例：CRSA-1234",
       "validating": "検証中...",
       "validate": "検証",
       "licenseHelpText": "AGCOから取得したオンタリオ州大麻小売ライセンス番号を入力してください",
@@ -146,7 +146,7 @@
       "alreadyRegistered": "登録済み",
       "noStoresFound": "店舗が見つかりませんでした。別の検索語を試してください。",
       "needHelp": "ヘルプが必要ですか？",
-      "helpText": "オンタリオ州大麻小売ライセンス番号は、AGCO認可文書に記載されています。通常、LCBOで始まり、その後に番号が続きます。"
+      "helpText": "オンタリオ州大麻小売ライセンス番号は、AGCO認可文書に記載されています。通常、CRSAで始まり、その後に番号が続きます。"
     }
   },
   "review": {

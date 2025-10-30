@@ -128,7 +128,7 @@
       "crsaTitle": "CRSA验证（大麻零售店授权）",
       "domainVerifiedSuccess": "✓ 域名已验证 - 您的电子邮件域名与CRSA网站匹配。您的第一家商店将自动从此许可证创建。",
       "licenseLabel": "安大略省大麻零售许可证编号",
-      "licensePlaceholder": "例如，LCBO-1234",
+      "licensePlaceholder": "例如，CRSA-1234",
       "validating": "验证中...",
       "validate": "验证",
       "licenseHelpText": "输入您从AGCO获得的安大略省大麻零售许可证编号",
@@ -147,7 +147,7 @@
       "alreadyRegistered": "已注册",
       "noStoresFound": "未找到商店。请尝试不同的搜索词。",
       "needHelp": "需要帮助？",
-      "helpText": "您的安大略省大麻零售许可证编号可以在您的AGCO授权文件中找到。通常以LCBO开头，后跟数字。"
+      "helpText": "您的安大略省大麻零售许可证编号可以在您的AGCO授权文件中找到。通常以CRSA开头，后跟数字。"
     }
   },
   "review": {

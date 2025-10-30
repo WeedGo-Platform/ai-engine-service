@@ -91,7 +91,7 @@
       "crsaTitle": "CRSA Validation (Cannabis Retail Store Authorization)",
       "domainVerifiedSuccess": "✓ Domain Verified - Your email domain matches the CRSA website. Your first store will be created automatically from this license.",
       "licenseLabel": "Ontario Cannabis Retail License Number",
-      "licensePlaceholder": "e.g., LCBO-1234",
+      "licensePlaceholder": "e.g., CRSA-1234",
       "validating": "Validating...",
       "validate": "Validate",
       "licenseHelpText": "Enter your Ontario cannabis retail license number from AGCO",
@@ -110,7 +110,7 @@
       "alreadyRegistered": "Already Registered",
       "noStoresFound": "No stores found. Try a different search term.",
       "needHelp": "Need help?",
-      "helpText": "Your Ontario cannabis retail license number can be found on your AGCO authorization documents. It typically starts with \"LCBO\" followed by a number."
+      "helpText": "Your Ontario cannabis retail license number can be found on your AGCO authorization documents. It typically starts with \"CRSA\" followed by a number."
     },
     "payment": {
       "cardholderName": "Cardholder Name",

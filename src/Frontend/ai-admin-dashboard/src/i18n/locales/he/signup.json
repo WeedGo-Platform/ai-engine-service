@@ -127,7 +127,7 @@
       "crsaTitle": "אימות CRSA (אישור חנות קמעונאות קנאביס)",
       "domainVerifiedSuccess": "✓ הדומיין אומת - דומיין האימייל שלך תואם לאתר CRSA. החנות הראשונה שלך תיווצר אוטומטית מרישיון זה.",
       "licenseLabel": "מספר רישיון קמעונאות קנאביס באונטריו",
-      "licensePlaceholder": "לדוגמה: LCBO-1234",
+      "licensePlaceholder": "לדוגמה: CRSA-1234",
       "validating": "מאמת...",
       "validate": "אמת",
       "licenseHelpText": "הזן את מספר רישיון קמעונאות הקנאביס שלך באונטריו מ-AGCO",

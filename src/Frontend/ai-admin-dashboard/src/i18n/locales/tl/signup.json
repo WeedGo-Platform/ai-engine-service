@@ -127,7 +127,7 @@
       "crsaTitle": "Pagpapatunay ng CRSA (Cannabis Retail Store Authorization)",
       "domainVerifiedSuccess": "✓ Na-verify ang Domain - Ang domain ng iyong email ay tumutugma sa website ng CRSA. Ang iyong unang tindahan ay awtomatikong lilikhahin mula sa lisensyang ito.",
       "licenseLabel": "Numero ng Lisensya ng Cannabis Retail sa Ontario",
-      "licensePlaceholder": "halimbawa: LCBO-1234",
+      "licensePlaceholder": "halimbawa: CRSA-1234",
       "validating": "Nag-veverify...",
       "validate": "I-validate",
       "licenseHelpText": "Ilagay ang iyong numero ng lisensya ng cannabis retail sa Ontario mula sa AGCO",

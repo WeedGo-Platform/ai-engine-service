@@ -128,7 +128,7 @@
       "crsaTitle": "التحقق من CRSA (تصريح متجر بيع القنب بالتجزئة)",
       "domainVerifiedSuccess": "✓ تم التحقق من النطاق - نطاق بريدك الإلكتروني يتطابق مع موقع CRSA. سيتم إنشاء متجرك الأول تلقائيًا من هذا الترخيص.",
       "licenseLabel": "رقم ترخيص بيع القنب بالتجزئة في أونتاريو",
-      "licensePlaceholder": "مثال: LCBO-1234",
+      "licensePlaceholder": "مثال: CRSA-1234",
       "validating": "جارٍ التحقق...",
       "validate": "تحقق",
       "licenseHelpText": "أدخل رقم ترخيص بيع القنب بالتجزئة في أونتاريو من AGCO",

@@ -128,7 +128,7 @@
       "crsaTitle": "Validación CRSA (Autorización de tienda minorista de cannabis)",
       "domainVerifiedSuccess": "✓ Dominio verificado - Su dominio de correo electrónico coincide con el sitio web de CRSA. Su primera tienda se creará automáticamente desde esta licencia.",
       "licenseLabel": "Número de licencia minorista de cannabis de Ontario",
-      "licensePlaceholder": "ej., LCBO-1234",
+      "licensePlaceholder": "ej., CRSA-1234",
       "validating": "Validando...",
       "validate": "Validar",
       "licenseHelpText": "Ingrese su número de licencia minorista de cannabis de Ontario de AGCO",
@@ -147,7 +147,7 @@
       "alreadyRegistered": "Ya registrado",
       "noStoresFound": "No se encontraron tiendas. Intente con un término de búsqueda diferente.",
       "needHelp": "¿Necesita ayuda?",
-      "helpText": "Su número de licencia minorista de cannabis de Ontario se puede encontrar en sus documentos de autorización de AGCO. Generalmente comienza con \"LCBO\" seguido de un número."
+      "helpText": "Su número de licencia minorista de cannabis de Ontario se puede encontrar en sus documentos de autorización de AGCO. Generalmente comienza con \"CRSA\" seguido de un número."
     }
   },
   "review": {

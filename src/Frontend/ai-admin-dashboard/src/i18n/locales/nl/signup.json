@@ -127,7 +127,7 @@
       "crsaTitle": "CRSA-validatie (Cannabis Retail Store Authorization)",
       "domainVerifiedSuccess": "✓ Domein geverifieerd - Uw e-maildomein komt overeen met de CRSA-website. Uw eerste winkel wordt automatisch aangemaakt vanuit deze licentie.",
       "licenseLabel": "Ontario Cannabis Detailhandel Licentienummer",
-      "licensePlaceholder": "bijv., LCBO-1234",
+      "licensePlaceholder": "bijv., CRSA-1234",
       "validating": "Valideren...",
       "validate": "Valideren",
       "licenseHelpText": "Voer uw Ontario cannabis detailhandel licentienummer van AGCO in",
@@ -146,7 +146,7 @@
       "alreadyRegistered": "Reeds geregistreerd",
       "noStoresFound": "Geen winkels gevonden. Probeer een andere zoekterm.",
       "needHelp": "Hulp nodig?",
-      "helpText": "Uw Ontario cannabis detailhandel licentienummer staat in uw AGCO-autorisatiedocumenten. Het begint meestal met \"LCBO\" gevolgd door een nummer."
+      "helpText": "Uw Ontario cannabis detailhandel licentienummer staat in uw AGCO-autorisatiedocumenten. Het begint meestal met \"CRSA\" gevolgd door een nummer."
     }
   },
   "review": {

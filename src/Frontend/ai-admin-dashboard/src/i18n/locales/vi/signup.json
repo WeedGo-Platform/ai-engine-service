@@ -127,7 +127,7 @@
       "crsaTitle": "Xác thực CRSA (Ủy quyền cửa hàng bán lẻ cần sa)",
       "domainVerifiedSuccess": "✓ Đã xác minh tên miền - Tên miền email của bạn khớp với trang web CRSA. Cửa hàng đầu tiên của bạn sẽ được tạo tự động từ giấy phép này.",
       "licenseLabel": "Số giấy phép bán lẻ cần sa Ontario",
-      "licensePlaceholder": "ví dụ: LCBO-1234",
+      "licensePlaceholder": "ví dụ: CRSA-1234",
       "validating": "Đang xác thực...",
       "validate": "Xác thực",
       "licenseHelpText": "Nhập số giấy phép bán lẻ cần sa Ontario từ AGCO của bạn",
@@ -146,7 +146,7 @@
       "alreadyRegistered": "Đã đăng ký",
       "noStoresFound": "Không tìm thấy cửa hàng. Thử từ khóa tìm kiếm khác.",
       "needHelp": "Cần giúp đỡ?",
-      "helpText": "Số giấy phép bán lẻ cần sa Ontario của bạn có thể được tìm thấy trong tài liệu ủy quyền AGCO của bạn. Nó thường bắt đầu bằng LCBO theo sau là một số."
+      "helpText": "Số giấy phép bán lẻ cần sa Ontario của bạn có thể được tìm thấy trong tài liệu ủy quyền AGCO của bạn. Nó thường bắt đầu bằng CRSA theo sau là một số."
     }
   },
   "review": {

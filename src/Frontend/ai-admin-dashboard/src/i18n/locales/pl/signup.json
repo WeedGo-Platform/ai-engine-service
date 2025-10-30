@@ -127,7 +127,7 @@
       "crsaTitle": "Walidacja CRSA (Autoryzacja sklepu detalicznego cannabis)",
       "domainVerifiedSuccess": "✓ Domena zweryfikowana - Twoja domena e-mail pasuje do strony CRSA. Twój pierwszy sklep zostanie utworzony automatycznie z tej licencji.",
       "licenseLabel": "Numer licencji sprzedaży detalicznej cannabis w Ontario",
-      "licensePlaceholder": "np., LCBO-1234",
+      "licensePlaceholder": "np., CRSA-1234",
       "validating": "Walidacja...",
       "validate": "Waliduj",
       "licenseHelpText": "Wprowadź swój numer licencji sprzedaży detalicznej cannabis w Ontario z AGCO",
@@ -146,7 +146,7 @@
       "alreadyRegistered": "Już zarejestrowany",
       "noStoresFound": "Nie znaleziono sklepów. Spróbuj innego hasła wyszukiwania.",
       "needHelp": "Potrzebujesz pomocy?",
-      "helpText": "Twój numer licencji sprzedaży detalicznej cannabis w Ontario znajduje się w dokumentach autoryzacyjnych AGCO. Zazwyczaj zaczyna się od \"LCBO\", po którym następuje numer."
+      "helpText": "Twój numer licencji sprzedaży detalicznej cannabis w Ontario znajduje się w dokumentach autoryzacyjnych AGCO. Zazwyczaj zaczyna się od \"CRSA\", po którym następuje numer."
     }
   },
   "review": {

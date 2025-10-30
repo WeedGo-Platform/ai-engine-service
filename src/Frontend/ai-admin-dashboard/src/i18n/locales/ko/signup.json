@@ -127,7 +127,7 @@
       "crsaTitle": "CRSA 검증 (대마초 소매점 승인)",
       "domainVerifiedSuccess": "✓ 도메인 확인됨 - 이메일 도메인이 CRSA 웹사이트와 일치합니다. 첫 번째 매장이 이 라이선스에서 자동으로 생성됩니다.",
       "licenseLabel": "온타리오 대마초 소매 라이선스 번호",
-      "licensePlaceholder": "예: LCBO-1234",
+      "licensePlaceholder": "예: CRSA-1234",
       "validating": "검증 중...",
       "validate": "검증",
       "licenseHelpText": "AGCO에서 받은 온타리오 대마초 소매 라이선스 번호를 입력하세요",
@@ -146,7 +146,7 @@
       "alreadyRegistered": "이미 등록됨",
       "noStoresFound": "매장을 찾을 수 없습니다. 다른 검색어를 시도하세요.",
       "needHelp": "도움이 필요하신가요?",
-      "helpText": "온타리오 대마초 소매 라이선스 번호는 AGCO 승인 문서에서 찾을 수 있습니다. 일반적으로 LCBO로 시작하고 그 뒤에 숫자가 붙습니다."
+      "helpText": "온타리오 대마초 소매 라이선스 번호는 AGCO 승인 문서에서 찾을 수 있습니다. 일반적으로 CRSA로 시작하고 그 뒤에 숫자가 붙습니다."
     }
   },
   "review": {

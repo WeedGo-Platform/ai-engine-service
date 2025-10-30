@@ -127,7 +127,7 @@
       "crsaTitle": "Validare CRSA (Autorizație magazin cu amănuntul de cannabis)",
       "domainVerifiedSuccess": "✓ Domeniu verificat - Domeniul dvs. de e-mail corespunde site-ului web CRSA. Primul dvs. magazin va fi creat automat din această licență.",
       "licenseLabel": "Număr licență vânzare cu amănuntul de cannabis Ontario",
-      "licensePlaceholder": "ex., LCBO-1234",
+      "licensePlaceholder": "ex., CRSA-1234",
       "validating": "Se validează...",
       "validate": "Validare",
       "licenseHelpText": "Introduceți numărul dvs. de licență de vânzare cu amănuntul de cannabis din Ontario de la AGCO",
@@ -146,7 +146,7 @@
       "alreadyRegistered": "Deja înregistrat",
       "noStoresFound": "Nu s-au găsit magazine. Încercați un alt termen de căutare.",
       "needHelp": "Aveți nevoie de ajutor?",
-      "helpText": "Numărul dvs. de licență de vânzare cu amănuntul de cannabis din Ontario poate fi găsit în documentele dvs. de autorizare AGCO. De obicei începe cu \"LCBO\" urmat de un număr."
+      "helpText": "Numărul dvs. de licență de vânzare cu amănuntul de cannabis din Ontario poate fi găsit în documentele dvs. de autorizare AGCO. De obicei începe cu \"CRSA\" urmat de un număr."
     }
   },
   "review": {
