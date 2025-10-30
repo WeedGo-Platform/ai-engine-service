@@ -313,11 +313,11 @@
     "cvvRequired": "CVV обязателен",
     "cvvFormat": "CVV должен быть 3 или 4 цифры",
     "cardholderRequired": "Имя держателя карты обязательно",
-    "crolNumberRequired": "CROL number is required for Ontario tenants",
-    "crsaLicenseRequired": "Valid CRSA license is required for Ontario tenants",
-    "crsaDomainMismatch": "Your email domain does not match the CRSA website. Please contact support for manual verification.",
-    "licenseNumberRequired": "Please enter a license number",
-    "licenseValidationFailed": "Failed to validate license"
+    "crolNumberRequired": "Номер CROL требуется для арендаторов Онтарио",
+    "crsaLicenseRequired": "Действительная лицензия CRSA требуется для арендаторов Онтарио",
+    "crsaDomainMismatch": "Ваш домен электронной почты не соответствует веб-сайту CRSA. Свяжитесь со службой поддержки для ручной проверки.",
+    "licenseNumberRequired": "Пожалуйста, введите номер лицензии",
+    "licenseValidationFailed": "Не удалось проверить лицензию"
   },
   "passwordStrength": {
     "weak": "Слабый",
@@ -407,19 +407,19 @@
   },
   "errors": {
     "submit": {
-      "processingPayment": "Processing payment method...",
-      "paymentDetailsRequired": "Payment details required for paid plans",
-      "paymentMethodFailed": "Failed to process payment method",
-      "accountCreationFailed": "Failed to create account.",
-      "tenantExists": "This tenant already exists.",
-      "userEmailExists": "A user with this email already exists. Please use a different email or login instead.",
-      "emailAlreadyRegistered": "This email is already registered. Please use a different email or login instead.",
-      "informationAlreadyRegistered": "This information is already registered in our system.",
-      "checkRequiredFields": "Please check all required fields are filled correctly.",
-      "validationError": "Validation error: Please check all required fields are filled correctly.",
-      "serverError": "Server error occurred. Please try again later or contact support.",
-      "serviceUnavailable": "Service not available. Please ensure the backend is running.",
-      "networkError": "Network error: Unable to connect to the server. Please check your connection."
+      "processingPayment": "Обработка способа оплаты...",
+      "paymentDetailsRequired": "Платежные данные требуются для платных планов",
+      "paymentMethodFailed": "Не удалось обработать способ оплаты",
+      "accountCreationFailed": "Не удалось создать учетную запись.",
+      "tenantExists": "Этот арендатор уже существует.",
+      "userEmailExists": "Пользователь с этим адресом электронной почты уже существует. Используйте другой адрес или войдите.",
+      "emailAlreadyRegistered": "Этот адрес электронной почты уже зарегистрирован. Используйте другой адрес или войдите.",
+      "informationAlreadyRegistered": "Эта информация уже зарегистрирована в нашей системе.",
+      "checkRequiredFields": "Пожалуйста, проверьте, что все обязательные поля заполнены правильно.",
+      "validationError": "Ошибка проверки: Пожалуйста, проверьте, что все обязательные поля заполнены правильно.",
+      "serverError": "Произошла ошибка сервера. Попробуйте позже или свяжитесь со службой поддержки.",
+      "serviceUnavailable": "Служба недоступна. Убедитесь, что серверная часть запущена.",
+      "networkError": "Ошибка сети: Невозможно подключиться к серверу. Проверьте ваше соединение."
     }
   }
 }

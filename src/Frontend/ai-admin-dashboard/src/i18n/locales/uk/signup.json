@@ -313,11 +313,11 @@
     "cvvRequired": "CVV є обов'язковим",
     "cvvFormat": "CVV повинен складатися з 3 або 4 цифр",
     "cardholderRequired": "Ім'я власника картки є обов'язковим",
-    "crolNumberRequired": "CROL number is required for Ontario tenants",
-    "crsaLicenseRequired": "Valid CRSA license is required for Ontario tenants",
-    "crsaDomainMismatch": "Your email domain does not match the CRSA website. Please contact support for manual verification.",
-    "licenseNumberRequired": "Please enter a license number",
-    "licenseValidationFailed": "Failed to validate license"
+    "crolNumberRequired": "Номер CROL потрібен для орендарів Онтаріо",
+    "crsaLicenseRequired": "Дійсна ліцензія CRSA потрібна для орендарів Онтаріо",
+    "crsaDomainMismatch": "Ваш домен електронної пошти не відповідає веб-сайту CRSA. Зв'яжіться зі службою підтримки для ручної перевірки.",
+    "licenseNumberRequired": "Будь ласка, введіть номер ліцензії",
+    "licenseValidationFailed": "Не вдалося перевірити ліцензію"
   },
   "passwordStrength": {
     "weak": "Слабкий",
@@ -407,19 +407,19 @@
   },
   "errors": {
     "submit": {
-      "processingPayment": "Processing payment method...",
-      "paymentDetailsRequired": "Payment details required for paid plans",
-      "paymentMethodFailed": "Failed to process payment method",
-      "accountCreationFailed": "Failed to create account.",
-      "tenantExists": "This tenant already exists.",
-      "userEmailExists": "A user with this email already exists. Please use a different email or login instead.",
-      "emailAlreadyRegistered": "This email is already registered. Please use a different email or login instead.",
-      "informationAlreadyRegistered": "This information is already registered in our system.",
-      "checkRequiredFields": "Please check all required fields are filled correctly.",
-      "validationError": "Validation error: Please check all required fields are filled correctly.",
-      "serverError": "Server error occurred. Please try again later or contact support.",
-      "serviceUnavailable": "Service not available. Please ensure the backend is running.",
-      "networkError": "Network error: Unable to connect to the server. Please check your connection."
+      "processingPayment": "Обробка способу оплати...",
+      "paymentDetailsRequired": "Платіжні дані потрібні для платних планів",
+      "paymentMethodFailed": "Не вдалося обробити спосіб оплати",
+      "accountCreationFailed": "Не вдалося створити обліковий запис.",
+      "tenantExists": "Цей орендар вже існує.",
+      "userEmailExists": "Користувач з цією електронною поштою вже існує. Використайте іншу адресу або увійдіть.",
+      "emailAlreadyRegistered": "Ця електронна пошта вже зареєстрована. Використайте іншу адресу або увійдіть.",
+      "informationAlreadyRegistered": "Ця інформація вже зареєстрована в нашій системі.",
+      "checkRequiredFields": "Будь ласка, перевірте, що всі обов'язкові поля заповнені правильно.",
+      "validationError": "Помилка перевірки: Будь ласка, перевірте, що всі обов'язкові поля заповнені правильно.",
+      "serverError": "Сталася помилка сервера. Спробуйте пізніше або зв'яжіться зі службою підтримки.",
+      "serviceUnavailable": "Служба недоступна. Переконайтеся, що серверна частина запущена.",
+      "networkError": "Помилка мережі: Неможливо підключитися до сервера. Перевірте ваше з'єднання."
     }
   }
 }

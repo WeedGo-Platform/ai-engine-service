@@ -313,11 +313,11 @@
     "cvvRequired": "CVV este obligatoriu",
     "cvvFormat": "CVV trebuie să aibă 3 sau 4 cifre",
     "cardholderRequired": "Numele deținătorului cardului este obligatoriu",
-    "crolNumberRequired": "CROL number is required for Ontario tenants",
-    "crsaLicenseRequired": "Valid CRSA license is required for Ontario tenants",
-    "crsaDomainMismatch": "Your email domain does not match the CRSA website. Please contact support for manual verification.",
-    "licenseNumberRequired": "Please enter a license number",
-    "licenseValidationFailed": "Failed to validate license"
+    "crolNumberRequired": "Numărul CROL este necesar pentru chiriașii din Ontario",
+    "crsaLicenseRequired": "Licența CRSA validă este necesară pentru chiriașii din Ontario",
+    "crsaDomainMismatch": "Domeniul dvs. de e-mail nu corespunde site-ului web CRSA. Vă rugăm să contactați asistența pentru verificare manuală.",
+    "licenseNumberRequired": "Vă rugăm să introduceți un număr de licență",
+    "licenseValidationFailed": "Validarea licenței a eșuat"
   },
   "passwordStrength": {
     "weak": "Slabă",
@@ -407,19 +407,19 @@
   },
   "errors": {
     "submit": {
-      "processingPayment": "Processing payment method...",
-      "paymentDetailsRequired": "Payment details required for paid plans",
-      "paymentMethodFailed": "Failed to process payment method",
-      "accountCreationFailed": "Failed to create account.",
-      "tenantExists": "This tenant already exists.",
-      "userEmailExists": "A user with this email already exists. Please use a different email or login instead.",
-      "emailAlreadyRegistered": "This email is already registered. Please use a different email or login instead.",
-      "informationAlreadyRegistered": "This information is already registered in our system.",
-      "checkRequiredFields": "Please check all required fields are filled correctly.",
-      "validationError": "Validation error: Please check all required fields are filled correctly.",
-      "serverError": "Server error occurred. Please try again later or contact support.",
-      "serviceUnavailable": "Service not available. Please ensure the backend is running.",
-      "networkError": "Network error: Unable to connect to the server. Please check your connection."
+      "processingPayment": "Procesare metodă de plată...",
+      "paymentDetailsRequired": "Detaliile de plată sunt necesare pentru planurile plătite",
+      "paymentMethodFailed": "Procesarea metodei de plată a eșuat",
+      "accountCreationFailed": "Crearea contului a eșuat.",
+      "tenantExists": "Acest chiriaș există deja.",
+      "userEmailExists": "Un utilizator cu acest e-mail există deja. Folosiți un alt e-mail sau autentificați-vă.",
+      "emailAlreadyRegistered": "Acest e-mail este deja înregistrat. Folosiți un alt e-mail sau autentificați-vă.",
+      "informationAlreadyRegistered": "Aceste informații sunt deja înregistrate în sistemul nostru.",
+      "checkRequiredFields": "Vă rugăm să verificați dacă toate câmpurile obligatorii sunt completate corect.",
+      "validationError": "Eroare de validare: Vă rugăm să verificați dacă toate câmpurile obligatorii sunt completate corect.",
+      "serverError": "A apărut o eroare de server. Încercați din nou mai târziu sau contactați asistența.",
+      "serviceUnavailable": "Serviciu indisponibil. Asigurați-vă că backend-ul rulează.",
+      "networkError": "Eroare de rețea: Imposibil de conectat la server. Verificați conexiunea."
     }
   }
 }

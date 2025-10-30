@@ -313,11 +313,11 @@
     "cvvRequired": "CVV jest wymagane",
     "cvvFormat": "CVV musi mieć 3 lub 4 cyfry",
     "cardholderRequired": "Imię i nazwisko posiadacza karty jest wymagane",
-    "crolNumberRequired": "CROL number is required for Ontario tenants",
-    "crsaLicenseRequired": "Valid CRSA license is required for Ontario tenants",
-    "crsaDomainMismatch": "Your email domain does not match the CRSA website. Please contact support for manual verification.",
-    "licenseNumberRequired": "Please enter a license number",
-    "licenseValidationFailed": "Failed to validate license"
+    "crolNumberRequired": "Numer CROL jest wymagany dla najemców z Ontario",
+    "crsaLicenseRequired": "Ważna licencja CRSA jest wymagana dla najemców z Ontario",
+    "crsaDomainMismatch": "Twoja domena e-mail nie pasuje do strony CRSA. Skontaktuj się z pomocą techniczną w celu ręcznej weryfikacji.",
+    "licenseNumberRequired": "Proszę wprowadzić numer licencji",
+    "licenseValidationFailed": "Nie udało się zweryfikować licencji"
   },
   "passwordStrength": {
     "weak": "Słabe",
@@ -407,19 +407,19 @@
   },
   "errors": {
     "submit": {
-      "processingPayment": "Processing payment method...",
-      "paymentDetailsRequired": "Payment details required for paid plans",
-      "paymentMethodFailed": "Failed to process payment method",
-      "accountCreationFailed": "Failed to create account.",
-      "tenantExists": "This tenant already exists.",
-      "userEmailExists": "A user with this email already exists. Please use a different email or login instead.",
-      "emailAlreadyRegistered": "This email is already registered. Please use a different email or login instead.",
-      "informationAlreadyRegistered": "This information is already registered in our system.",
-      "checkRequiredFields": "Please check all required fields are filled correctly.",
-      "validationError": "Validation error: Please check all required fields are filled correctly.",
-      "serverError": "Server error occurred. Please try again later or contact support.",
-      "serviceUnavailable": "Service not available. Please ensure the backend is running.",
-      "networkError": "Network error: Unable to connect to the server. Please check your connection."
+      "processingPayment": "Przetwarzanie metody płatności...",
+      "paymentDetailsRequired": "Dane płatności są wymagane dla płatnych planów",
+      "paymentMethodFailed": "Nie udało się przetworzyć metody płatności",
+      "accountCreationFailed": "Nie udało się utworzyć konta.",
+      "tenantExists": "Ten najemca już istnieje.",
+      "userEmailExists": "Użytkownik z tym adresem e-mail już istnieje. Użyj innego adresu e-mail lub zaloguj się.",
+      "emailAlreadyRegistered": "Ten adres e-mail jest już zarejestrowany. Użyj innego adresu e-mail lub zaloguj się.",
+      "informationAlreadyRegistered": "Te informacje są już zarejestrowane w naszym systemie.",
+      "checkRequiredFields": "Sprawdź, czy wszystkie wymagane pola są poprawnie wypełnione.",
+      "validationError": "Błąd walidacji: Sprawdź, czy wszystkie wymagane pola są poprawnie wypełnione.",
+      "serverError": "Wystąpił błąd serwera. Spróbuj ponownie później lub skontaktuj się z pomocą techniczną.",
+      "serviceUnavailable": "Usługa niedostępna. Upewnij się, że backend jest uruchomiony.",
+      "networkError": "Błąd sieci: Nie można połączyć się z serwerem. Sprawdź swoje połączenie."
     }
   }
 }
