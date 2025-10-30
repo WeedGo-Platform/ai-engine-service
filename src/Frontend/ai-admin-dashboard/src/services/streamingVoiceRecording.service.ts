@@ -59,8 +59,11 @@ export class StreamingVoiceRecordingService {
   // Callbacks
   private callbacks: StreamingVoiceCallbacks = {};
 
-  constructor(wsUrl: string = 'ws://localhost:5024/voice/stream') {
-    this.wsUrl = wsUrl;
+  constructor(wsUrl?: string) {
+    // Build WebSocket URL from environment variable or use localhost as fallback
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5024';
+    const wsBaseUrl = apiUrl.replace('http://', 'ws://').replace('https://', 'wss://');
+    this.wsUrl = wsUrl || `${wsBaseUrl}/voice/stream`;
   }
 
   /**

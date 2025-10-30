@@ -247,59 +247,74 @@ async def lifespan(app: FastAPI):
             logger.error(f"❌ Failed to initialize unified chat system: {e}", exc_info=True)
             logger.warning("Continuing without unified chat system")
 
-        # Auto-load model configuration from database or fall back to smallest model
-        logger.info("Auto-loading model configuration...")
+        # CLOUD-FIRST STRATEGY: Only auto-load models if NOT in cloud-only mode
+        if v5_engine.use_cloud_inference:
+            logger.info("☁️  Cloud-first mode: Skipping local model auto-load")
+            logger.info("   System will use cloud providers for inference")
+            logger.info("   To use local models, disable cloud inference and restart")
+        else:
+            # LOCAL MODE: Auto-load model configuration from database or fall back to smallest model
+            logger.info("💻 Local mode: Auto-loading model configuration...")
 
-        # Check for persisted model configuration in database
-        persisted_config = await get_system_setting("ai_model", "active_model_config")
+            # Check for persisted model configuration in database
+            persisted_config = await get_system_setting("ai_model", "active_model_config")
 
-        if persisted_config:
-            logger.info(f"Found persisted model configuration: {persisted_config.get('model')}")
-            try:
-                success = v5_engine.load_model(
-                    model_name=persisted_config.get("model"),
-                    agent_id=persisted_config.get("agent"),
-                    personality_id=persisted_config.get("personality")
-                )
-                if success:
-                    logger.info(f"✅ Successfully loaded persisted model: {persisted_config.get('model')} with {persisted_config.get('agent')}/{persisted_config.get('personality')}")
-                else:
-                    logger.warning("Failed to load persisted model, falling back to smallest model")
-                    persisted_config = None
-            except Exception as e:
-                logger.error(f"Error loading persisted model: {e}, falling back to smallest model")
-                persisted_config = None
-
-        if not persisted_config:
-            # Fallback: Find and load smallest model
-            logger.info("No persisted model found, loading smallest available model")
-            smallest_model = None
-            smallest_size = float('inf')
-            for model_name, model_path in v5_engine.available_models.items():
+            if persisted_config:
+                logger.info(f"Found persisted model configuration: {persisted_config.get('model')}")
                 try:
-                    size_bytes = os.path.getsize(model_path)
-                    if size_bytes > 0 and size_bytes < smallest_size:
-                        smallest_size = size_bytes
-                        smallest_model = model_name
-                except:
-                    continue
+                    success = v5_engine.load_model(
+                        model_name=persisted_config.get("model"),
+                        agent_id=persisted_config.get("agent"),
+                        personality_id=persisted_config.get("personality")
+                    )
+                    if success:
+                        logger.info(f"✅ Successfully loaded persisted model: {persisted_config.get('model')} with {persisted_config.get('agent')}/{persisted_config.get('personality')}")
+                    else:
+                        logger.warning("Failed to load persisted model, falling back to smallest model")
+                        persisted_config = None
+                except Exception as e:
+                    logger.error(f"Error loading persisted model: {e}, falling back to smallest model")
+                    persisted_config = None
 
-            if smallest_model:
-                logger.info(f"Loading smallest model: {smallest_model} ({smallest_size / (1024**3):.2f} GB)")
-                # Load model with dispensary agent and marcel personality
-                success = v5_engine.load_model(
-                    model_name=smallest_model,
-                    agent_id="dispensary",
-                    personality_id="marcel"
-                )
-                if success:
-                    logger.info(f"✅ Successfully loaded {smallest_model} with dispensary/marcel configuration")
+            if not persisted_config:
+                # Fallback: Find and load smallest model
+                logger.info("No persisted model found, loading smallest available model")
+                smallest_model = None
+                smallest_size = float('inf')
+                for model_name, model_path in v5_engine.available_models.items():
+                    try:
+                        size_bytes = os.path.getsize(model_path)
+                        if size_bytes > 0 and size_bytes < smallest_size:
+                            smallest_size = size_bytes
+                            smallest_model = model_name
+                    except:
+                        continue
+
+                if smallest_model:
+                    logger.info(f"Loading smallest model: {smallest_model} ({smallest_size / (1024**3):.2f} GB)")
+                    # Load model with dispensary agent and marcel personality
+                    success = v5_engine.load_model(
+                        model_name=smallest_model,
+                        agent_id="dispensary",
+                        personality_id="marcel"
+                    )
+                    if success:
+                        logger.info(f"✅ Successfully loaded {smallest_model} with dispensary/marcel configuration")
+                    else:
+                        logger.warning(f"Failed to load default model configuration")
                 else:
-                    logger.warning(f"Failed to load default model configuration")
-            else:
-                logger.warning("No models available to auto-load")
-        
-        logger.info(f"V5 Engine ready with {len(v5_engine.available_models)} models available")
+                    logger.warning("⚠️  No local models available to auto-load")
+                    logger.warning("   Add model files to models/ folder or enable cloud inference")
+
+        # Summary
+        if v5_engine.use_cloud_inference:
+            logger.info(f"☁️  V5 Engine ready in CLOUD mode")
+            logger.info(f"   Inference: Cloud providers (Groq/OpenRouter/LLM7)")
+            logger.info(f"   Local models available: {len(v5_engine.available_models)} (for manual switch)")
+        else:
+            logger.info(f"💻 V5 Engine ready in LOCAL mode")
+            logger.info(f"   Models available: {len(v5_engine.available_models)}")
+            logger.info(f"   Current model: {v5_engine.current_model_name or 'None'}")
 
         # Register function schemas
         logger.info("Registering function schemas...")
