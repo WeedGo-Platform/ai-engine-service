@@ -313,7 +313,12 @@
     "expiryFormat": "Veuillez entrer le format MM/AA",
     "cvvRequired": "Le CVV est requis",
     "cvvFormat": "Le CVV doit comporter 3 ou 4 chiffres",
-    "cardholderRequired": "Le nom du titulaire de la carte est requis"
+    "cardholderRequired": "Le nom du titulaire de la carte est requis",
+    "crolNumberRequired": "Le numéro CROL est requis pour les locataires de l'Ontario",
+    "crsaLicenseRequired": "Une licence CRSA valide est requise pour les locataires de l'Ontario",
+    "crsaDomainMismatch": "Votre domaine de messagerie ne correspond pas au site Web CRSA. Veuillez contacter le support pour une vérification manuelle.",
+    "licenseNumberRequired": "Veuillez entrer un numéro de licence",
+    "licenseValidationFailed": "Échec de la validation de la licence"
   },
   "passwordStrength": {
     "weak": "Faible",
@@ -400,5 +405,22 @@
       "required": "Vous devez confirmer votre autorisation pour continuer"
     },
     "allRequired": "Toutes les attestations doivent être acceptées pour créer votre compte"
+  },
+  "errors": {
+    "submit": {
+      "processingPayment": "Traitement du mode de paiement...",
+      "paymentDetailsRequired": "Les détails de paiement sont requis pour les plans payants",
+      "paymentMethodFailed": "Échec du traitement du mode de paiement",
+      "accountCreationFailed": "Échec de la création du compte.",
+      "tenantExists": "Ce locataire existe déjà.",
+      "userEmailExists": "Un utilisateur avec cet e-mail existe déjà. Veuillez utiliser un autre e-mail ou vous connecter.",
+      "emailAlreadyRegistered": "Cet e-mail est déjà enregistré. Veuillez utiliser un autre e-mail ou vous connecter.",
+      "informationAlreadyRegistered": "Ces informations sont déjà enregistrées dans notre système.",
+      "checkRequiredFields": "Veuillez vérifier que tous les champs obligatoires sont correctement remplis.",
+      "validationError": "Erreur de validation : Veuillez vérifier que tous les champs obligatoires sont correctement remplis.",
+      "serverError": "Une erreur serveur s'est produite. Veuillez réessayer plus tard ou contacter le support.",
+      "serviceUnavailable": "Service non disponible. Veuillez vous assurer que le backend est en cours d'exécution.",
+      "networkError": "Erreur réseau : Impossible de se connecter au serveur. Veuillez vérifier votre connexion."
+    }
   }
 }

@@ -313,7 +313,12 @@
     "expiryFormat": "ਕਿਰਪਾ ਕਰਕੇ MM/YY ਫਾਰਮੈਟ ਦਾਖਲ ਕਰੋ",
     "cvvRequired": "CVV ਲੋੜੀਂਦਾ ਹੈ",
     "cvvFormat": "CVV 3 ਜਾਂ 4 ਅੰਕਾਂ ਦਾ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ",
-    "cardholderRequired": "ਕਾਰਡਧਾਰਕ ਦਾ ਨਾਮ ਲੋੜੀਂਦਾ ਹੈ"
+    "cardholderRequired": "ਕਾਰਡਧਾਰਕ ਦਾ ਨਾਮ ਲੋੜੀਂਦਾ ਹੈ",
+    "crolNumberRequired": "CROL number is required for Ontario tenants",
+    "crsaLicenseRequired": "Valid CRSA license is required for Ontario tenants",
+    "crsaDomainMismatch": "Your email domain does not match the CRSA website. Please contact support for manual verification.",
+    "licenseNumberRequired": "Please enter a license number",
+    "licenseValidationFailed": "Failed to validate license"
   },
   "passwordStrength": {
     "weak": "ਕਮਜ਼ੋਰ",
@@ -400,5 +405,22 @@
       "required": "ਜਾਰੀ ਰੱਖਣ ਲਈ ਤੁਹਾਨੂੰ ਆਪਣੇ ਅਧਿਕਾਰ ਦੀ ਪੁਸ਼ਟੀ ਕਰਨੀ ਹੋਵੇਗੀ"
     },
     "allRequired": "ਤੁਹਾਡਾ ਖਾਤਾ ਬਣਾਉਣ ਲਈ ਸਾਰੇ ਪ੍ਰਮਾਣੀਕਰਣਾਂ ਨੂੰ ਸਵੀਕਾਰ ਕੀਤਾ ਜਾਣਾ ਚਾਹੀਦਾ ਹੈ"
+  },
+  "errors": {
+    "submit": {
+      "processingPayment": "Processing payment method...",
+      "paymentDetailsRequired": "Payment details required for paid plans",
+      "paymentMethodFailed": "Failed to process payment method",
+      "accountCreationFailed": "Failed to create account.",
+      "tenantExists": "This tenant already exists.",
+      "userEmailExists": "A user with this email already exists. Please use a different email or login instead.",
+      "emailAlreadyRegistered": "This email is already registered. Please use a different email or login instead.",
+      "informationAlreadyRegistered": "This information is already registered in our system.",
+      "checkRequiredFields": "Please check all required fields are filled correctly.",
+      "validationError": "Validation error: Please check all required fields are filled correctly.",
+      "serverError": "Server error occurred. Please try again later or contact support.",
+      "serviceUnavailable": "Service not available. Please ensure the backend is running.",
+      "networkError": "Network error: Unable to connect to the server. Please check your connection."
+    }
   }
 }

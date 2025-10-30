@@ -312,7 +312,12 @@
     "expiryFormat": "Si prega di inserire il formato MM/AA",
     "cvvRequired": "Il CVV è obbligatorio",
     "cvvFormat": "Il CVV deve essere di 3 o 4 cifre",
-    "cardholderRequired": "Il nome del titolare è obbligatorio"
+    "cardholderRequired": "Il nome del titolare è obbligatorio",
+    "crolNumberRequired": "Il numero CROL è richiesto per gli inquilini dell'Ontario",
+    "crsaLicenseRequired": "È richiesta una licenza CRSA valida per gli inquilini dell'Ontario",
+    "crsaDomainMismatch": "Il tuo dominio email non corrisponde al sito web CRSA. Contatta il supporto per la verifica manuale.",
+    "licenseNumberRequired": "Inserisci un numero di licenza",
+    "licenseValidationFailed": "Convalida della licenza non riuscita"
   },
   "passwordStrength": {
     "weak": "Debole",
@@ -399,5 +404,22 @@
       "required": "Devi confermare la tua autorizzazione per continuare"
     },
     "allRequired": "Tutte le attestazioni devono essere accettate per creare il tuo account"
+  },
+  "errors": {
+    "submit": {
+      "processingPayment": "Elaborazione metodo di pagamento...",
+      "paymentDetailsRequired": "Dettagli di pagamento richiesti per piani a pagamento",
+      "paymentMethodFailed": "Elaborazione del metodo di pagamento non riuscita",
+      "accountCreationFailed": "Creazione account non riuscita.",
+      "tenantExists": "Questo inquilino esiste già.",
+      "userEmailExists": "Esiste già un utente con questa email. Utilizza un'email diversa o accedi.",
+      "emailAlreadyRegistered": "Questa email è già registrata. Utilizza un'email diversa o accedi.",
+      "informationAlreadyRegistered": "Queste informazioni sono già registrate nel nostro sistema.",
+      "checkRequiredFields": "Verifica che tutti i campi obbligatori siano compilati correttamente.",
+      "validationError": "Errore di convalida: Verifica che tutti i campi obbligatori siano compilati correttamente.",
+      "serverError": "Si è verificato un errore del server. Riprova più tardi o contatta il supporto.",
+      "serviceUnavailable": "Servizio non disponibile. Assicurati che il backend sia in esecuzione.",
+      "networkError": "Errore di rete: Impossibile connettersi al server. Verifica la tua connessione."
+    }
   }
 }

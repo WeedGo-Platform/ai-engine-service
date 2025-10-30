@@ -312,7 +312,12 @@
     "expiryFormat": "Por favor, insira o formato MM/AA",
     "cvvRequired": "O CVV é obrigatório",
     "cvvFormat": "O CVV deve ter 3 ou 4 dígitos",
-    "cardholderRequired": "O nome do titular do cartão é obrigatório"
+    "cardholderRequired": "O nome do titular do cartão é obrigatório",
+    "crolNumberRequired": "O número CROL é obrigatório para inquilinos de Ontário",
+    "crsaLicenseRequired": "Licença CRSA válida é obrigatória para inquilinos de Ontário",
+    "crsaDomainMismatch": "Seu domínio de e-mail não corresponde ao site da CRSA. Entre em contato com o suporte para verificação manual.",
+    "licenseNumberRequired": "Por favor, insira um número de licença",
+    "licenseValidationFailed": "Falha na validação da licença"
   },
   "passwordStrength": {
     "weak": "Fraca",
@@ -399,5 +404,22 @@
       "required": "Você deve confirmar sua autorização para continuar"
     },
     "allRequired": "Todas as atestações devem ser aceitas para criar sua conta"
+  },
+  "errors": {
+    "submit": {
+      "processingPayment": "Processando método de pagamento...",
+      "paymentDetailsRequired": "Detalhes de pagamento obrigatórios para planos pagos",
+      "paymentMethodFailed": "Falha ao processar método de pagamento",
+      "accountCreationFailed": "Falha ao criar conta.",
+      "tenantExists": "Este inquilino já existe.",
+      "userEmailExists": "Já existe um usuário com este e-mail. Use um e-mail diferente ou faça login.",
+      "emailAlreadyRegistered": "Este e-mail já está registrado. Use um e-mail diferente ou faça login.",
+      "informationAlreadyRegistered": "Esta informação já está registrada em nosso sistema.",
+      "checkRequiredFields": "Verifique se todos os campos obrigatórios estão preenchidos corretamente.",
+      "validationError": "Erro de validação: Verifique se todos os campos obrigatórios estão preenchidos corretamente.",
+      "serverError": "Ocorreu um erro no servidor. Tente novamente mais tarde ou entre em contato com o suporte.",
+      "serviceUnavailable": "Serviço não disponível. Certifique-se de que o backend está em execução.",
+      "networkError": "Erro de rede: Não foi possível conectar ao servidor. Verifique sua conexão."
+    }
   }
 }

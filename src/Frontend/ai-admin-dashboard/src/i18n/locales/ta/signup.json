@@ -312,7 +312,12 @@
     "expiryFormat": "MM/YY வடிவத்தை உள்ளிடவும்",
     "cvvRequired": "CVV தேவை",
     "cvvFormat": "CVV 3 அல்லது 4 இலக்கங்களாக இருக்க வேண்டும்",
-    "cardholderRequired": "கார்டுதாரர் பெயர் தேவை"
+    "cardholderRequired": "கார்டுதாரர் பெயர் தேவை",
+    "crolNumberRequired": "CROL number is required for Ontario tenants",
+    "crsaLicenseRequired": "Valid CRSA license is required for Ontario tenants",
+    "crsaDomainMismatch": "Your email domain does not match the CRSA website. Please contact support for manual verification.",
+    "licenseNumberRequired": "Please enter a license number",
+    "licenseValidationFailed": "Failed to validate license"
   },
   "passwordStrength": {
     "weak": "பலவீனம்",
@@ -399,5 +404,22 @@
       "required": "தொடர உங்கள் அனுமதியை உறுதிபடுத்த வேண்டும்"
     },
     "allRequired": "உங்கள் கணக்கை உருவாக்க அனைத்து சான்றுகளையும் ஏற்க வேண்டும்"
+  },
+  "errors": {
+    "submit": {
+      "processingPayment": "Processing payment method...",
+      "paymentDetailsRequired": "Payment details required for paid plans",
+      "paymentMethodFailed": "Failed to process payment method",
+      "accountCreationFailed": "Failed to create account.",
+      "tenantExists": "This tenant already exists.",
+      "userEmailExists": "A user with this email already exists. Please use a different email or login instead.",
+      "emailAlreadyRegistered": "This email is already registered. Please use a different email or login instead.",
+      "informationAlreadyRegistered": "This information is already registered in our system.",
+      "checkRequiredFields": "Please check all required fields are filled correctly.",
+      "validationError": "Validation error: Please check all required fields are filled correctly.",
+      "serverError": "Server error occurred. Please try again later or contact support.",
+      "serviceUnavailable": "Service not available. Please ensure the backend is running.",
+      "networkError": "Network error: Unable to connect to the server. Please check your connection."
+    }
   }
 }

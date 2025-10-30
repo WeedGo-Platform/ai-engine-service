@@ -312,7 +312,12 @@
     "expiryFormat": "請用 MM/YY 格式輸入",
     "cvvRequired": "CVV 係必填",
     "cvvFormat": "CVV 必須係3或4位數字",
-    "cardholderRequired": "持卡人姓名係必填"
+    "cardholderRequired": "持卡人姓名係必填",
+    "crolNumberRequired": "CROL number is required for Ontario tenants",
+    "crsaLicenseRequired": "Valid CRSA license is required for Ontario tenants",
+    "crsaDomainMismatch": "Your email domain does not match the CRSA website. Please contact support for manual verification.",
+    "licenseNumberRequired": "Please enter a license number",
+    "licenseValidationFailed": "Failed to validate license"
   },
   "passwordStrength": {
     "weak": "弱",
@@ -399,5 +404,22 @@
       "required": "您必須確認您的授權才能繼續"
     },
     "allRequired": "必須接受所有聲明才能創建您的帳戶"
+  },
+  "errors": {
+    "submit": {
+      "processingPayment": "Processing payment method...",
+      "paymentDetailsRequired": "Payment details required for paid plans",
+      "paymentMethodFailed": "Failed to process payment method",
+      "accountCreationFailed": "Failed to create account.",
+      "tenantExists": "This tenant already exists.",
+      "userEmailExists": "A user with this email already exists. Please use a different email or login instead.",
+      "emailAlreadyRegistered": "This email is already registered. Please use a different email or login instead.",
+      "informationAlreadyRegistered": "This information is already registered in our system.",
+      "checkRequiredFields": "Please check all required fields are filled correctly.",
+      "validationError": "Validation error: Please check all required fields are filled correctly.",
+      "serverError": "Server error occurred. Please try again later or contact support.",
+      "serviceUnavailable": "Service not available. Please ensure the backend is running.",
+      "networkError": "Network error: Unable to connect to the server. Please check your connection."
+    }
   }
 }

@@ -312,7 +312,12 @@
     "expiryFormat": "Voer MM/JJ-formaat in",
     "cvvRequired": "CVV is verplicht",
     "cvvFormat": "CVV moet 3 of 4 cijfers bevatten",
-    "cardholderRequired": "Naam kaarthouder is verplicht"
+    "cardholderRequired": "Naam kaarthouder is verplicht",
+    "crolNumberRequired": "CROL-nummer is vereist voor Ontario-huurders",
+    "crsaLicenseRequired": "Geldige CRSA-licentie is vereist voor Ontario-huurders",
+    "crsaDomainMismatch": "Uw e-maildomein komt niet overeen met de CRSA-website. Neem contact op met ondersteuning voor handmatige verificatie.",
+    "licenseNumberRequired": "Voer een licentienummer in",
+    "licenseValidationFailed": "Licentievalidatie mislukt"
   },
   "passwordStrength": {
     "weak": "Zwak",
@@ -399,5 +404,22 @@
       "required": "U moet uw autorisatie bevestigen om door te gaan"
     },
     "allRequired": "Alle verklaringen moeten worden geaccepteerd om uw account aan te maken"
+  },
+  "errors": {
+    "submit": {
+      "processingPayment": "Betaalmethode wordt verwerkt...",
+      "paymentDetailsRequired": "Betalingsgegevens vereist voor betaalde plannen",
+      "paymentMethodFailed": "Verwerking van betaalmethode mislukt",
+      "accountCreationFailed": "Aanmaken account mislukt.",
+      "tenantExists": "Deze huurder bestaat al.",
+      "userEmailExists": "Er bestaat al een gebruiker met dit e-mailadres. Gebruik een ander e-mailadres of log in.",
+      "emailAlreadyRegistered": "Dit e-mailadres is al geregistreerd. Gebruik een ander e-mailadres of log in.",
+      "informationAlreadyRegistered": "Deze informatie is al geregistreerd in ons systeem.",
+      "checkRequiredFields": "Controleer of alle verplichte velden correct zijn ingevuld.",
+      "validationError": "Validatiefout: Controleer of alle verplichte velden correct zijn ingevuld.",
+      "serverError": "Serverfout opgetreden. Probeer het later opnieuw of neem contact op met ondersteuning.",
+      "serviceUnavailable": "Service niet beschikbaar. Zorg ervoor dat de backend draait.",
+      "networkError": "Netwerkfout: Kan geen verbinding maken met de server. Controleer uw verbinding."
+    }
   }
 }

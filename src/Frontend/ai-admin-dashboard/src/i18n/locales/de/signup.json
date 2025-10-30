@@ -313,7 +313,12 @@
     "expiryFormat": "Bitte geben Sie das Format MM/JJ ein",
     "cvvRequired": "CVV ist erforderlich",
     "cvvFormat": "CVV muss 3 oder 4 Ziffern haben",
-    "cardholderRequired": "Name des Karteninhabers ist erforderlich"
+    "cardholderRequired": "Name des Karteninhabers ist erforderlich",
+    "crolNumberRequired": "CROL-Nummer ist für Ontario-Mieter erforderlich",
+    "crsaLicenseRequired": "Gültige CRSA-Lizenz ist für Ontario-Mieter erforderlich",
+    "crsaDomainMismatch": "Ihre E-Mail-Domain stimmt nicht mit der CRSA-Website überein. Bitte kontaktieren Sie den Support für eine manuelle Überprüfung.",
+    "licenseNumberRequired": "Bitte geben Sie eine Lizenznummer ein",
+    "licenseValidationFailed": "Lizenzvalidierung fehlgeschlagen"
   },
   "passwordStrength": {
     "weak": "Schwach",
@@ -400,5 +405,22 @@
       "required": "Sie müssen Ihre Autorisierung bestätigen, um fortzufahren"
     },
     "allRequired": "Alle Bescheinigungen müssen akzeptiert werden, um Ihr Konto zu erstellen"
+  },
+  "errors": {
+    "submit": {
+      "processingPayment": "Zahlungsmethode wird verarbeitet...",
+      "paymentDetailsRequired": "Zahlungsdetails erforderlich für kostenpflichtige Pläne",
+      "paymentMethodFailed": "Verarbeitung der Zahlungsmethode fehlgeschlagen",
+      "accountCreationFailed": "Kontoerstellung fehlgeschlagen.",
+      "tenantExists": "Dieser Mieter existiert bereits.",
+      "userEmailExists": "Ein Benutzer mit dieser E-Mail existiert bereits. Bitte verwenden Sie eine andere E-Mail oder melden Sie sich an.",
+      "emailAlreadyRegistered": "Diese E-Mail ist bereits registriert. Bitte verwenden Sie eine andere E-Mail oder melden Sie sich an.",
+      "informationAlreadyRegistered": "Diese Informationen sind bereits in unserem System registriert.",
+      "checkRequiredFields": "Bitte überprüfen Sie, ob alle erforderlichen Felder korrekt ausgefüllt sind.",
+      "validationError": "Validierungsfehler: Bitte überprüfen Sie, ob alle erforderlichen Felder korrekt ausgefüllt sind.",
+      "serverError": "Serverfehler aufgetreten. Bitte versuchen Sie es später erneut oder kontaktieren Sie den Support.",
+      "serviceUnavailable": "Service nicht verfügbar. Bitte stellen Sie sicher, dass das Backend läuft.",
+      "networkError": "Netzwerkfehler: Verbindung zum Server nicht möglich. Bitte überprüfen Sie Ihre Verbindung."
+    }
   }
 }
