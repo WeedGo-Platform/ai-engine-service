@@ -313,11 +313,11 @@
     "cvvRequired": "CVV 係必填",
     "cvvFormat": "CVV 必須係3或4位數字",
     "cardholderRequired": "持卡人姓名係必填",
-    "crolNumberRequired": "CROL number is required for Ontario tenants",
-    "crsaLicenseRequired": "Valid CRSA license is required for Ontario tenants",
-    "crsaDomainMismatch": "Your email domain does not match the CRSA website. Please contact support for manual verification.",
-    "licenseNumberRequired": "Please enter a license number",
-    "licenseValidationFailed": "Failed to validate license"
+    "crolNumberRequired": "安大略省租戶需要CROL號碼",
+    "crsaLicenseRequired": "安大略省租戶需要有效嘅CRSA牌照",
+    "crsaDomainMismatch": "你嘅電郵網域同CRSA網站唔匹配。請聯絡支援進行人手驗證。",
+    "licenseNumberRequired": "請輸入牌照號碼",
+    "licenseValidationFailed": "牌照驗證失敗"
   },
   "passwordStrength": {
     "weak": "弱",
@@ -407,19 +407,19 @@
   },
   "errors": {
     "submit": {
-      "processingPayment": "Processing payment method...",
-      "paymentDetailsRequired": "Payment details required for paid plans",
-      "paymentMethodFailed": "Failed to process payment method",
-      "accountCreationFailed": "Failed to create account.",
-      "tenantExists": "This tenant already exists.",
-      "userEmailExists": "A user with this email already exists. Please use a different email or login instead.",
-      "emailAlreadyRegistered": "This email is already registered. Please use a different email or login instead.",
-      "informationAlreadyRegistered": "This information is already registered in our system.",
-      "checkRequiredFields": "Please check all required fields are filled correctly.",
-      "validationError": "Validation error: Please check all required fields are filled correctly.",
-      "serverError": "Server error occurred. Please try again later or contact support.",
-      "serviceUnavailable": "Service not available. Please ensure the backend is running.",
-      "networkError": "Network error: Unable to connect to the server. Please check your connection."
+      "processingPayment": "正在處理付款方式...",
+      "paymentDetailsRequired": "付費計劃需要付款詳情",
+      "paymentMethodFailed": "處理付款方式失敗",
+      "accountCreationFailed": "創建帳戶失敗。",
+      "tenantExists": "呢個租戶已經存在。",
+      "userEmailExists": "呢個電郵嘅用戶已經存在。請用另一個電郵或者登入。",
+      "emailAlreadyRegistered": "呢個電郵已經註冊咗。請用另一個電郵或者登入。",
+      "informationAlreadyRegistered": "呢啲資料已經喺我哋系統入面註冊咗。",
+      "checkRequiredFields": "請檢查所有必填欄位係咪正確填寫。",
+      "validationError": "驗證錯誤：請檢查所有必填欄位係咪正確填寫。",
+      "serverError": "發生伺服器錯誤。請稍後重試或聯絡支援。",
+      "serviceUnavailable": "服務唔可用。請確保後端運行緊。",
+      "networkError": "網絡錯誤：無法連接到伺服器。請檢查你嘅連接。"
     }
   }
 }

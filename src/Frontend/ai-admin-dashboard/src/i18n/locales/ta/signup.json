@@ -313,11 +313,11 @@
     "cvvRequired": "CVV தேவை",
     "cvvFormat": "CVV 3 அல்லது 4 இலக்கங்களாக இருக்க வேண்டும்",
     "cardholderRequired": "கார்டுதாரர் பெயர் தேவை",
-    "crolNumberRequired": "CROL number is required for Ontario tenants",
-    "crsaLicenseRequired": "Valid CRSA license is required for Ontario tenants",
-    "crsaDomainMismatch": "Your email domain does not match the CRSA website. Please contact support for manual verification.",
-    "licenseNumberRequired": "Please enter a license number",
-    "licenseValidationFailed": "Failed to validate license"
+    "crolNumberRequired": "ஒன்டாரியோ குத்தகைதாரர்களுக்கு CROL எண் தேவை",
+    "crsaLicenseRequired": "ஒன்டாரியோ குத்தகைதாரர்களுக்கு செல்லுபடியாகும் CRSA உரிமம் தேவை",
+    "crsaDomainMismatch": "உங்கள் மின்னஞ்சல் டொமைன் CRSA இணையதளத்துடன் பொருந்தவில்லை. கைமுறை சரிபார்ப்புக்கு ஆதரவைத் தொடர்பு கொள்ளவும்.",
+    "licenseNumberRequired": "உரிம எண்ணை உள்ளிடவும்",
+    "licenseValidationFailed": "உரிம சரிபார்ப்பு தோல்வியடைந்தது"
   },
   "passwordStrength": {
     "weak": "பலவீனம்",
@@ -407,19 +407,19 @@
   },
   "errors": {
     "submit": {
-      "processingPayment": "Processing payment method...",
-      "paymentDetailsRequired": "Payment details required for paid plans",
-      "paymentMethodFailed": "Failed to process payment method",
-      "accountCreationFailed": "Failed to create account.",
-      "tenantExists": "This tenant already exists.",
-      "userEmailExists": "A user with this email already exists. Please use a different email or login instead.",
-      "emailAlreadyRegistered": "This email is already registered. Please use a different email or login instead.",
-      "informationAlreadyRegistered": "This information is already registered in our system.",
-      "checkRequiredFields": "Please check all required fields are filled correctly.",
-      "validationError": "Validation error: Please check all required fields are filled correctly.",
-      "serverError": "Server error occurred. Please try again later or contact support.",
-      "serviceUnavailable": "Service not available. Please ensure the backend is running.",
-      "networkError": "Network error: Unable to connect to the server. Please check your connection."
+      "processingPayment": "கட்டண முறையை செயலாக்குகிறது...",
+      "paymentDetailsRequired": "கட்டண திட்டங்களுக்கு கட்டண விவரங்கள் தேவை",
+      "paymentMethodFailed": "கட்டண முறையை செயலாக்க முடியவில்லை",
+      "accountCreationFailed": "கணக்கை உருவாக்க முடியவில்லை.",
+      "tenantExists": "இந்த குத்தகைதாரர் ஏற்கனவே உள்ளார்.",
+      "userEmailExists": "இந்த மின்னஞ்சலுடன் ஒரு பயனர் ஏற்கனவே உள்ளார். வேறு மின்னஞ்சலைப் பயன்படுத்தவும் அல்லது உள்நுழையவும்.",
+      "emailAlreadyRegistered": "இந்த மின்னஞ்சல் ஏற்கனவே பதிவு செய்யப்பட்டுள்ளது. வேறு மின்னஞ்சலைப் பயன்படுத்தவும் அல்லது உள்நுழையவும்.",
+      "informationAlreadyRegistered": "இந்த தகவல் ஏற்கனவே எங்கள் அமைப்பில் பதிவு செய்யப்பட்டுள்ளது.",
+      "checkRequiredFields": "அனைத்து தேவையான புலங்களும் சரியாக நிரப்பப்பட்டுள்ளதா என்பதைச் சரிபார்க்கவும்.",
+      "validationError": "சரிபார்ப்பு பிழை: அனைத்து தேவையான புலங்களும் சரியாக நிரப்பப்பட்டுள்ளதா என்பதைச் சரிபார்க்கவும்.",
+      "serverError": "சேவையக பிழை ஏற்பட்டது. பின்னர் மீண்டும் முயற்சிக்கவும் அல்லது ஆதரவைத் தொடர்பு கொள்ளவும்.",
+      "serviceUnavailable": "சேவை கிடைக்கவில்லை. பின்தளம் இயங்குகிறதா என்பதை உறுதிப்படுத்தவும்.",
+      "networkError": "பிணையப் பிழை: சேவையகத்துடன் இணைக்க முடியவில்லை. உங்கள் இணைப்பைச் சரிபார்க்கவும்."
     }
   }
 }

@@ -313,11 +313,11 @@
     "cvvRequired": "CVV الزامی است",
     "cvvFormat": "CVV باید 3 یا 4 رقمی باشد",
     "cardholderRequired": "نام دارنده کارت الزامی است",
-    "crolNumberRequired": "CROL number is required for Ontario tenants",
-    "crsaLicenseRequired": "Valid CRSA license is required for Ontario tenants",
-    "crsaDomainMismatch": "Your email domain does not match the CRSA website. Please contact support for manual verification.",
-    "licenseNumberRequired": "Please enter a license number",
-    "licenseValidationFailed": "Failed to validate license"
+    "crolNumberRequired": "شماره CROL برای مستأجران انتاریو الزامی است",
+    "crsaLicenseRequired": "مجوز معتبر CRSA برای مستأجران انتاریو الزامی است",
+    "crsaDomainMismatch": "دامنه ایمیل شما با وب‌سایت CRSA مطابقت ندارد. لطفاً برای تأیید دستی با پشتیبانی تماس بگیرید.",
+    "licenseNumberRequired": "لطفاً شماره مجوز را وارد کنید",
+    "licenseValidationFailed": "اعتبارسنجی مجوز ناموفق بود"
   },
   "passwordStrength": {
     "weak": "ضعیف",
@@ -407,19 +407,19 @@
   },
   "errors": {
     "submit": {
-      "processingPayment": "Processing payment method...",
-      "paymentDetailsRequired": "Payment details required for paid plans",
-      "paymentMethodFailed": "Failed to process payment method",
-      "accountCreationFailed": "Failed to create account.",
-      "tenantExists": "This tenant already exists.",
-      "userEmailExists": "A user with this email already exists. Please use a different email or login instead.",
-      "emailAlreadyRegistered": "This email is already registered. Please use a different email or login instead.",
-      "informationAlreadyRegistered": "This information is already registered in our system.",
-      "checkRequiredFields": "Please check all required fields are filled correctly.",
-      "validationError": "Validation error: Please check all required fields are filled correctly.",
-      "serverError": "Server error occurred. Please try again later or contact support.",
-      "serviceUnavailable": "Service not available. Please ensure the backend is running.",
-      "networkError": "Network error: Unable to connect to the server. Please check your connection."
+      "processingPayment": "در حال پردازش روش پرداخت...",
+      "paymentDetailsRequired": "جزئیات پرداخت برای طرح‌های پولی الزامی است",
+      "paymentMethodFailed": "پردازش روش پرداخت ناموفق بود",
+      "accountCreationFailed": "ایجاد حساب ناموفق بود.",
+      "tenantExists": "این مستأجر از قبل وجود دارد.",
+      "userEmailExists": "کاربری با این ایمیل از قبل وجود دارد. لطفاً از ایمیل دیگری استفاده کنید یا وارد شوید.",
+      "emailAlreadyRegistered": "این ایمیل قبلاً ثبت شده است. لطفاً از ایمیل دیگری استفاده کنید یا وارد شوید.",
+      "informationAlreadyRegistered": "این اطلاعات قبلاً در سیستم ما ثبت شده است.",
+      "checkRequiredFields": "لطفاً بررسی کنید که همه فیلدهای الزامی به درستی پر شده‌اند.",
+      "validationError": "خطای اعتبارسنجی: لطفاً بررسی کنید که همه فیلدهای الزامی به درستی پر شده‌اند.",
+      "serverError": "خطای سرور رخ داد. لطفاً بعداً دوباره امتحان کنید یا با پشتیبانی تماس بگیرید.",
+      "serviceUnavailable": "سرویس در دسترس نیست. لطفاً اطمینان حاصل کنید که بک‌اند در حال اجراست.",
+      "networkError": "خطای شبکه: اتصال به سرور ممکن نیست. لطفاً اتصال خود را بررسی کنید."
     }
   }
 }

@@ -313,11 +313,11 @@
     "cvvRequired": "CVV는 필수입니다",
     "cvvFormat": "CVV는 3자리 또는 4자리여야 합니다",
     "cardholderRequired": "카드 소유자 이름은 필수입니다",
-    "crolNumberRequired": "CROL number is required for Ontario tenants",
-    "crsaLicenseRequired": "Valid CRSA license is required for Ontario tenants",
-    "crsaDomainMismatch": "Your email domain does not match the CRSA website. Please contact support for manual verification.",
-    "licenseNumberRequired": "Please enter a license number",
-    "licenseValidationFailed": "Failed to validate license"
+    "crolNumberRequired": "온타리오 임차인에게는 CROL 번호가 필요합니다",
+    "crsaLicenseRequired": "온타리오 임차인에게는 유효한 CRSA 라이선스가 필요합니다",
+    "crsaDomainMismatch": "이메일 도메인이 CRSA 웹사이트와 일치하지 않습니다. 수동 확인을 위해 지원팀에 문의하세요.",
+    "licenseNumberRequired": "라이선스 번호를 입력하세요",
+    "licenseValidationFailed": "라이선스 검증 실패"
   },
   "passwordStrength": {
     "weak": "약함",
@@ -407,19 +407,19 @@
   },
   "errors": {
     "submit": {
-      "processingPayment": "Processing payment method...",
-      "paymentDetailsRequired": "Payment details required for paid plans",
-      "paymentMethodFailed": "Failed to process payment method",
-      "accountCreationFailed": "Failed to create account.",
-      "tenantExists": "This tenant already exists.",
-      "userEmailExists": "A user with this email already exists. Please use a different email or login instead.",
-      "emailAlreadyRegistered": "This email is already registered. Please use a different email or login instead.",
-      "informationAlreadyRegistered": "This information is already registered in our system.",
-      "checkRequiredFields": "Please check all required fields are filled correctly.",
-      "validationError": "Validation error: Please check all required fields are filled correctly.",
-      "serverError": "Server error occurred. Please try again later or contact support.",
-      "serviceUnavailable": "Service not available. Please ensure the backend is running.",
-      "networkError": "Network error: Unable to connect to the server. Please check your connection."
+      "processingPayment": "결제 방법 처리 중...",
+      "paymentDetailsRequired": "유료 플랜에는 결제 정보가 필요합니다",
+      "paymentMethodFailed": "결제 방법 처리 실패",
+      "accountCreationFailed": "계정 생성 실패.",
+      "tenantExists": "이 임차인은 이미 존재합니다.",
+      "userEmailExists": "이 이메일을 가진 사용자가 이미 존재합니다. 다른 이메일을 사용하거나 로그인하세요.",
+      "emailAlreadyRegistered": "이 이메일은 이미 등록되었습니다. 다른 이메일을 사용하거나 로그인하세요.",
+      "informationAlreadyRegistered": "이 정보는 이미 시스템에 등록되어 있습니다.",
+      "checkRequiredFields": "모든 필수 필드가 올바르게 작성되었는지 확인하세요.",
+      "validationError": "검증 오류: 모든 필수 필드가 올바르게 작성되었는지 확인하세요.",
+      "serverError": "서버 오류가 발생했습니다. 나중에 다시 시도하거나 지원팀에 문의하세요.",
+      "serviceUnavailable": "서비스를 사용할 수 없습니다. 백엔드가 실행 중인지 확인하세요.",
+      "networkError": "네트워크 오류: 서버에 연결할 수 없습니다. 연결을 확인하세요."
     }
   }
 }

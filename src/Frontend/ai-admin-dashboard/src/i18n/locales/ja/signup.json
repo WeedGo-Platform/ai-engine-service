@@ -313,11 +313,11 @@
     "cvvRequired": "CVVは必須です",
     "cvvFormat": "CVVは3桁または4桁である必要があります",
     "cardholderRequired": "カード名義人は必須です",
-    "crolNumberRequired": "CROL number is required for Ontario tenants",
-    "crsaLicenseRequired": "Valid CRSA license is required for Ontario tenants",
-    "crsaDomainMismatch": "Your email domain does not match the CRSA website. Please contact support for manual verification.",
-    "licenseNumberRequired": "Please enter a license number",
-    "licenseValidationFailed": "Failed to validate license"
+    "crolNumberRequired": "オンタリオ州のテナントにはCROL番号が必要です",
+    "crsaLicenseRequired": "オンタリオ州のテナントには有効なCRSAライセンスが必要です",
+    "crsaDomainMismatch": "メールドメインがCRSAウェブサイトと一致しません。手動確認のためサポートにお問い合わせください。",
+    "licenseNumberRequired": "ライセンス番号を入力してください",
+    "licenseValidationFailed": "ライセンスの検証に失敗しました"
   },
   "passwordStrength": {
     "weak": "弱い",
@@ -407,19 +407,19 @@
   },
   "errors": {
     "submit": {
-      "processingPayment": "Processing payment method...",
-      "paymentDetailsRequired": "Payment details required for paid plans",
-      "paymentMethodFailed": "Failed to process payment method",
-      "accountCreationFailed": "Failed to create account.",
-      "tenantExists": "This tenant already exists.",
-      "userEmailExists": "A user with this email already exists. Please use a different email or login instead.",
-      "emailAlreadyRegistered": "This email is already registered. Please use a different email or login instead.",
-      "informationAlreadyRegistered": "This information is already registered in our system.",
-      "checkRequiredFields": "Please check all required fields are filled correctly.",
-      "validationError": "Validation error: Please check all required fields are filled correctly.",
-      "serverError": "Server error occurred. Please try again later or contact support.",
-      "serviceUnavailable": "Service not available. Please ensure the backend is running.",
-      "networkError": "Network error: Unable to connect to the server. Please check your connection."
+      "processingPayment": "支払い方法を処理中...",
+      "paymentDetailsRequired": "有料プランには支払い詳細が必要です",
+      "paymentMethodFailed": "支払い方法の処理に失敗しました",
+      "accountCreationFailed": "アカウントの作成に失敗しました。",
+      "tenantExists": "このテナントは既に存在します。",
+      "userEmailExists": "このメールアドレスのユーザーは既に存在します。別のメールアドレスを使用するかログインしてください。",
+      "emailAlreadyRegistered": "このメールアドレスは既に登録されています。別のメールアドレスを使用するかログインしてください。",
+      "informationAlreadyRegistered": "この情報は既にシステムに登録されています。",
+      "checkRequiredFields": "すべての必須フィールドが正しく入力されているか確認してください。",
+      "validationError": "検証エラー：すべての必須フィールドが正しく入力されているか確認してください。",
+      "serverError": "サーバーエラーが発生しました。後でもう一度お試しいただくか、サポートにお問い合わせください。",
+      "serviceUnavailable": "サービスが利用できません。バックエンドが実行されていることを確認してください。",
+      "networkError": "ネットワークエラー：サーバーに接続できません。接続を確認してください。"
     }
   }
 }

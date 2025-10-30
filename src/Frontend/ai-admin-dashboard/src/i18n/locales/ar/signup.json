@@ -314,11 +314,11 @@
     "cvvRequired": "CVV مطلوب",
     "cvvFormat": "يجب أن يكون CVV 3 أو 4 أرقام",
     "cardholderRequired": "اسم حامل البطاقة مطلوب",
-    "crolNumberRequired": "CROL number is required for Ontario tenants",
-    "crsaLicenseRequired": "Valid CRSA license is required for Ontario tenants",
-    "crsaDomainMismatch": "Your email domain does not match the CRSA website. Please contact support for manual verification.",
-    "licenseNumberRequired": "Please enter a license number",
-    "licenseValidationFailed": "Failed to validate license"
+    "crolNumberRequired": "رقم CROL مطلوب للمستأجرين في أونتاريو",
+    "crsaLicenseRequired": "ترخيص CRSA صالح مطلوب للمستأجرين في أونتاريو",
+    "crsaDomainMismatch": "مجال بريدك الإلكتروني لا يتطابق مع موقع CRSA. يرجى الاتصال بالدعم للتحقق اليدوي.",
+    "licenseNumberRequired": "الرجاء إدخال رقم الترخيص",
+    "licenseValidationFailed": "فشل التحقق من الترخيص"
   },
   "passwordStrength": {
     "weak": "ضعيف",
@@ -408,19 +408,19 @@
   },
   "errors": {
     "submit": {
-      "processingPayment": "Processing payment method...",
-      "paymentDetailsRequired": "Payment details required for paid plans",
-      "paymentMethodFailed": "Failed to process payment method",
-      "accountCreationFailed": "Failed to create account.",
-      "tenantExists": "This tenant already exists.",
-      "userEmailExists": "A user with this email already exists. Please use a different email or login instead.",
-      "emailAlreadyRegistered": "This email is already registered. Please use a different email or login instead.",
-      "informationAlreadyRegistered": "This information is already registered in our system.",
-      "checkRequiredFields": "Please check all required fields are filled correctly.",
-      "validationError": "Validation error: Please check all required fields are filled correctly.",
-      "serverError": "Server error occurred. Please try again later or contact support.",
-      "serviceUnavailable": "Service not available. Please ensure the backend is running.",
-      "networkError": "Network error: Unable to connect to the server. Please check your connection."
+      "processingPayment": "جاري معالجة طريقة الدفع...",
+      "paymentDetailsRequired": "تفاصيل الدفع مطلوبة للخطط المدفوعة",
+      "paymentMethodFailed": "فشلت معالجة طريقة الدفع",
+      "accountCreationFailed": "فشل إنشاء الحساب.",
+      "tenantExists": "هذا المستأجر موجود بالفعل.",
+      "userEmailExists": "مستخدم بهذا البريد الإلكتروني موجود بالفعل. يرجى استخدام بريد إلكتروني مختلف أو تسجيل الدخول.",
+      "emailAlreadyRegistered": "هذا البريد الإلكتروني مسجل بالفعل. يرجى استخدام بريد إلكتروني مختلف أو تسجيل الدخول.",
+      "informationAlreadyRegistered": "هذه المعلومات مسجلة بالفعل في نظامنا.",
+      "checkRequiredFields": "يرجى التحقق من ملء جميع الحقول المطلوبة بشكل صحيح.",
+      "validationError": "خطأ في التحقق: يرجى التحقق من ملء جميع الحقول المطلوبة بشكل صحيح.",
+      "serverError": "حدث خطأ في الخادم. يرجى المحاولة مرة أخرى لاحقًا أو الاتصال بالدعم.",
+      "serviceUnavailable": "الخدمة غير متوفرة. يرجى التأكد من تشغيل الخادم الخلفي.",
+      "networkError": "خطأ في الشبكة: تعذر الاتصال بالخادم. يرجى التحقق من اتصالك."
     }
   }
 }

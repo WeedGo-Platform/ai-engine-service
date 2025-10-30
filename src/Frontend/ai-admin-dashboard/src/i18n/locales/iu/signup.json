@@ -313,11 +313,11 @@
     "cvvRequired": "CVV ᐱᑕᖃᕆᐊᖃᖅᑐᖅ",
     "cvvFormat": "CVV 3 ᐅᕝᕙᓘᓐᓃᑦ 4 ᓈᓴᐅᑎᑦ",
     "cardholderRequired": "ᐃᑎᕐᕕᒃᓴᖅ ᐊᑎᖓ ᐱᑕᖃᕆᐊᖃᖅᑐᖅ",
-    "crolNumberRequired": "CROL number is required for Ontario tenants",
-    "crsaLicenseRequired": "Valid CRSA license is required for Ontario tenants",
-    "crsaDomainMismatch": "Your email domain does not match the CRSA website. Please contact support for manual verification.",
-    "licenseNumberRequired": "Please enter a license number",
-    "licenseValidationFailed": "Failed to validate license"
+    "crolNumberRequired": "CROL ᓈᓴᐅᑎ ᐱᔭᕆᐊᓕᒃ ᐊᖏᕐᕋᖃᕐᑎᑦᑎᔨᓄᑦ ᐋᓐᑎᐅᕆᐅᒥ",
+    "crsaLicenseRequired": "CRSA ᐱᔪᓐᓇᐅᑎ ᓈᒻᒪᒃᑐᖅ ᐱᔭᕆᐊᓕᒃ ᐊᖏᕐᕋᖃᕐᑎᑦᑎᔨᓄᑦ ᐋᓐᑎᐅᕆᐅᒥ",
+    "crsaDomainMismatch": "ᐅᖃᐅᓯᑎᑦᑎᓂᕐᒧᑦ ᑎᑎᕋᖅᓯᒪᔪᖅ ᐊᔾᔨᐅᓐᖏᑦᑐᖅ CRSA ᖃᕆᑕᐅᔭᒃᑯᑦ. ᖃᐅᔨᓴᕐᓗᒍ ᐃᑲᔪᕐᓂᕐᒧᑦ.",
+    "licenseNumberRequired": "ᐱᔪᓐᓇᐅᑎᐅᑉ ᓈᓴᐅᑎᖓ ᐃᓕᓐᓂᐊᖅᑕᐅᔪᖅ",
+    "licenseValidationFailed": "ᐱᔪᓐᓇᐅᑎ ᖃᐅᔨᓴᕐᓂᖅ ᐊᔪᕐᓂᖅ"
   },
   "passwordStrength": {
     "weak": "ᐱᔅᑫᐤ",
@@ -407,19 +407,19 @@
   },
   "errors": {
     "submit": {
-      "processingPayment": "Processing payment method...",
-      "paymentDetailsRequired": "Payment details required for paid plans",
-      "paymentMethodFailed": "Failed to process payment method",
-      "accountCreationFailed": "Failed to create account.",
-      "tenantExists": "This tenant already exists.",
-      "userEmailExists": "A user with this email already exists. Please use a different email or login instead.",
-      "emailAlreadyRegistered": "This email is already registered. Please use a different email or login instead.",
-      "informationAlreadyRegistered": "This information is already registered in our system.",
-      "checkRequiredFields": "Please check all required fields are filled correctly.",
-      "validationError": "Validation error: Please check all required fields are filled correctly.",
-      "serverError": "Server error occurred. Please try again later or contact support.",
-      "serviceUnavailable": "Service not available. Please ensure the backend is running.",
-      "networkError": "Network error: Unable to connect to the server. Please check your connection."
+      "processingPayment": "ᐊᑭᓕᖅᓱᐃᓂᕐᒧᑦ ᐱᓕᕆᐊᖑᔪᖅ...",
+      "paymentDetailsRequired": "ᐊᑭᓕᖅᓱᐃᓂᕐᒧᑦ ᑐᑭᓯᐅᒪᔾᔪᑏᑦ ᐱᔭᕆᐊᓕᑦ ᐊᑭᓕᕐᓗᒋᑦ",
+      "paymentMethodFailed": "ᐊᑭᓕᖅᓱᐃᓂᕐᒧᑦ ᐱᓕᕆᐊᖅ ᐊᔪᕐᓂᖅ",
+      "accountCreationFailed": "ᐊᑐᖅᑎᐅᓂᖅ ᓴᓇᔭᐅᓂᖅ ᐊᔪᕐᓂᖅ.",
+      "tenantExists": "ᐊᖏᕐᕋᖃᕐᑎᑦᑎᔨ ᐃᓂᒋᔭᐅᓕᖅᑐᖅ.",
+      "userEmailExists": "ᐊᑐᖅᑎ ᐅᖃᐅᓯᑎᑦᑎᓂᖅ ᐃᓂᒋᔭᐅᓕᖅᑐᖅ. ᐊᓯᐊᖅ ᐊᑐᕐᓗᒍ ᐅᕝᕙᓘᓐᓃᑦ ᐃᓯᕐᓗᒍ.",
+      "emailAlreadyRegistered": "ᐅᖃᐅᓯᑎᑦᑎᓂᖅ ᑎᑎᕋᖅᓯᒪᓕᖅᑐᖅ. ᐊᓯᐊᖅ ᐊᑐᕐᓗᒍ ᐅᕝᕙᓘᓐᓃᑦ ᐃᓯᕐᓗᒍ.",
+      "informationAlreadyRegistered": "ᑐᑭᓯᐅᒪᔾᔪᑏᑦ ᑎᑎᕋᖅᓯᒪᓕᖅᑐᑦ ᐊᑐᖅᑕᐅᔪᒥ.",
+      "checkRequiredFields": "ᖃᐅᔨᓴᕐᓗᒋᑦ ᐱᔭᕆᐊᓕᑦ ᓈᒻᒪᒃᑐᓂ ᑎᑎᕋᖅᓯᒪᔪᑦ.",
+      "validationError": "ᖃᐅᔨᓴᕐᓂᖅ ᐊᔪᕐᓂᖅ: ᖃᐅᔨᓴᕐᓗᒋᑦ ᐱᔭᕆᐊᓕᑦ ᓈᒻᒪᒃᑐᓂ ᑎᑎᕋᖅᓯᒪᔪᑦ.",
+      "serverError": "ᓴᕐᕕᒃ ᐊᔪᕐᓂᖅ. ᐱᓕᕆᓂᖅ ᐊᒻᒪᓗ ᐃᑲᔪᖅᑕᐅᓂᖅ.",
+      "serviceUnavailable": "ᐱᔨᑦᑎᕋᕐᓂᖅ ᐊᑐᐃᓐᓇᓐᖏᑦᑐᖅ. ᖃᐅᔨᓴᕐᓗᒍ ᐱᓕᕆᔪᓐᓇᕐᒪᖔᖅ.",
+      "networkError": "ᖃᕆᑕᐅᔭᒃᑯᑦ ᐊᔪᕐᓂᖅ: ᓴᕐᕕᒃᑯᑦ ᐃᑲᖅᑐᐃᓐᓇᕐᓂᖅ. ᖃᐅᔨᓴᕐᓗᒍ."
     }
   }
 }

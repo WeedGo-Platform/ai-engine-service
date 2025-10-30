@@ -313,11 +313,11 @@
     "cvvRequired": "CVV là bắt buộc",
     "cvvFormat": "CVV phải có 3 hoặc 4 chữ số",
     "cardholderRequired": "Tên chủ thẻ là bắt buộc",
-    "crolNumberRequired": "CROL number is required for Ontario tenants",
-    "crsaLicenseRequired": "Valid CRSA license is required for Ontario tenants",
-    "crsaDomainMismatch": "Your email domain does not match the CRSA website. Please contact support for manual verification.",
-    "licenseNumberRequired": "Please enter a license number",
-    "licenseValidationFailed": "Failed to validate license"
+    "crolNumberRequired": "Số CROL là bắt buộc đối với người thuê Ontario",
+    "crsaLicenseRequired": "Giấy phép CRSA hợp lệ là bắt buộc đối với người thuê Ontario",
+    "crsaDomainMismatch": "Tên miền email của bạn không khớp với trang web CRSA. Vui lòng liên hệ hỗ trợ để xác minh thủ công.",
+    "licenseNumberRequired": "Vui lòng nhập số giấy phép",
+    "licenseValidationFailed": "Xác thực giấy phép thất bại"
   },
   "passwordStrength": {
     "weak": "Yếu",
@@ -407,19 +407,19 @@
   },
   "errors": {
     "submit": {
-      "processingPayment": "Processing payment method...",
-      "paymentDetailsRequired": "Payment details required for paid plans",
-      "paymentMethodFailed": "Failed to process payment method",
-      "accountCreationFailed": "Failed to create account.",
-      "tenantExists": "This tenant already exists.",
-      "userEmailExists": "A user with this email already exists. Please use a different email or login instead.",
-      "emailAlreadyRegistered": "This email is already registered. Please use a different email or login instead.",
-      "informationAlreadyRegistered": "This information is already registered in our system.",
-      "checkRequiredFields": "Please check all required fields are filled correctly.",
-      "validationError": "Validation error: Please check all required fields are filled correctly.",
-      "serverError": "Server error occurred. Please try again later or contact support.",
-      "serviceUnavailable": "Service not available. Please ensure the backend is running.",
-      "networkError": "Network error: Unable to connect to the server. Please check your connection."
+      "processingPayment": "Đang xử lý phương thức thanh toán...",
+      "paymentDetailsRequired": "Chi tiết thanh toán là bắt buộc cho các gói trả phí",
+      "paymentMethodFailed": "Xử lý phương thức thanh toán thất bại",
+      "accountCreationFailed": "Tạo tài khoản thất bại.",
+      "tenantExists": "Người thuê này đã tồn tại.",
+      "userEmailExists": "Người dùng với email này đã tồn tại. Vui lòng sử dụng email khác hoặc đăng nhập.",
+      "emailAlreadyRegistered": "Email này đã được đăng ký. Vui lòng sử dụng email khác hoặc đăng nhập.",
+      "informationAlreadyRegistered": "Thông tin này đã được đăng ký trong hệ thống của chúng tôi.",
+      "checkRequiredFields": "Vui lòng kiểm tra tất cả các trường bắt buộc đã được điền đúng.",
+      "validationError": "Lỗi xác thực: Vui lòng kiểm tra tất cả các trường bắt buộc đã được điền đúng.",
+      "serverError": "Đã xảy ra lỗi máy chủ. Vui lòng thử lại sau hoặc liên hệ hỗ trợ.",
+      "serviceUnavailable": "Dịch vụ không khả dụng. Vui lòng đảm bảo backend đang chạy.",
+      "networkError": "Lỗi mạng: Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối của bạn."
     }
   }
 }

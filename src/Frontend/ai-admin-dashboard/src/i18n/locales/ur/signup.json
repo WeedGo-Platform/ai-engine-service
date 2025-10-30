@@ -314,11 +314,11 @@
     "cvvRequired": "CVV ضروری ہے",
     "cvvFormat": "CVV 3 یا 4 ہندسوں کا ہونا چاہیے",
     "cardholderRequired": "کارڈ ہولڈر کا نام ضروری ہے",
-    "crolNumberRequired": "CROL number is required for Ontario tenants",
-    "crsaLicenseRequired": "Valid CRSA license is required for Ontario tenants",
-    "crsaDomainMismatch": "Your email domain does not match the CRSA website. Please contact support for manual verification.",
-    "licenseNumberRequired": "Please enter a license number",
-    "licenseValidationFailed": "Failed to validate license"
+    "crolNumberRequired": "اونٹاریو کرایہ داروں کے لیے CROL نمبر ضروری ہے",
+    "crsaLicenseRequired": "اونٹاریو کرایہ داروں کے لیے درست CRSA لائسنس ضروری ہے",
+    "crsaDomainMismatch": "آپ کا ای میل ڈومین CRSA ویب سائٹ سے میل نہیں کھاتا۔ دستی تصدیق کے لیے سپورٹ سے رابطہ کریں۔",
+    "licenseNumberRequired": "براہ کرم لائسنس نمبر درج کریں",
+    "licenseValidationFailed": "لائسنس کی تصدیق ناکام"
   },
   "passwordStrength": {
     "weak": "کمزور",
@@ -408,19 +408,19 @@
   },
   "errors": {
     "submit": {
-      "processingPayment": "Processing payment method...",
-      "paymentDetailsRequired": "Payment details required for paid plans",
-      "paymentMethodFailed": "Failed to process payment method",
-      "accountCreationFailed": "Failed to create account.",
-      "tenantExists": "This tenant already exists.",
-      "userEmailExists": "A user with this email already exists. Please use a different email or login instead.",
-      "emailAlreadyRegistered": "This email is already registered. Please use a different email or login instead.",
-      "informationAlreadyRegistered": "This information is already registered in our system.",
-      "checkRequiredFields": "Please check all required fields are filled correctly.",
-      "validationError": "Validation error: Please check all required fields are filled correctly.",
-      "serverError": "Server error occurred. Please try again later or contact support.",
-      "serviceUnavailable": "Service not available. Please ensure the backend is running.",
-      "networkError": "Network error: Unable to connect to the server. Please check your connection."
+      "processingPayment": "ادائیگی کے طریقے پر کارروائی ہو رہی ہے...",
+      "paymentDetailsRequired": "بامعاوضہ منصوبوں کے لیے ادائیگی کی تفصیلات ضروری ہیں",
+      "paymentMethodFailed": "ادائیگی کے طریقے پر کارروائی ناکام",
+      "accountCreationFailed": "اکاؤنٹ بنانا ناکام۔",
+      "tenantExists": "یہ کرایہ دار پہلے سے موجود ہے۔",
+      "userEmailExists": "اس ای میل کے ساتھ ایک صارف پہلے سے موجود ہے۔ براہ کرم دوسرا ای میل استعمال کریں یا لاگ ان کریں۔",
+      "emailAlreadyRegistered": "یہ ای میل پہلے سے رجسٹرڈ ہے۔ براہ کرم دوسرا ای میل استعمال کریں یا لاگ ان کریں۔",
+      "informationAlreadyRegistered": "یہ معلومات ہمارے سسٹم میں پہلے سے رجسٹرڈ ہیں۔",
+      "checkRequiredFields": "براہ کرم جانچیں کہ تمام ضروری فیلڈز صحیح طریقے سے بھرے گئے ہیں۔",
+      "validationError": "توثیق کی خرابی: براہ کرم جانچیں کہ تمام ضروری فیلڈز صحیح طریقے سے بھرے گئے ہیں۔",
+      "serverError": "سرور کی خرابی ہوئی۔ براہ کرم بعد میں دوبارہ کوشش کریں یا سپورٹ سے رابطہ کریں۔",
+      "serviceUnavailable": "سروس دستیاب نہیں۔ براہ کرم یقینی بنائیں کہ بیک اینڈ چل رہا ہے۔",
+      "networkError": "نیٹ ورک کی خرابی: سرور سے منسلک نہیں ہو سکا۔ براہ کرم اپنا کنکشن چیک کریں۔"
     }
   }
 }

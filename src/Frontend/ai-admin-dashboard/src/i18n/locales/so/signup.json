@@ -313,11 +313,11 @@
     "cvvRequired": "CVV waa lagama maarmaan",
     "cvvFormat": "CVV waa inay ahaato 3 ama 4 nambar",
     "cardholderRequired": "Magaca haysta kaarka waa lagama maarmaan",
-    "crolNumberRequired": "CROL number is required for Ontario tenants",
-    "crsaLicenseRequired": "Valid CRSA license is required for Ontario tenants",
-    "crsaDomainMismatch": "Your email domain does not match the CRSA website. Please contact support for manual verification.",
-    "licenseNumberRequired": "Please enter a license number",
-    "licenseValidationFailed": "Failed to validate license"
+    "crolNumberRequired": "Lambarka CROL ayaa looga baahan yahay kireenayaasha Ontario",
+    "crsaLicenseRequired": "Shatiga CRSA ee sax ah ayaa looga baahan yahay kireenayaasha Ontario",
+    "crsaDomainMismatch": "Domain-kaaga iimaylka kuma habboonaan mareegta CRSA. Fadlan la xiriir taageerada xaqiijinta gacanta.",
+    "licenseNumberRequired": "Fadlan geli lambarka shatiga",
+    "licenseValidationFailed": "Xaqiijinta shatiga waa lagu guul-darraystay"
   },
   "passwordStrength": {
     "weak": "Daciif",
@@ -407,19 +407,19 @@
   },
   "errors": {
     "submit": {
-      "processingPayment": "Processing payment method...",
-      "paymentDetailsRequired": "Payment details required for paid plans",
-      "paymentMethodFailed": "Failed to process payment method",
-      "accountCreationFailed": "Failed to create account.",
-      "tenantExists": "This tenant already exists.",
-      "userEmailExists": "A user with this email already exists. Please use a different email or login instead.",
-      "emailAlreadyRegistered": "This email is already registered. Please use a different email or login instead.",
-      "informationAlreadyRegistered": "This information is already registered in our system.",
-      "checkRequiredFields": "Please check all required fields are filled correctly.",
-      "validationError": "Validation error: Please check all required fields are filled correctly.",
-      "serverError": "Server error occurred. Please try again later or contact support.",
-      "serviceUnavailable": "Service not available. Please ensure the backend is running.",
-      "networkError": "Network error: Unable to connect to the server. Please check your connection."
+      "processingPayment": "Waxaa lagu shaqaynayaa habka lacag bixinta...",
+      "paymentDetailsRequired": "Faahfaahinta lacag bixinta ayaa looga baahan yahay qorshayaasha lacag lagu bixiyo",
+      "paymentMethodFailed": "Habka lacag bixinta waa lagu guul-darraystay",
+      "accountCreationFailed": "Abuurista koontada waa lagu guul-darraystay.",
+      "tenantExists": "Kireenayahan horaa u jiray.",
+      "userEmailExists": "Isticmaale iimaylkan leh ayaa horaa u jiray. Fadlan isticmaal iimaayl kale ama soo gal.",
+      "emailAlreadyRegistered": "Iimaylkan horaa loo diiwaan geliyay. Fadlan isticmaal iimaayl kale ama soo gal.",
+      "informationAlreadyRegistered": "Macluumaadkan horaa loogu diiwaan geliyay nidaamkeenna.",
+      "checkRequiredFields": "Fadlan hubi in dhammaan goobaha loo baahan yahay si sax ah loo buuxiyay.",
+      "validationError": "Khalad xaqiijin: Fadlan hubi in dhammaan goobaha loo baahan yahay si sax ah loo buuxiyay.",
+      "serverError": "Khalad server ayaa dhacay. Fadlan isku day mar kale dabadeed ama la xiriir taageerada.",
+      "serviceUnavailable": "Adeegu ma heli karo. Fadlan hubi in backend-ka uu socdo.",
+      "networkError": "Khalad shabakadeed: Lama xidhi karo server-ka. Fadlan hubi isku xidhkaaga."
     }
   }
 }

@@ -313,11 +313,11 @@
     "cvvRequired": "CVV נדרש",
     "cvvFormat": "CVV חייב להיות 3 או 4 ספרות",
     "cardholderRequired": "שם בעל הכרטיס נדרש",
-    "crolNumberRequired": "CROL number is required for Ontario tenants",
-    "crsaLicenseRequired": "Valid CRSA license is required for Ontario tenants",
-    "crsaDomainMismatch": "Your email domain does not match the CRSA website. Please contact support for manual verification.",
-    "licenseNumberRequired": "Please enter a license number",
-    "licenseValidationFailed": "Failed to validate license"
+    "crolNumberRequired": "נדרש מספר CROL לשוכרים באונטריו",
+    "crsaLicenseRequired": "רישיון CRSA תקף נדרש לשוכרים באונטריו",
+    "crsaDomainMismatch": "דומיין הדוא\"ל שלך אינו תואם לאתר CRSA. אנא צור קשר עם התמיכה לאימות ידני.",
+    "licenseNumberRequired": "אנא הזן מספר רישיון",
+    "licenseValidationFailed": "אימות הרישיון נכשל"
   },
   "passwordStrength": {
     "weak": "חלשה",
@@ -407,19 +407,19 @@
   },
   "errors": {
     "submit": {
-      "processingPayment": "Processing payment method...",
-      "paymentDetailsRequired": "Payment details required for paid plans",
-      "paymentMethodFailed": "Failed to process payment method",
-      "accountCreationFailed": "Failed to create account.",
-      "tenantExists": "This tenant already exists.",
-      "userEmailExists": "A user with this email already exists. Please use a different email or login instead.",
-      "emailAlreadyRegistered": "This email is already registered. Please use a different email or login instead.",
-      "informationAlreadyRegistered": "This information is already registered in our system.",
-      "checkRequiredFields": "Please check all required fields are filled correctly.",
-      "validationError": "Validation error: Please check all required fields are filled correctly.",
-      "serverError": "Server error occurred. Please try again later or contact support.",
-      "serviceUnavailable": "Service not available. Please ensure the backend is running.",
-      "networkError": "Network error: Unable to connect to the server. Please check your connection."
+      "processingPayment": "מעבד אמצעי תשלום...",
+      "paymentDetailsRequired": "פרטי תשלום נדרשים לתוכניות בתשלום",
+      "paymentMethodFailed": "עיבוד אמצעי התשלום נכשל",
+      "accountCreationFailed": "יצירת החשבון נכשלה.",
+      "tenantExists": "שוכר זה כבר קיים.",
+      "userEmailExists": "משתמש עם דוא\"ל זה כבר קיים. אנא השתמש בדוא\"ל אחר או התחבר.",
+      "emailAlreadyRegistered": "דוא\"ל זה כבר רשום. אנא השתמש בדוא\"ל אחר או התחבר.",
+      "informationAlreadyRegistered": "מידע זה כבר רשום במערכת שלנו.",
+      "checkRequiredFields": "אנא בדוק שכל השדות הנדרשים מולאו כראוי.",
+      "validationError": "שגיאת אימות: אנא בדוק שכל השדות הנדרשים מולאו כראוי.",
+      "serverError": "אירעה שגיאת שרת. אנא נסה שוב מאוחר יותר או צור קשר עם התמיכה.",
+      "serviceUnavailable": "השירות אינו זמין. אנא ודא שהשרת פועל.",
+      "networkError": "שגיאת רשת: לא ניתן להתחבר לשרת. אנא בדוק את החיבור שלך."
     }
   }
 }

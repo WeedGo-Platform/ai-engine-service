@@ -314,11 +314,11 @@
     "cvvRequired": "CVV 为必填项",
     "cvvFormat": "CVV 必须为3或4位数字",
     "cardholderRequired": "持卡人姓名为必填项",
-    "crolNumberRequired": "CROL number is required for Ontario tenants",
-    "crsaLicenseRequired": "Valid CRSA license is required for Ontario tenants",
-    "crsaDomainMismatch": "Your email domain does not match the CRSA website. Please contact support for manual verification.",
-    "licenseNumberRequired": "Please enter a license number",
-    "licenseValidationFailed": "Failed to validate license"
+    "crolNumberRequired": "安大略省租户需要CROL号码",
+    "crsaLicenseRequired": "安大略省租户需要有效的CRSA许可证",
+    "crsaDomainMismatch": "您的电子邮件域名与CRSA网站不匹配。请联系支持人员进行手动验证。",
+    "licenseNumberRequired": "请输入许可证号码",
+    "licenseValidationFailed": "许可证验证失败"
   },
   "passwordStrength": {
     "weak": "弱",
@@ -408,19 +408,19 @@
   },
   "errors": {
     "submit": {
-      "processingPayment": "Processing payment method...",
-      "paymentDetailsRequired": "Payment details required for paid plans",
-      "paymentMethodFailed": "Failed to process payment method",
-      "accountCreationFailed": "Failed to create account.",
-      "tenantExists": "This tenant already exists.",
-      "userEmailExists": "A user with this email already exists. Please use a different email or login instead.",
-      "emailAlreadyRegistered": "This email is already registered. Please use a different email or login instead.",
-      "informationAlreadyRegistered": "This information is already registered in our system.",
-      "checkRequiredFields": "Please check all required fields are filled correctly.",
-      "validationError": "Validation error: Please check all required fields are filled correctly.",
-      "serverError": "Server error occurred. Please try again later or contact support.",
-      "serviceUnavailable": "Service not available. Please ensure the backend is running.",
-      "networkError": "Network error: Unable to connect to the server. Please check your connection."
+      "processingPayment": "正在处理付款方式...",
+      "paymentDetailsRequired": "付费计划需要付款详细信息",
+      "paymentMethodFailed": "处理付款方式失败",
+      "accountCreationFailed": "创建账户失败。",
+      "tenantExists": "此租户已存在。",
+      "userEmailExists": "此电子邮件的用户已存在。请使用其他电子邮件或登录。",
+      "emailAlreadyRegistered": "此电子邮件已注册。请使用其他电子邮件或登录。",
+      "informationAlreadyRegistered": "此信息已在我们的系统中注册。",
+      "checkRequiredFields": "请检查所有必填字段是否正确填写。",
+      "validationError": "验证错误：请检查所有必填字段是否正确填写。",
+      "serverError": "发生服务器错误。请稍后重试或联系支持人员。",
+      "serviceUnavailable": "服务不可用。请确保后端正在运行。",
+      "networkError": "网络错误：无法连接到服务器。请检查您的连接。"
     }
   }
 }

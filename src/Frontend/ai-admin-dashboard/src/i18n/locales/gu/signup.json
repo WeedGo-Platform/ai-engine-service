@@ -313,11 +313,11 @@
     "cvvRequired": "CVV જરૂરી છે",
     "cvvFormat": "CVV 3 અથવા 4 અંકોનો હોવો જોઈએ",
     "cardholderRequired": "કાર્ડધારક નામ જરૂરી છે",
-    "crolNumberRequired": "CROL number is required for Ontario tenants",
-    "crsaLicenseRequired": "Valid CRSA license is required for Ontario tenants",
-    "crsaDomainMismatch": "Your email domain does not match the CRSA website. Please contact support for manual verification.",
-    "licenseNumberRequired": "Please enter a license number",
-    "licenseValidationFailed": "Failed to validate license"
+    "crolNumberRequired": "ઑન્ટારિયો ભાડૂતો માટે CROL નંબર જરૂરી છે",
+    "crsaLicenseRequired": "ઑન્ટારિયો ભાડૂતો માટે માન્ય CRSA લાઇસન્સ જરૂરી છે",
+    "crsaDomainMismatch": "તમારું ઇમેઇલ ડોમેન CRSA વેબસાઇટ સાથે મેળ ખાતું નથી. કૃપા કરીને મેન્યુઅલ ચકાસણી માટે સપોર્ટનો સંપર્ક કરો.",
+    "licenseNumberRequired": "કૃપા કરીને લાઇસન્સ નંબર દાખલ કરો",
+    "licenseValidationFailed": "લાઇસન્સ માન્યતા નિષ્ફળ"
   },
   "passwordStrength": {
     "weak": "નબળું",
@@ -407,19 +407,19 @@
   },
   "errors": {
     "submit": {
-      "processingPayment": "Processing payment method...",
-      "paymentDetailsRequired": "Payment details required for paid plans",
-      "paymentMethodFailed": "Failed to process payment method",
-      "accountCreationFailed": "Failed to create account.",
-      "tenantExists": "This tenant already exists.",
-      "userEmailExists": "A user with this email already exists. Please use a different email or login instead.",
-      "emailAlreadyRegistered": "This email is already registered. Please use a different email or login instead.",
-      "informationAlreadyRegistered": "This information is already registered in our system.",
-      "checkRequiredFields": "Please check all required fields are filled correctly.",
-      "validationError": "Validation error: Please check all required fields are filled correctly.",
-      "serverError": "Server error occurred. Please try again later or contact support.",
-      "serviceUnavailable": "Service not available. Please ensure the backend is running.",
-      "networkError": "Network error: Unable to connect to the server. Please check your connection."
+      "processingPayment": "ચુકવણી પદ્ધતિની પ્રક્રિયા કરી રહ્યું છે...",
+      "paymentDetailsRequired": "ચૂકવણી યોજનાઓ માટે ચુકવણી વિગતો જરૂરી છે",
+      "paymentMethodFailed": "ચુકવણી પદ્ધતિની પ્રક્રિયા નિષ્ફળ",
+      "accountCreationFailed": "ખાતું બનાવવું નિષ્ફળ.",
+      "tenantExists": "આ ભાડૂત પહેલાથી અસ્તિત્વમાં છે.",
+      "userEmailExists": "આ ઇમેઇલ સાથે એક વપરાશકર્તા પહેલાથી અસ્તિત્વમાં છે. કૃપા કરીને અલગ ઇમેઇલનો ઉપયોગ કરો અથવા લૉગિન કરો.",
+      "emailAlreadyRegistered": "આ ઇમેઇલ પહેલાથી નોંધાયેલ છે. કૃપા કરીને અલગ ઇમેઇલનો ઉપયોગ કરો અથવા લૉગિન કરો.",
+      "informationAlreadyRegistered": "આ માહિતી અમારી સિસ્ટમમાં પહેલાથી નોંધાયેલી છે.",
+      "checkRequiredFields": "કૃપા કરીને તપાસો કે બધા જરૂરી ફીલ્ડ્સ યોગ્ય રીતે ભરાયેલા છે.",
+      "validationError": "માન્યતા ભૂલ: કૃપા કરીને તપાસો કે બધા જરૂરી ફીલ્ડ્સ યોગ્ય રીતે ભરાયેલા છે.",
+      "serverError": "સર્વર ભૂલ થઈ. કૃપા કરીને પછીથી ફરી પ્રયાસ કરો અથવા સપોર્ટનો સંપર્ક કરો.",
+      "serviceUnavailable": "સેવા ઉપલબ્ધ નથી. કૃપા કરીને ખાતરી કરો કે બેકએન્ડ ચાલી રહ્યું છે.",
+      "networkError": "નેટવર્ક ભૂલ: સર્વર સાથે કનેક્ટ કરવામાં અસમર્થ. કૃપા કરીને તમારું કનેક્શન તપાસો."
     }
   }
 }

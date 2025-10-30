@@ -313,11 +313,11 @@
     "cvvRequired": "Kinakailangan ang CVV",
     "cvvFormat": "Ang CVV ay dapat 3 o 4 digits",
     "cardholderRequired": "Kinakailangan ang pangalan ng cardholder",
-    "crolNumberRequired": "CROL number is required for Ontario tenants",
-    "crsaLicenseRequired": "Valid CRSA license is required for Ontario tenants",
-    "crsaDomainMismatch": "Your email domain does not match the CRSA website. Please contact support for manual verification.",
-    "licenseNumberRequired": "Please enter a license number",
-    "licenseValidationFailed": "Failed to validate license"
+    "crolNumberRequired": "Kailangan ang numero ng CROL para sa mga tenant ng Ontario",
+    "crsaLicenseRequired": "Kailangan ang wastong lisensya ng CRSA para sa mga tenant ng Ontario",
+    "crsaDomainMismatch": "Ang iyong email domain ay hindi tumutugma sa website ng CRSA. Mangyaring makipag-ugnayan sa suporta para sa manu-manong pag-verify.",
+    "licenseNumberRequired": "Mangyaring magpasok ng numero ng lisensya",
+    "licenseValidationFailed": "Nabigong i-validate ang lisensya"
   },
   "passwordStrength": {
     "weak": "Mahina",
@@ -407,19 +407,19 @@
   },
   "errors": {
     "submit": {
-      "processingPayment": "Processing payment method...",
-      "paymentDetailsRequired": "Payment details required for paid plans",
-      "paymentMethodFailed": "Failed to process payment method",
-      "accountCreationFailed": "Failed to create account.",
-      "tenantExists": "This tenant already exists.",
-      "userEmailExists": "A user with this email already exists. Please use a different email or login instead.",
-      "emailAlreadyRegistered": "This email is already registered. Please use a different email or login instead.",
-      "informationAlreadyRegistered": "This information is already registered in our system.",
-      "checkRequiredFields": "Please check all required fields are filled correctly.",
-      "validationError": "Validation error: Please check all required fields are filled correctly.",
-      "serverError": "Server error occurred. Please try again later or contact support.",
-      "serviceUnavailable": "Service not available. Please ensure the backend is running.",
-      "networkError": "Network error: Unable to connect to the server. Please check your connection."
+      "processingPayment": "Pinoproseso ang paraan ng pagbabayad...",
+      "paymentDetailsRequired": "Kinakailangan ang mga detalye ng pagbabayad para sa mga planong bayad",
+      "paymentMethodFailed": "Nabigong iproseso ang paraan ng pagbabayad",
+      "accountCreationFailed": "Nabigong lumikha ng account.",
+      "tenantExists": "Ang tenant na ito ay umiiral na.",
+      "userEmailExists": "May user na mayroon nang email na ito. Mangyaring gumamit ng ibang email o mag-login.",
+      "emailAlreadyRegistered": "Ang email na ito ay nakarehistro na. Mangyaring gumamit ng ibang email o mag-login.",
+      "informationAlreadyRegistered": "Ang impormasyong ito ay nakarehistro na sa aming sistema.",
+      "checkRequiredFields": "Mangyaring suriin na ang lahat ng kinakailangang field ay tama ang pagkakapuno.",
+      "validationError": "Error sa pagpapatunay: Mangyaring suriin na ang lahat ng kinakailangang field ay tama ang pagkakapuno.",
+      "serverError": "Naganap ang error sa server. Mangyaring subukan ulit mamaya o makipag-ugnayan sa suporta.",
+      "serviceUnavailable": "Hindi available ang serbisyo. Mangyaring tiyakin na tumatakbo ang backend.",
+      "networkError": "Error sa network: Hindi makakonekta sa server. Mangyaring suriin ang iyong koneksyon."
     }
   }
 }
