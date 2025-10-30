@@ -313,26 +313,26 @@ class TenantService {
         });
         clearTimeout(timeoutId);
         
-        console.log('OTP send success:', response.data);
+        console.log('✅ OTP send success:', response.data);
         
         return {
           success: true,
           message: response.data.message,
-          expiresIn: response.data.expires_in
+          expiresIn: response.data.expires_in_minutes // Backend sends expires_in_minutes
         };
       } catch (error: any) {
         clearTimeout(timeoutId);
         throw error;
       }
     } catch (error: any) {
-      console.error('OTP send error:', {
+      console.error('❌ OTP send error:', {
         status: error.response?.status,
         statusText: error.response?.statusText,
         detail: error.response?.data?.detail,
         data: error.response?.data,
-        identifier,
-        identifierType,
-        isTimeout: error.name === 'AbortError'
+        identifier: `${identifierType}:${identifier?.substring(0, 3)}...`,
+        isTimeout: error.name === 'AbortError',
+        errorType: error.constructor.name
       });
       
       // Handle timeout
