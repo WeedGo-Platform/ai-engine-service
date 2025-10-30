@@ -51,7 +51,9 @@
       "city": "市区町村",
       "province": "州",
       "postalCode": "郵便番号",
-      "postalCodePlaceholder": "A1A 1A1"
+      "postalCodePlaceholder": "A1A 1A1",
+      "autoFilled": "自動入力済み",
+      "addressAutocompleteHint": "💡 入力を開始して住所の候補を表示 - 市区町村と郵便番号は自動入力されます"
     },
     "accountSetup": {
       "password": "パスワード",
@@ -87,7 +89,8 @@
       "cvv": "CVV",
       "cvvPlaceholder": "123",
       "postalCode": "郵便番号",
-      "postalCodePlaceholder": "12345"
+      "postalCodePlaceholder": "12345",
+      "autoFilled": "自动填写"
     },
     "progress": {
       "verifying": "利用可能性を確認中...",

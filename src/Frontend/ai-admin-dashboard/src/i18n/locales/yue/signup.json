@@ -51,7 +51,9 @@
       "city": "城市",
       "province": "省份",
       "postalCode": "郵政編碼",
-      "postalCodePlaceholder": "A1A 1A1"
+      "postalCodePlaceholder": "A1A 1A1",
+      "autoFilled": "自動填寫",
+      "addressAutocompleteHint": "💡 開始輸入以查看地址建議 - 城市同郵政編碼會自動填寫"
     },
     "accountSetup": {
       "password": "密碼",
@@ -87,7 +89,8 @@
       "cvv": "CVV",
       "cvvPlaceholder": "123",
       "postalCode": "ZIP/郵政編碼",
-      "postalCodePlaceholder": "12345"
+      "postalCodePlaceholder": "12345",
+      "autoFilled": "自动填写"
     },
     "progress": {
       "verifying": "核實緊可用性...",

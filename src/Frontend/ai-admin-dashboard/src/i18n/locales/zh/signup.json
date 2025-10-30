@@ -51,7 +51,9 @@
       "city": "城市",
       "province": "省份",
       "postalCode": "邮政编码",
-      "postalCodePlaceholder": "A1A 1A1"
+      "postalCodePlaceholder": "A1A 1A1",
+      "autoFilled": "自动填写",
+      "addressAutocompleteHint": "💡 开始输入以查看地址建议 - 城市和邮政编码将自动填写"
     },
     "accountSetup": {
       "password": "密码",
@@ -87,7 +89,8 @@
       "cvv": "CVV",
       "cvvPlaceholder": "123",
       "postalCode": "邮政编码",
-      "postalCodePlaceholder": "12345"
+      "postalCodePlaceholder": "12345",
+      "autoFilled": "自动填写"
     },
     "progress": {
       "verifying": "正在验证可用性...",

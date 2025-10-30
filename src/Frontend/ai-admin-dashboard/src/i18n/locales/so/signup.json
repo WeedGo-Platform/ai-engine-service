@@ -51,7 +51,9 @@
       "city": "Magaalada",
       "province": "Gobolka",
       "postalCode": "Code-ka Boostada",
-      "postalCodePlaceholder": "A1A 1A1"
+      "postalCodePlaceholder": "A1A 1A1",
+      "autoFilled": "Si toos ah loo buuxiyey",
+      "addressAutocompleteHint": "💡 Bilow qorista si aad u aragto soo jeedinta cinwaanka - magaalada iyo lambarka boostada ayaa si toos ah u buuxsami doona"
     },
     "accountSetup": {
       "password": "Furaha Sirta ah",
@@ -87,7 +89,8 @@
       "cvv": "CVV",
       "cvvPlaceholder": "123",
       "postalCode": "ZIP/Code-ka Boostada",
-      "postalCodePlaceholder": "12345"
+      "postalCodePlaceholder": "12345",
+      "autoFilled": "自动填写"
     },
     "progress": {
       "verifying": "Xaqiijinta helitaanka...",

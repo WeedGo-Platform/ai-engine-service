@@ -51,7 +51,9 @@
       "city": "المدينة",
       "province": "المقاطعة",
       "postalCode": "الرمز البريدي",
-      "postalCodePlaceholder": "A1A 1A1"
+      "postalCodePlaceholder": "A1A 1A1",
+      "autoFilled": "تم الملء تلقائيًا",
+      "addressAutocompleteHint": "💡 ابدأ الكتابة لرؤية اقتراحات العنوان - سيتم ملء المدينة والرمز البريدي تلقائيًا"
     },
     "accountSetup": {
       "password": "كلمة المرور",
@@ -87,7 +89,8 @@
       "cvv": "CVV",
       "cvvPlaceholder": "123",
       "postalCode": "الرمز البريدي",
-      "postalCodePlaceholder": "12345"
+      "postalCodePlaceholder": "12345",
+      "autoFilled": "自动填写"
     },
     "progress": {
       "verifying": "التحقق من التوفر...",

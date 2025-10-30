@@ -51,7 +51,9 @@
       "city": "Oraș",
       "province": "Provincie",
       "postalCode": "Cod poștal",
-      "postalCodePlaceholder": "A1A 1A1"
+      "postalCodePlaceholder": "A1A 1A1",
+      "autoFilled": "Completat automat",
+      "addressAutocompleteHint": "💡 Începeți să tastați pentru a vedea sugestii de adrese - orașul și codul poștal se vor completa automat"
     },
     "accountSetup": {
       "password": "Parolă",
@@ -87,7 +89,8 @@
       "cvv": "CVV",
       "cvvPlaceholder": "123",
       "postalCode": "Cod poștal ZIP",
-      "postalCodePlaceholder": "12345"
+      "postalCodePlaceholder": "12345",
+      "autoFilled": "自动填写"
     },
     "progress": {
       "verifying": "Verificare disponibilitate...",

@@ -1041,7 +1041,7 @@ const TenantSignup = () => {
                 <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.street}</p>
               )}
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                💡 Start typing to see address suggestions - city and postal code will auto-fill
+                {t('signup:tenant.contactInfo.addressAutocompleteHint')}
               </p>
             </div>
 
@@ -1060,7 +1060,7 @@ const TenantSignup = () => {
                 {errors.city && (
                   <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.city}</p>
                 )}
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Auto-filled</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{t('signup:tenant.contactInfo.autoFilled')}</p>
               </div>
 
               <div>
@@ -1094,7 +1094,7 @@ const TenantSignup = () => {
                 {errors.postalCode && (
                   <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.postalCode}</p>
                 )}
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Auto-filled</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{t('signup:tenant.contactInfo.autoFilled')}</p>
               </div>
             </div>
           </div>

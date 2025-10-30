@@ -50,11 +50,13 @@
       "phoneOptional": "Optional - Verify to enable SMS notifications",
       "street": "Street Address",
       "streetPlaceholder": "Start typing an address (e.g., 123 Main St, Toronto)",
+      "addressAutocompleteHint": "💡 Start typing to see address suggestions - city and postal code will auto-fill",
       "city": "City",
       "cityPlaceholder": "e.g., Toronto",
       "province": "Province",
       "postalCode": "Postal Code",
-      "postalCodePlaceholder": "A1A 1A1"
+      "postalCodePlaceholder": "A1A 1A1",
+      "autoFilled": "Auto-filled"
     },
     "accountSetup": {
       "password": "Password",
@@ -90,7 +92,8 @@
       "cvv": "CVV",
       "cvvPlaceholder": "123",
       "postalCode": "ZIP/Postal Code",
-      "postalCodePlaceholder": "12345"
+      "postalCodePlaceholder": "12345",
+      "autoFilled": "自动填写"
     },
     "progress": {
       "verifying": "Verifying availability...",

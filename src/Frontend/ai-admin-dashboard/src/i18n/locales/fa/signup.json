@@ -51,7 +51,9 @@
       "city": "شهر",
       "province": "استان",
       "postalCode": "کد پستی",
-      "postalCodePlaceholder": "A1A 1A1"
+      "postalCodePlaceholder": "A1A 1A1",
+      "autoFilled": "خودکار پر شده",
+      "addressAutocompleteHint": "💡 شروع به تایپ کنید تا پیشنهادات آدرس را ببینید - شهر و کد پستی به طور خودکار پر می‌شوند"
     },
     "accountSetup": {
       "password": "رمز عبور",
@@ -87,7 +89,8 @@
       "cvv": "CVV",
       "cvvPlaceholder": "123",
       "postalCode": "کد پستی ZIP",
-      "postalCodePlaceholder": "12345"
+      "postalCodePlaceholder": "12345",
+      "autoFilled": "自动填写"
     },
     "progress": {
       "verifying": "در حال تأیید در دسترس بودن...",

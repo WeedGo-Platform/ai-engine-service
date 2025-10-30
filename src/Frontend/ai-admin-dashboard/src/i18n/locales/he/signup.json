@@ -51,7 +51,9 @@
       "city": "עיר",
       "province": "מחוז",
       "postalCode": "מיקוד",
-      "postalCodePlaceholder": "A1A 1A1"
+      "postalCodePlaceholder": "A1A 1A1",
+      "autoFilled": "מולא אוטומטית",
+      "addressAutocompleteHint": "💡 התחל להקליד כדי לראות הצעות כתובת - העיר והמיקוד יתמלאו אוטומטית"
     },
     "accountSetup": {
       "password": "סיסמה",
@@ -87,7 +89,8 @@
       "cvv": "CVV",
       "cvvPlaceholder": "123",
       "postalCode": "ZIP/מיקוד",
-      "postalCodePlaceholder": "12345"
+      "postalCodePlaceholder": "12345",
+      "autoFilled": "自动填写"
     },
     "progress": {
       "verifying": "מאמת זמינות...",

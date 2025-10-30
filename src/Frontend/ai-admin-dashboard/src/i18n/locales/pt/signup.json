@@ -51,7 +51,9 @@
       "city": "Cidade",
       "province": "Província",
       "postalCode": "Código postal",
-      "postalCodePlaceholder": "A1A 1A1"
+      "postalCodePlaceholder": "A1A 1A1",
+      "autoFilled": "Preenchido automaticamente",
+      "addressAutocompleteHint": "💡 Comece a digitar para ver sugestões de endereço - cidade e código postal serão preenchidos automaticamente"
     },
     "accountSetup": {
       "password": "Senha",
@@ -87,7 +89,8 @@
       "cvv": "CVV",
       "cvvPlaceholder": "123",
       "postalCode": "Código postal",
-      "postalCodePlaceholder": "12345"
+      "postalCodePlaceholder": "12345",
+      "autoFilled": "自动填写"
     },
     "progress": {
       "verifying": "Verificando disponibilidade...",

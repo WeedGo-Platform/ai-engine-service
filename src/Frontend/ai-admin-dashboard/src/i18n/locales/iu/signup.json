@@ -51,7 +51,9 @@
       "city": "ᓄᓇᓕᒃ",
       "province": "ᐃᓕᓴᕆᔭᐅᓯᒪᔪᖅ",
       "postalCode": "ᐃᑎᕐᕕᒃᓴᖅ ᑰᑦ",
-      "postalCodePlaceholder": "A1A 1A1"
+      "postalCodePlaceholder": "A1A 1A1",
+      "autoFilled": "Auto-filled",
+      "addressAutocompleteHint": "💡 Start typing to see address suggestions - city and postal code will auto-fill"
     },
     "accountSetup": {
       "password": "ᓇᓗᓇᐃᖅᓯᔾᔪᑎᒃ",
@@ -87,7 +89,8 @@
       "cvv": "CVV",
       "cvvPlaceholder": "123",
       "postalCode": "ZIP/ᐃᑎᕐᕕᒃᓴᖅ ᑰᑦ",
-      "postalCodePlaceholder": "12345"
+      "postalCodePlaceholder": "12345",
+      "autoFilled": "自动填写"
     },
     "progress": {
       "verifying": "ᖃᐅᔨᓴᖅᑐᒍᑦ...",

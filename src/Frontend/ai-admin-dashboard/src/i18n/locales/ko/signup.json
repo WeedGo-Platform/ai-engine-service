@@ -51,7 +51,9 @@
       "city": "도시",
       "province": "주",
       "postalCode": "우편번호",
-      "postalCodePlaceholder": "A1A 1A1"
+      "postalCodePlaceholder": "A1A 1A1",
+      "autoFilled": "자동 입력됨",
+      "addressAutocompleteHint": "💡 주소 제안을 보려면 입력을 시작하세요 - 도시와 우편번호가 자동으로 채워집니다"
     },
     "accountSetup": {
       "password": "비밀번호",
@@ -87,7 +89,8 @@
       "cvv": "CVV",
       "cvvPlaceholder": "123",
       "postalCode": "우편번호",
-      "postalCodePlaceholder": "12345"
+      "postalCodePlaceholder": "12345",
+      "autoFilled": "自动填写"
     },
     "progress": {
       "verifying": "사용 가능 여부 확인 중...",

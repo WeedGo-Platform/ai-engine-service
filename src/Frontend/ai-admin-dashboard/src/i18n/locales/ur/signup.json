@@ -51,7 +51,9 @@
       "city": "شہر",
       "province": "صوبہ",
       "postalCode": "پوسٹل کوڈ",
-      "postalCodePlaceholder": "A1A 1A1"
+      "postalCodePlaceholder": "A1A 1A1",
+      "autoFilled": "خود بخود بھرا ہوا",
+      "addressAutocompleteHint": "💡 پتہ کی تجاویز دیکھنے کے لیے ٹائپ کرنا شروع کریں - شہر اور پوسٹل کوڈ خود بخود بھر جائیں گے"
     },
     "accountSetup": {
       "password": "پاس ورڈ",
@@ -87,7 +89,8 @@
       "cvv": "CVV",
       "cvvPlaceholder": "123",
       "postalCode": "ZIP/پوسٹل کوڈ",
-      "postalCodePlaceholder": "12345"
+      "postalCodePlaceholder": "12345",
+      "autoFilled": "自动填写"
     },
     "progress": {
       "verifying": "دستیابی کی تصدیق ہو رہی ہے...",

@@ -51,7 +51,9 @@
       "city": "Thành phố",
       "province": "Tỉnh",
       "postalCode": "Mã Bưu điện",
-      "postalCodePlaceholder": "A1A 1A1"
+      "postalCodePlaceholder": "A1A 1A1",
+      "autoFilled": "Tự động điền",
+      "addressAutocompleteHint": "💡 Bắt đầu nhập để xem gợi ý địa chỉ - thành phố và mã bưu điện sẽ tự động điền"
     },
     "accountSetup": {
       "password": "Mật khẩu",
@@ -87,7 +89,8 @@
       "cvv": "CVV",
       "cvvPlaceholder": "123",
       "postalCode": "Mã Bưu điện",
-      "postalCodePlaceholder": "12345"
+      "postalCodePlaceholder": "12345",
+      "autoFilled": "自动填写"
     },
     "progress": {
       "verifying": "Đang xác minh tính khả dụng...",
