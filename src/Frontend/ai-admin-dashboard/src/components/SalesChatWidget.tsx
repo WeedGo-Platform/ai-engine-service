@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { voiceApi } from '../services/voiceApi';
+import { getWebSocketUrl } from '../utils/websocket';
 
 type RecordingState = 'idle' | 'recording' | 'processing' | 'error';
 
@@ -73,7 +74,7 @@ const stripMarkdown = (text: string): string => {
 };
 
 const SalesChatWidget: React.FC<SalesChatWidgetProps> = ({
-  wsUrl = 'ws://localhost:5024/api/v1/chat/ws',
+  wsUrl = getWebSocketUrl('SALES_CHAT'),
   enableVoice = true
 }) => {
   // Get translation function for chat namespace

@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Building2, User, Mail, Lock, Phone, AlertCircle, CheckCircle, Shield, Eye, EyeOff } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import tenantService from '../services/tenantService';
+import { getApiEndpoint } from '../config/app.config';
 
 interface LocationState {
   tenantCode?: string;
@@ -156,7 +157,7 @@ const UserRegistration = () => {
     
     try {
       // Create user through the backend API
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5024'}/api/users/register`, {
+      const response = await fetch(getApiEndpoint('/users/register'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

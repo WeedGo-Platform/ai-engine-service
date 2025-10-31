@@ -165,7 +165,7 @@ const TenantManagement: React.FC = () => {
         const formData = new FormData();
         formData.append('file', logoFile);
 
-        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5024'}/api/uploads/tenant/${id}/logo`, {
+        const response = await fetch(getApiEndpoint('/uploads/tenant/${id}/logo'), {
           method: 'POST',
           body: formData,
         });
@@ -413,7 +413,7 @@ const TenantManagement: React.FC = () => {
                 <div className="flex items-start gap-6">
                   {tenants[0]?.logo_url && (
                     <img
-                      src={tenants[0].logo_url.startsWith('http') ? tenants[0].logo_url : `${import.meta.env.VITE_API_URL || 'http://localhost:5024'}${tenants[0].logo_url}`}
+                      src={tenants[0].logo_url.startsWith('http') ? tenants[0].logo_url : `${appConfig.api.baseUrl}${tenants[0].logo_url}`}
                       alt={`${tenants[0].name} logo`}
                       className="w-16 h-16 object-contain rounded"
                     />
@@ -549,7 +549,7 @@ const TenantManagement: React.FC = () => {
                       <div className="flex items-start gap-4">
                         {tenant.logo_url && (
                           <img
-                            src={tenant.logo_url.startsWith('http') ? tenant.logo_url : `${import.meta.env.VITE_API_URL || 'http://localhost:5024'}${tenant.logo_url}`}
+                            src={tenant.logo_url.startsWith('http') ? tenant.logo_url : `${appConfig.api.baseUrl}${tenant.logo_url}`}
                             alt={`${tenant.name} logo`}
                             className="w-10 h-10 object-contain rounded"
                             onError={(e) => {

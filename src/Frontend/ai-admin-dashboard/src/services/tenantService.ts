@@ -1,7 +1,9 @@
 import { getAuthStorage, getStorageKey } from '../config/auth.config';
+import { appConfig } from '../config/app.config';
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5024';
+// Use centralized API configuration
+const API_BASE_URL = appConfig.api.baseUrl;
 
 export interface Address {
   street: string;
