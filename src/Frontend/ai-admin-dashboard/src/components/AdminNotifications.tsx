@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useWebSocket, WebSocketMessage } from '../hooks/useWebSocket';
 import { BellIcon, CheckCircleIcon, XCircleIcon, UserPlusIcon } from '@heroicons/react/24/outline';
+import { getWebSocketUrl } from '../utils/websocket';
 
 interface Notification {
   id: string;
@@ -41,7 +42,7 @@ export const AdminNotifications: React.FC<AdminNotificationsProps> = ({
 
   // WebSocket connection
   const { isConnected, lastMessage } = useWebSocket({
-    url: `ws://localhost:5024/ws/notifications/admin?token=${getToken()}`,
+    url: `${getWebSocketUrl('NOTIFICATIONS')}?token=${getToken()}`,
     onMessage: (message: WebSocketMessage) => {
       handleWebSocketMessage(message);
     },

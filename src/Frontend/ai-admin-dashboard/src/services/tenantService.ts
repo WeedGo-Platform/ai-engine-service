@@ -1,7 +1,9 @@
 import { getAuthStorage, getStorageKey } from '../config/auth.config';
+import { appConfig } from '../config/app.config';
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5024';
+// Use centralized API configuration
+const API_BASE_URL = appConfig.api.baseUrl;
 
 export interface Address {
   street: string;
@@ -392,7 +394,7 @@ class TenantService {
         identifier,
         identifier_type: identifierType,
         code,
-        purpose: 'verification'
+        purpose: 'signup'
       });
       return {
         success: true,
@@ -412,11 +414,24 @@ class TenantService {
     success: boolean;
     message?: string;
     expiresIn?: number;
-    rateLimited?: boolean;
-    retryAfter?: number;
   }> {
-    // Just delegate to sendOTP which has all the rate limiting logic
-    return this.sendOTP(identifier, identifierType);
+    try {
+      const response = await this.api.post('/api/v1/auth/otp/resend', {
+        identifier,
+        identifier_type: identifierType,
+        purpose: 'signup'
+      });
+      return {
+        success: true,
+        message: response.data.message,
+        expiresIn: response.data.expires_in
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.response?.data?.detail || error.message || 'Failed to resend OTP'
+      };
+    }
   }
 }
 

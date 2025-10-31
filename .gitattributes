@@ -1,0 +1,68 @@
+# Git Attributes for WeedGo AI Engine Service
+# =============================================
+# This file defines how Git should handle merges and diffs for specific files
+
+# =============================================
+# Environment File Handling
+# =============================================
+# Environment files use a hierarchy: .env (base) → .env.[mode] (overrides)
+# Each branch may have its own .env.[mode] that should be preserved during merges
+
+# Backend environment files - Use merge driver to preserve branch-specific configs
+src/Backend/.env.test        merge=union
+src/Backend/.env.uat         merge=union
+src/Backend/.env.beta        merge=union
+src/Backend/.env.preprod     merge=union
+src/Backend/.env.production  merge=union
+
+# Frontend environment files - Use merge driver to preserve branch-specific configs
+src/Frontend/*/env.test      merge=union
+src/Frontend/*/.env.uat      merge=union
+src/Frontend/*/.env.beta     merge=union
+src/Frontend/*/.env.preprod  merge=union
+src/Frontend/*/.env.production merge=union
+
+# =============================================
+# Branch-Specific Configuration Files
+# =============================================
+# These files contain branch-specific settings and should prefer current branch
+
+# Docker compose files for different environments
+docker-compose.test.yml      merge=union
+docker-compose.uat.yml       merge=union
+docker-compose.beta.yml      merge=union
+docker-compose.preprod.yml   merge=union
+
+# Package.json may have environment-specific scripts
+src/Frontend/*/package.json  merge=union
+
+# =============================================
+# Line Ending Normalization
+# =============================================
+# Ensure consistent line endings across platforms
+*.py        text eol=lf
+*.js        text eol=lf
+*.ts        text eol=lf
+*.tsx       text eol=lf
+*.json      text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+*.sh        text eol=lf
+*.md        text eol=lf
+
+# =============================================
+# Binary Files
+# =============================================
+# Mark binary files explicitly
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.gif       binary
+*.ico       binary
+*.woff      binary
+*.woff2     binary
+*.ttf       binary
+*.eot       binary
+*.pdf       binary
+*.zip       binary
+*.tar.gz    binary

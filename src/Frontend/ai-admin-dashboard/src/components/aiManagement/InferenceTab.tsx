@@ -22,6 +22,8 @@ import {
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
+import { useStoreContext } from '@/contexts/StoreContext';
+import { getApiEndpoint } from '@/config/app.config';
 
 interface InferenceTabProps {
   token?: string;
@@ -31,10 +33,10 @@ interface InferenceTabProps {
 const InferenceTab: React.FC<InferenceTabProps> = ({ token, tenantId: propTenantId }) => {
   const { t } = useTranslation(['common']);
   const { user } = useAuth();
-  
-  // Get tenant ID from props or user context
- 
-  const tenantId = propTenantId || user?.tenant_id;
+  const { currentStore } = useStoreContext();
+
+  // Get tenant ID from props, user context, or current store
+  const tenantId = propTenantId || user?.tenant_id || currentStore?.tenant_id;
   
   console.log('InferenceTab - tenantId:', tenantId, 'user:', user);
 
@@ -71,7 +73,7 @@ const InferenceTab: React.FC<InferenceTabProps> = ({ token, tenantId: propTenant
   const fetchRouterStats = async () => {
     setIsLoadingRouter(true);
     try {
-      const response = await fetch('http://localhost:5024/api/admin/router/stats', {
+      const response = await fetch(getApiEndpoint('/admin/router/stats'), {
         headers: {
           'Authorization': token ? `Bearer ${token}` : ''
         }
@@ -89,7 +91,7 @@ const InferenceTab: React.FC<InferenceTabProps> = ({ token, tenantId: propTenant
   const fetchModelConfig = async () => {
     setIsLoadingModels(true);
     try {
-      const response = await fetch('http://localhost:5024/api/admin/router/models/config', {
+      const response = await fetch(getApiEndpoint('/admin/router/models/config'), {
         headers: {
           'Authorization': token ? `Bearer ${token}` : ''
         }
@@ -113,7 +115,7 @@ const InferenceTab: React.FC<InferenceTabProps> = ({ token, tenantId: propTenant
   const toggleRouter = async () => {
     setIsTogglingRouter(true);
     try {
-      const response = await fetch('http://localhost:5024/api/admin/router/toggle', {
+      const response = await fetch(getApiEndpoint('/admin/router/toggle'), {
         method: 'POST',
         headers: {
           'Authorization': token ? `Bearer ${token}` : ''
@@ -144,7 +146,7 @@ const InferenceTab: React.FC<InferenceTabProps> = ({ token, tenantId: propTenant
   const updateProviderModel = async (provider: string, model: string) => {
     setIsUpdatingModel(true);
     try {
-      const response = await fetch('http://localhost:5024/api/admin/router/update-model', {
+      const response = await fetch(getApiEndpoint('/admin/router/update-model'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -170,10 +172,10 @@ const InferenceTab: React.FC<InferenceTabProps> = ({ token, tenantId: propTenant
   // Fetch tenant LLM tokens
   const fetchTenantTokens = async () => {
     if (!tenantId) return;
-    
+
     setIsLoadingTokens(true);
     try {
-      const response = await fetch(`http://localhost:5024/api/tenants/${tenantId}/llm-tokens`, {
+      const response = await fetch(getApiEndpoint(`/tenants/${tenantId}/llm-tokens`), {
         headers: {
           'Authorization': token ? `Bearer ${token}` : ''
         }
@@ -193,10 +195,10 @@ const InferenceTab: React.FC<InferenceTabProps> = ({ token, tenantId: propTenant
   // Save tenant LLM tokens
   const saveTenantTokens = async () => {
     if (!tenantId) return;
-    
+
     setIsSavingTokens(true);
     try {
-      const response = await fetch(`http://localhost:5024/api/tenants/${tenantId}/llm-tokens`, {
+      const response = await fetch(getApiEndpoint(`/tenants/${tenantId}/llm-tokens`), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -223,10 +225,10 @@ const InferenceTab: React.FC<InferenceTabProps> = ({ token, tenantId: propTenant
   // Test a specific token
   const testToken = async (provider: string) => {
     if (!tenantId || !llmTokens[provider as keyof typeof llmTokens]) return;
-    
+
     setIsTestingToken(provider);
     try {
-      const response = await fetch(`http://localhost:5024/api/tenants/${tenantId}/llm-tokens/test`, {
+      const response = await fetch(getApiEndpoint(`/tenants/${tenantId}/llm-tokens/test`), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -255,10 +257,10 @@ const InferenceTab: React.FC<InferenceTabProps> = ({ token, tenantId: propTenant
   // Fetch inference configuration
   const fetchInferenceConfig = async () => {
     if (!tenantId) return;
-    
+
     setIsLoadingConfig(true);
     try {
-      const response = await fetch(`http://localhost:5024/api/tenants/${tenantId}/inference-config`, {
+      const response = await fetch(getApiEndpoint(`/tenants/${tenantId}/inference-config`), {
         headers: {
           'Authorization': token ? `Bearer ${token}` : ''
         }
@@ -274,10 +276,10 @@ const InferenceTab: React.FC<InferenceTabProps> = ({ token, tenantId: propTenant
   // Save inference configuration
   const saveInferenceConfig = async (config: any) => {
     if (!tenantId) return;
-    
+
     setIsSavingConfig(true);
     try {
-      const response = await fetch(`http://localhost:5024/api/tenants/${tenantId}/inference-config`, {
+      const response = await fetch(getApiEndpoint(`/tenants/${tenantId}/inference-config`), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -302,11 +304,11 @@ const InferenceTab: React.FC<InferenceTabProps> = ({ token, tenantId: propTenant
   // Fetch usage statistics
   const fetchUsageStats = async () => {
     if (!tenantId) return;
-    
+
     setIsLoadingStats(true);
     try {
       const response = await fetch(
-        `http://localhost:5024/api/tenants/${tenantId}/usage-stats?hours=${statsTimeWindow}`,
+        getApiEndpoint(`/tenants/${tenantId}/usage-stats?hours=${statsTimeWindow}`),
         {
           headers: {
             'Authorization': token ? `Bearer ${token}` : ''

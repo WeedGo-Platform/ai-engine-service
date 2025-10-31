@@ -773,8 +773,7 @@ async def close_store(
 
 @router.get("/tenant/active", response_model=List[StoreResponse])
 async def get_active_stores_by_tenant(
-    # Temporarily disable auth check for development
-    # current_user: dict = Depends(get_current_user),
+    current_user: dict = Depends(get_current_user),
     service: StoreService = Depends(get_store_service),
     db_pool: asyncpg.Pool = Depends(get_db_pool)
 ):
@@ -785,8 +784,6 @@ async def get_active_stores_by_tenant(
     - Store Manager: Can see only their assigned store(s)
     """
     try:
-        # Mock user for development (temporarily disabled auth) - using real admin user ID from database
-        current_user = {"user_id": "c048d6c8-6a1a-45a4-a630-5861e730a8fd", "role": "super_admin"}
         # Get user info from the current_user dependency
         user_id = UUID(current_user['user_id'])
         user = None  # Initialize user variable

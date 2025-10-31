@@ -400,6 +400,8 @@ export class HttpClient {
 
 /**
  * Get API base URL from environment
+ *
+ * Cloud-First: Requires VITE_API_URL to be set in production environments
  */
 function getApiBaseUrl(): string {
   // Try Vite env var first
@@ -412,13 +414,18 @@ function getApiBaseUrl(): string {
     return process.env.VITE_API_URL;
   }
 
-  // Default to localhost in development
-  if (process.env.NODE_ENV === 'development') {
-    return 'http://localhost:5024';
+  // Only fall back to localhost in development mode
+  if (import.meta.env.DEV || process.env.NODE_ENV === 'development') {
+    console.warn('⚠️ VITE_API_URL not set, using localhost default for development');
+    return 'http://localhost:6024';
   }
 
-  // Production default
-  return 'https://api.weedgo.ca';
+  // In production, VITE_API_URL must be explicitly set
+  throw new Error(
+    'VITE_API_URL environment variable is not set. ' +
+    'Please configure it in your .env file for your deployment environment. ' +
+    'This is required for cloud deployments.'
+  );
 }
 
 /**

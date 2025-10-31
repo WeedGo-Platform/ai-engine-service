@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Mic, MicOff, Volume2, VolumeX, Upload, Download, AlertCircle, CheckCircle } from 'lucide-react';
+import { appConfig } from '../config/app.config';
 
 const VoiceAPITest: React.FC = () => {
   const { t } = useTranslation(['tools', 'common']);
@@ -15,7 +16,7 @@ const VoiceAPITest: React.FC = () => {
   const [synthesizedAudio, setSynthesizedAudio] = useState<string | null>(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [apiEndpoint, setApiEndpoint] = useState('http://localhost:5024');
+  const [apiEndpoint, setApiEndpoint] = useState(appConfig.api.baseUrl);
   const [selectedVoice, setSelectedVoice] = useState('en-US-Standard-A');
   const [voices, setVoices] = useState<any[]>([]);
 
@@ -209,7 +210,7 @@ const VoiceAPITest: React.FC = () => {
           value={apiEndpoint}
           onChange={(e) => setApiEndpoint(e.target.value)}
           className="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-md focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 dark:focus:border-primary-400 transition-colors text-sm"
-          placeholder="http://localhost:5024"
+          placeholder="API URL from environment"
         />
       </div>
 

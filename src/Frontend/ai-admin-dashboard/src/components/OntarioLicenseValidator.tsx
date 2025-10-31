@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
+import { appConfig } from '../config/app.config';
 
 interface LicenseValidationResult {
   is_valid: boolean;
@@ -44,7 +45,8 @@ const OntarioLicenseValidator: React.FC<OntarioLicenseValidatorProps> = ({
   const [isSearching, setIsSearching] = useState(false);
   const [autoCreateStore, setAutoCreateStore] = useState(true); // Default to checked
 
-  const API_BASE_URL = 'http://localhost:5024';
+  // Use centralized API configuration
+  const API_BASE_URL = appConfig.api.baseUrl;
 
   const validateLicense = async () => {
     if (!licenseNumber.trim()) {

@@ -2,7 +2,7 @@
 export const appConfig = {
   // API Configuration
   api: {
-    baseUrl: import.meta.env.VITE_API_URL || 'http://localhost:5024',
+    baseUrl: import.meta.env.VITE_API_URL || 'http://localhost:6024',
     timeout: parseInt(import.meta.env.VITE_API_TIMEOUT || '30000'),
     retryAttempts: parseInt(import.meta.env.VITE_API_RETRY_ATTEMPTS || '3'),
     retryDelay: parseInt(import.meta.env.VITE_API_RETRY_DELAY || '1000'),
