@@ -457,6 +457,32 @@ async def create_tenant_with_admin(
                         logger.error(f"Failed to create store from CRSA: {store_error}")
                         # Don't fail signup, but log for manual follow-up
                         # Admin can create store manually later
+                
+                # Create default store for non-Ontario or non-CRSA tenants
+                if not created_store_id and request.address:
+                    try:
+                        logger.info(f"Creating default primary store for tenant {tenant.id}")
+                        created_store = await conn.fetchrow("""
+                            INSERT INTO stores (
+                                tenant_id, name, address, city, province, postal_code,
+                                phone, status, is_primary, created_at, updated_at
+                            ) VALUES (
+                                $1, $2, $3, $4, $5, $6, $7, 'active', true, NOW(), NOW()
+                            ) RETURNING id
+                        """,
+                            tenant.id,
+                            request.name,  # Use tenant name as store name
+                            request.address.street if request.address else '',
+                            request.address.city if request.address else '',
+                            request.address.province if request.address else '',
+                            request.address.postal_code if request.address else '',
+                            request.contact_phone or ''
+                        )
+                        created_store_id = created_store['id']
+                        logger.info(f"Created default primary store {created_store_id} for tenant {tenant.id}")
+                    except Exception as default_store_error:
+                        logger.error(f"Failed to create default store: {default_store_error}")
+                        # Don't fail signup - tenant can create store manually
 
                 # Create admin user
                 try:
