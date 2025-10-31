@@ -255,9 +255,32 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({
     if (digits.length === 6) {
       const newOtp = digits.split('');
       setOtp(newOtp);
+      setError(null); // Clear any existing error
       inputRefs.current[5]?.focus();
-      // Auto-verify after paste
-      setTimeout(() => handleVerifyOTP(), 100);
+      // Auto-verify after paste with the new OTP value
+      setTimeout(async () => {
+        setLoading(true);
+        try {
+          const result = await onVerifyOTP(identifier, identifierType, digits);
+          if (result.success) {
+            setSuccess(true);
+            setError(null);
+            setTimeout(() => {
+              onVerified();
+            }, 1000);
+          } else {
+            setError(result.message || t('signup:verification.verifyFailed'));
+            setOtp(['', '', '', '', '', '']);
+            inputRefs.current[0]?.focus();
+          }
+        } catch (err: any) {
+          setError(err.message || t('signup:verification.verifyError'));
+          setOtp(['', '', '', '', '', '']);
+          inputRefs.current[0]?.focus();
+        } finally {
+          setLoading(false);
+        }
+      }, 100);
     }
   };
 

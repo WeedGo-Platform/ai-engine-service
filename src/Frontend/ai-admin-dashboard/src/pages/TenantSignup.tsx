@@ -232,6 +232,18 @@ const TenantSignup = () => {
         if (!formData.contactEmail.trim()) newErrors.contactEmail = t('signup:validation.emailRequired');
         else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.contactEmail)) {
           newErrors.contactEmail = t('signup:validation.emailInvalid');
+        } else {
+          // Validate email domain matches website domain
+          const emailDomain = formData.contactEmail.split('@')[1]?.toLowerCase();
+          const websiteDomain = formData.website
+            .replace(/^https?:\/\//, '')
+            .replace(/^www\./, '')
+            .split('/')[0]
+            .toLowerCase();
+          
+          if (emailDomain && websiteDomain && !websiteDomain.includes(emailDomain) && !emailDomain.includes(websiteDomain.split('.')[0])) {
+            newErrors.contactEmail = t('signup:validation.emailDomainMismatch', 'Email domain must match your website domain');
+          }
         }
         // Require email verification
         if (!formData.emailVerified) {
