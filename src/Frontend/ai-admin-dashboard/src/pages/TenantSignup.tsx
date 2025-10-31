@@ -866,8 +866,8 @@ const TenantSignup = () => {
                       }}
                       disabled={showEmailVerification}
                       className={`flex-1 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors ${
-                        errors.contactEmail ? 'border-red-500 dark:border-red-400' : 
                         formData.emailVerified ? 'border-green-500 dark:border-green-400' :
+                        errors.contactEmail ? 'border-red-500 dark:border-red-400' : 
                         'border-gray-200 dark:border-gray-600'
                       } ${showEmailVerification ? 'opacity-60' : ''}`}
                     />
@@ -908,6 +908,7 @@ const TenantSignup = () => {
                         onVerified={() => {
                           setFormData(prev => ({ ...prev, emailVerified: true }));
                           setShowEmailVerification(false);
+                          // Clear all contact email errors
                           setErrors(prev => {
                             const newErrors = { ...prev };
                             delete newErrors.contactEmail;
