@@ -146,10 +146,6 @@ class UserRepository:
         else:
             async with self.pool.acquire() as connection:
                 return await _update(connection)
-                raise
-            except Exception as e:
-                logger.error(f"Error updating user tenant: {e}")
-                raise
     
     async def verify_password(self, email: str, password: str) -> Optional[Dict[str, Any]]:
         """Verify user password and return user data if valid"""
