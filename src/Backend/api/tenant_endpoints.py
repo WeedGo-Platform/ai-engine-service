@@ -431,6 +431,15 @@ async def create_tenant_with_admin(
                     try:
                         crsa_data = request.crsa_license
                         
+                        # Get province_territory_id for Ontario
+                        province_id = await conn.fetchval("""
+                            SELECT id FROM provinces_territories WHERE code = 'ON'
+                        """)
+                        
+                        if not province_id:
+                            logger.error("Ontario province not found in provinces_territories table")
+                            raise ValueError("Province configuration error")
+                        
                         # Build address JSONB from CRSA data
                         store_address = {
                             "street": crsa_data.get('address', request.address.street if request.address else ''),
@@ -444,9 +453,9 @@ async def create_tenant_with_admin(
                         created_store = await conn.fetchrow("""
                             INSERT INTO stores (
                                 tenant_id, name, store_code, address, phone, 
-                                email, license_number, status, created_at, updated_at
+                                email, license_number, province_territory_id, status, created_at, updated_at
                             ) VALUES (
-                                $1, $2, $3, $4, $5, $6, $7, 'active', NOW(), NOW()
+                                $1, $2, $3, $4, $5, $6, $7, $8, 'active', NOW(), NOW()
                             ) RETURNING id
                         """,
                             tenant.id,
@@ -455,7 +464,8 @@ async def create_tenant_with_admin(
                             json.dumps(store_address),  # JSONB address
                             request.contact_phone or '',
                             request.contact_email or '',
-                            crsa_data.get('license_number')
+                            crsa_data.get('license_number'),
+                            province_id
                         )
                         created_store_id = created_store['id']
                         logger.info(f"Created primary store {created_store_id} from CRSA {crsa_data.get('license_number')}")
