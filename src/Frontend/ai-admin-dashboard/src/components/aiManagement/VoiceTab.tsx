@@ -10,6 +10,7 @@ import {
   Play
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import { getApiEndpoint } from '@/config/app.config';
 
 interface VoiceTabProps {
   token?: string;
@@ -33,7 +34,7 @@ const VoiceTab: React.FC<VoiceTabProps> = ({ token }) => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch('http://localhost:5024/api/voice-providers/list', {
+      const response = await fetch(getApiEndpoint('/voice-providers/list'), {
         headers: {
           'Authorization': token ? `Bearer ${token}` : ''
         }
@@ -60,7 +61,7 @@ const VoiceTab: React.FC<VoiceTabProps> = ({ token }) => {
   // Set active provider
   const setActiveProvider = async (providerId: string) => {
     try {
-      const response = await fetch('http://localhost:5024/api/voice-providers/active', {
+      const response = await fetch(getApiEndpoint('/voice-providers/active'), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -87,7 +88,7 @@ const VoiceTab: React.FC<VoiceTabProps> = ({ token }) => {
   const testProvider = async (providerId: string) => {
     setTestingProvider(providerId);
     try {
-      const response = await fetch('http://localhost:5024/api/voice-providers/test', {
+      const response = await fetch(getApiEndpoint('/voice-providers/test'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

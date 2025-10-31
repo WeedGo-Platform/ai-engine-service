@@ -12,6 +12,7 @@ import AddressAutocomplete, { AddressComponents } from '../components/AddressAut
 import OTPVerification from '../components/OTPVerification';
 import ErrorBoundary from '../components/ErrorBoundary';
 import '../styles/signup-animations.css';
+import { getApiEndpoint } from '../config/app.config';
 
 interface LicenseValidationResult {
   is_valid: boolean;
@@ -541,7 +542,7 @@ const TenantSignup = () => {
         uploadFormData.append('file', logoFile);
 
         try {
-          await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5024'}/api/uploads/tenant/${result.id}/logo`, {
+          await fetch(getApiEndpoint('/uploads/tenant/${result.id}/logo'), {
             method: 'POST',
             body: uploadFormData,
           });

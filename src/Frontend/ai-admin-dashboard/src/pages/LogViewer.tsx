@@ -7,9 +7,10 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
+import { appConfig } from '../config/app.config';
 
 // API configuration from environment
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5024';
+const API_URL = appConfig.api.baseUrl;
 
 // Helper function to parse UTC timestamps properly
 const parseUTCTimestamp = (timestamp: string): Date => {

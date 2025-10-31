@@ -247,59 +247,74 @@ async def lifespan(app: FastAPI):
             logger.error(f"❌ Failed to initialize unified chat system: {e}", exc_info=True)
             logger.warning("Continuing without unified chat system")
 
-        # Auto-load model configuration from database or fall back to smallest model
-        logger.info("Auto-loading model configuration...")
+        # CLOUD-FIRST STRATEGY: Only auto-load models if NOT in cloud-only mode
+        if v5_engine.use_cloud_inference:
+            logger.info("☁️  Cloud-first mode: Skipping local model auto-load")
+            logger.info("   System will use cloud providers for inference")
+            logger.info("   To use local models, disable cloud inference and restart")
+        else:
+            # LOCAL MODE: Auto-load model configuration from database or fall back to smallest model
+            logger.info("💻 Local mode: Auto-loading model configuration...")
 
-        # Check for persisted model configuration in database
-        persisted_config = await get_system_setting("ai_model", "active_model_config")
+            # Check for persisted model configuration in database
+            persisted_config = await get_system_setting("ai_model", "active_model_config")
 
-        if persisted_config:
-            logger.info(f"Found persisted model configuration: {persisted_config.get('model')}")
-            try:
-                success = v5_engine.load_model(
-                    model_name=persisted_config.get("model"),
-                    agent_id=persisted_config.get("agent"),
-                    personality_id=persisted_config.get("personality")
-                )
-                if success:
-                    logger.info(f"✅ Successfully loaded persisted model: {persisted_config.get('model')} with {persisted_config.get('agent')}/{persisted_config.get('personality')}")
-                else:
-                    logger.warning("Failed to load persisted model, falling back to smallest model")
-                    persisted_config = None
-            except Exception as e:
-                logger.error(f"Error loading persisted model: {e}, falling back to smallest model")
-                persisted_config = None
-
-        if not persisted_config:
-            # Fallback: Find and load smallest model
-            logger.info("No persisted model found, loading smallest available model")
-            smallest_model = None
-            smallest_size = float('inf')
-            for model_name, model_path in v5_engine.available_models.items():
+            if persisted_config:
+                logger.info(f"Found persisted model configuration: {persisted_config.get('model')}")
                 try:
-                    size_bytes = os.path.getsize(model_path)
-                    if size_bytes > 0 and size_bytes < smallest_size:
-                        smallest_size = size_bytes
-                        smallest_model = model_name
-                except:
-                    continue
+                    success = v5_engine.load_model(
+                        model_name=persisted_config.get("model"),
+                        agent_id=persisted_config.get("agent"),
+                        personality_id=persisted_config.get("personality")
+                    )
+                    if success:
+                        logger.info(f"✅ Successfully loaded persisted model: {persisted_config.get('model')} with {persisted_config.get('agent')}/{persisted_config.get('personality')}")
+                    else:
+                        logger.warning("Failed to load persisted model, falling back to smallest model")
+                        persisted_config = None
+                except Exception as e:
+                    logger.error(f"Error loading persisted model: {e}, falling back to smallest model")
+                    persisted_config = None
 
-            if smallest_model:
-                logger.info(f"Loading smallest model: {smallest_model} ({smallest_size / (1024**3):.2f} GB)")
-                # Load model with dispensary agent and marcel personality
-                success = v5_engine.load_model(
-                    model_name=smallest_model,
-                    agent_id="dispensary",
-                    personality_id="marcel"
-                )
-                if success:
-                    logger.info(f"✅ Successfully loaded {smallest_model} with dispensary/marcel configuration")
+            if not persisted_config:
+                # Fallback: Find and load smallest model
+                logger.info("No persisted model found, loading smallest available model")
+                smallest_model = None
+                smallest_size = float('inf')
+                for model_name, model_path in v5_engine.available_models.items():
+                    try:
+                        size_bytes = os.path.getsize(model_path)
+                        if size_bytes > 0 and size_bytes < smallest_size:
+                            smallest_size = size_bytes
+                            smallest_model = model_name
+                    except:
+                        continue
+
+                if smallest_model:
+                    logger.info(f"Loading smallest model: {smallest_model} ({smallest_size / (1024**3):.2f} GB)")
+                    # Load model with dispensary agent and marcel personality
+                    success = v5_engine.load_model(
+                        model_name=smallest_model,
+                        agent_id="dispensary",
+                        personality_id="marcel"
+                    )
+                    if success:
+                        logger.info(f"✅ Successfully loaded {smallest_model} with dispensary/marcel configuration")
+                    else:
+                        logger.warning(f"Failed to load default model configuration")
                 else:
-                    logger.warning(f"Failed to load default model configuration")
-            else:
-                logger.warning("No models available to auto-load")
-        
-        logger.info(f"V5 Engine ready with {len(v5_engine.available_models)} models available")
+                    logger.warning("⚠️  No local models available to auto-load")
+                    logger.warning("   Add model files to models/ folder or enable cloud inference")
+
+        # Summary
+        if v5_engine.use_cloud_inference:
+            logger.info(f"☁️  V5 Engine ready in CLOUD mode")
+            logger.info(f"   Inference: Cloud providers (Groq/OpenRouter/LLM7)")
+            logger.info(f"   Local models available: {len(v5_engine.available_models)} (for manual switch)")
+        else:
+            logger.info(f"💻 V5 Engine ready in LOCAL mode")
+            logger.info(f"   Models available: {len(v5_engine.available_models)}")
+            logger.info(f"   Current model: {v5_engine.current_model_name or 'None'}")
 
         # Register function schemas
         logger.info("Registering function schemas...")
@@ -421,72 +436,36 @@ setup_logging_with_correlation_id()
 # Add Performance Logging Middleware with correlation ID tracking
 app.add_middleware(PerformanceLoggingMiddleware, log_body=False, slow_request_threshold=1.0)
 
-# Add CORS middleware - read allowed origins from environment variable
-# Format: Comma-separated list of origins (e.g., "http://localhost:3000,https://app.vercel.app")
-# Auto-detect environment and use appropriate defaults
+# ====================================================================================
+# CORS Configuration - Environment-Driven (No Hardcoded Defaults)
+# ====================================================================================
+# REQUIRED: CORS_ALLOWED_ORIGINS - Comma or semicolon-separated list of allowed origins
+# OPTIONAL: CORS_ORIGIN_REGEX - Regex pattern for dynamic origin matching
+# All environment files (.env.test, .env.uat, .env.prod) must define these variables
+# ====================================================================================
 environment = os.getenv("ENVIRONMENT", "development")
 
-# Environment-specific CORS defaults
-environment_cors_defaults = {
-    "uat": {
-        "origins": [
-            "https://weedgo-uat-admin.pages.dev",
-            "https://weedgo-uat-commerce-headless.pages.dev",
-            "https://weedgo-uat-commerce-pot-palace.pages.dev",
-            "https://weedgo-uat-commerce-modern.pages.dev"
-        ],
-        "regex": r"https://.*\.weedgo-uat-.*\.pages\.dev"
-    },
-    "beta": {
-        "origins": [
-            "https://weedgo-beta-admin.netlify.app",
-            "https://weedgo-beta-commerce.netlify.app"
-        ],
-        "regex": r"https://.*\.netlify\.app"
-    },
-    "preprod": {
-        "origins": [
-            "https://weedgo-preprod-admin.vercel.app",
-            "https://weedgo-preprod-commerce.vercel.app"
-        ],
-        "regex": r"https://.*\.vercel\.app"
-    },
-    "development": {
-        "origins": [
-            "http://localhost:3000",
-            "http://localhost:3001",
-            "http://localhost:3002",
-            "http://localhost:3003",
-            "http://localhost:3004",
-            "http://localhost:3005",
-            "http://localhost:3006",
-            "http://localhost:3007",
-            "http://localhost:5024",
-            "http://localhost:5173",
-            "http://localhost:5174"
-        ],
-        "regex": r"https://.*\.vercel\.app"
-    }
-}
-
+# Read CORS allowed origins from environment variable (REQUIRED)
 cors_origins_str = os.getenv("CORS_ALLOWED_ORIGINS", "")
 if cors_origins_str:
-    # Support both comma and semicolon as delimiters (semicolon for Koyeb CLI compatibility)
+    # Support both comma and semicolon as delimiters (semicolon for Cloud Run YAML compatibility)
     delimiter = ";" if ";" in cors_origins_str else ","
     cors_origins = [origin.strip() for origin in cors_origins_str.split(delimiter) if origin.strip()]
-    logger.info(f"Using CORS origins from CORS_ALLOWED_ORIGINS environment variable: {cors_origins}")
+    logger.info(f"✓ CORS origins loaded from environment: {cors_origins}")
 else:
-    # Use environment-specific defaults
-    env_config = environment_cors_defaults.get(environment, environment_cors_defaults["development"])
-    cors_origins = env_config["origins"]
-    logger.info(f"Using CORS origins for {environment} environment: {cors_origins}")
+    # No fallback - CORS_ALLOWED_ORIGINS must be explicitly set in environment
+    logger.warning(
+        f"⚠️  CORS_ALLOWED_ORIGINS not set in {environment} environment! "
+        "No origins will be allowed. Please set CORS_ALLOWED_ORIGINS in your .env file."
+    )
+    cors_origins = []
 
-# Use allow_origin_regex - environment-specific or from env var
+# Read CORS origin regex from environment variable (OPTIONAL)
 cors_origin_regex = os.getenv("CORS_ORIGIN_REGEX", "")
-if not cors_origin_regex:
-    env_config = environment_cors_defaults.get(environment, environment_cors_defaults["development"])
-    cors_origin_regex = env_config["regex"]
-    logger.info(f"Using CORS regex for {environment} environment: {cors_origin_regex}")
+if cors_origin_regex:
+    logger.info(f"✓ CORS regex pattern loaded from environment: {cors_origin_regex}")
+else:
+    logger.info("ℹ️  CORS_ORIGIN_REGEX not set (optional - only needed for dynamic origin matching)")
 
 app.add_middleware(
     CORSMiddleware,
@@ -1686,9 +1665,9 @@ async def http_exception_handler(request: Request, exc: HTTPException):
         status_code=exc.status_code,
         content={"detail": exc.detail}
     )
-    # Add CORS headers to error responses
+    # Add CORS headers to error responses (use environment-configured origins)
     origin = request.headers.get("origin")
-    if origin in ["http://localhost:3003", "http://localhost:3004", "http://localhost:3000", "http://localhost:5024", "http://localhost:5173", "http://localhost:5174"]:
+    if origin and origin in cors_origins:
         response.headers["Access-Control-Allow-Origin"] = origin
         response.headers["Access-Control-Allow-Credentials"] = "true"
         response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS, PATCH"
@@ -1704,9 +1683,9 @@ async def general_exception_handler(request: Request, exc: Exception):
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content={"detail": "Internal server error"}
     )
-    # Add CORS headers to error responses
+    # Add CORS headers to error responses (use environment-configured origins)
     origin = request.headers.get("origin")
-    if origin in ["http://localhost:3003", "http://localhost:3004", "http://localhost:3000", "http://localhost:5024", "http://localhost:5173", "http://localhost:5174"]:
+    if origin and origin in cors_origins:
         response.headers["Access-Control-Allow-Origin"] = origin
         response.headers["Access-Control-Allow-Credentials"] = "true"
         response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS, PATCH"

@@ -27,6 +27,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useStoreContext } from '../contexts/StoreContext';
 import { voiceApi } from '../services/voiceApi';
 import { getApiUrl } from '../config/app.config';
+import { getWebSocketUrl } from '../utils/websocket';
 
 type RecordingState = 'idle' | 'recording' | 'processing' | 'error' | 'requesting';
 
@@ -102,7 +103,7 @@ const busyActivities = [
 ];
 
 const ChatWidget: React.FC<ChatWidgetProps> = ({
-  wsUrl = 'ws://localhost:5024/api/v1/chat/ws',
+  wsUrl = getWebSocketUrl('CHAT'),
   defaultOpen = false,
   initialPosition = 'bottom-right',
   // theme = 'auto', // Reserved for future dark mode implementation
@@ -633,7 +634,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({
       if (isOpen && user?.user_id && messages.length === 0) {
         try {
           console.log('Loading chat history for user:', user.user_id);
-          const response = await fetch(`http://localhost:5024/api/v1/chat/history/${user.user_id}?limit=20`);
+          const response = await fetch(getApiUrl(`/api/v1/chat/history/${user.user_id}?limit=20`));
 
           if (response.ok) {
             const history = await response.json();

@@ -56,8 +56,9 @@ export const Logo: React.FC<LogoProps> = ({
   };
 
   // Construct full logo URL
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || 'http://localhost:5024';
   const logoUrl = tenant?.logo_url ?
-    (tenant.logo_url.startsWith('http') ? tenant.logo_url : `http://localhost:5024${tenant.logo_url}`)
+    (tenant.logo_url.startsWith('http') ? tenant.logo_url : `${apiBaseUrl}${tenant.logo_url}`)
     : null;
 
   const [imageError, setImageError] = useState(false);
