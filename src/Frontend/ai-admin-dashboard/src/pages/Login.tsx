@@ -272,6 +272,16 @@ const Login: React.FC = () => {
                 )}
               </button>
             </div>
+
+            {/* Forgot Password Link */}
+            <div className="text-center">
+              <Link
+                to="/forgot-password"
+                className="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 hover:underline"
+              >
+                {t('auth:login.forgotPassword')}
+              </Link>
+            </div>
           </form>
           
           {/* Signup Link */}
