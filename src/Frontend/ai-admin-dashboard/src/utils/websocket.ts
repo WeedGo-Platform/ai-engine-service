@@ -6,9 +6,25 @@
 /**
  * Get the base WebSocket URL from environment variables
  * Converts HTTP(S) to WS(S) protocol
+ *
+ * Cloud-First: Requires VITE_API_URL to be set in production environments
  */
 export function getWebSocketBaseUrl(): string {
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5024';
+  // Get API URL from environment (required in production)
+  const apiUrl = import.meta.env.VITE_API_URL;
+
+  // Only fall back to localhost in development mode
+  if (!apiUrl) {
+    if (import.meta.env.DEV) {
+      console.warn('⚠️ VITE_API_URL not set, using localhost default for development');
+      return 'ws://localhost:6024';
+    }
+    throw new Error(
+      'VITE_API_URL environment variable is not set. ' +
+      'Please configure it in your .env file for your deployment environment.'
+    );
+  }
+
   return apiUrl.replace('http://', 'ws://').replace('https://', 'wss://');
 }
 

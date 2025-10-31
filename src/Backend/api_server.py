@@ -436,72 +436,36 @@ setup_logging_with_correlation_id()
 # Add Performance Logging Middleware with correlation ID tracking
 app.add_middleware(PerformanceLoggingMiddleware, log_body=False, slow_request_threshold=1.0)
 
-# Add CORS middleware - read allowed origins from environment variable
-# Format: Comma-separated list of origins (e.g., "http://localhost:3000,https://app.vercel.app")
-# Auto-detect environment and use appropriate defaults
+# ====================================================================================
+# CORS Configuration - Environment-Driven (No Hardcoded Defaults)
+# ====================================================================================
+# REQUIRED: CORS_ALLOWED_ORIGINS - Comma or semicolon-separated list of allowed origins
+# OPTIONAL: CORS_ORIGIN_REGEX - Regex pattern for dynamic origin matching
+# All environment files (.env.test, .env.uat, .env.prod) must define these variables
+# ====================================================================================
 environment = os.getenv("ENVIRONMENT", "development")
 
-# Environment-specific CORS defaults
-environment_cors_defaults = {
-    "uat": {
-        "origins": [
-            "https://weedgo-uat-admin.pages.dev",
-            "https://weedgo-uat-commerce-headless.pages.dev",
-            "https://weedgo-uat-commerce-pot-palace.pages.dev",
-            "https://weedgo-uat-commerce-modern.pages.dev"
-        ],
-        "regex": r"https://.*\.weedgo-uat-.*\.pages\.dev"
-    },
-    "beta": {
-        "origins": [
-            "https://weedgo-beta-admin.netlify.app",
-            "https://weedgo-beta-commerce.netlify.app"
-        ],
-        "regex": r"https://.*\.netlify\.app"
-    },
-    "preprod": {
-        "origins": [
-            "https://weedgo-preprod-admin.vercel.app",
-            "https://weedgo-preprod-commerce.vercel.app"
-        ],
-        "regex": r"https://.*\.vercel\.app"
-    },
-    "development": {
-        "origins": [
-            "http://localhost:3000",
-            "http://localhost:3001",
-            "http://localhost:3002",
-            "http://localhost:3003",
-            "http://localhost:3004",
-            "http://localhost:3005",
-            "http://localhost:3006",
-            "http://localhost:3007",
-            "http://localhost:5024",
-            "http://localhost:5173",
-            "http://localhost:5174"
-        ],
-        "regex": r"https://.*\.vercel\.app"
-    }
-}
-
+# Read CORS allowed origins from environment variable (REQUIRED)
 cors_origins_str = os.getenv("CORS_ALLOWED_ORIGINS", "")
 if cors_origins_str:
-    # Support both comma and semicolon as delimiters (semicolon for Koyeb CLI compatibility)
+    # Support both comma and semicolon as delimiters (semicolon for Cloud Run YAML compatibility)
     delimiter = ";" if ";" in cors_origins_str else ","
     cors_origins = [origin.strip() for origin in cors_origins_str.split(delimiter) if origin.strip()]
-    logger.info(f"Using CORS origins from CORS_ALLOWED_ORIGINS environment variable: {cors_origins}")
+    logger.info(f"✓ CORS origins loaded from environment: {cors_origins}")
 else:
-    # Use environment-specific defaults
-    env_config = environment_cors_defaults.get(environment, environment_cors_defaults["development"])
-    cors_origins = env_config["origins"]
-    logger.info(f"Using CORS origins for {environment} environment: {cors_origins}")
+    # No fallback - CORS_ALLOWED_ORIGINS must be explicitly set in environment
+    logger.warning(
+        f"⚠️  CORS_ALLOWED_ORIGINS not set in {environment} environment! "
+        "No origins will be allowed. Please set CORS_ALLOWED_ORIGINS in your .env file."
+    )
+    cors_origins = []
 
-# Use allow_origin_regex - environment-specific or from env var
+# Read CORS origin regex from environment variable (OPTIONAL)
 cors_origin_regex = os.getenv("CORS_ORIGIN_REGEX", "")
-if not cors_origin_regex:
-    env_config = environment_cors_defaults.get(environment, environment_cors_defaults["development"])
-    cors_origin_regex = env_config["regex"]
-    logger.info(f"Using CORS regex for {environment} environment: {cors_origin_regex}")
+if cors_origin_regex:
+    logger.info(f"✓ CORS regex pattern loaded from environment: {cors_origin_regex}")
+else:
+    logger.info("ℹ️  CORS_ORIGIN_REGEX not set (optional - only needed for dynamic origin matching)")
 
 app.add_middleware(
     CORSMiddleware,
@@ -1701,9 +1665,9 @@ async def http_exception_handler(request: Request, exc: HTTPException):
         status_code=exc.status_code,
         content={"detail": exc.detail}
     )
-    # Add CORS headers to error responses
+    # Add CORS headers to error responses (use environment-configured origins)
     origin = request.headers.get("origin")
-    if origin in ["http://localhost:3003", "http://localhost:3004", "http://localhost:3000", "http://localhost:5024", "http://localhost:5173", "http://localhost:5174"]:
+    if origin and origin in cors_origins:
         response.headers["Access-Control-Allow-Origin"] = origin
         response.headers["Access-Control-Allow-Credentials"] = "true"
         response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS, PATCH"
@@ -1719,9 +1683,9 @@ async def general_exception_handler(request: Request, exc: Exception):
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content={"detail": "Internal server error"}
     )
-    # Add CORS headers to error responses
+    # Add CORS headers to error responses (use environment-configured origins)
     origin = request.headers.get("origin")
-    if origin in ["http://localhost:3003", "http://localhost:3004", "http://localhost:3000", "http://localhost:5024", "http://localhost:5173", "http://localhost:5174"]:
+    if origin and origin in cors_origins:
         response.headers["Access-Control-Allow-Origin"] = origin
         response.headers["Access-Control-Allow-Credentials"] = "true"
         response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS, PATCH"

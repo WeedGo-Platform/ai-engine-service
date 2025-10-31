@@ -1,4 +1,6 @@
 // Authentication configuration
+import { appConfig } from './app.config';
+
 export const authConfig = {
   // Token refresh settings
   tokenRefresh: {
@@ -39,7 +41,7 @@ export const authConfig = {
   
   // API endpoints
   endpoints: {
-    baseUrl: import.meta.env.VITE_API_URL || 'http://localhost:5024',
+    baseUrl: appConfig.api.baseUrl,
     login: '/api/v1/auth/admin/login',  // Admin login endpoint
     logout: '/api/v1/auth/admin/logout',  // Admin logout endpoint
     refresh: '/api/v1/auth/admin/refresh',  // Admin refresh endpoint

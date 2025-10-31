@@ -225,9 +225,20 @@ redis-data/
 # PostgreSQL data
 postgres-data/
 
-# Environment specific
+# Environment files - NEVER commit files with real secrets
+# Only .env.example files should be in git
+.env
+.env.*
 .env.local
 .env.*.local
+!.env.example
+!.env.*.example
+
+# Explicitly protect environment files in all subdirectories
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.*.example
 
 # API keys and credentials
 api_keys.py

@@ -14,6 +14,7 @@ import {
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import JsonEditor from '../JsonEditor';
+import { getApiEndpoint } from '@/config/app.config';
 
 interface ConfigurationTabProps {
   token?: string;
@@ -42,7 +43,7 @@ const ConfigurationTab: React.FC<ConfigurationTabProps> = ({ token }) => {
   const fetchConfiguration = async (agent?: string, personality?: string) => {
     setIsLoadingConfig(true);
     try {
-      let url = 'http://localhost:5024/api/admin/configuration';
+      let url = getApiEndpoint('/admin/configuration');
       const params = new URLSearchParams();
       if (agent) params.append('agent', agent);
       if (personality) params.append('personality', personality);
@@ -66,7 +67,7 @@ const ConfigurationTab: React.FC<ConfigurationTabProps> = ({ token }) => {
   const fetchAgents = async () => {
     setIsLoadingAgents(true);
     try {
-      const response = await fetch('http://localhost:5024/api/admin/agents', {
+      const response = await fetch(getApiEndpoint('/admin/agents'), {
         headers: {
           'Authorization': token ? `Bearer ${token}` : ''
         }
@@ -91,7 +92,7 @@ const ConfigurationTab: React.FC<ConfigurationTabProps> = ({ token }) => {
   const fetchPersonalities = async (agentId: string) => {
     setIsLoadingPersonalities(true);
     try {
-      const response = await fetch(`http://localhost:5024/api/admin/agents/${agentId}/personalities`, {
+      const response = await fetch(getApiEndpoint(`/admin/agents/${agentId}/personalities`), {
         headers: {
           'Authorization': token ? `Bearer ${token}` : ''
         }

@@ -4,6 +4,8 @@
  * voice activity detection, and auto-send/stop functionality
  */
 
+import { getWebSocketBaseUrl } from '../utils/websocket';
+
 export interface AudioVisualizationData {
   waveform: Uint8Array;
   frequency: Uint8Array;
@@ -60,9 +62,8 @@ export class StreamingVoiceRecordingService {
   private callbacks: StreamingVoiceCallbacks = {};
 
   constructor(wsUrl?: string) {
-    // Build WebSocket URL from environment variable or use localhost as fallback
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5024';
-    const wsBaseUrl = apiUrl.replace('http://', 'ws://').replace('https://', 'wss://');
+    // Use centralized WebSocket URL builder
+    const wsBaseUrl = getWebSocketBaseUrl();
     this.wsUrl = wsUrl || `${wsBaseUrl}/voice/stream`;
   }
 

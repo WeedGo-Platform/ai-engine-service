@@ -14,7 +14,7 @@ const ChatWidgetExample: React.FC = () => {
 
       {/* Advanced Usage with All Props */}
       <ChatWidgetV2
-        wsUrl="ws://localhost:5024/chat/ws"
+        wsUrl="ws://your-api-url/chat/ws"
         defaultOpen={false}
         position="bottom-right"
         theme="auto"
@@ -47,7 +47,7 @@ const ChatWidgetExample: React.FC = () => {
  * 4. For voice features, HTTPS is required in production
  *
  * Props:
- * - wsUrl: WebSocket endpoint URL (default: ws://localhost:5024/chat/ws)
+ * - wsUrl: WebSocket endpoint URL (configured via environment variables)
  * - defaultOpen: Whether chat starts open (default: false)
  * - position: Corner position (default: bottom-right)
  * - theme: Color theme - light/dark/auto (default: auto)
