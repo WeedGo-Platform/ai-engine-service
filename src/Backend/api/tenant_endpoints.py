@@ -487,14 +487,16 @@ async def create_tenant_with_admin(
                         password=admin_user_data.get('password'),
                         first_name=admin_user_data.get('first_name', 'Admin'),
                         last_name=admin_user_data.get('last_name', 'User'),
-                        phone=request.contact_phone
+                        phone=request.contact_phone,
+                        conn=conn
                     )
 
                     # Link user to tenant with admin role
                     await user_repo.update_user_tenant(
                         user_id=created_user['id'],
                         tenant_id=tenant.id,
-                        role='tenant_admin'
+                        role='tenant_admin',
+                        conn=conn
                     )
 
                     # Add user info to response
