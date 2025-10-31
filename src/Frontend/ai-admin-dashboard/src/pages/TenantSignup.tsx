@@ -906,14 +906,14 @@ const TenantSignup = () => {
                         identifier={formData.contactEmail}
                         identifierType="email"
                         onVerified={() => {
-                          setFormData(prev => ({ ...prev, emailVerified: true }));
-                          setShowEmailVerification(false);
-                          // Clear all contact email errors
+                          // Clear error first, then update verification status
                           setErrors(prev => {
                             const newErrors = { ...prev };
                             delete newErrors.contactEmail;
                             return newErrors;
                           });
+                          setFormData(prev => ({ ...prev, emailVerified: true }));
+                          setShowEmailVerification(false);
                         }}
                         onCancel={() => setShowEmailVerification(false)}
                         onSendOTP={(identifier, type) => tenantService.sendOTP(identifier, type)}
