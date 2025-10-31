@@ -272,17 +272,17 @@ const Login: React.FC = () => {
                 )}
               </button>
             </div>
-
-            {/* Forgot Password Link */}
-            <div className="text-center">
-              <Link
-                to="/forgot-password"
-                className="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 hover:underline"
-              >
-                {t('auth:login.forgotPassword')}
-              </Link>
-            </div>
           </form>
+
+          {/* Forgot Password Link */}
+          <div className="mt-4 text-center">
+            <Link
+              to="/forgot-password"
+              className="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 hover:underline"
+            >
+              {t('auth:login.forgotPassword')}
+            </Link>
+          </div>
           
           {/* Signup Link */}
           <div className="mt-6 text-center">
