@@ -1360,42 +1360,44 @@ const TenantSignup = () => {
                     </ul>
                   </div>
 
-                  {/* Billing Cycle */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      {t('signup:tenant.subscription.billingCycle')}
-                    </label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                      <label className="flex items-center p-4 sm:p-6 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 active:scale-95 transition-all">
-                        <input
-                          type="radio"
-                          name="billingCycle"
-                          value="monthly"
-                          checked={formData.billingCycle === 'monthly'}
-                          onChange={(e) => handleInputChange('billingCycle', e.target.value)}
-                          className="mr-3 flex-shrink-0"
-                        />
-                        <div>
-                          <div className="font-medium text-gray-900 dark:text-white">{t('signup:tenant.subscription.monthly')}</div>
-                          <div className="text-sm text-gray-500 dark:text-gray-400">{t('signup:tenant.subscription.monthlyBilled')}</div>
-                        </div>
+                  {/* Billing Cycle - Only show for paid plans */}
+                  {selectedPlanInfo.price !== 0 && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        {t('signup:tenant.subscription.billingCycle')}
                       </label>
-                      <label className="flex items-center p-4 sm:p-6 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 active:scale-95 transition-all">
-                        <input
-                          type="radio"
-                          name="billingCycle"
-                          value="annual"
-                          checked={formData.billingCycle === 'annual'}
-                          onChange={(e) => handleInputChange('billingCycle', e.target.value)}
-                          className="mr-3 flex-shrink-0"
-                        />
-                        <div>
-                          <div className="font-medium text-gray-900 dark:text-white">{t('signup:tenant.subscription.annual')}</div>
-                          <div className="text-sm text-gray-500 dark:text-gray-400">{t('signup:tenant.subscription.annualSave')}</div>
-                        </div>
-                      </label>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                        <label className="flex items-center p-4 sm:p-6 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 active:scale-95 transition-all">
+                          <input
+                            type="radio"
+                            name="billingCycle"
+                            value="monthly"
+                            checked={formData.billingCycle === 'monthly'}
+                            onChange={(e) => handleInputChange('billingCycle', e.target.value)}
+                            className="mr-3 flex-shrink-0"
+                          />
+                          <div>
+                            <div className="font-medium text-gray-900 dark:text-white">{t('signup:tenant.subscription.monthly')}</div>
+                            <div className="text-sm text-gray-500 dark:text-gray-400">{t('signup:tenant.subscription.monthlyBilled')}</div>
+                          </div>
+                        </label>
+                        <label className="flex items-center p-4 sm:p-6 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 active:scale-95 transition-all">
+                          <input
+                            type="radio"
+                            name="billingCycle"
+                            value="annual"
+                            checked={formData.billingCycle === 'annual'}
+                            onChange={(e) => handleInputChange('billingCycle', e.target.value)}
+                            className="mr-3 flex-shrink-0"
+                          />
+                          <div>
+                            <div className="font-medium text-gray-900 dark:text-white">{t('signup:tenant.subscription.annual')}</div>
+                            <div className="text-sm text-gray-500 dark:text-gray-400">{t('signup:tenant.subscription.annualSave')}</div>
+                          </div>
+                        </label>
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   {/* Payment fields for non-free plans */}
                   {selectedPlanInfo.price !== 0 && (
