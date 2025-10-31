@@ -62,9 +62,9 @@ async def create_super_admin():
             await conn.execute("""
                 INSERT INTO users (
                     id, email, password_hash, first_name, last_name,
-                    role, auth_method, email_verified, created_at, updated_at
+                    role, email_verified, created_at, updated_at
                 ) VALUES (
-                    $1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW()
+                    $1, $2, $3, $4, $5, $6, $7, NOW(), NOW()
                 )
             """,
                 user_id,
@@ -73,7 +73,6 @@ async def create_super_admin():
                 'Super',
                 'Admin',
                 'super_admin',
-                'PASSWORD',
                 True  # Email already verified
             )
             
