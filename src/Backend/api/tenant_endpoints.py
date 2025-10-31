@@ -81,6 +81,7 @@ class CreateTenantRequest(BaseModel):
     logo_url: Optional[str] = Field(None, max_length=500)
     crol_number: Optional[str] = Field(None, max_length=50, description="Ontario Cannabis Retail Operating License (tenant-level)")
     crsa_license: Optional[Dict[str, Any]] = Field(None, description="CRSA license validation data for store creation")
+    auto_create_first_store: Optional[bool] = Field(False, description="Whether to auto-create first store from CRSA data")
     settings: Optional[Dict[str, Any]] = Field(default_factory=dict)
 
 
@@ -365,6 +366,24 @@ async def create_tenant_with_admin(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Admin user password is required"
             )
+        
+        # Validate email domain matches tenant website domain
+        if request.website:
+            admin_email = admin_user_data.get('email', '').lower()
+            email_domain = admin_email.split('@')[-1] if '@' in admin_email else ''
+            
+            # Extract domain from website (remove protocol, www, path, etc.)
+            website_domain = request.website.lower()
+            for prefix in ['https://', 'http://', 'www.']:
+                website_domain = website_domain.replace(prefix, '')
+            website_domain = website_domain.split('/')[0].split(':')[0]
+            
+            # Check if email domain matches website domain
+            if email_domain and website_domain and email_domain != website_domain:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"Email domain must match company website domain"
+                )
 
         # Start transaction for atomic operation
         async with pool.acquire() as conn:
@@ -425,9 +444,9 @@ async def create_tenant_with_admin(
                     )
                     logger.info(f"Recorded terms acceptance for tenant {tenant.id} by {terms_data.get('accepted_by')}")
                 
-                # Create first store from CRSA validation for Ontario tenants
+                # Create first store from CRSA validation if user opted in
                 created_store_id = None
-                if request.crsa_license and request.address:
+                if request.auto_create_first_store and request.crsa_license:
                     try:
                         # Use SAVEPOINT to allow rollback without aborting entire transaction
                         await conn.execute("SAVEPOINT store_creation")

@@ -233,7 +233,7 @@ const TenantSignup = () => {
         else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.contactEmail)) {
           newErrors.contactEmail = t('signup:validation.emailInvalid');
         } else {
-          // Validate email domain matches website domain
+          // Validate email domain matches website domain (exact match including TLD)
           const emailDomain = formData.contactEmail.split('@')[1]?.toLowerCase();
           const websiteDomain = formData.website
             .replace(/^https?:\/\//, '')
@@ -241,7 +241,8 @@ const TenantSignup = () => {
             .split('/')[0]
             .toLowerCase();
           
-          if (emailDomain && websiteDomain && !websiteDomain.includes(emailDomain) && !emailDomain.includes(websiteDomain.split('.')[0])) {
+          // Exact match required - potpalace.ca != potpalace.cc
+          if (emailDomain && websiteDomain && emailDomain !== websiteDomain) {
             newErrors.contactEmail = t('signup:validation.emailDomainMismatch', 'Email domain must match your website domain');
           }
         }

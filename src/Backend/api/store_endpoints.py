@@ -1094,7 +1094,7 @@ async def list_stores_by_tenant(
         
     except Exception as e:
         logger.error(f"Error listing stores: {e}")
-        raise HTTPException(status_code=http_http_status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to list stores")
+        raise HTTPException(status_code=http_status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to list stores")
 
 
 @router.get("/{store_id}/validate-license")

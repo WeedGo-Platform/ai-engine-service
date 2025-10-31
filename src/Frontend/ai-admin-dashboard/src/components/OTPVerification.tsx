@@ -247,7 +247,7 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({
     }
   };
 
-  const handlePaste = (e: React.ClipboardEvent) => {
+  const handlePaste = async (e: React.ClipboardEvent) => {
     e.preventDefault();
     const pastedData = e.clipboardData.getData('text').trim();
     const digits = pastedData.replace(/\D/g, '').slice(0, 6);
@@ -256,31 +256,30 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({
       const newOtp = digits.split('');
       setOtp(newOtp);
       setError(null); // Clear any existing error
+      setLoading(true); // Start loading immediately
       inputRefs.current[5]?.focus();
-      // Auto-verify after paste with the new OTP value
-      setTimeout(async () => {
-        setLoading(true);
-        try {
-          const result = await onVerifyOTP(identifier, identifierType, digits);
-          if (result.success) {
-            setSuccess(true);
-            setError(null);
-            setTimeout(() => {
-              onVerified();
-            }, 1000);
-          } else {
-            setError(result.message || t('signup:verification.verifyFailed'));
-            setOtp(['', '', '', '', '', '']);
-            inputRefs.current[0]?.focus();
-          }
-        } catch (err: any) {
-          setError(err.message || t('signup:verification.verifyError'));
+      
+      // Auto-verify immediately on paste
+      try {
+        const result = await onVerifyOTP(identifier, identifierType, digits);
+        if (result.success) {
+          setSuccess(true);
+          setError(null);
+          setTimeout(() => {
+            onVerified();
+          }, 1000);
+        } else {
+          setError(result.message || t('signup:verification.verifyFailed'));
           setOtp(['', '', '', '', '', '']);
           inputRefs.current[0]?.focus();
-        } finally {
-          setLoading(false);
         }
-      }, 100);
+      } catch (err: any) {
+        setError(err.message || t('signup:verification.verifyError'));
+        setOtp(['', '', '', '', '', '']);
+        inputRefs.current[0]?.focus();
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
