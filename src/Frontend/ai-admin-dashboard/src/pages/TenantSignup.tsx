@@ -1612,10 +1612,10 @@ const TenantSignup = () => {
               <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg p-6 text-center">
                 <CheckCircle className="w-12 h-12 text-green-600 dark:text-green-400 mx-auto mb-3" />
                 <h3 className="text-green-800 dark:text-green-300 text-xl font-semibold">
-                  🎉 Free Tier Selected
+                  {t('signup:tenant.subscription.freeTierTitle')}
                 </h3>
                 <p className="text-green-700 dark:text-green-400 mt-2">
-                  No payment required - continue to create your account!
+                  {t('signup:tenant.subscription.freeTierMessage')}
                 </p>
               </div>
             )}
@@ -1638,7 +1638,7 @@ const TenantSignup = () => {
             <div className="border-t-2 border-gray-200 dark:border-gray-700 pt-6 mt-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
                 <Shield className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400" />
-                Legal Agreements & Attestations
+                {t('signup:tenant.subscription.legalTitle')}
               </h3>
               
               <div className="space-y-4">
@@ -1657,7 +1657,7 @@ const TenantSignup = () => {
                     className="mt-1 mr-3 h-4 w-4 text-primary-600 focus:ring-primary-500 rounded flex-shrink-0"
                   />
                   <div className="text-sm">
-                    <span className="text-gray-700 dark:text-gray-300">I accept the </span>
+                    <span className="text-gray-700 dark:text-gray-300">{t('signup:tenant.subscription.termsPrefix')}</span>
                     <a 
                       href="/TERMS_OF_SERVICE.md" 
                       target="_blank" 
@@ -1665,9 +1665,9 @@ const TenantSignup = () => {
                       className="text-primary-600 dark:text-primary-400 hover:underline font-medium"
                       onClick={(e) => e.stopPropagation()}
                     >
-                      Terms of Service
+                      {t('signup:tenant.subscription.termsLink')}
                     </a>
-                    <span className="text-gray-700 dark:text-gray-300">, including AI-targeted advertising from Licensed Producers</span>
+                    <span className="text-gray-700 dark:text-gray-300">{t('signup:tenant.subscription.termsSuffix')}</span>
                   </div>
                 </label>
                 {errors.terms && (
@@ -1689,7 +1689,7 @@ const TenantSignup = () => {
                     className="mt-1 mr-3 h-4 w-4 text-primary-600 focus:ring-primary-500 rounded flex-shrink-0"
                   />
                   <div className="text-sm">
-                    <span className="text-gray-700 dark:text-gray-300">I accept the </span>
+                    <span className="text-gray-700 dark:text-gray-300">{t('signup:tenant.subscription.privacyPrefix')}</span>
                     <a 
                       href="/PRIVACY_POLICY.md" 
                       target="_blank" 
@@ -1697,9 +1697,9 @@ const TenantSignup = () => {
                       className="text-primary-600 dark:text-primary-400 hover:underline font-medium"
                       onClick={(e) => e.stopPropagation()}
                     >
-                      Privacy Policy
+                      {t('signup:tenant.subscription.privacyLink')}
                     </a>
-                    <span className="text-gray-700 dark:text-gray-300"> and consent to data collection and usage for advertising purposes</span>
+                    <span className="text-gray-700 dark:text-gray-300">{t('signup:tenant.subscription.privacySuffix')}</span>
                   </div>
                 </label>
                 {errors.privacy && (
@@ -1721,7 +1721,7 @@ const TenantSignup = () => {
                     className="mt-1 mr-3 h-4 w-4 text-primary-600 focus:ring-primary-500 rounded flex-shrink-0"
                   />
                   <div className="text-sm text-gray-700 dark:text-gray-300">
-                    <strong>I certify that all information provided in this registration is accurate, complete, and current.</strong> I understand that providing false or misleading information may result in account suspension or termination.
+                    <strong>{t('signup:tenant.subscription.accuracyTitle')}</strong>{t('signup:tenant.subscription.accuracyText')}
                   </div>
                 </label>
                 {errors.accuracy && (
@@ -1743,7 +1743,7 @@ const TenantSignup = () => {
                     className="mt-1 mr-3 h-4 w-4 text-primary-600 focus:ring-primary-500 rounded flex-shrink-0"
                   />
                   <div className="text-sm text-gray-700 dark:text-gray-300">
-                    <strong>I am duly authorized by my organization to create this account and bind the organization to these Terms.</strong> I have the legal authority to enter into agreements on behalf of the company listed above.
+                    <strong>{t('signup:tenant.subscription.authorizationTitle')}</strong>{t('signup:tenant.subscription.authorizationText')}
                   </div>
                 </label>
                 {errors.authorization && (
@@ -1755,12 +1755,12 @@ const TenantSignup = () => {
                   <div className="flex items-start">
                     <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-3 flex-shrink-0" />
                     <div className="text-sm text-blue-800 dark:text-blue-300">
-                      <p className="font-medium mb-1">Important Notice:</p>
+                      <p className="font-medium mb-1">{t('signup:tenant.subscription.noticeTitle')}</p>
                       <ul className="list-disc list-inside space-y-1 text-xs">
-                        <li>Your acceptance will be recorded with timestamp and IP address for legal compliance</li>
-                        <li>Revenue is generated through AI-targeted advertising from Licensed Producers</li>
-                        <li>Customer data will be used (anonymized) to improve product recommendations</li>
-                        <li>You must comply with all cannabis laws and regulations in your jurisdiction</li>
+                        <li>{t('signup:tenant.subscription.notice1')}</li>
+                        <li>{t('signup:tenant.subscription.notice2')}</li>
+                        <li>{t('signup:tenant.subscription.notice3')}</li>
+                        <li>{t('signup:tenant.subscription.notice4')}</li>
                       </ul>
                     </div>
                   </div>
