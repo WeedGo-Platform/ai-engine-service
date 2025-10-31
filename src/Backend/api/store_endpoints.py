@@ -2,7 +2,8 @@
 Store Management API Endpoints
 """
 
-from fastapi import APIRouter, HTTPException, Depends, Query, Header, status
+from fastapi import APIRouter, HTTPException, Depends, Query, Header
+from fastapi import status as http_status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from typing import List, Dict, Optional, Any
 from datetime import datetime, date
@@ -224,10 +225,10 @@ async def list_all_stores(
         
     except Exception as e:
         logger.error(f"Error listing all stores: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to list stores")
+        raise HTTPException(status_code=http_status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to list stores")
 
 
-@router.post("/", response_model=StoreResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/", response_model=StoreResponse, status_code=http_status.HTTP_201_CREATED)
 async def create_store(
     request: CreateStoreRequest,
     service: StoreService = Depends(get_store_service)
@@ -317,10 +318,10 @@ async def create_store(
         )
 
     except ValueError as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+        raise HTTPException(status_code=http_status.HTTP_400_BAD_REQUEST, detail=str(e))
     except Exception as e:
         logger.error(f"Error creating store: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to create store")
+        raise HTTPException(status_code=http_status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to create store")
 
 
 @router.get("/provinces", response_model=List[ProvinceTerritory])
@@ -360,7 +361,7 @@ async def get_provinces():
             ]
     except Exception as e:
         logger.error(f"Error fetching provinces: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to fetch provinces")
+        raise HTTPException(status_code=http_status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to fetch provinces")
 
 
 class ProvinceSupplierResponse(BaseModel):
@@ -395,7 +396,7 @@ async def get_store_province_supplier(
         store = await service.get_store(store_id)
         if not store:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
+                status_code=http_status.HTTP_404_NOT_FOUND,
                 detail=f"Store with ID {store_id} not found"
             )
 
@@ -429,7 +430,7 @@ async def get_store_province_supplier(
             if not row:
                 # This is a critical error - every store should have a provincial supplier
                 raise HTTPException(
-                    status_code=status.HTTP_404_NOT_FOUND,
+                    status_code=http_status.HTTP_404_NOT_FOUND,
                     detail=f"No provincial supplier found for store's province. Store: {store.name}, Province ID: {store.province_territory_id}"
                 )
 
@@ -453,7 +454,7 @@ async def get_store_province_supplier(
     except Exception as e:
         logger.error(f"Error getting province supplier for store {store_id}: {e}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status_code=http_status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to get provincial supplier: {str(e)}"
         )
 
@@ -467,7 +468,7 @@ async def get_store(
     try:
         store = await service.get_store(store_id)
         if not store:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Store not found")
+            raise HTTPException(status_code=http_status.HTTP_404_NOT_FOUND, detail="Store not found")
         
         return StoreResponse(
             id=store.id,
@@ -504,7 +505,7 @@ async def get_store(
         raise
     except Exception as e:
         logger.error(f"Error getting store: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to get store")
+        raise HTTPException(status_code=http_status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to get store")
 
 
 @router.get("/by-code/{code}", response_model=StoreResponse)
@@ -517,7 +518,7 @@ async def get_store_by_code(
         # Use DDD service layer - proper approach
         store = await service.get_store_by_code_only(code)
         if not store:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Store with code '{code}' not found")
+            raise HTTPException(status_code=http_status.HTTP_404_NOT_FOUND, detail=f"Store with code '{code}' not found")
 
         return StoreResponse(
             id=store.id,
@@ -554,7 +555,7 @@ async def get_store_by_code(
         raise
     except Exception as e:
         logger.error(f"Error getting store by code: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to get store by code")
+        raise HTTPException(status_code=http_status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to get store by code")
 
 
 @router.put("/{store_id}", response_model=StoreResponse)
@@ -622,10 +623,10 @@ async def update_store(
         )
 
     except ValueError as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+        raise HTTPException(status_code=http_status.HTTP_400_BAD_REQUEST, detail=str(e))
     except Exception as e:
         logger.error(f"Error updating store: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to update store")
+        raise HTTPException(status_code=http_status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to update store")
 
 
 @router.post("/{store_id}/suspend", response_model=StoreResponse)
@@ -670,10 +671,10 @@ async def suspend_store(
         )
 
     except ValueError as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+        raise HTTPException(status_code=http_status.HTTP_400_BAD_REQUEST, detail=str(e))
     except Exception as e:
         logger.error(f"Error suspending store: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to suspend store")
+        raise HTTPException(status_code=http_status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to suspend store")
 
 
 @router.post("/{store_id}/reactivate", response_model=StoreResponse)
@@ -717,10 +718,10 @@ async def reactivate_store(
         )
 
     except ValueError as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+        raise HTTPException(status_code=http_status.HTTP_400_BAD_REQUEST, detail=str(e))
     except Exception as e:
         logger.error(f"Error reactivating store: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to reactivate store")
+        raise HTTPException(status_code=http_status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to reactivate store")
 
 
 @router.post("/{store_id}/close", response_model=StoreResponse)
@@ -764,10 +765,10 @@ async def close_store(
         )
 
     except ValueError as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+        raise HTTPException(status_code=http_status.HTTP_400_BAD_REQUEST, detail=str(e))
     except Exception as e:
         logger.error(f"Error closing store: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to close store")
+        raise HTTPException(status_code=http_status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to close store")
 
 
 @router.get("/tenant/active", response_model=List[StoreResponse])
@@ -800,7 +801,7 @@ async def get_active_stores_by_tenant(
             
             if not user:
                 raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    status_code=http_status.HTTP_401_UNAUTHORIZED,
                     detail="User not found"
                 )
             
@@ -1017,25 +1018,25 @@ async def get_active_stores_by_tenant(
             # Provide specific error based on user role
             if user and user.get('role') == 'store_manager':
                 raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEN,
+                    status_code=http_status.HTTP_403_FORBIDDEN,
                     detail="Store managers do not have permission to view tenants. You can only access your assigned store."
                 )
             else:
                 raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEN,
+                    status_code=http_status.HTTP_403_FORBIDDEN,
                     detail=f"Access denied: Your role ({user.get('role', 'unknown')}) does not have permission for this action."
                 )
 
         # Check for validation errors
         if "validation error" in error_message.lower():
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=http_status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail=f"Data validation error: {error_message}"
             )
         
         # Generic error with more context
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
+            status_code=http_status.HTTP_500_INTERNAL_SERVER_ERROR, 
             detail=f"Failed to retrieve stores: {error_message}"
         )
 
@@ -1043,7 +1044,7 @@ async def get_active_stores_by_tenant(
 @router.get("/tenant/{tenant_id}", response_model=List[StoreResponse])
 async def list_stores_by_tenant(
     tenant_id: UUID,
-    status: Optional[StoreStatus] = Query(None),
+    filter_status: Optional[StoreStatus] = Query(None, alias="status"),
     limit: int = Query(100, ge=1, le=500),
     offset: int = Query(0, ge=0),
     service: StoreService = Depends(get_store_service)
@@ -1052,7 +1053,7 @@ async def list_stores_by_tenant(
     try:
         stores = await service.list_stores_by_tenant(
             tenant_id=tenant_id,
-            status=status,
+            status=filter_status,
             limit=limit,
             offset=offset
         )
@@ -1093,7 +1094,7 @@ async def list_stores_by_tenant(
         
     except Exception as e:
         logger.error(f"Error listing stores: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to list stores")
+        raise HTTPException(status_code=http_http_status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to list stores")
 
 
 @router.get("/{store_id}/validate-license")
@@ -1108,7 +1109,7 @@ async def validate_license(
         
     except Exception as e:
         logger.error(f"Error validating license: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to validate license")
+        raise HTTPException(status_code=http_status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to validate license")
 
 
 # =====================================================
@@ -1239,11 +1240,11 @@ async def find_nearest_stores(
         ]
         
     except ValueError as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+        raise HTTPException(status_code=http_status.HTTP_400_BAD_REQUEST, detail=str(e))
     except Exception as e:
         logger.error(f"Error finding nearest stores: {e}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
+            status_code=http_status.HTTP_500_INTERNAL_SERVER_ERROR, 
             detail="Failed to find nearest stores"
         )
 
@@ -1308,11 +1309,11 @@ async def check_delivery_availability(
         return response
         
     except ValueError as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+        raise HTTPException(status_code=http_status.HTTP_400_BAD_REQUEST, detail=str(e))
     except Exception as e:
         logger.error(f"Error checking delivery availability: {e}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
+            status_code=http_status.HTTP_500_INTERNAL_SERVER_ERROR, 
             detail="Failed to check delivery availability"
         )
 
@@ -1382,7 +1383,7 @@ async def select_store_for_session(
     except Exception as e:
         logger.error(f"Error selecting store: {e}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
+            status_code=http_status.HTTP_500_INTERNAL_SERVER_ERROR, 
             detail="Failed to select store"
         )
 
@@ -1413,7 +1414,7 @@ async def geocode_address(
         
         if not coordinates:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
+                status_code=http_status.HTTP_404_NOT_FOUND,
                 detail="Could not geocode the provided address"
             )
         
@@ -1428,7 +1429,7 @@ async def geocode_address(
     except Exception as e:
         logger.error(f"Error geocoding address: {e}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status_code=http_status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to geocode address"
         )
 

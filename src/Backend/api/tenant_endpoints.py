@@ -429,6 +429,9 @@ async def create_tenant_with_admin(
                 created_store_id = None
                 if request.crsa_license and request.address:
                     try:
+                        # Use SAVEPOINT to allow rollback without aborting entire transaction
+                        await conn.execute("SAVEPOINT store_creation")
+                        
                         crsa_data = request.crsa_license
                         
                         # Get province_territory_id for Ontario
@@ -485,7 +488,15 @@ async def create_tenant_with_admin(
                         )
                         logger.info(f"Linked CRSA {crsa_data.get('license_number')} to tenant {tenant.id}")
                         
+                        # Release SAVEPOINT on success
+                        await conn.execute("RELEASE SAVEPOINT store_creation")
+                        
                     except Exception as store_error:
+                        # Rollback to savepoint, allowing transaction to continue
+                        try:
+                            await conn.execute("ROLLBACK TO SAVEPOINT store_creation")
+                        except:
+                            pass  # Savepoint may not exist if error occurred before creation
                         logger.error(f"Failed to create store from CRSA: {store_error}")
                         # Don't fail signup, but log for manual follow-up
                         # Admin can create store manually later
