@@ -226,10 +226,12 @@ const OntarioLicenseValidator: React.FC<OntarioLicenseValidatorProps> = ({
                     />
                     <div className="flex-1">
                       <span className="text-sm font-medium text-green-800">
-                        Create <strong>{validationResult.store_name}</strong> as my first store
+                        {t('tenant.ontario.autoCreateStoreLabel').split('{storeName}')[0]}
+                        <strong>{validationResult.store_name}</strong>
+                        {t('tenant.ontario.autoCreateStoreLabel').split('{storeName}')[1]}
                       </span>
                       <p className="text-xs text-green-700 mt-1">
-                        This store will be automatically created when you complete signup. You can uncheck this to add stores manually later.
+                        {t('tenant.ontario.autoCreateStoreHelp')}
                       </p>
                     </div>
                   </label>

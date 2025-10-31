@@ -164,7 +164,9 @@
       "alreadyRegistered": "Już zarejestrowany",
       "noStoresFound": "Nie znaleziono sklepów. Spróbuj innego hasła wyszukiwania.",
       "needHelp": "Potrzebujesz pomocy?",
-      "helpText": "Twój numer licencji sprzedaży detalicznej cannabis w Ontario znajduje się w dokumentach autoryzacyjnych AGCO. Zazwyczaj zaczyna się od \"CRSA\", po którym następuje numer."
+      "helpText": "Twój numer licencji sprzedaży detalicznej cannabis w Ontario znajduje się w dokumentach autoryzacyjnych AGCO. Zazwyczaj zaczyna się od \"CRSA\", po którym następuje numer.",
+      "autoCreateStoreLabel": "Utwórz {storeName} jako mój pierwszy sklep",
+      "autoCreateStoreHelp": "Ten sklep zostanie automatycznie utworzony po zakończeniu rejestracji. Możesz odznaczyć, aby dodać sklepy ręcznie później."
     }
   },
   "review": {

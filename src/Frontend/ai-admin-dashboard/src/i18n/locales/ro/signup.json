@@ -164,7 +164,9 @@
       "alreadyRegistered": "Deja înregistrat",
       "noStoresFound": "Nu s-au găsit magazine. Încercați un alt termen de căutare.",
       "needHelp": "Aveți nevoie de ajutor?",
-      "helpText": "Numărul dvs. de licență de vânzare cu amănuntul de cannabis din Ontario poate fi găsit în documentele dvs. de autorizare AGCO. De obicei începe cu \"CRSA\" urmat de un număr."
+      "helpText": "Numărul dvs. de licență de vânzare cu amănuntul de cannabis din Ontario poate fi găsit în documentele dvs. de autorizare AGCO. De obicei începe cu \"CRSA\" urmat de un număr.",
+      "autoCreateStoreLabel": "Creează {storeName} ca primul meu magazin",
+      "autoCreateStoreHelp": "Acest magazin va fi creat automat la finalizarea înregistrării. Puteți debifa pentru a adăuga magazine manual mai târziu."
     }
   },
   "review": {

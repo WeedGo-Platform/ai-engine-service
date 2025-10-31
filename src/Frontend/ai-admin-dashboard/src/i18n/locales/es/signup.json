@@ -165,7 +165,9 @@
       "alreadyRegistered": "Ya registrado",
       "noStoresFound": "No se encontraron tiendas. Intente con un término de búsqueda diferente.",
       "needHelp": "¿Necesita ayuda?",
-      "helpText": "Su número de licencia minorista de cannabis de Ontario se puede encontrar en sus documentos de autorización de AGCO. Generalmente comienza con \"CRSA\" seguido de un número."
+      "helpText": "Su número de licencia minorista de cannabis de Ontario se puede encontrar en sus documentos de autorización de AGCO. Generalmente comienza con \"CRSA\" seguido de un número.",
+      "autoCreateStoreLabel": "Crear {storeName} como mi primera tienda",
+      "autoCreateStoreHelp": "Esta tienda se creará automáticamente al completar el registro. Puede desmarcar para agregar tiendas manualmente más tarde."
     }
   },
   "review": {

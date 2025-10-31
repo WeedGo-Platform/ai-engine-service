@@ -164,7 +164,9 @@
       "helpDetails": "kimiska ki oyôhkêmakan ayamihâwina ôma:",
       "helpCrol": "• CROL: ki OCS B2B portal (nitawihtamihk)",
       "helpCrsa": "• CRSA: AGCO oyôhkêmakan database awâsime (namôya nitawihtamihk)",
-      "helpNote": "kiskisiwin: kika pakitinên CRSA êkwa kiskinwahamaw atâwêwikamikwa îskwêyâc."
+      "helpNote": "kiskisiwin: kika pakitinên CRSA êkwa kiskinwahamaw atâwêwikamikwa îskwêyâc.",
+      "autoCreateStoreLabel": "osîhtaw {storeName} nitam ni atâwêwikamik",
+      "autoCreateStoreHelp": "oma atâwêwikamik ta-osîhtâw mêkwâc kikway ispayiw. kika pakitinên êkwa kiskinwahamaw atâwêwikamikwa îskwêyâc."
     }
   },
   "review": {

@@ -164,7 +164,9 @@
       "alreadyRegistered": "已經註冊咗",
       "noStoresFound": "搵唔到舖頭。試下其他搜尋詞。",
       "needHelp": "需要幫手？",
-      "helpText": "你嘅安大略省大麻零售牌照編號可以喺你嘅AGCO授權文件入面搵到。通常以CRSA開頭，後面跟住數字。"
+      "helpText": "你嘅安大略省大麻零售牌照編號可以喺你嘅AGCO授權文件入面搵到。通常以CRSA開頭，後面跟住數字。",
+      "autoCreateStoreLabel": "創建 {storeName} 作為我嘅第一間鋪頭",
+      "autoCreateStoreHelp": "完成註冊時會自動創建呢間鋪頭。你可以取消選擇以便稍後手動添加鋪頭。"
     }
   },
   "review": {

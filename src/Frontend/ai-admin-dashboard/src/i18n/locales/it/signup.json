@@ -164,7 +164,9 @@
       "alreadyRegistered": "Già registrato",
       "noStoresFound": "Nessun negozio trovato. Prova un termine di ricerca diverso.",
       "needHelp": "Hai bisogno di aiuto?",
-      "helpText": "Il tuo numero di licenza al dettaglio di cannabis dell'Ontario si trova nei tuoi documenti di autorizzazione AGCO. Di solito inizia con \"CRSA\" seguito da un numero."
+      "helpText": "Il tuo numero di licenza al dettaglio di cannabis dell'Ontario si trova nei tuoi documenti di autorizzazione AGCO. Di solito inizia con \"CRSA\" seguito da un numero.",
+      "autoCreateStoreLabel": "Crea {storeName} come mio primo negozio",
+      "autoCreateStoreHelp": "Questo negozio verrà creato automaticamente al completamento della registrazione. Puoi deselezionare per aggiungere negozi manualmente in seguito."
     }
   },
   "review": {

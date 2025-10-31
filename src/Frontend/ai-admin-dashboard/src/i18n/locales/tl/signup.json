@@ -164,7 +164,9 @@
       "helpDetails": "Maaari mong mahanap ang iyong mga numero ng lisensya sa:",
       "helpCrol": "• Numero ng CROL: Ang iyong OCS B2B portal (kinakailangan para lumikha ng tenant)",
       "helpCrsa": "• Numero ng CRSA: Pampublikong database ng lisensya ng AGCO (opsyonal - para sa awtomatikong pagpapatunay ng tindahan)",
-      "helpNote": "Paalala: Maaari mong laktawan ang pagpapatunay ng CRSA at magdagdag ng mga tindahan nang manu-mano mamaya."
+      "helpNote": "Paalala: Maaari mong laktawan ang pagpapatunay ng CRSA at magdagdag ng mga tindahan nang manu-mano mamaya.",
+      "autoCreateStoreLabel": "Gawing {storeName} ang aking unang tindahan",
+      "autoCreateStoreHelp": "Awtomatikong gagawin ang tindahang ito kapag nakumpleto ang signup. Maaari mong i-uncheck upang magdagdag ng mga tindahan nang manu-mano mamaya."
     }
   },
   "review": {

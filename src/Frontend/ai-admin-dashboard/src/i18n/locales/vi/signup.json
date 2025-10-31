@@ -164,7 +164,9 @@
       "alreadyRegistered": "Đã đăng ký",
       "noStoresFound": "Không tìm thấy cửa hàng. Thử từ khóa tìm kiếm khác.",
       "needHelp": "Cần giúp đỡ?",
-      "helpText": "Số giấy phép bán lẻ cần sa Ontario của bạn có thể được tìm thấy trong tài liệu ủy quyền AGCO của bạn. Nó thường bắt đầu bằng CRSA theo sau là một số."
+      "helpText": "Số giấy phép bán lẻ cần sa Ontario của bạn có thể được tìm thấy trong tài liệu ủy quyền AGCO của bạn. Nó thường bắt đầu bằng CRSA theo sau là một số.",
+      "autoCreateStoreLabel": "Tạo {storeName} làm cửa hàng đầu tiên của tôi",
+      "autoCreateStoreHelp": "Cửa hàng này sẽ được tạo tự động khi hoàn tất đăng ký. Bạn có thể bỏ chọn để thêm cửa hàng thủ công sau."
     }
   },
   "review": {

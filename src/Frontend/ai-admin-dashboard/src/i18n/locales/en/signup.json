@@ -128,7 +128,9 @@
       "alreadyRegistered": "Already Registered",
       "noStoresFound": "No stores found. Try a different search term.",
       "needHelp": "Need help?",
-      "helpText": "Your Ontario cannabis retail license number can be found on your AGCO authorization documents. It typically starts with \"CRSA\" followed by a number."
+      "helpText": "Your Ontario cannabis retail license number can be found on your AGCO authorization documents. It typically starts with \"CRSA\" followed by a number.",
+      "autoCreateStoreLabel": "Create {storeName} as my first store",
+      "autoCreateStoreHelp": "This store will be automatically created when you complete signup. You can uncheck this to add stores manually later."
     },
     "payment": {
       "cardholderName": "Cardholder Name",

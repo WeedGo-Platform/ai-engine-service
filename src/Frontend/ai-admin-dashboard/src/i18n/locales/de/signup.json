@@ -165,7 +165,9 @@
       "alreadyRegistered": "Bereits registriert",
       "noStoresFound": "Keine Läden gefunden. Versuchen Sie einen anderen Suchbegriff.",
       "needHelp": "Brauchen Sie Hilfe?",
-      "helpText": "Ihre Ontario Cannabis-Einzelhandelslizenznummer finden Sie in Ihren AGCO-Genehmigungsdokumenten. Sie beginnt normalerweise mit \"CRSA\" gefolgt von einer Nummer."
+      "helpText": "Ihre Ontario Cannabis-Einzelhandelslizenznummer finden Sie in Ihren AGCO-Genehmigungsdokumenten. Sie beginnt normalerweise mit \"CRSA\" gefolgt von einer Nummer.",
+      "autoCreateStoreLabel": "{storeName} als mein erstes Geschäft erstellen",
+      "autoCreateStoreHelp": "Dieses Geschäft wird automatisch bei Abschluss der Registrierung erstellt. Sie können dies abwählen, um Geschäfte später manuell hinzuzufügen."
     }
   },
   "review": {

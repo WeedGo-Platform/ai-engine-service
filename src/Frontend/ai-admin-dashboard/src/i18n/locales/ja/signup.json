@@ -164,7 +164,9 @@
       "alreadyRegistered": "登録済み",
       "noStoresFound": "店舗が見つかりませんでした。別の検索語を試してください。",
       "needHelp": "ヘルプが必要ですか？",
-      "helpText": "オンタリオ州大麻小売ライセンス番号は、AGCO認可文書に記載されています。通常、CRSAで始まり、その後に番号が続きます。"
+      "helpText": "オンタリオ州大麻小売ライセンス番号は、AGCO認可文書に記載されています。通常、CRSAで始まり、その後に番号が続きます。",
+      "autoCreateStoreLabel": "{storeName} を最初の店舗として作成",
+      "autoCreateStoreHelp": "この店舗は登録完了時に自動的に作成されます。チェックを外すと、後で手動で店舗を追加できます。"
     }
   },
   "review": {

@@ -164,7 +164,9 @@
       "alreadyRegistered": "Já registrado",
       "noStoresFound": "Nenhuma loja encontrada. Tente um termo de pesquisa diferente.",
       "needHelp": "Precisa de ajuda?",
-      "helpText": "Seu número de licença de varejo de cannabis de Ontário pode ser encontrado em seus documentos de autorização da AGCO. Geralmente começa com \"CRSA\" seguido de um número."
+      "helpText": "Seu número de licença de varejo de cannabis de Ontário pode ser encontrado em seus documentos de autorização da AGCO. Geralmente começa com \"CRSA\" seguido de um número.",
+      "autoCreateStoreLabel": "Criar {storeName} como minha primeira loja",
+      "autoCreateStoreHelp": "Esta loja será criada automaticamente ao concluir o cadastro. Você pode desmarcar para adicionar lojas manualmente depois."
     }
   },
   "review": {

@@ -164,7 +164,9 @@
       "helpDetails": "Waxaad ka heli kartaa nambaradahaaga shatiga:",
       "helpCrol": "• Nambarada CROL: Portal-kaaga OCS B2B (loo baahan yahay in la abuuro qanjadhada)",
       "helpCrsa": "• Nambarada CRSA: Kaydka dadweynaha ee shatiga AGCO (ikhtiyaar ah - xaqiijinta otomaatigga ah ee dukaanka)",
-      "helpNote": "Fiiro gaar ah: Waxaad ka booddhi kartaa xaqiijinta CRSA oo dukaammada si gacanta ah u dari kartaa markii dambe."
+      "helpNote": "Fiiro gaar ah: Waxaad ka booddhi kartaa xaqiijinta CRSA oo dukaammada si gacanta ah u dari kartaa markii dambe.",
+      "autoCreateStoreLabel": "Samee {storeName} dukaankayga ugu horreeya",
+      "autoCreateStoreHelp": "Dukaankan si otomaatig ah ayaa loo samayn doonaa markaad dhammaystirto isdiiwaangelinta. Waxaad ka saari kartaa calaamadda si aad u darto dukaammo gacanta markii dambe."
     }
   },
   "review": {

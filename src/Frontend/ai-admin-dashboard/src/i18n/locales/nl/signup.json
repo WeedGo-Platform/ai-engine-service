@@ -164,7 +164,9 @@
       "alreadyRegistered": "Reeds geregistreerd",
       "noStoresFound": "Geen winkels gevonden. Probeer een andere zoekterm.",
       "needHelp": "Hulp nodig?",
-      "helpText": "Uw Ontario cannabis detailhandel licentienummer staat in uw AGCO-autorisatiedocumenten. Het begint meestal met \"CRSA\" gevolgd door een nummer."
+      "helpText": "Uw Ontario cannabis detailhandel licentienummer staat in uw AGCO-autorisatiedocumenten. Het begint meestal met \"CRSA\" gevolgd door een nummer.",
+      "autoCreateStoreLabel": "{storeName} als mijn eerste winkel maken",
+      "autoCreateStoreHelp": "Deze winkel wordt automatisch aangemaakt bij het voltooien van de registratie. U kunt dit uitvinken om later handmatig winkels toe te voegen."
     }
   },
   "review": {
