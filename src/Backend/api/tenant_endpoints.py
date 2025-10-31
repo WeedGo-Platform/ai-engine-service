@@ -43,6 +43,7 @@ import os
 import logging
 import secrets
 import string
+import json
 
 from core.domain.models import TenantStatus, SubscriptionTier
 from core.services.tenant_service import TenantService
@@ -430,22 +431,30 @@ async def create_tenant_with_admin(
                     try:
                         crsa_data = request.crsa_license
                         
+                        # Build address JSONB from CRSA data
+                        store_address = {
+                            "street": crsa_data.get('address', request.address.street if request.address else ''),
+                            "city": crsa_data.get('municipality', request.address.city if request.address else ''),
+                            "province": request.address.province if request.address else 'ON',
+                            "postal_code": request.address.postal_code if request.address else '',
+                            "country": "CA"
+                        }
+                        
                         # Create store from CRSA data
                         created_store = await conn.fetchrow("""
                             INSERT INTO stores (
-                                tenant_id, name, address, city, province, postal_code,
-                                phone, status, license_number, is_primary, created_at, updated_at
+                                tenant_id, name, store_code, address, phone, 
+                                email, license_number, status, created_at, updated_at
                             ) VALUES (
-                                $1, $2, $3, $4, $5, $6, $7, 'active', $8, true, NOW(), NOW()
+                                $1, $2, $3, $4, $5, $6, $7, 'active', NOW(), NOW()
                             ) RETURNING id
                         """,
                             tenant.id,
                             crsa_data.get('store_name', request.name),
-                            crsa_data.get('address', request.address.street if request.address else ''),
-                            crsa_data.get('municipality', request.address.city if request.address else ''),
-                            request.address.province if request.address else 'ON',
-                            request.address.postal_code if request.address else '',
+                            f"{tenant.code}-MAIN",  # Store code
+                            json.dumps(store_address),  # JSONB address
                             request.contact_phone or '',
+                            request.contact_email or '',
                             crsa_data.get('license_number')
                         )
                         created_store_id = created_store['id']
