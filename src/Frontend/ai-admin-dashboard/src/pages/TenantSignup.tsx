@@ -1444,10 +1444,10 @@ const TenantSignup = () => {
                     <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg p-6 text-center">
                       <CheckCircle className="w-12 h-12 text-green-600 dark:text-green-400 mx-auto mb-3" />
                       <h3 className="text-green-800 dark:text-green-300 text-xl font-semibold">
-                        🎉 {t('signup:tenant.subscription.freeSelected')}
+                        {t('signup:tenant.subscription.freeTierTitle')}
                       </h3>
                       <p className="text-green-700 dark:text-green-400 mt-2">
-                        {t('signup:tenant.subscription.noPaymentRequired')}
+                        {t('signup:tenant.subscription.freeTierMessage')}
                       </p>
                     </div>
                   )}
