@@ -169,7 +169,7 @@
       "tryAgain": "Try Again",
       "registerAsUser": "Register as User",
       "signInInstead": "Sign In Instead",
-      "tenantExists": "The tenant code \"{{code}}\" is already registered",
+      "tenantExists": "A tenant with this domain already exists: {{name}}",
       "websiteExists": "The website \"{{website}}\" is already in use"
     }
   },

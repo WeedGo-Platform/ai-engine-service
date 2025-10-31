@@ -1140,3 +1140,46 @@ async def reset_password(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to reset password"
         )
+
+
+# ============================================================================
+# EMAIL AVAILABILITY CHECK
+# ============================================================================
+
+class CheckEmailRequest(BaseModel):
+    """Request model for checking if email exists"""
+    email: EmailStr = Field(..., description="Email address to check")
+
+
+@router.post("/check-email", status_code=status.HTTP_200_OK)
+async def check_email_exists(
+    request: CheckEmailRequest,
+    pool: asyncpg.Pool = Depends(get_db_pool)
+):
+    """
+    Check if a user with the given email already exists
+    
+    Used during signup to prevent duplicate registrations.
+    Returns whether the email is available or already taken.
+    """
+    try:
+        async with pool.acquire() as conn:
+            exists = await conn.fetchval("""
+                SELECT EXISTS(
+                    SELECT 1 FROM users 
+                    WHERE LOWER(email) = LOWER($1)
+                )
+            """, request.email)
+            
+            return {
+                "email": request.email,
+                "exists": exists,
+                "available": not exists
+            }
+            
+    except Exception as e:
+        logger.error(f"Error checking email availability: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to check email availability"
+        )

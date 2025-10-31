@@ -134,7 +134,7 @@
       "tryAgain": "重试",
       "registerAsUser": "注册为用户",
       "signInInstead": "改为登录",
-      "tenantExists": "租户代码 \"{{code}}\" 已被注册",
+      "tenantExists": "此域名的租户已存在：{{name}}",
       "websiteExists": "网站 \"{{website}}\" 已被使用"
     },
     "ontario": {

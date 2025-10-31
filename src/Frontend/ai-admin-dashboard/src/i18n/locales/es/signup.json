@@ -134,7 +134,7 @@
       "tryAgain": "Intentar de Nuevo",
       "registerAsUser": "Registrarse como Usuario",
       "signInInstead": "Iniciar Sesión",
-      "tenantExists": "El código de inquilino \"{{code}}\" ya está registrado",
+      "tenantExists": "Ya existe un inquilino con este dominio: {{name}}",
       "websiteExists": "El sitio web \"{{website}}\" ya está en uso"
     },
     "ontario": {

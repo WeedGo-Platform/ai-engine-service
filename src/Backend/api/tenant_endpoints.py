@@ -257,16 +257,28 @@ async def check_tenant_exists(
                         }
                     })
 
-            # Check by website
+            # Check by website (extract domain name for matching)
             if request.website:
-                # Normalize website URL
+                # Extract domain name (e.g., 'potpalace' from 'www.potpalace.ca' or 'https://potpalace.com')
+                import re
                 normalized_website = request.website.lower()
-                normalized_website = normalized_website.replace('https://', '').replace('http://', '').rstrip('/')
+                # Remove protocol
+                normalized_website = normalized_website.replace('https://', '').replace('http://', '')
+                # Remove www.
+                normalized_website = normalized_website.replace('www.', '')
+                # Get domain name before first dot or slash
+                domain_match = re.match(r'^([^./]+)', normalized_website)
+                domain_name = domain_match.group(1) if domain_match else normalized_website
 
                 existing_by_website = await conn.fetchrow("""
                     SELECT id, name, code, website, contact_email FROM tenants
-                    WHERE LOWER(REPLACE(REPLACE(TRIM(website), 'https://', ''), 'http://', '')) = $1
-                """, normalized_website)
+                    WHERE LOWER(
+                        SUBSTRING(
+                            REPLACE(REPLACE(REPLACE(TRIM(website), 'https://', ''), 'http://', ''), 'www.', '')
+                            FROM '^([^./]+)'
+                        )
+                    ) = $1
+                """, domain_name)
 
                 if existing_by_website:
                     conflicts.append({

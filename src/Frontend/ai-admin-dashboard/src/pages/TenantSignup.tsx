@@ -374,17 +374,66 @@ const TenantSignup = () => {
     }
   };
 
-  const nextStep = () => {
-    if (validateStep(currentStep)) {
-      let nextStepNum = currentStep + 1;
-      
-      // Auto-skip step 3 (Ontario Licensing) if province is not Ontario
-      if (nextStepNum === 3 && formData.province !== 'ON') {
-        nextStepNum = 4;
+  const nextStep = async () => {
+    if (!validateStep(currentStep)) return;
+
+    // Step 1: Check if tenant with website domain already exists
+    if (currentStep === 1 && formData.website) {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5024'}/api/tenants/check-exists`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ website: formData.website })
+        });
+
+        const data = await response.json();
+        
+        if (data.conflicts && data.conflicts.length > 0) {
+          const conflict = data.conflicts[0];
+          setErrors({
+            ...errors,
+            website: t('signup:tenant.errors.tenantExists', { 
+              name: conflict.existing_tenant.name 
+            }) || 'A tenant with this domain already exists'
+          });
+          return;
+        }
+      } catch (error) {
+        console.error('Error checking tenant existence:', error);
       }
-      
-      setCurrentStep(prev => Math.min(nextStepNum, 5));
     }
+
+    // Step 2: Check if user with email already exists (after email verification)
+    if (currentStep === 2 && formData.email && emailVerified) {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5024'}/api/v1/auth/admin/check-email`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: formData.email })
+        });
+
+        const data = await response.json();
+        
+        if (data.exists) {
+          setErrors({
+            ...errors,
+            email: t('auth:errors.emailAlreadyRegistered') || 'A user with this email already exists. Please use a different email or login instead.'
+          });
+          return;
+        }
+      } catch (error) {
+        console.error('Error checking email existence:', error);
+      }
+    }
+
+    let nextStepNum = currentStep + 1;
+    
+    // Auto-skip step 3 (Ontario Licensing) if province is not Ontario
+    if (nextStepNum === 3 && formData.province !== 'ON') {
+      nextStepNum = 4;
+    }
+    
+    setCurrentStep(prev => Math.min(nextStepNum, 5));
   };
 
   const prevStep = () => {
