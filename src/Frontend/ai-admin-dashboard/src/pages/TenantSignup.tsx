@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   ArrowLeft, ArrowRight, CheckCircle, AlertCircle, Leaf,
-  Eye, EyeOff, Shield, Loader2, UserPlus, LogIn, CheckCircle2, CreditCard
+  Eye, EyeOff, Shield, Loader2, UserPlus, LogIn, CheckCircle2, CreditCard, X
 } from 'lucide-react';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { useTranslation } from 'react-i18next';
@@ -101,6 +101,8 @@ const TenantSignup = () => {
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [accuracyAttested, setAccuracyAttested] = useState(false);
   const [authorizationAttested, setAuthorizationAttested] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   
   const [formData, setFormData] = useState<FormData>({
     companyName: '',
@@ -1660,15 +1662,17 @@ const TenantSignup = () => {
                   />
                   <div className="text-sm">
                     <span className="text-gray-700 dark:text-gray-300">{t('signup:tenant.subscription.termsPrefix')}</span>
-                    <a 
-                      href="/TERMS_OF_SERVICE.md" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setShowTermsModal(true);
+                      }}
                       className="text-primary-600 dark:text-primary-400 hover:underline font-medium"
-                      onClick={(e) => e.stopPropagation()}
                     >
                       {t('signup:tenant.subscription.termsLink')}
-                    </a>
+                    </button>
                     <span className="text-gray-700 dark:text-gray-300">{t('signup:tenant.subscription.termsSuffix')}</span>
                   </div>
                 </label>
@@ -1692,15 +1696,17 @@ const TenantSignup = () => {
                   />
                   <div className="text-sm">
                     <span className="text-gray-700 dark:text-gray-300">{t('signup:tenant.subscription.privacyPrefix')}</span>
-                    <a 
-                      href="/PRIVACY_POLICY.md" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setShowPrivacyModal(true);
+                      }}
                       className="text-primary-600 dark:text-primary-400 hover:underline font-medium"
-                      onClick={(e) => e.stopPropagation()}
                     >
                       {t('signup:tenant.subscription.privacyLink')}
-                    </a>
+                    </button>
                     <span className="text-gray-700 dark:text-gray-300">{t('signup:tenant.subscription.privacySuffix')}</span>
                   </div>
                 </label>
@@ -1964,6 +1970,88 @@ const TenantSignup = () => {
           </div>
         </div>
       </div>
+
+      {/* Terms of Service Modal */}
+      {showTermsModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 p-4" onClick={() => setShowTermsModal(false)}>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Terms of Service</h2>
+              <button
+                onClick={() => setShowTermsModal(false)}
+                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-6">
+              <iframe
+                src="/TERMS_OF_SERVICE.md"
+                className="w-full h-full min-h-[600px] border-0"
+                title="Terms of Service"
+              />
+            </div>
+            <div className="flex items-center justify-between p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={termsAccepted}
+                  onChange={(e) => setTermsAccepted(e.target.checked)}
+                  className="h-4 w-4 text-primary-600 focus:ring-primary-500 rounded"
+                />
+                <span className="text-sm text-gray-700 dark:text-gray-300">I accept the Terms of Service</span>
+              </label>
+              <button
+                onClick={() => setShowTermsModal(false)}
+                className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Privacy Policy Modal */}
+      {showPrivacyModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 p-4" onClick={() => setShowPrivacyModal(false)}>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Privacy Policy</h2>
+              <button
+                onClick={() => setShowPrivacyModal(false)}
+                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-6">
+              <iframe
+                src="/PRIVACY_POLICY.md"
+                className="w-full h-full min-h-[600px] border-0"
+                title="Privacy Policy"
+              />
+            </div>
+            <div className="flex items-center justify-between p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={privacyAccepted}
+                  onChange={(e) => setPrivacyAccepted(e.target.checked)}
+                  className="h-4 w-4 text-primary-600 focus:ring-primary-500 rounded"
+                />
+                <span className="text-sm text-gray-700 dark:text-gray-300">I accept the Privacy Policy</span>
+              </label>
+              <button
+                onClick={() => setShowPrivacyModal(false)}
+                className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
