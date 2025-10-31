@@ -1310,7 +1310,11 @@ const TenantSignup = () => {
                             onClick={() => navigate('/user-registration', {
                               state: {
                                 tenantCode: errors.existingTenant.code,
-                                tenantName: errors.existingTenant.name
+                                tenantName: errors.existingTenant.name,
+                                email: formData.contactEmail,
+                                firstName: formData.firstName,
+                                lastName: formData.lastName,
+                                phone: formData.contactPhone
                               }
                             })}
                             className="text-sm px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all transform hover:scale-105 flex items-center gap-2"
