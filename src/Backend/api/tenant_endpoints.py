@@ -356,7 +356,7 @@ async def create_tenant_with_admin(
         # Start transaction for atomic operation
         async with pool.acquire() as conn:
             async with conn.transaction():
-                # Create tenant first
+                # Create tenant first (pass connection for transaction control)
                 tenant = await service.create_tenant(
                     name=request.name,
                     code=request.code,
@@ -369,7 +369,8 @@ async def create_tenant_with_admin(
                     contact_phone=request.contact_phone,
                     website=request.website,
                     logo_url=request.logo_url,
-                    settings=request.settings
+                    settings=request.settings,
+                    conn=conn  # Pass connection for atomic transaction
                 )
                 
                 # Add CROL number for Ontario tenants
