@@ -94,6 +94,7 @@ const TenantSignup = () => {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [crsaValidation, setCrsaValidation] = useState<LicenseValidationResult | null>(null);
+  const [autoCreateStore, setAutoCreateStore] = useState(true); // Default to true
   const [showEmailVerification, setShowEmailVerification] = useState(false);
   const [showPhoneVerification, setShowPhoneVerification] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
@@ -515,8 +516,8 @@ const TenantSignup = () => {
       if (formData.province === 'ON') {
         payload.crol_number = formData.crolNumber;
         
-        // Add CRSA validation data for store creation
-        if (crsaValidation?.is_valid && crsaValidation.auto_fill_data) {
+        // Add CRSA validation data for store creation ONLY if user wants auto-create
+        if (autoCreateStore && crsaValidation?.is_valid && crsaValidation.auto_fill_data) {
           payload.crsa_license = {
             license_number: crsaValidation.license_number,
             store_name: crsaValidation.auto_fill_data.store_name,
@@ -1145,8 +1146,9 @@ const TenantSignup = () => {
               </h4>
               <OntarioLicenseValidator
                 email={formData.contactEmail}
-                onValidationSuccess={(result) => {
+                onValidationSuccess={(result, shouldAutoCreate) => {
                   setCrsaValidation(result);
+                  setAutoCreateStore(shouldAutoCreate);
                   // Clear any previous validation errors
                   if (errors.crsaValidation) {
                     const newErrors = { ...errors };

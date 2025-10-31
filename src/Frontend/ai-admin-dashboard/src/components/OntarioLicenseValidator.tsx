@@ -24,7 +24,7 @@ interface LicenseValidationResult {
 }
 
 interface OntarioLicenseValidatorProps {
-  onValidationSuccess: (data: LicenseValidationResult) => void;
+  onValidationSuccess: (data: LicenseValidationResult, autoCreateStore: boolean) => void;
   initialLicenseNumber?: string;
   email?: string;
 }
@@ -42,6 +42,7 @@ const OntarioLicenseValidator: React.FC<OntarioLicenseValidatorProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [autoCreateStore, setAutoCreateStore] = useState(true); // Default to checked
 
   const API_BASE_URL = 'http://localhost:5024';
 
@@ -67,7 +68,7 @@ const OntarioLicenseValidator: React.FC<OntarioLicenseValidatorProps> = ({
       setValidationResult(result);
 
       if (result.is_valid && result.auto_fill_data) {
-        onValidationSuccess(result);
+        onValidationSuccess(result, autoCreateStore);
       }
     } catch (error: any) {
       console.error('License validation error:', error);
@@ -204,6 +205,34 @@ const OntarioLicenseValidator: React.FC<OntarioLicenseValidatorProps> = ({
                       <p className="font-semibold text-blue-600">{validationResult.website}</p>
                     </div>
                   )}
+                </div>
+              )}
+              
+              {/* Auto-create store checkbox */}
+              {validationResult.store_name && (
+                <div className="mt-4 pt-4 border-t border-green-200">
+                  <label className="flex items-start gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={autoCreateStore}
+                      onChange={(e) => {
+                        setAutoCreateStore(e.target.checked);
+                        // Notify parent with updated preference
+                        if (validationResult.is_valid && validationResult.auto_fill_data) {
+                          onValidationSuccess(validationResult, e.target.checked);
+                        }
+                      }}
+                      className="mt-1 h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                    />
+                    <div className="flex-1">
+                      <span className="text-sm font-medium text-green-800">
+                        Create <strong>{validationResult.store_name}</strong> as my first store
+                      </span>
+                      <p className="text-xs text-green-700 mt-1">
+                        This store will be automatically created when you complete signup. You can uncheck this to add stores manually later.
+                      </p>
+                    </div>
+                  </label>
                 </div>
               )}
             </div>
