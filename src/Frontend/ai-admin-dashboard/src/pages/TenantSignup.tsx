@@ -530,7 +530,7 @@ const TenantSignup = () => {
 
 
       // Create tenant with admin user (now uses atomic signup endpoint)
-      const result = await tenantService.createTenant(payload);
+      const result = await tenantService.createTenantWithAdmin(payload);
 
       // Upload logo if provided
       if (logoFile && result?.id) {
