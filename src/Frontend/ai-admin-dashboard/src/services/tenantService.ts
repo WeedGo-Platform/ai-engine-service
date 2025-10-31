@@ -293,7 +293,8 @@ class TenantService {
       const payload = {
         identifier,
         identifier_type: identifierType,
-        purpose: 'verification'
+        purpose: 'verification',
+        create_user_if_missing: false // Don't create user during signup - will be created with full info later
       };
       
       console.log('Sending OTP request:', {
