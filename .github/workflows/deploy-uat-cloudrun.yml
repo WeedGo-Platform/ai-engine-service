@@ -26,7 +26,7 @@ jobs:
   # Build and push Docker image to Artifact Registry
   build:
     name: Build & Push Docker Image
-    runs-on: ubuntu-lauat
+    runs-on: ubuntu-latest
     outputs:
       image_tag: ${{ steps.meta.outputs.tags }}
 
@@ -78,7 +78,7 @@ jobs:
   # Deploy to Cloud Run
   deploy:
     name: Deploy to Cloud Run
-    runs-on: ubuntu-lauat
+    runs-on: ubuntu-latest
     needs: build
 
     steps:
@@ -186,7 +186,7 @@ jobs:
   # Optional: Run database migrations
   migrate:
     name: Run Database Migrations
-    runs-on: ubuntu-lauat
+    runs-on: ubuntu-latest
     needs: deploy
     if: github.event.inputs.run_migrations == 'true'
 
@@ -246,7 +246,7 @@ jobs:
   # Post-deployment notification
   notify:
     name: Send Notifications
-    runs-on: ubuntu-lauat
+    runs-on: ubuntu-latest
     needs: [build, deploy, migrate]
     if: always()
 
