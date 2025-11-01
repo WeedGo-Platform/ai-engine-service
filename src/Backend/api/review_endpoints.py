@@ -297,113 +297,113 @@ async def get_product_reviews(
     async with pool.acquire() as db:
         offset = (page - 1) * limit
 
-    # Build query with filters
-    conditions = ["cr.sku = $1", "cr.status = 'approved'"]
-    params = [sku]
-    param_count = 1
+        # Build query with filters
+        conditions = ["cr.sku = $1", "cr.status = 'approved'"]
+        params = [sku]
+        param_count = 1
 
-    if rating:
-        param_count += 1
-        conditions.append(f"cr.rating = ${param_count}")
-        params.append(rating)
+        if rating:
+            param_count += 1
+            conditions.append(f"cr.rating = ${param_count}")
+            params.append(rating)
 
-    if verified_only:
-        conditions.append("cr.is_verified_purchase = true")
+        if verified_only:
+            conditions.append("cr.is_verified_purchase = true")
 
-    # Determine sort order
-    order_by = {
-        "helpful": "cr.helpful_count DESC, cr.created_at DESC",
-        "recent": "cr.created_at DESC",
-        "rating_high": "cr.rating DESC, cr.created_at DESC",
-        "rating_low": "cr.rating ASC, cr.created_at DESC"
-    }[sort]
+        # Determine sort order
+        order_by = {
+            "helpful": "cr.helpful_count DESC, cr.created_at DESC",
+            "recent": "cr.created_at DESC",
+            "rating_high": "cr.rating DESC, cr.created_at DESC",
+            "rating_low": "cr.rating ASC, cr.created_at DESC"
+        }[sort]
 
-    query = f"""
-        SELECT
-            cr.id,
-            cr.sku,
-            cr.user_id,
-            cr.rating,
-            cr.title,
-            cr.review_text,
-            cr.is_recommended,
-            cr.is_verified_purchase,
-            cr.helpful_count,
-            cr.not_helpful_count,
-            cr.status,
-            cr.created_at,
-            cr.updated_at,
-            u.first_name,
-            u.last_name,
-            COALESCE(
-                json_agg(
-                    DISTINCT jsonb_build_object(
-                        'attribute_name', ra.attribute_name,
-                        'attribute_value', ra.attribute_value,
-                        'rating', ra.rating
-                    )
-                ) FILTER (WHERE ra.review_id IS NOT NULL),
-                '[]'::json
-            ) as attributes,
-            COALESCE(
-                json_agg(
-                    DISTINCT jsonb_build_object(
-                        'id', rm.id,
-                        'media_type', rm.media_type,
-                        'media_url', rm.media_url,
-                        'thumbnail_url', rm.thumbnail_url,
-                        'caption', rm.caption
-                    )
-                ) FILTER (WHERE rm.id IS NOT NULL),
-                '[]'::json
-            ) as media
-        FROM customer_reviews cr
-        JOIN users u ON u.id = cr.user_id
-        LEFT JOIN review_attributes ra ON ra.review_id = cr.id
-        LEFT JOIN review_media rm ON rm.review_id = cr.id
-        WHERE {' AND '.join(conditions)}
-        GROUP BY cr.id, u.first_name, u.last_name
-        ORDER BY {order_by}
-        LIMIT ${param_count + 1} OFFSET ${param_count + 2}
-    """
+        query = f"""
+            SELECT
+                cr.id,
+                cr.sku,
+                cr.user_id,
+                cr.rating,
+                cr.title,
+                cr.review_text,
+                cr.is_recommended,
+                cr.is_verified_purchase,
+                cr.helpful_count,
+                cr.not_helpful_count,
+                cr.status,
+                cr.created_at,
+                cr.updated_at,
+                u.first_name,
+                u.last_name,
+                COALESCE(
+                    json_agg(
+                        DISTINCT jsonb_build_object(
+                            'attribute_name', ra.attribute_name,
+                            'attribute_value', ra.attribute_value,
+                            'rating', ra.rating
+                        )
+                    ) FILTER (WHERE ra.review_id IS NOT NULL),
+                    '[]'::json
+                ) as attributes,
+                COALESCE(
+                    json_agg(
+                        DISTINCT jsonb_build_object(
+                            'id', rm.id,
+                            'media_type', rm.media_type,
+                            'media_url', rm.media_url,
+                            'thumbnail_url', rm.thumbnail_url,
+                            'caption', rm.caption
+                        )
+                    ) FILTER (WHERE rm.id IS NOT NULL),
+                    '[]'::json
+                ) as media
+            FROM customer_reviews cr
+            JOIN users u ON u.id = cr.user_id
+            LEFT JOIN review_attributes ra ON ra.review_id = cr.id
+            LEFT JOIN review_media rm ON rm.review_id = cr.id
+            WHERE {' AND '.join(conditions)}
+            GROUP BY cr.id, u.first_name, u.last_name
+            ORDER BY {order_by}
+            LIMIT ${param_count + 1} OFFSET ${param_count + 2}
+        """
 
-    params.extend([limit, offset])
-    rows = await db.fetch(query, *params)
+        params.extend([limit, offset])
+        rows = await db.fetch(query, *params)
 
-    reviews = []
-    for row in rows:
-        # Check if current user has voted on this review
-        user_vote = None
-        if current_user:
-            vote_query = """
-                SELECT vote_type FROM review_votes
-                WHERE review_id = $1 AND user_id = $2
-            """
-            vote = await db.fetchval(vote_query, row['id'], uuid.UUID(current_user['id']))
-            user_vote = vote
+        reviews = []
+        for row in rows:
+            # Check if current user has voted on this review
+            user_vote = None
+            if current_user:
+                vote_query = """
+                    SELECT vote_type FROM review_votes
+                    WHERE review_id = $1 AND user_id = $2
+                """
+                vote = await db.fetchval(vote_query, row['id'], uuid.UUID(current_user['id']))
+                user_vote = vote
 
-        reviews.append(ReviewResponse(
-            id=str(row['id']),
-            sku=row['sku'],
-            user_id=str(row['user_id']),
-            user_name=f"{row['first_name']} {row['last_name'][0] if row['last_name'] else ''}.",
-            order_id=None,  # Hidden for privacy
-            rating=row['rating'],
-            title=row['title'],
-            review_text=row['review_text'],
-            is_recommended=row['is_recommended'],
-            is_verified_purchase=row['is_verified_purchase'],
-            helpful_count=row['helpful_count'],
-            not_helpful_count=row['not_helpful_count'],
-            status=row['status'],
-            created_at=row['created_at'],
-            updated_at=row['updated_at'],
-            attributes=row['attributes'],
-            media=row['media'],
-            user_vote=user_vote
-        ))
+            reviews.append(ReviewResponse(
+                id=str(row['id']),
+                sku=row['sku'],
+                user_id=str(row['user_id']),
+                user_name=f"{row['first_name']} {row['last_name'][0] if row['last_name'] else ''}.",
+                order_id=None,  # Hidden for privacy
+                rating=row['rating'],
+                title=row['title'],
+                review_text=row['review_text'],
+                is_recommended=row['is_recommended'],
+                is_verified_purchase=row['is_verified_purchase'],
+                helpful_count=row['helpful_count'],
+                not_helpful_count=row['not_helpful_count'],
+                status=row['status'],
+                created_at=row['created_at'],
+                updated_at=row['updated_at'],
+                attributes=row['attributes'],
+                media=row['media'],
+                user_vote=user_vote
+            ))
 
-    return reviews
+        return reviews
 
 @router.post("/submit", response_model=ReviewResponse)
 async def submit_review(

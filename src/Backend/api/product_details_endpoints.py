@@ -287,7 +287,7 @@ async def get_product_details(
                         case_gtin,
                         each_gtin,
                         packaged_on_date,
-                        location_code
+                        location_id
                     FROM batch_tracking
                     WHERE store_id = $1 
                       AND LOWER(TRIM(sku)) = LOWER(TRIM($2))
@@ -305,7 +305,7 @@ async def get_product_details(
                         "case_gtin": batch_row["case_gtin"],
                         "each_gtin": batch_row["each_gtin"],
                         "packaged_on_date": batch_row["packaged_on_date"].isoformat() if batch_row["packaged_on_date"] else None,
-                        "location_code": batch_row["location_code"]
+                        "location_id": str(batch_row["location_id"]) if batch_row["location_id"] else None
                     })
                 
                 organized_data["batches"] = batches

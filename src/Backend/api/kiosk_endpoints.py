@@ -561,7 +561,7 @@ async def get_recommendations(
         query = """
             SELECT DISTINCT
                 i.id::text as product_id,
-                COALESCE(i.product_name, pc.product_name) as name,
+                pc.product_name as name,
                 COALESCE(i.override_price, i.retail_price) as price,
                 pc.category,
                 pc.sub_category,
