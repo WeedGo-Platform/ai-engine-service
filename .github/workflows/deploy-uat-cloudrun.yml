@@ -63,11 +63,12 @@ jobs:
           context: ./src/Backend
           file: ./src/Backend/Dockerfile
           push: true
+          platforms: linux/amd64
           tags: |
             ${{ steps.meta.outputs.tags }}
-            ${{ steps.meta.outputs.lauat }}
-          cache-from: type=registry,ref=${{ steps.meta.outputs.lauat }}
-          cache-to: type=registry,ref=${{ steps.meta.outputs.lauat }},mode=max
+            ${{ steps.meta.outputs.latest }}
+          cache-from: type=registry,ref=${{ steps.meta.outputs.latest }}
+          cache-to: type=registry,ref=${{ steps.meta.outputs.latest }},mode=max
 
       - name: Verify image
         run: |
