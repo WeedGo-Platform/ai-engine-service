@@ -62,6 +62,10 @@ class OTPVerify(BaseModel):
     identifier_type: Literal['email', 'phone'] = Field(..., description="Type of identifier")
     code: str = Field(..., min_length=4, max_length=10, description="OTP code")
     purpose: Literal['login', 'verification', 'password_reset'] = Field(default='login')
+    create_user_if_missing: bool = Field(
+        default=True,
+        description="If True, creates user if not exists. Set to False during signup to prevent premature user creation."
+    )
 
 
 class OTPResponse(BaseModel):
@@ -294,16 +298,21 @@ async def verify_otp(otp_verify: OTPVerify):
                 detail=result.get('error', 'Invalid verification code')
             )
         
-        # Get or create user
+        # Get or create user (only if create_user_if_missing is True)
         user = await get_or_create_user_by_identifier(
             otp_verify.identifier,
-            otp_verify.identifier_type
+            otp_verify.identifier_type,
+            create_if_missing=otp_verify.create_user_if_missing
         )
         
         if not user:
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Failed to create user account"
+            # User doesn't exist and create_user_if_missing is False
+            # This is expected during signup - verification is just for the identifier
+            return OTPResponse(
+                success=True,
+                message="Verification successful",
+                access_token=None,
+                user=None
             )
         
         # Update verification status

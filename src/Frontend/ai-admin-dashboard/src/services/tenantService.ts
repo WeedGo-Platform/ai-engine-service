@@ -395,7 +395,8 @@ class TenantService {
         identifier,
         identifier_type: identifierType,
         code,
-        purpose: 'verification'
+        purpose: 'verification',
+        create_user_if_missing: false // Don't create user during signup - will be created with full info later
       });
       return {
         success: true,
@@ -420,7 +421,8 @@ class TenantService {
       const response = await this.api.post('/api/v1/auth/otp/resend', {
         identifier,
         identifier_type: identifierType,
-        purpose: 'verification'
+        purpose: 'verification',
+        create_user_if_missing: false // Don't create user during signup
       });
       return {
         success: true,
