@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getApiUrl } from '../../config/app.config';
 import { ChevronLeft, Plus, Minus, Trash2, ShoppingCart } from 'lucide-react';
 import { useKiosk } from '../../contexts/KioskContext';
@@ -13,6 +14,7 @@ interface CartProps {
 }
 
 export default function Cart({ onBack, onCheckout, currentStore }: CartProps) {
+  const { t } = useTranslation(['kiosk']);
   const {
     cart,
     updateCartItem,
@@ -34,13 +36,13 @@ export default function Cart({ onBack, onCheckout, currentStore }: CartProps) {
     return (
       <div className="h-full flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 p-8">
         <ShoppingCart className="w-24 h-24 text-gray-300 dark:text-gray-600 mb-4" />
-        <h2 className="text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-2">Your Cart is Empty</h2>
-        <p className="text-gray-500 dark:text-gray-400 mb-6">Add some products to get started</p>
+        <h2 className="text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-2">{t('kiosk:cart.empty')}</h2>
+        <p className="text-gray-500 dark:text-gray-400 mb-6">{t('kiosk:cart.emptyMessage')}</p>
         <button
           onClick={onBack}
           className="px-6 py-3 bg-primary-600 dark:bg-primary-700 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 transition-colors"
         >
-          Continue Shopping
+          {t('kiosk:cart.backToBrowse')}
         </button>
       </div>
     );
@@ -58,14 +60,14 @@ export default function Cart({ onBack, onCheckout, currentStore }: CartProps) {
             >
               <ChevronLeft className="w-6 h-6" />
             </button>
-            <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Your Cart</h1>
+            <h1 className="text-2xl font-bold text-gray-800 dark:text-white">{t('kiosk:cart.title')}</h1>
             <span className="text-sm text-gray-500 dark:text-gray-400">({cartItemCount} items)</span>
           </div>
           <button
             onClick={clearCart}
             className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium"
           >
-            Clear Cart
+            {t('kiosk:cart.clearCart')}
           </button>
         </div>
       </div>
@@ -145,19 +147,19 @@ export default function Cart({ onBack, onCheckout, currentStore }: CartProps) {
 
           {/* Order Summary */}
           <div className="mt-6 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Order Summary</h3>
+            <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">{t('kiosk:cart.orderSummary')}</h3>
             <div className="space-y-2">
               <div className="flex justify-between text-gray-600 dark:text-gray-400">
-                <span>Subtotal</span>
+                <span>{t('kiosk:cart.subtotal')}</span>
                                 <span>{formatCurrency(subtotal)}</span>
               </div>
               <div className="flex justify-between text-gray-600 dark:text-gray-400">
-                <span>Tax (HST 13%)</span>
+                <span>{t('kiosk:cart.tax')}</span>
                 <span>{formatCurrency(tax)}</span>
               </div>
               <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
                 <div className="flex justify-between text-xl font-bold text-gray-900 dark:text-white">
-                  <span>Total</span>
+                  <span>{t('kiosk:cart.total')}</span>
                                     <span className="text-primary-600 dark:text-primary-400">{formatCurrency(total)}</span>
                 </div>
               </div>
@@ -168,7 +170,7 @@ export default function Cart({ onBack, onCheckout, currentStore }: CartProps) {
           {currentStore && (
             <div className="mt-4 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
               <p className="text-sm text-blue-800 dark:text-blue-300">
-                <strong>Pickup Location:</strong> {currentStore.name}
+                <strong>{t('kiosk:cart.pickupLocation')}</strong> {currentStore.name}
               </p>
               <p className="text-sm text-blue-600 dark:text-blue-400 mt-1">
                 {typeof currentStore.address === 'string'
@@ -199,13 +201,13 @@ export default function Cart({ onBack, onCheckout, currentStore }: CartProps) {
             onClick={onBack}
             className="flex-1 px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           >
-            Continue Shopping
+            {t('kiosk:cart.backToBrowse')}
           </button>
           <button
             onClick={onCheckout}
             className="flex-1 px-6 py-3 bg-primary-600 dark:bg-primary-700 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 transition-colors font-semibold"
           >
-            Proceed to Checkout
+            {t('kiosk:cart.checkout')}
           </button>
         </div>
       </div>

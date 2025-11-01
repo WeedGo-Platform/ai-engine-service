@@ -20,6 +20,7 @@
     "pickupLocation": "Pickup Location:",
     "backToBrowse": "Back to Products",
     "checkout": "Checkout",
+    "clearCart": "Clear Cart",
     "remove": "Remove"
   },
   "checkout": {
@@ -34,6 +35,8 @@
     "emailPlaceholder": "Enter your email (optional)",
     "phonePlaceholder": "Enter your phone number (optional)",
     "placeOrder": "Place Order",
+    "placeOrderWithTotal": "Place Order - Pay {{total}} at Pickup",
+    "placingOrder": "Placing Order...",
     "backToCart": "Back to Cart"
   },
   "browse": {
@@ -94,8 +97,13 @@
     "title": "Order Confirmed!",
     "orderNumber": "Order Number",
     "thankYou": "Thank you for your order",
+    "pickupReady": "Ready for Pickup",
+    "pickupLocation": "Pickup Location",
     "whatNext": "What's Next?",
-    "redirecting": "Redirecting in",
+    "step1": "Proceed to the counter",
+    "step2": "Show your order number",
+    "step3": "Collect your order",
+    "redirecting": "Returning to home in",
     "seconds": "seconds",
     "newOrder": "Start New Order",
     "returnHome": "Return to Home"

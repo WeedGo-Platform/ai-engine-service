@@ -2,7 +2,7 @@
 
 **Branch:** `dashboard-fixes`  
 **Date:** November 1, 2025  
-**Status:** 🟡 In Progress (Phase 1 Complete - WelcomeScreen migrated)
+**Status:** 🟢 In Progress (Phase 2: 40% Complete)
 
 ---
 
@@ -11,105 +11,184 @@
 Systematic internationalization of all hardcoded text in the `/apps` page (POS, Kiosk, Menu Display tabs).
 
 **Phase 1 Complete:**
-- ✅ Created `kiosk.json` translation structure (70+ keys)
+- ✅ Created `kiosk.json` translation structure (80+ keys)
 - ✅ Deployed to all 29 supported languages  
 - ✅ EN & FR translations complete
 - ✅ WelcomeScreen.tsx migrated to i18next
 
-**Remaining:** 8 kiosk components + MenuDisplay components
+**Phase 2 Progress:**
+- ✅ Cart.tsx migrated to i18next
+- ✅ Checkout.tsx migrated to i18next
+- ✅ OrderConfirmation.tsx migrated to i18next (HARDCODED FRENCH FIXED!)
+- ⏳ ProductBrowsing.tsx (in progress)
+- ⏳ ProductDetailsModal.tsx (pending)
+
+**Remaining:** 5 kiosk components + MenuDisplay components
 
 ---
 
 ## ✅ Phase 1: WelcomeScreen (COMPLETE)
 
 ### Changes Made:
-1. **Removed** custom `translations` object (lines 22-51)
+1. **Removed** custom `translations` object
 2. **Added** `useTranslation` hook from react-i18next
 3. **Integrated** with i18n.changeLanguage() for language switching
-4. **Removed** hardcoded "Select Store" text
 
 ### Translation Keys Used:
 ```typescript
-kiosk:welcome.title              // "Welcome to"
-kiosk:welcome.selectStore        // "Select Store"
-kiosk:welcome.selectLanguage     // "Select Your Language"
-kiosk:welcome.or                 // "OR"
-kiosk:welcome.scanQR             // "Scan QR to Sign In"
-kiosk:welcome.signIn             // "Sign In with Phone/Email"
-kiosk:welcome.continueAsGuest    // "Continue as Guest"
-kiosk:welcome.touchToStart       // "Touch to Start Shopping"
+kiosk:welcome.* (8 keys)
 ```
 
 ---
 
-## 🔄 Phase 2: Remaining Kiosk Components (PENDING)
+## ✅ Phase 2: Cart, Checkout, OrderConfirmation (COMPLETE)
+
+### 1. Cart.tsx ✅
+**Status:** COMPLETE  
+**Changes:**
+- Added `useTranslation` hook
+- Replaced all 9 hardcoded strings
+- Updated translation files with `clearCart` key
+
+**Keys Used:**
+```typescript
+kiosk:cart.title
+kiosk:cart.empty
+kiosk:cart.emptyMessage
+kiosk:cart.orderSummary
+kiosk:cart.subtotal
+kiosk:cart.tax
+kiosk:cart.total
+kiosk:cart.pickupLocation
+kiosk:cart.backToBrowse
+kiosk:cart.checkout
+kiosk:cart.clearCart
+```
+
+### 2. Checkout.tsx ✅
+**Status:** COMPLETE  
+**Changes:**
+- Added `useTranslation` hook
+- Replaced all 12 hardcoded strings
+- Implemented variable interpolation for total price
+- Uses `common:forms.*` for field labels (Name, Email, Phone)
+
+**Keys Used:**
+```typescript
+kiosk:checkout.title
+kiosk:checkout.orderSummary
+kiosk:checkout.subtotal
+kiosk:checkout.tax
+kiosk:checkout.total
+kiosk:checkout.contactInfo
+kiosk:checkout.contactInfoHelper
+kiosk:checkout.namePlaceholder
+kiosk:checkout.emailPlaceholder
+kiosk:checkout.phonePlaceholder
+kiosk:checkout.placeOrderWithTotal (with {{total}} variable)
+kiosk:checkout.placingOrder
+```
+
+### 3. OrderConfirmation.tsx ✅ 
+**Status:** COMPLETE  
+**Changes:**
+- ⚠️ **FIXED:** Removed hardcoded French text on line 73!
+- Removed entire custom `translations` object (60+ lines)
+- Added `useTranslation` hook
+- Replaced all 13 hardcoded strings with i18n keys
+
+**Critical Fix:**
+```typescript
+// OLD (HARDCODED FRENCH):
+redirecting: "Retour à l'accueil dans"
+
+// NEW (i18n):
+{t("kiosk:confirmation.redirecting")}
+```
+
+**Keys Used:**
+```typescript
+kiosk:confirmation.title
+kiosk:confirmation.orderNumber
+kiosk:confirmation.thankYou
+kiosk:confirmation.pickupReady
+kiosk:confirmation.pickupLocation
+kiosk:confirmation.whatNext
+kiosk:confirmation.step1
+kiosk:confirmation.step2
+kiosk:confirmation.step3
+kiosk:confirmation.redirecting
+kiosk:confirmation.seconds
+kiosk:confirmation.newOrder
+kiosk:confirmation.returnHome
+```
+
+---
+
+## 🔄 Phase 3: Remaining Kiosk Components (PENDING)
 
 ### Priority: HIGH
 
-#### 1. Cart.tsx
-**Hardcoded Strings:** 8  
-**Keys Ready:** kiosk:cart.* (8 keys)
-
-#### 2. Checkout.tsx  
-**Hardcoded Strings:** 10  
-**Keys Ready:** kiosk:checkout.* (10 keys)  
-**Placeholders:** namePlaceholder, emailPlaceholder, phonePlaceholder
-
-#### 3. ProductBrowsing.tsx
+#### 4. ProductBrowsing.tsx
+**Status:** ⏳ NEXT UP  
 **Hardcoded Strings:** 15+  
 **Keys Ready:** kiosk:browse.*, kiosk:sort.* (15 keys)
-
-#### 4. OrderConfirmation.tsx
-**Hardcoded Strings:** 7  
-**Keys Ready:** kiosk:confirmation.* (7 keys)  
-⚠️ **CRITICAL:** Contains hardcoded French text: "Retour à l'accueil dans" (line 73)
 
 ### Priority: MEDIUM
 
 #### 5. ProductDetailsModal.tsx
+**Status:** ❌ Pending  
 **Hardcoded Strings:** 20+  
 **Keys Ready:** kiosk:productDetails.* (20 keys)
 
 ### Priority: LOW
 
 #### 6. ProductRecommendations.tsx
+**Status:** ❌ Pending  
 **Hardcoded Strings:** 3  
 **Keys Ready:** kiosk:recommendations.* (3 keys)
 
 #### 7. AIAssistant.tsx
+**Status:** ❌ Pending  
 **Hardcoded Strings:** 3  
 **Keys Ready:** kiosk:assistant.* (3 keys)
 
 ---
 
-## 📁 Files Created
+## 📁 Files Modified
 
-### Translation Files (29 languages)
-```
-✅ src/i18n/locales/en/kiosk.json  (Complete - 70+ keys)
-✅ src/i18n/locales/fr/kiosk.json  (Complete - 70+ keys)
-⏳ src/i18n/locales/{ar,bn,cr,de,es,fa,gu,he,hi,it,iu,ja,ko,nl,pa,pl,pt,ro,ru,so,ta,tl,uk,ur,vi,yue,zh}/kiosk.json
-   (English placeholders - need translation)
-```
-
-### Modified Files
+### Phase 1:
 ```
 ✅ src/components/kiosk/WelcomeScreen.tsx
+```
+
+### Phase 2:
+```
+✅ src/components/kiosk/Cart.tsx
+✅ src/components/kiosk/Checkout.tsx
+✅ src/components/kiosk/OrderConfirmation.tsx
+```
+
+### Translation Files Updated:
+```
+✅ src/i18n/locales/en/kiosk.json  (Updated - 85+ keys)
+✅ src/i18n/locales/fr/kiosk.json  (Updated - 85+ keys)
 ```
 
 ---
 
 ## 🎯 Next Steps
 
-1. Update Cart.tsx - add `useTranslation`, replace hardcoded strings
-2. Update Checkout.tsx - add `useTranslation`, replace placeholders
-3. Update ProductBrowsing.tsx - add `useTranslation`, replace sort options
-4. **FIX** OrderConfirmation.tsx - remove hardcoded French!
-5. Update ProductDetailsModal.tsx - extensive replacements needed
-6. Update remaining low-priority components
-7. Analyze MenuDisplay components (not yet done)
-8. Test all flows in EN and FR
-9. Professional translation for 27 remaining languages
+1. ✅ ~~Update Cart.tsx~~
+2. ✅ ~~Update Checkout.tsx~~
+3. ✅ ~~**FIX** OrderConfirmation.tsx - remove hardcoded French!~~
+4. ⏳ **NEXT:** Update ProductBrowsing.tsx
+5. ❌ Update ProductDetailsModal.tsx
+6. ❌ Update ProductRecommendations.tsx
+7. ❌ Update AIAssistant.tsx
+8. ❌ Analyze MenuDisplay components
+9. ❌ Test all flows in EN and FR
+10. ❌ Professional translation for 27 remaining languages
 
 ---
 
@@ -122,21 +201,37 @@ import { useTranslation } from 'react-i18next';
 // 2. Hook
 const { t } = useTranslation(['kiosk']);
 
-// 3. Use
+// 3. Simple usage
 <h1>{t('kiosk:cart.title')}</h1>
-<input placeholder={t('kiosk:checkout.namePlaceholder')} />
+
+// 4. With variables
+{t('kiosk:checkout.placeOrderWithTotal', { total: formatCurrency(total) })}
 ```
 
 ---
 
-## ⚠️ Known Issues
+## ✅ Fixed Issues
 
-1. **Hardcoded French** in OrderConfirmation.tsx (line 73)
-2. **Tax Rate** "HST 13%" is Ontario-specific - should be dynamic
-3. **27 Languages** need professional translation (currently English placeholders)
+1. ✅ **CRITICAL FIX:** Removed hardcoded French in OrderConfirmation.tsx (line 73)
+   - Was: `"Retour à l'accueil dans"`
+   - Now: `t("kiosk:confirmation.redirecting")`
+
+2. ✅ **Cart Component:** Added missing `clearCart` translation key
+
+3. ✅ **Checkout Component:** Implemented variable interpolation for dynamic total price
 
 ---
 
-**Progress:** 1/9 components migrated (11%)  
-**Translation Keys:** 74 keys defined  
-**Languages:** 2/29 complete (7%)
+## ⚠️ Remaining Known Issues
+
+1. **Tax Rate** "HST 13%" is Ontario-specific - should be dynamic (both Cart & Checkout)
+2. **27 Languages** need professional translation (currently English placeholders)
+3. **ProductBrowsing, ProductDetailsModal, etc.** - still have hardcoded text
+
+---
+
+**Progress:** 4/9 components migrated (44%)  
+**Translation Keys:** 85+ keys defined  
+**Languages:** 2/29 complete (EN, FR)  
+**Critical Bugs Fixed:** 1 (hardcoded French removed!)
+

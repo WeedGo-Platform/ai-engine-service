@@ -20,6 +20,7 @@
     "pickupLocation": "Lieu de ramassage:",
     "backToBrowse": "Retour aux produits",
     "checkout": "Commander",
+    "clearCart": "Vider le panier",
     "remove": "Retirer"
   },
   "checkout": {
@@ -34,6 +35,8 @@
     "emailPlaceholder": "Entrez votre email (facultatif)",
     "phonePlaceholder": "Entrez votre numéro de téléphone (facultatif)",
     "placeOrder": "Passer la commande",
+    "placeOrderWithTotal": "Passer la commande - Payer {{total}} au ramassage",
+    "placingOrder": "Passage de la commande...",
     "backToCart": "Retour au panier"
   },
   "browse": {
@@ -94,8 +97,13 @@
     "title": "Commande confirmée!",
     "orderNumber": "Numéro de commande",
     "thankYou": "Merci pour votre commande",
+    "pickupReady": "Prêt pour le ramassage",
+    "pickupLocation": "Lieu de ramassage",
     "whatNext": "Et après?",
-    "redirecting": "Redirection dans",
+    "step1": "Rendez-vous au comptoir",
+    "step2": "Montrez votre numéro de commande",
+    "step3": "Récupérez votre commande",
+    "redirecting": "Retour à l'accueil dans",
     "seconds": "secondes",
     "newOrder": "Nouvelle commande",
     "returnHome": "Retour à l'accueil"

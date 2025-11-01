@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getApiUrl } from '../../config/app.config';
 import { ChevronLeft, ShoppingBag, Loader2, AlertCircle, User, Mail, Phone } from 'lucide-react';
 import { useKiosk } from '../../contexts/KioskContext';
@@ -12,6 +13,7 @@ interface CheckoutProps {
 }
 
 export default function Checkout({ onBack, onComplete, currentStore }: CheckoutProps) {
+  const { t } = useTranslation(['kiosk']);
   const {
     cart,
     cartTotal,
@@ -101,7 +103,7 @@ export default function Checkout({ onBack, onComplete, currentStore }: CheckoutP
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Complete Your Order</h1>
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">{t('kiosk:checkout.title')}</h1>
         </div>
       </div>
 
@@ -111,7 +113,7 @@ export default function Checkout({ onBack, onComplete, currentStore }: CheckoutP
 
           {/* Order Summary */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Order Summary</h3>
+            <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">{t('kiosk:checkout.orderSummary')}</h3>
 
             {/* Items */}
             <div className="space-y-3 mb-4">
@@ -131,15 +133,15 @@ export default function Checkout({ onBack, onComplete, currentStore }: CheckoutP
             {/* Totals */}
             <div className="border-t border-gray-200 dark:border-gray-700 pt-4 space-y-2">
               <div className="flex justify-between text-gray-600 dark:text-gray-400">
-                <span>Subtotal</span>
+                <span>{t('kiosk:checkout.subtotal')}</span>
                 <span>{formatCurrency(subtotal)}</span>
               </div>
               <div className="flex justify-between text-gray-600 dark:text-gray-400">
-                <span>Tax (HST 13%)</span>
+                <span>{t('kiosk:checkout.tax')}</span>
                 <span>{formatCurrency(tax)}</span>
               </div>
               <div className="flex justify-between text-xl font-bold pt-2 border-t border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
-                <span>Total</span>
+                <span>{t('kiosk:checkout.total')}</span>
                 <span className="text-primary-600 dark:text-primary-400">{formatCurrency(total)}</span>
               </div>
             </div>
@@ -147,21 +149,21 @@ export default function Checkout({ onBack, onComplete, currentStore }: CheckoutP
 
           {/* Optional Customer Info */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Contact Information</h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Optional - Help us notify you when your order is ready</p>
+            <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">{t('kiosk:checkout.contactInfo')}</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{t('kiosk:checkout.contactInfoHelper')}</p>
 
             <div className="space-y-4">
               {/* Name Field */}
               <div>
                 <label className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   <User className="w-4 h-4 mr-2" />
-                  Name
+                  {t('common:forms.name')}
                 </label>
                 <input
                   type="text"
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
-                  placeholder="Enter your name (optional)"
+                  placeholder={t('kiosk:checkout.namePlaceholder')}
                   className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-primary-500 dark:focus:border-primary-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                   disabled={isProcessing}
                 />
@@ -171,13 +173,13 @@ export default function Checkout({ onBack, onComplete, currentStore }: CheckoutP
               <div>
                 <label className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   <Mail className="w-4 h-4 mr-2" />
-                  Email
+                  {t('common:forms.email')}
                 </label>
                 <input
                   type="email"
                   value={customerEmail}
                   onChange={(e) => setCustomerEmail(e.target.value)}
-                  placeholder="Enter your email (optional)"
+                  placeholder={t('kiosk:checkout.emailPlaceholder')}
                   className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-primary-500 dark:focus:border-primary-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                   disabled={isProcessing}
                 />
@@ -187,13 +189,13 @@ export default function Checkout({ onBack, onComplete, currentStore }: CheckoutP
               <div>
                 <label className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   <Phone className="w-4 h-4 mr-2" />
-                  Phone
+                  {t('common:forms.phone')}
                 </label>
                 <input
                   type="tel"
                   value={customerPhone}
                   onChange={(e) => setCustomerPhone(e.target.value)}
-                  placeholder="Enter your phone number (optional)"
+                  placeholder={t('kiosk:checkout.phonePlaceholder')}
                   className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-primary-500 dark:focus:border-primary-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                   disabled={isProcessing}
                 />
@@ -248,12 +250,12 @@ export default function Checkout({ onBack, onComplete, currentStore }: CheckoutP
             {isProcessing ? (
               <>
                 <Loader2 className="w-6 h-6 animate-spin" />
-                Placing Order...
+                {t('kiosk:checkout.placingOrder')}
               </>
             ) : (
               <>
                 <ShoppingBag className="w-6 h-6" />
-                Place Order - Pay {formatCurrency(total)} at Pickup
+                {t('kiosk:checkout.placeOrderWithTotal', { total: formatCurrency(total) })}
               </>
             )}
           </button>
