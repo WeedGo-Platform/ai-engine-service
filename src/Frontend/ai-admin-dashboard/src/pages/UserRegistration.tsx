@@ -3,12 +3,13 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Building2, User, Mail, Lock, Phone, AlertCircle, CheckCircle, Shield, Eye, EyeOff } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import tenantService from '../services/tenantService';
+import { getApiEndpoint } from '../config/app.config';
 
 interface LocationState {
   tenantCode?: string;
   tenantName?: string;
   tenantId?: string;
-  contactEmail?: string;
+  email?: string;
   firstName?: string;
   lastName?: string;
   phone?: string;
@@ -36,7 +37,7 @@ const UserRegistration = () => {
   const [formData, setFormData] = useState<FormData>({
     firstName: state?.firstName || '',
     lastName: state?.lastName || '',
-    email: state?.contactEmail || '',
+    email: state?.email || '',
     phone: state?.phone || '',
     password: '',
     confirmPassword: ''
@@ -156,7 +157,7 @@ const UserRegistration = () => {
     
     try {
       // Create user through the backend API
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5024'}/api/users/register`, {
+      const response = await fetch(getApiEndpoint('/users/register'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -331,7 +332,10 @@ const UserRegistration = () => {
                 type="tel"
                 value={formData.phone}
                 onChange={(e) => handleInputChange('phone', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                readOnly={!!state?.phone}
+                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                  state?.phone ? 'bg-gray-50 border-gray-200 cursor-not-allowed' : 'border-gray-200'
+                }`}
                 placeholder={t('signup:userRegistration.phonePlaceholder')}
               />
             </div>

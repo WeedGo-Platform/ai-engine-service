@@ -1,8 +1,9 @@
 import React, { useState, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   ArrowLeft, ArrowRight, CheckCircle, AlertCircle, Leaf,
-  Eye, EyeOff, Shield, Loader2, UserPlus, LogIn, CheckCircle2, CreditCard
+  Eye, EyeOff, Shield, Loader2, UserPlus, LogIn, CheckCircle2, CreditCard, X
 } from 'lucide-react';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +13,7 @@ import AddressAutocomplete, { AddressComponents } from '../components/AddressAut
 import OTPVerification from '../components/OTPVerification';
 import ErrorBoundary from '../components/ErrorBoundary';
 import '../styles/signup-animations.css';
+import { getApiEndpoint } from '../config/app.config';
 
 interface LicenseValidationResult {
   is_valid: boolean;
@@ -94,12 +96,15 @@ const TenantSignup = () => {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [crsaValidation, setCrsaValidation] = useState<LicenseValidationResult | null>(null);
+  const [autoCreateStore, setAutoCreateStore] = useState(true); // Default to true
   const [showEmailVerification, setShowEmailVerification] = useState(false);
   const [showPhoneVerification, setShowPhoneVerification] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [accuracyAttested, setAccuracyAttested] = useState(false);
   const [authorizationAttested, setAuthorizationAttested] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   
   const [formData, setFormData] = useState<FormData>({
     companyName: '',
@@ -228,6 +233,19 @@ const TenantSignup = () => {
         if (!formData.contactEmail.trim()) newErrors.contactEmail = t('signup:validation.emailRequired');
         else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.contactEmail)) {
           newErrors.contactEmail = t('signup:validation.emailInvalid');
+        } else {
+          // Validate email domain matches website domain (exact match including TLD)
+          const emailDomain = formData.contactEmail.split('@')[1]?.toLowerCase();
+          const websiteDomain = formData.website
+            .replace(/^https?:\/\//, '')
+            .replace(/^www\./, '')
+            .split('/')[0]
+            .toLowerCase();
+          
+          // Exact match required - potpalace.ca != potpalace.cc
+          if (emailDomain && websiteDomain && emailDomain !== websiteDomain) {
+            newErrors.contactEmail = t('signup:validation.emailDomainMismatch', 'Email domain must match your website domain');
+          }
         }
         // Require email verification
         if (!formData.emailVerified) {
@@ -370,17 +388,66 @@ const TenantSignup = () => {
     }
   };
 
-  const nextStep = () => {
-    if (validateStep(currentStep)) {
-      let nextStepNum = currentStep + 1;
-      
-      // Auto-skip step 3 (Ontario Licensing) if province is not Ontario
-      if (nextStepNum === 3 && formData.province !== 'ON') {
-        nextStepNum = 4;
+  const nextStep = async () => {
+    if (!validateStep(currentStep)) return;
+
+    // Step 1: Check if tenant with website domain already exists
+    if (currentStep === 1 && formData.website) {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5024'}/api/tenants/check-exists`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ website: formData.website })
+        });
+
+        const data = await response.json();
+        
+        if (data.conflicts && data.conflicts.length > 0) {
+          const conflict = data.conflicts[0];
+          setErrors({
+            ...errors,
+            website: t('signup:tenant.errors.tenantExists', { 
+              name: conflict.existing_tenant.name 
+            }) || 'A tenant with this domain already exists'
+          });
+          return;
+        }
+      } catch (error) {
+        console.error('Error checking tenant existence:', error);
       }
-      
-      setCurrentStep(prev => Math.min(nextStepNum, 5));
     }
+
+    // Step 2: Check if user with email already exists (after email verification)
+    if (currentStep === 2 && formData.email && emailVerified) {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5024'}/api/v1/auth/admin/check-email`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: formData.email })
+        });
+
+        const data = await response.json();
+        
+        if (data.exists) {
+          setErrors({
+            ...errors,
+            email: t('auth:errors.emailAlreadyRegistered') || 'A user with this email already exists. Please use a different email or login instead.'
+          });
+          return;
+        }
+      } catch (error) {
+        console.error('Error checking email existence:', error);
+      }
+    }
+
+    let nextStepNum = currentStep + 1;
+    
+    // Auto-skip step 3 (Ontario Licensing) if province is not Ontario
+    if (nextStepNum === 3 && formData.province !== 'ON') {
+      nextStepNum = 4;
+    }
+    
+    setCurrentStep(prev => Math.min(nextStepNum, 5));
   };
 
   const prevStep = () => {
@@ -515,8 +582,8 @@ const TenantSignup = () => {
       if (formData.province === 'ON') {
         payload.crol_number = formData.crolNumber;
         
-        // Add CRSA validation data for store creation
-        if (crsaValidation?.is_valid && crsaValidation.auto_fill_data) {
+        // Add CRSA validation data for store creation ONLY if user wants auto-create
+        if (autoCreateStore && crsaValidation?.is_valid && crsaValidation.auto_fill_data) {
           payload.crsa_license = {
             license_number: crsaValidation.license_number,
             store_name: crsaValidation.auto_fill_data.store_name,
@@ -530,7 +597,7 @@ const TenantSignup = () => {
 
 
       // Create tenant with admin user (now uses atomic signup endpoint)
-      const result = await tenantService.createTenant(payload);
+      const result = await tenantService.createTenantWithAdmin(payload);
 
       // Upload logo if provided
       if (logoFile && result?.id) {
@@ -541,7 +608,7 @@ const TenantSignup = () => {
         uploadFormData.append('file', logoFile);
 
         try {
-          await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5024'}/api/uploads/tenant/${result.id}/logo`, {
+          await fetch(getApiEndpoint('/uploads/tenant/${result.id}/logo'), {
             method: 'POST',
             body: uploadFormData,
           });
@@ -862,8 +929,8 @@ const TenantSignup = () => {
                       }}
                       disabled={showEmailVerification}
                       className={`flex-1 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors ${
-                        errors.contactEmail ? 'border-red-500 dark:border-red-400' : 
                         formData.emailVerified ? 'border-green-500 dark:border-green-400' :
+                        errors.contactEmail ? 'border-red-500 dark:border-red-400' : 
                         'border-gray-200 dark:border-gray-600'
                       } ${showEmailVerification ? 'opacity-60' : ''}`}
                     />
@@ -902,13 +969,14 @@ const TenantSignup = () => {
                         identifier={formData.contactEmail}
                         identifierType="email"
                         onVerified={() => {
-                          setFormData(prev => ({ ...prev, emailVerified: true }));
-                          setShowEmailVerification(false);
+                          // Clear error first, then update verification status
                           setErrors(prev => {
                             const newErrors = { ...prev };
                             delete newErrors.contactEmail;
                             return newErrors;
                           });
+                          setFormData(prev => ({ ...prev, emailVerified: true }));
+                          setShowEmailVerification(false);
                         }}
                         onCancel={() => setShowEmailVerification(false)}
                         onSendOTP={(identifier, type) => tenantService.sendOTP(identifier, type)}
@@ -1041,7 +1109,7 @@ const TenantSignup = () => {
                 <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.street}</p>
               )}
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                💡 Start typing to see address suggestions - city and postal code will auto-fill
+                {t('signup:tenant.contactInfo.addressAutocompleteHint')}
               </p>
             </div>
 
@@ -1060,7 +1128,7 @@ const TenantSignup = () => {
                 {errors.city && (
                   <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.city}</p>
                 )}
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Auto-filled</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{t('signup:tenant.contactInfo.autoFilled')}</p>
               </div>
 
               <div>
@@ -1094,7 +1162,7 @@ const TenantSignup = () => {
                 {errors.postalCode && (
                   <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.postalCode}</p>
                 )}
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Auto-filled</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{t('signup:tenant.contactInfo.autoFilled')}</p>
               </div>
             </div>
           </div>
@@ -1109,18 +1177,17 @@ const TenantSignup = () => {
           <div className="space-y-5 sm:space-y-7">
             <div>
               <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-2 sm:mb-3">
-                Ontario Cannabis Licensing
+                {t('signup:tenant.ontario.title')}
               </h3>
               <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
-                Required for Ontario cannabis retailers. CROL is your tenant-level operating license, 
-                CRSA is your store-level retail authorization.
+                {t('signup:tenant.ontario.description')}
               </p>
             </div>
 
             {/* CROL Number Input */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                CROL Number (Cannabis Retail Operating License) *
+                {t('signup:tenant.ontario.crolLabel')}
               </label>
               <input
                 type="text"
@@ -1129,25 +1196,26 @@ const TenantSignup = () => {
                 className={`w-full px-4 py-3 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-primary-500 transition-colors ${
                   errors.crolNumber ? 'border-red-500 dark:border-red-400' : 'border-gray-200 dark:border-gray-600'
                 }`}
-                placeholder="Enter your OCS CROL number"
+                placeholder={t('signup:tenant.ontario.crolPlaceholder')}
               />
               {errors.crolNumber && (
                 <p className="mt-1 text-sm text-danger-600 dark:text-danger-400">{errors.crolNumber}</p>
               )}
               <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                Your tenant-level OCS operating license number
+                {t('signup:tenant.ontario.crolHelpText')}
               </p>
             </div>
 
             {/* CRSA Validator */}
             <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 sm:p-8">
               <h4 className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white mb-4 sm:mb-5">
-                CRSA Validation (Cannabis Retail Store Authorization)
+                {t('signup:tenant.ontario.crsaTitle')}
               </h4>
               <OntarioLicenseValidator
                 email={formData.contactEmail}
-                onValidationSuccess={(result) => {
+                onValidationSuccess={(result, shouldAutoCreate) => {
                   setCrsaValidation(result);
+                  setAutoCreateStore(shouldAutoCreate);
                   // Clear any previous validation errors
                   if (errors.crsaValidation) {
                     const newErrors = { ...errors };
@@ -1166,8 +1234,7 @@ const TenantSignup = () => {
               {crsaValidation?.is_valid && crsaValidation?.verification_tier === 'auto_approved' && (
                 <div className="mt-4 p-4 bg-green-50 dark:bg-green-900/20 border-2 border-green-500 dark:border-green-400 rounded-lg">
                   <p className="text-sm text-green-700 dark:text-green-400 font-semibold">
-                    ✓ Domain Verified - Your email domain matches the CRSA website. 
-                    Your first store will be created automatically from this license.
+                    {t('signup:tenant.ontario.domainVerifiedSuccess')}
                   </p>
                 </div>
               )}
@@ -1306,7 +1373,11 @@ const TenantSignup = () => {
                             onClick={() => navigate('/user-registration', {
                               state: {
                                 tenantCode: errors.existingTenant.code,
-                                tenantName: errors.existingTenant.name
+                                tenantName: errors.existingTenant.name,
+                                email: formData.contactEmail,
+                                firstName: formData.firstName,
+                                lastName: formData.lastName,
+                                phone: formData.contactPhone
                               }
                             })}
                             className="text-sm px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all transform hover:scale-105 flex items-center gap-2"
@@ -1356,42 +1427,44 @@ const TenantSignup = () => {
                     </ul>
                   </div>
 
-                  {/* Billing Cycle */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      {t('signup:tenant.subscription.billingCycle')}
-                    </label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                      <label className="flex items-center p-4 sm:p-6 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 active:scale-95 transition-all">
-                        <input
-                          type="radio"
-                          name="billingCycle"
-                          value="monthly"
-                          checked={formData.billingCycle === 'monthly'}
-                          onChange={(e) => handleInputChange('billingCycle', e.target.value)}
-                          className="mr-3 flex-shrink-0"
-                        />
-                        <div>
-                          <div className="font-medium text-gray-900 dark:text-white">{t('signup:tenant.subscription.monthly')}</div>
-                          <div className="text-sm text-gray-500 dark:text-gray-400">{t('signup:tenant.subscription.monthlyBilled')}</div>
-                        </div>
+                  {/* Billing Cycle - Only show for paid plans */}
+                  {selectedPlanInfo.price !== 0 && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        {t('signup:tenant.subscription.billingCycle')}
                       </label>
-                      <label className="flex items-center p-4 sm:p-6 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 active:scale-95 transition-all">
-                        <input
-                          type="radio"
-                          name="billingCycle"
-                          value="annual"
-                          checked={formData.billingCycle === 'annual'}
-                          onChange={(e) => handleInputChange('billingCycle', e.target.value)}
-                          className="mr-3 flex-shrink-0"
-                        />
-                        <div>
-                          <div className="font-medium text-gray-900 dark:text-white">{t('signup:tenant.subscription.annual')}</div>
-                          <div className="text-sm text-gray-500 dark:text-gray-400">{t('signup:tenant.subscription.annualSave')}</div>
-                        </div>
-                      </label>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                        <label className="flex items-center p-4 sm:p-6 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 active:scale-95 transition-all">
+                          <input
+                            type="radio"
+                            name="billingCycle"
+                            value="monthly"
+                            checked={formData.billingCycle === 'monthly'}
+                            onChange={(e) => handleInputChange('billingCycle', e.target.value)}
+                            className="mr-3 flex-shrink-0"
+                          />
+                          <div>
+                            <div className="font-medium text-gray-900 dark:text-white">{t('signup:tenant.subscription.monthly')}</div>
+                            <div className="text-sm text-gray-500 dark:text-gray-400">{t('signup:tenant.subscription.monthlyBilled')}</div>
+                          </div>
+                        </label>
+                        <label className="flex items-center p-4 sm:p-6 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 active:scale-95 transition-all">
+                          <input
+                            type="radio"
+                            name="billingCycle"
+                            value="annual"
+                            checked={formData.billingCycle === 'annual'}
+                            onChange={(e) => handleInputChange('billingCycle', e.target.value)}
+                            className="mr-3 flex-shrink-0"
+                          />
+                          <div>
+                            <div className="font-medium text-gray-900 dark:text-white">{t('signup:tenant.subscription.annual')}</div>
+                            <div className="text-sm text-gray-500 dark:text-gray-400">{t('signup:tenant.subscription.annualSave')}</div>
+                          </div>
+                        </label>
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   {/* Payment fields for non-free plans */}
                   {selectedPlanInfo.price !== 0 && (
@@ -1446,10 +1519,10 @@ const TenantSignup = () => {
                     <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg p-6 text-center">
                       <CheckCircle className="w-12 h-12 text-green-600 dark:text-green-400 mx-auto mb-3" />
                       <h3 className="text-green-800 dark:text-green-300 text-xl font-semibold">
-                        🎉 {t('signup:tenant.subscription.freeSelected')}
+                        {t('signup:tenant.subscription.freeTierTitle')}
                       </h3>
                       <p className="text-green-700 dark:text-green-400 mt-2">
-                        {t('signup:tenant.subscription.noPaymentRequired')}
+                        {t('signup:tenant.subscription.freeTierMessage')}
                       </p>
                     </div>
                   )}
@@ -1523,42 +1596,44 @@ const TenantSignup = () => {
               </ul>
             </div>
 
-            {/* Billing Cycle */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                {t('signup:tenant.subscription.billingCycle')}
-              </label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                <label className="flex items-center p-4 sm:p-6 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 active:scale-95 transition-all">
-                  <input
-                    type="radio"
-                    name="billingCycle"
-                    value="monthly"
-                    checked={formData.billingCycle === 'monthly'}
-                    onChange={(e) => handleInputChange('billingCycle', e.target.value)}
-                    className="mr-3 flex-shrink-0"
-                  />
-                  <div>
-                    <div className="font-medium text-gray-900 dark:text-white">{t('signup:tenant.subscription.monthly')}</div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400">{t('signup:tenant.subscription.monthlyBilled')}</div>
-                  </div>
+            {/* Billing Cycle - Only show for paid plans */}
+            {selectedPlanInfo.price !== 0 && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  {t('signup:tenant.subscription.billingCycle')}
                 </label>
-                <label className="flex items-center p-4 sm:p-6 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 active:scale-95 transition-all">
-                  <input
-                    type="radio"
-                    name="billingCycle"
-                    value="annual"
-                    checked={formData.billingCycle === 'annual'}
-                    onChange={(e) => handleInputChange('billingCycle', e.target.value)}
-                    className="mr-3 flex-shrink-0"
-                  />
-                  <div>
-                    <div className="font-medium text-gray-900 dark:text-white">{t('signup:tenant.subscription.annual')}</div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400">{t('signup:tenant.subscription.annualSave')}</div>
-                  </div>
-                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                  <label className="flex items-center p-4 sm:p-6 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 active:scale-95 transition-all">
+                    <input
+                      type="radio"
+                      name="billingCycle"
+                      value="monthly"
+                      checked={formData.billingCycle === 'monthly'}
+                      onChange={(e) => handleInputChange('billingCycle', e.target.value)}
+                      className="mr-3 flex-shrink-0"
+                    />
+                    <div>
+                      <div className="font-medium text-gray-900 dark:text-white">{t('signup:tenant.subscription.monthly')}</div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">{t('signup:tenant.subscription.monthlyBilled')}</div>
+                    </div>
+                  </label>
+                  <label className="flex items-center p-4 sm:p-6 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 active:scale-95 transition-all">
+                    <input
+                      type="radio"
+                      name="billingCycle"
+                      value="annual"
+                      checked={formData.billingCycle === 'annual'}
+                      onChange={(e) => handleInputChange('billingCycle', e.target.value)}
+                      className="mr-3 flex-shrink-0"
+                    />
+                    <div>
+                      <div className="font-medium text-gray-900 dark:text-white">{t('signup:tenant.subscription.annual')}</div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">{t('signup:tenant.subscription.annualSave')}</div>
+                    </div>
+                  </label>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Payment Information - Skip for Community and Enterprise */}
             {formData.subscriptionTier !== 'enterprise' && formData.subscriptionTier !== 'community_and_new_business' && (
@@ -1614,10 +1689,10 @@ const TenantSignup = () => {
               <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg p-6 text-center">
                 <CheckCircle className="w-12 h-12 text-green-600 dark:text-green-400 mx-auto mb-3" />
                 <h3 className="text-green-800 dark:text-green-300 text-xl font-semibold">
-                  🎉 Free Tier Selected
+                  {t('signup:tenant.subscription.freeTierTitle')}
                 </h3>
                 <p className="text-green-700 dark:text-green-400 mt-2">
-                  No payment required - continue to create your account!
+                  {t('signup:tenant.subscription.freeTierMessage')}
                 </p>
               </div>
             )}
@@ -1640,7 +1715,7 @@ const TenantSignup = () => {
             <div className="border-t-2 border-gray-200 dark:border-gray-700 pt-6 mt-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
                 <Shield className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400" />
-                Legal Agreements & Attestations
+                {t('signup:tenant.subscription.legalTitle')}
               </h3>
               
               <div className="space-y-4">
@@ -1659,17 +1734,19 @@ const TenantSignup = () => {
                     className="mt-1 mr-3 h-4 w-4 text-primary-600 focus:ring-primary-500 rounded flex-shrink-0"
                   />
                   <div className="text-sm">
-                    <span className="text-gray-700 dark:text-gray-300">I accept the </span>
-                    <a 
-                      href="/TERMS_OF_SERVICE.md" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
+                    <span className="text-gray-700 dark:text-gray-300">{t('signup:tenant.subscription.termsPrefix')}</span>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setShowTermsModal(true);
+                      }}
                       className="text-primary-600 dark:text-primary-400 hover:underline font-medium"
-                      onClick={(e) => e.stopPropagation()}
                     >
-                      Terms of Service
-                    </a>
-                    <span className="text-gray-700 dark:text-gray-300">, including AI-targeted advertising from Licensed Producers</span>
+                      {t('signup:tenant.subscription.termsLink')}
+                    </button>
+                    <span className="text-gray-700 dark:text-gray-300">{t('signup:tenant.subscription.termsSuffix')}</span>
                   </div>
                 </label>
                 {errors.terms && (
@@ -1691,17 +1768,19 @@ const TenantSignup = () => {
                     className="mt-1 mr-3 h-4 w-4 text-primary-600 focus:ring-primary-500 rounded flex-shrink-0"
                   />
                   <div className="text-sm">
-                    <span className="text-gray-700 dark:text-gray-300">I accept the </span>
-                    <a 
-                      href="/PRIVACY_POLICY.md" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
+                    <span className="text-gray-700 dark:text-gray-300">{t('signup:tenant.subscription.privacyPrefix')}</span>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setShowPrivacyModal(true);
+                      }}
                       className="text-primary-600 dark:text-primary-400 hover:underline font-medium"
-                      onClick={(e) => e.stopPropagation()}
                     >
-                      Privacy Policy
-                    </a>
-                    <span className="text-gray-700 dark:text-gray-300"> and consent to data collection and usage for advertising purposes</span>
+                      {t('signup:tenant.subscription.privacyLink')}
+                    </button>
+                    <span className="text-gray-700 dark:text-gray-300">{t('signup:tenant.subscription.privacySuffix')}</span>
                   </div>
                 </label>
                 {errors.privacy && (
@@ -1723,7 +1802,7 @@ const TenantSignup = () => {
                     className="mt-1 mr-3 h-4 w-4 text-primary-600 focus:ring-primary-500 rounded flex-shrink-0"
                   />
                   <div className="text-sm text-gray-700 dark:text-gray-300">
-                    <strong>I certify that all information provided in this registration is accurate, complete, and current.</strong> I understand that providing false or misleading information may result in account suspension or termination.
+                    <strong>{t('signup:tenant.subscription.accuracyTitle')}</strong>{t('signup:tenant.subscription.accuracyText')}
                   </div>
                 </label>
                 {errors.accuracy && (
@@ -1745,7 +1824,7 @@ const TenantSignup = () => {
                     className="mt-1 mr-3 h-4 w-4 text-primary-600 focus:ring-primary-500 rounded flex-shrink-0"
                   />
                   <div className="text-sm text-gray-700 dark:text-gray-300">
-                    <strong>I am duly authorized by my organization to create this account and bind the organization to these Terms.</strong> I have the legal authority to enter into agreements on behalf of the company listed above.
+                    <strong>{t('signup:tenant.subscription.authorizationTitle')}</strong>{t('signup:tenant.subscription.authorizationText')}
                   </div>
                 </label>
                 {errors.authorization && (
@@ -1757,12 +1836,12 @@ const TenantSignup = () => {
                   <div className="flex items-start">
                     <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-3 flex-shrink-0" />
                     <div className="text-sm text-blue-800 dark:text-blue-300">
-                      <p className="font-medium mb-1">Important Notice:</p>
+                      <p className="font-medium mb-1">{t('signup:tenant.subscription.noticeTitle')}</p>
                       <ul className="list-disc list-inside space-y-1 text-xs">
-                        <li>Your acceptance will be recorded with timestamp and IP address for legal compliance</li>
-                        <li>Revenue is generated through AI-targeted advertising from Licensed Producers</li>
-                        <li>Customer data will be used (anonymized) to improve product recommendations</li>
-                        <li>You must comply with all cannabis laws and regulations in your jurisdiction</li>
+                        <li>{t('signup:tenant.subscription.notice1')}</li>
+                        <li>{t('signup:tenant.subscription.notice2')}</li>
+                        <li>{t('signup:tenant.subscription.notice3')}</li>
+                        <li>{t('signup:tenant.subscription.notice4')}</li>
                       </ul>
                     </div>
                   </div>
@@ -1964,6 +2043,90 @@ const TenantSignup = () => {
           </div>
         </div>
       </div>
+
+      {/* Terms of Service Modal */}
+      {showTermsModal && createPortal(
+        <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 p-4" onClick={() => setShowTermsModal(false)}>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Terms of Service</h2>
+              <button
+                onClick={() => setShowTermsModal(false)}
+                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-6">
+              <iframe
+                src="/TERMS_OF_SERVICE.md"
+                className="w-full h-full min-h-[600px] border-0"
+                title="Terms of Service"
+              />
+            </div>
+            <div className="flex items-center justify-between p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={termsAccepted}
+                  onChange={(e) => setTermsAccepted(e.target.checked)}
+                  className="h-4 w-4 text-primary-600 focus:ring-primary-500 rounded"
+                />
+                <span className="text-sm text-gray-700 dark:text-gray-300">I accept the Terms of Service</span>
+              </label>
+              <button
+                onClick={() => setShowTermsModal(false)}
+                className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {/* Privacy Policy Modal */}
+      {showPrivacyModal && createPortal(
+        <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 p-4" onClick={() => setShowPrivacyModal(false)}>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Privacy Policy</h2>
+              <button
+                onClick={() => setShowPrivacyModal(false)}
+                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-6">
+              <iframe
+                src="/PRIVACY_POLICY.md"
+                className="w-full h-full min-h-[600px] border-0"
+                title="Privacy Policy"
+              />
+            </div>
+            <div className="flex items-center justify-between p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={privacyAccepted}
+                  onChange={(e) => setPrivacyAccepted(e.target.checked)}
+                  className="h-4 w-4 text-primary-600 focus:ring-primary-500 rounded"
+                />
+                <span className="text-sm text-gray-700 dark:text-gray-300">I accept the Privacy Policy</span>
+              </label>
+              <button
+                onClick={() => setShowPrivacyModal(false)}
+                className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
     </div>
   );
 };

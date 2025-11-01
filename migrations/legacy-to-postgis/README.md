@@ -128,7 +128,7 @@ This migration transforms **ai-engine-db-postgis** from a minimal 24-table datab
   - Port: `5434`
   - Database: `ai_engine`
   - User: `weedgo`
-  - Password: `your_password_here`
+  - Password: `weedgo123`
 
 ### Permissions Required
 - CREATE EXTENSION
@@ -166,7 +166,7 @@ cd /Users/charrcy/projects/WeedGo/microservices/ai-engine-service/migrations/leg
 export DB_HOST=localhost
 export DB_PORT=5434
 export DB_USER=weedgo
-export DB_PASSWORD=your_password_here
+export DB_PASSWORD=weedgo123
 export DB_NAME=ai_engine
 
 # Execute migrations in order

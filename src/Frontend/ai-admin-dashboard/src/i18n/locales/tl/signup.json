@@ -16,7 +16,7 @@
     "stepDescriptions": {
       "company": "Sabihin sa amin ang tungkol sa inyong negosyo at brand",
       "contact": "Ibigay ang inyong contact information at address",
-      "ontario": "Validate your Ontario cannabis retail licenses (CROL and CRSA)",
+      "ontario": "I-validate ang iyong mga lisensya ng cannabis retail sa Ontario (CROL at CRSA)",
       "account": "Gumawa ng inyong admin account credentials",
       "payment": "Pumili ng inyong plan at paraan ng pagbayad"
     },
@@ -51,7 +51,9 @@
       "city": "Lungsod",
       "province": "Probinsya",
       "postalCode": "Postal Code",
-      "postalCodePlaceholder": "A1A 1A1"
+      "postalCodePlaceholder": "A1A 1A1",
+      "autoFilled": "Awtomatikong napunan",
+      "addressAutocompleteHint": "💡 Magsimulang mag-type upang makita ang mga suhestiyon ng address - awtomatikong mapupunan ang lungsod at postal code"
     },
     "accountSetup": {
       "password": "Password",
@@ -75,7 +77,25 @@
       "annualSave": "Makatipid ng 20%",
       "selectPlan": "Pumili ng Plan",
       "enterpriseTitle": "Enterprise Plan",
-      "enterpriseDescription": "Makikipag-ugnayan sa inyo ang aming sales team sa loob ng 24 oras para pag-usapan ang custom na presyo at setup."
+      "enterpriseDescription": "Makikipag-ugnayan sa inyo ang aming sales team sa loob ng 24 oras para pag-usapan ang custom na presyo at setup.",
+      "freeTierTitle": "🎉 Free Tier Selected",
+      "freeTierMessage": "No payment required - continue to create your account!",
+      "legalTitle": "Legal Agreements & Attestations",
+      "termsPrefix": "I accept the ",
+      "termsLink": "Terms of Service",
+      "termsSuffix": ", including AI-targeted advertising from Licensed Producers",
+      "privacyPrefix": "I accept the ",
+      "privacyLink": "Privacy Policy",
+      "privacySuffix": " and consent to data collection and usage for advertising purposes",
+      "accuracyTitle": "I certify that all information provided in this registration is accurate, complete, and current.",
+      "accuracyText": " I understand that providing false or misleading information may result in account suspension or termination.",
+      "authorizationTitle": "I am duly authorized by my organization to create this account and bind the organization to these Terms.",
+      "authorizationText": " I have the legal authority to enter into agreements on behalf of the company listed above.",
+      "noticeTitle": "Important Notice:",
+      "notice1": "Your acceptance will be recorded with timestamp and IP address for legal compliance",
+      "notice2": "Revenue is generated through AI-targeted advertising from Licensed Producers",
+      "notice3": "Customer data will be used (anonymized) to improve product recommendations",
+      "notice4": "You must comply with all cannabis laws and regulations in your jurisdiction"
     },
     "payment": {
       "cardholderName": "Pangalan ng Cardholder",
@@ -87,7 +107,8 @@
       "cvv": "CVV",
       "cvvPlaceholder": "123",
       "postalCode": "ZIP/Postal Code",
-      "postalCodePlaceholder": "12345"
+      "postalCodePlaceholder": "12345",
+      "autoFilled": "自动填写"
     },
     "progress": {
       "verifying": "Sinusuri ang availability...",
@@ -114,6 +135,38 @@
       "signInInstead": "Mag-sign In na Lang",
       "tenantExists": "Ang tenant code na \"{{code}}\" ay nakarehestro na",
       "websiteExists": "Ang website na \"{{website}}\" ay ginagamit na"
+    },
+    "ontario": {
+      "title": "Lisensya ng Cannabis sa Ontario",
+      "description": "Kinakailangan para sa mga retailer ng cannabis sa Ontario. Ang CROL ay ang iyong operating license sa antas ng tenant, ang CRSA ay ang iyong retail authorization sa antas ng tindahan.",
+      "crolLabel": "Numero ng CROL (Cannabis Retail Operating License) *",
+      "crolPlaceholder": "Ilagay ang iyong OCS CROL numero",
+      "crolHelpText": "Ang iyong OCS operating license number sa antas ng tenant",
+      "crsaTitle": "Pagpapatunay ng CRSA (Cannabis Retail Store Authorization)",
+      "domainVerifiedSuccess": "✓ Na-verify ang Domain - Ang domain ng iyong email ay tumutugma sa website ng CRSA. Ang iyong unang tindahan ay awtomatikong lilikhahin mula sa lisensyang ito.",
+      "licenseLabel": "Numero ng Lisensya ng Cannabis Retail sa Ontario",
+      "licensePlaceholder": "halimbawa: CRSA-1234",
+      "validating": "Nag-veverify...",
+      "validate": "I-validate",
+      "licenseHelpText": "Ilagay ang iyong numero ng lisensya ng cannabis retail sa Ontario mula sa AGCO",
+      "validatedSuccess": "✓ Matagumpay na Na-validate ang Lisensya",
+      "storeNameLabel": "Pangalan ng Tindahan:",
+      "municipalityLabel": "Munisipalidad:",
+      "addressLabel": "Address:",
+      "websiteLabel": "Website:",
+      "validationFailed": "Nabigo ang Pagpapatunay",
+      "searchIntro": "Hindi alam ang iyong numero ng lisensya? Maghanap ng iyong tindahan:",
+      "searchPlaceholder": "Maghanap sa pamamagitan ng pangalan ng tindahan o address",
+      "searching": "Naghahanap...",
+      "noResults": "Walang nahanap na resulta",
+      "selectStore": "Piliin ang iyong tindahan mula sa listahan sa ibaba:",
+      "needHelp": "Kailangan ng tulong?",
+      "helpDetails": "Maaari mong mahanap ang iyong mga numero ng lisensya sa:",
+      "helpCrol": "• Numero ng CROL: Ang iyong OCS B2B portal (kinakailangan para lumikha ng tenant)",
+      "helpCrsa": "• Numero ng CRSA: Pampublikong database ng lisensya ng AGCO (opsyonal - para sa awtomatikong pagpapatunay ng tindahan)",
+      "helpNote": "Paalala: Maaari mong laktawan ang pagpapatunay ng CRSA at magdagdag ng mga tindahan nang manu-mano mamaya.",
+      "autoCreateStoreLabel": "Gawing {storeName} ang aking unang tindahan",
+      "autoCreateStoreHelp": "Awtomatikong gagawin ang tindahang ito kapag nakumpleto ang signup. Maaari mong i-uncheck upang magdagdag ng mga tindahan nang manu-mano mamaya."
     }
   },
   "review": {
@@ -309,7 +362,12 @@
     "expiryFormat": "Mangyaring maglagay ng MM/YY format",
     "cvvRequired": "Kinakailangan ang CVV",
     "cvvFormat": "Ang CVV ay dapat 3 o 4 digits",
-    "cardholderRequired": "Kinakailangan ang pangalan ng cardholder"
+    "cardholderRequired": "Kinakailangan ang pangalan ng cardholder",
+    "crolNumberRequired": "Kailangan ang numero ng CROL para sa mga tenant ng Ontario",
+    "crsaLicenseRequired": "Kailangan ang wastong lisensya ng CRSA para sa mga tenant ng Ontario",
+    "crsaDomainMismatch": "Ang iyong email domain ay hindi tumutugma sa website ng CRSA. Mangyaring makipag-ugnayan sa suporta para sa manu-manong pag-verify.",
+    "licenseNumberRequired": "Mangyaring magpasok ng numero ng lisensya",
+    "licenseValidationFailed": "Nabigong i-validate ang lisensya"
   },
   "passwordStrength": {
     "weak": "Mahina",
@@ -396,5 +454,22 @@
       "required": "Kailangan mong kumpirmahin ang iyong awtorisasyon upang magpatuloy"
     },
     "allRequired": "Lahat ng mga patunay ay dapat tanggapin upang makalikha ng iyong account"
+  },
+  "errors": {
+    "submit": {
+      "processingPayment": "Pinoproseso ang paraan ng pagbabayad...",
+      "paymentDetailsRequired": "Kinakailangan ang mga detalye ng pagbabayad para sa mga planong bayad",
+      "paymentMethodFailed": "Nabigong iproseso ang paraan ng pagbabayad",
+      "accountCreationFailed": "Nabigong lumikha ng account.",
+      "tenantExists": "Ang tenant na ito ay umiiral na.",
+      "userEmailExists": "May user na mayroon nang email na ito. Mangyaring gumamit ng ibang email o mag-login.",
+      "emailAlreadyRegistered": "Ang email na ito ay nakarehistro na. Mangyaring gumamit ng ibang email o mag-login.",
+      "informationAlreadyRegistered": "Ang impormasyong ito ay nakarehistro na sa aming sistema.",
+      "checkRequiredFields": "Mangyaring suriin na ang lahat ng kinakailangang field ay tama ang pagkakapuno.",
+      "validationError": "Error sa pagpapatunay: Mangyaring suriin na ang lahat ng kinakailangang field ay tama ang pagkakapuno.",
+      "serverError": "Naganap ang error sa server. Mangyaring subukan ulit mamaya o makipag-ugnayan sa suporta.",
+      "serviceUnavailable": "Hindi available ang serbisyo. Mangyaring tiyakin na tumatakbo ang backend.",
+      "networkError": "Error sa network: Hindi makakonekta sa server. Mangyaring suriin ang iyong koneksyon."
+    }
   }
 }

@@ -159,18 +159,39 @@ class EmailService(ICommunicationChannel):
             )
 
         except Exception as e:
-            logger.error(f"Failed to send email to {recipient.email}: {e}")
+            error_msg = str(e)
+            logger.error(f"Failed to send email to {recipient.email}: {error_msg}")
 
-            # Retry on failure
-            if self.config.retry_attempts > 0:
-                return await self._retry_failed_message(recipient, message)
+            # Don't retry on permanent failures (authentication, invalid recipient, etc.)
+            is_permanent_failure = any([
+                '401' in error_msg,  # Authentication error
+                '403' in error_msg,  # Permission denied
+                'Permission denied' in error_msg,
+                'wrong credentials' in error_msg,
+                'Invalid API key' in error_msg,
+                'unauthorized' in error_msg.lower(),
+                'not verified' in error_msg.lower() and 'sandbox' not in error_msg.lower(),  # SES sandbox is retryable
+            ])
+
+            # Only retry on transient failures (network issues, rate limits, timeouts)
+            if not is_permanent_failure and self.config.retry_attempts > 0:
+                # Check if it's a retryable error (5xx, timeout, network)
+                is_retryable = any([
+                    '5' in error_msg and error_msg.index('5') < 3,  # 5xx errors
+                    'timeout' in error_msg.lower(),
+                    'connection' in error_msg.lower(),
+                    'network' in error_msg.lower(),
+                ])
+                
+                if is_retryable:
+                    return await self._retry_failed_message(recipient, message)
 
             return DeliveryResult(
                 message_id=f"email_{recipient.id}_{datetime.now().timestamp()}",
                 recipient_id=recipient.id,
                 status=DeliveryStatus.FAILED,
                 channel=self.channel_type,
-                error_message=str(e)
+                error_message=error_msg
             )
 
     async def send_batch(

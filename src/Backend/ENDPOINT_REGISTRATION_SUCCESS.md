@@ -138,7 +138,7 @@ export DB_HOST=localhost
 export DB_PORT=5434
 export DB_NAME=ai_engine
 export DB_USER=weedgo
-export DB_PASSWORD=your_password_here
+export DB_PASSWORD=weedgo123
 ```
 
 ---

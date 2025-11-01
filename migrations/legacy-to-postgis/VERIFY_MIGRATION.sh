@@ -14,7 +14,7 @@ DB_HOST="${DB_HOST:-localhost}"
 DB_PORT="${DB_PORT:-5434}"
 DB_NAME="${DB_NAME:-ai_engine}"
 DB_USER="${DB_USER:-weedgo}"
-DB_PASSWORD="${DB_PASSWORD:-your_password_here}"
+DB_PASSWORD="${DB_PASSWORD:-weedgo123}"
 
 # Colors
 RED='\033[0;31m'

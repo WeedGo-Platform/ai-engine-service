@@ -40,14 +40,14 @@ COVERAGE=${2:-no}
 print_header "Setting up test database..."
 
 # Create test database if it doesn't exist
-PGPASSWORD=your_password_here psql -h localhost -p 5434 -U weedgo -d postgres -c "CREATE DATABASE ai_engine_test;" 2>/dev/null || true
+PGPASSWORD=weedgo123 psql -h localhost -p 5434 -U weedgo -d postgres -c "CREATE DATABASE ai_engine_test;" 2>/dev/null || true
 
 # Run migrations on test database
 print_header "Running migrations on test database..."
 for migration in migrations/*.sql; do
     if [ -f "$migration" ]; then
         echo "  Applying $(basename $migration)..."
-        PGPASSWORD=your_password_here psql -h localhost -p 5434 -U weedgo -d ai_engine_test -f "$migration" > /dev/null 2>&1 || true
+        PGPASSWORD=weedgo123 psql -h localhost -p 5434 -U weedgo -d ai_engine_test -f "$migration" > /dev/null 2>&1 || true
     fi
 done
 

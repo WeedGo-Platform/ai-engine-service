@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Phone, Shield, CheckCircle, AlertCircle, RefreshCcw } from 'lucide-react';
+import { getApiEndpoint } from '../config/app.config';
 
 interface LocationState {
   email?: string;
@@ -56,7 +57,7 @@ const Verification = () => {
     setErrors({});
     
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5024'}/api/v1/auth/otp/verify`, {
+      const response = await fetch(getApiEndpoint('/v1/auth/otp/verify'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -111,7 +112,7 @@ const Verification = () => {
     setErrors({});
     
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5024'}/api/v1/auth/otp/resend`, {
+      const response = await fetch(getApiEndpoint('/v1/auth/otp/resend'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

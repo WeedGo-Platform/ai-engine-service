@@ -28,10 +28,11 @@ import {
 } from 'lucide-react';
 import tenantService, { Tenant, CreateTenantRequest } from '../services/tenantService';
 import ocsService from '../services/ocsService';
-import { getApiEndpoint } from '../config/app.config';
+import { getApiEndpoint, appConfig } from '../config/app.config';
 import { useAuth } from '../contexts/AuthContext';
 import TenantEditModal from '../components/TenantEditModal';
 import { useErrorHandler } from '../hooks/useErrorHandler';
+import { formatApiError } from '../utils/errorHandler';
 
 const TenantManagement: React.FC = () => {
   const navigate = useNavigate();
@@ -165,14 +166,14 @@ const TenantManagement: React.FC = () => {
         const formData = new FormData();
         formData.append('file', logoFile);
 
-        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5024'}/api/uploads/tenant/${id}/logo`, {
+        const response = await fetch(getApiEndpoint('/uploads/tenant/${id}/logo'), {
           method: 'POST',
           body: formData,
         });
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.detail || t('tenants:messages.logoUploadFailed'));
+          throw new Error(formatApiError(errorData, t('tenants:messages.logoUploadFailed')));
         }
 
         toast.success(t('tenants:messages.logoUploaded'));
@@ -413,7 +414,7 @@ const TenantManagement: React.FC = () => {
                 <div className="flex items-start gap-6">
                   {tenants[0]?.logo_url && (
                     <img
-                      src={tenants[0].logo_url.startsWith('http') ? tenants[0].logo_url : `${import.meta.env.VITE_API_URL || 'http://localhost:5024'}${tenants[0].logo_url}`}
+                      src={tenants[0].logo_url.startsWith('http') ? tenants[0].logo_url : `${appConfig.api.baseUrl}${tenants[0].logo_url}`}
                       alt={`${tenants[0].name} logo`}
                       className="w-16 h-16 object-contain rounded"
                     />
@@ -549,7 +550,7 @@ const TenantManagement: React.FC = () => {
                       <div className="flex items-start gap-4">
                         {tenant.logo_url && (
                           <img
-                            src={tenant.logo_url.startsWith('http') ? tenant.logo_url : `${import.meta.env.VITE_API_URL || 'http://localhost:5024'}${tenant.logo_url}`}
+                            src={tenant.logo_url.startsWith('http') ? tenant.logo_url : `${appConfig.api.baseUrl}${tenant.logo_url}`}
                             alt={`${tenant.name} logo`}
                             className="w-10 h-10 object-contain rounded"
                             onError={(e) => {
@@ -1122,7 +1123,7 @@ const TenantFormModal: React.FC<{
       );
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.detail || t('tenants:messages.createFailed'));
+        throw new Error(formatApiError(error, t('tenants:messages.createFailed')));
       }
       await fetchTenantUsers();
       setUserSuccess(t('tenants:userManagement.created'));

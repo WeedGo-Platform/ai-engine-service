@@ -294,7 +294,7 @@ Retry attempts observed:
 
 **Steps:**
 ```bash
-PGPASSWORD=your_password_here psql -h localhost -p 5434 -U weedgo -d ai_engine -c "\dt payment*"
+PGPASSWORD=weedgo123 psql -h localhost -p 5434 -U weedgo -d ai_engine -c "\dt payment*"
 ```
 
 **Expected Results:**
@@ -323,8 +323,8 @@ Tables found:
 
 **Steps:**
 ```bash
-PGPASSWORD=your_password_here psql -h localhost -p 5434 -U weedgo -d ai_engine -c "SELECT COUNT(*) FROM payment_transactions;"
-PGPASSWORD=your_password_here psql -h localhost -p 5434 -U weedgo -d ai_engine -c "SELECT COUNT(*) FROM payment_providers;"
+PGPASSWORD=weedgo123 psql -h localhost -p 5434 -U weedgo -d ai_engine -c "SELECT COUNT(*) FROM payment_transactions;"
+PGPASSWORD=weedgo123 psql -h localhost -p 5434 -U weedgo -d ai_engine -c "SELECT COUNT(*) FROM payment_providers;"
 ```
 
 **Expected Results:**

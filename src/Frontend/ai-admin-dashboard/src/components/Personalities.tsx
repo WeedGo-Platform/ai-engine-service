@@ -417,7 +417,7 @@ const Personalities: React.FC = () => {
             <div className="text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800 rounded p-3">
               <strong>Tip:</strong> Run the seed script to add default personalities (marcel, shanté, zac):
               <code className="block mt-2 text-xs bg-gray-100 dark:bg-gray-700 p-2 rounded">
-                PGPASSWORD=your_password_here psql -h localhost -p 5434 -U weedgo -d ai_engine -f migrations/seed_default_personalities.sql
+                PGPASSWORD=weedgo123 psql -h localhost -p 5434 -U weedgo -d ai_engine -f migrations/seed_default_personalities.sql
               </code>
             </div>
           </div>

@@ -357,13 +357,13 @@ cd /Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/Backend/mi
 ./run_migrations.sh
 
 # Manual
-psql "postgresql://weedgo:your_password_here@localhost:5434/ai_engine" -f 001_backup_payment_schema.sql
-psql "postgresql://weedgo:your_password_here@localhost:5434/ai_engine" -f 002_drop_deprecated_payment_tables.sql
-psql "postgresql://weedgo:your_password_here@localhost:5434/ai_engine" -f 003_recreate_payment_core_tables.sql
-psql "postgresql://weedgo:your_password_here@localhost:5434/ai_engine" -f 004_seed_payment_providers.sql
+psql "postgresql://weedgo:weedgo123@localhost:5434/ai_engine" -f 001_backup_payment_schema.sql
+psql "postgresql://weedgo:weedgo123@localhost:5434/ai_engine" -f 002_drop_deprecated_payment_tables.sql
+psql "postgresql://weedgo:weedgo123@localhost:5434/ai_engine" -f 003_recreate_payment_core_tables.sql
+psql "postgresql://weedgo:weedgo123@localhost:5434/ai_engine" -f 004_seed_payment_providers.sql
 
 # Rollback if needed
-psql "postgresql://weedgo:your_password_here@localhost:5434/ai_engine" -f 999_rollback.sql
+psql "postgresql://weedgo:weedgo123@localhost:5434/ai_engine" -f 999_rollback.sql
 ```
 
 ---

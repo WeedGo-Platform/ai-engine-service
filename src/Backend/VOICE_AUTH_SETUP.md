@@ -301,7 +301,7 @@ DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=ai_engine
 DB_USER=weedgo
-DB_PASSWORD=your_password_here
+DB_PASSWORD=weedgo123
 ```
 
 ### Service Dependencies
@@ -313,7 +313,7 @@ DB_PASSWORD=your_password_here
 ### Verification Commands
 ```bash
 # Test database connection
-PGPASSWORD=your_password_here psql -h localhost -p 5432 -U weedgo -d ai_engine -c "\\d voice_profiles"
+PGPASSWORD=weedgo123 psql -h localhost -p 5432 -U weedgo -d ai_engine -c "\\d voice_profiles"
 
 # Test API endpoints
 curl http://localhost:5024/api/voice/voices
@@ -367,10 +367,10 @@ python test_complete_workflow.py
 ### Debug Commands
 ```bash
 # Check voice profiles
-PGPASSWORD=your_password_here psql -h localhost -p 5432 -U weedgo -d ai_engine -c "SELECT * FROM voice_profiles;"
+PGPASSWORD=weedgo123 psql -h localhost -p 5432 -U weedgo -d ai_engine -c "SELECT * FROM voice_profiles;"
 
 # Check authentication logs
-PGPASSWORD=your_password_here psql -h localhost -p 5432 -U weedgo -d ai_engine -c "SELECT * FROM voice_auth_logs ORDER BY timestamp DESC LIMIT 10;"
+PGPASSWORD=weedgo123 psql -h localhost -p 5432 -U weedgo -d ai_engine -c "SELECT * FROM voice_auth_logs ORDER BY timestamp DESC LIMIT 10;"
 
 # Test feature extraction
 python test_fixed_features.py

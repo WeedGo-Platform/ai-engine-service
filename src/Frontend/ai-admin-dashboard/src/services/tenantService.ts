@@ -1,7 +1,10 @@
 import { getAuthStorage, getStorageKey } from '../config/auth.config';
+import { appConfig } from '../config/app.config';
 import axios from 'axios';
+import { formatApiError } from '../utils/errorHandler';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5024';
+// Use centralized API configuration
+const API_BASE_URL = appConfig.api.baseUrl;
 
 export interface Address {
   street: string;
@@ -293,7 +296,8 @@ class TenantService {
       const payload = {
         identifier,
         identifier_type: identifierType,
-        purpose: 'verification'
+        purpose: 'verification',
+        create_user_if_missing: false // Don't create user during signup - will be created with full info later
       };
       
       console.log('Sending OTP request:', {
@@ -303,24 +307,45 @@ class TenantService {
         identifierValue: identifier
       });
 
-      const response = await this.api.post('/api/v1/auth/otp/send', payload);
-      
-      console.log('OTP send success:', response.data);
-      
-      return {
-        success: true,
-        message: response.data.message,
-        expiresIn: response.data.expires_in
-      };
+      // Add timeout to prevent infinite loading
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout
+
+      try {
+        const response = await this.api.post('/api/v1/auth/otp/send', payload, {
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        
+        console.log('✅ OTP send success:', response.data);
+        
+        return {
+          success: true,
+          message: response.data.message,
+          expiresIn: response.data.expires_in_minutes // Backend sends expires_in_minutes
+        };
+      } catch (error: any) {
+        clearTimeout(timeoutId);
+        throw error;
+      }
     } catch (error: any) {
-      console.error('OTP send error:', {
+      console.error('❌ OTP send error:', {
         status: error.response?.status,
         statusText: error.response?.statusText,
         detail: error.response?.data?.detail,
         data: error.response?.data,
-        identifier,
-        identifierType
+        identifier: `${identifierType}:${identifier?.substring(0, 3)}...`,
+        isTimeout: error.name === 'AbortError',
+        errorType: error.constructor.name
       });
+      
+      // Handle timeout
+      if (error.name === 'AbortError' || error.code === 'ECONNABORTED') {
+        return {
+          success: false,
+          message: `⏱️ Request timed out. The verification service is taking longer than expected. Please try again in a moment.`
+        };
+      }
       
       // Handle rate limiting with specific message
       if (error.response?.status === 429) {
@@ -337,9 +362,24 @@ class TenantService {
         };
       }
       
+      // Handle 500 errors (all providers failed)
+      if (error.response?.status === 500) {
+        const detail = error.response?.data?.detail || '';
+        if (detail.includes('All providers failed') || detail.includes('provider')) {
+          return {
+            success: false,
+            message: identifierType === 'email'
+              ? `⚠️ We're experiencing temporary issues with our email service. Please try again in a few moments, or contact support if the issue persists.`
+              : `⚠️ We're experiencing temporary issues with our SMS service. Please try again in a few moments, or skip phone verification for now.`
+          };
+        }
+      }
+      
+      // Generic error with helpful message
+      const userMessage = error.response?.data?.detail || error.message || 'Failed to send verification code';
       return {
         success: false,
-        message: error.response?.data?.detail || error.message || 'Failed to send OTP'
+        message: `Unable to send verification code: ${userMessage}. Please try again.`
       };
     }
   }
@@ -355,7 +395,8 @@ class TenantService {
         identifier,
         identifier_type: identifierType,
         code,
-        purpose: 'verification'
+        purpose: 'verification',
+        create_user_if_missing: false // Don't create user during signup - will be created with full info later
       });
       return {
         success: true,
@@ -366,7 +407,7 @@ class TenantService {
     } catch (error: any) {
       return {
         success: false,
-        message: error.response?.data?.detail || error.message || 'Failed to verify OTP'
+        message: formatApiError(error.response?.data || error, 'Failed to verify OTP')
       };
     }
   }
@@ -375,11 +416,25 @@ class TenantService {
     success: boolean;
     message?: string;
     expiresIn?: number;
-    rateLimited?: boolean;
-    retryAfter?: number;
   }> {
-    // Just delegate to sendOTP which has all the rate limiting logic
-    return this.sendOTP(identifier, identifierType);
+    try {
+      const response = await this.api.post('/api/v1/auth/otp/resend', {
+        identifier,
+        identifier_type: identifierType,
+        purpose: 'verification',
+        create_user_if_missing: false // Don't create user during signup
+      });
+      return {
+        success: true,
+        message: response.data.message,
+        expiresIn: response.data.expires_in
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        message: formatApiError(error.response?.data || error, 'Failed to resend OTP')
+      };
+    }
   }
 }
 

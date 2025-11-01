@@ -264,11 +264,11 @@ open htmlcov/index.html
 
 ```bash
 # Create test database
-PGPASSWORD=your_password_here psql -h localhost -p 5434 -U weedgo -d postgres -c "CREATE DATABASE ai_engine_test;"
+PGPASSWORD=weedgo123 psql -h localhost -p 5434 -U weedgo -d postgres -c "CREATE DATABASE ai_engine_test;"
 
 # Run migrations
 for migration in migrations/*.sql; do
-    PGPASSWORD=your_password_here psql -h localhost -p 5434 -U weedgo -d ai_engine_test -f "$migration"
+    PGPASSWORD=weedgo123 psql -h localhost -p 5434 -U weedgo -d ai_engine_test -f "$migration"
 done
 ```
 
@@ -328,7 +328,7 @@ pytest tests/concurrency/test_cart_locking.py::test_cart_lock_prevents_double_ch
 ### Check Database State
 
 ```bash
-PGPASSWORD=your_password_here psql -h localhost -p 5434 -U weedgo -d ai_engine_test
+PGPASSWORD=weedgo123 psql -h localhost -p 5434 -U weedgo -d ai_engine_test
 
 # Check inventory
 SELECT * FROM ocs_inventory WHERE sku LIKE 'TEST%';

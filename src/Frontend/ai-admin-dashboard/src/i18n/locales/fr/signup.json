@@ -16,7 +16,7 @@
     "stepDescriptions": {
       "company": "Parlez-nous de votre entreprise et de votre marque",
       "contact": "Fournissez vos coordonnées et votre adresse",
-      "ontario": "Validate your Ontario cannabis retail licenses (CROL and CRSA)",
+      "ontario": "Validez vos licences de vente au détail de cannabis de l'Ontario (CROL et CRSA)",
       "account": "Créez les identifiants de votre compte administrateur",
       "payment": "Sélectionnez votre forfait et mode de paiement"
     },
@@ -51,7 +51,9 @@
       "city": "Ville",
       "province": "Province",
       "postalCode": "Code postal",
-      "postalCodePlaceholder": "A1A 1A1"
+      "postalCodePlaceholder": "A1A 1A1",
+      "autoFilled": "Rempli automatiquement",
+      "addressAutocompleteHint": "💡 Commencez à taper pour voir les suggestions d'adresse - la ville et le code postal se rempliront automatiquement"
     },
     "accountSetup": {
       "password": "Mot de passe",
@@ -75,7 +77,25 @@
       "annualSave": "Économisez 20%",
       "selectPlan": "Sélectionner le forfait",
       "enterpriseTitle": "Forfait Entreprise",
-      "enterpriseDescription": "Notre équipe de vente vous contactera dans les 24 heures pour discuter de la tarification personnalisée et de la configuration."
+      "enterpriseDescription": "Notre équipe de vente vous contactera dans les 24 heures pour discuter de la tarification personnalisée et de la configuration.",
+      "freeTierTitle": "🎉 Niveau gratuit sélectionné",
+      "freeTierMessage": "Aucun paiement requis - continuez pour créer votre compte !",
+      "legalTitle": "Accords juridiques et attestations",
+      "termsPrefix": "J'accepte les ",
+      "termsLink": "Conditions d'utilisation",
+      "termsSuffix": ", y compris la publicité ciblée par IA des Producteurs autorisés",
+      "privacyPrefix": "J'accepte la ",
+      "privacyLink": "Politique de confidentialité",
+      "privacySuffix": " et consens à la collecte et l'utilisation des données à des fins publicitaires",
+      "accuracyTitle": "Je certifie que toutes les informations fournies dans cette inscription sont exactes, complètes et à jour.",
+      "accuracyText": " Je comprends que fournir des informations fausses ou trompeuses peut entraîner la suspension ou la résiliation du compte.",
+      "authorizationTitle": "Je suis dûment autorisé par mon organisation à créer ce compte et à lier l'organisation à ces Conditions.",
+      "authorizationText": " J'ai l'autorité légale pour conclure des accords au nom de la société mentionnée ci-dessus.",
+      "noticeTitle": "Avis important :",
+      "notice1": "Votre acceptation sera enregistrée avec horodatage et adresse IP pour conformité légale",
+      "notice2": "Les revenus sont générés par la publicité ciblée par IA des Producteurs autorisés",
+      "notice3": "Les données clients seront utilisées (anonymisées) pour améliorer les recommandations de produits",
+      "notice4": "Vous devez vous conformer à toutes les lois et réglementations sur le cannabis de votre juridiction"
     },
     "payment": {
       "cardholderName": "Nom du titulaire de la carte",
@@ -87,7 +107,8 @@
       "cvv": "CVV",
       "cvvPlaceholder": "123",
       "postalCode": "Code postal",
-      "postalCodePlaceholder": "12345"
+      "postalCodePlaceholder": "12345",
+      "autoFilled": "自动填写"
     },
     "progress": {
       "verifying": "Vérification de la disponibilité...",
@@ -115,6 +136,38 @@
       "signInInstead": "Se connecter plutôt",
       "tenantExists": "Le code locataire \"{{code}}\" est déjà enregistré",
       "websiteExists": "Le site web \"{{website}}\" est déjà utilisé"
+    },
+    "ontario": {
+      "title": "Licence de cannabis de l'Ontario",
+      "description": "Requis pour les détaillants de cannabis de l'Ontario. Le CROL est votre licence d'exploitation au niveau du locataire, le CRSA est votre autorisation de vente au détail au niveau du magasin.",
+      "crolLabel": "Numéro CROL (Licence d'exploitation du commerce du cannabis) *",
+      "crolPlaceholder": "Entrez votre numéro CROL OCS",
+      "crolHelpText": "Votre numéro de licence d'exploitation OCS au niveau du locataire",
+      "crsaTitle": "Validation CRSA (Autorisation de vente au détail de cannabis)",
+      "domainVerifiedSuccess": "✓ Domaine vérifié - Votre domaine de messagerie correspond au site Web CRSA. Votre premier magasin sera créé automatiquement à partir de cette licence.",
+      "licenseLabel": "Numéro de licence de vente au détail de cannabis de l'Ontario",
+      "licensePlaceholder": "ex., CRSA-1234",
+      "validating": "Validation en cours...",
+      "validate": "Valider",
+      "licenseHelpText": "Entrez votre numéro de licence de vente au détail de cannabis de l'Ontario de l'AGCO",
+      "validatedSuccess": "✓ Licence validée avec succès",
+      "storeNameLabel": "Nom du magasin :",
+      "municipalityLabel": "Municipalité :",
+      "addressLabel": "Adresse :",
+      "websiteLabel": "Site Web :",
+      "validationFailed": "Validation échouée",
+      "searchIntro": "Vous ne connaissez pas votre numéro de licence ? Recherchez votre magasin :",
+      "searchPlaceholder": "Rechercher par nom de magasin ou adresse...",
+      "searching": "Recherche...",
+      "search": "Rechercher",
+      "licenseField": "Licence :",
+      "availableForSignup": "Disponible pour l'inscription",
+      "alreadyRegistered": "Déjà enregistré",
+      "noStoresFound": "Aucun magasin trouvé. Essayez un autre terme de recherche.",
+      "needHelp": "Besoin d'aide ?",
+      "helpText": "Votre numéro de licence de vente au détail de cannabis de l'Ontario se trouve sur vos documents d'autorisation de l'AGCO. Il commence généralement par « CRSA » suivi d'un numéro.",
+      "autoCreateStoreLabel": "Créer {storeName} comme mon premier magasin",
+      "autoCreateStoreHelp": "Ce magasin sera automatiquement créé lors de votre inscription. Vous pouvez décocher pour ajouter des magasins manuellement plus tard."
     }
   },
   "review": {
@@ -310,7 +363,12 @@
     "expiryFormat": "Veuillez entrer le format MM/AA",
     "cvvRequired": "Le CVV est requis",
     "cvvFormat": "Le CVV doit comporter 3 ou 4 chiffres",
-    "cardholderRequired": "Le nom du titulaire de la carte est requis"
+    "cardholderRequired": "Le nom du titulaire de la carte est requis",
+    "crolNumberRequired": "Le numéro CROL est requis pour les locataires de l'Ontario",
+    "crsaLicenseRequired": "Une licence CRSA valide est requise pour les locataires de l'Ontario",
+    "crsaDomainMismatch": "Votre domaine de messagerie ne correspond pas au site Web CRSA. Veuillez contacter le support pour une vérification manuelle.",
+    "licenseNumberRequired": "Veuillez entrer un numéro de licence",
+    "licenseValidationFailed": "Échec de la validation de la licence"
   },
   "passwordStrength": {
     "weak": "Faible",
@@ -397,5 +455,22 @@
       "required": "Vous devez confirmer votre autorisation pour continuer"
     },
     "allRequired": "Toutes les attestations doivent être acceptées pour créer votre compte"
+  },
+  "errors": {
+    "submit": {
+      "processingPayment": "Traitement du mode de paiement...",
+      "paymentDetailsRequired": "Les détails de paiement sont requis pour les plans payants",
+      "paymentMethodFailed": "Échec du traitement du mode de paiement",
+      "accountCreationFailed": "Échec de la création du compte.",
+      "tenantExists": "Ce locataire existe déjà.",
+      "userEmailExists": "Un utilisateur avec cet e-mail existe déjà. Veuillez utiliser un autre e-mail ou vous connecter.",
+      "emailAlreadyRegistered": "Cet e-mail est déjà enregistré. Veuillez utiliser un autre e-mail ou vous connecter.",
+      "informationAlreadyRegistered": "Ces informations sont déjà enregistrées dans notre système.",
+      "checkRequiredFields": "Veuillez vérifier que tous les champs obligatoires sont correctement remplis.",
+      "validationError": "Erreur de validation : Veuillez vérifier que tous les champs obligatoires sont correctement remplis.",
+      "serverError": "Une erreur serveur s'est produite. Veuillez réessayer plus tard ou contacter le support.",
+      "serviceUnavailable": "Service non disponible. Veuillez vous assurer que le backend est en cours d'exécution.",
+      "networkError": "Erreur réseau : Impossible de se connecter au serveur. Veuillez vérifier votre connexion."
+    }
   }
 }

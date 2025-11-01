@@ -103,13 +103,21 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+# Virtual environments
 .venv
 env/
 venv/
 ENV/
 env.bak/
 venv.bak/
+
+# Environment files
+# NOTE: .env and .env.[mode] are tracked in git (contain non-secret config)
+# Only .env.local and .env.*.local are ignored (developer-specific overrides)
+# Pattern: .env (base) → .env.[mode] (overrides) → .env.local (local dev overrides)
+*.local.env
+.env.backup
+.env.original
 
 # Spyder project settings
 .spyderproject
@@ -217,9 +225,20 @@ redis-data/
 # PostgreSQL data
 postgres-data/
 
-# Environment specific
+# Environment files - NEVER commit files with real secrets
+# Only .env.example files should be in git
+.env
+.env.*
 .env.local
 .env.*.local
+!.env.example
+!.env.*.example
+
+# Explicitly protect environment files in all subdirectories
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.*.example
 
 # API keys and credentials
 api_keys.py

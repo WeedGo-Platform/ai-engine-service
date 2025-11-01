@@ -724,7 +724,7 @@ def main():
         'port': 5433,
         'database': 'ai_engine',
         'user': 'weedgo',
-        'password': 'your_password_here'
+        'password': 'weedgo123'
     }
 
     current_config = {
@@ -732,7 +732,7 @@ def main():
         'port': 5434,
         'database': 'ai_engine',
         'user': 'weedgo',
-        'password': 'your_password_here'
+        'password': 'weedgo123'
     }
 
     # Run comparison

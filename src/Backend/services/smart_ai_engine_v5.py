@@ -94,10 +94,25 @@ class SmartAIEngineV5:
 
         # Initialize LLM Router for cloud inference (hot-swappable backend)
         self.llm_router = None
-        self.use_cloud_inference = False  # Flag to switch between local and cloud
+        # CLOUD-FIRST: Check environment variable first (before system_config)
+        self.use_cloud_inference = os.getenv("USE_CLOUD_INFERENCE", "").lower() == "true"
         self._initialize_llm_router()
 
-        logger.info(f"SmartAIEngineV5 initialized with {len(self.available_models)} models")
+        # Log initialization status
+        model_count = len(self.available_models)
+        if self.use_cloud_inference:
+            logger.info(f"☁️  SmartAIEngineV5 initialized in CLOUD-FIRST mode")
+            logger.info(f"   Local models found: {model_count} (optional)")
+            logger.info(f"   Inference backend: Cloud providers (Groq/OpenRouter/LLM7)")
+        else:
+            logger.info(f"💻 SmartAIEngineV5 initialized in LOCAL mode")
+            logger.info(f"   Local models found: {model_count}")
+            if model_count == 0:
+                logger.warning("   ⚠️  WARNING: No local models found!")
+                logger.warning("   You must either:")
+                logger.warning("   1. Add model files to models/ folder, OR")
+                logger.warning("   2. Enable cloud inference (set USE_CLOUD_INFERENCE=true)")
+
         self._log_system_resources()
     
     def _log_system_resources(self):
@@ -175,8 +190,10 @@ class SmartAIEngineV5:
             logger.info(f"✅ LLM Router initialized with {provider_count} cloud providers")
             logger.info(f"   Providers: {', '.join(self.llm_router.list_providers())}")
 
-            # Check config for default inference backend
-            if self.system_config:
+            # Check config for default inference backend (only if not set by environment variable)
+            # Priority: Environment Variable > system_config
+            if self.system_config and not hasattr(self, 'use_cloud_inference'):
+                # Only set from config if not already set from environment variable
                 self.use_cloud_inference = self.system_config.get('inference', {}).get('use_cloud', False)
                 if self.use_cloud_inference:
                     logger.info("🌐 Cloud inference ENABLED by default (hot-swap active)")
@@ -400,16 +417,38 @@ class SmartAIEngineV5:
         except:
             return {}
     
-    def _scan_models(self) -> Dict[str, str]:
-        """Scan all available model files"""
+    def _scan_models(self, cloud_mode_check: bool = True) -> Dict[str, str]:
+        """
+        Scan all available model files
+
+        Args:
+            cloud_mode_check: If True and cloud inference is enabled, skip scanning (cloud-first)
+
+        Returns:
+            Dict of model_name -> model_path
+        """
         models = {}
+
+        # CLOUD-FIRST STRATEGY: If cloud inference will be enabled, local models are optional
+        # Check environment variable first (before system_config is loaded)
+        use_cloud = os.getenv("USE_CLOUD_INFERENCE", "").lower() == "true"
+
+        if cloud_mode_check and use_cloud:
+            logger.info("☁️  Cloud-first mode enabled: Local models are OPTIONAL")
+            logger.info("   System will use cloud providers (Groq, OpenRouter, LLM7)")
+            logger.info("   Skipping local model scan to support cloud-only deployments")
+            return models  # Return empty dict - this is OK in cloud mode
+
+        # LOCAL MODE: Scan for models
+        logger.info("💻 Scanning for local models...")
+
         # Check both V5/models and ai-engine-service/models
         base_paths = [
             Path("models"),
             Path("../models"),
             Path("/Users/charrcy/projects/WeedGo/microservices/ai-engine-service/models")
         ]
-        
+
         for base_path in base_paths:
             if not base_path.exists():
                 continue
@@ -419,15 +458,23 @@ class SmartAIEngineV5:
                 if model_file.stat().st_size == 0:
                     logger.info(f"Skipping empty model file: {model_file}")
                     continue
-                
+
                 # Get relative path from models directory
                 rel_path = model_file.relative_to(base_path)
                 # Create a simple name from the filename
                 model_name = model_file.stem.replace('.Q4_K_M', '').replace('-', '_').lower()
                 # Store full path
                 models[model_name] = str(model_file)
-            
-        logger.info(f"Found {len(models)} downloaded models: {list(models.keys())}")
+
+        if models:
+            logger.info(f"✓ Found {len(models)} local models: {list(models.keys())}")
+        else:
+            logger.warning("⚠️  No local models found")
+            logger.warning("   Local inference will NOT be available")
+            logger.warning("   You must enable cloud inference or add model files to:")
+            for path in base_paths:
+                logger.warning(f"   - {path}")
+
         return models
     
     def _load_system_config(self) -> Dict:
@@ -2291,7 +2338,7 @@ class SmartAIEngineV5:
                 'port': int(os.getenv('DB_PORT', 5434)),
                 'database': os.getenv('DB_NAME', 'ai_engine'),
                 'user': os.getenv('DB_USER', 'weedgo'),
-                'password': os.getenv('DB_PASSWORD', 'your_password_here')
+                'password': os.getenv('DB_PASSWORD', 'weedgo123')
             }
             logger.info(f"[SmartAIEngineV5] Connecting to database at {db_config['host']}:{db_config['port']}/{db_config['database']}")
 
@@ -2740,16 +2787,57 @@ Please provide a personalized response based on the user's history and preferenc
         return True
 
     def disable_cloud_inference(self):
-        """Disable cloud inference (hot-swap back to local)"""
+        """
+        Disable cloud inference (hot-swap back to local)
+
+        VALIDATION: Ensures local models are available before switching
+
+        Returns:
+            bool: True if successfully switched to local, False if failed validation
+        """
+        # VALIDATION: Check if local models exist
+        if not self.available_models:
+            # Re-scan for models (in case they were added after startup)
+            logger.info("No models in cache, re-scanning...")
+            self.available_models = self._scan_models(cloud_mode_check=False)
+
+        if not self.available_models:
+            logger.error("❌ Cannot switch to local mode: No local models found")
+            logger.error("   Please add model files (.gguf) to:")
+            logger.error("   - models/")
+            logger.error("   - ../models/")
+            logger.error("   Then restart or re-run this command")
+            return False
+
+        # VALIDATION: Check if a model is loaded
+        if not self.current_model:
+            logger.warning("⚠️  No model currently loaded")
+            logger.warning("   Switching to local mode requires loading a model")
+            logger.warning("   Use /api/admin/models/load endpoint to load a model first")
+            # Still allow the switch, but warn that inference won't work until model loaded
+            self.use_cloud_inference = False
+            logger.info("💻 Cloud inference DISABLED (local mode - no model loaded yet)")
+            return True
+
+        # All validations passed
         self.use_cloud_inference = False
-        logger.info("💻 Cloud inference DISABLED (using local model)")
+        logger.info(f"💻 Cloud inference DISABLED")
+        logger.info(f"   Using local model: {self.current_model_name}")
+        logger.info(f"   Available models: {len(self.available_models)}")
         return True
 
     def toggle_cloud_inference(self):
-        """Toggle between cloud and local inference"""
+        """
+        Toggle between cloud and local inference
+
+        Returns:
+            bool: True if toggle successful, False if validation failed
+        """
         if self.use_cloud_inference:
+            # Switching TO local - validation required
             return self.disable_cloud_inference()
         else:
+            # Switching TO cloud - no validation needed
             return self.enable_cloud_inference()
 
     def get_router_stats(self) -> Dict[str, Any]:

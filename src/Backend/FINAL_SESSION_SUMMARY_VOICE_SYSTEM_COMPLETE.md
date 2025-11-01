@@ -424,7 +424,7 @@ python3 test_personality_endpoints.py
 
 ```bash
 # Via database
-PGPASSWORD=your_password_here psql -h localhost -p 5434 -U weedgo -d ai_engine \
+PGPASSWORD=weedgo123 psql -h localhost -p 5434 -U weedgo -d ai_engine \
   -c "SELECT name, personality_name, is_default, (voice_config ? 'sample_path') as has_voice FROM ai_personalities;"
 
 # Via API (when server running)

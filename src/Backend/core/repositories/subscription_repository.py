@@ -15,9 +15,11 @@ class SubscriptionRepository(ISubscriptionRepository):
     def __init__(self, db_pool: asyncpg.Pool):
         self.pool = db_pool
 
-    async def create(self, subscription: TenantSubscription) -> TenantSubscription:
+    async def create(self, subscription: TenantSubscription, conn=None) -> TenantSubscription:
         """Create a new subscription"""
-        # Simplified implementation - would normally insert into database
+        # For now, this is a simplified implementation
+        # The subscription data is stored in the tenant record itself
+        # This method exists for future expansion when subscriptions are separated
         return subscription
 
     async def get_by_tenant(self, tenant_id: UUID) -> Optional[TenantSubscription]:

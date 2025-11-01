@@ -205,7 +205,7 @@ Update your Cloudflare Pages frontend to use the new Cloud Run URL:
 1. Go to: https://weedgo-uat-admin.pages.dev/login
 2. Enter credentials:
    - Email: `admin@weedgo.ca`
-   - Password: `your_password_here`
+   - Password: `Password1$`
 3. Should successfully log in without CORS errors!
 
 ---

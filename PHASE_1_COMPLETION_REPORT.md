@@ -201,7 +201,7 @@ All 16 original tables backed up to `payment_backup` schema for rollback if need
 
 **Test:** Verify payment tables exist
 ```bash
-PGPASSWORD=your_password_here psql -h localhost -p 5434 -U weedgo -d ai_engine -c "\dt payment*"
+PGPASSWORD=weedgo123 psql -h localhost -p 5434 -U weedgo -d ai_engine -c "\dt payment*"
 ```
 
 **Result:** ✅ **PASSED**

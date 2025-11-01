@@ -6,7 +6,7 @@ services:
     container_name: weedgo-postgres
     environment:
       POSTGRES_USER: weedgo
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-your_password_here}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-weedgo123}
       POSTGRES_DB: ai_engine
     ports:
       - "5432:5432"
@@ -45,7 +45,7 @@ services:
     ports:
       - "5024:5024"
     environment:
-      DATABASE_URL: postgresql://weedgo:${DB_PASSWORD:-your_password_here}@postgres:5432/ai_engine
+      DATABASE_URL: postgresql://weedgo:${DB_PASSWORD:-weedgo123}@postgres:5432/ai_engine
       REDIS_URL: redis://redis:6379/0
       SECRET_KEY: ${SECRET_KEY}
       JWT_SECRET_KEY: ${JWT_SECRET_KEY}

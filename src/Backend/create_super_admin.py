@@ -16,12 +16,12 @@ async def create_super_admin():
         'port': int(os.getenv('DB_PORT', 5434)),
         'database': os.getenv('DB_NAME', 'ai_engine'),
         'user': os.getenv('DB_USER', 'weedgo'),
-        'password': os.getenv('DB_PASSWORD', 'your_password_here')
+        'password': os.getenv('DB_PASSWORD')  # Must be set in environment
     }
 
-    # User details
+    # User details - password should be passed as argument or environment variable
     email = 'admin@weedgo.ca'
-    password = 'your_password_here'
+    password = os.getenv('ADMIN_PASSWORD', 'Password1$')  # Default for local dev only
 
     # Hash the password
     salt = bcrypt.gensalt()

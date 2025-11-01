@@ -27,7 +27,7 @@ async def debug_voice_auth():
             port=int(os.getenv('DB_PORT', 5432)),
             database=os.getenv('DB_NAME', 'ai_engine'),
             user=os.getenv('DB_USER', 'weedgo'),
-            password=os.getenv('DB_PASSWORD', 'your_password_here')
+            password=os.getenv('DB_PASSWORD', 'weedgo123')
         )
         
         print("✅ Direct database connection successful")
@@ -65,7 +65,7 @@ async def debug_voice_auth():
             port=int(os.getenv('DB_PORT', 5432)),
             database=os.getenv('DB_NAME', 'ai_engine'),
             user=os.getenv('DB_USER', 'weedgo'),
-            password=os.getenv('DB_PASSWORD', 'your_password_here'),
+            password=os.getenv('DB_PASSWORD', 'weedgo123'),
             min_size=1,
             max_size=10
         )

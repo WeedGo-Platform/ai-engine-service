@@ -16,7 +16,7 @@
     "stepDescriptions": {
       "company": "告诉我们您的业务和品牌",
       "contact": "提供您的联系信息和地址",
-      "ontario": "Validate your Ontario cannabis retail licenses (CROL and CRSA)",
+      "ontario": "验证您的安大略省大麻零售许可证（CROL和CRSA）",
       "account": "创建您的管理员账户凭证",
       "payment": "选择您的计划和支付方式"
     },
@@ -51,7 +51,9 @@
       "city": "城市",
       "province": "省份",
       "postalCode": "邮政编码",
-      "postalCodePlaceholder": "A1A 1A1"
+      "postalCodePlaceholder": "A1A 1A1",
+      "autoFilled": "自动填写",
+      "addressAutocompleteHint": "💡 开始输入以查看地址建议 - 城市和邮政编码将自动填写"
     },
     "accountSetup": {
       "password": "密码",
@@ -75,7 +77,25 @@
       "annualSave": "节省20%",
       "selectPlan": "选择计划",
       "enterpriseTitle": "企业计划",
-      "enterpriseDescription": "我们的销售团队将在24小时内与您联系，讨论定制定价和设置。"
+      "enterpriseDescription": "我们的销售团队将在24小时内与您联系，讨论定制定价和设置。",
+      "freeTierTitle": "🎉 已选择免费套餐",
+      "freeTierMessage": "无需付款 - 继续创建您的账户！",
+      "legalTitle": "法律协议与声明",
+      "termsPrefix": "我接受",
+      "termsLink": "服务条款",
+      "termsSuffix": "，包括来自持牌生产商的AI定向广告",
+      "privacyPrefix": "我接受",
+      "privacyLink": "隐私政策",
+      "privacySuffix": "并同意为广告目的收集和使用数据",
+      "accuracyTitle": "我证明此注册中提供的所有信息准确、完整且最新。",
+      "accuracyText": "我了解提供虚假或误导性信息可能导致账户暂停或终止。",
+      "authorizationTitle": "我经我的组织正式授权创建此账户并使组织受这些条款约束。",
+      "authorizationText": "我有法律权限代表上述公司签订协议。",
+      "noticeTitle": "重要提示：",
+      "notice1": "您的接受将记录时间戳和IP地址以符合法律要求",
+      "notice2": "收入通过来自持牌生产商的AI定向广告产生",
+      "notice3": "客户数据将用于（匿名化）改进产品推荐",
+      "notice4": "您必须遵守您所在司法管辖区的所有大麻法律法规"
     },
     "payment": {
       "cardholderName": "持卡人姓名",
@@ -87,7 +107,8 @@
       "cvv": "CVV",
       "cvvPlaceholder": "123",
       "postalCode": "邮政编码",
-      "postalCodePlaceholder": "12345"
+      "postalCodePlaceholder": "12345",
+      "autoFilled": "自动填写"
     },
     "progress": {
       "verifying": "正在验证可用性...",
@@ -113,8 +134,40 @@
       "tryAgain": "重试",
       "registerAsUser": "注册为用户",
       "signInInstead": "改为登录",
-      "tenantExists": "租户代码 \"{{code}}\" 已被注册",
+      "tenantExists": "此域名的租户已存在：{{name}}",
       "websiteExists": "网站 \"{{website}}\" 已被使用"
+    },
+    "ontario": {
+      "title": "安大略省大麻许可",
+      "description": "安大略省大麻零售商所需。CROL是您的租户级运营许可证，CRSA是您的商店级零售授权。",
+      "crolLabel": "CROL编号（大麻零售运营许可证）*",
+      "crolPlaceholder": "输入您的OCS CROL编号",
+      "crolHelpText": "您的租户级OCS运营许可证编号",
+      "crsaTitle": "CRSA验证（大麻零售店授权）",
+      "domainVerifiedSuccess": "✓ 域名已验证 - 您的电子邮件域名与CRSA网站匹配。您的第一家商店将自动从此许可证创建。",
+      "licenseLabel": "安大略省大麻零售许可证编号",
+      "licensePlaceholder": "例如，CRSA-1234",
+      "validating": "验证中...",
+      "validate": "验证",
+      "licenseHelpText": "输入您从AGCO获得的安大略省大麻零售许可证编号",
+      "validatedSuccess": "✓ 许可证验证成功",
+      "storeNameLabel": "商店名称：",
+      "municipalityLabel": "市镇：",
+      "addressLabel": "地址：",
+      "websiteLabel": "网站：",
+      "validationFailed": "验证失败",
+      "searchIntro": "不知道您的许可证编号？搜索您的商店：",
+      "searchPlaceholder": "按商店名称或地址搜索...",
+      "searching": "搜索中...",
+      "search": "搜索",
+      "licenseField": "许可证：",
+      "availableForSignup": "可注册",
+      "alreadyRegistered": "已注册",
+      "noStoresFound": "未找到商店。请尝试不同的搜索词。",
+      "needHelp": "需要帮助？",
+      "helpText": "您的安大略省大麻零售许可证编号可以在您的AGCO授权文件中找到。通常以CRSA开头，后跟数字。",
+      "autoCreateStoreLabel": "创建 {storeName} 作为我的第一家店铺",
+      "autoCreateStoreHelp": "完成注册时将自动创建此店铺。您可以取消选中以便稍后手动添加店铺。"
     }
   },
   "review": {
@@ -310,7 +363,12 @@
     "expiryFormat": "请输入 MM/YY 格式",
     "cvvRequired": "CVV 为必填项",
     "cvvFormat": "CVV 必须为3或4位数字",
-    "cardholderRequired": "持卡人姓名为必填项"
+    "cardholderRequired": "持卡人姓名为必填项",
+    "crolNumberRequired": "安大略省租户需要CROL号码",
+    "crsaLicenseRequired": "安大略省租户需要有效的CRSA许可证",
+    "crsaDomainMismatch": "您的电子邮件域名与CRSA网站不匹配。请联系支持人员进行手动验证。",
+    "licenseNumberRequired": "请输入许可证号码",
+    "licenseValidationFailed": "许可证验证失败"
   },
   "passwordStrength": {
     "weak": "弱",
@@ -397,5 +455,22 @@
       "required": "您必须确认您的授权才能继续"
     },
     "allRequired": "必须接受所有声明才能创建您的账户"
+  },
+  "errors": {
+    "submit": {
+      "processingPayment": "正在处理付款方式...",
+      "paymentDetailsRequired": "付费计划需要付款详细信息",
+      "paymentMethodFailed": "处理付款方式失败",
+      "accountCreationFailed": "创建账户失败。",
+      "tenantExists": "此租户已存在。",
+      "userEmailExists": "此电子邮件的用户已存在。请使用其他电子邮件或登录。",
+      "emailAlreadyRegistered": "此电子邮件已注册。请使用其他电子邮件或登录。",
+      "informationAlreadyRegistered": "此信息已在我们的系统中注册。",
+      "checkRequiredFields": "请检查所有必填字段是否正确填写。",
+      "validationError": "验证错误：请检查所有必填字段是否正确填写。",
+      "serverError": "发生服务器错误。请稍后重试或联系支持人员。",
+      "serviceUnavailable": "服务不可用。请确保后端正在运行。",
+      "networkError": "网络错误：无法连接到服务器。请检查您的连接。"
+    }
   }
 }

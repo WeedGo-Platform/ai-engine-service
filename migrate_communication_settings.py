@@ -16,7 +16,7 @@ async def migrate_settings():
     db_port = 5434
     db_name = 'ai_engine'
     db_user = 'weedgo'
-    db_password = 'your_password_here'
+    db_password = 'weedgo123'
 
     # Pot Palace tenant ID
     tenant_id = UUID('ce2d57bc-b3ba-4801-b229-889a9fe9626d')

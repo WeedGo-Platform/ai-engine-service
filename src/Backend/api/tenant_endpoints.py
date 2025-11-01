@@ -43,6 +43,7 @@ import os
 import logging
 import secrets
 import string
+import json
 
 from core.domain.models import TenantStatus, SubscriptionTier
 from core.services.tenant_service import TenantService
@@ -80,6 +81,7 @@ class CreateTenantRequest(BaseModel):
     logo_url: Optional[str] = Field(None, max_length=500)
     crol_number: Optional[str] = Field(None, max_length=50, description="Ontario Cannabis Retail Operating License (tenant-level)")
     crsa_license: Optional[Dict[str, Any]] = Field(None, description="CRSA license validation data for store creation")
+    auto_create_first_store: Optional[bool] = Field(False, description="Whether to auto-create first store from CRSA data")
     settings: Optional[Dict[str, Any]] = Field(default_factory=dict)
 
 
@@ -138,7 +140,7 @@ async def get_db_pool() -> asyncpg.Pool:
             port=int(os.getenv('DB_PORT', 5434)),
             database=os.getenv('DB_NAME', 'ai_engine'),
             user=os.getenv('DB_USER', 'weedgo'),
-            password=os.getenv('DB_PASSWORD', 'your_password_here'),
+            password=os.getenv('DB_PASSWORD', 'weedgo123'),
             min_size=10,
             max_size=20
         )
@@ -257,16 +259,28 @@ async def check_tenant_exists(
                         }
                     })
 
-            # Check by website
+            # Check by website (extract domain name for matching)
             if request.website:
-                # Normalize website URL
+                # Extract domain name (e.g., 'potpalace' from 'www.potpalace.ca' or 'https://potpalace.com')
+                import re
                 normalized_website = request.website.lower()
-                normalized_website = normalized_website.replace('https://', '').replace('http://', '').rstrip('/')
+                # Remove protocol
+                normalized_website = normalized_website.replace('https://', '').replace('http://', '')
+                # Remove www.
+                normalized_website = normalized_website.replace('www.', '')
+                # Get domain name before first dot or slash
+                domain_match = re.match(r'^([^./]+)', normalized_website)
+                domain_name = domain_match.group(1) if domain_match else normalized_website
 
                 existing_by_website = await conn.fetchrow("""
                     SELECT id, name, code, website, contact_email FROM tenants
-                    WHERE LOWER(REPLACE(REPLACE(TRIM(website), 'https://', ''), 'http://', '')) = $1
-                """, normalized_website)
+                    WHERE LOWER(
+                        SUBSTRING(
+                            REPLACE(REPLACE(REPLACE(TRIM(website), 'https://', ''), 'http://', ''), 'www.', '')
+                            FROM '^([^./]+)'
+                        )
+                    ) = $1
+                """, domain_name)
 
                 if existing_by_website:
                     conflicts.append({
@@ -352,11 +366,29 @@ async def create_tenant_with_admin(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Admin user password is required"
             )
+        
+        # Validate email domain matches tenant website domain
+        if request.website:
+            admin_email = admin_user_data.get('email', '').lower()
+            email_domain = admin_email.split('@')[-1] if '@' in admin_email else ''
+            
+            # Extract domain from website (remove protocol, www, path, etc.)
+            website_domain = request.website.lower()
+            for prefix in ['https://', 'http://', 'www.']:
+                website_domain = website_domain.replace(prefix, '')
+            website_domain = website_domain.split('/')[0].split(':')[0]
+            
+            # Check if email domain matches website domain
+            if email_domain and website_domain and email_domain != website_domain:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"Email domain must match company website domain"
+                )
 
         # Start transaction for atomic operation
         async with pool.acquire() as conn:
             async with conn.transaction():
-                # Create tenant first
+                # Create tenant first (pass connection for transaction control)
                 tenant = await service.create_tenant(
                     name=request.name,
                     code=request.code,
@@ -369,7 +401,8 @@ async def create_tenant_with_admin(
                     contact_phone=request.contact_phone,
                     website=request.website,
                     logo_url=request.logo_url,
-                    settings=request.settings
+                    settings=request.settings,
+                    conn=conn  # Pass connection for atomic transaction
                 )
                 
                 # Add CROL number for Ontario tenants
@@ -411,29 +444,50 @@ async def create_tenant_with_admin(
                     )
                     logger.info(f"Recorded terms acceptance for tenant {tenant.id} by {terms_data.get('accepted_by')}")
                 
-                # Create first store from CRSA validation for Ontario tenants
+                # Create first store from CRSA validation if user opted in
                 created_store_id = None
-                if request.crsa_license and request.address:
+                if request.auto_create_first_store and request.crsa_license:
                     try:
+                        # Use SAVEPOINT to allow rollback without aborting entire transaction
+                        await conn.execute("SAVEPOINT store_creation")
+                        
                         crsa_data = request.crsa_license
+                        
+                        # Get province_territory_id for Ontario
+                        province_id = await conn.fetchval("""
+                            SELECT id FROM provinces_territories WHERE code = 'ON'
+                        """)
+                        
+                        if not province_id:
+                            logger.error("Ontario province not found in provinces_territories table")
+                            raise ValueError("Province configuration error")
+                        
+                        # Build address JSONB from CRSA data
+                        store_address = {
+                            "street": crsa_data.get('address', request.address.street if request.address else ''),
+                            "city": crsa_data.get('municipality', request.address.city if request.address else ''),
+                            "province": request.address.province if request.address else 'ON',
+                            "postal_code": request.address.postal_code if request.address else '',
+                            "country": "CA"
+                        }
                         
                         # Create store from CRSA data
                         created_store = await conn.fetchrow("""
                             INSERT INTO stores (
-                                tenant_id, name, address, city, province, postal_code,
-                                phone, status, license_number, is_primary, created_at, updated_at
+                                tenant_id, name, store_code, address, phone, 
+                                email, license_number, province_territory_id, status, created_at, updated_at
                             ) VALUES (
-                                $1, $2, $3, $4, $5, $6, $7, 'active', $8, true, NOW(), NOW()
+                                $1, $2, $3, $4, $5, $6, $7, $8, 'active', NOW(), NOW()
                             ) RETURNING id
                         """,
                             tenant.id,
                             crsa_data.get('store_name', request.name),
-                            crsa_data.get('address', request.address.street if request.address else ''),
-                            crsa_data.get('municipality', request.address.city if request.address else ''),
-                            request.address.province if request.address else 'ON',
-                            request.address.postal_code if request.address else '',
+                            f"{tenant.code}-MAIN",  # Store code
+                            json.dumps(store_address),  # JSONB address
                             request.contact_phone or '',
-                            crsa_data.get('license_number')
+                            request.contact_email or '',
+                            crsa_data.get('license_number'),
+                            province_id
                         )
                         created_store_id = created_store['id']
                         logger.info(f"Created primary store {created_store_id} from CRSA {crsa_data.get('license_number')}")
@@ -453,7 +507,15 @@ async def create_tenant_with_admin(
                         )
                         logger.info(f"Linked CRSA {crsa_data.get('license_number')} to tenant {tenant.id}")
                         
+                        # Release SAVEPOINT on success
+                        await conn.execute("RELEASE SAVEPOINT store_creation")
+                        
                     except Exception as store_error:
+                        # Rollback to savepoint, allowing transaction to continue
+                        try:
+                            await conn.execute("ROLLBACK TO SAVEPOINT store_creation")
+                        except:
+                            pass  # Savepoint may not exist if error occurred before creation
                         logger.error(f"Failed to create store from CRSA: {store_error}")
                         # Don't fail signup, but log for manual follow-up
                         # Admin can create store manually later
@@ -465,14 +527,16 @@ async def create_tenant_with_admin(
                         password=admin_user_data.get('password'),
                         first_name=admin_user_data.get('first_name', 'Admin'),
                         last_name=admin_user_data.get('last_name', 'User'),
-                        phone=request.contact_phone
+                        phone=request.contact_phone,
+                        conn=conn
                     )
 
                     # Link user to tenant with admin role
                     await user_repo.update_user_tenant(
                         user_id=created_user['id'],
                         tenant_id=tenant.id,
-                        role='tenant_admin'
+                        role='tenant_admin',
+                        conn=conn
                     )
 
                     # Add user info to response

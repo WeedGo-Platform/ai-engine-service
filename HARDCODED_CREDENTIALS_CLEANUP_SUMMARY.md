@@ -28,7 +28,7 @@ DB_HOST=localhost          # Database host
 DB_PORT=5434               # Database port
 DB_NAME=ai_engine          # Database name
 DB_USER=weedgo             # Database user
-DB_PASSWORD=your_password_here      # Database password
+DB_PASSWORD=your_secure_password_here      # Database password
 ```
 
 ### Redis Cache
@@ -96,7 +96,7 @@ conn = await asyncpg.connect(
     port=5434,
     database='ai_engine',
     user='weedgo',
-    password='your_password_here'
+    password=os.getenv('DB_PASSWORD')
 )
 ```
 
@@ -109,7 +109,7 @@ conn = await asyncpg.connect(
     port=int(os.getenv('DB_PORT', 5434)),
     database=os.getenv('DB_NAME', 'ai_engine'),
     user=os.getenv('DB_USER', 'weedgo'),
-    password=os.getenv('DB_PASSWORD', 'your_password_here')
+    password=os.getenv('DB_PASSWORD')
 )
 ```
 
@@ -139,7 +139,7 @@ All hardcoded credentials have been removed. Verified by:
 1. ✅ Grep search for `database='ai_engine'` - No matches
 2. ✅ Grep search for `host='localhost'` (excluding env var usage) - No matches
 3. ✅ Grep search for `user='weedgo'` - No matches
-4. ✅ Grep search for `password='your_password_here'` - No matches
+4. ✅ Grep search for `password=os.getenv('DB_PASSWORD')` - No matches
 
 ## Benefits
 

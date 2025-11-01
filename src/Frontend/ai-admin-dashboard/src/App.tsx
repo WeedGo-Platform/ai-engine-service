@@ -91,6 +91,8 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 
 
 // Import pages
 import Login from './pages/Login';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import Landing from './pages/Landing';
 import TenantSignup from './pages/TenantSignup';
 import UserRegistration from './pages/UserRegistration';
@@ -483,6 +485,14 @@ const router = createBrowserRouter([
   {
     path: '/login',
     element: <Login />  // Login page must be accessible without auth
+  },
+  {
+    path: '/forgot-password',
+    element: <ForgotPassword />  // Forgot password page
+  },
+  {
+    path: '/reset-password',
+    element: <ResetPassword />  // Reset password page (with token)
   },
   {
     path: '/signup',

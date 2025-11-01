@@ -431,7 +431,7 @@ const TenantEditModal: React.FC<TenantEditModalProps> = ({
                     <div className="flex items-center gap-6">
                       {(logoPreview || editedTenant?.logo_url) && (
                         <img
-                          src={logoPreview || (editedTenant.logo_url.startsWith('http') ? editedTenant.logo_url : `${import.meta.env.VITE_API_URL || 'http://localhost:5024'}${editedTenant.logo_url}`)}
+                          src={logoPreview || (editedTenant.logo_url.startsWith('http') ? editedTenant.logo_url : `${appConfig.api.baseUrl}${editedTenant.logo_url}`)}
                           alt="Logo"
                           className="w-16 h-16 object-contain border border-gray-200 dark:border-gray-600 rounded"
                         />

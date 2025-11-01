@@ -373,7 +373,7 @@ def main():
         'port': 5434,  # Current database
         'database': 'ai_engine',
         'user': 'weedgo',
-        'password': 'your_password_here'
+        'password': 'weedgo123'
     }
 
     print("="*80)

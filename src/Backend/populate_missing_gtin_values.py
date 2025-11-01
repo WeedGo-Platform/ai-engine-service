@@ -23,7 +23,7 @@ async def populate_gtin_values():
             port=int(os.getenv('DB_PORT', 5434)),
             database=os.getenv('DB_NAME', 'ai_engine'),
             user=os.getenv('DB_USER', 'weedgo'),
-            password=os.getenv('DB_PASSWORD', 'your_password_here')
+            password=os.getenv('DB_PASSWORD', 'weedgo123')
         )
         
         # First, check how many batch_tracking records have missing GTIN values

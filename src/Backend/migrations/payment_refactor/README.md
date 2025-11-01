@@ -27,16 +27,16 @@ cd /Users/charrcy/projects/WeedGo/microservices/ai-engine-service/src/Backend/mi
 
 ```bash
 # 1. Backup
-psql "postgresql://weedgo:your_password_here@localhost:5434/ai_engine" -f 001_backup_payment_schema.sql
+psql "postgresql://weedgo:weedgo123@localhost:5434/ai_engine" -f 001_backup_payment_schema.sql
 
 # 2. Drop deprecated tables
-psql "postgresql://weedgo:your_password_here@localhost:5434/ai_engine" -f 002_drop_deprecated_payment_tables.sql
+psql "postgresql://weedgo:weedgo123@localhost:5434/ai_engine" -f 002_drop_deprecated_payment_tables.sql
 
 # 3. Recreate core tables
-psql "postgresql://weedgo:your_password_here@localhost:5434/ai_engine" -f 003_recreate_payment_core_tables.sql
+psql "postgresql://weedgo:weedgo123@localhost:5434/ai_engine" -f 003_recreate_payment_core_tables.sql
 
 # 4. Seed providers
-psql "postgresql://weedgo:your_password_here@localhost:5434/ai_engine" -f 004_seed_payment_providers.sql
+psql "postgresql://weedgo:weedgo123@localhost:5434/ai_engine" -f 004_seed_payment_providers.sql
 ```
 
 ## Changes Summary
@@ -110,7 +110,7 @@ Each migration includes verification queries to confirm success.
 ### Rollback
 If something goes wrong:
 ```bash
-psql "postgresql://weedgo:your_password_here@localhost:5434/ai_engine" -f 999_rollback.sql
+psql "postgresql://weedgo:weedgo123@localhost:5434/ai_engine" -f 999_rollback.sql
 ```
 
 ## Pre-Migration Checklist
@@ -192,7 +192,7 @@ SELECT provider_name, is_active, is_sandbox FROM payment_providers ORDER BY prio
 **Problem:** Something went wrong
 **Solution:**
 ```bash
-psql "postgresql://weedgo:your_password_here@localhost:5434/ai_engine" -f 999_rollback.sql
+psql "postgresql://weedgo:weedgo123@localhost:5434/ai_engine" -f 999_rollback.sql
 ```
 
 ## Support

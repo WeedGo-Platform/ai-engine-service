@@ -16,7 +16,7 @@
     "stepDescriptions": {
       "company": "Spuneți-ne despre afacerea și marca dvs.",
       "contact": "Furnizați informațiile de contact și adresa",
-      "ontario": "Validate your Ontario cannabis retail licenses (CROL and CRSA)",
+      "ontario": "Validați licențele dvs. de vânzare cu amănuntul de canabis din Ontario (CROL și CRSA)",
       "account": "Creați acreditările contului de administrator",
       "payment": "Selectați planul și metoda de plată"
     },
@@ -51,7 +51,9 @@
       "city": "Oraș",
       "province": "Provincie",
       "postalCode": "Cod poștal",
-      "postalCodePlaceholder": "A1A 1A1"
+      "postalCodePlaceholder": "A1A 1A1",
+      "autoFilled": "Completat automat",
+      "addressAutocompleteHint": "💡 Începeți să tastați pentru a vedea sugestii de adrese - orașul și codul poștal se vor completa automat"
     },
     "accountSetup": {
       "password": "Parolă",
@@ -75,7 +77,25 @@
       "annualSave": "Economisiți 20%",
       "selectPlan": "Selectează planul",
       "enterpriseTitle": "Plan Enterprise",
-      "enterpriseDescription": "Echipa noastră de vânzări vă va contacta în 24 de ore pentru a discuta prețurile personalizate și configurarea."
+      "enterpriseDescription": "Echipa noastră de vânzări vă va contacta în 24 de ore pentru a discuta prețurile personalizate și configurarea.",
+      "freeTierTitle": "🎉 Free Tier Selected",
+      "freeTierMessage": "No payment required - continue to create your account!",
+      "legalTitle": "Legal Agreements & Attestations",
+      "termsPrefix": "I accept the ",
+      "termsLink": "Terms of Service",
+      "termsSuffix": ", including AI-targeted advertising from Licensed Producers",
+      "privacyPrefix": "I accept the ",
+      "privacyLink": "Privacy Policy",
+      "privacySuffix": " and consent to data collection and usage for advertising purposes",
+      "accuracyTitle": "I certify that all information provided in this registration is accurate, complete, and current.",
+      "accuracyText": " I understand that providing false or misleading information may result in account suspension or termination.",
+      "authorizationTitle": "I am duly authorized by my organization to create this account and bind the organization to these Terms.",
+      "authorizationText": " I have the legal authority to enter into agreements on behalf of the company listed above.",
+      "noticeTitle": "Important Notice:",
+      "notice1": "Your acceptance will be recorded with timestamp and IP address for legal compliance",
+      "notice2": "Revenue is generated through AI-targeted advertising from Licensed Producers",
+      "notice3": "Customer data will be used (anonymized) to improve product recommendations",
+      "notice4": "You must comply with all cannabis laws and regulations in your jurisdiction"
     },
     "payment": {
       "cardholderName": "Nume deținător card",
@@ -87,7 +107,8 @@
       "cvv": "CVV",
       "cvvPlaceholder": "123",
       "postalCode": "Cod poștal ZIP",
-      "postalCodePlaceholder": "12345"
+      "postalCodePlaceholder": "12345",
+      "autoFilled": "自动填写"
     },
     "progress": {
       "verifying": "Verificare disponibilitate...",
@@ -114,6 +135,38 @@
       "signInInstead": "Autentifică-te în schimb",
       "tenantExists": "Codul chiriașului \"{{code}}\" este deja înregistrat",
       "websiteExists": "Site-ul web \"{{website}}\" este deja utilizat"
+    },
+    "ontario": {
+      "title": "Licențiere Cannabis Ontario",
+      "description": "Necesar pentru comercianții cu amănuntul de cannabis din Ontario. CROL este licența dvs. de operare la nivel de chiriaș, CRSA este autorizația dvs. de vânzare cu amănuntul la nivel de magazin.",
+      "crolLabel": "Număr CROL (Licență de operare comercială cu cannabis) *",
+      "crolPlaceholder": "Introduceți numărul dvs. CROL OCS",
+      "crolHelpText": "Numărul dvs. de licență de operare OCS la nivel de chiriaș",
+      "crsaTitle": "Validare CRSA (Autorizație magazin cu amănuntul de cannabis)",
+      "domainVerifiedSuccess": "✓ Domeniu verificat - Domeniul dvs. de e-mail corespunde site-ului web CRSA. Primul dvs. magazin va fi creat automat din această licență.",
+      "licenseLabel": "Număr licență vânzare cu amănuntul de cannabis Ontario",
+      "licensePlaceholder": "ex., CRSA-1234",
+      "validating": "Se validează...",
+      "validate": "Validare",
+      "licenseHelpText": "Introduceți numărul dvs. de licență de vânzare cu amănuntul de cannabis din Ontario de la AGCO",
+      "validatedSuccess": "✓ Licență validată cu succes",
+      "storeNameLabel": "Nume magazin:",
+      "municipalityLabel": "Municipalitate:",
+      "addressLabel": "Adresă:",
+      "websiteLabel": "Site web:",
+      "validationFailed": "Validare eșuată",
+      "searchIntro": "Nu știți numărul dvs. de licență? Căutați magazinul dvs.:",
+      "searchPlaceholder": "Căutați după nume magazin sau adresă...",
+      "searching": "Se caută...",
+      "search": "Căutare",
+      "licenseField": "Licență:",
+      "availableForSignup": "Disponibil pentru înregistrare",
+      "alreadyRegistered": "Deja înregistrat",
+      "noStoresFound": "Nu s-au găsit magazine. Încercați un alt termen de căutare.",
+      "needHelp": "Aveți nevoie de ajutor?",
+      "helpText": "Numărul dvs. de licență de vânzare cu amănuntul de cannabis din Ontario poate fi găsit în documentele dvs. de autorizare AGCO. De obicei începe cu \"CRSA\" urmat de un număr.",
+      "autoCreateStoreLabel": "Creează {storeName} ca primul meu magazin",
+      "autoCreateStoreHelp": "Acest magazin va fi creat automat la finalizarea înregistrării. Puteți debifa pentru a adăuga magazine manual mai târziu."
     }
   },
   "review": {
@@ -309,7 +362,12 @@
     "expiryFormat": "Vă rugăm să introduceți formatul LL/AA",
     "cvvRequired": "CVV este obligatoriu",
     "cvvFormat": "CVV trebuie să aibă 3 sau 4 cifre",
-    "cardholderRequired": "Numele deținătorului cardului este obligatoriu"
+    "cardholderRequired": "Numele deținătorului cardului este obligatoriu",
+    "crolNumberRequired": "Numărul CROL este necesar pentru chiriașii din Ontario",
+    "crsaLicenseRequired": "Licența CRSA validă este necesară pentru chiriașii din Ontario",
+    "crsaDomainMismatch": "Domeniul dvs. de e-mail nu corespunde site-ului web CRSA. Vă rugăm să contactați asistența pentru verificare manuală.",
+    "licenseNumberRequired": "Vă rugăm să introduceți un număr de licență",
+    "licenseValidationFailed": "Validarea licenței a eșuat"
   },
   "passwordStrength": {
     "weak": "Slabă",
@@ -396,5 +454,22 @@
       "required": "Trebuie să confirmați autorizarea dvs. pentru a continua"
     },
     "allRequired": "Toate atestațiile trebuie acceptate pentru a crea contul dvs."
+  },
+  "errors": {
+    "submit": {
+      "processingPayment": "Procesare metodă de plată...",
+      "paymentDetailsRequired": "Detaliile de plată sunt necesare pentru planurile plătite",
+      "paymentMethodFailed": "Procesarea metodei de plată a eșuat",
+      "accountCreationFailed": "Crearea contului a eșuat.",
+      "tenantExists": "Acest chiriaș există deja.",
+      "userEmailExists": "Un utilizator cu acest e-mail există deja. Folosiți un alt e-mail sau autentificați-vă.",
+      "emailAlreadyRegistered": "Acest e-mail este deja înregistrat. Folosiți un alt e-mail sau autentificați-vă.",
+      "informationAlreadyRegistered": "Aceste informații sunt deja înregistrate în sistemul nostru.",
+      "checkRequiredFields": "Vă rugăm să verificați dacă toate câmpurile obligatorii sunt completate corect.",
+      "validationError": "Eroare de validare: Vă rugăm să verificați dacă toate câmpurile obligatorii sunt completate corect.",
+      "serverError": "A apărut o eroare de server. Încercați din nou mai târziu sau contactați asistența.",
+      "serviceUnavailable": "Serviciu indisponibil. Asigurați-vă că backend-ul rulează.",
+      "networkError": "Eroare de rețea: Imposibil de conectat la server. Verificați conexiunea."
+    }
   }
 }

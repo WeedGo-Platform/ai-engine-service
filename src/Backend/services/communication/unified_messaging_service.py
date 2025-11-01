@@ -28,6 +28,7 @@ from .aws_sns_provider import AWSSNSProvider
 from .email_service import EmailService
 from .sms_service import SMSService
 from .console_sms_provider import ConsoleSMSProvider
+from .smtp_email_provider import SMTPEmailProvider
 
 logger = logging.getLogger(__name__)
 
@@ -162,28 +163,31 @@ class UnifiedMessagingService:
                 sendgrid_config = ChannelConfig(
                     enabled=True,
                     rate_limit=10,
-                    cost_per_message=0.0,  # Free tier
+                    cost_per_message=0.0,  # Free tier (100/day)
                     api_key=os.getenv('SENDGRID_API_KEY'),
-                    timeout=30
+                    timeout=30,
+                    retry_attempts=0  # Don't retry SendGrid - fail fast
                 )
                 sendgrid_provider = EmailService(sendgrid_config, provider="sendgrid")
-                circuit_breaker = CircuitBreaker(failure_threshold=3, timeout_seconds=180)
+                circuit_breaker = CircuitBreaker(failure_threshold=1, timeout_seconds=300)  # Fail after 1 attempt
                 self.email_providers.append((sendgrid_provider, ProviderPriority.SECONDARY, circuit_breaker))
                 logger.info("SendGrid initialized as SECONDARY email provider")
             except Exception as e:
                 logger.warning(f"Failed to initialize SendGrid: {e}")
 
-        # 3. Gmail SMTP (Tertiary) - Last resort
+        # 3. Gmail SMTP (Tertiary) - Last resort fallback
         if os.getenv('SMTP_USER') and os.getenv('SMTP_PASSWORD'):
             try:
                 smtp_config = ChannelConfig(
                     enabled=True,
-                    rate_limit=1,  # Conservative rate for SMTP
+                    rate_limit=1,  # Conservative rate for SMTP (1 email/sec)
                     cost_per_message=0.0,  # Free
                     timeout=30
                 )
-                # SMTP provider would be implemented in email_service.py
-                logger.info("SMTP configured as TERTIARY email provider")
+                smtp_provider = SMTPEmailProvider(smtp_config)
+                circuit_breaker = CircuitBreaker(failure_threshold=3, timeout_seconds=180)
+                self.email_providers.append((smtp_provider, ProviderPriority.TERTIARY, circuit_breaker))
+                logger.info("SMTP initialized as TERTIARY email provider")
             except Exception as e:
                 logger.warning(f"Failed to initialize SMTP: {e}")
 
@@ -314,6 +318,7 @@ class UnifiedMessagingService:
     ) -> DeliveryResult:
         """
         Send message with automatic failover through provider chain
+        Strategy: Try PRIMARY → wait 2s → try SECONDARY once → TERTIARY (SMTP backup always tried)
         """
         if not providers:
             return DeliveryResult(
@@ -326,35 +331,43 @@ class UnifiedMessagingService:
             )
 
         errors = []
-
+        sorted_providers = sorted(providers, key=lambda x: x[1].value)
+        
         # Try each provider in priority order
-        for provider, priority, circuit_breaker in sorted(providers, key=lambda x: x[1].value):
+        for idx, (provider, priority, circuit_breaker) in enumerate(sorted_providers):
             # Check circuit breaker
             if not circuit_breaker.can_attempt():
                 logger.warning(f"Skipping provider {provider.__class__.__name__} - circuit breaker open")
                 continue
 
+            # Add delay between providers (2 seconds after PRIMARY fails)
+            if idx > 0:
+                await asyncio.sleep(2.0)
+                logger.info(f"Waiting 2 seconds before trying {provider.__class__.__name__}")
+
             try:
                 # Attempt to send
+                logger.info(f"Attempting to send via {provider.__class__.__name__} ({priority.name})")
                 result = await provider.send_single(recipient, message)
 
                 if result.status == DeliveryStatus.SENT:
                     # Success!
                     circuit_breaker.record_success()
-                    logger.info(f"Message sent via {provider.__class__.__name__} ({priority.name})")
+                    logger.info(f"✅ Message sent via {provider.__class__.__name__} ({priority.name})")
                     return result
                 else:
                     # Provider returned failure
                     circuit_breaker.record_failure()
-                    errors.append(f"{provider.__class__.__name__}: {result.error_message}")
-                    logger.warning(f"Provider {provider.__class__.__name__} failed: {result.error_message}")
+                    error_msg = result.error_message or "Unknown error"
+                    errors.append(f"{provider.__class__.__name__}: {error_msg}")
+                    logger.warning(f"❌ Provider {provider.__class__.__name__} failed: {error_msg}")
 
             except Exception as e:
                 # Provider threw exception
                 circuit_breaker.record_failure()
                 error_msg = str(e)
                 errors.append(f"{provider.__class__.__name__}: {error_msg}")
-                logger.error(f"Provider {provider.__class__.__name__} exception: {e}")
+                logger.error(f"❌ Provider {provider.__class__.__name__} exception: {e}")
 
         # All providers failed
         return DeliveryResult(
@@ -364,7 +377,7 @@ class UnifiedMessagingService:
             channel=ChannelType.EMAIL if channel_type == "email" else ChannelType.SMS,
             error_message=f"All providers failed: {'; '.join(errors)}",
             sent_at=datetime.now(),
-            metadata={'attempted_providers': len(providers), 'errors': errors}
+            metadata={'attempted_providers': len(errors), 'errors': errors}
         )
 
     async def get_provider_health(self) -> Dict[str, Any]:

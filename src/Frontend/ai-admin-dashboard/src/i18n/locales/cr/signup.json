@@ -16,7 +16,7 @@
     "stepDescriptions": {
       "company": "ᐚᑴᑕᒪᐗᐃᓇᐣ ᑭᐊᑑᑲᑌᐏᐣ ᐃᑭᐗ ᑭᐅᐦᒋᐏᐣ",
       "contact": "ᒥᔪᐁᐠ ᑭᐋᔭᒥᐦᑖᐏᐣ ᑭᑯᕀᔭᐠ ᐊᐱᐦᑖᒋᑫᐏᐣ ᐃᑭᐗ ᑭᐚᑴᐱᐏᐣ",
-      "ontario": "Validate your Ontario cannabis retail licenses (CROL and CRSA)",
+      "ontario": "kwayaskîtam ki Ontario askîhkâna atâwêwin oyôhkêmakana (CROL êkwa CRSA)",
       "account": "ᐅᔑᐦᑖᐠ ᑭᑭᓀᐚᐃᐦᑖᒪᑫᐏᐣ ᐅᑭᐊᔪᕀᐏᐣ",
       "payment": "ᐚᐯᐦᑕᐣ ᑭᐋᔭᒥᐦᑖᓱᐏᐣ ᐃᑭᐗ ᑎᐯᐧᓀᐏᐣ ᐃᑐᑕᒧᐚᐃᐣ"
     },
@@ -51,7 +51,9 @@
       "city": "ᐅᑌᓇᐤ",
       "province": "ᑮᐱᑯᐃᓇᐠ",
       "postalCode": "ᒪᓯᓇᐦᐃᑲᐣ ᑯᐟ",
-      "postalCodePlaceholder": "A1A 1A1"
+      "postalCodePlaceholder": "A1A 1A1",
+      "autoFilled": "Auto-filled",
+      "addressAutocompleteHint": "💡 Start typing to see address suggestions - city and postal code will auto-fill"
     },
     "accountSetup": {
       "password": "ᑲᑲᐤ ᑮᔅᑭᓄᐊᐧᐠ",
@@ -75,7 +77,25 @@
       "annualSave": "ᑲᓀᑕᐁᐧᐃᐦᑖᒋᑲᑌᐠ 20%",
       "selectPlan": "ᐚᐯᐦᑕᐣ ᐋᔭᒥᐦᑖᓱᐏᐣ",
       "enterpriseTitle": "ᒥᓯᐌ ᐋᔭᒥᐦᑖᓱᐏᐣ",
-      "enterpriseDescription": "ᑭᐊᑑᑲᑌᐏᓂᓂᐚᐠ ᑲᑭᐃᓐᑎᐧᑳᐧᐠ 24 ᑎᐸᐦᐃᑲᓇᐣ ᑲᐃᑐᑕᒧᐊᐧᐸᐣ ᑎᐯᐧᓀᐏᐣ."
+      "enterpriseDescription": "ᑭᐊᑑᑲᑌᐏᓂᓂᐚᐠ ᑲᑭᐃᓐᑎᐧᑳᐧᐠ 24 ᑎᐸᐦᐃᑲᓇᐣ ᑲᐃᑐᑕᒧᐊᐧᐸᐣ ᑎᐯᐧᓀᐏᐣ.",
+      "freeTierTitle": "🎉 Free Tier Selected",
+      "freeTierMessage": "No payment required - continue to create your account!",
+      "legalTitle": "Legal Agreements & Attestations",
+      "termsPrefix": "I accept the ",
+      "termsLink": "Terms of Service",
+      "termsSuffix": ", including AI-targeted advertising from Licensed Producers",
+      "privacyPrefix": "I accept the ",
+      "privacyLink": "Privacy Policy",
+      "privacySuffix": " and consent to data collection and usage for advertising purposes",
+      "accuracyTitle": "I certify that all information provided in this registration is accurate, complete, and current.",
+      "accuracyText": " I understand that providing false or misleading information may result in account suspension or termination.",
+      "authorizationTitle": "I am duly authorized by my organization to create this account and bind the organization to these Terms.",
+      "authorizationText": " I have the legal authority to enter into agreements on behalf of the company listed above.",
+      "noticeTitle": "Important Notice:",
+      "notice1": "Your acceptance will be recorded with timestamp and IP address for legal compliance",
+      "notice2": "Revenue is generated through AI-targeted advertising from Licensed Producers",
+      "notice3": "Customer data will be used (anonymized) to improve product recommendations",
+      "notice4": "You must comply with all cannabis laws and regulations in your jurisdiction"
     },
     "payment": {
       "cardholderName": "ᑲᑭᓇᐚᐃᐦᑖᐠ ᐅᐃᔑᓂᑳᓱᐏᐣ",
@@ -87,7 +107,8 @@
       "cvv": "CVV",
       "cvvPlaceholder": "123",
       "postalCode": "ZIP/ᒪᓯᓇᐦᐃᑲᐣ ᑯᐟ",
-      "postalCodePlaceholder": "12345"
+      "postalCodePlaceholder": "12345",
+      "autoFilled": "自动填写"
     },
     "progress": {
       "verifying": "ᑳᓇᐚᐸᐦᑕᒧᐠ...",
@@ -114,6 +135,38 @@
       "signInInstead": "ᐱᐦᑐᑲᐙᐣ ᐊᓐᒋᒪ",
       "tenantExists": "ᑯᐟ \"{{code}}\" ᐁᐅᔑᐦᑕᑯᓯᐠ",
       "websiteExists": "ᐃᓐᑎᕀᓂᐟ \"{{website}}\" ᐁᐊᐸᒋᐦᑖᑯᓯᐠ"
+    },
+    "ontario": {
+      "title": "Ontario ê-pê-oyôhkêmakan askîhkâna",
+      "description": "nitawihtamihk Ontario askîhkâna atâwêwikamikohk. CROL kîsi-oyôhkêmakan, CRSA kîsi-atâwêwin-oyôhkêmakan.",
+      "crolLabel": "CROL ayamihâwin (Cannabis Retail Operating License) *",
+      "crolPlaceholder": "kîkway ki OCS CROL ayamihâwin",
+      "crolHelpText": "ki OCS oyôhkêmakan ayamihâwin",
+      "crsaTitle": "CRSA kwayaskîtamowin (Cannabis Retail Store Authorization)",
+      "domainVerifiedSuccess": "✓ Domain kwayaskîtamohk - ki email domain tahto CRSA website. kikway atâwêwikamik ta-osîhtâw mêkwâc oma oyôhkêmakan.",
+      "licenseLabel": "Ontario Cannabis atâwêwin oyôhkêmakan ayamihâwin",
+      "licensePlaceholder": "ayamân: CRSA-1234",
+      "validating": "kwayaskîtamohk...",
+      "validate": "kwayaskîtamowin",
+      "licenseHelpText": "kîkway ki Ontario cannabis atâwêwin oyôhkêmakan AGCO ohci",
+      "validatedSuccess": "✓ oyôhkêmakan kwayaskîtamohk mwêhci",
+      "storeNameLabel": "atâwêwikamik isiyîhkâsowin:",
+      "municipalityLabel": "otênaw:",
+      "addressLabel": "tânite:",
+      "websiteLabel": "website:",
+      "validationFailed": "kwayaskîtamowin namôya mwêhci",
+      "searchIntro": "namôya kikiskêyihtên ki oyôhkêmakan ayamihâwin? nâtam ki atâwêwikamik:",
+      "searchPlaceholder": "nâtam isiyîhkâsowin ahpô tânite",
+      "searching": "nâtamohk...",
+      "noResults": "namôya kîkway miskam",
+      "selectStore": "wâpahtam ki atâwêwikamik oma ohci:",
+      "needHelp": "nitawihtên wîcihiwewin?",
+      "helpDetails": "kimiska ki oyôhkêmakan ayamihâwina ôma:",
+      "helpCrol": "• CROL: ki OCS B2B portal (nitawihtamihk)",
+      "helpCrsa": "• CRSA: AGCO oyôhkêmakan database awâsime (namôya nitawihtamihk)",
+      "helpNote": "kiskisiwin: kika pakitinên CRSA êkwa kiskinwahamaw atâwêwikamikwa îskwêyâc.",
+      "autoCreateStoreLabel": "osîhtaw {storeName} nitam ni atâwêwikamik",
+      "autoCreateStoreHelp": "oma atâwêwikamik ta-osîhtâw mêkwâc kikway ispayiw. kika pakitinên êkwa kiskinwahamaw atâwêwikamikwa îskwêyâc."
     }
   },
   "review": {
@@ -309,7 +362,12 @@
     "expiryFormat": "ᒥᓀᐊᐧᐋᐠ MM/YY",
     "cvvRequired": "CVV ᐱᑯᑮᔭᐠ",
     "cvvFormat": "CVV 3 ᐁᑯᑌ 4 ᐊᔮᐯᕀᐏᓇᐣ",
-    "cardholderRequired": "ᑲᑭᓇᐚᐃᐦᑖᐠ ᐅᐃᔑᓂᑳᓱᐏᐣ ᐱᑯᑮᔭᐠ"
+    "cardholderRequired": "ᑲᑭᓇᐚᐃᐦᑖᐠ ᐅᐃᔑᓂᑳᓱᐏᐣ ᐱᑯᑮᔭᐠ",
+    "crolNumberRequired": "CROL ᐊᔨᐦᒋᑲᐣ ᐁᑭᐸᑲᐦᐋᐊᐧᐠ ᐊᖏᕐᕋᖃᕐᑎᑦᑎᔨᓄᑦ ᐋᓐᑎᐅᕆᐅ",
+    "crsaLicenseRequired": "CRSA ᐱᔪᓐᓇᐅᑎ ᒥᓄᓭᐎᐣ ᐁᑭᐸᑲᐦᐋᐊᐧᐠ ᐊᖏᕐᕋᖃᕐᑎᑦᑎᔨᓄᑦ ᐋᓐᑎᐅᕆᐅ",
+    "crsaDomainMismatch": "ᑭᐁᓬᐁᐠᑐᕒᐊᓂᐠ ᑎᑎᕋᐱᐣ ᓇᒪ ᐁᔑ ᐊᔨᔭᐃᐧᐣ CRSA ᖃᕆᑕᐅᔭᒃᑯᑦ. ᐃᑲᔪᖅᑕᐅᓂᖅ ᖃᐅᔨᓴᕐᓗᒍ.",
+    "licenseNumberRequired": "ᐱᔪᓐᓇᐅᑎᐅᑉ ᓈᓴᐅᑎᖓ ᑎᑎᕋᖅᓯᒪᔪᖅ",
+    "licenseValidationFailed": "ᐱᔪᓐᓇᐅᑎ ᖃᐅᔨᓴᕐᓂᖅ ᑭᒫᒋᐦᐅᐤ"
   },
   "passwordStrength": {
     "weak": "ᐱᔅᑫᐤ",
@@ -396,5 +454,22 @@
       "required": "You must confirm your authorization to continue"
     },
     "allRequired": "All attestations must be accepted to create your account"
+  },
+  "errors": {
+    "submit": {
+      "processingPayment": "ᑎᐹᐦᐊᒧᐎᐣ ᐱᓕᕆᐊᖅ...",
+      "paymentDetailsRequired": "ᑎᐹᐦᐊᒧᐎᐣ ᑐᑭᓯᐅᒪᔾᔪᑏᑦ ᐱᔭᕆᐊᓕᑦ ᑎᐹᐦᐃᑫᐎᐣ",
+      "paymentMethodFailed": "ᑎᐹᐦᐊᒧᐎᐣ ᐱᓕᕆᐊᖅ ᑭᒫᒋᐦᐅᐤ",
+      "accountCreationFailed": "ᐊᑐᖅᑎᐅᓂᖅ ᐅᓵᒥᐦᐃᑲᑌᐎᐣ ᑭᒫᒋᐦᐅᐤ.",
+      "tenantExists": "ᐊᖏᕐᕋᖃᕐᑎᑦᑎᔨ ᐃᓂᒋᔭᐅᓕᖅᑐᖅ.",
+      "userEmailExists": "ᐊᐸᒋᐦᑕᐤ ᐅᖃᐅᓯᑎᑦᑎᓂᖅ ᐃᓂᒋᔭᐅᓕᖅᑐᖅ. ᑯᑕᐠ ᐊᑐᕐᓗᒍ ᐅᕝᕙᓘᓐᓃᑦ ᐱᓐᑎᑫᐤ.",
+      "emailAlreadyRegistered": "ᐅᖃᐅᓯᑎᑦᑎᓂᖅ ᒫᒋᑐᐏᓇᐦᐃᑲᑌᐤ. ᑯᑕᐠ ᐊᑐᕐᓗᒍ ᐅᕝᕙᓘᓐᓃᑦ ᐱᓐᑎᑫᐤ.",
+      "informationAlreadyRegistered": "ᐊᔨᒥᐦᐁᐎᐣ ᒫᒋᑐᐏᓇᐦᐃᑲᑌᐤ ᑭᑕᑕᐸᔅᑫᐎᓇᐎᓂᐣ.",
+      "checkRequiredFields": "ᖃᐅᔨᓴᕐᓗᒋᑦ ᐱᔭᕆᐊᓕᑦ ᒥᓄᓭᐎᐣ ᑎᑎᕋᖅᓯᒪᔪᑦ.",
+      "validationError": "ᖃᐅᔨᓴᕐᓂᖅ ᐊᔪᕐᓂᖅ: ᖃᐅᔨᓴᕐᓗᒋᑦ ᐱᔭᕆᐊᓕᑦ ᒥᓄᓭᐎᐣ.",
+      "serverError": "ᓴᕐᕕᒃ ᐊᔪᕐᓂᖅ. ᒥᓇᐊᐧᐨ ᑯᒋᑕᐤ ᐅᕝᕙᓘᓐᓃᑦ ᐃᑲᔪᖅᑕᐅᓂᖅ.",
+      "serviceUnavailable": "ᐱᔨᑦᑎᕋᕐᓂᖅ ᓇᒪ ᒥᑲᐤ. ᖃᐅᔨᓴᕐᓗᒍ ᐱᓕᕆᔪᓐᓇᕐᒪᖔᖅ.",
+      "networkError": "ᖃᕆᑕᐅᔭᒃᑯᑦ ᐊᔪᕐᓂᖅ: ᓴᕐᕕᒃ ᐃᑲᖅᑐᐃᓐᓇᕐᓂᖅ. ᖃᐅᔨᓴᕐᓗᒍ."
+    }
   }
 }
