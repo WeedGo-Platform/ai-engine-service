@@ -81,7 +81,7 @@ docker run ... weedgo-postgres-postgis:17 postgres -c listen_addresses='*'
 docker run -d --name ai-engine-db-postgis \
   -p 5434:5432 \
   -e POSTGRES_USER=weedgo \
-  -e POSTGRES_PASSWORD=your_password_here \
+  -e POSTGRES_PASSWORD=weedgo123 \
   -e POSTGRES_DB=ai_engine \
   weedgo-postgres-postgis:17 \
   postgres -c listen_addresses='*'
@@ -220,7 +220,7 @@ docker logs ai-engine-db-postgis
 
 ### Connect to Database
 ```bash
-PGPASSWORD=your_password_here psql -h localhost -p 5434 -U weedgo -d ai_engine
+PGPASSWORD=weedgo123 psql -h localhost -p 5434 -U weedgo -d ai_engine
 ```
 
 ---

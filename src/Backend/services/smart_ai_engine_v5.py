@@ -2338,7 +2338,7 @@ class SmartAIEngineV5:
                 'port': int(os.getenv('DB_PORT', 5434)),
                 'database': os.getenv('DB_NAME', 'ai_engine'),
                 'user': os.getenv('DB_USER', 'weedgo'),
-                'password': os.getenv('DB_PASSWORD', 'your_password_here')
+                'password': os.getenv('DB_PASSWORD', 'weedgo123')
             }
             logger.info(f"[SmartAIEngineV5] Connecting to database at {db_config['host']}:{db_config['port']}/{db_config['database']}")
 

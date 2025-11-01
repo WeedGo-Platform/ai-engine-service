@@ -27,7 +27,7 @@ The new Unified Messaging Service provides enterprise-grade email and SMS delive
 
 ### AWS Configuration (Primary Providers)
 ```bash
-***REMOVED***
+# AWS Credentials
 AWS_ACCESS_KEY_ID=your_access_key
 AWS_SECRET_ACCESS_KEY=your_secret_key
 AWS_REGION=us-east-1  # or ca-central-1 for Canada

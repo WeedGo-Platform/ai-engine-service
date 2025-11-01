@@ -18,7 +18,7 @@ class SimpleBarcodeLookup:
             'port': 5434,
             'database': 'ai_engine',
             'user': 'weedgo',
-            'password': 'your_password_here'
+            'password': 'weedgo123'
         }
     
     async def lookup_barcode(self, barcode: str, store_id: str = None) -> Dict[str, Any]:

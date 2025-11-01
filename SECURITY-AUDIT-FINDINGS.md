@@ -325,7 +325,7 @@ OPENROUTER_API_KEY=sk-or-v1-dev-xxxxx  # Different key for dev!
 **Storage**:
 ```bash
 # ❌ DON'T: Hardcode
-DB_PASSWORD=your_password_here
+DB_PASSWORD=your_secure_password_here
 
 # ✅ DO: Generate strong passwords
 DB_PASSWORD=X9$mK2#pL8@vN5!qR7

@@ -99,7 +99,7 @@ async def get_db_pool() -> asyncpg.Pool:
             port=int(os.getenv('DB_PORT', 5434)),
             database=os.getenv('DB_NAME', 'ai_engine'),
             user=os.getenv('DB_USER', 'weedgo'),
-            password=os.getenv('DB_PASSWORD', 'your_password_here'),  # Default password
+            password=os.getenv('DB_PASSWORD', 'weedgo123'),  # Default password
             min_size=10,
             max_size=20
         )
@@ -123,7 +123,7 @@ async def get_db_pool() -> asyncpg.Pool:
 
 1. **Missing .env file** 🔴 **MOST LIKELY**
    - AI Engine has no `.env` file
-   - Using hardcoded defaults: `DB_PASSWORD=your_password_here`
+   - Using hardcoded defaults: `DB_PASSWORD=weedgo123`
    - Database credentials may not match
 
 2. **Table `provinces_territories` doesn't exist** 🟡 **POSSIBLE**
@@ -142,7 +142,7 @@ async def get_db_pool() -> asyncpg.Pool:
 1. AI Engine Service implemented with provinces endpoint
 2. Migration files created but may not have been executed
 3. No `.env` file created (only `.env.example` exists)
-4. Service defaults to `DB_PASSWORD=your_password_here`
+4. Service defaults to `DB_PASSWORD=weedgo123`
 5. Frontend admin dashboard calls `/api/stores/provinces`
 6. Database connection fails → 500 error
 

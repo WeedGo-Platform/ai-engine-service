@@ -16,7 +16,7 @@ TEST_DB_CONFIG = {
     'port': 5434,
     'database': 'ai_engine_test',  # Separate test database
     'user': 'weedgo',
-    'password': 'your_password_here',
+    'password': 'weedgo123',
 }
 
 

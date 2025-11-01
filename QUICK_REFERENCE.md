@@ -194,7 +194,7 @@ SAVINGS: $27.45/month (18%)
 ### Circuit Breaker Stuck Open
 Wait 60 seconds for auto-recovery
 
-##***REMOVED*** Invalid
+### AWS Credentials Invalid
 ```bash
 aws sts get-caller-identity
 # Should return your AWS account info

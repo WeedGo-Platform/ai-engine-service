@@ -471,10 +471,10 @@ Or place CSV in `data/crsa/` directory and it will be picked up automatically.
 **1. Initial Setup:**
 ```bash
 # Apply migrations
-PGPASSWORD=your_password_here psql -h localhost -p 5434 -U weedgo -d ai_engine \
+PGPASSWORD=weedgo123 psql -h localhost -p 5434 -U weedgo -d ai_engine \
   -f migrations/create_ontario_crsa_table.sql
 
-PGPASSWORD=your_password_here psql -h localhost -p 5434 -U weedgo -d ai_engine \
+PGPASSWORD=weedgo123 psql -h localhost -p 5434 -U weedgo -d ai_engine \
   -f migrations/create_crsa_sync_history.sql
 
 # Import initial CSV data
@@ -544,7 +544,7 @@ curl http://localhost:5024/api/crsa/admin/sync/history?limit=10
 DB_HOST=localhost
 DB_PORT=5434
 DB_USER=weedgo
-DB_PASSWORD=your_password_here
+DB_PASSWORD=weedgo123
 DB_NAME=ai_engine
 ```
 

@@ -9,7 +9,7 @@ async def check_columns():
         'port': 5434,
         'database': 'ai_engine',
         'user': 'weedgo',
-        'password': 'your_password_here'
+        'password': 'weedgo123'
     }
     
     conn = await asyncpg.connect(**db_config)

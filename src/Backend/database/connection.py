@@ -20,8 +20,12 @@ DB_CONFIG = {
     'port': int(os.getenv('DB_PORT', 5434)),
     'database': os.getenv('DB_NAME', 'ai_engine'),
     'user': os.getenv('DB_USER', 'weedgo'),
-    'password': os.getenv('DB_PASSWORD', 'your_password_here')
+    'password': os.getenv('DB_PASSWORD')  # No default - must be set in environment
 }
+
+# Validate required environment variables
+if not DB_CONFIG['password']:
+    raise ValueError("DB_PASSWORD environment variable must be set")
 
 # Connection pools for better performance
 connection_pool = None

@@ -109,7 +109,7 @@ koyeb service logs 59872c17 --token YOUR_TOKEN | grep "CORS"
 1. Go to: https://weedgo-uat-admin.pages.dev/login
 2. Enter credentials:
    - Email: `admin@weedgo.ca`
-   - Password: `your_password_here`
+   - Password: `Password1$`
 3. Should successfully log in without CORS errors
 
 ## Automatic Deployments

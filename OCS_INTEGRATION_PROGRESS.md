@@ -136,7 +136,7 @@ DB_HOST=localhost
 DB_PORT=5434
 DB_NAME=ai_engine
 DB_USER=weedgo
-DB_PASSWORD=your_password_here
+DB_PASSWORD=weedgo123
 
 # Redis (for workers)
 REDIS_HOST=localhost

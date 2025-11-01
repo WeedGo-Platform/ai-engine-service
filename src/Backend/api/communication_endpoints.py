@@ -51,7 +51,7 @@ async def get_db_pool():
             host=os.getenv('PG_HOST', 'localhost'),
             port=int(os.getenv('PG_PORT', '5434')),
             user=os.getenv('PG_USER', 'weedgo'),
-            password=os.getenv('PG_PASSWORD', 'your_password_here'),
+            password=os.getenv('PG_PASSWORD', 'weedgo123'),
             database=os.getenv('PG_DATABASE', 'ai_engine'),
             min_size=5,
             max_size=20

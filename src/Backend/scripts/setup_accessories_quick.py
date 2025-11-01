@@ -16,7 +16,7 @@ DB_CONFIG = {
     'port': 5434,
     'database': 'ai_engine',
     'user': 'weedgo',
-    'password': 'your_password_here'
+    'password': 'weedgo123'
 }
 
 def setup_accessories():

@@ -16,7 +16,7 @@ services:
       - .env.test
     environment:
       # Connect to host machine's local database and redis
-      DATABASE_URL: postgresql://${DB_USER:-weedgo}:${DB_PASSWORD:-your_password_here}@host.docker.internal:${DB_PORT:-5432}/${DB_NAME:-ai_engine_test}
+      DATABASE_URL: postgresql://${DB_USER:-weedgo}:${DB_PASSWORD:-weedgo123}@host.docker.internal:${DB_PORT:-5432}/${DB_NAME:-ai_engine_test}
       REDIS_URL: redis://host.docker.internal:6379/0
       ENVIRONMENT: test
       PORT: 6024

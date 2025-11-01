@@ -24,7 +24,7 @@ async def setup_delivery_zones():
         port=int(os.getenv('DB_PORT', 5434)),
         database=os.getenv('DB_NAME', 'ai_engine'),
         user=os.getenv('DB_USER', 'weedgo'),
-        password=os.getenv('DB_PASSWORD', 'your_password_here')
+        password=os.getenv('DB_PASSWORD', 'weedgo123')
     )
 
     try:

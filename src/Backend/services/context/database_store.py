@@ -28,7 +28,7 @@ class DatabaseContextStore:
                  port: int = 5434,
                  database: str = "ai_engine",
                  user: str = "weedgo",
-                 password: str = "your_password_here",
+                 password: str = "weedgo123",
                  min_connections: int = 2,
                  max_connections: int = 10):
         """

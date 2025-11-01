@@ -20,7 +20,7 @@ jobs:
         image: postgres:15
         env:
           POSTGRES_USER: weedgo
-          POSTGRES_PASSWORD: your_password_here
+          POSTGRES_PASSWORD: weedgo123
           POSTGRES_DB: ai_engine
         ports:
           - 5434:5432
@@ -61,7 +61,7 @@ jobs:
     
     - name: Setup database
       env:
-        PGPASSWORD: your_password_here
+        PGPASSWORD: weedgo123
       run: |
         psql -h localhost -p 5434 -U weedgo -d ai_engine -f ./microservices/ai-engine-service/data/migrations/001_create_ai_engine_schema.sql
         psql -h localhost -p 5434 -U weedgo -d ai_engine -f ./microservices/ai-engine-service/data/migrations/002_create_history_aware_tables.sql
@@ -74,7 +74,7 @@ jobs:
         DB_PORT: 5434
         DB_NAME: ai_engine
         DB_USER: weedgo
-        DB_PASSWORD: your_password_here
+        DB_PASSWORD: weedgo123
         REDIS_HOST: localhost
         REDIS_PORT: 6381
       run: |

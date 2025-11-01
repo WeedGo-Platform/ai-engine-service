@@ -12,9 +12,9 @@ import sys
 from datetime import datetime
 from uuid import uuid4
 
-# Configuration
-ADMIN_EMAIL = "admin@weedgo.ca"
-ADMIN_PASSWORD = "your_password_here"
+# Configuration - Read from environment
+ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "admin@weedgo.ca")
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "Password1$")  # Default for local dev only
 ADMIN_ROLE = "super_admin"
 
 async def create_super_admin():
@@ -26,7 +26,7 @@ async def create_super_admin():
         'port': int(os.getenv('DB_PORT', 5434)),
         'database': os.getenv('DB_NAME', 'ai_engine'),
         'user': os.getenv('DB_USER', 'weedgo'),
-        'password': os.getenv('DB_PASSWORD', 'your_password_here')
+        'password': os.getenv('DB_PASSWORD')  # Must be set in environment
     }
 
     print(f"🔌 Connecting to database: {db_config['host']}:{db_config['port']}/{db_config['database']}")

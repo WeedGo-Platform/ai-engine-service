@@ -18,7 +18,7 @@ LEGACY_DB_CONFIG = {
     'port': 5433,  # Legacy database
     'database': 'ai_engine',
     'user': 'weedgo',
-    'password': 'your_password_here'
+    'password': 'weedgo123'
 }
 
 CURRENT_DB_CONFIG = {
@@ -26,7 +26,7 @@ CURRENT_DB_CONFIG = {
     'port': 5434,  # Current database
     'database': 'ai_engine',
     'user': 'weedgo',
-    'password': 'your_password_here'
+    'password': 'weedgo123'
 }
 
 class DataMigrator:

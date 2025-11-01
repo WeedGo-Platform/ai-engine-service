@@ -140,7 +140,7 @@ delivered      → "Your order has been delivered" (shows rating UI)
 
 2. **Verify order exists in database**
    ```bash
-   PGPASSWORD=your_password_here psql -h localhost -p 5434 -U weedgo -d ai_engine \
+   PGPASSWORD=weedgo123 psql -h localhost -p 5434 -U weedgo -d ai_engine \
      -c "SELECT id, order_number, delivery_status FROM orders WHERE id = 'YOUR-ORDER-ID';"
    ```
 
