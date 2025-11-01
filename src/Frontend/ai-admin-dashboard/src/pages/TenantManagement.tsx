@@ -28,7 +28,7 @@ import {
 } from 'lucide-react';
 import tenantService, { Tenant, CreateTenantRequest } from '../services/tenantService';
 import ocsService from '../services/ocsService';
-import { getApiEndpoint } from '../config/app.config';
+import { getApiEndpoint, appConfig } from '../config/app.config';
 import { useAuth } from '../contexts/AuthContext';
 import TenantEditModal from '../components/TenantEditModal';
 import { useErrorHandler } from '../hooks/useErrorHandler';
