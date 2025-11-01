@@ -103,12 +103,7 @@ jobs:
             --platform managed \
             --region ${{ env.REGION }} \
             --allow-unauthenticated \
-            --set-env-vars "ENVIRONMENT=test,\
-DB_HOST=/cloudsql/${{ env.PROJECT_ID }}:${{ env.REGION }}:${{ env.CLOUD_SQL_INSTANCE }},\
-DB_PORT=5432,\
-DB_NAME=ai_engine,\
-DB_USER=weedgo,\
-DB_PASSWORD=${{ secrets.CLOUD_SQL_DB_PASSWORD }}" \
+            --set-env-vars "ENVIRONMENT=test,DB_HOST=/cloudsql/${{ env.PROJECT_ID }}:${{ env.REGION }}:${{ env.CLOUD_SQL_INSTANCE }},DB_PORT=5432,DB_NAME=ai_engine,DB_USER=weedgo,DB_PASSWORD=${{ secrets.CLOUD_SQL_DB_PASSWORD }}" \
             --add-cloudsql-instances ${{ env.PROJECT_ID }}:${{ env.REGION }}:${{ env.CLOUD_SQL_INSTANCE }} \
             --min-instances 0 \
             --max-instances 10 \
