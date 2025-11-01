@@ -225,12 +225,14 @@ jobs:
       - name: Run migrations
         run: |
           export PGPASSWORD="${{ secrets.CLOUD_SQL_DB_PASSWORD }}"
+
+          # Run schema migration
           psql -h 127.0.0.1 \
                -p 5432 \
                -U weedgo \
                -d ai_engine \
-               -f src/Backend/database/ai_engine_minimal_schema.sql \
-               
+               -f src/Backend/database/schema_migration.sql \
+
 
           echo "✅ Database migrations completed"
 
