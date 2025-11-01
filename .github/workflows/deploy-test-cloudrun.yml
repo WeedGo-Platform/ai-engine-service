@@ -67,9 +67,7 @@ jobs:
             ${{ steps.meta.outputs.tags }}
             ${{ steps.meta.outputs.latest }}
           cache-from: type=registry,ref=${{ steps.meta.outputs.latest }}
-          cache-to: type=inline
-          build-args: |
-            BUILDKIT_INLINE_CACHE=1
+          cache-to: type=registry,ref=${{ steps.meta.outputs.latest }},mode=max
 
       - name: Verify image
         run: |
