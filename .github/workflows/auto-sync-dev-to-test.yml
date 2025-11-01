@@ -31,8 +31,8 @@ jobs:
         with:
           # Fetch full history for proper merging
           fetch-depth: 0
-          # Use a token with write permissions
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # Use PAT to trigger downstream workflows (falls back to GITHUB_TOKEN if not set)
+          token: ${{ secrets.WORKFLOW_PAT || secrets.GITHUB_TOKEN }}
 
       - name: Configure Git
         run: |
