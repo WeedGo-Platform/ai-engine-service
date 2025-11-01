@@ -64,7 +64,7 @@ jobs:
           echo "🔄 Merging dev into test..."
 
           # Attempt merge with union strategy for environment files (defined in .gitattributes)
-          if git merge dev --no-edit -m "chore: Auto-sync dev to test [skip ci]
+          if git merge dev --no-edit --allow-unrelated-histories -m "chore: Auto-sync dev to test [skip ci]
 
           Automated merge of dev branch into test branch.
 
