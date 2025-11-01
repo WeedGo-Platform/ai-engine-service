@@ -18,7 +18,7 @@ env:
   PROJECT_ID: weedgo-uat-2025
   REGION: us-central1
   SERVICE_NAME: weedgo-uat
-  CLOUD_SQL_INSTANCE: weedgo-uat-db
+  CLOUD_SQL_INSTANCE: weedgo-test-db
   ARTIFACT_REGISTRY: us-central1-docker.pkg.dev
   IMAGE_NAME: weedgo-uat
 
@@ -79,7 +79,7 @@ jobs:
   deploy:
     name: Deploy to Cloud Run
     runs-on: ubuntu-latest
-    needs: build
+    needs: [build, migrate]
 
     steps:
       - name: Checkout code
@@ -183,12 +183,12 @@ jobs:
           echo "- **Cloud SQL:** ${{ env.PROJECT_ID }}:${{ env.REGION }}:${{ env.CLOUD_SQL_INSTANCE }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Database:** ai_engine" >> $GITHUB_STEP_SUMMARY
 
-  # Optional: Run database migrations
+  # Run database migrations (required before deployment)
   migrate:
     name: Run Database Migrations
     runs-on: ubuntu-latest
-    needs: deploy
-    if: github.event.inputs.run_migrations == 'true'
+    needs: build
+    
 
     steps:
       - name: Checkout code
@@ -230,7 +230,7 @@ jobs:
                -U weedgo \
                -d ai_engine \
                -f src/Backend/database/ai_engine_minimal_schema.sql \
-               || echo "⚠️  Migrations may have partial failures (this is often expected)"
+               
 
           echo "✅ Database migrations completed"
 
