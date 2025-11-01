@@ -16,7 +16,7 @@
     "stepDescriptions": {
       "company": "話俾我哋聽你嘅生意同品牌",
       "contact": "提供你嘅聯絡資料同地址",
-      "ontario": "Validate your Ontario cannabis retail licenses (CROL and CRSA)",
+      "ontario": "驗證你嘅安大略省大麻零售牌照（CROL同CRSA）",
       "account": "建立你嘅管理員帳戶憑證",
       "payment": "揀選你嘅計劃同付款方式"
     },
@@ -51,7 +51,9 @@
       "city": "城市",
       "province": "省份",
       "postalCode": "郵政編碼",
-      "postalCodePlaceholder": "A1A 1A1"
+      "postalCodePlaceholder": "A1A 1A1",
+      "autoFilled": "自動填寫",
+      "addressAutocompleteHint": "💡 開始輸入以查看地址建議 - 城市同郵政編碼會自動填寫"
     },
     "accountSetup": {
       "password": "密碼",
@@ -75,7 +77,25 @@
       "annualSave": "節省20%",
       "selectPlan": "揀選計劃",
       "enterpriseTitle": "企業計劃",
-      "enterpriseDescription": "我哋嘅銷售團隊會喺24小時內聯絡你，討論自訂定價同設置。"
+      "enterpriseDescription": "我哋嘅銷售團隊會喺24小時內聯絡你，討論自訂定價同設置。",
+      "freeTierTitle": "🎉 Free Tier Selected",
+      "freeTierMessage": "No payment required - continue to create your account!",
+      "legalTitle": "Legal Agreements & Attestations",
+      "termsPrefix": "I accept the ",
+      "termsLink": "Terms of Service",
+      "termsSuffix": ", including AI-targeted advertising from Licensed Producers",
+      "privacyPrefix": "I accept the ",
+      "privacyLink": "Privacy Policy",
+      "privacySuffix": " and consent to data collection and usage for advertising purposes",
+      "accuracyTitle": "I certify that all information provided in this registration is accurate, complete, and current.",
+      "accuracyText": " I understand that providing false or misleading information may result in account suspension or termination.",
+      "authorizationTitle": "I am duly authorized by my organization to create this account and bind the organization to these Terms.",
+      "authorizationText": " I have the legal authority to enter into agreements on behalf of the company listed above.",
+      "noticeTitle": "Important Notice:",
+      "notice1": "Your acceptance will be recorded with timestamp and IP address for legal compliance",
+      "notice2": "Revenue is generated through AI-targeted advertising from Licensed Producers",
+      "notice3": "Customer data will be used (anonymized) to improve product recommendations",
+      "notice4": "You must comply with all cannabis laws and regulations in your jurisdiction"
     },
     "payment": {
       "cardholderName": "持卡人姓名",
@@ -87,7 +107,8 @@
       "cvv": "CVV",
       "cvvPlaceholder": "123",
       "postalCode": "ZIP/郵政編碼",
-      "postalCodePlaceholder": "12345"
+      "postalCodePlaceholder": "12345",
+      "autoFilled": "自动填写"
     },
     "progress": {
       "verifying": "核實緊可用性...",
@@ -114,6 +135,38 @@
       "signInInstead": "登入",
       "tenantExists": "租戶代碼 \"{{code}}\" 已經註冊咗",
       "websiteExists": "網站 \"{{website}}\" 已經有人用緊"
+    },
+    "ontario": {
+      "title": "安大略省大麻牌照",
+      "description": "安大略省大麻零售商必需。CROL係你嘅租戶級營運牌照，CRSA係你嘅商店級零售授權。",
+      "crolLabel": "CROL編號（大麻零售營運牌照）*",
+      "crolPlaceholder": "輸入你嘅OCS CROL編號",
+      "crolHelpText": "你嘅租戶級OCS營運牌照編號",
+      "crsaTitle": "CRSA驗證（大麻零售店授權）",
+      "domainVerifiedSuccess": "✓ 域名已驗證 - 你嘅電郵域名同CRSA網站匹配。你嘅第一間舖頭會自動從呢個牌照創建。",
+      "licenseLabel": "安大略省大麻零售牌照編號",
+      "licensePlaceholder": "例如，CRSA-1234",
+      "validating": "驗證緊...",
+      "validate": "驗證",
+      "licenseHelpText": "輸入你從AGCO攞到嘅安大略省大麻零售牌照編號",
+      "validatedSuccess": "✓ 牌照驗證成功",
+      "storeNameLabel": "舖頭名：",
+      "municipalityLabel": "市鎮：",
+      "addressLabel": "地址：",
+      "websiteLabel": "網站：",
+      "validationFailed": "驗證失敗",
+      "searchIntro": "唔知你嘅牌照編號？搵你嘅舖頭：",
+      "searchPlaceholder": "按舖頭名或地址搜尋...",
+      "searching": "搜尋緊...",
+      "search": "搜尋",
+      "licenseField": "牌照：",
+      "availableForSignup": "可以註冊",
+      "alreadyRegistered": "已經註冊咗",
+      "noStoresFound": "搵唔到舖頭。試下其他搜尋詞。",
+      "needHelp": "需要幫手？",
+      "helpText": "你嘅安大略省大麻零售牌照編號可以喺你嘅AGCO授權文件入面搵到。通常以CRSA開頭，後面跟住數字。",
+      "autoCreateStoreLabel": "創建 {storeName} 作為我嘅第一間鋪頭",
+      "autoCreateStoreHelp": "完成註冊時會自動創建呢間鋪頭。你可以取消選擇以便稍後手動添加鋪頭。"
     }
   },
   "review": {
@@ -309,7 +362,12 @@
     "expiryFormat": "請用 MM/YY 格式輸入",
     "cvvRequired": "CVV 係必填",
     "cvvFormat": "CVV 必須係3或4位數字",
-    "cardholderRequired": "持卡人姓名係必填"
+    "cardholderRequired": "持卡人姓名係必填",
+    "crolNumberRequired": "安大略省租戶需要CROL號碼",
+    "crsaLicenseRequired": "安大略省租戶需要有效嘅CRSA牌照",
+    "crsaDomainMismatch": "你嘅電郵網域同CRSA網站唔匹配。請聯絡支援進行人手驗證。",
+    "licenseNumberRequired": "請輸入牌照號碼",
+    "licenseValidationFailed": "牌照驗證失敗"
   },
   "passwordStrength": {
     "weak": "弱",
@@ -396,5 +454,22 @@
       "required": "您必須確認您的授權才能繼續"
     },
     "allRequired": "必須接受所有聲明才能創建您的帳戶"
+  },
+  "errors": {
+    "submit": {
+      "processingPayment": "正在處理付款方式...",
+      "paymentDetailsRequired": "付費計劃需要付款詳情",
+      "paymentMethodFailed": "處理付款方式失敗",
+      "accountCreationFailed": "創建帳戶失敗。",
+      "tenantExists": "呢個租戶已經存在。",
+      "userEmailExists": "呢個電郵嘅用戶已經存在。請用另一個電郵或者登入。",
+      "emailAlreadyRegistered": "呢個電郵已經註冊咗。請用另一個電郵或者登入。",
+      "informationAlreadyRegistered": "呢啲資料已經喺我哋系統入面註冊咗。",
+      "checkRequiredFields": "請檢查所有必填欄位係咪正確填寫。",
+      "validationError": "驗證錯誤：請檢查所有必填欄位係咪正確填寫。",
+      "serverError": "發生伺服器錯誤。請稍後重試或聯絡支援。",
+      "serviceUnavailable": "服務唔可用。請確保後端運行緊。",
+      "networkError": "網絡錯誤：無法連接到伺服器。請檢查你嘅連接。"
+    }
   }
 }

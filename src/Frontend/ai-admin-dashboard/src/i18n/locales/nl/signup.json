@@ -16,7 +16,7 @@
     "stepDescriptions": {
       "company": "Vertel ons over uw bedrijf en merk",
       "contact": "Geef uw contactgegevens en adres op",
-      "ontario": "Validate your Ontario cannabis retail licenses (CROL and CRSA)",
+      "ontario": "Valideer uw Ontario cannabis detailhandelslicenties (CROL en CRSA)",
       "account": "Maak uw beheerdersaccountgegevens aan",
       "payment": "Selecteer uw abonnement en betaalmethode"
     },
@@ -51,7 +51,9 @@
       "city": "Stad",
       "province": "Provincie",
       "postalCode": "Postcode",
-      "postalCodePlaceholder": "A1A 1A1"
+      "postalCodePlaceholder": "A1A 1A1",
+      "autoFilled": "Automatisch ingevuld",
+      "addressAutocompleteHint": "💡 Begin met typen om adressuggesties te zien - stad en postcode worden automatisch ingevuld"
     },
     "accountSetup": {
       "password": "Wachtwoord",
@@ -75,7 +77,25 @@
       "annualSave": "Bespaar 20%",
       "selectPlan": "Selecteer abonnement",
       "enterpriseTitle": "Enterprise-abonnement",
-      "enterpriseDescription": "Ons verkoopteam neemt binnen 24 uur contact met u op om aangepaste prijzen en installatie te bespreken."
+      "enterpriseDescription": "Ons verkoopteam neemt binnen 24 uur contact met u op om aangepaste prijzen en installatie te bespreken.",
+      "freeTierTitle": "🎉 Free Tier Selected",
+      "freeTierMessage": "No payment required - continue to create your account!",
+      "legalTitle": "Legal Agreements & Attestations",
+      "termsPrefix": "I accept the ",
+      "termsLink": "Terms of Service",
+      "termsSuffix": ", including AI-targeted advertising from Licensed Producers",
+      "privacyPrefix": "I accept the ",
+      "privacyLink": "Privacy Policy",
+      "privacySuffix": " and consent to data collection and usage for advertising purposes",
+      "accuracyTitle": "I certify that all information provided in this registration is accurate, complete, and current.",
+      "accuracyText": " I understand that providing false or misleading information may result in account suspension or termination.",
+      "authorizationTitle": "I am duly authorized by my organization to create this account and bind the organization to these Terms.",
+      "authorizationText": " I have the legal authority to enter into agreements on behalf of the company listed above.",
+      "noticeTitle": "Important Notice:",
+      "notice1": "Your acceptance will be recorded with timestamp and IP address for legal compliance",
+      "notice2": "Revenue is generated through AI-targeted advertising from Licensed Producers",
+      "notice3": "Customer data will be used (anonymized) to improve product recommendations",
+      "notice4": "You must comply with all cannabis laws and regulations in your jurisdiction"
     },
     "payment": {
       "cardholderName": "Naam kaarthouder",
@@ -87,7 +107,8 @@
       "cvv": "CVV",
       "cvvPlaceholder": "123",
       "postalCode": "ZIP/postcode",
-      "postalCodePlaceholder": "12345"
+      "postalCodePlaceholder": "12345",
+      "autoFilled": "自动填写"
     },
     "progress": {
       "verifying": "Beschikbaarheid verifiëren...",
@@ -114,6 +135,38 @@
       "signInInstead": "In plaats daarvan inloggen",
       "tenantExists": "De tenantcode \"{{code}}\" is al geregistreerd",
       "websiteExists": "De website \"{{website}}\" is al in gebruik"
+    },
+    "ontario": {
+      "title": "Ontario Cannabis Licenties",
+      "description": "Vereist voor Ontario cannabis-detailhandelaren. CROL is uw bedrijfslicentie op huurderniveau, CRSA is uw winkelvergunning op winkelniveau.",
+      "crolLabel": "CROL-nummer (Cannabis Retail Operating License) *",
+      "crolPlaceholder": "Voer uw OCS CROL-nummer in",
+      "crolHelpText": "Uw OCS-bedrijfslicentienummer op huurderniveau",
+      "crsaTitle": "CRSA-validatie (Cannabis Retail Store Authorization)",
+      "domainVerifiedSuccess": "✓ Domein geverifieerd - Uw e-maildomein komt overeen met de CRSA-website. Uw eerste winkel wordt automatisch aangemaakt vanuit deze licentie.",
+      "licenseLabel": "Ontario Cannabis Detailhandel Licentienummer",
+      "licensePlaceholder": "bijv., CRSA-1234",
+      "validating": "Valideren...",
+      "validate": "Valideren",
+      "licenseHelpText": "Voer uw Ontario cannabis detailhandel licentienummer van AGCO in",
+      "validatedSuccess": "✓ Licentie succesvol gevalideerd",
+      "storeNameLabel": "Winkelnaam:",
+      "municipalityLabel": "Gemeente:",
+      "addressLabel": "Adres:",
+      "websiteLabel": "Website:",
+      "validationFailed": "Validatie mislukt",
+      "searchIntro": "Weet u uw licentienummer niet? Zoek uw winkel:",
+      "searchPlaceholder": "Zoeken op winkelnaam of adres...",
+      "searching": "Zoeken...",
+      "search": "Zoeken",
+      "licenseField": "Licentie:",
+      "availableForSignup": "Beschikbaar voor aanmelding",
+      "alreadyRegistered": "Reeds geregistreerd",
+      "noStoresFound": "Geen winkels gevonden. Probeer een andere zoekterm.",
+      "needHelp": "Hulp nodig?",
+      "helpText": "Uw Ontario cannabis detailhandel licentienummer staat in uw AGCO-autorisatiedocumenten. Het begint meestal met \"CRSA\" gevolgd door een nummer.",
+      "autoCreateStoreLabel": "{storeName} als mijn eerste winkel maken",
+      "autoCreateStoreHelp": "Deze winkel wordt automatisch aangemaakt bij het voltooien van de registratie. U kunt dit uitvinken om later handmatig winkels toe te voegen."
     }
   },
   "review": {
@@ -309,7 +362,12 @@
     "expiryFormat": "Voer MM/JJ-formaat in",
     "cvvRequired": "CVV is verplicht",
     "cvvFormat": "CVV moet 3 of 4 cijfers bevatten",
-    "cardholderRequired": "Naam kaarthouder is verplicht"
+    "cardholderRequired": "Naam kaarthouder is verplicht",
+    "crolNumberRequired": "CROL-nummer is vereist voor Ontario-huurders",
+    "crsaLicenseRequired": "Geldige CRSA-licentie is vereist voor Ontario-huurders",
+    "crsaDomainMismatch": "Uw e-maildomein komt niet overeen met de CRSA-website. Neem contact op met ondersteuning voor handmatige verificatie.",
+    "licenseNumberRequired": "Voer een licentienummer in",
+    "licenseValidationFailed": "Licentievalidatie mislukt"
   },
   "passwordStrength": {
     "weak": "Zwak",
@@ -396,5 +454,22 @@
       "required": "U moet uw autorisatie bevestigen om door te gaan"
     },
     "allRequired": "Alle verklaringen moeten worden geaccepteerd om uw account aan te maken"
+  },
+  "errors": {
+    "submit": {
+      "processingPayment": "Betaalmethode wordt verwerkt...",
+      "paymentDetailsRequired": "Betalingsgegevens vereist voor betaalde plannen",
+      "paymentMethodFailed": "Verwerking van betaalmethode mislukt",
+      "accountCreationFailed": "Aanmaken account mislukt.",
+      "tenantExists": "Deze huurder bestaat al.",
+      "userEmailExists": "Er bestaat al een gebruiker met dit e-mailadres. Gebruik een ander e-mailadres of log in.",
+      "emailAlreadyRegistered": "Dit e-mailadres is al geregistreerd. Gebruik een ander e-mailadres of log in.",
+      "informationAlreadyRegistered": "Deze informatie is al geregistreerd in ons systeem.",
+      "checkRequiredFields": "Controleer of alle verplichte velden correct zijn ingevuld.",
+      "validationError": "Validatiefout: Controleer of alle verplichte velden correct zijn ingevuld.",
+      "serverError": "Serverfout opgetreden. Probeer het later opnieuw of neem contact op met ondersteuning.",
+      "serviceUnavailable": "Service niet beschikbaar. Zorg ervoor dat de backend draait.",
+      "networkError": "Netwerkfout: Kan geen verbinding maken met de server. Controleer uw verbinding."
+    }
   }
 }

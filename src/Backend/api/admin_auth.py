@@ -938,3 +938,248 @@ async def change_password(
         "message": "Password changed successfully. Please log in again with your new password.",
         "sessions_invalidated": True
     }
+
+# ============================================================================
+# PASSWORD RESET FLOW
+# ============================================================================
+
+class ForgotPasswordRequest(BaseModel):
+    """Request model for initiating password reset"""
+    email: EmailStr = Field(..., description="Email address of the account")
+
+
+class ResetPasswordRequest(BaseModel):
+    """Request model for resetting password with token"""
+    token: str = Field(..., min_length=64, max_length=128, description="Reset token from email")
+    new_password: str = Field(..., min_length=8, max_length=128)
+    
+    @validator('new_password')
+    def validate_password(cls, v):
+        if len(v) < 8:
+            raise ValueError('Password must be at least 8 characters')
+        if not any(c.isupper() for c in v):
+            raise ValueError('Password must contain at least one uppercase letter')
+        if not any(c.islower() for c in v):
+            raise ValueError('Password must contain at least one lowercase letter')
+        if not any(c.isdigit() for c in v):
+            raise ValueError('Password must contain at least one number')
+        return v
+
+
+@router.post("/forgot-password", status_code=status.HTTP_200_OK)
+async def forgot_password(
+    request: ForgotPasswordRequest,
+    pool: asyncpg.Pool = Depends(get_db_pool)
+):
+    """
+    Initiate password reset flow
+    
+    - Generates secure reset token
+    - Stores token in database with expiration (1 hour)
+    - Sends reset email via OTP service
+    - Returns success even if email doesn't exist (security best practice)
+    """
+    try:
+        async with pool.acquire() as conn:
+            # Check if user exists
+            user = await conn.fetchrow("""
+                SELECT id, email, first_name, tenant_id, role
+                FROM users
+                WHERE LOWER(email) = LOWER($1) AND auth_method = 'PASSWORD'
+            """, request.email)
+            
+            if user:
+                # Generate secure reset token (64 chars hex = 256 bits entropy)
+                reset_token = secrets.token_urlsafe(48)  # 48 bytes = 64 chars base64
+                expires_at = datetime.utcnow() + timedelta(hours=1)
+                
+                # Store reset token
+                await conn.execute("""
+                    INSERT INTO password_reset_tokens (
+                        user_id, token, expires_at, created_at
+                    ) VALUES ($1, $2, $3, NOW())
+                    ON CONFLICT (user_id) 
+                    DO UPDATE SET 
+                        token = EXCLUDED.token,
+                        expires_at = EXCLUDED.expires_at,
+                        created_at = NOW(),
+                        used_at = NULL
+                """, user['id'], reset_token, expires_at)
+                
+                # Send reset email via OTP service
+                from services.otp_service import OTPService
+                from core.db import get_db_pool as get_main_pool
+                
+                otp_service = OTPService(await get_main_pool())
+                
+                # Build reset URL
+                reset_url = f"{os.getenv('FRONTEND_URL', 'http://localhost:3003')}/reset-password?token={reset_token}"
+                
+                # Send email (we'll use OTP service infrastructure)
+                try:
+                    # TODO: Create proper password reset email template
+                    # For now, use generic messaging
+                    await otp_service.send_password_reset_email(
+                        email=user['email'],
+                        reset_url=reset_url,
+                        first_name=user['first_name']
+                    )
+                    logger.info(f"Password reset email sent to {user['email']}")
+                except Exception as email_error:
+                    logger.error(f"Failed to send password reset email: {email_error}")
+                    # Don't fail the request - token is created
+            else:
+                # User doesn't exist - still return success (security best practice)
+                # Prevents email enumeration attacks
+                logger.warning(f"Password reset requested for non-existent email: {request.email}")
+        
+        return {
+            "message": "If an account exists with that email, a password reset link has been sent.",
+            "success": True
+        }
+        
+    except Exception as e:
+        logger.error(f"Error in forgot password flow: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to process password reset request"
+        )
+
+
+@router.post("/reset-password", status_code=status.HTTP_200_OK)
+async def reset_password(
+    request: ResetPasswordRequest,
+    pool: asyncpg.Pool = Depends(get_db_pool)
+):
+    """
+    Reset password using token from email
+    
+    - Validates reset token
+    - Checks expiration (1 hour)
+    - Ensures token hasn't been used
+    - Updates password
+    - Marks token as used
+    - Invalidates all user sessions for security
+    """
+    try:
+        async with pool.acquire() as conn:
+            # Get token details
+            token_data = await conn.fetchrow("""
+                SELECT 
+                    prt.user_id,
+                    prt.expires_at,
+                    prt.used_at,
+                    u.email,
+                    u.tenant_id
+                FROM password_reset_tokens prt
+                JOIN users u ON u.id = prt.user_id
+                WHERE prt.token = $1
+            """, request.token)
+            
+            if not token_data:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Invalid or expired reset token"
+                )
+            
+            # Check if already used
+            if token_data['used_at']:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="This reset link has already been used. Please request a new one."
+                )
+            
+            # Check expiration
+            if datetime.utcnow() > token_data['expires_at'].replace(tzinfo=None):
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Reset link has expired. Please request a new one."
+                )
+            
+            # Hash new password
+            password_hash = bcrypt.hashpw(
+                request.new_password.encode('utf-8'),
+                bcrypt.gensalt()
+            ).decode('utf-8')
+            
+            # Start transaction for atomic operation
+            async with conn.transaction():
+                # Update password
+                await conn.execute("""
+                    UPDATE users
+                    SET password_hash = $1, updated_at = NOW()
+                    WHERE id = $2
+                """, password_hash, token_data['user_id'])
+                
+                # Mark token as used
+                await conn.execute("""
+                    UPDATE password_reset_tokens
+                    SET used_at = NOW()
+                    WHERE token = $1
+                """, request.token)
+                
+                # Invalidate all sessions for security
+                await conn.execute("""
+                    UPDATE auth_sessions
+                    SET invalidated_at = NOW()
+                    WHERE user_id = $1 AND invalidated_at IS NULL
+                """, token_data['user_id'])
+            
+            logger.info(f"Password reset successfully for user {token_data['email']}")
+            
+            return {
+                "message": "Password reset successful. Please log in with your new password.",
+                "success": True
+            }
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error resetting password: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to reset password"
+        )
+
+
+# ============================================================================
+# EMAIL AVAILABILITY CHECK
+# ============================================================================
+
+class CheckEmailRequest(BaseModel):
+    """Request model for checking if email exists"""
+    email: EmailStr = Field(..., description="Email address to check")
+
+
+@router.post("/check-email", status_code=status.HTTP_200_OK)
+async def check_email_exists(
+    request: CheckEmailRequest,
+    pool: asyncpg.Pool = Depends(get_db_pool)
+):
+    """
+    Check if a user with the given email already exists
+    
+    Used during signup to prevent duplicate registrations.
+    Returns whether the email is available or already taken.
+    """
+    try:
+        async with pool.acquire() as conn:
+            exists = await conn.fetchval("""
+                SELECT EXISTS(
+                    SELECT 1 FROM users 
+                    WHERE LOWER(email) = LOWER($1)
+                )
+            """, request.email)
+            
+            return {
+                "email": request.email,
+                "exists": exists,
+                "available": not exists
+            }
+            
+    except Exception as e:
+        logger.error(f"Error checking email availability: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to check email availability"
+        )

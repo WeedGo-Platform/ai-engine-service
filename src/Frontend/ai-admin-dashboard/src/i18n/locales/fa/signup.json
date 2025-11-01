@@ -16,7 +16,7 @@
     "stepDescriptions": {
       "company": "درباره کسب‌وکار و برند خود به ما بگویید",
       "contact": "اطلاعات تماس و آدرس خود را ارائه دهید",
-      "ontario": "Validate your Ontario cannabis retail licenses (CROL and CRSA)",
+      "ontario": "مجوزهای خرده‌فروشی شاهدانه انتاریو خود را اعتبارسنجی کنید (CROL و CRSA)",
       "account": "اعتبارنامه حساب مدیر خود را ایجاد کنید",
       "payment": "پلن و روش پرداخت خود را انتخاب کنید"
     },
@@ -51,7 +51,9 @@
       "city": "شهر",
       "province": "استان",
       "postalCode": "کد پستی",
-      "postalCodePlaceholder": "A1A 1A1"
+      "postalCodePlaceholder": "A1A 1A1",
+      "autoFilled": "خودکار پر شده",
+      "addressAutocompleteHint": "💡 شروع به تایپ کنید تا پیشنهادات آدرس را ببینید - شهر و کد پستی به طور خودکار پر می‌شوند"
     },
     "accountSetup": {
       "password": "رمز عبور",
@@ -75,7 +77,25 @@
       "annualSave": "20٪ صرفه‌جویی",
       "selectPlan": "انتخاب پلن",
       "enterpriseTitle": "پلن سازمانی",
-      "enterpriseDescription": "تیم فروش ما ظرف 24 ساعت با شما تماس خواهد گرفت تا در مورد قیمت‌گذاری و راه‌اندازی سفارشی صحبت کند."
+      "enterpriseDescription": "تیم فروش ما ظرف 24 ساعت با شما تماس خواهد گرفت تا در مورد قیمت‌گذاری و راه‌اندازی سفارشی صحبت کند.",
+      "freeTierTitle": "🎉 Free Tier Selected",
+      "freeTierMessage": "No payment required - continue to create your account!",
+      "legalTitle": "Legal Agreements & Attestations",
+      "termsPrefix": "I accept the ",
+      "termsLink": "Terms of Service",
+      "termsSuffix": ", including AI-targeted advertising from Licensed Producers",
+      "privacyPrefix": "I accept the ",
+      "privacyLink": "Privacy Policy",
+      "privacySuffix": " and consent to data collection and usage for advertising purposes",
+      "accuracyTitle": "I certify that all information provided in this registration is accurate, complete, and current.",
+      "accuracyText": " I understand that providing false or misleading information may result in account suspension or termination.",
+      "authorizationTitle": "I am duly authorized by my organization to create this account and bind the organization to these Terms.",
+      "authorizationText": " I have the legal authority to enter into agreements on behalf of the company listed above.",
+      "noticeTitle": "Important Notice:",
+      "notice1": "Your acceptance will be recorded with timestamp and IP address for legal compliance",
+      "notice2": "Revenue is generated through AI-targeted advertising from Licensed Producers",
+      "notice3": "Customer data will be used (anonymized) to improve product recommendations",
+      "notice4": "You must comply with all cannabis laws and regulations in your jurisdiction"
     },
     "payment": {
       "cardholderName": "نام دارنده کارت",
@@ -87,7 +107,8 @@
       "cvv": "CVV",
       "cvvPlaceholder": "123",
       "postalCode": "کد پستی ZIP",
-      "postalCodePlaceholder": "12345"
+      "postalCodePlaceholder": "12345",
+      "autoFilled": "自动填写"
     },
     "progress": {
       "verifying": "در حال تأیید در دسترس بودن...",
@@ -114,6 +135,38 @@
       "signInInstead": "در عوض وارد شوید",
       "tenantExists": "کد مستأجر \"{{code}}\" قبلاً ثبت شده است",
       "websiteExists": "وب‌سایت \"{{website}}\" در حال حاضر استفاده می‌شود"
+    },
+    "ontario": {
+      "title": "مجوز شاهدانه انتاریو",
+      "description": "برای خرده‌فروشان شاهدانه در انتاریو الزامی است. CROL مجوز عملیاتی در سطح مستاجر شماست، CRSA مجوز خرده‌فروشی در سطح فروشگاه است.",
+      "crolLabel": "شماره CROL (مجوز عملیاتی خرده‌فروشی شاهدانه) *",
+      "crolPlaceholder": "شماره CROL خود از OCS را وارد کنید",
+      "crolHelpText": "شماره مجوز عملیاتی OCS در سطح مستاجر شما",
+      "crsaTitle": "اعتبارسنجی CRSA (مجوز فروشگاه خرده‌فروشی شاهدانه)",
+      "domainVerifiedSuccess": "✓ دامنه تأیید شد - دامنه ایمیل شما با وب‌سایت CRSA مطابقت دارد. اولین فروشگاه شما به‌طور خودکار از این مجوز ایجاد خواهد شد.",
+      "licenseLabel": "شماره مجوز خرده‌فروشی شاهدانه انتاریو",
+      "licensePlaceholder": "مثال: CRSA-1234",
+      "validating": "در حال اعتبارسنجی...",
+      "validate": "اعتبارسنجی",
+      "licenseHelpText": "شماره مجوز خرده‌فروشی شاهدانه انتاریو خود را از AGCO وارد کنید",
+      "validatedSuccess": "✓ مجوز با موفقیت تأیید شد",
+      "storeNameLabel": "نام فروشگاه:",
+      "municipalityLabel": "شهرداری:",
+      "addressLabel": "آدرس:",
+      "websiteLabel": "وب‌سایت:",
+      "validationFailed": "اعتبارسنجی ناموفق بود",
+      "searchIntro": "شماره مجوز خود را نمی‌دانید؟ فروشگاه خود را جستجو کنید:",
+      "searchPlaceholder": "جستجو بر اساس نام فروشگاه یا آدرس",
+      "searching": "در حال جستجو...",
+      "noResults": "نتیجه‌ای یافت نشد",
+      "selectStore": "فروشگاه خود را از لیست زیر انتخاب کنید:",
+      "needHelp": "به کمک نیاز دارید؟",
+      "helpDetails": "می‌توانید شماره‌های مجوز خود را در اینجا پیدا کنید:",
+      "helpCrol": "• شماره CROL: پورتال B2B شما در OCS (برای ایجاد مستاجر الزامی است)",
+      "helpCrsa": "• شماره CRSA: پایگاه داده عمومی مجوز AGCO (اختیاری - برای تأیید خودکار فروشگاه)",
+      "helpNote": "نکته: می‌توانید اعتبارسنجی CRSA را رد کنید و فروشگاه‌ها را بعداً به‌صورت دستی اضافه کنید.",
+      "autoCreateStoreLabel": "ایجاد {storeName} به عنوان اولین فروشگاه من",
+      "autoCreateStoreHelp": "این فروشگاه به طور خودکار هنگام تکمیل ثبت نام ایجاد می‌شود. می‌توانید تیک را بردارید تا فروشگاه‌ها را بعداً به صورت دستی اضافه کنید."
     }
   },
   "review": {
@@ -309,7 +362,12 @@
     "expiryFormat": "لطفاً فرمت MM/YY را وارد کنید",
     "cvvRequired": "CVV الزامی است",
     "cvvFormat": "CVV باید 3 یا 4 رقمی باشد",
-    "cardholderRequired": "نام دارنده کارت الزامی است"
+    "cardholderRequired": "نام دارنده کارت الزامی است",
+    "crolNumberRequired": "شماره CROL برای مستأجران انتاریو الزامی است",
+    "crsaLicenseRequired": "مجوز معتبر CRSA برای مستأجران انتاریو الزامی است",
+    "crsaDomainMismatch": "دامنه ایمیل شما با وب‌سایت CRSA مطابقت ندارد. لطفاً برای تأیید دستی با پشتیبانی تماس بگیرید.",
+    "licenseNumberRequired": "لطفاً شماره مجوز را وارد کنید",
+    "licenseValidationFailed": "اعتبارسنجی مجوز ناموفق بود"
   },
   "passwordStrength": {
     "weak": "ضعیف",
@@ -396,5 +454,22 @@
       "required": "برای ادامه باید مجوز خود را تأیید کنید"
     },
     "allRequired": "همه گواهی‌نامه‌ها باید برای ایجاد حساب شما پذیرفته شوند"
+  },
+  "errors": {
+    "submit": {
+      "processingPayment": "در حال پردازش روش پرداخت...",
+      "paymentDetailsRequired": "جزئیات پرداخت برای طرح‌های پولی الزامی است",
+      "paymentMethodFailed": "پردازش روش پرداخت ناموفق بود",
+      "accountCreationFailed": "ایجاد حساب ناموفق بود.",
+      "tenantExists": "این مستأجر از قبل وجود دارد.",
+      "userEmailExists": "کاربری با این ایمیل از قبل وجود دارد. لطفاً از ایمیل دیگری استفاده کنید یا وارد شوید.",
+      "emailAlreadyRegistered": "این ایمیل قبلاً ثبت شده است. لطفاً از ایمیل دیگری استفاده کنید یا وارد شوید.",
+      "informationAlreadyRegistered": "این اطلاعات قبلاً در سیستم ما ثبت شده است.",
+      "checkRequiredFields": "لطفاً بررسی کنید که همه فیلدهای الزامی به درستی پر شده‌اند.",
+      "validationError": "خطای اعتبارسنجی: لطفاً بررسی کنید که همه فیلدهای الزامی به درستی پر شده‌اند.",
+      "serverError": "خطای سرور رخ داد. لطفاً بعداً دوباره امتحان کنید یا با پشتیبانی تماس بگیرید.",
+      "serviceUnavailable": "سرویس در دسترس نیست. لطفاً اطمینان حاصل کنید که بک‌اند در حال اجراست.",
+      "networkError": "خطای شبکه: اتصال به سرور ممکن نیست. لطفاً اتصال خود را بررسی کنید."
+    }
   }
 }

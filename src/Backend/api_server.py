@@ -467,10 +467,13 @@ if cors_origin_regex:
 else:
     logger.info("ℹ️  CORS_ORIGIN_REGEX not set (optional - only needed for dynamic origin matching)")
 
+# Store CORS origins globally for use in error handlers
+ALLOWED_CORS_ORIGINS = cors_origins
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=cors_origins,
-    allow_origin_regex=cors_origin_regex,
+    allow_origin_regex=cors_origin_regex if cors_origin_regex else None,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
@@ -887,16 +890,21 @@ async def rate_limit_middleware(request: Request, call_next):
 
     if not allowed:
         # Create response with CORS headers to prevent browser blocking
-        response = JSONResponse(
-            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-            content={"detail": "Too many requests", **info},
-            headers={
-                "Retry-After": str(info.get('retry_after', 60)),
-                "Access-Control-Allow-Origin": request.headers.get("origin", "http://localhost:3003"),
+        # Create response with CORS headers using environment-configured origins
+        origin = request.headers.get("origin")
+        headers = {"Retry-After": str(info.get('retry_after', 60))}
+        if origin and origin in ALLOWED_CORS_ORIGINS:
+            headers.update({
+                "Access-Control-Allow-Origin": origin,
                 "Access-Control-Allow-Credentials": "true",
                 "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS, PATCH",
                 "Access-Control-Allow-Headers": "*"
-            }
+            })
+
+        response = JSONResponse(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            content={"detail": "Too many requests", **info},
+            headers=headers
         )
         return response
     
@@ -1657,17 +1665,17 @@ async def update_models_config(req: Request):
         )
 
 
-# Error handlers
+# Error handlers with environment-driven CORS support
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
-    """Handle HTTP exceptions"""
+    """Handle HTTP exceptions with CORS support"""
     response = JSONResponse(
         status_code=exc.status_code,
         content={"detail": exc.detail}
     )
     # Add CORS headers to error responses (use environment-configured origins)
     origin = request.headers.get("origin")
-    if origin and origin in cors_origins:
+    if origin and origin in ALLOWED_CORS_ORIGINS:
         response.headers["Access-Control-Allow-Origin"] = origin
         response.headers["Access-Control-Allow-Credentials"] = "true"
         response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS, PATCH"
@@ -1677,7 +1685,7 @@ async def http_exception_handler(request: Request, exc: HTTPException):
 
 @app.exception_handler(Exception)
 async def general_exception_handler(request: Request, exc: Exception):
-    """Handle general exceptions"""
+    """Handle general exceptions with CORS support"""
     logger.error(f"Unhandled exception: {exc}")
     response = JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -1685,7 +1693,7 @@ async def general_exception_handler(request: Request, exc: Exception):
     )
     # Add CORS headers to error responses (use environment-configured origins)
     origin = request.headers.get("origin")
-    if origin and origin in cors_origins:
+    if origin and origin in ALLOWED_CORS_ORIGINS:
         response.headers["Access-Control-Allow-Origin"] = origin
         response.headers["Access-Control-Allow-Credentials"] = "true"
         response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS, PATCH"

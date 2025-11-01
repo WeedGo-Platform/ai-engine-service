@@ -33,6 +33,10 @@ class OTPRequest(BaseModel):
     identifier: str = Field(..., description="Email address or phone number")
     identifier_type: Literal['email', 'phone'] = Field(..., description="Type of identifier")
     purpose: Literal['login', 'verification', 'password_reset'] = Field(default='login')
+    create_user_if_missing: bool = Field(
+        default=True, 
+        description="If True, creates user if not exists. Set to False during signup to prevent premature user creation."
+    )
     
     @validator('identifier')
     def validate_identifier(cls, v, values):
@@ -58,6 +62,10 @@ class OTPVerify(BaseModel):
     identifier_type: Literal['email', 'phone'] = Field(..., description="Type of identifier")
     code: str = Field(..., min_length=4, max_length=10, description="OTP code")
     purpose: Literal['login', 'verification', 'password_reset'] = Field(default='login')
+    create_user_if_missing: bool = Field(
+        default=True,
+        description="If True, creates user if not exists. Set to False during signup to prevent premature user creation."
+    )
 
 
 class OTPResponse(BaseModel):
@@ -91,9 +99,21 @@ async def get_db_connection():
 
 async def get_or_create_user_by_identifier(
     identifier: str, 
-    identifier_type: Literal['email', 'phone']
+    identifier_type: Literal['email', 'phone'],
+    create_if_missing: bool = True
 ) -> Optional[Dict[str, Any]]:
-    """Get existing user or create a new one based on identifier"""
+    """
+    Get existing user or optionally create a new one based on identifier
+    
+    Args:
+        identifier: Email address or phone number
+        identifier_type: Type of identifier ('email' or 'phone')
+        create_if_missing: If True, creates user if not found. If False, returns None.
+                          Set to False during signup to avoid premature user creation.
+    
+    Returns:
+        User dict if found/created, None otherwise
+    """
     conn = None
     try:
         conn = await get_db_connection()
@@ -112,6 +132,11 @@ async def get_or_create_user_by_identifier(
         
         if user:
             return dict(user)
+        
+        # Only create user if explicitly allowed
+        if not create_if_missing:
+            logger.info(f"User not found for {identifier_type}: {identifier} (create_if_missing=False)")
+            return None
         
         # Create new user if doesn't exist
         user_id = str(uuid.uuid4())
@@ -146,10 +171,11 @@ async def get_or_create_user_by_identifier(
             user_id
         )
         
+        logger.info(f"Created new user for {identifier_type}: {identifier}")
         return dict(user) if user else None
         
     except Exception as e:
-        logger.error(f"User creation failed: {e}")
+        logger.error(f"User lookup/creation failed: {e}")
         return None
     finally:
         if conn:
@@ -172,10 +198,11 @@ async def send_otp(request: Request, otp_request: OTPRequest):
         ip_address = request.client.host if request.client else None
         user_agent = request.headers.get('User-Agent')
         
-        # Get user if exists
+        # Get user if exists (or create if allowed)
         user = await get_or_create_user_by_identifier(
             otp_request.identifier, 
-            otp_request.identifier_type
+            otp_request.identifier_type,
+            create_if_missing=otp_request.create_user_if_missing
         )
         
         user_id = user['id'] if user else None
@@ -271,16 +298,21 @@ async def verify_otp(otp_verify: OTPVerify):
                 detail=result.get('error', 'Invalid verification code')
             )
         
-        # Get or create user
+        # Get or create user (only if create_user_if_missing is True)
         user = await get_or_create_user_by_identifier(
             otp_verify.identifier,
-            otp_verify.identifier_type
+            otp_verify.identifier_type,
+            create_if_missing=otp_verify.create_user_if_missing
         )
         
         if not user:
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Failed to create user account"
+            # User doesn't exist and create_user_if_missing is False
+            # This is expected during signup - verification is just for the identifier
+            return OTPResponse(
+                success=True,
+                message="Verification successful",
+                access_token=None,
+                user=None
             )
         
         # Update verification status

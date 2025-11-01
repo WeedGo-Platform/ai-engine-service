@@ -16,7 +16,7 @@
     "stepDescriptions": {
       "company": "ᐅᖃᐅᓯᖃᕋᑎᑦ ᑮᓇᐅᔭᓕᕆᔨᒃᑯᓐᓂᑦ ᐊᒻᒪ ᐃᓚᔭᕐᓂᑦ",
       "contact": "ᑐᓂᓗᒍ ᖃᐅᔨᒋᐊᕈᑎᒃᓴᓂᑦ ᐊᒻᒪ ᐃᓂᕐᓂᑦ",
-      "ontario": "Validate your Ontario cannabis retail licenses (CROL and CRSA)",
+      "ontario": "kwayaskîtam ki Ontario Cannabis atâwêwin oyôhkêmakana (CROL êkwa CRSA)",
       "account": "ᓴᖅᑭᑎᒋᐊᕐᓗᒍ ᐊᖓᔪᖅᑳᖑᔪᒧᑦ ᐊᑎᖕᒥᒃ",
       "payment": "ᓂᕈᐊᕐᓗᒍ ᐸᕐᓇᒃᓯᒪᓂᕐᒥᒃ ᐊᒻᒪ ᐊᑭᓕᖅᑕᐅᓂᐊᖅᑐᒥᒃ"
     },
@@ -51,7 +51,9 @@
       "city": "ᓄᓇᓕᒃ",
       "province": "ᐃᓕᓴᕆᔭᐅᓯᒪᔪᖅ",
       "postalCode": "ᐃᑎᕐᕕᒃᓴᖅ ᑰᑦ",
-      "postalCodePlaceholder": "A1A 1A1"
+      "postalCodePlaceholder": "A1A 1A1",
+      "autoFilled": "Auto-filled",
+      "addressAutocompleteHint": "💡 Start typing to see address suggestions - city and postal code will auto-fill"
     },
     "accountSetup": {
       "password": "ᓇᓗᓇᐃᖅᓯᔾᔪᑎᒃ",
@@ -75,7 +77,25 @@
       "annualSave": "ᑲᒪᒋᔭᐅᓂᐊᖅᑐᖅ 20%",
       "selectPlan": "ᓂᕈᐊᕐᓗᒍ ᐸᕐᓇᒃᓯᒪᓂᖅ",
       "enterpriseTitle": "ᐊᖏᔪᖅ ᐸᕐᓇᒃᓯᒪᓂᖅ",
-      "enterpriseDescription": "ᓂᐅᕕᖅᑎᑦᑎᔨᒃᑯᑦ ᖃᐅᔨᒋᐊᕐᓂᐊᖅᑕᑎᑦ 24 ᐃᑲᕐᕋᓄᑦ ᐅᖃᐅᓯᖃᕐᓂᐊᕋᑎᑦ."
+      "enterpriseDescription": "ᓂᐅᕕᖅᑎᑦᑎᔨᒃᑯᑦ ᖃᐅᔨᒋᐊᕐᓂᐊᖅᑕᑎᑦ 24 ᐃᑲᕐᕋᓄᑦ ᐅᖃᐅᓯᖃᕐᓂᐊᕋᑎᑦ.",
+      "freeTierTitle": "🎉 Free Tier Selected",
+      "freeTierMessage": "No payment required - continue to create your account!",
+      "legalTitle": "Legal Agreements & Attestations",
+      "termsPrefix": "I accept the ",
+      "termsLink": "Terms of Service",
+      "termsSuffix": ", including AI-targeted advertising from Licensed Producers",
+      "privacyPrefix": "I accept the ",
+      "privacyLink": "Privacy Policy",
+      "privacySuffix": " and consent to data collection and usage for advertising purposes",
+      "accuracyTitle": "I certify that all information provided in this registration is accurate, complete, and current.",
+      "accuracyText": " I understand that providing false or misleading information may result in account suspension or termination.",
+      "authorizationTitle": "I am duly authorized by my organization to create this account and bind the organization to these Terms.",
+      "authorizationText": " I have the legal authority to enter into agreements on behalf of the company listed above.",
+      "noticeTitle": "Important Notice:",
+      "notice1": "Your acceptance will be recorded with timestamp and IP address for legal compliance",
+      "notice2": "Revenue is generated through AI-targeted advertising from Licensed Producers",
+      "notice3": "Customer data will be used (anonymized) to improve product recommendations",
+      "notice4": "You must comply with all cannabis laws and regulations in your jurisdiction"
     },
     "payment": {
       "cardholderName": "ᐃᑎᕐᕕᒃᓴᖅ ᐊᑎᖓ",
@@ -87,7 +107,8 @@
       "cvv": "CVV",
       "cvvPlaceholder": "123",
       "postalCode": "ZIP/ᐃᑎᕐᕕᒃᓴᖅ ᑰᑦ",
-      "postalCodePlaceholder": "12345"
+      "postalCodePlaceholder": "12345",
+      "autoFilled": "自动填写"
     },
     "progress": {
       "verifying": "ᖃᐅᔨᓴᖅᑐᒍᑦ...",
@@ -114,6 +135,38 @@
       "signInInstead": "ᐃᑎᕈᑎᒃ ᐊᓯᐊᓂ",
       "tenantExists": "ᑰᑦ \"{{code}}\" ᐊᑎᕐᓗᒍ ᐊᑐᐃᓐᓇᖅᑐᖅ",
       "websiteExists": "ᖃᕆᑕᐅᔭᒃᑯᑦ \"{{website}}\" ᐊᑐᐃᓐᓇᖅᑐᖅ"
+    },
+    "ontario": {
+      "title": "Ontario ᐊᖅᑭᓯᒪᔪᑦ ᐱᔪᓐᓇᐅᑎᑦ",
+      "description": "ᐱᔭᕆᐊᖃᖅᑐᖅ Ontario-ᒥ ᓂᐅᕕᕐᕕᖃᖅᑎᑦ. CROL ᐃᒡᓗᑎᑦ ᐱᔪᓐᓇᐅᑎᖓ, CRSA ᓂᐅᕕᕐᕕᐅᑉ ᐱᔪᓐᓇᐅᑎᖓ.",
+      "crolLabel": "CROL ᓈᓴᐅᑎ (Cannabis Retail Operating License) *",
+      "crolPlaceholder": "ᐃᓕᔅᓯ OCS CROL ᓈᓴᐅᑎ",
+      "crolHelpText": "ᐃᓕᔅᓯ OCS ᐃᒡᓗᑎᑦ ᐱᔪᓐᓇᐅᑎ ᓈᓴᐅᑎ",
+      "crsaTitle": "CRSA ᖃᐅᔨᓴᖅᑕᐅᓂᖓ (Cannabis Retail Store Authorization)",
+      "domainVerifiedSuccess": "✓ Domain ᖃᐅᔨᓴᖅᑕᐅᓯᒪᔪᖅ - ᐃᓕᔅᓯ email domain ᐊᔾᔨᐅᔪᖅ CRSA website-ᒧᑦ. ᓯᕗᓪᓕᖅᐹᖅ ᓂᐅᕕᕐᕕᑦ ᓴᖅᑭᑎᑕᐅᓂᐊᖅᑐᖅ ᐊᐅᑐᒪᑎᒃᑯᑦ ᐅᑯᓇᖓᑦ ᐱᔪᓐᓇᐅᑎᖅ.",
+      "licenseLabel": "Ontario Cannabis ᓂᐅᕕᕐᕕᐅᑉ ᐱᔪᓐᓇᐅᑎ ᓈᓴᐅᑎ",
+      "licensePlaceholder": "ᐆᑦᑑᑎ: CRSA-1234",
+      "validating": "ᖃᐅᔨᓴᖅᑕᐅᔪᖅ...",
+      "validate": "ᖃᐅᔨᓴᕐᓗᒍ",
+      "licenseHelpText": "ᐃᓕᔅᓯ Ontario cannabis ᓂᐅᕕᕐᕕᐅᑉ ᐱᔪᓐᓇᐅᑎ ᓈᓴᐅᑎ AGCO-ᒥᑦ",
+      "validatedSuccess": "✓ ᐱᔪᓐᓇᐅᑎ ᖃᐅᔨᓴᖅᑕᐅᓯᒪᔪᖅ ᐱᐅᓯᒋᐊᖅᑎᑕᐅᓪᓗᓂ",
+      "storeNameLabel": "ᓂᐅᕕᕐᕕᐅᑉ ᐊᑎᖓ:",
+      "municipalityLabel": "ᓄᓇᓕᖅ:",
+      "addressLabel": "ᐊᑐᐃᓐᓇᐅᑎᓕᒃ:",
+      "websiteLabel": "ᐅᕙᓂ:",
+      "validationFailed": "ᖃᐅᔨᓴᕐᓂᖅ ᐊᑲᐅᙱᓚᐅᖅᑐᖅ",
+      "searchIntro": "ᖃᐅᔨᒪᙱᑦᑐᑎᑦ ᐃᓕᔅᓯ ᐱᔪᓐᓇᐅᑎ ᓈᓴᐅᑎ? ᕿᓂᕐᓗᒍ ᐃᓕᔅᓯ ᓂᐅᕕᕐᕕᖅ:",
+      "searchPlaceholder": "ᕿᓂᕐᓗᒍ ᓂᐅᕕᕐᕕᐅᑉ ᐊᑎᖓ ᐅᕙᓗ ᐊᑐᐃᓐᓇᐅᑎᓕᒃ",
+      "searching": "ᕿᓂᖅᑕᐅᔪᖅ...",
+      "noResults": "ᐊᑕᐅᓯᕐᓗ ᓇᓂᔭᐅᓚᐅᙱᑦᑐᖅ",
+      "selectStore": "ᓂᕈᐊᕐᓗᒍ ᐃᓕᔅᓯ ᓂᐅᕕᕐᕕᖅ ᐅᑯᓇᖓᑦ:",
+      "needHelp": "ᐃᑲᔪᖅᑕᐅᔭᕆᐊᖃᖅᐱᑎᑦ?",
+      "helpDetails": "ᓇᓂᔭᐅᔪᓐᓇᖅᑐᑦ ᐃᓕᔅᓯ ᐱᔪᓐᓇᐅᑎ ᓈᓴᐅᑎᑦ:",
+      "helpCrol": "• CROL: ᐃᓕᔅᓯ OCS B2B portal (ᐱᔭᕆᐊᖃᖅᑐᖅ)",
+      "helpCrsa": "• CRSA: AGCO ᐃᓄᐃᑦ ᖃᐅᔨᒪᔾᔪᑎᖏᑦ (ᐱᔭᕆᐊᖃᙱᑦᑐᖅ)",
+      "helpNote": "ᖃᐅᔨᒪᔭᐅᔪᖅ: ᐊᓂᒍᐃᔪᓐᓇᖅᑐᑎᑦ CRSA ᖃᐅᔨᓴᕐᓂᖅ ᐊᒻᒪ ᐃᓚᒋᐊᕐᓗᒋᑦ ᓂᐅᕕᕐᕕᑦ ᐊᒡᒍᑐᖅᑎᑦᑎᓗᑎᑦ ᐃᓱᓕᕐᓗᒍ.",
+      "autoCreateStoreLabel": "ᓴᖅᑭᑎᑦᑎᓗᒍ {storeName} ᓯᕗᓪᓕᖅᐹᖅ ᓂᐅᕕᕐᕕᒃ",
+      "autoCreateStoreHelp": "ᐅᓇ ᓂᐅᕕᕐᕕᖅ ᓴᖅᑭᑎᑕᐅᓂᐊᖅᑐᖅ ᐊᐅᑐᒪᑎᒃᑯᑦ. ᐊᓂᒍᐃᔪᓐᓇᖅᑐᑎᑦ ᐃᓚᒋᐊᕐᓗᒋᑦ ᓂᐅᕕᕐᕕᑦ ᐊᒡᒍᑐᖅᑎᑦᑎᓗᑎᑦ ᐃᓱᓕᕐᓗᒍ."
     }
   },
   "review": {
@@ -309,7 +362,12 @@
     "expiryFormat": "ᐃᑎᕐᓗᒍ MM/YY",
     "cvvRequired": "CVV ᐱᑕᖃᕆᐊᖃᖅᑐᖅ",
     "cvvFormat": "CVV 3 ᐅᕝᕙᓘᓐᓃᑦ 4 ᓈᓴᐅᑎᑦ",
-    "cardholderRequired": "ᐃᑎᕐᕕᒃᓴᖅ ᐊᑎᖓ ᐱᑕᖃᕆᐊᖃᖅᑐᖅ"
+    "cardholderRequired": "ᐃᑎᕐᕕᒃᓴᖅ ᐊᑎᖓ ᐱᑕᖃᕆᐊᖃᖅᑐᖅ",
+    "crolNumberRequired": "CROL ᓈᓴᐅᑎ ᐱᔭᕆᐊᓕᒃ ᐊᖏᕐᕋᖃᕐᑎᑦᑎᔨᓄᑦ ᐋᓐᑎᐅᕆᐅᒥ",
+    "crsaLicenseRequired": "CRSA ᐱᔪᓐᓇᐅᑎ ᓈᒻᒪᒃᑐᖅ ᐱᔭᕆᐊᓕᒃ ᐊᖏᕐᕋᖃᕐᑎᑦᑎᔨᓄᑦ ᐋᓐᑎᐅᕆᐅᒥ",
+    "crsaDomainMismatch": "ᐅᖃᐅᓯᑎᑦᑎᓂᕐᒧᑦ ᑎᑎᕋᖅᓯᒪᔪᖅ ᐊᔾᔨᐅᓐᖏᑦᑐᖅ CRSA ᖃᕆᑕᐅᔭᒃᑯᑦ. ᖃᐅᔨᓴᕐᓗᒍ ᐃᑲᔪᕐᓂᕐᒧᑦ.",
+    "licenseNumberRequired": "ᐱᔪᓐᓇᐅᑎᐅᑉ ᓈᓴᐅᑎᖓ ᐃᓕᓐᓂᐊᖅᑕᐅᔪᖅ",
+    "licenseValidationFailed": "ᐱᔪᓐᓇᐅᑎ ᖃᐅᔨᓴᕐᓂᖅ ᐊᔪᕐᓂᖅ"
   },
   "passwordStrength": {
     "weak": "ᐱᔅᑫᐤ",
@@ -396,5 +454,22 @@
       "required": "You must confirm your authorization to continue"
     },
     "allRequired": "All attestations must be accepted to create your account"
+  },
+  "errors": {
+    "submit": {
+      "processingPayment": "ᐊᑭᓕᖅᓱᐃᓂᕐᒧᑦ ᐱᓕᕆᐊᖑᔪᖅ...",
+      "paymentDetailsRequired": "ᐊᑭᓕᖅᓱᐃᓂᕐᒧᑦ ᑐᑭᓯᐅᒪᔾᔪᑏᑦ ᐱᔭᕆᐊᓕᑦ ᐊᑭᓕᕐᓗᒋᑦ",
+      "paymentMethodFailed": "ᐊᑭᓕᖅᓱᐃᓂᕐᒧᑦ ᐱᓕᕆᐊᖅ ᐊᔪᕐᓂᖅ",
+      "accountCreationFailed": "ᐊᑐᖅᑎᐅᓂᖅ ᓴᓇᔭᐅᓂᖅ ᐊᔪᕐᓂᖅ.",
+      "tenantExists": "ᐊᖏᕐᕋᖃᕐᑎᑦᑎᔨ ᐃᓂᒋᔭᐅᓕᖅᑐᖅ.",
+      "userEmailExists": "ᐊᑐᖅᑎ ᐅᖃᐅᓯᑎᑦᑎᓂᖅ ᐃᓂᒋᔭᐅᓕᖅᑐᖅ. ᐊᓯᐊᖅ ᐊᑐᕐᓗᒍ ᐅᕝᕙᓘᓐᓃᑦ ᐃᓯᕐᓗᒍ.",
+      "emailAlreadyRegistered": "ᐅᖃᐅᓯᑎᑦᑎᓂᖅ ᑎᑎᕋᖅᓯᒪᓕᖅᑐᖅ. ᐊᓯᐊᖅ ᐊᑐᕐᓗᒍ ᐅᕝᕙᓘᓐᓃᑦ ᐃᓯᕐᓗᒍ.",
+      "informationAlreadyRegistered": "ᑐᑭᓯᐅᒪᔾᔪᑏᑦ ᑎᑎᕋᖅᓯᒪᓕᖅᑐᑦ ᐊᑐᖅᑕᐅᔪᒥ.",
+      "checkRequiredFields": "ᖃᐅᔨᓴᕐᓗᒋᑦ ᐱᔭᕆᐊᓕᑦ ᓈᒻᒪᒃᑐᓂ ᑎᑎᕋᖅᓯᒪᔪᑦ.",
+      "validationError": "ᖃᐅᔨᓴᕐᓂᖅ ᐊᔪᕐᓂᖅ: ᖃᐅᔨᓴᕐᓗᒋᑦ ᐱᔭᕆᐊᓕᑦ ᓈᒻᒪᒃᑐᓂ ᑎᑎᕋᖅᓯᒪᔪᑦ.",
+      "serverError": "ᓴᕐᕕᒃ ᐊᔪᕐᓂᖅ. ᐱᓕᕆᓂᖅ ᐊᒻᒪᓗ ᐃᑲᔪᖅᑕᐅᓂᖅ.",
+      "serviceUnavailable": "ᐱᔨᑦᑎᕋᕐᓂᖅ ᐊᑐᐃᓐᓇᓐᖏᑦᑐᖅ. ᖃᐅᔨᓴᕐᓗᒍ ᐱᓕᕆᔪᓐᓇᕐᒪᖔᖅ.",
+      "networkError": "ᖃᕆᑕᐅᔭᒃᑯᑦ ᐊᔪᕐᓂᖅ: ᓴᕐᕕᒃᑯᑦ ᐃᑲᖅᑐᐃᓐᓇᕐᓂᖅ. ᖃᐅᔨᓴᕐᓗᒍ."
+    }
   }
 }

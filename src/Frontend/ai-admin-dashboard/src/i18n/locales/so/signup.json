@@ -16,7 +16,7 @@
     "stepDescriptions": {
       "company": "Noo sheeg ganacsigaaga iyo summaddaada",
       "contact": "Bixi macluumaadka xiriirkaaga iyo cinwaankaaga",
-      "ontario": "Validate your Ontario cannabis retail licenses (CROL and CRSA)",
+      "ontario": "Xaqiiji shatiyada tafaariiqda cannabis ee Ontario (CROL iyo CRSA)",
       "account": "Samee aqoonsiga akoonkaaga admin",
       "payment": "Dooro qorshaddaada iyo habka lacag bixinta"
     },
@@ -51,7 +51,9 @@
       "city": "Magaalada",
       "province": "Gobolka",
       "postalCode": "Code-ka Boostada",
-      "postalCodePlaceholder": "A1A 1A1"
+      "postalCodePlaceholder": "A1A 1A1",
+      "autoFilled": "Si toos ah loo buuxiyey",
+      "addressAutocompleteHint": "💡 Bilow qorista si aad u aragto soo jeedinta cinwaanka - magaalada iyo lambarka boostada ayaa si toos ah u buuxsami doona"
     },
     "accountSetup": {
       "password": "Furaha Sirta ah",
@@ -75,7 +77,25 @@
       "annualSave": "Badbaadi 20%",
       "selectPlan": "Dooro Qorshaha",
       "enterpriseTitle": "Qorshaha Enterprise",
-      "enterpriseDescription": "Kooxda iibka waxay kula soo xiriiri doontaa 24 saacadood gudahood si ay uga wada hadlaan qiimaha gaarka ah iyo dejinta."
+      "enterpriseDescription": "Kooxda iibka waxay kula soo xiriiri doontaa 24 saacadood gudahood si ay uga wada hadlaan qiimaha gaarka ah iyo dejinta.",
+      "freeTierTitle": "🎉 Free Tier Selected",
+      "freeTierMessage": "No payment required - continue to create your account!",
+      "legalTitle": "Legal Agreements & Attestations",
+      "termsPrefix": "I accept the ",
+      "termsLink": "Terms of Service",
+      "termsSuffix": ", including AI-targeted advertising from Licensed Producers",
+      "privacyPrefix": "I accept the ",
+      "privacyLink": "Privacy Policy",
+      "privacySuffix": " and consent to data collection and usage for advertising purposes",
+      "accuracyTitle": "I certify that all information provided in this registration is accurate, complete, and current.",
+      "accuracyText": " I understand that providing false or misleading information may result in account suspension or termination.",
+      "authorizationTitle": "I am duly authorized by my organization to create this account and bind the organization to these Terms.",
+      "authorizationText": " I have the legal authority to enter into agreements on behalf of the company listed above.",
+      "noticeTitle": "Important Notice:",
+      "notice1": "Your acceptance will be recorded with timestamp and IP address for legal compliance",
+      "notice2": "Revenue is generated through AI-targeted advertising from Licensed Producers",
+      "notice3": "Customer data will be used (anonymized) to improve product recommendations",
+      "notice4": "You must comply with all cannabis laws and regulations in your jurisdiction"
     },
     "payment": {
       "cardholderName": "Magaca Haysta Kaarka",
@@ -87,7 +107,8 @@
       "cvv": "CVV",
       "cvvPlaceholder": "123",
       "postalCode": "ZIP/Code-ka Boostada",
-      "postalCodePlaceholder": "12345"
+      "postalCodePlaceholder": "12345",
+      "autoFilled": "自动填写"
     },
     "progress": {
       "verifying": "Xaqiijinta helitaanka...",
@@ -114,6 +135,38 @@
       "signInInstead": "Taa beddelkeeda gal",
       "tenantExists": "Code-ka tenant \"{{code}}\" horeba ayaa loo diiwaangeliyey",
       "websiteExists": "Mareegta \"{{website}}\" horeba ayaa loo isticmaalayaa"
+    },
+    "ontario": {
+      "title": "Shatiga Cannabis ee Ontario",
+      "description": "Loo baahan yahay iibiyeyaasha cannabis ee Ontario. CROL waa shatiga hawlgalkaaga ee heerka qanjadhada, CRSA waa ogolaanshaha tafaariiqda ee heerka dukaanka.",
+      "crolLabel": "Nambarada CROL (Cannabis Retail Operating License) *",
+      "crolPlaceholder": "Geli nambaradaada CROL ee OCS",
+      "crolHelpText": "Nambarada shatiga hawlgalkaaga ee OCS heerka qanjadhada",
+      "crsaTitle": "Xaqiijinta CRSA (Cannabis Retail Store Authorization)",
+      "domainVerifiedSuccess": "✓ Domain la Xaqiijiyey - domain-ka email-kaagu wuxuu u dhigma website-ka CRSA. Dukaankaaga ugu horreeya ayaa si otomaatig ah loogu samayn doonaa shatigan.",
+      "licenseLabel": "Nambarada Shatiga Tafaariiqda Cannabis ee Ontario",
+      "licensePlaceholder": "tusaale: CRSA-1234",
+      "validating": "Xaqiijinaya...",
+      "validate": "Xaqiiji",
+      "licenseHelpText": "Geli nambarada shatiga tafaariiqda cannabis ee Ontario ee AGCO",
+      "validatedSuccess": "✓ Shatiga si Guul leh ayaa loo Xaqiijiyey",
+      "storeNameLabel": "Magaca Dukaanka:",
+      "municipalityLabel": "Degmada:",
+      "addressLabel": "Cinwaanka:",
+      "websiteLabel": "Website-ka:",
+      "validationFailed": "Xaqiijinta Way Fashilantay",
+      "searchIntro": "Ma ogtahay nambaradaada shatiga? Raadi dukaankaaga:",
+      "searchPlaceholder": "Ku raadi magaca dukaanka ama cinwaanka",
+      "searching": "Raadinta...",
+      "noResults": "Wax natiijo ah lama helin",
+      "selectStore": "Dooro dukaankaaga liiska hoose:",
+      "needHelp": "Ma u baahan tahay caawimaad?",
+      "helpDetails": "Waxaad ka heli kartaa nambaradahaaga shatiga:",
+      "helpCrol": "• Nambarada CROL: Portal-kaaga OCS B2B (loo baahan yahay in la abuuro qanjadhada)",
+      "helpCrsa": "• Nambarada CRSA: Kaydka dadweynaha ee shatiga AGCO (ikhtiyaar ah - xaqiijinta otomaatigga ah ee dukaanka)",
+      "helpNote": "Fiiro gaar ah: Waxaad ka booddhi kartaa xaqiijinta CRSA oo dukaammada si gacanta ah u dari kartaa markii dambe.",
+      "autoCreateStoreLabel": "Samee {storeName} dukaankayga ugu horreeya",
+      "autoCreateStoreHelp": "Dukaankan si otomaatig ah ayaa loo samayn doonaa markaad dhammaystirto isdiiwaangelinta. Waxaad ka saari kartaa calaamadda si aad u darto dukaammo gacanta markii dambe."
     }
   },
   "review": {
@@ -309,7 +362,12 @@
     "expiryFormat": "Fadlan geli qaabka MM/YY",
     "cvvRequired": "CVV waa lagama maarmaan",
     "cvvFormat": "CVV waa inay ahaato 3 ama 4 nambar",
-    "cardholderRequired": "Magaca haysta kaarka waa lagama maarmaan"
+    "cardholderRequired": "Magaca haysta kaarka waa lagama maarmaan",
+    "crolNumberRequired": "Lambarka CROL ayaa looga baahan yahay kireenayaasha Ontario",
+    "crsaLicenseRequired": "Shatiga CRSA ee sax ah ayaa looga baahan yahay kireenayaasha Ontario",
+    "crsaDomainMismatch": "Domain-kaaga iimaylka kuma habboonaan mareegta CRSA. Fadlan la xiriir taageerada xaqiijinta gacanta.",
+    "licenseNumberRequired": "Fadlan geli lambarka shatiga",
+    "licenseValidationFailed": "Xaqiijinta shatiga waa lagu guul-darraystay"
   },
   "passwordStrength": {
     "weak": "Daciif",
@@ -396,5 +454,22 @@
       "required": "Waa inaad xaqiijisaa ogolaanshahaaga si aad u sii waddo"
     },
     "allRequired": "Dhammaan caddayntu waa in la aqbalaa si loo abuuro akoonkaaga"
+  },
+  "errors": {
+    "submit": {
+      "processingPayment": "Waxaa lagu shaqaynayaa habka lacag bixinta...",
+      "paymentDetailsRequired": "Faahfaahinta lacag bixinta ayaa looga baahan yahay qorshayaasha lacag lagu bixiyo",
+      "paymentMethodFailed": "Habka lacag bixinta waa lagu guul-darraystay",
+      "accountCreationFailed": "Abuurista koontada waa lagu guul-darraystay.",
+      "tenantExists": "Kireenayahan horaa u jiray.",
+      "userEmailExists": "Isticmaale iimaylkan leh ayaa horaa u jiray. Fadlan isticmaal iimaayl kale ama soo gal.",
+      "emailAlreadyRegistered": "Iimaylkan horaa loo diiwaan geliyay. Fadlan isticmaal iimaayl kale ama soo gal.",
+      "informationAlreadyRegistered": "Macluumaadkan horaa loogu diiwaan geliyay nidaamkeenna.",
+      "checkRequiredFields": "Fadlan hubi in dhammaan goobaha loo baahan yahay si sax ah loo buuxiyay.",
+      "validationError": "Khalad xaqiijin: Fadlan hubi in dhammaan goobaha loo baahan yahay si sax ah loo buuxiyay.",
+      "serverError": "Khalad server ayaa dhacay. Fadlan isku day mar kale dabadeed ama la xiriir taageerada.",
+      "serviceUnavailable": "Adeegu ma heli karo. Fadlan hubi in backend-ka uu socdo.",
+      "networkError": "Khalad shabakadeed: Lama xidhi karo server-ka. Fadlan hubi isku xidhkaaga."
+    }
   }
 }

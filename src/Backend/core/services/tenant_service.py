@@ -40,7 +40,8 @@ class TenantService:
         contact_phone: Optional[str] = None,
         website: Optional[str] = None,
         logo_url: Optional[str] = None,
-        settings: Optional[Dict[str, Any]] = None
+        settings: Optional[Dict[str, Any]] = None,
+        conn=None  # Accept optional connection for transaction control
     ) -> Tenant:
         """Create a new tenant with subscription"""
         try:
@@ -92,10 +93,10 @@ class TenantService:
                 updated_at=datetime.utcnow()
             )
             
-            # Save tenant
-            saved_tenant = await self.tenant_repo.create(tenant)
+            # Save tenant (pass connection if provided for transaction control)
+            saved_tenant = await self.tenant_repo.create(tenant, conn=conn)
             
-            # Create subscription
+            # Create subscription (pass connection if provided)
             subscription = TenantSubscription(
                 id=uuid4(),
                 tenant_id=saved_tenant.id,
@@ -110,7 +111,7 @@ class TenantService:
                 updated_at=datetime.utcnow()
             )
             
-            await self.subscription_repo.create(subscription)
+            await self.subscription_repo.create(subscription, conn=conn)
             
             logger.info(f"Created tenant '{name}' with code '{code}' and {subscription_tier.value} subscription")
             return saved_tenant

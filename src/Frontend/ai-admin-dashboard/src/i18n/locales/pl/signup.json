@@ -16,7 +16,7 @@
     "stepDescriptions": {
       "company": "Powiedz nam o swoim biznesie i marce",
       "contact": "Podaj swoje dane kontaktowe i adres",
-      "ontario": "Validate your Ontario cannabis retail licenses (CROL and CRSA)",
+      "ontario": "Zweryfikuj swoje licencje detaliczne na sprzedaż konopi w Ontario (CROL i CRSA)",
       "account": "Utwórz dane logowania konta administratora",
       "payment": "Wybierz swój plan i metodę płatności"
     },
@@ -51,7 +51,9 @@
       "city": "Miasto",
       "province": "Prowincja",
       "postalCode": "Kod pocztowy",
-      "postalCodePlaceholder": "A1A 1A1"
+      "postalCodePlaceholder": "A1A 1A1",
+      "autoFilled": "Wypełnione automatycznie",
+      "addressAutocompleteHint": "💡 Zacznij pisać, aby zobaczyć sugestie adresów - miasto i kod pocztowy wypełnią się automatycznie"
     },
     "accountSetup": {
       "password": "Hasło",
@@ -75,7 +77,25 @@
       "annualSave": "Oszczędź 20%",
       "selectPlan": "Wybierz plan",
       "enterpriseTitle": "Plan korporacyjny",
-      "enterpriseDescription": "Nasz zespół sprzedaży skontaktuje się z Tobą w ciągu 24 godzin, aby omówić indywidualne ceny i konfigurację."
+      "enterpriseDescription": "Nasz zespół sprzedaży skontaktuje się z Tobą w ciągu 24 godzin, aby omówić indywidualne ceny i konfigurację.",
+      "freeTierTitle": "🎉 Free Tier Selected",
+      "freeTierMessage": "No payment required - continue to create your account!",
+      "legalTitle": "Legal Agreements & Attestations",
+      "termsPrefix": "I accept the ",
+      "termsLink": "Terms of Service",
+      "termsSuffix": ", including AI-targeted advertising from Licensed Producers",
+      "privacyPrefix": "I accept the ",
+      "privacyLink": "Privacy Policy",
+      "privacySuffix": " and consent to data collection and usage for advertising purposes",
+      "accuracyTitle": "I certify that all information provided in this registration is accurate, complete, and current.",
+      "accuracyText": " I understand that providing false or misleading information may result in account suspension or termination.",
+      "authorizationTitle": "I am duly authorized by my organization to create this account and bind the organization to these Terms.",
+      "authorizationText": " I have the legal authority to enter into agreements on behalf of the company listed above.",
+      "noticeTitle": "Important Notice:",
+      "notice1": "Your acceptance will be recorded with timestamp and IP address for legal compliance",
+      "notice2": "Revenue is generated through AI-targeted advertising from Licensed Producers",
+      "notice3": "Customer data will be used (anonymized) to improve product recommendations",
+      "notice4": "You must comply with all cannabis laws and regulations in your jurisdiction"
     },
     "payment": {
       "cardholderName": "Imię i nazwisko posiadacza karty",
@@ -87,7 +107,8 @@
       "cvv": "CVV",
       "cvvPlaceholder": "123",
       "postalCode": "Kod pocztowy",
-      "postalCodePlaceholder": "12345"
+      "postalCodePlaceholder": "12345",
+      "autoFilled": "自动填写"
     },
     "progress": {
       "verifying": "Weryfikacja dostępności...",
@@ -114,6 +135,38 @@
       "signInInstead": "Zaloguj się zamiast tego",
       "tenantExists": "Kod najemcy \"{{code}}\" jest już zarejestrowany",
       "websiteExists": "Strona internetowa \"{{website}}\" jest już w użyciu"
+    },
+    "ontario": {
+      "title": "Licencjonowanie Cannabis w Ontario",
+      "description": "Wymagane dla sprzedawców detalicznych cannabis w Ontario. CROL to Twoja licencja operacyjna na poziomie najemcy, CRSA to autoryzacja sprzedaży detalicznej na poziomie sklepu.",
+      "crolLabel": "Numer CROL (Licencja operacyjna sprzedaży detalicznej cannabis) *",
+      "crolPlaceholder": "Wprowadź swój numer CROL OCS",
+      "crolHelpText": "Twój numer licencji operacyjnej OCS na poziomie najemcy",
+      "crsaTitle": "Walidacja CRSA (Autoryzacja sklepu detalicznego cannabis)",
+      "domainVerifiedSuccess": "✓ Domena zweryfikowana - Twoja domena e-mail pasuje do strony CRSA. Twój pierwszy sklep zostanie utworzony automatycznie z tej licencji.",
+      "licenseLabel": "Numer licencji sprzedaży detalicznej cannabis w Ontario",
+      "licensePlaceholder": "np., CRSA-1234",
+      "validating": "Walidacja...",
+      "validate": "Waliduj",
+      "licenseHelpText": "Wprowadź swój numer licencji sprzedaży detalicznej cannabis w Ontario z AGCO",
+      "validatedSuccess": "✓ Licencja zwalidowana pomyślnie",
+      "storeNameLabel": "Nazwa sklepu:",
+      "municipalityLabel": "Gmina:",
+      "addressLabel": "Adres:",
+      "websiteLabel": "Strona internetowa:",
+      "validationFailed": "Walidacja nie powiodła się",
+      "searchIntro": "Nie znasz swojego numeru licencji? Wyszukaj swój sklep:",
+      "searchPlaceholder": "Szukaj po nazwie sklepu lub adresie...",
+      "searching": "Wyszukiwanie...",
+      "search": "Szukaj",
+      "licenseField": "Licencja:",
+      "availableForSignup": "Dostępny do rejestracji",
+      "alreadyRegistered": "Już zarejestrowany",
+      "noStoresFound": "Nie znaleziono sklepów. Spróbuj innego hasła wyszukiwania.",
+      "needHelp": "Potrzebujesz pomocy?",
+      "helpText": "Twój numer licencji sprzedaży detalicznej cannabis w Ontario znajduje się w dokumentach autoryzacyjnych AGCO. Zazwyczaj zaczyna się od \"CRSA\", po którym następuje numer.",
+      "autoCreateStoreLabel": "Utwórz {storeName} jako mój pierwszy sklep",
+      "autoCreateStoreHelp": "Ten sklep zostanie automatycznie utworzony po zakończeniu rejestracji. Możesz odznaczyć, aby dodać sklepy ręcznie później."
     }
   },
   "review": {
@@ -309,7 +362,12 @@
     "expiryFormat": "Wprowadź format MM/RR",
     "cvvRequired": "CVV jest wymagane",
     "cvvFormat": "CVV musi mieć 3 lub 4 cyfry",
-    "cardholderRequired": "Imię i nazwisko posiadacza karty jest wymagane"
+    "cardholderRequired": "Imię i nazwisko posiadacza karty jest wymagane",
+    "crolNumberRequired": "Numer CROL jest wymagany dla najemców z Ontario",
+    "crsaLicenseRequired": "Ważna licencja CRSA jest wymagana dla najemców z Ontario",
+    "crsaDomainMismatch": "Twoja domena e-mail nie pasuje do strony CRSA. Skontaktuj się z pomocą techniczną w celu ręcznej weryfikacji.",
+    "licenseNumberRequired": "Proszę wprowadzić numer licencji",
+    "licenseValidationFailed": "Nie udało się zweryfikować licencji"
   },
   "passwordStrength": {
     "weak": "Słabe",
@@ -396,5 +454,22 @@
       "required": "Musisz potwierdzić swoje upoważnienie, aby kontynuować"
     },
     "allRequired": "Wszystkie oświadczenia muszą zostać zaakceptowane, aby utworzyć konto"
+  },
+  "errors": {
+    "submit": {
+      "processingPayment": "Przetwarzanie metody płatności...",
+      "paymentDetailsRequired": "Dane płatności są wymagane dla płatnych planów",
+      "paymentMethodFailed": "Nie udało się przetworzyć metody płatności",
+      "accountCreationFailed": "Nie udało się utworzyć konta.",
+      "tenantExists": "Ten najemca już istnieje.",
+      "userEmailExists": "Użytkownik z tym adresem e-mail już istnieje. Użyj innego adresu e-mail lub zaloguj się.",
+      "emailAlreadyRegistered": "Ten adres e-mail jest już zarejestrowany. Użyj innego adresu e-mail lub zaloguj się.",
+      "informationAlreadyRegistered": "Te informacje są już zarejestrowane w naszym systemie.",
+      "checkRequiredFields": "Sprawdź, czy wszystkie wymagane pola są poprawnie wypełnione.",
+      "validationError": "Błąd walidacji: Sprawdź, czy wszystkie wymagane pola są poprawnie wypełnione.",
+      "serverError": "Wystąpił błąd serwera. Spróbuj ponownie później lub skontaktuj się z pomocą techniczną.",
+      "serviceUnavailable": "Usługa niedostępna. Upewnij się, że backend jest uruchomiony.",
+      "networkError": "Błąd sieci: Nie można połączyć się z serwerem. Sprawdź swoje połączenie."
+    }
   }
 }

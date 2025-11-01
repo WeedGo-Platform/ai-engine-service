@@ -1,0 +1,50 @@
+{
+  "auth": {
+    "database_connection_failed": "Database connection failed",
+    "invalid_credentials": "Invalid authentication credentials",
+    "not_authenticated": "Not authenticated - no token or X-User-Id header provided",
+    "email_already_registered": "Email already registered",
+    "registration_failed": "Registration failed. Please try again.",
+    "invalid_email_or_password": "Invalid email or password",
+    "login_failed": "Login failed. Please try again.",
+    "logout_successful": "Logout successful",
+    "user_not_found": "User not found",
+    "verification_failed": "Verification failed",
+    "failed_retrieve_province_info": "Failed to retrieve province information",
+    "failed_retrieve_user_info": "Failed to retrieve user information",
+    "must_be_minimum_age": "Must be {minAge} years or older to register in this province",
+    "registration_successful": "Registration successful",
+    "login_successful": "Login successful",
+    "token_verification_failed": "Token verification failed: {error}"
+  },
+  "address": {
+    "failed_retrieve_addresses": "Failed to retrieve addresses",
+    "address_created_successfully": "Address created successfully",
+    "failed_create_address": "Failed to create address",
+    "not_authorized_update_address": "Not authorized to update this address",
+    "address_updated_successfully": "Address updated successfully",
+    "failed_update_address": "Failed to update address",
+    "address_not_found_or_not_authorized": "Address not found or not authorized",
+    "address_deleted_successfully": "Address deleted successfully",
+    "failed_delete_address": "Failed to delete address",
+    "default_address_updated_successfully": "Default address updated successfully",
+    "failed_set_default_address": "Failed to set default address"
+  },
+  "otp": {
+    "database_connection_failed": "Database connection failed",
+    "failed_create_user_account": "Failed to create user account",
+    "verification_failed": "Verification failed",
+    "failed_check_otp_status": "Failed to check OTP status",
+    "expired_otp_cleaned": "Expired OTP codes cleaned up",
+    "cleanup_failed": "Cleanup failed",
+    "too_many_otp_requests": "Too many OTP requests. Please try again in {minutes} minutes.",
+    "failed_send_otp": "Failed to send OTP",
+    "email_service_unavailable": "We're experiencing temporary issues with our email service. Our backup providers (AWS SES, SendGrid, Gmail SMTP) are all unavailable. Please try again in a few moments, or contact support if this persists.",
+    "sms_service_unavailable": "We're experiencing temporary issues with our SMS service. Please try again in a few moments, or skip phone verification for now. You can add your phone number later from your account settings.",
+    "invalid_verification_code": "Invalid verification code",
+    "failed_send_verification_code": "Failed to send verification code: {error}",
+    "invalid_email_format": "Invalid email format. Please provide a valid email address.",
+    "phone_too_short": "Phone number too short. Must be at least 10 digits. Received: {digits} digits",
+    "phone_too_long": "Phone number too long. Maximum 15 digits allowed. Received: {digits} digits"
+  }
+}

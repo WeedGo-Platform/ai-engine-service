@@ -25,10 +25,11 @@ class UserRepository:
         first_name: str,
         last_name: str,
         phone: Optional[str] = None,
-        is_active: bool = True
+        is_active: bool = True,
+        conn=None
     ) -> Dict[str, Any]:
         """Create a new user"""
-        async with self.pool.acquire() as conn:
+        async def _create(connection):
             try:
                 # Hash the password
                 password_hash = self._hash_password(password)
@@ -44,7 +45,7 @@ class UserRepository:
                 """
                 
                 now = datetime.utcnow()
-                row = await conn.fetchrow(
+                row = await connection.fetchrow(
                     query,
                     user_id,
                     email.lower(),
@@ -66,6 +67,12 @@ class UserRepository:
             except Exception as e:
                 logger.error(f"Error creating user: {e}")
                 raise
+        
+        if conn:
+            return await _create(conn)
+        else:
+            async with self.pool.acquire() as connection:
+                return await _create(connection)
     
     async def get_user_by_email(self, email: str) -> Optional[Dict[str, Any]]:
         """Get user by email"""
@@ -95,10 +102,11 @@ class UserRepository:
         self,
         user_id: UUID,
         tenant_id: UUID,
-        role: str = 'admin'
+        role: str = 'admin',
+        conn=None
     ) -> Dict[str, Any]:
         """Update user with tenant information"""
-        async with self.pool.acquire() as conn:
+        async def _update(connection):
             try:
                 # Determine the main role based on the tenant role
                 main_role = 'tenant_admin' if role in ['admin', 'tenant_admin'] else 'staff'
@@ -111,7 +119,7 @@ class UserRepository:
                 """
 
                 now = datetime.utcnow()
-                row = await conn.fetchrow(
+                row = await connection.fetchrow(
                     query,
                     user_id,
                     tenant_id,
@@ -132,6 +140,12 @@ class UserRepository:
             except Exception as e:
                 logger.error(f"Error updating user tenant: {e}")
                 raise
+        
+        if conn:
+            return await _update(conn)
+        else:
+            async with self.pool.acquire() as connection:
+                return await _update(connection)
     
     async def verify_password(self, email: str, password: str) -> Optional[Dict[str, Any]]:
         """Verify user password and return user data if valid"""

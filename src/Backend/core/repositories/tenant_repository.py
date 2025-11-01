@@ -23,9 +23,15 @@ class TenantRepository(ITenantRepository):
     def __init__(self, connection_pool: asyncpg.Pool):
         self.pool = connection_pool
     
-    async def create(self, tenant: Tenant) -> Tenant:
-        """Create a new tenant"""
-        async with self.pool.acquire() as conn:
+    async def create(self, tenant: Tenant, conn=None) -> Tenant:
+        """Create a new tenant
+        
+        Args:
+            tenant: Tenant entity to create
+            conn: Optional database connection for transaction control.
+                  If provided, uses this connection; otherwise acquires new one.
+        """
+        async def _create(connection):
             try:
                 query = """
                     INSERT INTO tenants (
@@ -43,7 +49,7 @@ class TenantRepository(ITenantRepository):
                 
                 address_json = tenant.address.to_dict() if tenant.address else None
                 
-                row = await conn.fetchrow(
+                row = await connection.fetchrow(
                     query,
                     tenant.id,
                     tenant.name,
@@ -75,6 +81,13 @@ class TenantRepository(ITenantRepository):
             except Exception as e:
                 logger.error(f"Error creating tenant: {e}")
                 raise
+        
+        # Use provided connection or acquire new one
+        if conn is not None:
+            return await _create(conn)
+        else:
+            async with self.pool.acquire() as connection:
+                return await _create(connection)
     
     async def get_by_id(self, tenant_id: UUID) -> Optional[Tenant]:
         """Get tenant by ID"""

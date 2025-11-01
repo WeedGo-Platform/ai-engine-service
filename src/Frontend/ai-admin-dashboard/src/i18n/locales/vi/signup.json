@@ -16,7 +16,7 @@
     "stepDescriptions": {
       "company": "Cho chúng tôi biết về doanh nghiệp và thương hiệu của bạn",
       "contact": "Cung cấp thông tin liên hệ và địa chỉ của bạn",
-      "ontario": "Validate your Ontario cannabis retail licenses (CROL and CRSA)",
+      "ontario": "Xác thực giấy phép bán lẻ cần sa Ontario của bạn (CROL và CRSA)",
       "account": "Tạo thông tin đăng nhập tài khoản quản trị",
       "payment": "Chọn gói và phương thức thanh toán của bạn"
     },
@@ -51,7 +51,9 @@
       "city": "Thành phố",
       "province": "Tỉnh",
       "postalCode": "Mã Bưu điện",
-      "postalCodePlaceholder": "A1A 1A1"
+      "postalCodePlaceholder": "A1A 1A1",
+      "autoFilled": "Tự động điền",
+      "addressAutocompleteHint": "💡 Bắt đầu nhập để xem gợi ý địa chỉ - thành phố và mã bưu điện sẽ tự động điền"
     },
     "accountSetup": {
       "password": "Mật khẩu",
@@ -75,7 +77,25 @@
       "annualSave": "Tiết kiệm 20%",
       "selectPlan": "Chọn Gói",
       "enterpriseTitle": "Gói Doanh nghiệp",
-      "enterpriseDescription": "Đội ngũ bán hàng của chúng tôi sẽ liên hệ với bạn trong vòng 24 giờ để thảo luận về giá tùy chỉnh và thiết lập."
+      "enterpriseDescription": "Đội ngũ bán hàng của chúng tôi sẽ liên hệ với bạn trong vòng 24 giờ để thảo luận về giá tùy chỉnh và thiết lập.",
+      "freeTierTitle": "🎉 Free Tier Selected",
+      "freeTierMessage": "No payment required - continue to create your account!",
+      "legalTitle": "Legal Agreements & Attestations",
+      "termsPrefix": "I accept the ",
+      "termsLink": "Terms of Service",
+      "termsSuffix": ", including AI-targeted advertising from Licensed Producers",
+      "privacyPrefix": "I accept the ",
+      "privacyLink": "Privacy Policy",
+      "privacySuffix": " and consent to data collection and usage for advertising purposes",
+      "accuracyTitle": "I certify that all information provided in this registration is accurate, complete, and current.",
+      "accuracyText": " I understand that providing false or misleading information may result in account suspension or termination.",
+      "authorizationTitle": "I am duly authorized by my organization to create this account and bind the organization to these Terms.",
+      "authorizationText": " I have the legal authority to enter into agreements on behalf of the company listed above.",
+      "noticeTitle": "Important Notice:",
+      "notice1": "Your acceptance will be recorded with timestamp and IP address for legal compliance",
+      "notice2": "Revenue is generated through AI-targeted advertising from Licensed Producers",
+      "notice3": "Customer data will be used (anonymized) to improve product recommendations",
+      "notice4": "You must comply with all cannabis laws and regulations in your jurisdiction"
     },
     "payment": {
       "cardholderName": "Tên Chủ thẻ",
@@ -87,7 +107,8 @@
       "cvv": "CVV",
       "cvvPlaceholder": "123",
       "postalCode": "Mã Bưu điện",
-      "postalCodePlaceholder": "12345"
+      "postalCodePlaceholder": "12345",
+      "autoFilled": "自动填写"
     },
     "progress": {
       "verifying": "Đang xác minh tính khả dụng...",
@@ -114,6 +135,38 @@
       "signInInstead": "Đăng nhập thay vào đó",
       "tenantExists": "Mã thuê \"{{code}}\" đã được đăng ký",
       "websiteExists": "Trang web \"{{website}}\" đã được sử dụng"
+    },
+    "ontario": {
+      "title": "Cấp phép Cần sa Ontario",
+      "description": "Bắt buộc đối với nhà bán lẻ cần sa Ontario. CROL là giấy phép hoạt động cấp người thuê của bạn, CRSA là quyền bán lẻ cấp cửa hàng của bạn.",
+      "crolLabel": "Số CROL (Giấy phép hoạt động bán lẻ cần sa) *",
+      "crolPlaceholder": "Nhập số CROL OCS của bạn",
+      "crolHelpText": "Số giấy phép hoạt động OCS cấp người thuê của bạn",
+      "crsaTitle": "Xác thực CRSA (Ủy quyền cửa hàng bán lẻ cần sa)",
+      "domainVerifiedSuccess": "✓ Đã xác minh tên miền - Tên miền email của bạn khớp với trang web CRSA. Cửa hàng đầu tiên của bạn sẽ được tạo tự động từ giấy phép này.",
+      "licenseLabel": "Số giấy phép bán lẻ cần sa Ontario",
+      "licensePlaceholder": "ví dụ: CRSA-1234",
+      "validating": "Đang xác thực...",
+      "validate": "Xác thực",
+      "licenseHelpText": "Nhập số giấy phép bán lẻ cần sa Ontario từ AGCO của bạn",
+      "validatedSuccess": "✓ Giấy phép đã được xác thực thành công",
+      "storeNameLabel": "Tên cửa hàng:",
+      "municipalityLabel": "Thành phố:",
+      "addressLabel": "Địa chỉ:",
+      "websiteLabel": "Trang web:",
+      "validationFailed": "Xác thực thất bại",
+      "searchIntro": "Không biết số giấy phép của bạn? Tìm kiếm cửa hàng của bạn:",
+      "searchPlaceholder": "Tìm kiếm theo tên cửa hàng hoặc địa chỉ...",
+      "searching": "Đang tìm kiếm...",
+      "search": "Tìm kiếm",
+      "licenseField": "Giấy phép:",
+      "availableForSignup": "Có sẵn để đăng ký",
+      "alreadyRegistered": "Đã đăng ký",
+      "noStoresFound": "Không tìm thấy cửa hàng. Thử từ khóa tìm kiếm khác.",
+      "needHelp": "Cần giúp đỡ?",
+      "helpText": "Số giấy phép bán lẻ cần sa Ontario của bạn có thể được tìm thấy trong tài liệu ủy quyền AGCO của bạn. Nó thường bắt đầu bằng CRSA theo sau là một số.",
+      "autoCreateStoreLabel": "Tạo {storeName} làm cửa hàng đầu tiên của tôi",
+      "autoCreateStoreHelp": "Cửa hàng này sẽ được tạo tự động khi hoàn tất đăng ký. Bạn có thể bỏ chọn để thêm cửa hàng thủ công sau."
     }
   },
   "review": {
@@ -309,7 +362,12 @@
     "expiryFormat": "Vui lòng nhập định dạng MM/YY",
     "cvvRequired": "CVV là bắt buộc",
     "cvvFormat": "CVV phải có 3 hoặc 4 chữ số",
-    "cardholderRequired": "Tên chủ thẻ là bắt buộc"
+    "cardholderRequired": "Tên chủ thẻ là bắt buộc",
+    "crolNumberRequired": "Số CROL là bắt buộc đối với người thuê Ontario",
+    "crsaLicenseRequired": "Giấy phép CRSA hợp lệ là bắt buộc đối với người thuê Ontario",
+    "crsaDomainMismatch": "Tên miền email của bạn không khớp với trang web CRSA. Vui lòng liên hệ hỗ trợ để xác minh thủ công.",
+    "licenseNumberRequired": "Vui lòng nhập số giấy phép",
+    "licenseValidationFailed": "Xác thực giấy phép thất bại"
   },
   "passwordStrength": {
     "weak": "Yếu",
@@ -396,5 +454,22 @@
       "required": "Bạn phải xác nhận sự ủy quyền của bạn để tiếp tục"
     },
     "allRequired": "Tất cả các xác nhận phải được chấp nhận để tạo tài khoản của bạn"
+  },
+  "errors": {
+    "submit": {
+      "processingPayment": "Đang xử lý phương thức thanh toán...",
+      "paymentDetailsRequired": "Chi tiết thanh toán là bắt buộc cho các gói trả phí",
+      "paymentMethodFailed": "Xử lý phương thức thanh toán thất bại",
+      "accountCreationFailed": "Tạo tài khoản thất bại.",
+      "tenantExists": "Người thuê này đã tồn tại.",
+      "userEmailExists": "Người dùng với email này đã tồn tại. Vui lòng sử dụng email khác hoặc đăng nhập.",
+      "emailAlreadyRegistered": "Email này đã được đăng ký. Vui lòng sử dụng email khác hoặc đăng nhập.",
+      "informationAlreadyRegistered": "Thông tin này đã được đăng ký trong hệ thống của chúng tôi.",
+      "checkRequiredFields": "Vui lòng kiểm tra tất cả các trường bắt buộc đã được điền đúng.",
+      "validationError": "Lỗi xác thực: Vui lòng kiểm tra tất cả các trường bắt buộc đã được điền đúng.",
+      "serverError": "Đã xảy ra lỗi máy chủ. Vui lòng thử lại sau hoặc liên hệ hỗ trợ.",
+      "serviceUnavailable": "Dịch vụ không khả dụng. Vui lòng đảm bảo backend đang chạy.",
+      "networkError": "Lỗi mạng: Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối của bạn."
+    }
   }
 }

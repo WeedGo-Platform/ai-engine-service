@@ -9,7 +9,7 @@ interface LocationState {
   tenantCode?: string;
   tenantName?: string;
   tenantId?: string;
-  contactEmail?: string;
+  email?: string;
   firstName?: string;
   lastName?: string;
   phone?: string;
@@ -37,7 +37,7 @@ const UserRegistration = () => {
   const [formData, setFormData] = useState<FormData>({
     firstName: state?.firstName || '',
     lastName: state?.lastName || '',
-    email: state?.contactEmail || '',
+    email: state?.email || '',
     phone: state?.phone || '',
     password: '',
     confirmPassword: ''
@@ -332,7 +332,10 @@ const UserRegistration = () => {
                 type="tel"
                 value={formData.phone}
                 onChange={(e) => handleInputChange('phone', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                readOnly={!!state?.phone}
+                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
+                  state?.phone ? 'bg-gray-50 border-gray-200 cursor-not-allowed' : 'border-gray-200'
+                }`}
                 placeholder={t('signup:userRegistration.phonePlaceholder')}
               />
             </div>

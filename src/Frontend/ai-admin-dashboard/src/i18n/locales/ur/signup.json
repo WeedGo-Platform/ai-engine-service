@@ -16,7 +16,7 @@
     "stepDescriptions": {
       "company": "اپنے کاروبار اور برانڈ کے بارے میں ہمیں بتائیں",
       "contact": "اپنی رابطے کی معلومات اور پتہ فراہم کریں",
-      "ontario": "Validate your Ontario cannabis retail licenses (CROL and CRSA)",
+      "ontario": "اپنے اونٹاریو کینابس ریٹیل لائسنس کی تصدیق کریں (CROL اور CRSA)",
       "account": "اپنے ایڈمن اکاؤنٹ کی اسناد بنائیں",
       "payment": "اپنا منصوبہ اور ادائیگی کا طریقہ منتخب کریں"
     },
@@ -51,7 +51,9 @@
       "city": "شہر",
       "province": "صوبہ",
       "postalCode": "پوسٹل کوڈ",
-      "postalCodePlaceholder": "A1A 1A1"
+      "postalCodePlaceholder": "A1A 1A1",
+      "autoFilled": "خود بخود بھرا ہوا",
+      "addressAutocompleteHint": "💡 پتہ کی تجاویز دیکھنے کے لیے ٹائپ کرنا شروع کریں - شہر اور پوسٹل کوڈ خود بخود بھر جائیں گے"
     },
     "accountSetup": {
       "password": "پاس ورڈ",
@@ -75,7 +77,25 @@
       "annualSave": "20% بچائیں",
       "selectPlan": "منصوبہ منتخب کریں",
       "enterpriseTitle": "انٹرپرائز منصوبہ",
-      "enterpriseDescription": "ہماری سیلز ٹیم اپنی مرضی کی قیمت اور سیٹ اپ پر بات کرنے کے لیے 24 گھنٹوں میں آپ سے رابطہ کرے گی۔"
+      "enterpriseDescription": "ہماری سیلز ٹیم اپنی مرضی کی قیمت اور سیٹ اپ پر بات کرنے کے لیے 24 گھنٹوں میں آپ سے رابطہ کرے گی۔",
+      "freeTierTitle": "🎉 Free Tier Selected",
+      "freeTierMessage": "No payment required - continue to create your account!",
+      "legalTitle": "Legal Agreements & Attestations",
+      "termsPrefix": "I accept the ",
+      "termsLink": "Terms of Service",
+      "termsSuffix": ", including AI-targeted advertising from Licensed Producers",
+      "privacyPrefix": "I accept the ",
+      "privacyLink": "Privacy Policy",
+      "privacySuffix": " and consent to data collection and usage for advertising purposes",
+      "accuracyTitle": "I certify that all information provided in this registration is accurate, complete, and current.",
+      "accuracyText": " I understand that providing false or misleading information may result in account suspension or termination.",
+      "authorizationTitle": "I am duly authorized by my organization to create this account and bind the organization to these Terms.",
+      "authorizationText": " I have the legal authority to enter into agreements on behalf of the company listed above.",
+      "noticeTitle": "Important Notice:",
+      "notice1": "Your acceptance will be recorded with timestamp and IP address for legal compliance",
+      "notice2": "Revenue is generated through AI-targeted advertising from Licensed Producers",
+      "notice3": "Customer data will be used (anonymized) to improve product recommendations",
+      "notice4": "You must comply with all cannabis laws and regulations in your jurisdiction"
     },
     "payment": {
       "cardholderName": "کارڈ ہولڈر کا نام",
@@ -87,7 +107,8 @@
       "cvv": "CVV",
       "cvvPlaceholder": "123",
       "postalCode": "ZIP/پوسٹل کوڈ",
-      "postalCodePlaceholder": "12345"
+      "postalCodePlaceholder": "12345",
+      "autoFilled": "自动填写"
     },
     "progress": {
       "verifying": "دستیابی کی تصدیق ہو رہی ہے...",
@@ -115,6 +136,38 @@
       "signInInstead": "اس کے بجائے سائن ان کریں",
       "tenantExists": "ٹینینٹ کوڈ \"{{code}}\" پہلے سے رجسٹرڈ ہے",
       "websiteExists": "ویب سائٹ \"{{website}}\" پہلے سے استعمال میں ہے"
+    },
+    "ontario": {
+      "title": "اونٹاریو کینابس لائسنسنگ",
+      "description": "اونٹاریو کینابس خوردہ فروشوں کے لیے ضروری۔ CROL آپ کا کرایہ دار سطح کا آپریٹنگ لائسنس ہے، CRSA آپ کا اسٹور سطح کا خوردہ اختیار ہے۔",
+      "crolLabel": "CROL نمبر (کینابس ریٹیل آپریٹنگ لائسنس) *",
+      "crolPlaceholder": "اپنا OCS CROL نمبر درج کریں",
+      "crolHelpText": "آپ کا کرایہ دار سطح کا OCS آپریٹنگ لائسنس نمبر",
+      "crsaTitle": "CRSA تصدیق (کینابس ریٹیل اسٹور اتھارٹی)",
+      "domainVerifiedSuccess": "✓ ڈومین تصدیق شدہ - آپ کا ای میل ڈومین CRSA ویب سائٹ سے مماثل ہے۔ آپ کا پہلا اسٹور اس لائسنس سے خودکار طور پر بنایا جائے گا۔",
+      "licenseLabel": "اونٹاریو کینابس خوردہ لائسنس نمبر",
+      "licensePlaceholder": "مثلاً، CRSA-1234",
+      "validating": "تصدیق ہو رہی ہے...",
+      "validate": "تصدیق کریں",
+      "licenseHelpText": "AGCO سے اپنا اونٹاریو کینابس خوردہ لائسنس نمبر درج کریں",
+      "validatedSuccess": "✓ لائسنس کامیابی سے تصدیق شدہ",
+      "storeNameLabel": "اسٹور کا نام:",
+      "municipalityLabel": "میونسپلٹی:",
+      "addressLabel": "پتہ:",
+      "websiteLabel": "ویب سائٹ:",
+      "validationFailed": "تصدیق ناکام",
+      "searchIntro": "اپنا لائسنس نمبر نہیں جانتے؟ اپنا اسٹور تلاش کریں:",
+      "searchPlaceholder": "اسٹور کے نام یا پتہ سے تلاش کریں...",
+      "searching": "تلاش ہو رہی ہے...",
+      "search": "تلاش کریں",
+      "licenseField": "لائسنس:",
+      "availableForSignup": "سائن اپ کے لیے دستیاب",
+      "alreadyRegistered": "پہلے سے رجسٹرڈ",
+      "noStoresFound": "کوئی اسٹور نہیں ملا۔ مختلف تلاش کی اصطلاح آزمائیں۔",
+      "needHelp": "مدد کی ضرورت ہے؟",
+      "helpText": "آپ کا اونٹاریو کینابس خوردہ لائسنس نمبر آپ کے AGCO اختیار دستاویزات میں مل سکتا ہے۔ یہ عام طور پر CRSA سے شروع ہوتا ہے اور اس کے بعد ایک نمبر ہوتا ہے۔",
+      "autoCreateStoreLabel": "{storeName} کو میرے پہلے اسٹور کے طور پر بنائیں",
+      "autoCreateStoreHelp": "سائن اپ مکمل ہونے پر یہ اسٹور خودکار طور پر بنایا جائے گا۔ آپ بعد میں دستی طور پر اسٹور شامل کرنے کے لیے ان چیک کر سکتے ہیں۔"
     }
   },
   "review": {
@@ -310,7 +363,12 @@
     "expiryFormat": "براہ کرم MM/YY فارمیٹ درج کریں",
     "cvvRequired": "CVV ضروری ہے",
     "cvvFormat": "CVV 3 یا 4 ہندسوں کا ہونا چاہیے",
-    "cardholderRequired": "کارڈ ہولڈر کا نام ضروری ہے"
+    "cardholderRequired": "کارڈ ہولڈر کا نام ضروری ہے",
+    "crolNumberRequired": "اونٹاریو کرایہ داروں کے لیے CROL نمبر ضروری ہے",
+    "crsaLicenseRequired": "اونٹاریو کرایہ داروں کے لیے درست CRSA لائسنس ضروری ہے",
+    "crsaDomainMismatch": "آپ کا ای میل ڈومین CRSA ویب سائٹ سے میل نہیں کھاتا۔ دستی تصدیق کے لیے سپورٹ سے رابطہ کریں۔",
+    "licenseNumberRequired": "براہ کرم لائسنس نمبر درج کریں",
+    "licenseValidationFailed": "لائسنس کی تصدیق ناکام"
   },
   "passwordStrength": {
     "weak": "کمزور",
@@ -397,5 +455,22 @@
       "required": "جاری رکھنے کے لیے آپ کو اپنی اجازت کی تصدیق کرنی ہوگی"
     },
     "allRequired": "آپ کا اکاؤنٹ بنانے کے لیے تمام تصدیقات کو قبول کیا جانا چاہیے"
+  },
+  "errors": {
+    "submit": {
+      "processingPayment": "ادائیگی کے طریقے پر کارروائی ہو رہی ہے...",
+      "paymentDetailsRequired": "بامعاوضہ منصوبوں کے لیے ادائیگی کی تفصیلات ضروری ہیں",
+      "paymentMethodFailed": "ادائیگی کے طریقے پر کارروائی ناکام",
+      "accountCreationFailed": "اکاؤنٹ بنانا ناکام۔",
+      "tenantExists": "یہ کرایہ دار پہلے سے موجود ہے۔",
+      "userEmailExists": "اس ای میل کے ساتھ ایک صارف پہلے سے موجود ہے۔ براہ کرم دوسرا ای میل استعمال کریں یا لاگ ان کریں۔",
+      "emailAlreadyRegistered": "یہ ای میل پہلے سے رجسٹرڈ ہے۔ براہ کرم دوسرا ای میل استعمال کریں یا لاگ ان کریں۔",
+      "informationAlreadyRegistered": "یہ معلومات ہمارے سسٹم میں پہلے سے رجسٹرڈ ہیں۔",
+      "checkRequiredFields": "براہ کرم جانچیں کہ تمام ضروری فیلڈز صحیح طریقے سے بھرے گئے ہیں۔",
+      "validationError": "توثیق کی خرابی: براہ کرم جانچیں کہ تمام ضروری فیلڈز صحیح طریقے سے بھرے گئے ہیں۔",
+      "serverError": "سرور کی خرابی ہوئی۔ براہ کرم بعد میں دوبارہ کوشش کریں یا سپورٹ سے رابطہ کریں۔",
+      "serviceUnavailable": "سروس دستیاب نہیں۔ براہ کرم یقینی بنائیں کہ بیک اینڈ چل رہا ہے۔",
+      "networkError": "نیٹ ورک کی خرابی: سرور سے منسلک نہیں ہو سکا۔ براہ کرم اپنا کنکشن چیک کریں۔"
+    }
   }
 }

@@ -316,7 +316,12 @@ class LoginTrackingService:
                     """, user_id)
                     
                     if last_login and last_login['country'] != country:
-                        time_diff = datetime.now(timezone.utc) - last_login['login_timestamp']
+                        # Ensure both datetimes are timezone-aware
+                        last_login_time = last_login['login_timestamp']
+                        if last_login_time.tzinfo is None:
+                            last_login_time = last_login_time.replace(tzinfo=timezone.utc)
+                        current_time = datetime.now(timezone.utc)
+                        time_diff = current_time - last_login_time
                         if time_diff.total_seconds() < 3600:  # Less than 1 hour
                             suspicious_indicators.append('rapid_location_change')
                 

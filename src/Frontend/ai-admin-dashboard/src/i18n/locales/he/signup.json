@@ -16,7 +16,7 @@
     "stepDescriptions": {
       "company": "ספר לנו על העסק והמותג שלך",
       "contact": "ספק את פרטי הקשר והכתובת שלך",
-      "ontario": "Validate your Ontario cannabis retail licenses (CROL and CRSA)",
+      "ontario": "אמת את רישיונות הקמעונאות קנאביס באונטריו שלך (CROL ו-CRSA)",
       "account": "צור את אישורי חשבון המנהל שלך",
       "payment": "בחר את התוכנית ואמצעי התשלום שלך"
     },
@@ -51,7 +51,9 @@
       "city": "עיר",
       "province": "מחוז",
       "postalCode": "מיקוד",
-      "postalCodePlaceholder": "A1A 1A1"
+      "postalCodePlaceholder": "A1A 1A1",
+      "autoFilled": "מולא אוטומטית",
+      "addressAutocompleteHint": "💡 התחל להקליד כדי לראות הצעות כתובת - העיר והמיקוד יתמלאו אוטומטית"
     },
     "accountSetup": {
       "password": "סיסמה",
@@ -75,7 +77,25 @@
       "annualSave": "חסוך 20%",
       "selectPlan": "בחר תוכנית",
       "enterpriseTitle": "תוכנית ארגונית",
-      "enterpriseDescription": "צוות המכירות שלנו יצור איתך קשר תוך 24 שעות כדי לדון בתמחור ובהתקנה מותאמים אישית."
+      "enterpriseDescription": "צוות המכירות שלנו יצור איתך קשר תוך 24 שעות כדי לדון בתמחור ובהתקנה מותאמים אישית.",
+      "freeTierTitle": "🎉 Free Tier Selected",
+      "freeTierMessage": "No payment required - continue to create your account!",
+      "legalTitle": "Legal Agreements & Attestations",
+      "termsPrefix": "I accept the ",
+      "termsLink": "Terms of Service",
+      "termsSuffix": ", including AI-targeted advertising from Licensed Producers",
+      "privacyPrefix": "I accept the ",
+      "privacyLink": "Privacy Policy",
+      "privacySuffix": " and consent to data collection and usage for advertising purposes",
+      "accuracyTitle": "I certify that all information provided in this registration is accurate, complete, and current.",
+      "accuracyText": " I understand that providing false or misleading information may result in account suspension or termination.",
+      "authorizationTitle": "I am duly authorized by my organization to create this account and bind the organization to these Terms.",
+      "authorizationText": " I have the legal authority to enter into agreements on behalf of the company listed above.",
+      "noticeTitle": "Important Notice:",
+      "notice1": "Your acceptance will be recorded with timestamp and IP address for legal compliance",
+      "notice2": "Revenue is generated through AI-targeted advertising from Licensed Producers",
+      "notice3": "Customer data will be used (anonymized) to improve product recommendations",
+      "notice4": "You must comply with all cannabis laws and regulations in your jurisdiction"
     },
     "payment": {
       "cardholderName": "שם בעל הכרטיס",
@@ -87,7 +107,8 @@
       "cvv": "CVV",
       "cvvPlaceholder": "123",
       "postalCode": "ZIP/מיקוד",
-      "postalCodePlaceholder": "12345"
+      "postalCodePlaceholder": "12345",
+      "autoFilled": "自动填写"
     },
     "progress": {
       "verifying": "מאמת זמינות...",
@@ -114,6 +135,38 @@
       "signInInstead": "התחבר במקום זאת",
       "tenantExists": "קוד השוכר \"{{code}}\" כבר רשום",
       "websiteExists": "האתר \"{{website}}\" כבר בשימוש"
+    },
+    "ontario": {
+      "title": "רישוי קנאביס באונטריו",
+      "description": "נדרש לקמעונאי קנאביס באונטריו. CROL הוא רישיון התפעול שלך ברמת הדייר, CRSA הוא אישור הקמעונאות ברמת החנות.",
+      "crolLabel": "מספר CROL (רישיון תפעול קמעונאות קנאביס) *",
+      "crolPlaceholder": "הזן את מספר ה-CROL שלך מ-OCS",
+      "crolHelpText": "מספר רישיון התפעול שלך מ-OCS ברמת הדייר",
+      "crsaTitle": "אימות CRSA (אישור חנות קמעונאות קנאביס)",
+      "domainVerifiedSuccess": "✓ הדומיין אומת - דומיין האימייל שלך תואם לאתר CRSA. החנות הראשונה שלך תיווצר אוטומטית מרישיון זה.",
+      "licenseLabel": "מספר רישיון קמעונאות קנאביס באונטריו",
+      "licensePlaceholder": "לדוגמה: CRSA-1234",
+      "validating": "מאמת...",
+      "validate": "אמת",
+      "licenseHelpText": "הזן את מספר רישיון קמעונאות הקנאביס שלך באונטריו מ-AGCO",
+      "validatedSuccess": "✓ הרישיון אומת בהצלחה",
+      "storeNameLabel": "שם החנות:",
+      "municipalityLabel": "עירייה:",
+      "addressLabel": "כתובת:",
+      "websiteLabel": "אתר אינטרנט:",
+      "validationFailed": "האימות נכשל",
+      "searchIntro": "לא יודע את מספר הרישיון שלך? חפש את החנות שלך:",
+      "searchPlaceholder": "חפש לפי שם חנות או כתובת",
+      "searching": "מחפש...",
+      "noResults": "לא נמצאו תוצאות",
+      "selectStore": "בחר את החנות שלך מהרשימה למטה:",
+      "needHelp": "צריך עזרה?",
+      "helpDetails": "אתה יכול למצוא את מספרי הרישיון שלך ב:",
+      "helpCrol": "• מספר CROL: פורטל ה-B2B שלך ב-OCS (נדרש ליצירת דייר)",
+      "helpCrsa": "• מספר CRSA: מסד הנתונים הציבורי של רישיונות AGCO (אופציונלי - לאימות אוטומטי של חנות)",
+      "helpNote": "הערה: אתה יכול לדלג על אימות CRSA ולהוסיף חנויות ידנית מאוחר יותר.",
+      "autoCreateStoreLabel": "צור את {storeName} כחנות הראשונה שלי",
+      "autoCreateStoreHelp": "חנות זו תיווצר אוטומטית בסיום ההרשמה. אתה יכול לבטל את הסימון כדי להוסיף חנויות ידנית מאוחר יותר."
     }
   },
   "review": {
@@ -309,7 +362,12 @@
     "expiryFormat": "אנא הזן בפורמט MM/YY",
     "cvvRequired": "CVV נדרש",
     "cvvFormat": "CVV חייב להיות 3 או 4 ספרות",
-    "cardholderRequired": "שם בעל הכרטיס נדרש"
+    "cardholderRequired": "שם בעל הכרטיס נדרש",
+    "crolNumberRequired": "נדרש מספר CROL לשוכרים באונטריו",
+    "crsaLicenseRequired": "רישיון CRSA תקף נדרש לשוכרים באונטריו",
+    "crsaDomainMismatch": "דומיין הדוא\"ל שלך אינו תואם לאתר CRSA. אנא צור קשר עם התמיכה לאימות ידני.",
+    "licenseNumberRequired": "אנא הזן מספר רישיון",
+    "licenseValidationFailed": "אימות הרישיון נכשל"
   },
   "passwordStrength": {
     "weak": "חלשה",
@@ -396,5 +454,22 @@
       "required": "עליך לאשר את ההרשאה שלך כדי להמשיך"
     },
     "allRequired": "יש לקבל את כל האישורים כדי ליצור את חשבונך"
+  },
+  "errors": {
+    "submit": {
+      "processingPayment": "מעבד אמצעי תשלום...",
+      "paymentDetailsRequired": "פרטי תשלום נדרשים לתוכניות בתשלום",
+      "paymentMethodFailed": "עיבוד אמצעי התשלום נכשל",
+      "accountCreationFailed": "יצירת החשבון נכשלה.",
+      "tenantExists": "שוכר זה כבר קיים.",
+      "userEmailExists": "משתמש עם דוא\"ל זה כבר קיים. אנא השתמש בדוא\"ל אחר או התחבר.",
+      "emailAlreadyRegistered": "דוא\"ל זה כבר רשום. אנא השתמש בדוא\"ל אחר או התחבר.",
+      "informationAlreadyRegistered": "מידע זה כבר רשום במערכת שלנו.",
+      "checkRequiredFields": "אנא בדוק שכל השדות הנדרשים מולאו כראוי.",
+      "validationError": "שגיאת אימות: אנא בדוק שכל השדות הנדרשים מולאו כראוי.",
+      "serverError": "אירעה שגיאת שרת. אנא נסה שוב מאוחר יותר או צור קשר עם התמיכה.",
+      "serviceUnavailable": "השירות אינו זמין. אנא ודא שהשרת פועל.",
+      "networkError": "שגיאת רשת: לא ניתן להתחבר לשרת. אנא בדוק את החיבור שלך."
+    }
   }
 }

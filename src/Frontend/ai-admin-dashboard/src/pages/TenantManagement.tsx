@@ -28,10 +28,11 @@ import {
 } from 'lucide-react';
 import tenantService, { Tenant, CreateTenantRequest } from '../services/tenantService';
 import ocsService from '../services/ocsService';
-import { getApiEndpoint } from '../config/app.config';
+import { getApiEndpoint, appConfig } from '../config/app.config';
 import { useAuth } from '../contexts/AuthContext';
 import TenantEditModal from '../components/TenantEditModal';
 import { useErrorHandler } from '../hooks/useErrorHandler';
+import { formatApiError } from '../utils/errorHandler';
 
 const TenantManagement: React.FC = () => {
   const navigate = useNavigate();
@@ -172,7 +173,7 @@ const TenantManagement: React.FC = () => {
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.detail || t('tenants:messages.logoUploadFailed'));
+          throw new Error(formatApiError(errorData, t('tenants:messages.logoUploadFailed')));
         }
 
         toast.success(t('tenants:messages.logoUploaded'));
@@ -1122,7 +1123,7 @@ const TenantFormModal: React.FC<{
       );
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.detail || t('tenants:messages.createFailed'));
+        throw new Error(formatApiError(error, t('tenants:messages.createFailed')));
       }
       await fetchTenantUsers();
       setUserSuccess(t('tenants:userManagement.created'));

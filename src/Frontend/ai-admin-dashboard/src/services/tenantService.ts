@@ -1,6 +1,7 @@
 import { getAuthStorage, getStorageKey } from '../config/auth.config';
 import { appConfig } from '../config/app.config';
 import axios from 'axios';
+import { formatApiError } from '../utils/errorHandler';
 
 // Use centralized API configuration
 const API_BASE_URL = appConfig.api.baseUrl;
@@ -295,7 +296,8 @@ class TenantService {
       const payload = {
         identifier,
         identifier_type: identifierType,
-        purpose: 'verification'
+        purpose: 'verification',
+        create_user_if_missing: false // Don't create user during signup - will be created with full info later
       };
       
       console.log('Sending OTP request:', {
@@ -315,26 +317,26 @@ class TenantService {
         });
         clearTimeout(timeoutId);
         
-        console.log('OTP send success:', response.data);
+        console.log('✅ OTP send success:', response.data);
         
         return {
           success: true,
           message: response.data.message,
-          expiresIn: response.data.expires_in
+          expiresIn: response.data.expires_in_minutes // Backend sends expires_in_minutes
         };
       } catch (error: any) {
         clearTimeout(timeoutId);
         throw error;
       }
     } catch (error: any) {
-      console.error('OTP send error:', {
+      console.error('❌ OTP send error:', {
         status: error.response?.status,
         statusText: error.response?.statusText,
         detail: error.response?.data?.detail,
         data: error.response?.data,
-        identifier,
-        identifierType,
-        isTimeout: error.name === 'AbortError'
+        identifier: `${identifierType}:${identifier?.substring(0, 3)}...`,
+        isTimeout: error.name === 'AbortError',
+        errorType: error.constructor.name
       });
       
       // Handle timeout
@@ -393,7 +395,8 @@ class TenantService {
         identifier,
         identifier_type: identifierType,
         code,
-        purpose: 'signup'
+        purpose: 'verification',
+        create_user_if_missing: false // Don't create user during signup - will be created with full info later
       });
       return {
         success: true,
@@ -404,7 +407,7 @@ class TenantService {
     } catch (error: any) {
       return {
         success: false,
-        message: error.response?.data?.detail || error.message || 'Failed to verify OTP'
+        message: formatApiError(error.response?.data || error, 'Failed to verify OTP')
       };
     }
   }
@@ -418,7 +421,8 @@ class TenantService {
       const response = await this.api.post('/api/v1/auth/otp/resend', {
         identifier,
         identifier_type: identifierType,
-        purpose: 'signup'
+        purpose: 'verification',
+        create_user_if_missing: false // Don't create user during signup
       });
       return {
         success: true,
@@ -428,7 +432,7 @@ class TenantService {
     } catch (error: any) {
       return {
         success: false,
-        message: error.response?.data?.detail || error.message || 'Failed to resend OTP'
+        message: formatApiError(error.response?.data || error, 'Failed to resend OTP')
       };
     }
   }
