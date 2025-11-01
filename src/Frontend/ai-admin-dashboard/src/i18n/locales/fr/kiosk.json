@@ -1,0 +1,113 @@
+{
+  "welcome": {
+    "title": "Bienvenue à",
+    "selectStore": "Sélectionner un magasin",
+    "selectLanguage": "Sélectionnez votre langue",
+    "or": "OU",
+    "scanQR": "Scanner le QR pour se connecter",
+    "signIn": "Se connecter avec téléphone/email",
+    "continueAsGuest": "Continuer en tant qu'invité",
+    "touchToStart": "Touchez pour commencer vos achats"
+  },
+  "cart": {
+    "title": "Votre panier",
+    "empty": "Votre panier est vide",
+    "emptyMessage": "Ajoutez des produits pour commencer",
+    "orderSummary": "Résumé de la commande",
+    "subtotal": "Sous-total",
+    "tax": "Taxe (TVH 13%)",
+    "total": "Total",
+    "pickupLocation": "Lieu de ramassage:",
+    "backToBrowse": "Retour aux produits",
+    "checkout": "Commander",
+    "remove": "Retirer"
+  },
+  "checkout": {
+    "title": "Finalisez votre commande",
+    "orderSummary": "Résumé de la commande",
+    "subtotal": "Sous-total",
+    "tax": "Taxe (TVH 13%)",
+    "total": "Total",
+    "contactInfo": "Informations de contact",
+    "contactInfoHelper": "Facultatif - Aidez-nous à vous informer quand votre commande est prête",
+    "namePlaceholder": "Entrez votre nom (facultatif)",
+    "emailPlaceholder": "Entrez votre email (facultatif)",
+    "phonePlaceholder": "Entrez votre numéro de téléphone (facultatif)",
+    "placeOrder": "Passer la commande",
+    "backToCart": "Retour au panier"
+  },
+  "browse": {
+    "title": "Parcourir les produits",
+    "searchPlaceholder": "Rechercher des produits...",
+    "loadingFilters": "Chargement des filtres...",
+    "quickFilters": "Filtres rapides",
+    "sortBy": "Trier par",
+    "activeFilters": "Filtres actifs",
+    "clearAll": "Tout effacer",
+    "noProducts": "Aucun produit trouvé. Essayez d'ajuster vos filtres.",
+    "viewCart": "Voir le panier"
+  },
+  "sort": {
+    "nameAZ": "Nom (A-Z)",
+    "priceLowHigh": "Prix: Bas à Élevé",
+    "priceHighLow": "Prix: Élevé à Bas",
+    "sizeLargeSmall": "Taille: Grand à Petit",
+    "sizeSmallLarge": "Taille: Petit à Grand",
+    "mostPopular": "Plus populaire"
+  },
+  "productDetails": {
+    "productIdentifiers": "Identifiants du produit",
+    "slug": "Identifiant",
+    "categorization": "Catégorisation",
+    "category": "Catégorie",
+    "subcategory": "Sous-catégorie",
+    "subSubcategory": "Sous-sous-catégorie",
+    "strain": "Souche",
+    "streetName": "Nom de rue",
+    "pack": "Emballage",
+    "quantity": "Quantité:",
+    "outOfStock": "En rupture de stock",
+    "quickOverview": "Aperçu rapide",
+    "detailedDescription": "Description détaillée",
+    "flowerEquivalent": "Équivalent fleur",
+    "extraction": "Extraction",
+    "recommended": "Recommandé",
+    "cannabinoidProfile": "Profil cannabinoïde complet",
+    "perUnit": "Par unité:",
+    "perVolume": "Par volume:",
+    "range": "Gamme:",
+    "addToCart": "Ajouter au panier",
+    "close": "Fermer"
+  },
+  "recommendations": {
+    "loading": "Chargement des recommandations...",
+    "title": "Recommandé pour vous",
+    "outOfStock": "En rupture de stock"
+  },
+  "assistant": {
+    "title": "Assistant Cannabis",
+    "welcomeMessage": "Bonjour! Je suis là pour vous aider à trouver les produits de cannabis parfaits. Que recherchez-vous aujourd'hui?",
+    "placeholder": "Demandez-moi n'importe quoi...",
+    "defaultResponse": "Je suis là pour aider! Que voulez-vous savoir?"
+  },
+  "confirmation": {
+    "title": "Commande confirmée!",
+    "orderNumber": "Numéro de commande",
+    "thankYou": "Merci pour votre commande",
+    "whatNext": "Et après?",
+    "redirecting": "Redirection dans",
+    "seconds": "secondes",
+    "newOrder": "Nouvelle commande",
+    "returnHome": "Retour à l'accueil"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "tryAgain": "Réessayer",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "back": "Retour",
+    "next": "Suivant",
+    "done": "Terminé"
+  }
+}

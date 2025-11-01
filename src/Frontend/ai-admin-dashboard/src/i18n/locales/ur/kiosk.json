@@ -1,0 +1,113 @@
+{
+  "welcome": {
+    "title": "Welcome to",
+    "selectStore": "Select Store",
+    "selectLanguage": "Select Your Language",
+    "or": "OR",
+    "scanQR": "Scan QR to Sign In",
+    "signIn": "Sign In with Phone/Email",
+    "continueAsGuest": "Continue as Guest",
+    "touchToStart": "Touch to Start Shopping"
+  },
+  "cart": {
+    "title": "Your Cart",
+    "empty": "Your Cart is Empty",
+    "emptyMessage": "Add some products to get started",
+    "orderSummary": "Order Summary",
+    "subtotal": "Subtotal",
+    "tax": "Tax (HST 13%)",
+    "total": "Total",
+    "pickupLocation": "Pickup Location:",
+    "backToBrowse": "Back to Products",
+    "checkout": "Checkout",
+    "remove": "Remove"
+  },
+  "checkout": {
+    "title": "Complete Your Order",
+    "orderSummary": "Order Summary",
+    "subtotal": "Subtotal",
+    "tax": "Tax (HST 13%)",
+    "total": "Total",
+    "contactInfo": "Contact Information",
+    "contactInfoHelper": "Optional - Help us notify you when your order is ready",
+    "namePlaceholder": "Enter your name (optional)",
+    "emailPlaceholder": "Enter your email (optional)",
+    "phonePlaceholder": "Enter your phone number (optional)",
+    "placeOrder": "Place Order",
+    "backToCart": "Back to Cart"
+  },
+  "browse": {
+    "title": "Browse Products",
+    "searchPlaceholder": "Search products...",
+    "loadingFilters": "Loading filters...",
+    "quickFilters": "Quick Filters",
+    "sortBy": "Sort By",
+    "activeFilters": "Active Filters",
+    "clearAll": "Clear All",
+    "noProducts": "No products found. Try adjusting your filters.",
+    "viewCart": "View Cart"
+  },
+  "sort": {
+    "nameAZ": "Name (A-Z)",
+    "priceLowHigh": "Price: Low to High",
+    "priceHighLow": "Price: High to Low",
+    "sizeLargeSmall": "Size: Large to Small",
+    "sizeSmallLarge": "Size: Small to Large",
+    "mostPopular": "Most Popular"
+  },
+  "productDetails": {
+    "productIdentifiers": "Product Identifiers",
+    "slug": "Slug",
+    "categorization": "Categorization",
+    "category": "Category",
+    "subcategory": "Subcategory",
+    "subSubcategory": "Sub-subcategory",
+    "strain": "Strain",
+    "streetName": "Street Name",
+    "pack": "Pack",
+    "quantity": "Quantity:",
+    "outOfStock": "Out of Stock",
+    "quickOverview": "Quick Overview",
+    "detailedDescription": "Detailed Description",
+    "flowerEquivalent": "Flower Equivalent",
+    "extraction": "Extraction",
+    "recommended": "Recommended",
+    "cannabinoidProfile": "Complete Cannabinoid Profile",
+    "perUnit": "Per Unit:",
+    "perVolume": "Per Volume:",
+    "range": "Range:",
+    "addToCart": "Add to Cart",
+    "close": "Close"
+  },
+  "recommendations": {
+    "loading": "Loading Recommendations...",
+    "title": "Recommended for You",
+    "outOfStock": "Out of Stock"
+  },
+  "assistant": {
+    "title": "Cannabis Assistant",
+    "welcomeMessage": "Hi! I'm here to help you find the perfect cannabis products. What are you looking for today?",
+    "placeholder": "Ask me anything...",
+    "defaultResponse": "I'm here to help! What would you like to know?"
+  },
+  "confirmation": {
+    "title": "Order Confirmed!",
+    "orderNumber": "Order Number",
+    "thankYou": "Thank you for your order",
+    "whatNext": "What's Next?",
+    "redirecting": "Redirecting in",
+    "seconds": "seconds",
+    "newOrder": "Start New Order",
+    "returnHome": "Return to Home"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "tryAgain": "Try Again",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "done": "Done"
+  }
+}
