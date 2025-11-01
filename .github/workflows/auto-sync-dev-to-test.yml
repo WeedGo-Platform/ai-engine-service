@@ -14,6 +14,9 @@ env:
   GIT_COMMITTER_NAME: "GitHub Actions Bot"
   GIT_COMMITTER_EMAIL: "actions@github.com"
 
+permissions:
+  contents: write
+
 jobs:
   sync-dev-to-test:
     name: Sync Dev → Test Branch
