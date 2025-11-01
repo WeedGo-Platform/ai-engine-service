@@ -90,6 +90,30 @@ Transaction validation failed: Inventory record not found for SKU
 2. ✅ Missing `appConfig` import in `TenantManagement.tsx` - FIXED (feature/signup)
 3. ✅ Missing auth headers in PO modal supplier lookup - FIXED
 4. ✅ Provincial suppliers seeded - FIXED
+5. ✅ **Missing `review_summary_view` table** - FIXED (created materialized view)
+6. ✅ **Database connection pool management** - FIXED (proper async context)
+7. ✅ **Wrong column `i.product_name`** - FIXED (changed to `pc.product_name`)
+8. ✅ **Wrong column `location_code`** - FIXED (changed to `location_id`)
+
+---
+
+## ⚠️ Remaining Issues
+
+### 5. Missing Inventory Records - ROOT CAUSE IDENTIFIED
+**Status:** Frontend Bug
+
+**Issue:** POS transaction endpoint receives inventory UUIDs instead of SKUs
+- Backend expects: `product.sku` (e.g., "105000_28G___")
+- Frontend sends: `product.id` (e.g., "93247ef8-2a03-40f6-ad53...")
+- Backend uses first 8 chars as SKU, which doesn't match any inventory
+
+**Affected SKUs (actually UUIDs):**
+- `93247ef8` → Actually inventory ID `93247ef8-2a03-40f6-ad53-ca9bb02a27aa` (SKU: 105000_28G___)
+- `5d2300d4` → Actually inventory ID `5d2300d4-d5e5-43fb-a880-c1eb804cee25` (SKU: 310102_2G___)
+
+**Fix Required:** Update POS frontend to send `product.sku` instead of `product.id`
+
+**Location:** Frontend POS component that creates transactions
 
 ---
 
@@ -156,10 +180,10 @@ async with pool.acquire() as db:
 
 | Error Type | Count | Severity | Status |
 |------------|-------|----------|--------|
-| Missing Table | 1 | HIGH | ❌ Not Fixed |
-| Connection Pool | 1 | HIGH | ❌ Not Fixed |
-| Wrong Column | 2 | HIGH | ❌ Not Fixed |
-| Missing Data | 2 | MEDIUM | ⚠️ Data Issue |
+| Missing Table | 1 | HIGH | ✅ FIXED |
+| Connection Pool | 1 | HIGH | ✅ FIXED |
+| Wrong Column | 2 | HIGH | ✅ FIXED |
+| Frontend Bug (UUID vs SKU) | 1 | MEDIUM | ⚠️ Needs Frontend Fix |
 
 ---
 
