@@ -756,7 +756,14 @@ export default function POS({
         cashier_id: user?.user_id || 'anonymous',
         customer_id: customer?.id === 'anonymous' ? undefined : customer?.id,
         items: cart.map(item => ({
-          product: item.product,
+          product: {
+            id: item.product.sku || item.product.id, // Send SKU as ID for backend compatibility
+            sku: item.product.sku || item.product.id, // Ensure SKU is always present
+            name: item.product.name,
+            price: item.product.price,
+            brand: item.product.brand,
+            category: item.product.category
+          },
           quantity: item.quantity,
           discount: item.discount || 0,
           discount_type: 'percentage',
@@ -1921,7 +1928,14 @@ export default function POS({
                 cashier_id: user?.user_id || 'anonymous',
                 customer_id: customer?.id === 'anonymous' ? undefined : customer?.id,
                 items: cart.map(item => ({
-                  product: item.product,
+                  product: {
+                    id: item.product.sku || item.product.id, // Send SKU as ID for backend compatibility
+                    sku: item.product.sku || item.product.id, // Ensure SKU is always present
+                    name: item.product.name,
+                    price: item.product.price,
+                    brand: item.product.brand,
+                    category: item.product.category
+                  },
                   quantity: item.quantity,
                   discount: item.discount,
                   promotion: item.promotion,
