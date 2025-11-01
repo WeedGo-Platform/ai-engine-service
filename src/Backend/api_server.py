@@ -1694,7 +1694,6 @@ async def general_exception_handler(request: Request, exc: Exception):
     # Add CORS headers to error responses (use environment-configured origins)
     origin = request.headers.get("origin")
     if origin and origin in ALLOWED_CORS_ORIGINS:
->>>>>>> dev
         response.headers["Access-Control-Allow-Origin"] = origin
         response.headers["Access-Control-Allow-Credentials"] = "true"
         response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS, PATCH"
