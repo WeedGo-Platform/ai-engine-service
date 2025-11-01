@@ -226,15 +226,41 @@ jobs:
         run: |
           export PGPASSWORD="${{ secrets.CLOUD_SQL_DB_PASSWORD }}"
 
-          # Run schema migration
+          echo "📊 Running complete database schema migration..."
+
+          # Run main schema migration (complete dev schema)
+          echo "1️⃣ Applying main schema migration..."
           psql -h 127.0.0.1 \
                -p 5432 \
                -U weedgo \
                -d ai_engine \
-               -f src/Backend/database/schema_migration.sql \
+               -f src/Backend/database/schema_migration.sql
 
+          # Run complete tenant schema migration
+          echo "2️⃣ Applying complete tenant schema..."
+          psql -h 127.0.0.1 \
+               -p 5432 \
+               -U weedgo \
+               -d ai_engine \
+               -f src/Backend/database/complete_tenant_schema_migration.sql
 
-          echo "✅ Database migrations completed"
+          # Run RAG schema migration
+          echo "3️⃣ Applying RAG schema..."
+          psql -h 127.0.0.1 \
+               -p 5432 \
+               -U weedgo \
+               -d ai_engine \
+               -f src/Backend/migrations/create_rag_schema.sql
+
+          # Run OCS integration schema
+          echo "4️⃣ Applying OCS integration schema..."
+          psql -h 127.0.0.1 \
+               -p 5432 \
+               -U weedgo \
+               -d ai_engine \
+               -f src/Backend/migrations/001_ocs_integration_schema.sql
+
+          echo "✅ All database migrations completed successfully!"
 
       - name: Verify migrations
         run: |
