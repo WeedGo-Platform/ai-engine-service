@@ -48,6 +48,12 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
   useEffect(() => {
     const fetchProvincialSupplier = async () => {
       if (isOpen && currentStore) {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          console.warn('No auth token found');
+          return;
+        }
+
         // Check if store has province_territory_id
         if (currentStore.province_territory_id) {
           try {
@@ -56,6 +62,7 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
               },
             });
 
@@ -64,6 +71,8 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
               setSupplierId(provincialSupplier.id);
               console.log(`Auto-selected provincial supplier by territory ID:`, provincialSupplier.name);
               return; // Exit if we found the supplier
+            } else {
+              console.log(`No provincial supplier found by territory ID. Status: ${response.status}`);
             }
           } catch (error) {
             console.error('Error fetching provincial supplier by territory ID:', error);
@@ -77,6 +86,7 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
               },
             });
 
@@ -85,6 +95,8 @@ const CreatePurchaseOrderModal: React.FC<CreatePurchaseOrderModalProps> = ({
               setSupplierId(provincialSupplier.id);
               console.log(`Auto-selected provincial supplier by province code:`, provincialSupplier.name);
               return;
+            } else {
+              console.log(`No provincial supplier found by province code. Status: ${response.status}`);
             }
           } catch (error) {
             console.error('Error fetching provincial supplier by province code:', error);
