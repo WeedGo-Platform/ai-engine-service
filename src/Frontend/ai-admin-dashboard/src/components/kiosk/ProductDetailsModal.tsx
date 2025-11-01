@@ -9,7 +9,7 @@ import {
   MapPin, Shield, Truck, Scale, Box, Gauge,
   Thermometer, Zap, Factory, Mountain, Flower,
   FileText, DollarSign, BarChart, Warehouse,
-  Building2, Tag, Layers, TestTube, Pill
+  Building2, Tag, Layers, TestTube, Pill, Wrench
 } from 'lucide-react';
 import { useStoreContext } from '../../contexts/StoreContext';
 import { formatCurrency } from '../../utils/currency';
