@@ -1,11 +1,11 @@
-name: Deploy Test to Cloud Run
+name: Deploy UAT to Cloud Run
 
-# Automatically deploy to Google Cloud Run when test branch is updated
-# This runs after the auto-sync-dev-to-test workflow completes
+# Automatically deploy to Google Cloud Run when uat branch is updated
+# This runs after the auto-sync-dev-to-uat workflow completes
 on:
   push:
     branches:
-      - test
+      - uat
   workflow_dispatch:  # Allow manual trigger
     inputs:
       run_migrations:
@@ -17,16 +17,16 @@ on:
 env:
   PROJECT_ID: weedgo-uat-2025
   REGION: us-central1
-  SERVICE_NAME: weedgo-test
-  CLOUD_SQL_INSTANCE: weedgo-test-db
+  SERVICE_NAME: weedgo-uat
+  CLOUD_SQL_INSTANCE: weedgo-uat-db
   ARTIFACT_REGISTRY: us-central1-docker.pkg.dev
-  IMAGE_NAME: weedgo-test
+  IMAGE_NAME: weedgo-uat
 
 jobs:
   # Build and push Docker image to Artifact Registry
   build:
     name: Build & Push Docker Image
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-lauat
     outputs:
       image_tag: ${{ steps.meta.outputs.tags }}
 
@@ -50,9 +50,9 @@ jobs:
         id: meta
         run: |
           IMAGE_TAG="${{ env.ARTIFACT_REGISTRY }}/${{ env.PROJECT_ID }}/weedgo/${{ env.IMAGE_NAME }}:${{ github.sha }}"
-          IMAGE_LATEST="${{ env.ARTIFACT_REGISTRY }}/${{ env.PROJECT_ID }}/weedgo/${{ env.IMAGE_NAME }}:latest"
+          IMAGE_LATEST="${{ env.ARTIFACT_REGISTRY }}/${{ env.PROJECT_ID }}/weedgo/${{ env.IMAGE_NAME }}:lauat"
           echo "tags=$IMAGE_TAG" >> $GITHUB_OUTPUT
-          echo "latest=$IMAGE_LATEST" >> $GITHUB_OUTPUT
+          echo "lauat=$IMAGE_LATEST" >> $GITHUB_OUTPUT
           echo "📦 Image tags:"
           echo "  - $IMAGE_TAG"
           echo "  - $IMAGE_LATEST"
@@ -65,9 +65,9 @@ jobs:
           push: true
           tags: |
             ${{ steps.meta.outputs.tags }}
-            ${{ steps.meta.outputs.latest }}
-          cache-from: type=registry,ref=${{ steps.meta.outputs.latest }}
-          cache-to: type=registry,ref=${{ steps.meta.outputs.latest }},mode=max
+            ${{ steps.meta.outputs.lauat }}
+          cache-from: type=registry,ref=${{ steps.meta.outputs.lauat }}
+          cache-to: type=registry,ref=${{ steps.meta.outputs.lauat }},mode=max
 
       - name: Verify image
         run: |
@@ -77,7 +77,7 @@ jobs:
   # Deploy to Cloud Run
   deploy:
     name: Deploy to Cloud Run
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-lauat
     needs: build
 
     steps:
@@ -101,7 +101,7 @@ jobs:
             --platform managed \
             --region ${{ env.REGION }} \
             --allow-unauthenticated \
-            --set-env-vars "ENVIRONMENT=test,DB_HOST=/cloudsql/${{ env.PROJECT_ID }}:${{ env.REGION }}:${{ env.CLOUD_SQL_INSTANCE }},DB_PORT=5432,DB_NAME=ai_engine,DB_USER=weedgo,DB_PASSWORD=${{ secrets.CLOUD_SQL_DB_PASSWORD }}" \
+            --set-env-vars "ENVIRONMENT=uat,DB_HOST=/cloudsql/${{ env.PROJECT_ID }}:${{ env.REGION }}:${{ env.CLOUD_SQL_INSTANCE }},DB_PORT=5432,DB_NAME=ai_engine,DB_USER=weedgo,DB_PASSWORD=${{ secrets.CLOUD_SQL_DB_PASSWORD }}" \
             --add-cloudsql-instances ${{ env.PROJECT_ID }}:${{ env.REGION }}:${{ env.CLOUD_SQL_INSTANCE }} \
             --min-instances 0 \
             --max-instances 10 \
@@ -158,7 +158,7 @@ jobs:
         run: |
           echo "## 🚀 Cloud Run Deployment Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Environment:** Test" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** UAT" >> $GITHUB_STEP_SUMMARY
           echo "**Service:** ${{ env.SERVICE_NAME }}" >> $GITHUB_STEP_SUMMARY
           echo "**Region:** ${{ env.REGION }}" >> $GITHUB_STEP_SUMMARY
           echo "**Image:** \`${{ needs.build.outputs.image_tag }}\`" >> $GITHUB_STEP_SUMMARY
@@ -185,7 +185,7 @@ jobs:
   # Optional: Run database migrations
   migrate:
     name: Run Database Migrations
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-lauat
     needs: deploy
     if: github.event.inputs.run_migrations == 'true'
 
@@ -245,7 +245,7 @@ jobs:
   # Post-deployment notification
   notify:
     name: Send Notifications
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-lauat
     needs: [build, deploy, migrate]
     if: always()
 
@@ -253,17 +253,17 @@ jobs:
       - name: Deployment success notification
         if: needs.deploy.result == 'success'
         run: |
-          echo "✅ Test environment deployed successfully to Cloud Run!"
+          echo "✅ UAT environment deployed successfully to Cloud Run!"
           # Add Slack/Discord webhook here:
           # curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} \
           #   -H 'Content-Type: application/json' \
-          #   -d '{"text":"✅ Test deployment successful!"}'
+          #   -d '{"text":"✅ UAT deployment successful!"}'
 
       - name: Deployment failure notification
         if: needs.deploy.result == 'failure'
         run: |
-          echo "❌ Test environment deployment failed!"
+          echo "❌ UAT environment deployment failed!"
           # Add Slack/Discord webhook here:
           # curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} \
           #   -H 'Content-Type: application/json' \
-          #   -d '{"text":"❌ Test deployment failed! Check GitHub Actions."}'
+          #   -d '{"text":"❌ UAT deployment failed! Check GitHub Actions."}'
