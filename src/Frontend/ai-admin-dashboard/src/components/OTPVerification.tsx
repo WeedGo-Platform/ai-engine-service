@@ -256,30 +256,32 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({
       const newOtp = digits.split('');
       setOtp(newOtp);
       setError(null); // Clear any existing error
-      setLoading(true); // Start loading immediately
       inputRefs.current[5]?.focus();
       
-      // Auto-verify immediately on paste
-      try {
-        const result = await onVerifyOTP(identifier, identifierType, digits);
-        if (result.success) {
-          setSuccess(true);
-          setError(null);
-          setTimeout(() => {
-            onVerified();
-          }, 1000);
-        } else {
-          setError(result.message || t('signup:verification.verifyFailed'));
+      // Small delay to allow UI to update before verifying
+      setTimeout(async () => {
+        setLoading(true);
+        try {
+          const result = await onVerifyOTP(identifier, identifierType, digits);
+          if (result.success) {
+            setSuccess(true);
+            setError(null);
+            setTimeout(() => {
+              onVerified();
+            }, 1000);
+          } else {
+            setError(result.message || t('signup:verification.verifyFailed'));
+            setOtp(['', '', '', '', '', '']);
+            inputRefs.current[0]?.focus();
+          }
+        } catch (err: any) {
+          setError(err.message || t('signup:verification.verifyError'));
           setOtp(['', '', '', '', '', '']);
           inputRefs.current[0]?.focus();
+        } finally {
+          setLoading(false);
         }
-      } catch (err: any) {
-        setError(err.message || t('signup:verification.verifyError'));
-        setOtp(['', '', '', '', '', '']);
-        inputRefs.current[0]?.focus();
-      } finally {
-        setLoading(false);
-      }
+      }, 100);
     }
   };
 
