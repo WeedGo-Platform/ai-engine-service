@@ -38,8 +38,8 @@ jobs:
 
       - name: Fetch all branches
         run: |
-          git fetch origin dev:dev
-          git fetch origin test:test
+          git fetch origin dev
+          git fetch origin test
 
       - name: Checkout test branch
         run: |
