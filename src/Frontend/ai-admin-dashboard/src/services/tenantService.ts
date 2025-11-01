@@ -1,6 +1,7 @@
 import { getAuthStorage, getStorageKey } from '../config/auth.config';
 import { appConfig } from '../config/app.config';
 import axios from 'axios';
+import { formatApiError } from '../utils/errorHandler';
 
 // Use centralized API configuration
 const API_BASE_URL = appConfig.api.baseUrl;
@@ -405,7 +406,7 @@ class TenantService {
     } catch (error: any) {
       return {
         success: false,
-        message: error.response?.data?.detail || error.message || 'Failed to verify OTP'
+        message: formatApiError(error.response?.data || error, 'Failed to verify OTP')
       };
     }
   }
@@ -429,7 +430,7 @@ class TenantService {
     } catch (error: any) {
       return {
         success: false,
-        message: error.response?.data?.detail || error.message || 'Failed to resend OTP'
+        message: formatApiError(error.response?.data || error, 'Failed to resend OTP')
       };
     }
   }
